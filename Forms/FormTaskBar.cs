@@ -1,4 +1,5 @@
-﻿using Filexplorip.WinAPI;
+﻿using Filexplorip.Helpers;
+using Filexplorip.WinAPI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,14 +11,16 @@ namespace Filexplorip.Forms
 {
     public partial class FormTaskBar : Form
     {
-        //private readonly List<Process> _precedenteListe;
         private readonly int _uwpHostProcess;
 
         public FormTaskBar()
         {
             InitializeComponent();
             //_precedenteListe = new List<Process>();
-            _uwpHostProcess = Process.GetProcesses().Single(item => item.Id!=Process.GetCurrentProcess().Id && item.MainWindowHandle != IntPtr.Zero && !string.IsNullOrEmpty(item.MainModule.FileName) && item.MainModule.FileName.ToLower().Trim() == Environment.GetFolderPath(Environment.SpecialFolder.System).ToLower().Trim() + @"\applicationframehost.exe").Id;
+            _uwpHostProcess = Process.GetProcesses().Single(item => item.Id!=Process.GetCurrentProcess().Id &&
+                                                            item.MainWindowHandle != IntPtr.Zero &&
+                                                            !string.IsNullOrEmpty(item.MainModule.FileName) &&
+                                                            item.MainModule.FileName.ToLower().Trim() == Environment.GetFolderPath(Environment.SpecialFolder.System).ToLower().Trim() + @"\applicationframehost.exe").Id;
         }
 
         private void TimerRefresh_Tick(object sender, EventArgs e)
@@ -25,25 +28,7 @@ namespace Filexplorip.Forms
             try
             {
                 timerRefresh.Enabled = false;
-                // Managed version
-                /*List<Process> nouvelleListe = new List<Process>();
-                foreach (Process processus in Process.GetProcesses().Where(item => item.Responding && item.Id != Process.GetCurrentProcess().Id && !string.IsNullOrWhiteSpace(item.MainWindowTitle) && (item.MainModule.FileName.ToLower() != Environment.GetFolderPath(Environment.SpecialFolder.System).ToLower() + @"\applicationframehost.exe")).ToList())
-                {
-                    nouvelleListe.Add(processus);
-                }
-
-                if (ListeDifferentes(nouvelleListe))
-                {
-                    _precedenteListe = nouvelleListe;
-                    lvTaches.Items.Clear();
-                    lvTaches.LargeImageList = new ImageList();
-                    foreach (Process processus in _precedenteListe)
-                    {
-                        lvTaches.LargeImageList.Images.Add(Helpers.Icones.GetFileIcon(processus.MainModule.FileName, false, false));
-                        lvTaches.Items.Add(processus.MainWindowTitle);
-                        lvTaches.Items[lvTaches.Items.Count - 1].ImageIndex = lvTaches.Items.Count - 1;
-                    }
-                }*/
+                lvTaches.Items.Clear();
                 UnManagedVersion();
             }
             catch (Exception) { }
@@ -52,24 +37,6 @@ namespace Filexplorip.Forms
                 //timerRefresh.Enabled = true;
             }
         }
-
-        /*private bool ListeDifferentes(List<Process> nouvelleListe)
-        {
-            if (nouvelleListe.Count != _precedenteListe.Count)
-                return true;
-            foreach (Process processus in nouvelleListe)
-            {
-                if (_precedenteListe.Any(item => item.Id == processus.Id))
-                {
-                    if (_precedenteListe.Single(item => item.Id == processus.Id).MainWindowTitle != processus.MainWindowTitle)
-                        return true;
-                }
-                else
-                    return true;
-            }
-            return false;
-        }*/
-
 
         // Save window titles and handles in these lists.
         private static List<IntPtr> WindowHandles;
@@ -120,15 +87,31 @@ namespace Filexplorip.Forms
         private void UnManagedVersion()
         {
             Process process;
+            WinAPI.Modeles.WINDOWPLACEMENT windowState = new WinAPI.Modeles.WINDOWPLACEMENT();
+            windowState.length = System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinAPI.Modeles.WINDOWPLACEMENT));
+            WinAPI.Modeles.PROCESS_BASIC_INFORMATION pbi = new WinAPI.Modeles.PROCESS_BASIC_INFORMATION();
 
+            Process processusParent;
             GetDesktopWindowHandlesAndTitles(out List<IntPtr> pointeurs, out List<string> titres);
             if (titres != null)
                 for (int i = 0; i < titres.Count; i++)
                 {
                     User32.GetWindowThreadProcessId(pointeurs[i], out uint processId);
                     process = Process.GetProcessById((int)processId);
-                    if ((process.Id != _uwpHostProcess) || (process.Responding))
-                        lvTaches.Items.Add($"({processId}) = {titres[i]}");
+                    User32.GetWindowPlacement(process.MainWindowHandle, ref windowState);
+                    int status = Ntdll.NtQueryInformationProcess(process.Handle, Ntdll.PROCESSINFOCLASS.ProcessBasicInformation, ref pbi, System.Runtime.InteropServices.Marshal.SizeOf(typeof(WinAPI.Modeles.PROCESS_BASIC_INFORMATION)), out int returnSize);
+                    if (status != 0)
+                    {
+                        processusParent = null;
+                    }
+                    else
+                    {
+                        processusParent = Process.GetProcessById(pbi.InheritedFromUniqueProcessId.ToInt32());
+                    }
+                    if ((process.Id != _uwpHostProcess || (process.Responding)) && (process.Id != Process.GetCurrentProcess().Id) && (windowState.showCmd != WinAPI.Modeles.ShowWindowCommands.Hide))
+                    {
+                        lvTaches.Items.Add($"({processId}) = {process.ProcessName} | {titres[i]} | Responding={process.Responding}, Parent={processusParent?.ProcessName}");
+                    }
                 }
         }
     }
