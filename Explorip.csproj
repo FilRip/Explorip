@@ -7,8 +7,8 @@
     <ProjectGuid>{001DCDA7-F4C3-4BD6-A86C-C99B35A9798A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Filexplorip</RootNamespace>
-    <AssemblyName>Filexplorip</AssemblyName>
+    <RootNamespace>Explorip</RootNamespace>
+    <AssemblyName>Explorip</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -39,7 +39,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Filexplorip.Program</StartupObject>
+    <StartupObject>Explorip.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -59,16 +59,84 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ManagedShell, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.AppBar, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.AppBar.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.Common, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.Interop, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.ShellFolders, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.ShellFolders.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.UWPInterop, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.UWPInterop.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.WindowsTasks, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.WindowsTasks.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedShell.WindowsTray, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.WindowsTray.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.OleDb, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Data.OleDb.5.0.0\lib\net461\System.Data.OleDb.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Diagnostics.EventLog, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.EventLog.5.0.1\lib\net461\System.Diagnostics.EventLog.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.ServiceProcess.ServiceController, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.ServiceProcess.ServiceController.5.0.0\lib\net461\System.ServiceProcess.ServiceController.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComposantsWinForm\FilRipListView\FilRipColumnHeaderCollection.cs" />
+    <Compile Include="ComposantsWinForm\FilRipListView\FilRipColumnsCollectionEditor.cs" />
+    <Compile Include="ComposantsWinForm\FilRipListView\FilRipColumnsHeader.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\FilRipListView\FilRipListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\FilRipListView\FilRipListViewComparateur.cs" />
+    <Compile Include="ComposantsWinForm\DirectoryTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\FichiersListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\FilRipTabControl\FilRipTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\ContextMenu\FilRipToolStripSeparator.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
+    <Compile Include="Helpers\ExtensionsDossiers.cs" />
+    <Compile Include="Helpers\ExtensionsFichiers.cs" />
     <Compile Include="Helpers\ExtensionsProcess.cs" />
-    <Compile Include="Sorters\DirectorySorter.cs" />
+    <Compile Include="Helpers\ExtensionsWindows.cs" />
+    <Compile Include="Helpers\WindowsSettings.cs" />
+    <Compile Include="Sorters\TriAlphabetique.cs" />
     <Compile Include="Forms\FormTaskBar.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,7 +153,9 @@
     <Compile Include="Localization\GestionString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WinAPI\Dwmapi.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
+    <Compile Include="WinAPI\Modeles\BROWSEINFO.cs" />
     <Compile Include="WinAPI\Modeles\CMINVOKECOMMANDINFOEX.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu2.cs" />
@@ -96,6 +166,8 @@
     <Compile Include="WinAPI\Modeles\MENUITEMINFO.cs" />
     <Compile Include="WinAPI\Modeles\POINT.cs" />
     <Compile Include="WinAPI\Modeles\PROCESS_BASIC_INFORMATION.cs" />
+    <Compile Include="WinAPI\Modeles\SHFILEINFO.cs" />
+    <Compile Include="WinAPI\Modeles\SHITEMID.cs" />
     <Compile Include="WinAPI\Modeles\WINDOWPLACEMENT.cs" />
     <Compile Include="WinAPI\Ntdll.cs" />
     <Compile Include="WinAPI\Shlwapi.cs" />
@@ -118,6 +190,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="app.manifest" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

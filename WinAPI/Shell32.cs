@@ -1,38 +1,13 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Filexplorip.WinAPI
+using Explorip.WinAPI.Modeles;
+
+namespace Explorip.WinAPI
 {
     public static class Shell32
     {
         public const int MAX_PATH = 256;
-        [StructLayout(LayoutKind.Sequential)]
-        public struct SHITEMID
-        {
-            public ushort cb;
-            [MarshalAs(UnmanagedType.LPArray)]
-            public byte[] abID;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct ITEMIDLIST
-        {
-            public SHITEMID mkid;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct BROWSEINFO
-        {
-            public IntPtr hwndOwner;
-            public IntPtr pidlRoot;
-            public IntPtr pszDisplayName;
-            [MarshalAs(UnmanagedType.LPTStr)]
-            public string lpszTitle;
-            public uint ulFlags;
-            public IntPtr lpfn;
-            public int lParam;
-            public IntPtr iImage;
-        }
 
         [Flags()]
         public enum BIF : uint
@@ -51,19 +26,6 @@ namespace Filexplorip.WinAPI
             BROWSEINCLUDEFILES = 0x4000,
             SHAREABLE = 0x8000,
         }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct SHFILEINFO
-        {
-            public const int NAMESIZE = 80;
-            public IntPtr hIcon;
-            public int iIcon;
-            public uint dwAttributes;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = MAX_PATH)]
-            public string szDisplayName;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = NAMESIZE)]
-            public string szTypeName;
-        };
 
         public const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
         public const uint FILE_ATTRIBUTE_NORMAL = 0x00000080;

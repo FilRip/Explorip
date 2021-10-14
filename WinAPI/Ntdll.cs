@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using Filexplorip.WinAPI.Modeles;
+using Explorip.WinAPI.Modeles;
 
-namespace Filexplorip.WinAPI
+namespace Explorip.WinAPI
 {
     public static class Ntdll
     {

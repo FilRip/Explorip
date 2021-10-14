@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Filexplorip.WinAPI.Modeles
+namespace Explorip.WinAPI.Modeles
 {
     [Flags()]
     public enum SHGNO

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Filexplorip.Helpers
+namespace Explorip.Helpers
 {
     public static class ProcessExtensions
     {

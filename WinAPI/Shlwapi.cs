@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Filexplorip.WinAPI
+namespace Explorip.WinAPI
 {
     public static class Shlwapi
     {

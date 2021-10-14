@@ -5,11 +5,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 
-using Filexplorip.WinAPI;
-using Filexplorip.WinAPI.Modeles;
-using Filexplorip.Exceptions;
+using Explorip.WinAPI;
+using Explorip.WinAPI.Modeles;
+using Explorip.Exceptions;
 
-namespace Filexplorip.Helpers
+namespace Explorip.Helpers
 {
     public class ShellContextMenu : NativeWindow
     {
@@ -280,9 +280,9 @@ namespace Filexplorip.Helpers
                     IntPtr winHandle = IntPtr.Zero;
 
                     IntPtr tempPidl;
-                    Shell32.SHFILEINFO info;
+                    SHFILEINFO info;
 
-                    info = new Shell32.SHFILEINFO();
+                    info = new SHFILEINFO();
                     tempPidl = IntPtr.Zero;
                     Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref tempPidl);
 

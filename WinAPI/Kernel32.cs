@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Filexplorip.WinAPI
+namespace Explorip.WinAPI
 {
     public static class Kernel32
     {

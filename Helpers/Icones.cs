@@ -1,7 +1,9 @@
-﻿using Filexplorip.WinAPI;
+﻿using Explorip.WinAPI;
+using Explorip.WinAPI.Modeles;
+
 using System.Drawing;
 
-namespace Filexplorip.Helpers
+namespace Explorip.Helpers
 {
     internal class Icones
     {
@@ -13,7 +15,7 @@ namespace Filexplorip.Helpers
         /// <returns>Icon</returns>
         public static Icon GetFileIcon(string name, bool linkOverlay, bool repertoire, bool othersOverlay)
         {
-            Shell32.SHFILEINFO shfi = new Shell32.SHFILEINFO();
+            SHFILEINFO shfi = new SHFILEINFO();
             Shell32.SHGFI flags = Shell32.SHGFI.ICON | Shell32.SHGFI.USEFILEATTRIBUTES;
 
             if (linkOverlay) flags |= Shell32.SHGFI.LINKOVERLAY;

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Filexplorip.Properties {
+namespace Explorip.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

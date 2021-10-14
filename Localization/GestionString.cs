@@ -1,8 +1,8 @@
-﻿using Filexplorip.WinAPI;
+﻿using Explorip.WinAPI;
 using System;
 using System.Text;
 
-namespace Filexplorip.Localization
+namespace Explorip.Localization
 {
     public static class GestionString
     {

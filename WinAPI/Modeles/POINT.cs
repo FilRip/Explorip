@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Filexplorip.WinAPI.Modeles
+namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct POINT

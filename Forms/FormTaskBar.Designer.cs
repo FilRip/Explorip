@@ -1,4 +1,4 @@
-﻿namespace Filexplorip.Forms
+﻿namespace Explorip.Forms
 {
     partial class FormTaskBar
     {

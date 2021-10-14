@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Filexplorip.WinAPI.Modeles
+namespace Explorip.WinAPI.Modeles
 {
     public enum HookType : int
     {

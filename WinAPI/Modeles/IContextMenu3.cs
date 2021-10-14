@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Filexplorip.WinAPI.Modeles
+namespace Explorip.WinAPI.Modeles
 {
     [ComImport(), Guid("bcfce0a0-ec17-11d0-8d10-00a0c90f2719")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

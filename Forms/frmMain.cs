@@ -2,31 +2,29 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using Filexplorip.Helpers;
-using Filexplorip.Sorters;
+using Explorip.Helpers;
+using Explorip.Sorters;
 
-namespace Filexplorip.Forms
+namespace Explorip.Forms
 {
     public partial class FrmMain : Form
     {
-        //private readonly FormTaskBar _barreDesTaches;
-        
         public FrmMain()
         {
             InitializeComponent();
 
-            /*_barreDesTaches = new FormTaskBar();
-            _barreDesTaches.Show();*/
+            if (WindowsSettings.IsWindowsApplicationInDarkMode())
+                WindowsSettings.UseImmersiveDarkMode(Handle, true);
 
             TreeNode rootDesktop = new TreeNode("Desktop", 2, 2);
-            this.treeMain.Nodes.Add(rootDesktop);
+            this.TreeRepertoire.Nodes.Add(rootDesktop);
             rootDesktop.Name = "Desktop";
             rootDesktop.Nodes.Add("");
             TreeNode myComputer = new TreeNode("My Computer", 4, 4)
             {
                 Name = "My Computer"
             };
-            this.treeMain.Nodes.Add(myComputer);
+            this.TreeRepertoire.Nodes.Add(myComputer);
             foreach (DriveInfo drive in DriveInfo.GetDrives())
             {
                 TreeNode driveNode = new TreeNode(drive.Name)
@@ -56,27 +54,27 @@ namespace Filexplorip.Forms
                 myComputer.Nodes.Add(driveNode);
             }
 
-            this.treeMain.BeforeExpand += new TreeViewCancelEventHandler(TreeMain_BeforeExpand);
-            this.treeMain.MouseDown += new MouseEventHandler(TreeMain_MouseDown);
+            this.TreeRepertoire.BeforeExpand += new TreeViewCancelEventHandler(TreeMain_BeforeExpand);
+            this.TreeRepertoire.MouseDown += new MouseEventHandler(TreeMain_MouseDown);
         }
 
         void TreeMain_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                this.treeMain.SelectedNode = this.treeMain.GetNodeAt(e.X, e.Y);
-                if (this.treeMain.SelectedNode.Tag != null)
+                this.TreeRepertoire.SelectedNode = this.TreeRepertoire.GetNodeAt(e.X, e.Y);
+                if (this.TreeRepertoire.SelectedNode.Tag != null)
                 {
                     ShellContextMenu ctxMnu = new ShellContextMenu();
                     FileInfo[] arrFI = new FileInfo[1];
-                    arrFI[0] = new FileInfo(this.treeMain.SelectedNode.Tag.ToString());
+                    arrFI[0] = new FileInfo(this.TreeRepertoire.SelectedNode.Tag.ToString());
                     ctxMnu.ShowContextMenu(arrFI, this.PointToScreen(new Point(e.X, e.Y)), cmsMonMenu);
                 }
                 else
                 {
                     ShellContextMenu ctxMnu = new ShellContextMenu();
                     DirectoryInfo[] dir = new DirectoryInfo[1];
-                    dir[0] = new DirectoryInfo(GetFolderPath(this.treeMain.SelectedNode));
+                    dir[0] = new DirectoryInfo(GetFolderPath(this.TreeRepertoire.SelectedNode));
                     ctxMnu.ShowContextMenu(dir, this.PointToScreen(new Point(e.X, e.Y)), cmsMonMenu);
                 }
             }
@@ -97,39 +95,31 @@ namespace Filexplorip.Forms
             parentNode.Nodes.Clear();
 
             dirInfo = new DirectoryInfo(path);
-            DirectoryInfo[] dirs = dirInfo.GetDirectories();
-            Array.Sort(dirs, new DirectorySorter());
+            DirectoryInfo[] dirs;
+            try
+            {
+                dirs = dirInfo.GetDirectories();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            Array.Sort(dirs, new TriAlphabetique());
             foreach (DirectoryInfo dirI in dirs)
             {
                 TreeNode node = new TreeNode(dirI.Name, 6, 6)
                 {
                     Name = dirI.Name
                 };
-                this.imgMain.Images.Add(Helpers.Icones.GetFileIcon(dirI.FullName, EstUnRaccourcis(dirI.FullName), true, true));
+                this.imgMain.Images.Add(Icones.GetFileIcon(dirI.FullName, dirI.IsShortcut(), true, true));
                 int imgIndex = this.imgMain.Images.Count - 1;
                 node.ImageIndex = imgIndex;
                 node.SelectedImageIndex = imgIndex;
                 node.Nodes.Add("");
                 parentNode.Nodes.Add(node);
             }
-
-            FileInfo[] files = dirInfo.GetFiles();
-            Array.Sort(files, new FileSorter());
-            foreach (FileInfo file in files)
-            {
-                TreeNode node = new TreeNode(file.Name, 6, 6)
-                {
-                    Name = file.Name
-                };
-
-                this.imgMain.Images.Add(Helpers.Icones.GetFileIcon(file.FullName, EstUnRaccourcis(file.FullName), false, true));
-
-                int imgIndex = this.imgMain.Images.Count - 1;
-                node.Tag = file.FullName;
-                node.ImageIndex = imgIndex;
-                node.SelectedImageIndex = imgIndex;
-                parentNode.Nodes.Add(node);
-            }
+            lvFichiers.Rafraichir(dirInfo);
         }
 
         private static string GetFolderPath(TreeNode parentNode)
@@ -163,14 +153,6 @@ namespace Filexplorip.Forms
 
             }
             return path;
-        }
-        private bool EstUnRaccourcis(string filename)
-        {
-            // TODO : Détecter les raccourcis de répertoire
-            if (Path.GetExtension(filename).ToLower().Trim() == ".lnk")
-                return true;
-            else
-                return false;
         }
     }
 }

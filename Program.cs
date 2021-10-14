@@ -1,8 +1,8 @@
-using Filexplorip.Forms;
+using Explorip.Forms;
 using System;
 using System.Windows.Forms;
 
-namespace Filexplorip
+namespace Explorip
 {
     static class Program
     {
@@ -14,7 +14,7 @@ namespace Filexplorip
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormTaskBar());
+            Application.Run(new FrmMain());
         }
     }
 }
