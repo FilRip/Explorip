@@ -30,19 +30,15 @@ namespace Explorip.Forms
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
-            this.imgMain = new System.Windows.Forms.ImageList(this.components);
-            this.TreeRepertoire = new System.Windows.Forms.TreeView();
-            this.cmsMonMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.monMenuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.filRipTabControl1 = new ComposantsWinForm.FilRipTabControl.FilRipTabControl();
+            this.filRipTabControl1 = new Explorip.ComposantsWinForm.FilRipTabControl.FilRipTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.lvFichiers = new ComposantsWinForm.FichiersListView();
-            this.filRipTabControl2 = new ComposantsWinForm.FilRipTabControl.FilRipTabControl();
+            this.TreeRepertoire = new ComposantsWinForm.DirectoryTreeView();
+            this.lvFichiers = new Explorip.ComposantsWinForm.FichiersListView();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.filRipTabControl2 = new Explorip.ComposantsWinForm.FilRipTabControl.FilRipTabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.cmsMonMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -55,52 +51,6 @@ namespace Explorip.Forms
             this.splitContainer2.SuspendLayout();
             this.filRipTabControl2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // imgMain
-            // 
-            this.imgMain.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imgMain.ImageStream")));
-            this.imgMain.TransparentColor = System.Drawing.Color.Transparent;
-            this.imgMain.Images.SetKeyName(0, "RemovableDrive.png");
-            this.imgMain.Images.SetKeyName(1, "CDRom.png");
-            this.imgMain.Images.SetKeyName(2, "Desktop.png");
-            this.imgMain.Images.SetKeyName(3, "Drive.png");
-            this.imgMain.Images.SetKeyName(4, "MyComputer.png");
-            this.imgMain.Images.SetKeyName(5, "NetworkDrive.png");
-            this.imgMain.Images.SetKeyName(6, "Folder.png");
-            // 
-            // TreeRepertoire
-            // 
-            this.TreeRepertoire.AllowDrop = true;
-            this.TreeRepertoire.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TreeRepertoire.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TreeRepertoire.ImageIndex = 6;
-            this.TreeRepertoire.ImageList = this.imgMain;
-            this.TreeRepertoire.Location = new System.Drawing.Point(3, 3);
-            this.TreeRepertoire.Name = "TreeRepertoire";
-            this.TreeRepertoire.SelectedImageIndex = 0;
-            this.TreeRepertoire.Size = new System.Drawing.Size(131, 382);
-            this.TreeRepertoire.TabIndex = 3;
-            // 
-            // cmsMonMenu
-            // 
-            this.cmsMonMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.monMenuToolStripMenuItem,
-            this.toolStripMenuItem1});
-            this.cmsMonMenu.Name = "cmsMonMenu";
-            this.cmsMonMenu.Size = new System.Drawing.Size(134, 32);
-            // 
-            // monMenuToolStripMenuItem
-            // 
-            this.monMenuToolStripMenuItem.Name = "monMenuToolStripMenuItem";
-            this.monMenuToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
-            this.monMenuToolStripMenuItem.Text = "Mon Menu";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(130, 6);
             // 
             // splitContainer1
             // 
@@ -136,6 +86,7 @@ namespace Explorip.Forms
             this.filRipTabControl1.BorderColorHot = System.Drawing.SystemColors.ControlDark;
             this.filRipTabControl1.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
             this.filRipTabControl1.Controls.Add(this.tabPage1);
+            this.filRipTabControl1.Controls.Add(this.tabPage3);
             this.filRipTabControl1.FocusColor = System.Drawing.Color.Orange;
             this.filRipTabControl1.FocusTrack = true;
             this.filRipTabControl1.HotTrack = true;
@@ -184,6 +135,20 @@ namespace Explorip.Forms
             this.splitContainer2.SplitterDistance = 137;
             this.splitContainer2.TabIndex = 4;
             // 
+            // TreeRepertoire
+            // 
+            this.TreeRepertoire.AllowDrop = true;
+            this.TreeRepertoire.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.TreeRepertoire.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.TreeRepertoire.ImageIndex = 6;
+            this.TreeRepertoire.Location = new System.Drawing.Point(3, 3);
+            this.TreeRepertoire.Name = "TreeRepertoire";
+            this.TreeRepertoire.SelectedImageIndex = 0;
+            this.TreeRepertoire.Size = new System.Drawing.Size(131, 382);
+            this.TreeRepertoire.TabIndex = 3;
+            // 
             // lvFichiers
             // 
             this.lvFichiers.ActiverCouleurAlternee = true;
@@ -200,6 +165,16 @@ namespace Explorip.Forms
             this.lvFichiers.Size = new System.Drawing.Size(266, 382);
             this.lvFichiers.TabIndex = 0;
             this.lvFichiers.UseCompatibleStateImageBehavior = false;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 23);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(425, 400);
+            this.tabPage3.TabIndex = 1;
+            this.tabPage3.Text = "tabPage3";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // filRipTabControl2
             // 
@@ -253,7 +228,6 @@ namespace Explorip.Forms
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMain";
             this.Text = "Explorateur de fichier";
-            this.cmsMonMenu.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -271,11 +245,7 @@ namespace Explorip.Forms
 
         #endregion
 
-        private System.Windows.Forms.ImageList imgMain;
-        private System.Windows.Forms.TreeView TreeRepertoire;
-        private System.Windows.Forms.ContextMenuStrip cmsMonMenu;
-        private System.Windows.Forms.ToolStripMenuItem monMenuToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private ComposantsWinForm.DirectoryTreeView TreeRepertoire;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private ComposantsWinForm.FilRipTabControl.FilRipTabControl filRipTabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -283,6 +253,7 @@ namespace Explorip.Forms
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private ComposantsWinForm.FichiersListView lvFichiers;
+        private System.Windows.Forms.TabPage tabPage3;
     }
 }
 

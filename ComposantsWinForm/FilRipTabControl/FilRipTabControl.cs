@@ -1251,9 +1251,9 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
             using (Pen borderPen = new Pen(borderColor))
             {
-                if (TabCount > 0)
+                if (index == 0)
                 {
-                    path.AddLine(new PointF(Left, Top), new PointF(Left, Top + GetTabRect(0).Height));
+                    path.AddLine(new PointF(Margin.Left, Margin.Top), new PointF(Margin.Left, Margin.Top + GetTabRect(0).Height));
                 }
                 graphics.DrawPath(borderPen, path);
             }

@@ -130,6 +130,10 @@
     <Compile Include="ComposantsWinForm\ContextMenu\FilRipToolStripSeparator.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ComposantsWinForm\TabExplorer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
     <Compile Include="Helpers\ExtensionsDossiers.cs" />
     <Compile Include="Helpers\ExtensionsFichiers.cs" />
@@ -172,6 +176,9 @@
     <Compile Include="WinAPI\Ntdll.cs" />
     <Compile Include="WinAPI\Shlwapi.cs" />
     <Compile Include="WinAPI\User32.cs" />
+    <EmbeddedResource Include="ComposantsWinForm\FichiersListView.resx">
+      <DependentUpon>FichiersListView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormTaskBar.resx">
       <DependentUpon>FormTaskBar.cs</DependentUpon>
     </EmbeddedResource>

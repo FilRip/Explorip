@@ -1,4 +1,6 @@
 ﻿using Explorip.WinAPI;
+using Explorip.WinAPI.Modeles;
+
 using System;
 using System.Text;
 
@@ -38,6 +40,40 @@ namespace Explorip.Localization
             else
             {
                 return DefaultText;
+            }
+        }
+
+        public static string Localized(this Environment.SpecialFolder specialFolder)
+        {
+            string chemin = Environment.GetFolderPath(specialFolder);
+            try
+            {
+                if (specialFolder == Environment.SpecialFolder.MyComputer)
+                {
+                    IntPtr Pidl = IntPtr.Zero;
+                    Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref Pidl);
+                    SHFILEINFO info = new SHFILEINFO();
+                    if (Shell32.SHGetFileInfo(Pidl, Shell32.FILE_ATTRIBUTE.NULL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), Shell32.SHGFI.TYPENAME | Shell32.SHGFI.PIDL | Shell32.SHGFI.DISPLAYNAME) != IntPtr.Zero)
+                    {
+                        return info.szDisplayName;
+                    }
+                    else
+                        throw new Exception();
+                }
+                else
+                {
+                    SHFILEINFO info = new SHFILEINFO();
+                    if (Shell32.SHGetFileInfo(chemin, Shell32.FILE_ATTRIBUTE.NORMAL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), Shell32.SHGFI.DISPLAYNAME) != IntPtr.Zero)
+                    {
+                        return info.szDisplayName;
+                    }
+                    else
+                        throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                return System.IO.Path.GetFileName(chemin);
             }
         }
     }

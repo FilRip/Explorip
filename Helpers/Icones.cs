@@ -13,19 +13,24 @@ namespace Explorip.Helpers
         /// <param name="name">Path to file.</param>
         /// <param name="linkOverlay">Link Overlay</param>
         /// <returns>Icon</returns>
-        public static Icon GetFileIcon(string name, bool linkOverlay, bool repertoire, bool othersOverlay)
+        public static Icon GetFileIcon(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
         {
             SHFILEINFO shfi = new SHFILEINFO();
-            Shell32.SHGFI flags = Shell32.SHGFI.ICON | Shell32.SHGFI.USEFILEATTRIBUTES;
+            Shell32.SHGFI flags = Shell32.SHGFI.ICON/* | Shell32.SHGFI.USEFILEATTRIBUTES*/;
 
             if (linkOverlay) flags |= Shell32.SHGFI.LINKOVERLAY;
-            flags |= Shell32.SHGFI.SMALLICON;
+
+            if (petiteIcone)
+                flags |= Shell32.SHGFI.SMALLICON;
+            else
+                flags |= Shell32.SHGFI.LARGEICON;
+
             if (othersOverlay)
                 flags |= Shell32.SHGFI.ADDOVERLAYS;
 
-            uint attribut = Shell32.FILE_ATTRIBUTE_NORMAL;
+            Shell32.FILE_ATTRIBUTE attribut = Shell32.FILE_ATTRIBUTE.NORMAL;
             if (repertoire)
-                attribut = Shell32.FILE_ATTRIBUTE_DIRECTORY;
+                attribut = Shell32.FILE_ATTRIBUTE.DIRECTORY;
 
             Shell32.SHGetFileInfo(name,
                 attribut,
@@ -37,7 +42,7 @@ namespace Explorip.Helpers
             // Copy (clone) the returned icon to a new object, thus allowing us 
             // to call DestroyIcon immediately
             Icon icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
-            WinAPI.User32.DestroyIcon(shfi.hIcon); // Cleanup
+            User32.DestroyIcon(shfi.hIcon); // Cleanup
             return icon;
         }
     }

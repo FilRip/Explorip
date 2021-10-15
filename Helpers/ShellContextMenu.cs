@@ -11,6 +11,10 @@ using Explorip.Exceptions;
 
 namespace Explorip.Helpers
 {
+    // TODO : Ouvrir avec : https://social.msdn.microsoft.com/Forums/en-US/d513e241-8f7e-419c-b87f-0b653abb3d83/translate?forum=Offtopic
+    // TODO : Nouveau fichier/dossier : https://social.msdn.microsoft.com/Forums/vstudio/en-US/5732ce0a-29d8-4e73-ae25-5789e20e9c24/display-file-explorers-new-item-menu-in-a-barsubitem?forum=csharpgeneral
+    // TODO : Clique droit dans une zone vide
+
     public class ShellContextMenu : NativeWindow
     {
         #region Constructor
@@ -459,64 +463,6 @@ namespace Explorip.Helpers
         }
         #endregion
 
-        /*#region InvokeContextMenuDefault
-        private void InvokeContextMenuDefault(FileInfo[] arrFI)
-        {
-            // Release all resources first.
-            ReleaseAll();
-
-            IntPtr pMenu = IntPtr.Zero,
-                iContextMenuPtr = IntPtr.Zero;
-
-            try
-            {
-                _arrPIDLs = GetPIDLs(arrFI);
-                if (null == _arrPIDLs)
-                {
-                    ReleaseAll();
-                    return;
-                }
-
-                if (false == GetContextMenuInterfaces(_oParentFolder, _arrPIDLs, out iContextMenuPtr))
-                {
-                    ReleaseAll();
-                    return;
-                }
-
-                pMenu = CreatePopupMenu();
-
-                int nResult = _oContextMenu.QueryContextMenu(
-                    pMenu,
-                    0,
-                    CMD_FIRST,
-                    CMD_LAST,
-                    CMF.DEFAULTONLY |
-                    ((Control.ModifierKeys & Keys.Shift) != 0 ? CMF.EXTENDEDVERBS : 0));
-
-                uint nDefaultCmd = (uint)GetMenuDefaultItem(pMenu, false, 0);
-                if (nDefaultCmd >= CMD_FIRST)
-                {
-                    InvokeCommand(_oContextMenu, nDefaultCmd, arrFI[0].DirectoryName, Control.MousePosition);
-                }
-
-                DestroyMenu(pMenu);
-                pMenu = IntPtr.Zero;
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                if (pMenu != IntPtr.Zero)
-                {
-                    DestroyMenu(pMenu);
-                }
-                ReleaseAll();
-            }
-        }
-        #endregion*/
-
         #region ShowContextMenu()
 
         /// <summary>
@@ -563,18 +509,13 @@ namespace Explorip.Helpers
             {
                 _positionSouris = pointScreen;
 
-                //_arrPIDLs = GetPIDLs(arrFI);
-                // todo, cleanup ?
-                /*if (cms != null)
-                    CleanUp();*/
-
-                if (null == _arrPIDLs)
+                if (_arrPIDLs == null)
                 {
                     ReleaseAll();
                     return;
                 }
 
-                if (false == GetContextMenuInterfaces(_oParentFolder, _arrPIDLs, out iContextMenuPtr))
+                if (!GetContextMenuInterfaces(_oParentFolder, _arrPIDLs, out iContextMenuPtr))
                 {
                     ReleaseAll();
                     return;

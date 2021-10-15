@@ -11,5 +11,10 @@ namespace Explorip.Helpers
             else
                 return false;
         }
+
+        public static string Repertoire(this System.Environment.SpecialFolder specialFolder)
+        {
+            return System.Environment.GetFolderPath(specialFolder);
+        }
     }
 }

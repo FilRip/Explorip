@@ -155,7 +155,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
         private void ConstruireMenuColonnes(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right) return;
-            if (!_addMenuShowColumns) return;
+            if (!_addMenuShowColumns || Columns.Count == 0) return;
 
             if (ContextMenuStrip == null)
                 ContextMenuStrip = new ContextMenuStrip();

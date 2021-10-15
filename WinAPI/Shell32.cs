@@ -27,14 +27,18 @@ namespace Explorip.WinAPI
             SHAREABLE = 0x8000,
         }
 
-        public const uint FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
-        public const uint FILE_ATTRIBUTE_NORMAL = 0x00000080;
+        public enum FILE_ATTRIBUTE : uint
+        {
+            NULL = 0x0000000,
+            NORMAL = 0x00000080,
+            DIRECTORY = 0x00000010,
+        }
 
         [DllImport("Shell32.dll")]
-        public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
+        public static extern IntPtr SHGetFileInfo(string pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
 
         [DllImport("Shell32.dll")]
-        public static extern IntPtr SHGetFileInfo(IntPtr pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
+        public static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
 
         [DllImport("shell32.dll")]
         public static extern int SHGetDesktopFolder(out IntPtr ppshf);
