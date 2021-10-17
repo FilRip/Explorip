@@ -10,5 +10,11 @@ namespace Explorip.WinAPI
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool GetExitCodeProcess(IntPtr hProcess, out uint lpExitCode);
+
+        [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPTStr)] string lpFileName);
+
+        [DllImport("Kernel32.dll", SetLastError = true)]
+        public static extern bool FreeLibrary(IntPtr hModule);
     }
 }

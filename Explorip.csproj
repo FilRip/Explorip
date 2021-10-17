@@ -16,6 +16,8 @@
     <OldToolsVersion>2.0</OldToolsVersion>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -63,47 +65,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ManagedShell, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.AppBar, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.AppBar.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.Common, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.Interop, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.Interop.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.ShellFolders, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.ShellFolders.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.UWPInterop, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.UWPInterop.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.WindowsTasks, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.WindowsTasks.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.WindowsTray, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.WindowsTray.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.OleDb, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Data.OleDb.5.0.0\lib\net461\System.Data.OleDb.dll</HintPath>
-    </Reference>
     <Reference Include="System.Design" />
-    <Reference Include="System.Diagnostics.EventLog, Version=5.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.Diagnostics.EventLog.5.0.1\lib\net461\System.Diagnostics.EventLog.dll</HintPath>
-    </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Security.Principal.Windows, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.Security.Principal.Windows.5.0.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
-    </Reference>
     <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.ServiceProcess.ServiceController, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\System.ServiceProcess.ServiceController.5.0.0\lib\net461\System.ServiceProcess.ServiceController.dll</HintPath>
-    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -198,7 +164,6 @@
     </Compile>
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

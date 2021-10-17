@@ -64,11 +64,7 @@ namespace Explorip.ComposantsWinForm
                 Nodes.Add(_noeudMyComputer);
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
-                    Icon iconeLecteur = Icones.GetFileIcon(drive.Name, false, true, false, true);
-                    Bitmap imageIcone = iconeLecteur.ToBitmap();
-                    iconeLecteur.Dispose();
-                    imageIcone.MakeTransparent();
-                    _listeIcones.Images.Add(imageIcone);
+                    _listeIcones.Images.Add(Icones.GetIcone(drive.Name, false, true, false, true));
                     TreeNode driveNode = new TreeNode(drive.Name)
                     {
                         Name = drive.Name,
@@ -82,7 +78,7 @@ namespace Explorip.ComposantsWinForm
             }
             else
             {
-                // TODO : Initialise un répertoire en ouvrant tous les parents
+                RafraichirRepertoire(new DirectoryInfo(path));
             }
         }
 
@@ -149,7 +145,7 @@ namespace Explorip.ComposantsWinForm
                 {
                     Name = dirI.Name
                 };
-                _listeIcones.Images.Add(Icones.GetFileIcon(dirI.FullName, dirI.IsShortcut(), true, true, true));
+                _listeIcones.Images.Add(Icones.GetIcone(dirI.FullName, dirI.IsShortcut(), true, true, true));
                 int imgIndex = _listeIcones.Images.Count - 1;
                 node.ImageIndex = imgIndex;
                 node.SelectedImageIndex = imgIndex;
@@ -201,10 +197,11 @@ namespace Explorip.ComposantsWinForm
             return path;
         }
 
-        public void RafraichirRepertoire(string chemin)
+        public void RafraichirRepertoire(DirectoryInfo directoryInfo)
         {
             // TODO : RafraichirRepertoire (apres suppression, ajout, renommer, etc...)
-            if (!string.IsNullOrWhiteSpace(chemin))
+            // TODO : Initialise un répertoire en ouvrant tous les parents
+            if (directoryInfo != null)
             {
             }
         }

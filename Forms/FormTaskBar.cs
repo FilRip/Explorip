@@ -3,6 +3,7 @@ using Explorip.WinAPI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -44,7 +45,7 @@ namespace Explorip.Forms
                 if ((p.MainWindowHandle != IntPtr.Zero) && (!string.IsNullOrWhiteSpace(p.MainWindowTitle)) && (p.Responding) && (User32.IsWindowVisible(p.MainWindowHandle)))
                 {
                     lvTaches.Items.Add($"({p.Id}) {p.ProcessName} | {p.MainWindowTitle} | NomModule={p.MainModule.ModuleName}");
-                    lvTaches.SmallImageList.Images.Add(Icones.GetFileIcon(p.MainModule.FileName, false, false, false, false));
+                    lvTaches.SmallImageList.Images.Add(Icones.GetIcone(p.MainModule.FileName, false, false, false, false));
                     lvTaches.Items[lvTaches.Items.Count - 1].ImageIndex = lvTaches.SmallImageList.Images.Count - 1;
                 }
             }

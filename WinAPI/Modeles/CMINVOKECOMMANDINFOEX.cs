@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Explorip.WinAPI.Modeles
 {
     [Flags()]
-    public enum SW
+    public enum SW : int
     {
         HIDE = 0,
         SHOWNORMAL = 1,

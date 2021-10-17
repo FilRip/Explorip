@@ -12,8 +12,6 @@ using Explorip.Exceptions;
 namespace Explorip.Helpers
 {
     // TODO : Ouvrir avec : https://social.msdn.microsoft.com/Forums/en-US/d513e241-8f7e-419c-b87f-0b653abb3d83/translate?forum=Offtopic
-    // TODO : Nouveau fichier/dossier : https://social.msdn.microsoft.com/Forums/vstudio/en-US/5732ce0a-29d8-4e73-ae25-5789e20e9c24/display-file-explorers-new-item-menu-in-a-barsubitem?forum=csharpgeneral
-    // TODO : Clique droit dans une zone vide
 
     public class ShellContextMenu : NativeWindow
     {
@@ -50,7 +48,7 @@ namespace Explorip.Helpers
                 IntPtr.Zero,
                 out ctxMenuPtr);
 
-            if (S_OK == nResult)
+            if (nResult == S_OK)
             {
                 _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
 
@@ -213,7 +211,7 @@ namespace Explorip.Helpers
             {
                 // Get desktop IShellFolder
                 int nResult = Shell32.SHGetDesktopFolder(out IntPtr pUnkownDesktopFolder);
-                if (S_OK != nResult)
+                if (nResult != S_OK)
                 {
                     throw new ShellContextMenuException("Failed to get the desktop shell folder");
                 }
@@ -247,7 +245,7 @@ namespace Explorip.Helpers
 
                     // Get the PIDL for the folder file is in
                     int nResult = oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
-                    if (S_OK != nResult)
+                    if (nResult != S_OK)
                     {
                         return null;
                     }
@@ -264,7 +262,7 @@ namespace Explorip.Helpers
                     nResult = oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref IID_IShellFolder, out IntPtr pUnknownParentFolder);
                     // Free the PIDL first
                     Marshal.FreeCoTaskMem(pPIDL);
-                    if (S_OK != nResult)
+                    if (nResult != S_OK)
                     {
                         return null;
                     }
@@ -380,7 +378,7 @@ namespace Explorip.Helpers
                 SFGAO pdwAttributes = 0;
                 IntPtr pPIDL = IntPtr.Zero;
                 int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out pPIDL, ref pdwAttributes);
-                if (S_OK != nResult)
+                if (nResult != S_OK)
                 {
                     FreePIDLs(arrPIDLs);
                     return null;
@@ -427,7 +425,7 @@ namespace Explorip.Helpers
                 SFGAO pdwAttributes = 0;
                 IntPtr pPIDL = IntPtr.Zero;
                 int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out pPIDL, ref pdwAttributes);
-                if (S_OK != nResult)
+                if (nResult != S_OK)
                 {
                     Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref pPIDL);
                 }

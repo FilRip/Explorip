@@ -38,12 +38,18 @@ namespace Explorip.Helpers
                 (uint)System.Runtime.InteropServices.Marshal.SizeOf(shfi),
                 flags);
 
-
-            // Copy (clone) the returned icon to a new object, thus allowing us 
-            // to call DestroyIcon immediately
             Icon icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
             User32.DestroyIcon(shfi.hIcon); // Cleanup
             return icon;
+        }
+
+        public static Bitmap GetIcone(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
+        {
+            Icon icone = GetFileIcon(name, linkOverlay, repertoire, othersOverlay, petiteIcone);
+            Bitmap image = icone.ToBitmap();
+            icone.Dispose();
+            image.MakeTransparent(Color.Black);
+            return image;
         }
     }
 }
