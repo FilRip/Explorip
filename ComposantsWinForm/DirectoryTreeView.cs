@@ -100,8 +100,15 @@ namespace Explorip.ComposantsWinForm
                     if (_liensFichiers != null) _liensFichiers.Rafraichir(dirInfo);
                     if (!e.Node.IsExpanded)
                     {
-                        if (dirInfo.GetDirectories().Length == 0)
+                        try
+                        {
+                            if (dirInfo.GetDirectories().Length == 0)
+                                throw new Exception("Répertoire vide");
+                        }
+                        catch (Exception)
+                        {
                             e.Node.Nodes.Clear();
+                        }
                     }
                 }
             }

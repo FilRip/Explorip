@@ -105,6 +105,8 @@
     <Compile Include="Helpers\ExtensionsFichiers.cs" />
     <Compile Include="Helpers\ExtensionsProcess.cs" />
     <Compile Include="Helpers\ExtensionsWindows.cs" />
+    <Compile Include="Helpers\PopUpMenuExtensions.cs" />
+    <Compile Include="Helpers\ShellContextMenuFolder.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
     <Compile Include="Forms\FormTaskBar.cs">
@@ -123,6 +125,7 @@
     <Compile Include="Localization\GestionString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WinAPI\Commun.cs" />
     <Compile Include="WinAPI\Dwmapi.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
     <Compile Include="WinAPI\Modeles\BROWSEINFO.cs" />

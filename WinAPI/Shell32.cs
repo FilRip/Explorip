@@ -125,5 +125,11 @@ namespace Explorip.WinAPI
 
         [DllImport("shell32.dll", SetLastError = true)]
         public static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, CSIDL nFolder, ref IntPtr ppidl);
+
+        [DllImport("Shell32.dll", SetLastError = true)]
+        public static extern IntPtr ILCreateFromPath([MarshalAs(UnmanagedType.LPWStr)] string pszPath);
+
+        [DllImport("Shell32.dll", SetLastError = true)]
+        public static extern void ILFree(IntPtr pidl);
     }
 }
