@@ -1,18 +1,13 @@
 ﻿using Explorip.WinAPI;
 using Explorip.WinAPI.Modeles;
 
+using System;
 using System.Drawing;
 
 namespace Explorip.Helpers
 {
     internal class Icones
     {
-        /// <summary>
-        /// Gets the Shell Icon for the given file...
-        /// </summary>
-        /// <param name="name">Path to file.</param>
-        /// <param name="linkOverlay">Link Overlay</param>
-        /// <returns>Icon</returns>
         public static Icon GetFileIcon(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
         {
             SHFILEINFO shfi = new SHFILEINFO();
@@ -46,6 +41,30 @@ namespace Explorip.Helpers
         public static Bitmap GetIcone(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
         {
             Icon icone = GetFileIcon(name, linkOverlay, repertoire, othersOverlay, petiteIcone);
+            Bitmap image = icone.ToBitmap();
+            icone.Dispose();
+            image.MakeTransparent(Color.Black);
+            return image;
+        }
+
+        public static Icon GetFileIcon(IntPtr pidl)
+        {
+            SHFILEINFO shfi = new SHFILEINFO();
+
+            Shell32.SHGetFileInfo(pidl,
+                0,
+                ref shfi,
+                (uint)System.Runtime.InteropServices.Marshal.SizeOf(shfi),
+                (Shell32.SHGFI.PIDL | Shell32.SHGFI.DISPLAYNAME | Shell32.SHGFI.ICON | Shell32.SHGFI.SMALLICON));
+
+            Icon icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
+            User32.DestroyIcon(shfi.hIcon); // Cleanup
+            return icon;
+        }
+
+        public static Bitmap GetIcone(IntPtr pidl)
+        {
+            Icon icone = GetFileIcon(pidl);
             Bitmap image = icone.ToBitmap();
             icone.Dispose();
             image.MakeTransparent(Color.Black);

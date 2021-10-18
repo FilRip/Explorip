@@ -7,6 +7,7 @@ using Explorip.ExploripEventArgs;
 using Explorip.Helpers;
 using Explorip.Localization;
 using Explorip.Sorters;
+using Explorip.WinAPI;
 
 namespace Explorip.ComposantsWinForm
 {
@@ -63,6 +64,10 @@ namespace Explorip.ComposantsWinForm
                 {
                     Name = "My Computer"
                 };
+                IntPtr tempPidl = IntPtr.Zero;
+                Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref tempPidl);
+                _listeIcones.Images.Add(Icones.GetIcone(tempPidl));
+                _noeudMyComputer.ImageIndex = _listeIcones.Images.Count - 1;
                 Nodes.Add(_noeudMyComputer);
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
