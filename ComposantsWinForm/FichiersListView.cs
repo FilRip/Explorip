@@ -134,8 +134,7 @@ namespace Explorip.ComposantsWinForm
                 }
                 else
                 {
-                    // TODO : Nouveau fichier/dossier : https://social.msdn.microsoft.com/Forums/vstudio/en-US/5732ce0a-29d8-4e73-ae25-5789e20e9c24/display-file-explorers-new-item-menu-in-a-barsubitem?forum=csharpgeneral
-                    // TODO : Clique droit dans une zone vide
+                    // TODO : Coller (fichier/dossier) (précédemment Copier)
                     ShellContextMenuFolder ctxMnu = new ShellContextMenuFolder();
                     ctxMnu.ShowContextMenu(_repCourant.FullName, PointToScreen(new Point(e.X, e.Y)), _cms);
                 }

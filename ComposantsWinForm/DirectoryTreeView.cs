@@ -49,7 +49,7 @@ namespace Explorip.ComposantsWinForm
         {
             if (path == "Desktop")
             {
-                // TODO : Nom localisé des répertoires connus, voir https://github.com/aybe/Windows-API-Code-Pack-1.1
+                // voir https://github.com/aybe/Windows-API-Code-Pack-1.1
                 TreeNode rootDesktop = new TreeNode(Environment.SpecialFolder.Desktop.Localized(), 2, 2);
                 Nodes.Add(rootDesktop);
                 rootDesktop.Name = "Desktop";
