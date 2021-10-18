@@ -89,7 +89,7 @@ namespace Explorip.Helpers
                                 {
                                     cms.Items.Clear();
                                     PopUpMenuExtensions.EtendreSousMenuPopUpFolder(hMenu, pContextMenu2);
-                                    PopUpMenuExtensions.CopierVersCms(cms, null, hMenu, menuAAjouter_Click);
+                                    PopUpMenuExtensions.CopierVersCms(cms, null, hMenu, MenuAAjouter_Click);
                                     cms.Show(pointScreeen);
                                     return;
                                 }
@@ -104,7 +104,7 @@ namespace Explorip.Helpers
             }
         }
 
-        private void menuAAjouter_Click(object sender, EventArgs e)
+        private void MenuAAjouter_Click(object sender, EventArgs e)
         {
             try
             {

@@ -53,6 +53,8 @@ namespace Explorip.ComposantsWinForm
                 Nodes.Add(rootDesktop);
                 rootDesktop.Name = "Desktop";
                 rootDesktop.Tag = new DirectoryInfo(Environment.SpecialFolder.Desktop.Repertoire());
+                _listeIcones.Images.Add(Icones.GetIcone(Environment.SpecialFolder.Desktop.Repertoire(), false, true, false, true));
+                rootDesktop.ImageIndex = _listeIcones.Images.Count - 1;
                 if ((Directory.GetFiles(Environment.SpecialFolder.Desktop.Repertoire()).Length > 0) || (Directory.GetDirectories(Environment.SpecialFolder.Desktop.Repertoire()).Length > 0))
                 {
                     rootDesktop.Nodes.Add("");
