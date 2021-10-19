@@ -57,6 +57,8 @@ namespace Explorip.ComposantsWinForm
             }
         }
 
+        // TODO : RafraichirRepertoire (apres suppression, ajout, renommer, etc...)
+
         public DirectoryTreeView LiensRepertoires
         {
             get { return _liensRepertoire; }
@@ -136,7 +138,8 @@ namespace Explorip.ComposantsWinForm
                 {
                     // TODO : Coller (fichier/dossier) (précédemment Copier)
                     ShellContextMenuFolder ctxMnu = new ShellContextMenuFolder();
-                    ctxMnu.ShowContextMenu(_repCourant.FullName, PointToScreen(new Point(e.X, e.Y)), _cms);
+                    if (_repCourant != null)
+                        ctxMnu.ShowContextMenu(_repCourant.FullName, PointToScreen(new Point(e.X, e.Y)), _cms);
                 }
             }
         }

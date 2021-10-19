@@ -10,6 +10,21 @@ namespace Explorip.WinAPI
         public const int MAX_PATH = 256;
 
         [Flags()]
+        public enum KnownFolderFlags : uint
+        {
+            SimpleIDList = 0x00000100,
+            NotParentRelative = 0x00000200,
+            DefaultPath = 0x00000400,
+            Init = 0x00000800,
+            NoAlias = 0x00001000,
+            DontUnexpand = 0x00002000,
+            DontVerify = 0x00004000,
+            Create = 0x00008000,
+            NoAppcontainerRedirection = 0x00010000,
+            AliasOnly = 0x80000000
+        }
+
+        [Flags()]
         public enum BIF : uint
         {
             RETURNONLYFSDIRS = 0x0001,
@@ -42,6 +57,9 @@ namespace Explorip.WinAPI
 
         [DllImport("shell32.dll")]
         public static extern int SHGetDesktopFolder(out IntPtr ppshf);
+
+        [DllImport("Shell32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        public static extern int SHGetDesktopFolder(out IShellFolder ppshf);
 
         public enum CSIDL
         {
@@ -131,5 +149,11 @@ namespace Explorip.WinAPI
 
         [DllImport("Shell32.dll", SetLastError = true)]
         public static extern void ILFree(IntPtr pidl);
+
+        [DllImport("shell32.dll")]
+        public static extern int SHGetFolderLocation(IntPtr hwndOwner, CSIDL nFolder, IntPtr hToken, uint dwReserved, out IntPtr ppidl);
+
+        [DllImport("shell32.dll")]
+        public extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolderFlags flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
     }
 }

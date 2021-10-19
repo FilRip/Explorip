@@ -137,11 +137,14 @@
     <Compile Include="WinAPI\Modeles\IShellFolder.cs" />
     <Compile Include="WinAPI\Modeles\LocalWindowsHook.cs" />
     <Compile Include="WinAPI\Modeles\MENUITEMINFO.cs" />
+    <Compile Include="WinAPI\Modeles\NETRESOURCE.cs" />
     <Compile Include="WinAPI\Modeles\POINT.cs" />
     <Compile Include="WinAPI\Modeles\PROCESS_BASIC_INFORMATION.cs" />
     <Compile Include="WinAPI\Modeles\SHFILEINFO.cs" />
     <Compile Include="WinAPI\Modeles\SHITEMID.cs" />
+    <Compile Include="WinAPI\Modeles\UNIVERSAL_NAME_INFO.cs" />
     <Compile Include="WinAPI\Modeles\WINDOWPLACEMENT.cs" />
+    <Compile Include="WinAPI\Mpr.cs" />
     <Compile Include="WinAPI\Ntdll.cs" />
     <Compile Include="WinAPI\Shlwapi.cs" />
     <Compile Include="WinAPI\User32.cs" />

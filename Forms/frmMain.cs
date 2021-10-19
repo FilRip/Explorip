@@ -12,8 +12,9 @@ namespace Explorip.Forms
 
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
                 WindowsSettings.UseImmersiveDarkMode(Handle, true);
-            TreeRepertoire.Init("Desktop");
+            TreeRepertoire.Init("My Computer");
             TreeRepertoire.LiensFichiers = lvFichiers;
+            lvFichiers.LiensRepertoires = TreeRepertoire;
         }
     }
 }

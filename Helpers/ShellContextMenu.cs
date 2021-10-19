@@ -15,6 +15,34 @@ namespace Explorip.Helpers
 
     public class ShellContextMenu : NativeWindow
     {
+        #region Champs
+
+        private IntPtr pMenu = IntPtr.Zero,
+            iContextMenuPtr = IntPtr.Zero,
+            iContextMenuPtr2 = IntPtr.Zero,
+            iContextMenuPtr3 = IntPtr.Zero;
+        private IContextMenu _oContextMenu;
+        private IContextMenu2 _oContextMenu2;
+        private IContextMenu3 _oContextMenu3;
+        private IShellFolder _oDesktopFolder;
+        private IShellFolder _oParentFolder;
+        private IntPtr[] _arrPIDLs;
+        private string _strParentFolder;
+        private const int MAX_PATH = 260;
+        private const uint CMD_FIRST = 1;
+        private const uint CMD_LAST = 30000;
+
+        private static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CMINVOKECOMMANDINFOEX));
+
+        private Point _positionSouris;
+
+        private static Guid IID_IShellFolder = new Guid("{000214E6-0000-0000-C000-000000000046}");
+        private static Guid IID_IContextMenu = new Guid("{000214e4-0000-0000-c000-000000000046}");
+        private static Guid IID_IContextMenu2 = new Guid("{000214f4-0000-0000-c000-000000000046}");
+        private static Guid IID_IContextMenu3 = new Guid("{bcfce0a0-ec17-11d0-8d10-00a0c90f2719}");
+
+        #endregion
+
         #region Constructor
         /// <summary>Default constructor</summary>
         public ShellContextMenu()
@@ -51,18 +79,6 @@ namespace Explorip.Helpers
             if (nResult == (int)Commun.HRESULT.S_OK)
             {
                 _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
-
-                /*IntPtr pUnknownContextMenu2 = IntPtr.Zero;
-                if (S_OK == Marshal.QueryInterface(pUnknownContextMenu, ref IID_IContextMenu2, out pUnknownContextMenu2))
-                {
-                    _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(pUnknownContextMenu2, typeof(IContextMenu2));
-                }
-                IntPtr pUnknownContextMenu3 = IntPtr.Zero;
-                if (S_OK == Marshal.QueryInterface(pUnknownContextMenu, ref IID_IContextMenu3, out pUnknownContextMenu3))
-                {
-                    _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(pUnknownContextMenu3, typeof(IContextMenu3));
-                }*/
-
                 return true;
             }
             else
@@ -76,41 +92,8 @@ namespace Explorip.Helpers
 
         #region Override
 
-        /// <summary>
-        /// This method receives WindowMessages. It will make the "Open With" and "Send To" work 
-        /// by calling HandleMenuMsg and HandleMenuMsg2. It will also call the OnContextMenuMouseHover 
-        /// method of Browser when hovering over a ContextMenu item.
-        /// </summary>
-        /// <param name="m">the Message of the Browser's WndProc</param>
-        /// <returns>true if the message has been handled, false otherwise</returns>
         protected override void WndProc(ref Message m)
         {
-            #region IContextMenu
-
-            if (_oContextMenu != null &&
-                m.Msg == (int)Commun.WM.MENUSELECT &&
-                ((int)ShellHelper.HiWord(m.WParam) & (int)MFT.SEPARATOR) == 0 &&
-                ((int)ShellHelper.HiWord(m.WParam) & (int)MFT.POPUP) == 0)
-            {
-                //string info = string.Empty;
-
-                /*if (ShellHelper.LoWord(m.WParam) == (int)CMD_CUSTOM.ExpandCollapse)
-                    info = "Expands or collapses the current selected item";
-                else
-                {
-                    info = "";/* ContextMenuHelper.GetCommandString(
-                         _oContextMenu,
-                         ShellHelper.LoWord(m.WParam) - CMD_FIRST,
-                         false);*/
-                //}
-
-                //br.OnContextMenuMouseHover(new ContextMenuMouseHoverEventArgs(info.ToString()));
-            }
-
-            #endregion
-
-            #region IContextMenu2
-
             if (_oContextMenu2 != null &&
                 (m.Msg == (int)Commun.WM.INITMENUPOPUP ||
                  m.Msg == (int)Commun.WM.MEASUREITEM ||
@@ -121,10 +104,6 @@ namespace Explorip.Helpers
                     return;
             }
 
-            #endregion
-
-            #region IContextMenu3
-
             if (_oContextMenu3 != null &&
                 m.Msg == (int)Commun.WM.MENUCHAR)
             {
@@ -132,8 +111,6 @@ namespace Explorip.Helpers
                     (uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == (int)Commun.HRESULT.S_OK)
                     return;
             }
-
-            #endregion
 
             base.WndProc(ref m);
         }
@@ -207,14 +184,13 @@ namespace Explorip.Helpers
         /// <returns>IShellFolder for desktop folder</returns>
         private IShellFolder GetDesktopFolder()
         {
-            if (null == _oDesktopFolder)
+            if (_oDesktopFolder == null)
             {
                 // Get desktop IShellFolder
                 int nResult = Shell32.SHGetDesktopFolder(out IntPtr pUnkownDesktopFolder);
                 if (nResult != (int)Commun.HRESULT.S_OK)
-                {
                     throw new ShellContextMenuException("Failed to get the desktop shell folder");
-                }
+
                 _oDesktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnkownDesktopFolder, typeof(IShellFolder));
             }
 
@@ -232,13 +208,11 @@ namespace Explorip.Helpers
         {
             if (!string.IsNullOrWhiteSpace(folderName))
             {
-                if (null == _oParentFolder)
+                if (_oParentFolder == null)
                 {
                     IShellFolder oDesktopFolder = GetDesktopFolder();
-                    if (null == oDesktopFolder)
-                    {
+                    if (oDesktopFolder == null)
                         return null;
-                    }
 
                     uint pchEaten = 0;
                     SFGAO pdwAttributes = 0;
@@ -246,9 +220,7 @@ namespace Explorip.Helpers
                     // Get the PIDL for the folder file is in
                     int nResult = oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                     if (nResult != (int)Commun.HRESULT.S_OK)
-                    {
                         return null;
-                    }
 
                     IntPtr pStrRet = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
                     Marshal.WriteInt32(pStrRet, 0, 0);
@@ -263,18 +235,15 @@ namespace Explorip.Helpers
                     // Free the PIDL first
                     Marshal.FreeCoTaskMem(pPIDL);
                     if (nResult != (int)Commun.HRESULT.S_OK)
-                    {
                         return null;
-                    }
+
                     _oParentFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnknownParentFolder, typeof(IShellFolder));
                 }
             }
             else
             {
                 if (desktopParent)
-                {
                     _oParentFolder = GetDesktopFolder();
-                }
                 else
                 {
                     IntPtr folderEnumPtr = IntPtr.Zero;
@@ -358,16 +327,12 @@ namespace Explorip.Helpers
         /// <returns>Array of PIDLs</returns>
         protected IntPtr[] GetPIDLs(FileInfo[] arrFI)
         {
-            if (null == arrFI || 0 == arrFI.Length)
-            {
+            if (arrFI == null || arrFI.Length == 0)
                 return null;
-            }
 
             IShellFolder oParentFolder = GetParentFolder(arrFI[0].DirectoryName, false);
-            if (null == oParentFolder)
-            {
+            if (oParentFolder == null)
                 return null;
-            }
 
             IntPtr[] arrPIDLs = new IntPtr[arrFI.Length];
             int n = 0;
@@ -397,24 +362,18 @@ namespace Explorip.Helpers
         /// <returns>Array of PIDLs</returns>
         protected IntPtr[] GetPIDLs(DirectoryInfo[] arrFI)
         {
-            if (null == arrFI || 0 == arrFI.Length)
-            {
+            if (arrFI == null || arrFI.Length == 0)
                 return null;
-            }
 
             IShellFolder oParentFolder;
-            if ((arrFI[0].FullName.Length > 3) && (arrFI[0].Name != "My Computer"))
+            if ((arrFI[0].FullName.Length > 3) && (arrFI[0].Name != "My Computer") && (arrFI[0].Name != "Desktop") && (arrFI[0].Exists))
             {
                 oParentFolder = GetParentFolder(arrFI[0].Parent.FullName, false);
-                if (null == oParentFolder)
-                {
+                if (oParentFolder == null)
                     return null;
-                }
             }
             else
-            {
-                oParentFolder = GetParentFolder(null, (arrFI[0].Name == "My Computer"));
-            }
+                oParentFolder = GetParentFolder(null, (arrFI[0].Name == "My Computer" || arrFI[0].Name == "Desktop"));
 
             IntPtr[] arrPIDLs = new IntPtr[arrFI.Length];
             int n = 0;
@@ -427,7 +386,14 @@ namespace Explorip.Helpers
                 int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out pPIDL, ref pdwAttributes);
                 if (nResult != (int)Commun.HRESULT.S_OK)
                 {
-                    Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref pPIDL);
+                    if ((fi.Name=="Desktop") && (!fi.Exists))
+                    {
+                        Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DESKTOP, ref pPIDL);
+                    }
+                    else
+                    {
+                        Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref pPIDL);
+                    }
                 }
                 if (pPIDL != IntPtr.Zero)
                 {
@@ -488,13 +454,6 @@ namespace Explorip.Helpers
             _arrPIDLs = GetPIDLs(dirs);
             this.ShowContextMenu(pointScreen, cms);
         }
-
-        private IntPtr pMenu = IntPtr.Zero,
-            iContextMenuPtr = IntPtr.Zero,
-            iContextMenuPtr2 = IntPtr.Zero,
-            iContextMenuPtr3 = IntPtr.Zero;
-
-        private Point _positionSouris;
 
         /// <summary>
         /// Shows the context menu
@@ -602,36 +561,6 @@ namespace Explorip.Helpers
             uint ID = uint.Parse(((ToolStripMenuItem)sender).Tag.ToString());
             InvokeCommand(_oContextMenu, ID, _strParentFolder, _positionSouris);
         }
-
-        #region Local variabled
-        private IContextMenu _oContextMenu;
-        private IContextMenu2 _oContextMenu2;
-        private IContextMenu3 _oContextMenu3;
-        private IShellFolder _oDesktopFolder;
-        private IShellFolder _oParentFolder;
-        private IntPtr[] _arrPIDLs;
-        private string _strParentFolder;
-        #endregion
-
-        #region Variables and Constants
-
-        private const int MAX_PATH = 260;
-        private const uint CMD_FIRST = 1;
-        private const uint CMD_LAST = 30000;
-
-        private static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CMINVOKECOMMANDINFOEX));
-
-        #endregion
-
-        #region Shell GUIDs
-
-        private static Guid IID_IShellFolder = new Guid("{000214E6-0000-0000-C000-000000000046}");
-        private static Guid IID_IContextMenu = new Guid("{000214e4-0000-0000-c000-000000000046}");
-        private static Guid IID_IContextMenu2 = new Guid("{000214f4-0000-0000-c000-000000000046}");
-        private static Guid IID_IContextMenu3 = new Guid("{bcfce0a0-ec17-11d0-8d10-00a0c90f2719}");
-
-        #endregion
-
     }
 
     #region ShellHelper

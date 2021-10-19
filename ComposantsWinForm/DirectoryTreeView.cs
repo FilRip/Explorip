@@ -47,20 +47,9 @@ namespace Explorip.ComposantsWinForm
 
         public void Init(string path)
         {
-            if (path == "Desktop")
+            if (path == "My Computer")
             {
-                // voir https://github.com/aybe/Windows-API-Code-Pack-1.1
-                TreeNode rootDesktop = new TreeNode(Environment.SpecialFolder.Desktop.Localized(), 2, 2);
-                Nodes.Add(rootDesktop);
-                rootDesktop.Name = "Desktop";
-                rootDesktop.Tag = new DirectoryInfo(Environment.SpecialFolder.Desktop.Repertoire());
-                _listeIcones.Images.Add(Icones.GetIcone(Environment.SpecialFolder.Desktop.Repertoire(), false, true, false, true));
-                rootDesktop.ImageIndex = _listeIcones.Images.Count - 1;
-                if ((Directory.GetFiles(Environment.SpecialFolder.Desktop.Repertoire()).Length > 0) || (Directory.GetDirectories(Environment.SpecialFolder.Desktop.Repertoire()).Length > 0))
-                {
-                    rootDesktop.Nodes.Add("");
-                }
-                _noeudMyComputer = new TreeNode(Environment.SpecialFolder.MyComputer.Localized(), 4, 4)
+                _noeudMyComputer = new TreeNode(Environment.SpecialFolder.MyComputer.NomTraduit())
                 {
                     Name = "My Computer"
                 };
@@ -68,14 +57,50 @@ namespace Explorip.ComposantsWinForm
                 Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref tempPidl);
                 _listeIcones.Images.Add(Icones.GetIcone(tempPidl));
                 _noeudMyComputer.ImageIndex = _listeIcones.Images.Count - 1;
+                _noeudMyComputer.SelectedImageIndex = _listeIcones.Images.Count - 1;
+                _noeudMyComputer.Tag = "My Computer";
                 Nodes.Add(_noeudMyComputer);
+
+                // voir https://github.com/aybe/Windows-API-Code-Pack-1.1
+                TreeNode noeudDesktop = new TreeNode(Environment.SpecialFolder.Desktop.NomTraduit(), 2, 2);
+                _noeudMyComputer.Nodes.Add(noeudDesktop);
+                noeudDesktop.Name = "Desktop";
+                noeudDesktop.Tag = new DirectoryInfo(Environment.SpecialFolder.Desktop.Repertoire());
+                _listeIcones.Images.Add(Icones.GetIcone(Environment.SpecialFolder.Desktop.Repertoire(), false, true, false, true));
+                noeudDesktop.ImageIndex = _listeIcones.Images.Count - 1;
+                noeudDesktop.SelectedImageIndex = _listeIcones.Images.Count - 1;
+                if ((Directory.GetFiles(Environment.SpecialFolder.Desktop.Repertoire()).Length > 0) || (Directory.GetDirectories(Environment.SpecialFolder.Desktop.Repertoire()).Length > 0))
+                {
+                    noeudDesktop.Nodes.Add("");
+                }
+
+                _noeudMyComputer.Nodes.Add(Environment.SpecialFolder.MyDocuments.GetTreeNode(_listeIcones));
+                _noeudMyComputer.Nodes.Add(Environment.SpecialFolder.MyPictures.GetTreeNode(_listeIcones));
+                _noeudMyComputer.Nodes.Add(Environment.SpecialFolder.MyMusic.GetTreeNode(_listeIcones));
+                Shell32.SHGetKnownFolderPath(ref Commun.KnownFolder.Objects3D, Shell32.KnownFolderFlags.DontVerify, IntPtr.Zero, out string repertoire);
+                AjouteRepertoire(repertoire, _noeudMyComputer);
+                Shell32.SHGetKnownFolderPath(ref Commun.KnownFolder.Downloads, Shell32.KnownFolderFlags.DontVerify, IntPtr.Zero, out repertoire);
+                AjouteRepertoire(repertoire, _noeudMyComputer);
+                _noeudMyComputer.Nodes.Add(Environment.SpecialFolder.MyVideos.GetTreeNode(_listeIcones));
+
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
+                    string nomVolume = drive.VolumeLabel; ;
+                    if (drive.DriveType == DriveType.Network)
+                    {
+                        System.Text.StringBuilder remotePath = new System.Text.StringBuilder();
+                        int taille = 250;
+                        uint connRes = Mpr.WNetGetConnection(drive.Name.Substring(0,2), remotePath, ref taille);
+                        if (connRes == 0)
+                            nomVolume = remotePath.ToString();
+                    }
+
                     _listeIcones.Images.Add(Icones.GetIcone(drive.Name, false, true, false, true));
-                    TreeNode driveNode = new TreeNode(drive.Name)
+                    TreeNode driveNode = new TreeNode($"{nomVolume} ({drive.Name})")
                     {
                         Name = drive.Name,
                         ImageIndex = _listeIcones.Images.Count - 1,
+                        SelectedImageIndex = _listeIcones.Images.Count - 1,
                         Tag = new DirectoryInfo(drive.Name)
                     };
                     // drive.DriveType
@@ -87,6 +112,24 @@ namespace Explorip.ComposantsWinForm
             {
                 RafraichirRepertoire(new DirectoryInfo(path));
             }
+        }
+
+        private void AjouteRepertoire(string path, TreeNode parent)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return;
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            _listeIcones.Images.Add(Icones.GetIcone(dirInfo.FullName, false, true, false, true));
+            TreeNode nouveauNoeud;
+            nouveauNoeud = new TreeNode(dirInfo.Name)
+            {
+                Name = dirInfo.Name,
+                ImageIndex = _listeIcones.Images.Count - 1,
+                SelectedImageIndex = _listeIcones.Images.Count - 1,
+                Tag = dirInfo
+            };
+            nouveauNoeud.Nodes.Add("");
+            parent.Nodes.Add(nouveauNoeud);
         }
 
         private void TreeRepertoire_AfterExpand(object sender, TreeViewEventArgs e)
@@ -174,49 +217,45 @@ namespace Explorip.ComposantsWinForm
             }
         }
 
-        private static string GetFolderPath(TreeNode parentNode)
+        private string GetFolderPath(TreeNode parentNode)
         {
-            string path = "";
-            string[] pathSplit = parentNode.FullPath.Split('\\');
-            if (pathSplit[0] == "Desktop")
+            if (parentNode.Tag != null)
             {
-                path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\";
-                for (int a = 1; a < pathSplit.Length; a++)
+                if (parentNode.Tag.GetType() == typeof(DirectoryInfo))
                 {
-                    if (pathSplit[a].Trim() != string.Empty)
-                    {
-                        path += pathSplit[a] + "\\";
-                    }
+                    if (((DirectoryInfo)(parentNode.Tag)).FullName == Environment.SpecialFolder.Desktop.Repertoire())
+                        return "Desktop";
+                    else
+                        return ((DirectoryInfo)(parentNode.Tag)).FullName;
                 }
+                if (parentNode == _noeudMyComputer)
+                    return "My Computer";
             }
-            else if ((pathSplit.Length == 1) && (parentNode.Name == "My Computer"))
-            {
-                path = "My Computer";
-            }
-            else if ((pathSplit.Length == 1) && (parentNode.Name == "Desktop"))
-            {
-                path = Environment.SpecialFolder.Desktop.Repertoire();
-            }
-            else
-            {
-                for (int a = 1; a < pathSplit.Length; a++)
-                {
-                    if (pathSplit[a].Trim() != string.Empty)
-                    {
-                        path += pathSplit[a] + "\\";
-                    }
-                }
 
-            }
-            return path;
+            return "";
         }
 
         public void RafraichirRepertoire(DirectoryInfo directoryInfo)
         {
             // TODO : RafraichirRepertoire (apres suppression, ajout, renommer, etc...)
-            // TODO : Initialise un répertoire en ouvrant tous les parents
-            if (directoryInfo != null)
+            if ((directoryInfo != null) && (directoryInfo.Exists))
             {
+                TreeNode noeudCourant = _noeudMyComputer;
+                foreach (string rep in directoryInfo.FullName.Split('\\'))
+                {
+                    foreach (TreeNode treeNode in noeudCourant.Nodes)
+                    {
+                        if (treeNode.Tag.GetType() == typeof(DirectoryInfo))
+                        {
+                            if (((DirectoryInfo)treeNode.Tag).Name.ToLower().Trim().Trim('\\') == rep.ToLower().Trim())
+                            {
+                                treeNode.Expand();
+                                noeudCourant = treeNode;
+                            }
+                        }
+                    }
+                }
+                SelectedNode = noeudCourant;
             }
         }
     }

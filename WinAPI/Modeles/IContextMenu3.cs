@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Explorip.WinAPI.Modeles
 {
-    [ComImport(), Guid("bcfce0a0-ec17-11d0-8d10-00a0c90f2719")]
+    [ComImport()]
+    [Guid("bcfce0a0-ec17-11d0-8d10-00a0c90f2719")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IContextMenu3
     {

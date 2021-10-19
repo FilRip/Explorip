@@ -43,7 +43,7 @@ namespace Explorip.Localization
             }
         }
 
-        public static string Localized(this Environment.SpecialFolder specialFolder)
+        public static string NomTraduit(this Environment.SpecialFolder specialFolder)
         {
             string chemin = Environment.GetFolderPath(specialFolder);
             try
