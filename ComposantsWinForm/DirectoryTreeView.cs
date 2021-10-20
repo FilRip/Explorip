@@ -85,27 +85,31 @@ namespace Explorip.ComposantsWinForm
 
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
-                    string nomVolume = drive.VolumeLabel; ;
-                    if (drive.DriveType == DriveType.Network)
+                    try
                     {
-                        System.Text.StringBuilder remotePath = new System.Text.StringBuilder();
-                        int taille = 250;
-                        uint connRes = Mpr.WNetGetConnection(drive.Name.Substring(0,2), remotePath, ref taille);
-                        if (connRes == 0)
-                            nomVolume = remotePath.ToString();
-                    }
+                        string nomVolume = drive.VolumeLabel; ;
+                        if (drive.DriveType == DriveType.Network)
+                        {
+                            System.Text.StringBuilder remotePath = new System.Text.StringBuilder();
+                            int taille = 250;
+                            uint connRes = Mpr.WNetGetConnection(drive.Name.Substring(0, 2), remotePath, ref taille);
+                            if (connRes == 0)
+                                nomVolume = remotePath.ToString();
+                        }
 
-                    _listeIcones.Images.Add(Icones.GetIcone(drive.Name, false, true, false, true));
-                    TreeNode driveNode = new TreeNode($"{nomVolume} ({drive.Name})")
-                    {
-                        Name = drive.Name,
-                        ImageIndex = _listeIcones.Images.Count - 1,
-                        SelectedImageIndex = _listeIcones.Images.Count - 1,
-                        Tag = new DirectoryInfo(drive.Name)
-                    };
-                    // drive.DriveType
-                    driveNode.Nodes.Add("");
-                    _noeudMyComputer.Nodes.Add(driveNode);
+                        _listeIcones.Images.Add(Icones.GetIcone(drive.Name, false, true, false, true));
+                        TreeNode driveNode = new TreeNode($"{nomVolume} ({drive.Name})")
+                        {
+                            Name = drive.Name,
+                            ImageIndex = _listeIcones.Images.Count - 1,
+                            SelectedImageIndex = _listeIcones.Images.Count - 1,
+                            Tag = new DirectoryInfo(drive.Name)
+                        };
+                        // drive.DriveType
+                        driveNode.Nodes.Add("");
+                        _noeudMyComputer.Nodes.Add(driveNode);
+                    }
+                    catch (Exception) { }
                 }
             }
             else
