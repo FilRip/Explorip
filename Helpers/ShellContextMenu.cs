@@ -231,13 +231,14 @@ namespace Explorip.Helpers
                     _strParentFolder = strFolder.ToString();
 
                     // Get the IShellFolder for folder
-                    nResult = oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref IID_IShellFolder, out IntPtr pUnknownParentFolder);
+                    nResult = oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref IID_IShellFolder, out object pUnknownParentFolder);
                     // Free the PIDL first
                     Marshal.FreeCoTaskMem(pPIDL);
                     if (nResult != (int)Commun.HRESULT.S_OK)
                         return null;
 
-                    _oParentFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnknownParentFolder, typeof(IShellFolder));
+                    _oParentFolder = (IShellFolder)pUnknownParentFolder;
+                    //_oParentFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnknownParentFolder, typeof(IShellFolder));
                 }
             }
             else
@@ -274,7 +275,7 @@ namespace Explorip.Helpers
                                             pidlSubItem,
                                             IntPtr.Zero,
                                             ref IID_IShellFolder,
-                                            out IntPtr shellFolderPtr) == (int)Commun.HRESULT.S_OK)
+                                            out object shellFolderPtr) == (int)Commun.HRESULT.S_OK)
                                 {
                                     IntPtr strr = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
                                     Marshal.WriteInt32(strr, 0, 0);
@@ -294,7 +295,7 @@ namespace Explorip.Helpers
 
                                     if (txt == mycompName)
                                     {
-                                        _oParentFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(shellFolderPtr, typeof(IShellFolder));
+                                        _oParentFolder = (IShellFolder)shellFolderPtr;
                                         break;
                                     }
                                 }
@@ -360,10 +361,23 @@ namespace Explorip.Helpers
         /// </summary>
         /// <param name="arrFI">Array of DirectoryInfo</param>
         /// <returns>Array of PIDLs</returns>
-        protected IntPtr[] GetPIDLs(DirectoryInfo[] arrFI)
+        protected IntPtr[] GetPIDLs(DirectoryInfo[] arrFI, bool background = false)
         {
             if (arrFI == null || arrFI.Length == 0)
                 return null;
+
+            if (background)
+            {
+                IntPtr pItemIDL = Shell32.ILCreateFromPath(arrFI[0].FullName);
+                GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out object opsf);
+                IShellFolder psf = (IShellFolder)opsf;
+                psf.CreateViewObject(Handle, typeof(IShellView).GUID, out object opShellView);
+                IShellView pShellView = (IShellView)opShellView;
+                pShellView.GetItemObject((uint)SVGIO.SVGIO_BACKGROUND, typeof(IContextMenu).GUID, out object opContextMenu);
+                _oContextMenu = (IContextMenu)opContextMenu;
+
+                return new IntPtr[] { pItemIDL };
+            }
 
             IShellFolder oParentFolder;
             if ((arrFI[0].FullName.Length > 3) && (arrFI[0].Name != "My Computer") && (arrFI[0].Name != "Desktop") && (arrFI[0].Exists))
@@ -386,11 +400,11 @@ namespace Explorip.Helpers
                 int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out pPIDL, ref pdwAttributes);
                 if (nResult != (int)Commun.HRESULT.S_OK)
                 {
-                    if ((fi.Name=="Desktop") && (!fi.Exists))
+                    if ((fi.Name == "Desktop") && (!fi.Exists))
                     {
                         Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DESKTOP, ref pPIDL);
                     }
-                    else
+                    else if ((fi.Name == "My Computer") && (!fi.Exists))
                     {
                         Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref pPIDL);
                     }
@@ -455,12 +469,19 @@ namespace Explorip.Helpers
             this.ShowContextMenu(pointScreen, cms);
         }
 
+        public void ShowContextMenu(DirectoryInfo dir, Point pointScreen, ContextMenuStrip cms)
+        {
+            ReleaseAll();
+            _arrPIDLs = GetPIDLs(new DirectoryInfo[] { dir }, true);
+            ShowContextMenu(pointScreen, cms, true);
+        }
+
         /// <summary>
         /// Shows the context menu
         /// </summary>
         /// <param name="arrFI">FileInfos (should all be in same directory)</param>
         /// <param name="pointScreen">Where to show the menu</param>
-        public void ShowContextMenu(Point pointScreen, ContextMenuStrip cms)
+        public void ShowContextMenu(Point pointScreen, ContextMenuStrip cms, bool background = false)
         {
             try
             {
@@ -472,10 +493,13 @@ namespace Explorip.Helpers
                     return;
                 }
 
-                if (!GetContextMenuInterfaces(_oParentFolder, _arrPIDLs, out iContextMenuPtr))
+                if (!background)
                 {
-                    ReleaseAll();
-                    return;
+                    if (!GetContextMenuInterfaces(_oParentFolder, _arrPIDLs, out iContextMenuPtr))
+                    {
+                        ReleaseAll();
+                        return;
+                    }
                 }
 
                 pMenu = User32.CreatePopupMenu();
@@ -487,13 +511,20 @@ namespace Explorip.Helpers
                     CMD_LAST,
                     CMF.EXPLORE |
                     CMF.NORMAL | CMF.CANRENAME | 
-                    ((Control.ModifierKeys & Keys.Shift) != 0 ? CMF.EXTENDEDVERBS : 0));
+                    CMF.EXTENDEDVERBS);
 
-                Marshal.QueryInterface(iContextMenuPtr, ref IID_IContextMenu2, out iContextMenuPtr2);
-                Marshal.QueryInterface(iContextMenuPtr, ref IID_IContextMenu3, out iContextMenuPtr3);
-
-                _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
-                _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
+                if (iContextMenuPtr != IntPtr.Zero)
+                {
+                    Marshal.QueryInterface(iContextMenuPtr, ref IID_IContextMenu2, out iContextMenuPtr2);
+                    Marshal.QueryInterface(iContextMenuPtr, ref IID_IContextMenu3, out iContextMenuPtr3);
+                    _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
+                    _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
+                }
+                else
+                {
+                    _oContextMenu2 = (IContextMenu2)_oContextMenu;
+                    _oContextMenu3 = (IContextMenu3)_oContextMenu;
+                }
 
                 if (cms == null)
                 {

@@ -61,7 +61,7 @@ namespace Explorip.ComposantsWinForm
                 _noeudMyComputer.Tag = "My Computer";
                 Nodes.Add(_noeudMyComputer);
 
-                // voir https://github.com/aybe/Windows-API-Code-Pack-1.1
+                // TODO : voir https://github.com/aybe/Windows-API-Code-Pack-1.1
                 TreeNode noeudDesktop = new TreeNode(Environment.SpecialFolder.Desktop.NomTraduit(), 2, 2);
                 _noeudMyComputer.Nodes.Add(noeudDesktop);
                 noeudDesktop.Name = "Desktop";

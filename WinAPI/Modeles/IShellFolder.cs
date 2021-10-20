@@ -95,8 +95,8 @@ namespace Explorip.WinAPI.Modeles
         Int32 BindToObject(
             IntPtr pidl,
             IntPtr pbc,
-            ref Guid riid,
-            out IntPtr ppv);
+            [In] ref Guid riid,
+            [MarshalAs(UnmanagedType.Interface)] out object ppv);
 
         // Requests a pointer to an object's storage interface. 
         // Return value: error code, if any
@@ -130,7 +130,7 @@ namespace Explorip.WinAPI.Modeles
         Int32 CreateViewObject(
             IntPtr hwndOwner,
             Guid riid,
-            out IntPtr ppv);
+            [MarshalAs(UnmanagedType.Interface)] out object ppv);
 
         // Retrieves the attributes of one or more file objects or subfolders. 
         // Return value: error code, if any

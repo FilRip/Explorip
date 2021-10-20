@@ -123,23 +123,31 @@ namespace Explorip.ComposantsWinForm
                 if (SelectedItems.Count > 0)
                 {
                     List<FileInfo> arrFI = new List<FileInfo>();
+                    List<DirectoryInfo> arrDI = new List<DirectoryInfo>();
                     foreach (ListViewItem item in SelectedItems)
                     {
                         if (item.Tag.GetType() == typeof(FileInfo))
                             arrFI.Add((FileInfo)item.Tag);
+                        else if (item.Tag.GetType() == typeof(DirectoryInfo))
+                            arrDI.Add((DirectoryInfo)item.Tag);
                     }
+                    // TODO : Menu contextuel quand on a sélectionné des fichiers ET des dossiers
                     if (arrFI.Count > 0)
                     {
                         ShellContextMenu ctxMnu = new ShellContextMenu();
                         ctxMnu.ShowContextMenu(arrFI.ToArray(), PointToScreen(new Point(e.X, e.Y)), _cms);
                     }
+                    else if (arrDI.Count > 0)
+                    {
+                        ShellContextMenu ctxMnu = new ShellContextMenu();
+                        ctxMnu.ShowContextMenu(arrDI.ToArray(), PointToScreen(new Point(e.X, e.Y)), _cms);
+                    }
                 }
                 else
                 {
                     // TODO : Coller (fichier/dossier) (précédemment Copier)
-                    ShellContextMenuFolder ctxMnu = new ShellContextMenuFolder();
-                    if (_repCourant != null)
-                        ctxMnu.ShowContextMenu(_repCourant.FullName, PointToScreen(new Point(e.X, e.Y)), _cms);
+                    ShellContextMenu ctxMenu = new ShellContextMenu();
+                    ctxMenu.ShowContextMenu(_repCourant, PointToScreen(new Point(e.X, e.Y)), _cms);
                 }
             }
         }

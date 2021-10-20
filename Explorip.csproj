@@ -106,7 +106,6 @@
     <Compile Include="Helpers\ExtensionsProcess.cs" />
     <Compile Include="Helpers\ExtensionsWindows.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
-    <Compile Include="Helpers\ShellContextMenuFolder.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
     <Compile Include="Forms\FormTaskBar.cs">
@@ -134,7 +133,9 @@
     <Compile Include="WinAPI\Modeles\IContextMenu2.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu3.cs" />
     <Compile Include="WinAPI\Modeles\IEnumIDList.cs" />
+    <Compile Include="WinAPI\Modeles\IOleWindow.cs" />
     <Compile Include="WinAPI\Modeles\IShellFolder.cs" />
+    <Compile Include="WinAPI\Modeles\IShellView.cs" />
     <Compile Include="WinAPI\Modeles\LocalWindowsHook.cs" />
     <Compile Include="WinAPI\Modeles\MENUITEMINFO.cs" />
     <Compile Include="WinAPI\Modeles\NETRESOURCE.cs" />
