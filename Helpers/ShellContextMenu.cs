@@ -134,7 +134,7 @@ namespace Explorip.Helpers
                 nShow = SW.SHOWNORMAL
             };
 
-            oContextMenu.InvokeCommand(ref invoke);
+            int retour = oContextMenu.InvokeCommand(ref invoke);
         }
         #endregion
 
@@ -371,12 +371,10 @@ namespace Explorip.Helpers
                 IntPtr pItemIDL = Shell32.ILCreateFromPath(arrFI[0].FullName);
                 GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out object opsf);
                 IShellFolder psf = (IShellFolder)opsf;
-                psf.CreateViewObject(Handle, typeof(IShellView).GUID, out object opShellView);
+                psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out object opShellView);
                 IShellView pShellView = (IShellView)opShellView;
                 pShellView.GetItemObject((uint)SVGIO.SVGIO_BACKGROUND, typeof(IContextMenu).GUID, out object opContextMenu);
                 _oContextMenu = (IContextMenu)opContextMenu;
-
-                return new IntPtr[] { pItemIDL };
             }
 
             IShellFolder oParentFolder;
@@ -473,6 +471,7 @@ namespace Explorip.Helpers
         {
             ReleaseAll();
             _arrPIDLs = GetPIDLs(new DirectoryInfo[] { dir }, true);
+            //GetParentFolder(dir.FullName, false);
             ShowContextMenu(pointScreen, cms, true);
         }
 

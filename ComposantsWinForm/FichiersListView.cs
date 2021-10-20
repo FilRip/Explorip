@@ -146,6 +146,14 @@ namespace Explorip.ComposantsWinForm
                 else
                 {
                     // TODO : Coller (fichier/dossier) (précédemment Copier)
+                    // voir : https://stackoverflow.com/questions/18229944/how-to-copy-paste-files-like-windows
+                    //        IFileOperation https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileoperation
+                    //        https://stackoverflow.com/questions/3124038/copyfileex-with-multiple-files-but-only-one-copy-dialog
+                    //        https://docs.microsoft.com/en-us/archive/msdn-magazine/2005/february/net-matters-file-copy-progress-custom-thread-pools
+                    // C# does Shell : https://www.codeproject.com/Articles/3590/C-does-Shell-Part-2
+                    // https://www.codeproject.com/Articles/422497/ExpTreeLib-Version-3-Explorer-like-Navigation-and
+                    // https://www.codeguru.com/dotnet/displaying-the-windows-copy-dialog-box-when-copying-files-through-net/
+                    // https://github.com/mlaily/MSDNMagazine2007-.NET-Matters-IFileOperation-in-Windows-Vista
                     ShellContextMenu ctxMenu = new ShellContextMenu();
                     ctxMenu.ShowContextMenu(_repCourant, PointToScreen(new Point(e.X, e.Y)), _cms);
                 }
