@@ -198,7 +198,7 @@ namespace Explorip.Helpers
             return retour;
         }
 
-        public static void CopierVersCms(ContextMenuStrip cms, ToolStripMenuItem sousMenu, IntPtr pointeurMenu, EventHandler ClickMenu)
+        public static void CopierVersCms(ContextMenuStrip cms, ToolStripMenuItem sousMenu, IntPtr pointeurMenu, EventHandler ClickMenu, bool background)
         {
             if (pointeurMenu != IntPtr.Zero)
             {
@@ -231,6 +231,19 @@ namespace Explorip.Helpers
                                     Enabled = (etat == MFS.ENABLED),
                                 };
                                 menuAAjouter.Click += ClickMenu;
+                                if (background)
+                                {
+                                    if (libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER.Trim().ToLower() ||
+                                        libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER_RACCOURCI.Trim().ToLower())
+                                    {
+                                        if (FilesOperations.ContextMenuPaste.CollerDispo())
+                                        {
+                                            menuAAjouter.Enabled = true;
+                                            menuAAjouter.Click -= ClickMenu;
+                                            menuAAjouter.Click += FilesOperations.ContextMenuPaste.MenuColler;
+                                        }
+                                    }
+                                }
                             }
                             if (sousMenu == null)
                             {
@@ -268,7 +281,7 @@ namespace Explorip.Helpers
                                     Enabled = (etat == MFS.ENABLED),
                                 });
 
-                                CopierVersCms(cms, (ToolStripMenuItem)cms.Items[cms.Items.Count - 1], IdSousMenu, ClickMenu);
+                                CopierVersCms(cms, (ToolStripMenuItem)cms.Items[cms.Items.Count - 1], IdSousMenu, ClickMenu, background);
                             }
                         }
                     }

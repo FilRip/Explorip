@@ -43,24 +43,6 @@
   <PropertyGroup>
     <StartupObject>Explorip.Program</StartupObject>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
@@ -99,8 +81,16 @@
     <Compile Include="ComposantsWinForm\TabExplorer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Constantes\Localisation.cs" />
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
+    <Compile Include="FilesOperations\ContextMenuPaste.cs" />
+    <Compile Include="FilesOperations\FileOperation.cs" />
+    <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
+    <Compile Include="FilesOperations\Interfaces\FileOperationFlags.cs" />
+    <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
+    <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
+    <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionsDossiers.cs" />
     <Compile Include="Helpers\ExtensionsFichiers.cs" />
     <Compile Include="Helpers\ExtensionsProcess.cs" />
@@ -129,12 +119,14 @@
     <Compile Include="WinAPI\Kernel32.cs" />
     <Compile Include="WinAPI\Modeles\BROWSEINFO.cs" />
     <Compile Include="WinAPI\Modeles\CMINVOKECOMMANDINFOEX.cs" />
+    <Compile Include="FilesOperations\Interfaces\CopyEngineResult.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu2.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu3.cs" />
     <Compile Include="WinAPI\Modeles\IEnumIDList.cs" />
     <Compile Include="WinAPI\Modeles\IOleWindow.cs" />
     <Compile Include="WinAPI\Modeles\IShellFolder.cs" />
+    <Compile Include="WinAPI\Modeles\IShellItem.cs" />
     <Compile Include="WinAPI\Modeles\IShellView.cs" />
     <Compile Include="WinAPI\Modeles\LocalWindowsHook.cs" />
     <Compile Include="WinAPI\Modeles\MENUITEMINFO.cs" />

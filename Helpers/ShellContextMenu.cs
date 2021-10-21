@@ -133,8 +133,7 @@ namespace Explorip.Helpers
                 ptInvoke = new POINT(pointInvoke.X, pointInvoke.Y),
                 nShow = SW.SHOWNORMAL
             };
-
-            int retour = oContextMenu.InvokeCommand(ref invoke);
+            oContextMenu.InvokeCommand(ref invoke);
         }
         #endregion
 
@@ -549,7 +548,7 @@ namespace Explorip.Helpers
                 {
                     cms.Items.Clear();
                     PopUpMenuExtensions.EtendreSousMenuPopUp(pMenu, _oContextMenu2);
-                    PopUpMenuExtensions.CopierVersCms(cms, null, pMenu, MenuAAjouter_Click);
+                    PopUpMenuExtensions.CopierVersCms(cms, null, pMenu, MenuAAjouter_Click, background);
                     cms.Show(pointScreen);
                     return;
                 }

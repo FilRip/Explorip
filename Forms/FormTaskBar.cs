@@ -12,6 +12,7 @@ namespace Explorip.Forms
 {
     // TODO : Utiliser ManagedShell pour la barre des taches
     // Et peut etre : https://github.com/dbarros/WindowsAPICodePack
+    // Voir https://github.com/dremin/RetroBar
     public partial class FormTaskBar : Form
     {
         public FormTaskBar()

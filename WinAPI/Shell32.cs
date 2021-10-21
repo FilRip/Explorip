@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 
 using Explorip.WinAPI.Modeles;
 
@@ -155,5 +156,9 @@ namespace Explorip.WinAPI
 
         [DllImport("shell32.dll")]
         public extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolderFlags flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
+
+        [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
+        [return: MarshalAs(UnmanagedType.Interface)]
+        public static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
     }
 }

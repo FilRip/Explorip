@@ -87,7 +87,7 @@ namespace Explorip.ComposantsWinForm
                 {
                     try
                     {
-                        string nomVolume = drive.VolumeLabel; ;
+                        string nomVolume = drive.VolumeLabel;
                         if (drive.DriveType == DriveType.Network)
                         {
                             System.Text.StringBuilder remotePath = new System.Text.StringBuilder();
