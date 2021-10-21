@@ -4,9 +4,9 @@ using Explorip.Helpers;
 
 namespace Explorip.Forms
 {
-    public partial class FrmMain : Form
+    public partial class FormExplorer : Form
     {
-        public FrmMain()
+        public FormExplorer()
         {
             InitializeComponent();
 

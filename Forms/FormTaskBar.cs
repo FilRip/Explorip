@@ -56,17 +56,5 @@ namespace Explorip.Forms
                 }
             }
         }
-
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                var cp = base.CreateParams; // Retrieve the normal parameters.
-                cp.Style = 0x40000000 | 0x4000000; // WS_CHILD | WS_CLIPSIBLINGS
-                cp.ExStyle &= 0x00080000; // WS_EX_LAYERED
-                //cp.Parent = GetDesktopWindow(); // Make "GetDesktopWindow()" from your own namespace.
-                return cp;
-            }
-        }
     }
 }

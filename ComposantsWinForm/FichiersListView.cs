@@ -58,6 +58,8 @@ namespace Explorip.ComposantsWinForm
         }
 
         // TODO : RafraichirRepertoire (apres suppression, ajout, renommer, etc...)
+        // rafraichir par F5/Actualiser
+        // Repertoire parent par DEL
 
         public DirectoryTreeView LiensRepertoires
         {

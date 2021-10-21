@@ -14,7 +14,7 @@ namespace Explorip
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormTaskBar());
+            Application.Run(new FormExplorer());
         }
     }
 }
