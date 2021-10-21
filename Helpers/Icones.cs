@@ -6,9 +6,9 @@ using System.Drawing;
 
 namespace Explorip.Helpers
 {
-    internal class Icones
+    public class Icones
     {
-        public static Icon GetFileIcon(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
+        private static Icon GetFileIcon(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
         {
             SHFILEINFO shfi = new SHFILEINFO();
             Shell32.SHGFI flags = Shell32.SHGFI.ICON/* | Shell32.SHGFI.USEFILEATTRIBUTES*/;
@@ -47,7 +47,7 @@ namespace Explorip.Helpers
             return image;
         }
 
-        public static Icon GetFileIcon(IntPtr pidl)
+        private static Icon GetFileIcon(IntPtr pidl)
         {
             SHFILEINFO shfi = new SHFILEINFO();
 
@@ -70,5 +70,8 @@ namespace Explorip.Helpers
             image.MakeTransparent(Color.Black);
             return image;
         }
+
+        // TODO : Recupérer les icones des autres tailles
+        // voir : https://stackoverflow.com/questions/28012229/what-is-the-maximum-size-of-an-icon-returned-from-shgetfileinfo
     }
 }

@@ -160,5 +160,18 @@ namespace Explorip.WinAPI
         [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
         [return: MarshalAs(UnmanagedType.Interface)]
         public static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
+
+        public enum SHIL : int
+        {
+            LARGE = 0,
+            SMALL = 1,
+            EXTRALARGE = 2,
+            SYSSMALL = 3,
+            JUMBO = 4,
+            LAST
+        }
+
+        [DllImport("shell32.dll")]
+        private extern static int SHGetImageList(SHIL iImageList, ref Guid riid, ref IImageList ppv);
     }
 }

@@ -124,6 +124,9 @@
     <Compile Include="WinAPI\Modeles\IContextMenu2.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu3.cs" />
     <Compile Include="WinAPI\Modeles\IEnumIDList.cs" />
+    <Compile Include="WinAPI\Modeles\IImageList.cs" />
+    <Compile Include="WinAPI\Modeles\IMAGEINFO.cs" />
+    <Compile Include="WinAPI\Modeles\IMAGELISTDRAWPARAMS.cs" />
     <Compile Include="WinAPI\Modeles\IOleWindow.cs" />
     <Compile Include="WinAPI\Modeles\IShellFolder.cs" />
     <Compile Include="WinAPI\Modeles\IShellItem.cs" />
@@ -133,6 +136,7 @@
     <Compile Include="WinAPI\Modeles\NETRESOURCE.cs" />
     <Compile Include="WinAPI\Modeles\POINT.cs" />
     <Compile Include="WinAPI\Modeles\PROCESS_BASIC_INFORMATION.cs" />
+    <Compile Include="WinAPI\Modeles\RECT.cs" />
     <Compile Include="WinAPI\Modeles\SHFILEINFO.cs" />
     <Compile Include="WinAPI\Modeles\SHITEMID.cs" />
     <Compile Include="WinAPI\Modeles\UNIVERSAL_NAME_INFO.cs" />
