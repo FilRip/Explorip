@@ -10,192 +10,40 @@ namespace Explorip.Helpers
 {
     public static class PopUpMenuExtensions
     {
-        private static string GetMenuItemText(uint IdMenu, IntPtr pointeurMenu)
+        private static bool GetMenuItem(int IdOrPositionMenu, IntPtr pointeurMenu, bool usePosition, out string libelle, out uint IdCmd, out Bitmap icone, out MFS etat)
         {
-            string retour = "";
+            icone = null;
+            libelle = null;
+            IdCmd = 0;
+            etat = MFS.ENABLED;
             try
             {
                 MENUITEMINFO sortie = new MENUITEMINFO
                 {
                     cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
                     dwTypeData = new string('\0', 256),
-                    fMask = MIIM.STRING,
+                    fMask = MIIM.STRING | MIIM.STATE | MIIM.ID | MIIM.BITMAP,
                     fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED
                 };
                 sortie.cch = sortie.dwTypeData.Length - 1;
-                if (User32.GetMenuItemInfo(pointeurMenu, IdMenu, false, ref sortie))
+                if (User32.GetMenuItemInfo(pointeurMenu, (uint)IdOrPositionMenu, usePosition, ref sortie))
                 {
-                    retour = sortie.dwTypeData;
+                    libelle = sortie.dwTypeData;
+                    if (sortie.hbmpItem != IntPtr.Zero)
+                    {
+                        icone = Image.FromHbitmap(sortie.hbmpItem);
+                        icone.MakeTransparent(Color.Black);
+                    }
+                    etat = sortie.fState;
+                    IdCmd = sortie.wID;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Erreur " + ex.Message);
             }
-            return retour;
-        }
-
-        private static string GetMenuItemText(int position, IntPtr pointeurMenu)
-        {
-            string retour = "";
-            try
-            {
-                MENUITEMINFO sortie = new MENUITEMINFO
-                {
-                    cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
-                    dwTypeData = new string('\0', 256),
-                    fMask = MIIM.STRING,
-                    fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED
-                };
-                sortie.cch = sortie.dwTypeData.Length - 1;
-                if (User32.GetMenuItemInfo(pointeurMenu, (uint)position, true, ref sortie))
-                {
-                    retour = sortie.dwTypeData;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur " + ex.Message);
-            }
-            return retour;
-        }
-
-        private static Image GetMenuItemIcone(uint IdMenu, IntPtr pointeurMenu)
-        {
-            Bitmap retour = null;
-            try
-            {
-                MENUITEMINFO sortie = new MENUITEMINFO
-                {
-                    cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
-                    fMask = MIIM.BITMAP,
-                };
-                if (User32.GetMenuItemInfo(pointeurMenu, IdMenu, false, ref sortie))
-                {
-                    retour = Image.FromHbitmap(sortie.hbmpItem);
-                    retour.MakeTransparent(Color.Black);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur " + ex.Message);
-            }
-            return retour;
-        }
-
-        private static Image GetMenuItemIcone(int position, IntPtr pointeurMenu)
-        {
-            Bitmap retour = null;
-            try
-            {
-                MENUITEMINFO sortie = new MENUITEMINFO
-                {
-                    cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
-                    fMask = MIIM.BITMAP,
-                };
-                if (User32.GetMenuItemInfo(pointeurMenu, (uint)position, true, ref sortie))
-                {
-                    retour = Image.FromHbitmap(sortie.hbmpItem);
-                    retour.MakeTransparent(Color.Black);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur " + ex.Message);
-            }
-            return retour;
-        }
-
-        private static uint GetMenuItemID(int position, IntPtr pointeurMenu)
-        {
-            uint retour = 0;
-            try
-            {
-                MENUITEMINFO sortie = new MENUITEMINFO
-                {
-                    cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
-                    fMask = MIIM.ID,
-                    fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED
-                };
-                if (User32.GetMenuItemInfo(pointeurMenu, (uint)position, true, ref sortie))
-                {
-                    retour = sortie.wID;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur " + ex.Message);
-            }
-            return retour;
-        }
-
-        private static uint GetMenuItemID(uint IdMenu, IntPtr pointeurMenu)
-        {
-            uint retour = 0;
-            try
-            {
-                MENUITEMINFO sortie = new MENUITEMINFO
-                {
-                    cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
-                    fMask = MIIM.ID,
-                    fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED
-                };
-                if (User32.GetMenuItemInfo(pointeurMenu, IdMenu, false, ref sortie))
-                {
-                    retour = sortie.wID;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur " + ex.Message);
-            }
-            return retour;
-        }
-
-        private static MFS GetMenuItemState(uint IdMenu, IntPtr pointeurMenu)
-        {
-            MFS retour = MFS.DEFAULT;
-            try
-            {
-                MENUITEMINFO sortie = new MENUITEMINFO
-                {
-                    cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
-                    fMask = MIIM.STATE,
-                    fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED
-                };
-                if (User32.GetMenuItemInfo(pointeurMenu, IdMenu, false, ref sortie))
-                {
-                    retour = sortie.fState;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur " + ex.Message);
-            }
-            return retour;
-        }
-
-        private static MFS GetMenuItemState(int position, IntPtr pointeurMenu)
-        {
-            MFS retour = MFS.DEFAULT;
-            try
-            {
-                MENUITEMINFO sortie = new MENUITEMINFO
-                {
-                    cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
-                    fMask = MIIM.STATE,
-                    fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED
-                };
-                if (User32.GetMenuItemInfo(pointeurMenu, (uint)position, true, ref sortie))
-                {
-                    retour = sortie.fState;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur " + ex.Message);
-            }
-            return retour;
+            return false;           
         }
 
         public static void CopierVersCms(ContextMenuStrip cms, ToolStripMenuItem sousMenu, IntPtr pointeurMenu, EventHandler ClickMenu, bool background)
@@ -207,13 +55,16 @@ namespace Explorip.Helpers
                 {
                     int IdMenu;
                     string libelle;
+                    uint IdCmd;
+                    Bitmap icone;
+                    MFS etat;
                     ToolStripItem menuAAjouter;
                     for (int i = 0; i < nbMenu; i++)
                     {
                         IdMenu = User32.GetMenuItemID(pointeurMenu, i);
                         if (IdMenu > 0)
                         {
-                            libelle = GetMenuItemText((uint)IdMenu, pointeurMenu).Trim();
+                            GetMenuItem(IdMenu, pointeurMenu, false, out libelle, out IdCmd, out icone, out etat);//)
                             if (string.IsNullOrWhiteSpace(libelle))
                             {
                                 if (cms.Items[cms.Items.Count - 1].GetType() == typeof(ToolStripSeparator))
@@ -222,12 +73,11 @@ namespace Explorip.Helpers
                             }
                             else
                             {
-                                MFS etat = GetMenuItemState((uint)IdMenu, pointeurMenu);
                                 menuAAjouter = new ToolStripMenuItem()
                                 {
                                     Text = libelle,
-                                    Image = GetMenuItemIcone((uint)IdMenu, pointeurMenu),
-                                    Tag = GetMenuItemID((uint)IdMenu, pointeurMenu),
+                                    Image = icone,
+                                    Tag = IdCmd,
                                     Enabled = (etat == MFS.ENABLED),
                                 };
                                 menuAAjouter.Click += ClickMenu;
@@ -264,7 +114,7 @@ namespace Explorip.Helpers
                         else if (IdMenu < 0)
                         {
                             IntPtr IdSousMenu = User32.GetSubMenu(pointeurMenu, i);
-                            libelle = GetMenuItemText(i, pointeurMenu);
+                            GetMenuItem(i, pointeurMenu, true, out libelle, out IdCmd, out icone, out etat);
                             if (string.IsNullOrWhiteSpace(libelle))
                             {
                                 if (cms.Items[cms.Items.Count - 1].GetType() != typeof(ToolStripSeparator))
@@ -272,12 +122,11 @@ namespace Explorip.Helpers
                             }
                             else
                             {
-                                MFS etat = GetMenuItemState(i, pointeurMenu);
                                 cms.Items.Add(new ToolStripMenuItem()
                                 {
                                     Text = libelle,
-                                    Image = GetMenuItemIcone(i, pointeurMenu),
-                                    Tag = GetMenuItemID(i, pointeurMenu),
+                                    Image = icone,
+                                    Tag = IdCmd,
                                     Enabled = (etat == MFS.ENABLED),
                                 });
 

@@ -262,5 +262,6 @@ namespace Explorip.ComposantsWinForm
                 SelectedNode = noeudCourant;
             }
         }
+        // TODO : Implémenter couper/copier/coller par drag & drop
     }
 }

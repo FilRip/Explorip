@@ -151,5 +151,6 @@ namespace Explorip.ComposantsWinForm
                 }
             }
         }
+        // TODO : Implémenter couper/copier/coller par drag & drop
     }
 }
