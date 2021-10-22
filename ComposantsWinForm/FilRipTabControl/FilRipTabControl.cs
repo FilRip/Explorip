@@ -49,6 +49,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         private FontStyle _styleText = FontStyle.Regular;
         private FontStyle _styleTextSelected = FontStyle.Regular;
         private int _lastActiveIndex = -1;
+        private int _actualScrollPos;
 
         #endregion
 
@@ -910,6 +911,10 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                     _forceSelectParClick = true;
                     SelectedIndex = _lastActiveIndex;
                     Focus();
+                    _actualScrollPos = SelectedIndex;
+                    int x = GetTabRect(SelectedIndex).X - 20;
+                    if (x < 0)
+                        ScrollLeft();
                     Invalidate();
                 }
             }
@@ -1934,6 +1939,63 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 }
                 return loc;
             }
+        }
+
+        public void ScrollLeft()
+        {
+            if (_actualScrollPos <= 0)
+                return;
+            _actualScrollPos -= 1;
+            ScrollTabs();
+        }
+
+        public void ScrollRight()
+        {
+            if (_actualScrollPos >= TabCount - 1)
+                return;
+            _actualScrollPos += 1;
+            ScrollTabs();
+        }
+
+        private void ScrollTabs()
+        {
+            Message msg = new Message
+            {
+                Msg = WM_HSCROLL,
+                WParam = new IntPtr((_actualScrollPos << 16) + 4),
+                HWnd = Handle
+            };
+            WndProc(ref msg);
+            msg = new Message
+            {
+                Msg = WM_HSCROLL,
+                WParam = new IntPtr((_actualScrollPos << 16) + 8),
+                HWnd = Handle
+            };
+            WndProc(ref msg);
+        }
+
+        private const int WM_HSCROLL = 0x114;
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WM_HSCROLL)
+            {
+                _actualScrollPos = HiWord(m.WParam);
+            }
+            base.WndProc(ref m);
+        }
+
+        private int LoWord(IntPtr dWord)
+        {
+            return dWord.ToInt32() & 0xffff;
+        }
+
+        private int HiWord(IntPtr dWord)
+        {
+            if ((dWord.ToInt32() & 0x80000000) == 0x80000000)
+                return (dWord.ToInt32() >> 16);
+            else
+                return (dWord.ToInt32() >> 16) & 0xffff;
         }
 
         #endregion
