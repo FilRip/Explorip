@@ -91,9 +91,12 @@
     <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
+    <Compile Include="Helpers\ExtensionsArray.cs" />
+    <Compile Include="Helpers\ExtensionsCommandLineArguments.cs" />
     <Compile Include="Helpers\ExtensionsDossiers.cs" />
     <Compile Include="Helpers\ExtensionsFichiers.cs" />
     <Compile Include="Helpers\ExtensionsProcess.cs" />
+    <Compile Include="Helpers\ExtensionsString.cs" />
     <Compile Include="Helpers\ExtensionsWindows.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />

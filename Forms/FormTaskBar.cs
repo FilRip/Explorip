@@ -25,6 +25,7 @@ namespace Explorip.Forms
         {
             InitializeComponent();
             lvTaches.SmallImageList = new ImageList();
+            lvTaches.LargeImageList = new ImageList();
         }
 
         private void TimerRefresh_Tick(object sender, EventArgs e)
@@ -34,12 +35,13 @@ namespace Explorip.Forms
                 timerRefresh.Enabled = false;
                 lvTaches.Items.Clear();
                 lvTaches.SmallImageList.Images.Clear();
+                lvTaches.LargeImageList.Images.Clear();
                 ManagedVersion();
             }
             catch (Exception) { }
             finally
             {
-                timerRefresh.Enabled = true;
+                //timerRefresh.Enabled = true;
             }
         }
 
@@ -51,10 +53,39 @@ namespace Explorip.Forms
                 {
                     lvTaches.Items.Add($"({p.Id}) {p.ProcessName} | {p.MainWindowTitle} | NomModule={p.MainModule.ModuleName}");
                     if (!lvTaches.SmallImageList.Images.ContainsKey(p.MainModule.FileName))
+                    {
                         lvTaches.SmallImageList.Images.Add(p.MainModule.FileName, Icones.GetIcone(p.MainModule.FileName, false, false, false, true));
+                    }
+                    if (!lvTaches.LargeImageList.Images.ContainsKey(p.MainModule.FileName))
+                    {
+                        lvTaches.LargeImageList.Images.Add(p.MainModule.FileName, Icones.GetIcone(p.MainModule.FileName, false, false, false, false));
+                    }
                     lvTaches.Items[lvTaches.Items.Count - 1].ImageKey = p.MainModule.FileName;
                 }
             }
+        }
+
+        private void VerrouillerLaBarreDesTachesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                VerrouillerLaBarreDesTachesToolStripMenuItem.Checked = !VerrouillerLaBarreDesTachesToolStripMenuItem.Checked;
+                if (VerrouillerLaBarreDesTachesToolStripMenuItem.Checked)
+                    FormBorderStyle = FormBorderStyle.FixedToolWindow;
+                else
+                    FormBorderStyle = FormBorderStyle.SizableToolWindow;
+            }
+            catch (Exception) { }
+        }
+
+        private void QuitterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            SendKeys.Send("^{ESC}");
         }
     }
 }

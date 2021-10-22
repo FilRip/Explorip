@@ -54,7 +54,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
             try
             {
                 FilRipColumnHeader enTete = ((FilRipColumnHeader)e.Header);
-                if (enTete.ActiveCouleur)
+                if ((View == View.Details) && (enTete.ActiveCouleur))
                 {
                     e.Graphics.FillRectangle(new SolidBrush(enTete.CouleurArrierePlan), e.Bounds);
                     Rectangle monBounds = e.Bounds;
@@ -74,16 +74,19 @@ namespace Explorip.ComposantsWinForm.FilRipListView
             try
             {
                 FilRipColumnHeader enTete = ((FilRipColumnHeader)e.Header);
-                if (enTete.ActiveCouleurOk)
+                if (View == View.Details)
                 {
-                    if ((!string.IsNullOrWhiteSpace(enTete.ExpressionOK)) && (e.SubItem.Text == enTete.ExpressionOK))
-                        e.SubItem.ForeColor = enTete.CouleurOk;
-                    else
-                        e.SubItem.ForeColor = enTete.CouleurSinon;
-                }
-                if (_alternerCouleur)
-                {
-                    e.SubItem.BackColor = e.ItemIndex % 2 == 0 ? _couleurAlternee1 : _couleurAlternee2;
+                    if (enTete.ActiveCouleurOk)
+                    {
+                        if ((!string.IsNullOrWhiteSpace(enTete.ExpressionOK)) && (e.SubItem.Text == enTete.ExpressionOK))
+                            e.SubItem.ForeColor = enTete.CouleurOk;
+                        else
+                            e.SubItem.ForeColor = enTete.CouleurSinon;
+                    }
+                    if (_alternerCouleur)
+                    {
+                        e.SubItem.BackColor = e.ItemIndex % 2 == 0 ? _couleurAlternee1 : _couleurAlternee2;
+                    }
                 }
                 e.DrawDefault = true;
             }
@@ -92,7 +95,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
 
         private void MonListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (View != View.Details)
+            if ((!OwnerDraw) || (View != View.Details))
                 e.DrawDefault = true;
         }
 
