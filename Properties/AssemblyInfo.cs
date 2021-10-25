@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Filexplorip")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Explorip")]
+[assembly: AssemblyDescription("Shell for Windows 11")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CoolBytes")]
-[assembly: AssemblyProduct("Filexplorip")]
+[assembly: AssemblyProduct("Explorip")]
 [assembly: AssemblyCopyright("Copyright © 2021")]
 [assembly: AssemblyTrademark("CoolBytes - FilRip")]
 [assembly: AssemblyCulture("")]

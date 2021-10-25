@@ -19,6 +19,8 @@ namespace Explorip.Forms
     // http://www.codeproject.com/KB/miscctrl/magicdocking.aspx?target=dockable|controls
     // https://sourceforge.net/projects/dockpanelsuite/
     // https://www.codeproject.com/Articles/17729/Add-Docking-and-Floating-Support-Easily-and-Quickl
+    // Windows 11 (to 10) : https://github.com/valinet/ExplorerPatcher
+    [Obsolete()]
     public partial class FormTaskBar : Form
     {
         public FormTaskBar()

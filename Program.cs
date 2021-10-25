@@ -4,20 +4,37 @@ using System.Windows.Forms;
 
 namespace Explorip
 {
-    static class Program
+    public static class Program
     {
+        private static TaskBar.MyApp _WpfHost;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread()]
-        static void Main()
+        public static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.ApplicationExit += Application_ApplicationExit;
+
             if (Helpers.ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
-                Application.Run(new FormTaskBar());
+            {
+                _WpfHost = new TaskBar.MyApp();
+                _WpfHost.Run();
+            }
             else
-                Application.Run(new FormExplorer());
+            {
+                Application.Run(new FormExplorer(args));
+            }
+        }
+
+        private static void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            if (_WpfHost != null)
+            {
+                _WpfHost.ExitGracefully();
+            }
         }
     }
 }
