@@ -73,7 +73,7 @@ namespace Explorip.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\TREILLE\\Documents\\QuickLaunch")]
+        [global::System.Configuration.DefaultSettingValueAttribute("%USERPROFILE%\\Documents\\QuickLaunch")]
         public string QuickLaunchPath {
             get {
                 return ((string)(this["QuickLaunchPath"]));

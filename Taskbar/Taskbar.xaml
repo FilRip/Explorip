@@ -21,7 +21,10 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -36,7 +39,23 @@
                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:StartButton>
-                <controls:Toolbar x:Name="QuickLaunchToolbar" Grid.Column="1" Grid.Row="0"
+                <controls:SearchButton x:Name="SearchButton" Grid.Column="1" Grid.RowSpan="2">
+                    <DockPanel.Dock>
+                        <Binding Converter="{StaticResource dockOrientationConverter}"
+                             ConverterParameter="leading"
+                             Path="Orientation"
+                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                    </DockPanel.Dock>
+                </controls:SearchButton>
+                <controls:TaskManButton x:Name="TaskManButton" Grid.Column="2" Grid.RowSpan="2">
+                    <DockPanel.Dock>
+                        <Binding Converter="{StaticResource dockOrientationConverter}"
+                             ConverterParameter="leading"
+                             Path="Orientation"
+                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                    </DockPanel.Dock>
+                </controls:TaskManButton>
+                <controls:Toolbar x:Name="QuickLaunchToolbar" Grid.Column="3" Grid.Row="0"
                               Visibility="Collapsed"
                               Path="{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}">
                     <DockPanel.Dock>
@@ -46,9 +65,9 @@
                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:Toolbar>
-                <controls:TaskList VerticalAlignment="Top" Grid.Column="1" Grid.Row="1" x:Name="ListeDesTaches"
+                <controls:TaskList VerticalAlignment="Top" Grid.Column="3" Grid.Row="1" x:Name="ListeDesTaches"
                                Tasks="{Binding Tasks}"></controls:TaskList>
-                <GroupBox Style="{DynamicResource Tray}" Grid.Column="2" Grid.RowSpan="2">
+                <GroupBox Style="{DynamicResource Tray}" Grid.Column="4" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Converter="{StaticResource dockOrientationConverter}"
                              ConverterParameter="trailing"
@@ -66,6 +85,14 @@
                         <controls:Clock VerticalAlignment="Center"></controls:Clock>
                     </StackPanel>
                 </GroupBox>
+                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="5" Grid.RowSpan="2">
+                    <DockPanel.Dock>
+                        <Binding Converter="{StaticResource dockOrientationConverter}"
+                             ConverterParameter="leading"
+                             Path="Orientation"
+                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                    </DockPanel.Dock>
+                </controls:NotificationButton>
             </Grid>
         </DockPanel>
     </ContentControl>

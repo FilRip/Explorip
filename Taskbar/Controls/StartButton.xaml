@@ -9,6 +9,6 @@
             MouseRightButtonUp="Start_OnMouseRightButtonUp"
             Name="Start"
             Style="{DynamicResource StartButton}">
-            <Image Style="{DynamicResource StartIcon}" />
+          <Image Style="{DynamicResource StartIcon}"/>
     </ToggleButton>
 </UserControl>

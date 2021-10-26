@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:s="clr-namespace:System;assembly=mscorlib">
 
-    <s:String x:Key="retrobar_properties">Propriétés de RetroBar</s:String>
+    <s:String x:Key="explorip_properties">Propriétés de Explorip</s:String>
     <s:String x:Key="taskbar_options">Barre des tâches</s:String>
     <BitmapImage x:Key="properties_95" UriSource="../Resources/fr/properties.png" />
     <BitmapImage x:Key="properties_95_noclock" UriSource="../Resources/fr/properties_noclock.png" />
@@ -28,20 +28,18 @@
     <s:String x:Key="ok_dialog">OK</s:String>
 
     <s:String x:Key="start_text">Démarrer</s:String>
-    <s:String x:Key="start_text_xp">démarrer</s:String>
-    <s:String x:Key="start_button_tip_98">Cliquez ici pour commencer.</s:String>
     <s:String x:Key="start_button_tip">Cliquez ici pour commencer</s:String>
-    <s:String x:Key="start_button_tip_vista">Démarrer</s:String>
+    <s:String x:Key="search_button_tip">Tapez ici pour effectuer une recherche</s:String>
+    <s:String x:Key="taskman_button_tip">Affichage des tâches</s:String>
+    <s:String x:Key="notification_button_tip">Centre de notification</s:String>
 
     <s:String x:Key="retrobar_title">Barre des tâches RetroBar</s:String>
     <s:String x:Key="toolbars">Barres d'ou_tils</s:String>
     <s:String x:Key="quick_launch">Lancement _rapide</s:String>
     <s:String x:Key="new_toolbar">_Nouvelle barre d'outils...</s:String>
     <s:String x:Key="show_taskman_2k">_Gestionnaire des tâches...</s:String>
-    <s:String x:Key="show_taskman">_Gestionnaire des tâches</s:String>
     <s:String x:Key="tray_properties">P_ropriétés</s:String>
-    <s:String x:Key="update_available">_Mise à jour disponible...</s:String>
-    <s:String x:Key="exit_retrobar">_Quitter RetroBar</s:String>
+    <s:String x:Key="exit_retrobar">_Quitter Explorip</s:String>
 
     <s:String x:Key="restore">_Restaurer</s:String>
     <s:String x:Key="move">Dép_lacer</s:String>

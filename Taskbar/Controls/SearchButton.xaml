@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="Explorip.TaskBar.Controls.SearchButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ToggleButton ToolTip="{DynamicResource SearchButtonTip}"
+            Click="Search_OnClick"
+            Name="Search"
+            Style="{DynamicResource SearchButton}">
+          <Image Style="{DynamicResource SearchIcon}"/>
+    </ToggleButton>
+</UserControl>

@@ -122,6 +122,9 @@
       <HintPath>packages\VirtualDesktop.4.0.1\lib\net472\VirtualDesktop.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="WindowsInput, Version=1.0.4.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL">
+      <HintPath>packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComposantsWinForm\FilRipListView\FilRipColumnHeaderCollection.cs" />
@@ -184,50 +187,59 @@
     <Compile Include="Localization\GestionString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Taskbar\MyApp.xaml.cs">
+    <Compile Include="TaskBar\Controls\NotificationButton.xaml.cs">
+      <DependentUpon>NotificationButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TaskBar\Controls\TaskManButton.xaml.cs">
+      <DependentUpon>TaskManButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TaskBar\Controls\SearchButton.xaml.cs">
+      <DependentUpon>SearchButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TaskBar\MyApp.xaml.cs">
       <DependentUpon>MyApp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\Clock.xaml.cs">
+    <Compile Include="TaskBar\Controls\Clock.xaml.cs">
       <DependentUpon>Clock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\NotifyBalloon.xaml.cs">
+    <Compile Include="TaskBar\Controls\NotifyBalloon.xaml.cs">
       <DependentUpon>NotifyBalloon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\NotifyIcon.xaml.cs">
+    <Compile Include="TaskBar\Controls\NotifyIcon.xaml.cs">
       <DependentUpon>NotifyIcon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\NotifyIconList.xaml.cs">
+    <Compile Include="TaskBar\Controls\NotifyIconList.xaml.cs">
       <DependentUpon>NotifyIconList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\StartButton.xaml.cs">
+    <Compile Include="TaskBar\Controls\StartButton.xaml.cs">
       <DependentUpon>StartButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\TaskButton.xaml.cs">
+    <Compile Include="TaskBar\Controls\TaskButton.xaml.cs">
       <DependentUpon>TaskButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\TaskList.xaml.cs">
+    <Compile Include="TaskBar\Controls\TaskList.xaml.cs">
       <DependentUpon>TaskList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\Toolbar.xaml.cs">
+    <Compile Include="TaskBar\Controls\Toolbar.xaml.cs">
       <DependentUpon>Toolbar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Controls\ToolbarButton.xaml.cs">
+    <Compile Include="TaskBar\Controls\ToolbarButton.xaml.cs">
       <DependentUpon>ToolbarButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Converters\DockOrientationConverter.cs" />
-    <Compile Include="Taskbar\Converters\EdgeOrientationConverter.cs" />
-    <Compile Include="Taskbar\Converters\TaskButtonStyleConverter.cs" />
-    <Compile Include="Taskbar\PropertiesWindow.xaml.cs">
+    <Compile Include="TaskBar\Converters\DockOrientationConverter.cs" />
+    <Compile Include="TaskBar\Converters\EdgeOrientationConverter.cs" />
+    <Compile Include="TaskBar\Converters\TaskButtonStyleConverter.cs" />
+    <Compile Include="TaskBar\PropertiesWindow.xaml.cs">
       <DependentUpon>PropertiesWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Taskbar.xaml.cs">
+    <Compile Include="TaskBar\Taskbar.xaml.cs">
       <DependentUpon>Taskbar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Taskbar\Utilities\DictionaryManager.cs" />
-    <Compile Include="Taskbar\Utilities\ExePath.cs" />
-    <Compile Include="Taskbar\Utilities\ManagedShellLogger.cs" />
-    <Compile Include="Taskbar\Utilities\Settings.cs" />
-    <Compile Include="Taskbar\Utilities\StartMenuMonitor.cs" />
+    <Compile Include="TaskBar\Utilities\DictionaryManager.cs" />
+    <Compile Include="TaskBar\Utilities\ExePath.cs" />
+    <Compile Include="TaskBar\Utilities\ManagedShellLogger.cs" />
+    <Compile Include="TaskBar\Utilities\Settings.cs" />
+    <Compile Include="TaskBar\Utilities\StartMenuMonitor.cs" />
     <Compile Include="WinAPI\Commun.cs" />
     <Compile Include="WinAPI\Dwmapi.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
@@ -295,59 +307,71 @@
     <Compile Include="Helpers\ShellContextMenu.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Taskbar\Languages\francais.xaml">
+    <Page Include="TaskBar\Controls\NotificationButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\MyApp.xaml">
+    <Page Include="TaskBar\Controls\TaskManButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\Clock.xaml">
+    <Page Include="TaskBar\Controls\SearchButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\NotifyBalloon.xaml">
+    <Page Include="TaskBar\Languages\francais.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\NotifyIcon.xaml">
+    <Page Include="TaskBar\MyApp.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\NotifyIconList.xaml">
+    <Page Include="TaskBar\Controls\Clock.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\StartButton.xaml">
+    <Page Include="TaskBar\Controls\NotifyBalloon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\TaskButton.xaml">
+    <Page Include="TaskBar\Controls\NotifyIcon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\TaskList.xaml">
+    <Page Include="TaskBar\Controls\NotifyIconList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\Toolbar.xaml">
+    <Page Include="TaskBar\Controls\StartButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Controls\ToolbarButton.xaml">
+    <Page Include="TaskBar\Controls\TaskButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\PropertiesWindow.xaml">
+    <Page Include="TaskBar\Controls\TaskList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Taskbar.xaml">
+    <Page Include="TaskBar\Controls\Toolbar.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Taskbar\Themes\System.xaml">
+    <Page Include="TaskBar\Controls\ToolbarButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TaskBar\PropertiesWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TaskBar\Taskbar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TaskBar\Themes\System.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -358,10 +382,10 @@
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Taskbar\Resources\notification10.png" />
-    <Content Include="Taskbar\Resources\search10.png" />
-    <Content Include="Taskbar\Resources\start10.png" />
-    <Content Include="Taskbar\Resources\task10.png" />
+    <Resource Include="TaskBar\Resources\notification10.png" />
+    <Resource Include="TaskBar\Resources\search10.png" />
+    <Resource Include="TaskBar\Resources\start10.png" />
+    <Resource Include="TaskBar\Resources\taskman10.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

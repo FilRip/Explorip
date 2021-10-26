@@ -119,18 +119,21 @@ namespace Explorip.TaskBar.Controls
         {
             if (e.NewValue is bool visible)
             {
-                if (visible)
+                if (e.NewValue != e.OldValue)
                 {
-                    if (Folder != null)
+                    if (visible)
                     {
-                        return;
-                    }
+                        if (Folder != null)
+                        {
+                            return;
+                        }
 
-                    SetupFolder(Path);
-                }
-                else
-                {
-                    UnloadFolder();
+                        SetupFolder(Path);
+                    }
+                    else
+                    {
+                        UnloadFolder();
+                    }
                 }
             }
         }
