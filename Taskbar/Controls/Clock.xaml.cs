@@ -129,6 +129,11 @@ namespace Explorip.TaskBar.Controls
             {
                 singleClick.Start();
             }
+            else
+            {
+                WindowsInput.InputSimulator inputSimulator = new WindowsInput.InputSimulator();
+                inputSimulator.Keyboard.ModifiedKeyStroke(new[] { WindowsInput.Native.VirtualKeyCode.LWIN, WindowsInput.Native.VirtualKeyCode.LMENU }, WindowsInput.Native.VirtualKeyCode.VK_D);
+            }
         }
 
         private void Clock_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
