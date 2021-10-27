@@ -197,33 +197,23 @@
                 Value="True" />
         <Setter Property="Background"
                 Value="Black" />
-        <Setter Property="Foreground"
-                Value="{DynamicResource ButtonForeground}" />
         <Setter Property="Margin"
                 Value="{DynamicResource TaskButtonMargin}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="DarkBlue"
+                    <Border Background="Transparent"
                             Padding="0,2"
                             Name="ButtonBorder">
-                        <Border BorderThickness="0,0,1,1"
-                                BorderBrush="DarkBlue"
-                                x:Name="ButtonOuterBottomBorder">
-                            <Border BorderThickness="1,1,0,0"
-                                    BorderBrush="Green"
-                                    x:Name="ButtonOuterTopBorder">
-                                <Border BorderThickness="0,0,1,1"
-                                        BorderBrush="DarkBlue"
-                                        x:Name="ButtonInnerBottomBorder">
-                                    <Border BorderThickness="1,1,0,0"
-                                            BorderBrush="Blue"
-                                            Background="{TemplateBinding Background}"
-                                            Padding="2,1"
-                                            x:Name="ButtonInnerTopBorder">
-                                        <ContentPresenter />
-                                    </Border>
-                                </Border>
+                        <Border BorderThickness="0,0,0,0"
+                                BorderBrush="{TemplateBinding Background}"
+                                x:Name="ButtonRightBottomBorder">
+                            <Border BorderThickness="0,0,0,0"
+                                    BorderBrush="{TemplateBinding Background}"
+                                    Background="{TemplateBinding Background}"
+                                    Padding="2"
+                                    x:Name="ButtonLeftTopBorder">
+                                <ContentPresenter />
                             </Border>
                         </Border>
                     </Border>
@@ -236,22 +226,14 @@
                                         Value="2,1" />
                             </DataTrigger.Setters>
                         </DataTrigger>
-                        <Trigger Property="IsPressed"
+                        <Trigger Property="IsMouseOver"
                                  Value="True">
-                            <Setter TargetName="ButtonOuterBottomBorder"
-                                    Property="BorderBrush"
-                                    Value="Green" />
-                            <Setter TargetName="ButtonOuterTopBorder"
-                                    Property="BorderBrush"
-                                    Value="DarkBlue" />
-                            <Setter TargetName="ButtonInnerBottomBorder"
-                                    Property="BorderBrush"
-                                    Value="Blue" />
-                            <Setter TargetName="ButtonInnerTopBorder"
+                            <Setter TargetName="ButtonLeftTopBorder"
+                                    Property="Background"
+                                    Value="#303030" />
+                            <Setter TargetName="ButtonRightBottomBorder"
                                     Property="BorderBrush"
                                     Value="DarkBlue" />
-                            <Setter Property="Background"
-                                    Value="Gray"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -279,28 +261,16 @@
                     <Border Background="Transparent"
                             Padding="0,2"
                             Name="ButtonBorder">
-                        <Border BorderThickness="0,0,0,0"
-                                BorderBrush="{DynamicResource ButtonHighlight}">
+                        <Border BorderThickness="0,0,1,0"
+                                BorderBrush="{TemplateBinding Foreground}"
+                                Background="DarkBlue"
+                                x:Name="ButtonRightBottomBorder">
                             <Border BorderThickness="0,0,0,0"
-                                    BorderBrush="{DynamicResource ButtonDarkShadow}">
-                                <Border BorderThickness="0,0,0,0"
-                                        BorderBrush="{DynamicResource ButtonLight}">
-                                    <Border BorderThickness="0,0,0,0"
-                                            BorderBrush="{DynamicResource ButtonShadow}">
-                                        <Border BorderThickness="0,0,0,0"
-                                                BorderBrush="{DynamicResource ButtonHighlight}"
-                                                Padding="2,1,2,0">
-                                            <Border.Background>
-                                                <DrawingBrush TileMode="Tile" Viewport="0,0,2,2" ViewportUnits="Absolute">
-                                                    <DrawingBrush.Drawing>
-                                                        <GeometryDrawing Geometry="M0,0 H1 V1 H2 V2 H1 V1 H0Z" Brush="Black" />
-                                                    </DrawingBrush.Drawing>
-                                                </DrawingBrush>
-                                            </Border.Background>
-                                            <ContentPresenter />
-                                        </Border>
-                                    </Border>
-                                </Border>
+                                    BorderBrush="{TemplateBinding Background}"
+                                    Background="#606060"
+                                    Padding="2"
+                                    x:Name="ButtonLeftTopBorder">
+                                <ContentPresenter />
                             </Border>
                         </Border>
                     </Border>
@@ -523,7 +493,8 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver"
                                  Value="True">
-                            <Setter Property="Background"
+                            <Setter TargetName="ButtonOuterBottomBorder"
+                                    Property="Background"
                                     Value="DarkBlue"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -714,7 +685,7 @@
                         <Trigger Property="IsMouseOver"
                                  Value="True">
                             <Setter TargetName="ButtonLeftTopBorder"
-                                    Property="BorderBrush"
+                                    Property="Background"
                                     Value="{DynamicResource ButtonHighlight}" />
                             <Setter TargetName="ButtonRightBottomBorder"
                                     Property="BorderBrush"
@@ -723,7 +694,7 @@
                         <Trigger Property="IsPressed"
                                  Value="True">
                             <Setter TargetName="ButtonRightBottomBorder"
-                                    Property="BorderBrush"
+                                    Property="Background"
                                     Value="{DynamicResource ButtonHighlight}" />
                             <Setter TargetName="ButtonLeftTopBorder"
                                     Property="BorderBrush"
