@@ -18,8 +18,7 @@ namespace Explorip.Helpers
             WindowHandles = new List<IntPtr>();
             WindowTitles = new List<string>();
 
-            if (!User32.EnumDesktopWindows(IntPtr.Zero, FilterCallback,
-                IntPtr.Zero))
+            if (!User32.EnumDesktopWindows(IntPtr.Zero, FilterCallback, 0))
             {
                 handles = null;
                 titles = null;

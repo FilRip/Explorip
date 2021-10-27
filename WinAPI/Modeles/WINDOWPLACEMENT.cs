@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Explorip.WinAPI.Modeles
 {
-    [Flags]
+    [Flags()]
     public enum WindowStyles : uint
     {
         WS_BORDER = 0x800000,

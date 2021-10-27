@@ -78,7 +78,13 @@ namespace Explorip.WinAPI
         public delegate bool EnumDelegate(IntPtr hWnd, int lParam);
 
         [DllImport("user32.dll", EntryPoint = "EnumDesktopWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpEnumCallbackFunction, IntPtr lParam);
+        public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpEnumCallbackFunction, int lParam);
+
+        [DllImport("user32.dll", EntryPoint = "EnumWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int EnumWindows(EnumDelegate callPtr, int lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr GetForegroundWindow();
 
         [DllImport("USER32.DLL")]
         public static extern IntPtr GetShellWindow();

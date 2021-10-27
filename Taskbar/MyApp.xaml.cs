@@ -19,11 +19,11 @@ namespace Explorip.TaskBar
         private ManagedShellLogger _logger;
         private Taskbar _taskbar;
         private readonly StartMenuMonitor _startMenuMonitor;
-        private readonly ShellManager _shellManager;
+        public static ShellManager MonShellManager;
 
         public MyApp()
         {
-            _shellManager = SetupManagedShell();
+            MonShellManager = SetupManagedShell();
 
             _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(false));
             DictionaryManager = new DictionaryManager();
@@ -36,8 +36,8 @@ namespace Explorip.TaskBar
 
         public void ExitGracefully()
         {
-            _shellManager.ExplorerHelper.HideExplorerTaskbar = false;
-            _shellManager.AppBarManager.SignalGracefulShutdown();
+            MonShellManager.ExplorerHelper.HideExplorerTaskbar = false;
+            MonShellManager.AppBarManager.SignalGracefulShutdown();
             Current.Shutdown();
         }
 
@@ -50,7 +50,7 @@ namespace Explorip.TaskBar
 
         private void OpenTaskbar()
         {
-            _taskbar = new Taskbar(_shellManager, _startMenuMonitor, AppBarScreen.FromPrimaryScreen(), (AppBarEdge)Settings.Instance.Edge);
+            _taskbar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen(), (AppBarEdge)Settings.Instance.Edge);
             _taskbar.Show();
         }
 
@@ -70,14 +70,25 @@ namespace Explorip.TaskBar
 
             _logger = new ManagedShellLogger();
 
-            return new ShellManager(ShellManager.DefaultShellConfig);
+            ShellConfig config = new ShellConfig()
+            {
+                EnableTasksService = true,
+                AutoStartTasksService = false,
+                TaskIconSize = ManagedShell.Common.Enums.IconSize.ExtraLarge,
+
+                EnableTrayService = true,
+                AutoStartTrayService = true,
+                PinnedNotifyIcons = ManagedShell.WindowsTray.NotificationArea.DEFAULT_PINNED
+            };
+
+            return new ShellManager(config);
         }
 
         private void ExitApp()
         {
-            _shellManager.ExplorerHelper.HideExplorerTaskbar = false;
+            MonShellManager.ExplorerHelper.HideExplorerTaskbar = false;
             DictionaryManager.Dispose();
-            _shellManager.Dispose();
+            MonShellManager.Dispose();
             _startMenuMonitor.Dispose();
             _logger.Dispose();
         }

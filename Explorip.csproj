@@ -240,6 +240,7 @@
     <Compile Include="TaskBar\Utilities\ManagedShellLogger.cs" />
     <Compile Include="TaskBar\Utilities\Settings.cs" />
     <Compile Include="TaskBar\Utilities\StartMenuMonitor.cs" />
+    <Compile Include="TaskBar\Utilities\TaskCategoryProvider.cs" />
     <Compile Include="WinAPI\Commun.cs" />
     <Compile Include="WinAPI\Dwmapi.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />

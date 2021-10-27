@@ -1,53 +1,38 @@
 ﻿using ManagedShell.AppBar;
-using ManagedShell.WindowsTasks;
 using Explorip.TaskBar.Utilities;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.ComponentModel;
+using WindowsDesktop;
+using ManagedShell.WindowsTasks;
+using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace Explorip.TaskBar.Controls
 {
     /// <summary>
     /// Interaction logic for TaskList.xaml
     /// </summary>
-    public partial class TaskList : UserControl, INotifyPropertyChanged
+    public partial class TaskList : UserControl
     {
         private bool isLoaded;
         private double DefaultButtonWidth;
         private double TaskButtonLeftMargin;
         private double TaskButtonRightMargin;
+        private readonly object _lockChangeDesktop = new object();
+        private ObservableCollection<ApplicationWindow> _listeFenetresBureauCourant;
 
         public static DependencyProperty ButtonWidthProperty = DependencyProperty.Register("ButtonWidth", typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
+
+        public TaskList()
+        {
+            InitializeComponent();
+        }
 
         public double ButtonWidth
         {
             get { return (double)GetValue(ButtonWidthProperty); }
             set { SetValue(ButtonWidthProperty, value); }
-        }
-
-        public static DependencyProperty TasksProperty = DependencyProperty.Register(nameof(Tasks), typeof(Tasks), typeof(TaskList));
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public Tasks Tasks
-        {
-            get { return (Tasks)GetValue(TasksProperty); }
-            set
-            {
-                SetValue(TasksProperty, value);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tasks)));
-            }
-        }
-
-        public void ForceMajListeTaches()
-        {
-            Tasks = (Tasks)GetValue(TasksProperty);
-        }
-
-        public TaskList()
-        {
-            InitializeComponent();
         }
 
         private void SetStyles()
@@ -70,21 +55,68 @@ namespace Explorip.TaskBar.Controls
 
         private void TaskList_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!isLoaded && Tasks != null)
+            if (!isLoaded && MyApp.MonShellManager.Tasks != null)
             {
-                TasksList.ItemsSource = Tasks.GroupedWindows;
-                if (Tasks.GroupedWindows != null)
-                    Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
+                TasksList.ItemsSource = MyApp.MonShellManager.Tasks.GroupedWindows;
+                if (MyApp.MonShellManager.Tasks.GroupedWindows != null)
+                    MyApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
                 
                 isLoaded = true;
+                VirtualDesktopProvider.Default.Initialize();
+                typeof(VirtualDesktop).GetField("_isSupported", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, true);
+                VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
             }
 
             SetStyles();
         }
 
+        private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
+        {
+            lock (_lockChangeDesktop)
+            {
+                if (_listeFenetresBureauCourant != null)
+                {
+                    _listeFenetresBureauCourant.Clear();
+                }
+                else
+                {
+                    _listeFenetresBureauCourant = new ObservableCollection<ApplicationWindow>();
+                }
+
+                WinAPI.User32.EnumWindows(new WinAPI.User32.EnumDelegate(EnumerationFenetre), 0);
+
+                IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
+                if (_listeFenetresBureauCourant.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
+                {
+                    ApplicationWindow win = _listeFenetresBureauCourant.First(wnd => wnd.Handle == hWndForeground);
+                    win.State = ApplicationWindow.WindowState.Active;
+                    win.SetShowInTaskbar();
+                }
+
+                Application.Current.Dispatcher.Invoke(new Action(() => {
+                    typeof(TasksService).GetProperty("Windows", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(MyApp.MonShellManager.TasksService, _listeFenetresBureauCourant);
+                }));
+            }
+        }
+
+        private bool EnumerationFenetre(IntPtr handle, int lParam)
+        {
+            if (VirtualDesktopHelper.IsCurrentVirtualDesktop(handle))
+            {
+                ApplicationWindow win = new ApplicationWindow(MyApp.MonShellManager.TasksService, handle);
+
+                if (win.CanAddToTaskbar && win.ShowInTaskbar && !_listeFenetresBureauCourant.Contains(win))
+                {
+                    _listeFenetresBureauCourant.Add(win);
+                    typeof(TasksService).GetMethod("sendTaskbarButtonCreatedMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(MyApp.MonShellManager.TasksService, new object[] { win.Handle });
+                }
+            }
+            return true;
+        }
+
         private void TaskList_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
+            MyApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
             isLoaded = false;
         }
 

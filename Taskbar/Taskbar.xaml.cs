@@ -1,7 +1,6 @@
 ﻿using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
-using ManagedShell;
 using ManagedShell.WindowsTray;
 using System;
 using System.ComponentModel;
@@ -11,7 +10,6 @@ using System.Windows.Media;
 using Explorip.TaskBar.Utilities;
 using Application = System.Windows.Application;
 using Explorip.TaskBar.Controls;
-using WindowsDesktop;
 
 namespace Explorip.TaskBar
 {
@@ -21,16 +19,14 @@ namespace Explorip.TaskBar
     public partial class Taskbar : AppBarWindow
     {
         private bool _isReopening;
-        private readonly ShellManager _shellManager;
 
-        public Taskbar(ShellManager shellManager, StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
-            : base(shellManager.AppBarManager, shellManager.ExplorerHelper, shellManager.FullScreenHelper, screen, edge, 0)
+        public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
+            : base(MyApp.MonShellManager.AppBarManager, MyApp.MonShellManager.ExplorerHelper, MyApp.MonShellManager.FullScreenHelper, screen, edge, 0)
         {
-            _shellManager = shellManager;
-            _shellManager.TasksService.TaskIconSize = ManagedShell.Common.Enums.IconSize.ExtraLarge;
+            MyApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
 
             InitializeComponent();
-            DataContext = _shellManager;
+            DataContext = MyApp.MonShellManager;
             StartButton.StartMenuMonitor = startMenuMonitor;
 
             DesiredHeight = Application.Current.FindResource("TaskbarHeight") as double? ?? 0;
@@ -44,20 +40,13 @@ namespace Explorip.TaskBar
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
             // Layout rounding causes incorrect sizing on non-integer scales
-            if(DpiHelper.DpiScale % 1 != 0) UseLayoutRounding = false;
+            if (DpiHelper.DpiScale % 1 != 0) UseLayoutRounding = false;
 
             if (Settings.Instance.ShowQuickLaunch)
             {
                 QuickLaunchToolbar.Visibility = Visibility.Visible;
                 DesiredHeight += 16;
             }
-
-            VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
-        }
-
-        private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
-        {
-            ListeDesTaches.ForceMajListeTaches();
         }
 
         protected override void OnSourceInitialized(object sender, EventArgs e)
@@ -88,7 +77,7 @@ namespace Explorip.TaskBar
         {
             base.SetPosition();
 
-            _shellManager.NotificationArea.SetTrayHostSizeData(new TrayHostSizeData
+            MyApp.MonShellManager.NotificationArea.SetTrayHostSizeData(new TrayHostSizeData
             {
                 edge = (NativeMethods.ABEdge)AppBarEdge,
                 rc = new NativeMethods.Rect

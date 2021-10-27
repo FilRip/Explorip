@@ -22,6 +22,7 @@ namespace Explorip
             {
                 _WpfHost = new TaskBar.MyApp();
                 _WpfHost.Run();
+                //Application.Run(new FormTaskBar());
             }
             else
             {

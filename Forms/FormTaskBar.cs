@@ -7,6 +7,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using WindowsDesktop;
+
+#pragma warning disable IDE0051
 
 namespace Explorip.Forms
 {
@@ -28,6 +31,7 @@ namespace Explorip.Forms
             InitializeComponent();
             lvTaches.SmallImageList = new ImageList();
             lvTaches.LargeImageList = new ImageList();
+            VirtualDesktopProvider.Default.Initialize();
         }
 
         private void TimerRefresh_Tick(object sender, EventArgs e)
@@ -38,13 +42,33 @@ namespace Explorip.Forms
                 lvTaches.Items.Clear();
                 lvTaches.SmallImageList.Images.Clear();
                 lvTaches.LargeImageList.Images.Clear();
-                ManagedVersion();
+                UnManagedVersion();
             }
             catch (Exception) { }
             finally
             {
                 //timerRefresh.Enabled = true;
             }
+        }
+
+        private void UnManagedVersion()
+        {
+            User32.EnumWindows((hwnd, lParam) =>
+            {
+                StringBuilder stringBuilder = new StringBuilder(255);
+                if ((User32.GetWindowLong(hwnd, User32.GWL.GWL_STYLE) & (int)WinAPI.Modeles.WindowStyles.WS_VISIBLE) == (int)WinAPI.Modeles.WindowStyles.WS_VISIBLE)
+                {
+                    User32.GetWindowText(hwnd, stringBuilder, 255);
+                    if (!string.IsNullOrWhiteSpace(stringBuilder.ToString()))
+                    {
+                        if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
+                        {
+                            lvTaches.Items.Add(stringBuilder.ToString());
+                        }
+                    }
+                }
+                return true;
+            }, 0);
         }
 
         private void ManagedVersion()
@@ -91,3 +115,5 @@ namespace Explorip.Forms
         }
     }
 }
+
+#pragma warning restore IDE0051
