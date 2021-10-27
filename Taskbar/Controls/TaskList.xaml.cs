@@ -27,6 +27,14 @@ namespace Explorip.TaskBar.Controls
         public TaskList()
         {
             InitializeComponent();
+            InitializeComObject();
+        }
+
+        private async void InitializeComObject()
+        {
+            Console.WriteLine("Demarrage VirtualDesktop");
+            await VirtualDesktopProvider.Default.Initialize();
+            //typeof(VirtualDesktop).GetField("_isSupported", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, true);
         }
 
         public double ButtonWidth
@@ -62,8 +70,7 @@ namespace Explorip.TaskBar.Controls
                     MyApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
                 
                 isLoaded = true;
-                VirtualDesktopProvider.Default.Initialize();
-                typeof(VirtualDesktop).GetField("_isSupported", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, true);
+                Console.WriteLine("Abonnement changement VirtualDesktop");
                 VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
             }
 
@@ -74,6 +81,7 @@ namespace Explorip.TaskBar.Controls
         {
             lock (_lockChangeDesktop)
             {
+                Console.WriteLine("Change bureau vers " + e.NewDesktop.Id);
                 if (_listeFenetresBureauCourant != null)
                 {
                     _listeFenetresBureauCourant.Clear();
@@ -105,8 +113,10 @@ namespace Explorip.TaskBar.Controls
             {
                 ApplicationWindow win = new ApplicationWindow(MyApp.MonShellManager.TasksService, handle);
 
+                Console.WriteLine($"Fenetre trouvée : {win.Title}");
                 if (win.CanAddToTaskbar && win.ShowInTaskbar && !_listeFenetresBureauCourant.Contains(win))
                 {
+                    Console.WriteLine($"Fenetre acceptée");
                     _listeFenetresBureauCourant.Add(win);
                     typeof(TasksService).GetMethod("sendTaskbarButtonCreatedMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(MyApp.MonShellManager.TasksService, new object[] { win.Handle });
                 }

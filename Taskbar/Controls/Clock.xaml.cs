@@ -127,7 +127,8 @@ namespace Explorip.TaskBar.Controls
         {
             if (EnvironmentHelper.IsWindows11OrBetter)
             {
-                singleClick.Start();
+                WindowsInput.InputSimulator inputSimulator = new WindowsInput.InputSimulator();
+                inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.LWIN, WindowsInput.Native.VirtualKeyCode.VK_A);
             }
             else
             {

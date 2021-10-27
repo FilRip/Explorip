@@ -113,6 +113,14 @@ namespace Explorip.Forms
         {
             SendKeys.Send("^{ESC}");
         }
+
+        private void lvTaches_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                timerRefresh.Enabled = true;
+            }
+        }
     }
 }
 
