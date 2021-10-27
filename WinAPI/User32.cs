@@ -114,5 +114,9 @@ namespace Explorip.WinAPI
 
         [DllImport("user32.dll")]
         public static extern bool IsIconic(IntPtr hWnd);
+
+        public delegate bool EnumDesktopsDelegate(string desktop, IntPtr lParam);
+        [DllImport("user32.dll")]
+        public static extern bool EnumDesktops(IntPtr hwinsta, EnumDesktopsDelegate lpEnumFunc, IntPtr lParam);
     }
 }

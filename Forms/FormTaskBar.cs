@@ -31,7 +31,19 @@ namespace Explorip.Forms
             InitializeComponent();
             lvTaches.SmallImageList = new ImageList();
             lvTaches.LargeImageList = new ImageList();
-            VirtualDesktopProvider.Default.Initialize();
+            Initialize();
+            VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
+        }
+
+        private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
+        {
+            Console.WriteLine("Change bureau");
+            timerRefresh.Enabled = true;
+        }
+
+        private async void Initialize()
+        {
+            await VirtualDesktopProvider.Default.Initialize();
         }
 
         private void TimerRefresh_Tick(object sender, EventArgs e)

@@ -32,6 +32,7 @@ namespace Explorip.TaskBar.Controls
 
         private async void InitializeComObject()
         {
+            //doc : win11 virtualdesktop : https://github.com/MScholtes/VirtualDesktop
             Console.WriteLine("Demarrage VirtualDesktop");
             await VirtualDesktopProvider.Default.Initialize();
             //typeof(VirtualDesktop).GetField("_isSupported", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, true);

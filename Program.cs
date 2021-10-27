@@ -20,9 +20,9 @@ namespace Explorip
 
             if (Helpers.ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
             {
-                _WpfHost = new TaskBar.MyApp();
-                _WpfHost.Run();
-                //Application.Run(new FormTaskBar());
+                Application.Run(new FormTaskBar());
+                /*_WpfHost = new TaskBar.MyApp();
+                _WpfHost.Run();*/
             }
             else
             {
