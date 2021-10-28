@@ -6,6 +6,7 @@
         xmlns:utilities="clr-namespace:Explorip.TaskBar.Utilities"
         xmlns:appbar="clr-namespace:ManagedShell.AppBar;assembly=ManagedShell.AppBar"
         Title="{DynamicResource retrobar_title}"
+        Loaded="AppBarWindow_Loaded"
         Left="0"
         LocationChanged="Taskbar_OnLocationChanged"
         AllowDrop="True"

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <Version>5.0</Version>
+    <Authors>Manato KAMEYA</Authors>
+    <Company>grabacr.net</Company>
+    <Description>C# wrapper for IVirtualDesktopManager on Windows 10 and 11.</Description>
+    <Copyright>Copyright © 2020 Manato KAMEYA</Copyright>
+    <Product>VirtualDesktop</Product>
+    <RootNamespace>WindowsDesktop</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\$(TargetFramework)\VirtualDesktop.WPF.xml</DocumentationFile>
+    <NoWarn>1701,1702,1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VirtualDesktop\VirtualDesktop.csproj" />
+  </ItemGroup>
+
+</Project>

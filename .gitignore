@@ -3,3 +3,9 @@
 /.vs/
 *.user
 /packages/
+/VirtualDesktop/VirtualDesktop/bin/
+/VirtualDesktop/VirtualDesktop/obj/
+/VirtualDesktop/VirtualDesktop.WinForms/bin/
+/VirtualDesktop/VirtualDesktop.WinForms/obj/
+/VirtualDesktop/VirtualDesktop.WPF/bin/
+/VirtualDesktop/VirtualDesktop.WPF/obj/

@@ -118,15 +118,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtualDesktop, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\VirtualDesktop.4.0.1\lib\net472\VirtualDesktop.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtualDesktop.WinForms, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\VirtualDesktop.WinForms.4.0.1\lib\net472\VirtualDesktop.WinForms.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtualDesktop.WPF, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\VirtualDesktop.WPF.4.0.1\lib\net472\VirtualDesktop.WPF.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsInput, Version=1.0.4.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL">
       <HintPath>packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
@@ -383,7 +374,20 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="VirtualDesktop\VirtualDesktop.WinForms\VirtualDesktop.WinForms.csproj">
+      <Project>{216e7cec-137f-4c93-99ad-c01cacf9a4d3}</Project>
+      <Name>VirtualDesktop.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="VirtualDesktop\VirtualDesktop.WPF\VirtualDesktop.WPF.csproj">
+      <Project>{8977acaf-eded-45e3-be03-0c4e26f28d81}</Project>
+      <Name>VirtualDesktop.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj">
+      <Project>{4a2d2831-b4d0-403f-a749-9e9143798c8d}</Project>
+      <Name>VirtualDesktop</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="packages\Microsoft.CodeAnalysis.Analyzers.3.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />

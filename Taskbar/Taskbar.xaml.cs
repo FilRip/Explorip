@@ -23,9 +23,6 @@ namespace Explorip.TaskBar
         public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
             : base(MyApp.MonShellManager.AppBarManager, MyApp.MonShellManager.ExplorerHelper, MyApp.MonShellManager.FullScreenHelper, screen, edge, 0)
         {
-            WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
-            MyApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
-
             InitializeComponent();
 
             DataContext = MyApp.MonShellManager;
@@ -205,6 +202,12 @@ namespace Explorip.TaskBar
         private void PropertiesMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             PropertiesWindow.Open(((MyApp)Application.Current).DictionaryManager);
+        }
+
+        private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
+            MyApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
         }
     }
 }
