@@ -93,7 +93,7 @@ namespace Explorip.TaskBar.Controls
                             if (win.CanAddToTaskbar && win.ShowInTaskbar && !_listeFenetresBureauCourant.Contains(win))
                             {
                                 _listeFenetresBureauCourant.Add(win);
-                                typeof(TasksService).GetMethod("sendTaskbarButtonCreatedMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(MyApp.MonShellManager.TasksService, new object[] { win.Handle });
+                                typeof(TasksService).GetMethod("SendTaskbarButtonCreatedMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(MyApp.MonShellManager.TasksService, new object[] { win.Handle });
                             }
                         }
                         return true;

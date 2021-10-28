@@ -48,30 +48,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ManagedShell, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.AppBar, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.AppBar.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.Common, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.Interop, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.Interop.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.ShellFolders, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.ShellFolders.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.UWPInterop, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.UWPInterop.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.WindowsTasks, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.WindowsTasks.dll</HintPath>
-    </Reference>
-    <Reference Include="ManagedShell.WindowsTray, Version=0.0.132.17638, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\ManagedShell.0.0.132\lib\net471\ManagedShell.WindowsTray.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -165,6 +141,8 @@
     <Compile Include="Helpers\ExtensionsProcess.cs" />
     <Compile Include="Helpers\ExtensionsString.cs" />
     <Compile Include="Helpers\ExtensionsWindows.cs" />
+    <Compile Include="Helpers\GestionEcrans.cs" />
+    <Compile Include="Helpers\GestionFenetres.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
@@ -375,6 +353,38 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj">
+      <Project>{faed8422-bac8-4909-a199-e16595a1f448}</Project>
+      <Name>ManagedShell.AppBar</Name>
+    </ProjectReference>
+    <ProjectReference Include="ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj">
+      <Project>{b5afdc3a-12d6-44bb-8b03-d4a3d6cdce0d}</Project>
+      <Name>ManagedShell.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj">
+      <Project>{70c88862-47d9-4706-8c9a-2c9c8cfd4abd}</Project>
+      <Name>ManagedShell.Interop</Name>
+    </ProjectReference>
+    <ProjectReference Include="ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj">
+      <Project>{08ca72ae-748c-45e3-88f1-0236d1ac679e}</Project>
+      <Name>ManagedShell.ShellFolders</Name>
+    </ProjectReference>
+    <ProjectReference Include="ManagedShell\ManagedShell.UWPInterop\ManagedShell.UWPInterop.csproj">
+      <Project>{51215e01-faa3-4c16-9381-6f7b593a8fbe}</Project>
+      <Name>ManagedShell.UWPInterop</Name>
+    </ProjectReference>
+    <ProjectReference Include="ManagedShell\ManagedShell.WindowsTasks\ManagedShell.WindowsTasks.csproj">
+      <Project>{ddc9d4fa-8457-4d65-a776-32f84227c2d8}</Project>
+      <Name>ManagedShell.WindowsTasks</Name>
+    </ProjectReference>
+    <ProjectReference Include="ManagedShell\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj">
+      <Project>{b469bd3c-8790-4262-ab02-0195aecb9ce6}</Project>
+      <Name>ManagedShell.WindowsTray</Name>
+    </ProjectReference>
+    <ProjectReference Include="ManagedShell\ManagedShell\ManagedShell.csproj">
+      <Project>{78f2ad9f-f689-4f84-ad24-fce54b23c6e6}</Project>
+      <Name>ManagedShell</Name>
+    </ProjectReference>
     <ProjectReference Include="VirtualDesktop\VirtualDesktop.WinForms\VirtualDesktop.WinForms.csproj">
       <Project>{216e7cec-137f-4c93-99ad-c01cacf9a4d3}</Project>
       <Name>VirtualDesktop.WinForms</Name>

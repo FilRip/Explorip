@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFrameworks>net471</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ManagedShell.Common\ManagedShell.Common.csproj" />
+    <ProjectReference Include="..\ManagedShell.Interop\ManagedShell.Interop.csproj" />
+    <ProjectReference Include="..\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj" />
+  </ItemGroup>
+
+</Project>

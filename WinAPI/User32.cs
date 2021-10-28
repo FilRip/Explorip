@@ -118,5 +118,14 @@ namespace Explorip.WinAPI
         public delegate bool EnumDesktopsDelegate(string desktop, IntPtr lParam);
         [DllImport("user32.dll")]
         public static extern bool EnumDesktops(IntPtr hwinsta, EnumDesktopsDelegate lpEnumFunc, IntPtr lParam);
+
+        [DllImport("kernel32.dll", EntryPoint = "GetConsoleWindow", SetLastError = true)]
+        public static extern IntPtr GetConsoleWindow();
+
+        [DllImport("kernel32.dll", EntryPoint = "AttachConsole", SetLastError = true)]
+        public static extern bool AttachConsole(int IdProcessus);
+
+        [DllImport("kernel32.dll", EntryPoint = "FreeConsole", SetLastError = true)]
+        public static extern bool FreeConsole();
     }
 }
