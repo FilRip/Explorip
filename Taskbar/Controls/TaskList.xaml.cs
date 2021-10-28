@@ -27,15 +27,8 @@ namespace Explorip.TaskBar.Controls
         public TaskList()
         {
             InitializeComponent();
-            InitializeComObject();
-        }
-
-        private async void InitializeComObject()
-        {
-            //doc : win11 virtualdesktop : https://github.com/MScholtes/VirtualDesktop
-            Console.WriteLine("Demarrage VirtualDesktop");
-            await VirtualDesktopProvider.Default.Initialize();
-            //typeof(VirtualDesktop).GetField("_isSupported", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, true);
+            Console.WriteLine("Abonnement changement VirtualDesktop");
+            VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
         }
 
         public double ButtonWidth
@@ -71,8 +64,6 @@ namespace Explorip.TaskBar.Controls
                     MyApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
                 
                 isLoaded = true;
-                Console.WriteLine("Abonnement changement VirtualDesktop");
-                VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
             }
 
             SetStyles();
@@ -82,47 +73,45 @@ namespace Explorip.TaskBar.Controls
         {
             lock (_lockChangeDesktop)
             {
-                Console.WriteLine("Change bureau vers " + e.NewDesktop.Id);
-                if (_listeFenetresBureauCourant != null)
-                {
-                    _listeFenetresBureauCourant.Clear();
-                }
-                else
-                {
-                    _listeFenetresBureauCourant = new ObservableCollection<ApplicationWindow>();
-                }
-
-                WinAPI.User32.EnumWindows(new WinAPI.User32.EnumDelegate(EnumerationFenetre), 0);
-
-                IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
-                if (_listeFenetresBureauCourant.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
-                {
-                    ApplicationWindow win = _listeFenetresBureauCourant.First(wnd => wnd.Handle == hWndForeground);
-                    win.State = ApplicationWindow.WindowState.Active;
-                    win.SetShowInTaskbar();
-                }
-
                 Application.Current.Dispatcher.Invoke(new Action(() => {
+                    Console.WriteLine("Change bureau");
+                    if (_listeFenetresBureauCourant != null)
+                    {
+                        _listeFenetresBureauCourant.Clear();
+                    }
+                    else
+                    {
+                        _listeFenetresBureauCourant = new ObservableCollection<ApplicationWindow>();
+                    }
+
+                    WinAPI.User32.EnumWindows((hwnd, lParam) => {
+                        if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
+                        {
+                            ApplicationWindow win = new ApplicationWindow(MyApp.MonShellManager.TasksService, hwnd);
+
+                            if (win.CanAddToTaskbar && win.ShowInTaskbar && !_listeFenetresBureauCourant.Contains(win))
+                            {
+                                _listeFenetresBureauCourant.Add(win);
+                                typeof(TasksService).GetMethod("sendTaskbarButtonCreatedMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(MyApp.MonShellManager.TasksService, new object[] { win.Handle });
+                            }
+                        }
+                        return true;
+                    }, 0);
+
+                    IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
+                    if (_listeFenetresBureauCourant.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
+                    {
+                        ApplicationWindow win = _listeFenetresBureauCourant.First(wnd => wnd.Handle == hWndForeground);
+                        win.State = ApplicationWindow.WindowState.Active;
+                        win.SetShowInTaskbar();
+                    }
+
                     typeof(TasksService).GetProperty("Windows", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(MyApp.MonShellManager.TasksService, _listeFenetresBureauCourant);
+                    System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(_listeFenetresBureauCourant);
+                    typeof(Tasks).GetField("groupedWindows", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(MyApp.MonShellManager.Tasks, nouvelleListeGroupedWindows);
+                    TasksList.ItemsSource = MyApp.MonShellManager.Tasks.GroupedWindows;
                 }));
             }
-        }
-
-        private bool EnumerationFenetre(IntPtr handle, int lParam)
-        {
-            if (VirtualDesktopHelper.IsCurrentVirtualDesktop(handle))
-            {
-                ApplicationWindow win = new ApplicationWindow(MyApp.MonShellManager.TasksService, handle);
-
-                Console.WriteLine($"Fenetre trouvée : {win.Title}");
-                if (win.CanAddToTaskbar && win.ShowInTaskbar && !_listeFenetresBureauCourant.Contains(win))
-                {
-                    Console.WriteLine($"Fenetre acceptée");
-                    _listeFenetresBureauCourant.Add(win);
-                    typeof(TasksService).GetMethod("sendTaskbarButtonCreatedMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(MyApp.MonShellManager.TasksService, new object[] { win.Handle });
-                }
-            }
-            return true;
         }
 
         private void TaskList_OnUnloaded(object sender, RoutedEventArgs e)

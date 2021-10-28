@@ -26,6 +26,7 @@ namespace Explorip.TaskBar
             MyApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
 
             InitializeComponent();
+
             DataContext = MyApp.MonShellManager;
             StartButton.StartMenuMonitor = startMenuMonitor;
 

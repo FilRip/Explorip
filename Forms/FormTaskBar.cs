@@ -32,7 +32,6 @@ namespace Explorip.Forms
             lvTaches.SmallImageList = new ImageList();
             lvTaches.LargeImageList = new ImageList();
             Initialize();
-            VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
         }
 
         private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
@@ -43,7 +42,9 @@ namespace Explorip.Forms
 
         private async void Initialize()
         {
+            Console.WriteLine("Démarrage VirtualDesktop");
             await VirtualDesktopProvider.Default.Initialize();
+            //VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
         }
 
         private void TimerRefresh_Tick(object sender, EventArgs e)
@@ -126,7 +127,7 @@ namespace Explorip.Forms
             SendKeys.Send("^{ESC}");
         }
 
-        private void lvTaches_MouseUp(object sender, MouseEventArgs e)
+        private void LvTaches_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
