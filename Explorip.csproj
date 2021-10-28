@@ -121,6 +121,12 @@
     <Reference Include="VirtualDesktop, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\VirtualDesktop.4.0.1\lib\net472\VirtualDesktop.dll</HintPath>
     </Reference>
+    <Reference Include="VirtualDesktop.WinForms, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\VirtualDesktop.WinForms.4.0.1\lib\net472\VirtualDesktop.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="VirtualDesktop.WPF, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\VirtualDesktop.WPF.4.0.1\lib\net472\VirtualDesktop.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsInput, Version=1.0.4.0, Culture=neutral, PublicKeyToken=9b287f7dc5073cad, processorArchitecture=MSIL">
       <HintPath>packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
