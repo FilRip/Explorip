@@ -23,6 +23,7 @@ namespace Explorip.TaskBar
         public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
             : base(MyApp.MonShellManager.AppBarManager, MyApp.MonShellManager.ExplorerHelper, MyApp.MonShellManager.FullScreenHelper, screen, edge, 0)
         {
+            WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
             MyApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
 
             InitializeComponent();

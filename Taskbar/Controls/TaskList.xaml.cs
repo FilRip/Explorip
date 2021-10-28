@@ -27,8 +27,6 @@ namespace Explorip.TaskBar.Controls
         public TaskList()
         {
             InitializeComponent();
-            Console.WriteLine("Abonnement changement VirtualDesktop");
-            VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
         }
 
         public double ButtonWidth
@@ -62,7 +60,10 @@ namespace Explorip.TaskBar.Controls
                 TasksList.ItemsSource = MyApp.MonShellManager.Tasks.GroupedWindows;
                 if (MyApp.MonShellManager.Tasks.GroupedWindows != null)
                     MyApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
-                
+
+                Console.WriteLine("Abonnement changement VirtualDesktop");
+                VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
+
                 isLoaded = true;
             }
 
@@ -117,6 +118,8 @@ namespace Explorip.TaskBar.Controls
         private void TaskList_OnUnloaded(object sender, RoutedEventArgs e)
         {
             MyApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
+            Console.WriteLine("Désabonnement changement VirtualDesktop");
+            VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
             isLoaded = false;
         }
 
