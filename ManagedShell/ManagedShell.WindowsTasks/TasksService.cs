@@ -116,7 +116,7 @@ namespace ManagedShell.WindowsTasks
             TaskCategoryProvider.SetCategoryChangeDelegate(CategoryChangeDelegate);
         }
 
-        private void GetInitialWindows()
+        public void GetInitialWindows()
         {
             EnumWindows((hwnd, lParam) =>
             {
@@ -201,7 +201,7 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        private void SendTaskbarButtonCreatedMessage(IntPtr hWnd)
+        public void SendTaskbarButtonCreatedMessage(IntPtr hWnd)
         {
             // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
             if (!EnvironmentHelper.IsServerCore) SendNotifyMessage(hWnd, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
@@ -584,7 +584,7 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        internal ObservableCollection<ApplicationWindow> Windows
+        public ObservableCollection<ApplicationWindow> Windows
         {
             get
             {

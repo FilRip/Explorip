@@ -93,7 +93,7 @@ namespace Explorip.TaskBar.Controls
                             if (win.CanAddToTaskbar && win.ShowInTaskbar && !_listeFenetresBureauCourant.Contains(win))
                             {
                                 _listeFenetresBureauCourant.Add(win);
-                                typeof(TasksService).GetMethod("SendTaskbarButtonCreatedMessage", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(MyApp.MonShellManager.TasksService, new object[] { win.Handle });
+                                MyApp.MonShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
                             }
                         }
                         return true;
@@ -107,9 +107,9 @@ namespace Explorip.TaskBar.Controls
                         win.SetShowInTaskbar();
                     }
 
-                    typeof(TasksService).GetProperty("Windows", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(MyApp.MonShellManager.TasksService, _listeFenetresBureauCourant);
+                    MyApp.MonShellManager.TasksService.Windows = _listeFenetresBureauCourant;
                     System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(_listeFenetresBureauCourant);
-                    typeof(Tasks).GetField("groupedWindows", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(MyApp.MonShellManager.Tasks, nouvelleListeGroupedWindows);
+                    MyApp.MonShellManager.Tasks.groupedWindows = nouvelleListeGroupedWindows;
                     TasksList.ItemsSource = MyApp.MonShellManager.Tasks.GroupedWindows;
                 }));
             }

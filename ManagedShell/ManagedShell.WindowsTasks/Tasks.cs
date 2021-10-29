@@ -8,7 +8,7 @@ namespace ManagedShell.WindowsTasks
     public class Tasks : IDisposable
     {
         private readonly TasksService _tasksService;
-        private readonly ICollectionView groupedWindows;
+        public ICollectionView groupedWindows;
 
         public ICollectionView GroupedWindows => groupedWindows;
 
