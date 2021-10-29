@@ -23,8 +23,7 @@ namespace Explorip.TaskBar.Controls
             }
             else
             {
-                WindowsInput.InputSimulator inputSimulator = new WindowsInput.InputSimulator();
-                inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.LWIN, WindowsInput.Native.VirtualKeyCode.VK_A);
+                ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.KEY_A);
             }
         }
     }

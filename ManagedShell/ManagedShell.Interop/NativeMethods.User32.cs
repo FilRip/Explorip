@@ -2992,6 +2992,7 @@ namespace ManagedShell.Interop
 
         public enum VK : int
         {
+            NONE = 0x0,
             ///<summary>
             ///Left mouse button
             ///</summary>

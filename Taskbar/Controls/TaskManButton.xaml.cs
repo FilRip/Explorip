@@ -15,8 +15,7 @@ namespace Explorip.TaskBar.Controls
 
         private void TaskMan_OnClick(object sender, RoutedEventArgs e)
         {
-            WindowsInput.InputSimulator inputSimulator = new WindowsInput.InputSimulator();
-            inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.LWIN, WindowsInput.Native.VirtualKeyCode.TAB);
+            ManagedShell.Common.Helpers.ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.TAB);
         }
     }
 }

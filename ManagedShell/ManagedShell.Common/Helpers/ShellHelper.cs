@@ -505,9 +505,9 @@ namespace ManagedShell.Common.Helpers
             return (info.dwStyle & 0x10000000) == 0x10000000;
         }
 
-        private static void ShellKeyCombo(VK wVk_1, VK wVk_2)
+        public static void ShellKeyCombo(VK wVk_1, VK wVk_2, VK wVk_3 = VK.NONE)
         {
-            INPUT[] inputs = new INPUT[4];
+            INPUT[] inputs = new INPUT[(wVk_3 == VK.NONE ? 4 : 6)];
 
             inputs[0].type = INPUT_KEYBOARD;
             inputs[0].mkhi.ki.time = 0;
@@ -522,19 +522,38 @@ namespace ManagedShell.Common.Helpers
             inputs[1].mkhi.ki.wVk = (ushort)wVk_2;
             inputs[1].mkhi.ki.dwFlags = 0;
 
-            inputs[2].type = INPUT_KEYBOARD;
-            inputs[2].mkhi.ki.wScan = 0;
-            inputs[2].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[2].mkhi.ki.wVk = (ushort)wVk_2;
-            inputs[2].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
+            int position = 2;
+            if (wVk_3 != VK.NONE)
+            {
+                inputs[position].type = INPUT_KEYBOARD;
+                inputs[position].mkhi.ki.wScan = 0;
+                inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
+                inputs[position].mkhi.ki.wVk = (ushort)wVk_3;
+                inputs[position].mkhi.ki.dwFlags = 0;
+                position++;
 
-            inputs[3].type = INPUT_KEYBOARD;
-            inputs[3].mkhi.ki.wScan = 0;
-            inputs[3].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
-            inputs[3].mkhi.ki.wVk = (ushort)wVk_1;
-            inputs[3].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
+                inputs[position].type = INPUT_KEYBOARD;
+                inputs[position].mkhi.ki.wScan = 0;
+                inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
+                inputs[position].mkhi.ki.wVk = (ushort)wVk_3;
+                inputs[position].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
+                position++;
+            }
 
-            SendInput(4, inputs, Marshal.SizeOf(typeof(INPUT)));
+            inputs[position].type = INPUT_KEYBOARD;
+            inputs[position].mkhi.ki.wScan = 0;
+            inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
+            inputs[position].mkhi.ki.wVk = (ushort)wVk_2;
+            inputs[position].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
+            position++;
+
+            inputs[position].type = INPUT_KEYBOARD;
+            inputs[position].mkhi.ki.wScan = 0;
+            inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
+            inputs[position].mkhi.ki.wVk = (ushort)wVk_1;
+            inputs[position].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
+
+            SendInput((uint)(wVk_3 == VK.NONE ? 4 : 6), inputs, Marshal.SizeOf(typeof(INPUT)));
         }
 
         public static void SetShellReadyEvent()

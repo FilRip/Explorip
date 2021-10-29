@@ -127,13 +127,11 @@ namespace Explorip.TaskBar.Controls
         {
             if (EnvironmentHelper.IsWindows11OrBetter)
             {
-                WindowsInput.InputSimulator inputSimulator = new WindowsInput.InputSimulator();
-                inputSimulator.Keyboard.ModifiedKeyStroke(WindowsInput.Native.VirtualKeyCode.LWIN, WindowsInput.Native.VirtualKeyCode.VK_A);
+                ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.KEY_A);
             }
             else
             {
-                WindowsInput.InputSimulator inputSimulator = new WindowsInput.InputSimulator();
-                inputSimulator.Keyboard.ModifiedKeyStroke(new[] { WindowsInput.Native.VirtualKeyCode.LWIN, WindowsInput.Native.VirtualKeyCode.LMENU }, WindowsInput.Native.VirtualKeyCode.VK_D);
+                ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.LMENU, ManagedShell.Interop.NativeMethods.VK.KEY_D);
             }
         }
 
