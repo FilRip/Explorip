@@ -1,4 +1,5 @@
 ﻿using ManagedShell.Common.Extensions;
+
 using Microsoft.Win32;
 
 namespace ManagedShell.Common.Helpers

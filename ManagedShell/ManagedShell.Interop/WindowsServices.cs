@@ -20,7 +20,7 @@ namespace ManagedShell.Interop
         private WindowsServices()
         {
         }
-        
+
         /// <summary>
         /// Gets the status of the specified service.
         /// </summary>
@@ -29,26 +29,36 @@ namespace ManagedShell.Interop
         /// RetrievalError if it could not get the status of the service.
         /// Running if the service is fully up and running.
         /// Otherwise, NotRunning</returns>
-        public static ServiceStatus QueryStatus(string serviceName) {
+        public static ServiceStatus QueryStatus(string serviceName)
+        {
             ServiceController controller = new ServiceController(serviceName);
-            try {
-                if (controller.Status == ServiceControllerStatus.Running) {
+            try
+            {
+                if (controller.Status == ServiceControllerStatus.Running)
+                {
                     return ServiceStatus.Running;
-                } else {
+                }
+                else
+                {
                     return ServiceStatus.NotRunning;
                 }
-            } catch (InvalidOperationException) {
+            }
+            catch (InvalidOperationException)
+            {
                 return ServiceStatus.NotInstalled;
-            } catch {
+            }
+            catch
+            {
                 return ServiceStatus.RetrievalError;
             }
         }
     }
-    
+
     /// <summary>
     /// Simple Windows service status enumeration.
     /// </summary>
-    public enum ServiceStatus {
+    public enum ServiceStatus
+    {
         Running,
         NotRunning,
         NotInstalled,

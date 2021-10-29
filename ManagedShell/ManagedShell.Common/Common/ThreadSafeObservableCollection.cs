@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
-using System.Windows.Threading;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace ManagedShell.Common.Common
 {
@@ -25,7 +25,7 @@ namespace ManagedShell.Common.Common
             }
             else
             {
-                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { Clear(); },null);
+                _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { Clear(); }, null);
             }
         }
         protected override void InsertItem(int index, T item)

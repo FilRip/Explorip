@@ -36,7 +36,7 @@ namespace ManagedShell.Interop
                 this.x = x;
                 this.y = y;
             }
-            
+
             public long x;
             public long y;
         }

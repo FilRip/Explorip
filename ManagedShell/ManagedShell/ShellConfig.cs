@@ -12,7 +12,7 @@ namespace ManagedShell
         /// By default, this is enabled.
         /// </summary>
         public bool EnableTasksService;
-        
+
         /// <summary>
         /// Controls whether the tasks service will be initialized with ManagedShell.<br />
         /// It is possible to initialize the tasks service at a later time.<br />
@@ -38,7 +38,7 @@ namespace ManagedShell
         /// By default, this is enabled.
         /// </summary>
         public bool EnableTrayService;
-        
+
         /// <summary>
         /// Controls whether the tray service will be initialized with ManagedShell.<br />
         /// It is possible to initialize the tray service at a later time.<br />
@@ -58,7 +58,7 @@ namespace ManagedShell
         ///   - Otherwise, the string follows the format: "PathToExe:UID"
         /// </summary>
         public string[] PinnedNotifyIcons;
-        
+
         #endregion
     }
 }

@@ -2,10 +2,12 @@
 using System.ComponentModel;
 using System.IO;
 using System.Windows;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Structs;
+
 using Microsoft.VisualBasic.FileIO;
 
 namespace ManagedShell.ShellFolders
@@ -27,7 +29,7 @@ namespace ManagedShell.ShellFolders
             {
                 return;
             }
-            
+
             if (clipFiles.GetDataPresent(DataFormats.FileDrop))
             {
                 if (clipFiles.GetData(DataFormats.FileDrop) is string[] files)
@@ -55,7 +57,7 @@ namespace ManagedShell.ShellFolders
                 {
                     return;
                 }
-                
+
                 FileAttributes attr = File.GetAttributes(path);
                 if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
                 {

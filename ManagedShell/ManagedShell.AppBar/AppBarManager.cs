@@ -1,9 +1,11 @@
-using ManagedShell.Common.Logging;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.AppBar
@@ -11,10 +13,10 @@ namespace ManagedShell.AppBar
     public class AppBarManager : IDisposable
     {
         private static readonly object appBarLock = new object();
-        
+
         private readonly ExplorerHelper _explorerHelper;
         private int uCallBack;
-        
+
         public List<AppBarWindow> AppBars { get; } = new List<AppBarWindow>();
         public EventHandler<AppBarEventArgs> AppBarEvent;
 
@@ -54,12 +56,12 @@ namespace ManagedShell.AppBar
                     {
                         uCallBack = RegisterWindowMessage("AppBarMessage");
                         abd.uCallbackMessage = uCallBack;
-                        
-                        SHAppBarMessage((int) ABMsg.ABM_NEW, ref abd);
+
+                        SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
                     }
-                    
+
                     AppBars.Add(abWindow);
-                    
+
                     ShellLogger.Debug($"AppBarManager: Created AppBar for handle {abWindow.Handle}");
 
                     if (!EnvironmentHelper.IsAppRunningAsShell)
@@ -75,7 +77,7 @@ namespace ManagedShell.AppBar
                 {
                     if (!EnvironmentHelper.IsAppRunningAsShell)
                     {
-                        SHAppBarMessage((int) ABMsg.ABM_REMOVE, ref abd);
+                        SHAppBarMessage((int)ABMsg.ABM_REMOVE, ref abd);
                     }
 
                     AppBars.Remove(abWindow);
@@ -101,7 +103,7 @@ namespace ManagedShell.AppBar
                 hWnd = hwnd,
                 lParam = (IntPtr)Convert.ToInt32(true)
             };
-            
+
             SHAppBarMessage((int)ABMsg.ABM_ACTIVATE, ref abd);
 
             // apparently the TaskBars like to pop up when AppBars change
@@ -118,7 +120,7 @@ namespace ManagedShell.AppBar
                 cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                 hWnd = hwnd
             };
-            
+
             SHAppBarMessage((int)ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
 
             // apparently the TaskBars like to pop up when AppBars change

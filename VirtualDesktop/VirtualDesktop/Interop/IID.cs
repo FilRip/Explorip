@@ -4,8 +4,10 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
-using WindowsDesktop.Properties;
+
 using Microsoft.Win32;
+
+using WindowsDesktop.Properties;
 
 namespace WindowsDesktop.Interop
 {
@@ -32,7 +34,7 @@ namespace WindowsDesktop.Interop
                         if (targets.All(x => @interface != x) || known.ContainsKey(@interface)) continue;
 
                         if (!Guid.TryParse(pair[1], out var guid)) continue;
-                        
+
                         known.Add(@interface, guid);
                     }
 

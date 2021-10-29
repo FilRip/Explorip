@@ -1,13 +1,15 @@
-﻿using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using ManagedShell.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
+
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray
@@ -41,7 +43,7 @@ namespace ManagedShell.WindowsTray
             Bottom = 23,
             Right = 23
         };
-        
+
         public string[] PinnedNotifyIcons { get; internal set; }
         public IntPtr Handle { get; private set; }
         public bool IsFailed { get; private set; }
@@ -68,7 +70,7 @@ namespace ManagedShell.WindowsTray
         public NotificationArea(TrayService trayService, ExplorerTrayService explorerTrayService) : this(DEFAULT_PINNED, trayService, explorerTrayService)
         {
         }
-        
+
         public NotificationArea(string[] savedPinnedIcons, TrayService trayService, ExplorerTrayService explorerTrayService)
         {
             PinnedNotifyIcons = savedPinnedIcons;
@@ -151,7 +153,7 @@ namespace ManagedShell.WindowsTray
         public void SetPinnedIcons(string[] pinnedIcons)
         {
             PinnedNotifyIcons = pinnedIcons;
-            
+
             UpdatePinnedIcons();
         }
 
@@ -167,7 +169,7 @@ namespace ManagedShell.WindowsTray
         {
             _trayService?.Suspend();
         }
-        
+
         public void Resume()
         {
             _trayService?.Resume();

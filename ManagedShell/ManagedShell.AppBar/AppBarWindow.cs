@@ -1,13 +1,15 @@
-﻿using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using ManagedShell.Interop;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Threading;
+
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
+
 using Application = System.Windows.Application;
 
 namespace ManagedShell.AppBar
@@ -244,7 +246,7 @@ namespace ManagedShell.AppBar
                 ProcessScreenChange(ScreenSetupReason.DwmChange);
                 handled = true;
             }
-            
+
             return IntPtr.Zero;
         }
         #endregion
@@ -432,7 +434,7 @@ namespace ManagedShell.AppBar
                     Top = Screen.Bounds.Bottom / DpiScale - Height - edgeOffset;
                 }
             }
-            
+
 
             if (EnvironmentHelper.IsAppRunningAsShell)
             {

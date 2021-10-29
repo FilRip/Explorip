@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.Common.Helpers
@@ -99,7 +100,7 @@ namespace ManagedShell.Common.Helpers
 
             return desktopHwnd;
         }
-        
+
         public static void HideWindowFromTasks(IntPtr hWnd)
         {
             SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW);

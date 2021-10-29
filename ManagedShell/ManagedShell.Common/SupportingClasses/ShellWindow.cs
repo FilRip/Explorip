@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+
 using ManagedShell.Interop;
 
 namespace ManagedShell.Common.SupportingClasses
@@ -15,7 +16,7 @@ namespace ManagedShell.Common.SupportingClasses
             CreateParams cp = new CreateParams();
             cp.Style |= (int)NativeMethods.WindowStyles.WS_VISIBLE;
             cp.Style |= unchecked((int)NativeMethods.WindowStyles.WS_POPUP);
-            cp.ExStyle |= (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW | 
+            cp.ExStyle |= (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW |
                 (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE;
             cp.Height = SystemInformation.VirtualScreen.Height;
             cp.Width = SystemInformation.VirtualScreen.Width;
@@ -24,8 +25,8 @@ namespace ManagedShell.Common.SupportingClasses
 
             CreateHandle(cp);
             MessageReceived += WndProc;
-            NativeMethods.SetWindowLong(Handle, NativeMethods.GWL_EXSTYLE, 
-                NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE) & 
+            NativeMethods.SetWindowLong(Handle, NativeMethods.GWL_EXSTYLE,
+                NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE) &
                 ~(int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
 
             if (NativeMethods.SetShellWindow(Handle) == 1)
@@ -37,8 +38,8 @@ namespace ManagedShell.Common.SupportingClasses
 
         public void SetSize()
         {
-            NativeMethods.SetWindowPos(Handle, IntPtr.Zero, SystemInformation.VirtualScreen.Left, 
-                SystemInformation.VirtualScreen.Top, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height, 
+            NativeMethods.SetWindowPos(Handle, IntPtr.Zero, SystemInformation.VirtualScreen.Left,
+                SystemInformation.VirtualScreen.Top, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height,
                 (int)NativeMethods.SetWindowPosFlags.SWP_NOZORDER | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
         }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Threading;
+﻿using System.Diagnostics;
 
 namespace ManagedShell.Common.Logging.Observers
 {

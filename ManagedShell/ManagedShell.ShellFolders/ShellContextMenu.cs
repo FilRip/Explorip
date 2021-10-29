@@ -4,9 +4,11 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using ManagedShell.ShellFolders.Interfaces;
+
 using ManagedShell.ShellFolders.Enums;
+using ManagedShell.ShellFolders.Interfaces;
 using ManagedShell.ShellFolders.Structs;
+
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.ShellFolders
@@ -15,7 +17,7 @@ namespace ManagedShell.ShellFolders
     {
         // Properties
         protected List<ShellNewMenuCommand> ShellNewMenus = new List<ShellNewMenuCommand>();
-        
+
         internal IContextMenu iContextMenu;
         internal IContextMenu2 iContextMenu2;
         internal IContextMenu3 iContextMenu3;
@@ -74,7 +76,7 @@ namespace ManagedShell.ShellFolders
                 nativeMenuPtr = IntPtr.Zero;
             }
         }
-        
+
         protected string GetCommandString(IContextMenu iContextMenu, uint idcmd, bool executeString)
         {
             string command = GetCommandStringW(iContextMenu, idcmd, executeString);
@@ -208,14 +210,14 @@ namespace ManagedShell.ShellFolders
                     (uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == NativeMethods.S_OK)
                     return;
             }
-            
+
             foreach (var subMenu in ShellNewMenus)
             {
                 if (m.WParam != subMenu.nativeMenuPtr)
                 {
                     continue;
                 }
-                
+
                 if (subMenu.iContextMenu2 != null &&
                     (m.Msg == (int)NativeMethods.WM.INITMENUPOPUP ||
                         m.Msg == (int)NativeMethods.WM.MEASUREITEM ||

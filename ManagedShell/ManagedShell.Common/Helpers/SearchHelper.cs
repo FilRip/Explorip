@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Windows;
 using System.Collections.ObjectModel;
-using System.Data.OleDb;
 using System.Data;
+using System.Data.OleDb;
 using System.Threading.Tasks;
-using ManagedShell.Common.Logging;
+using System.Windows;
+
 using ManagedShell.Common.Common;
+using ManagedShell.Common.Logging;
 using ManagedShell.Common.SupportingClasses;
 
 namespace ManagedShell.Common.Helpers
@@ -43,7 +44,7 @@ namespace ManagedShell.Common.Helpers
                 Task.Run(DoSearch);
             }
         }
-        
+
         static void IncrementQueryNum()
         {
             if (QueryNum < int.MaxValue)
@@ -95,7 +96,7 @@ namespace ManagedShell.Common.Helpers
             }
             else
             {
-                query = 
+                query =
                     $@"SELECT TOP {MAX_RESULT} ""{displayNameColumn}"", ""System.ItemUrl"", ""System.ItemPathDisplay"", ""System.DateModified"", ""System.Search.Rank""
                     FROM ""SYSTEMINDEX""
                     WHERE WITH(System.ItemNameDisplay, System.ItemAuthors, System.Keywords, System.Music.AlbumTitle, System.Title, System.Music.Genre, System.Message.FromName, System.Subject, System.Contact.FullName) AS #MRProps
@@ -155,7 +156,7 @@ namespace ManagedShell.Common.Helpers
                         {
                             break;
                         }
-                        
+
                         m_results.Add(result);
                     }
 

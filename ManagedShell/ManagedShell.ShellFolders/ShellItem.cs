@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -29,7 +30,7 @@ namespace ManagedShell.ShellFolders
         public bool Loaded => _shellItem != null;
 
         public bool AllowAsync = true;
-        
+
 
         private bool? _isFileSystem;
 
@@ -41,7 +42,7 @@ namespace ManagedShell.ShellFolders
                 {
                     _isFileSystem = ((Attributes & SFGAO.FILESYSTEM) != 0);
                 }
-                
+
                 return (bool)_isFileSystem;
             }
         }
@@ -92,7 +93,7 @@ namespace ManagedShell.ShellFolders
         }
 
         protected IntPtr _absolutePidl;
-        
+
         public IntPtr AbsolutePidl
         {
             get
@@ -126,7 +127,7 @@ namespace ManagedShell.ShellFolders
         }
 
         private string _path;
-        
+
         public string Path
         {
             get
@@ -141,7 +142,7 @@ namespace ManagedShell.ShellFolders
         }
 
         private string _fileName;
-        
+
         public string FileName
         {
             get
@@ -156,7 +157,7 @@ namespace ManagedShell.ShellFolders
         }
 
         private string _displayName;
-        
+
         public string DisplayName
         {
             get
@@ -171,7 +172,7 @@ namespace ManagedShell.ShellFolders
         }
 
         private SFGAO _attributes = 0;
-        
+
         public SFGAO Attributes
         {
             get
@@ -336,12 +337,14 @@ namespace ManagedShell.ShellFolders
             _shellItem = GetShellItem(parsingName);
         }
 
+#pragma warning disable IDE0060
         public ShellItem(IntPtr parentPidl, IShellFolder parentShellFolder, IntPtr relativePidl, bool isAsync = false)
         {
             _relativePidl = relativePidl;
-            
+
             _shellItem = GetShellItem(parentPidl, parentShellFolder, _relativePidl);
         }
+#pragma warning restore IDE0060
 
         public void Refresh(bool newPath = false)
         {
@@ -351,11 +354,11 @@ namespace ManagedShell.ShellFolders
                 _fileName = null;
                 _path = null;
             }
-            
+
             _attributes = 0;
             _isFileSystem = null;
             _isFolder = null;
-            
+
             _smallIcon = null;
             _largeIcon = null;
             _extraLargeIcon = null;
@@ -371,7 +374,7 @@ namespace ManagedShell.ShellFolders
             OnPropertyChanged("Attributes");
             OnPropertyChanged("IsFileSystem");
             OnPropertyChanged("IsFolder");
-            
+
             OnPropertyChanged("SmallIcon");
             OnPropertyChanged("LargeIcon");
             OnPropertyChanged("ExtraLargeIcon");
@@ -447,7 +450,7 @@ namespace ManagedShell.ShellFolders
             {
                 return null;
             }
-            
+
             try
             {
                 Interop.SHCreateItemFromIDList(absolutePidl, typeof(IShellItemImageFactory).GUID, out IShellItemImageFactory ppv);
@@ -462,9 +465,7 @@ namespace ManagedShell.ShellFolders
 
         private void GetParentAndItem()
         {
-            IParentAndItem pni = _shellItem as IParentAndItem;
-
-            if (pni == null)
+            if (!(_shellItem is IParentAndItem pni))
             {
                 return;
             }
@@ -600,7 +601,7 @@ namespace ManagedShell.ShellFolders
             {
                 icon = IconImageConverter.GetDefaultIcon();
             }
-            
+
             return icon;
         }
         #endregion
@@ -609,7 +610,7 @@ namespace ManagedShell.ShellFolders
         public void Rename(string newName)
         {
             string newFilePathName = System.IO.Path.GetDirectoryName(Path) + "\\" + newName;
-            
+
             if (newFilePathName != Path)
             {
                 if (IsFolder)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -28,8 +29,10 @@ namespace ManagedShell.UWPInterop
         private ImageSource GetShellItemImageSource(IconSize size)
         {
             ImageSource img;
-            ShellItem item = new ShellItem("shell:appsfolder\\" + AppUserModelId);
-            item.AllowAsync = false;
+            ShellItem item = new ShellItem("shell:appsfolder\\" + AppUserModelId)
+            {
+                AllowAsync = false
+            };
 
             switch (size)
             {
@@ -106,17 +109,17 @@ namespace ManagedShell.UWPInterop
         #region IEquitable
         public bool Equals(StoreApp other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
             return AppUserModelId == other.AppUserModelId;
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((StoreApp) obj);
+            return Equals((StoreApp)obj);
         }
 
         public override int GetHashCode()

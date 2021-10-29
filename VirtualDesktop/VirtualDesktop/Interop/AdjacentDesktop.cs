@@ -1,10 +1,10 @@
 ﻿
 namespace WindowsDesktop.Interop
 {
-	public enum AdjacentDesktop
-	{
-		LeftDirection = 3,
+    public enum AdjacentDesktop
+    {
+        LeftDirection = 3,
 
-		RightDirection = 4,
-	}
+        RightDirection = 4,
+    }
 }

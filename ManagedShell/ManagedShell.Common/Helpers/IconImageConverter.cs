@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Interop;
 
@@ -79,7 +80,7 @@ namespace ManagedShell.Common.Helpers
         /// </summary>
         /// <param name="hIcon">The icon's handle (HICON).</param>
         /// <returns>The Icon, or a default icon if not found.</returns>
-        public static ImageSource GetImageFromHIcon(IntPtr hIcon, bool returnDefault = true) 
+        public static ImageSource GetImageFromHIcon(IntPtr hIcon, bool returnDefault = true)
         {
             BitmapSource bs;
             if (hIcon != IntPtr.Zero)
@@ -114,7 +115,8 @@ namespace ManagedShell.Common.Helpers
         /// Creates an empty bitmap source in the size of an Icon.
         /// </summary>
         /// <returns>Empty icon bitmap.</returns>
-        private static BitmapSource GenerateEmptyBitmapSource() {
+        private static BitmapSource GenerateEmptyBitmapSource()
+        {
             int width = 16;
             int height = width;
             int stride = width / 4;

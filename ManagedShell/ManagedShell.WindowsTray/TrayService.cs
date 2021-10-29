@@ -1,8 +1,10 @@
-using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Threading;
+
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray

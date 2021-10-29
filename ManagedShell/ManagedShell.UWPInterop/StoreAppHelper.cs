@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -309,7 +310,7 @@ namespace ManagedShell.UWPInterop
                 {
                     return pman.FindPackagesForUser(userSID);
                 }
-                
+
                 return pman.FindPackagesForUser(userSID, packageFamilyName);
             }
             catch
@@ -327,7 +328,7 @@ namespace ManagedShell.UWPInterop
             {
                 path = package.InstalledLocation.Path;
             }
-            catch {}
+            catch { }
 
             return path;
         }
@@ -370,7 +371,7 @@ namespace ManagedShell.UWPInterop
                 foreach (XmlNode appNode in appNodeList)
                 {
                     // get specific app in package
-                    
+
                     if (appNode.SelectSingleNode("@Id", xmlnsManager)?.Value == appId)
                     {
                         // return values

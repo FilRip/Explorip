@@ -1,10 +1,13 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+
 using ManagedShell.Common.Logging;
+
+using Microsoft.Win32;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.Common.Helpers
@@ -129,6 +132,7 @@ namespace ManagedShell.Common.Helpers
             }
         }
 
+#pragma warning disable IDE0060
         public static bool StartProcess(string filename, string args, string verb)
         {
             try
@@ -159,6 +163,7 @@ namespace ManagedShell.Common.Helpers
                 return false;
             }
         }
+#pragma warning restore IDE0060
 
         public static bool Exists(string filename)
         {
@@ -202,7 +207,7 @@ namespace ManagedShell.Common.Helpers
                 Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced",
                     false);
             object hideFileExtValue = hideFileExt?.GetValue("HideFileExt");
-            
+
             return hideFileExtValue != null && hideFileExtValue.ToString() == "0";
         }
 
@@ -331,7 +336,7 @@ namespace ManagedShell.Common.Helpers
             return SendToRecycleBin(path, FileOperationFlags.FOF_NOCONFIRMATION | FileOperationFlags.FOF_NOERRORUI | FileOperationFlags.FOF_SILENT);
 
         }
-        
+
         public static void ToggleDesktopIcons(bool enable)
         {
             if (!EnvironmentHelper.IsAppRunningAsShell)
@@ -362,7 +367,7 @@ namespace ManagedShell.Common.Helpers
 
                 if (IsDesktopVisible() != enable)
                 {
-                    SendMessageTimeout(hWnd, (uint) WM.COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
+                    SendMessageTimeout(hWnd, (uint)WM.COMMAND, toggleDesktopCommand, IntPtr.Zero, 2, 200, ref hWnd);
                 }
             }
         }
@@ -378,7 +383,7 @@ namespace ManagedShell.Common.Helpers
             {
                 // open process
                 // QueryLimitedInformation flag allows us to access elevated applications as well
-                IntPtr hProc = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, (int) procId);
+                IntPtr hProc = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, (int)procId);
 
                 // get filename
                 int len = outFileName.Capacity;

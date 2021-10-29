@@ -1,7 +1,4 @@
-﻿using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using ManagedShell.Interop;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -9,8 +6,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
+
 using ManagedShell.Common.Enums;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.Common.SupportingClasses;
+using ManagedShell.Interop;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTasks
@@ -18,7 +20,7 @@ namespace ManagedShell.WindowsTasks
     public class TasksService : DependencyObject, IDisposable
     {
         public static readonly IconSize DEFAULT_ICON_SIZE = IconSize.Small;
-        
+
         private NativeWindowEx _HookWin;
         private readonly object _windowsLock = new object();
         internal bool IsInitialized;
@@ -36,7 +38,7 @@ namespace ManagedShell.WindowsTasks
         public TasksService() : this(DEFAULT_ICON_SIZE)
         {
         }
-        
+
         public TasksService(IconSize iconSize)
         {
             TaskIconSize = iconSize;
@@ -336,7 +338,7 @@ namespace ManagedShell.WindowsTasks
                                 if (Windows.Any(i => i.Handle == msg.LParam))
                                 {
                                     ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    
+
                                     if (win.State != ApplicationWindow.WindowState.Active)
                                     {
                                         win.State = ApplicationWindow.WindowState.Flashing;

@@ -282,6 +282,7 @@ namespace ManagedShell.Interop
         [DllImport(User32_DllName)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int messageId, IntPtr wparam, IntPtr lparam);
 
+#pragma warning disable IDE0060
         [StructLayout(LayoutKind.Sequential)]
         public struct WINDOWINFO
         {
@@ -302,6 +303,7 @@ namespace ManagedShell.Interop
                 cbSize = (uint)(Marshal.SizeOf(typeof(WINDOWINFO)));
             }
         }
+#pragma warning restore IDE0060
 
         [DllImport(User32_DllName)]
         public static extern IntPtr GetClassLong(IntPtr handle, int longClass);
@@ -1770,6 +1772,7 @@ namespace ManagedShell.Interop
         public const int INPUT_KEYBOARD = 1;
         public const uint KEYEVENTF_KEYUP = 0x0002;
 
+#pragma warning disable IDE0044
         [StructLayout(LayoutKind.Sequential)]
         public struct MOUSEINPUT
         {
@@ -1780,6 +1783,7 @@ namespace ManagedShell.Interop
             uint time;
             IntPtr dwExtraInfo;
         }
+#pragma warning restore IDE0044
 
         [StructLayout(LayoutKind.Sequential)]
         public struct KEYBDINPUT
@@ -1791,6 +1795,7 @@ namespace ManagedShell.Interop
             public IntPtr dwExtraInfo;
         }
 
+#pragma warning disable IDE0044
         [StructLayout(LayoutKind.Sequential)]
         public struct HARDWAREINPUT
         {
@@ -1798,6 +1803,7 @@ namespace ManagedShell.Interop
             ushort wParamL;
             ushort wParamH;
         }
+#pragma warning restore IDE0044
 
         [StructLayout(LayoutKind.Explicit)]
         public struct MouseKeybdHardwareInputUnion

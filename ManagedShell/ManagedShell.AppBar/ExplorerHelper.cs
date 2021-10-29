@@ -1,10 +1,12 @@
-﻿using ManagedShell.Common.Helpers;
-using ManagedShell.WindowsTray;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+
+using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.WindowsTray;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.AppBar
@@ -111,10 +113,10 @@ namespace ManagedShell.AppBar
                 {
                     cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                     hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle),
-                    lParam = (IntPtr) state
+                    lParam = (IntPtr)state
                 };
-                
-                SHAppBarMessage((int) ABMsg.ABM_SETSTATE, ref abd);
+
+                SHAppBarMessage((int)ABMsg.ABM_SETSTATE, ref abd);
             });
         }
 
@@ -125,7 +127,7 @@ namespace ManagedShell.AppBar
                 cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                 hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle)
             };
-            
+
             uint uState = SHAppBarMessage((int)ABMsg.ABM_GETSTATE, ref abd);
 
             return (TaskbarState)uState;

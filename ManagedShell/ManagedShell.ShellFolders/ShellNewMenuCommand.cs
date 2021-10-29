@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
@@ -18,7 +19,7 @@ namespace ManagedShell.ShellFolders
         internal IntPtr iContextMenu3Ptr;
 
         internal IntPtr nativeMenuPtr;
-        
+
         public void AddSubMenu(ShellFolder folder, int position, ref IntPtr parentNativeMenuPtr)
         {
             if (GetNewContextMenu(folder))
@@ -102,7 +103,7 @@ namespace ManagedShell.ShellFolders
                     return true;
                 }
             }
-            
+
             return false;
         }
 

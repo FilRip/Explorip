@@ -1,5 +1,7 @@
 ﻿using System;
+
 using ManagedShell.Common.Logging;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray
@@ -40,7 +42,7 @@ namespace ManagedShell.WindowsTray
             {
                 ShellLogger.Error($"SafeNotifyIconData: Unable to convert icon handle: {e.Message}");
             }
-            
+
             szTip = nid.szTip;
             dwState = nid.dwState;
             dwStateMask = nid.dwStateMask;

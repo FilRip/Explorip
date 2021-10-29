@@ -83,6 +83,7 @@ namespace ManagedShell.Common.Helpers
         {
         }
 
+#pragma warning disable IDE1006
         [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IAudioEndpointVolume
         {
@@ -91,7 +92,9 @@ namespace ManagedShell.Common.Helpers
             void _VtblGap8_5();
             int GetMute();
         }
+#pragma warning restore IDE1006
 
+#pragma warning disable IDE1006
         [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDeviceEnumerator
         {
@@ -100,6 +103,7 @@ namespace ManagedShell.Common.Helpers
             [PreserveSig]
             int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice ppDevice);
         }
+#pragma warning restore IDE1006
 
         [Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDevice

@@ -2,10 +2,12 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
-using ManagedShell.ShellFolders.Interfaces;
 using ManagedShell.ShellFolders.Enums;
+using ManagedShell.ShellFolders.Interfaces;
+
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.ShellFolders
@@ -154,7 +156,7 @@ namespace ManagedShell.ShellFolders
             finally
             {
                 FreeResources();
-                
+
                 foreach (var subMenu in ShellNewMenus)
                 {
                     subMenu.FreeResources();
@@ -224,7 +226,7 @@ namespace ManagedShell.ShellFolders
 
             return allFolders;
         }
-        
+
         protected bool GetIContextMenu(ShellItem[] items, ShellFolder parentFolder, IntPtr hwndOwner, out IntPtr icontextMenuPtr, out IContextMenu iContextMenu)
         {
             if (items.Length < 1)
@@ -234,7 +236,7 @@ namespace ManagedShell.ShellFolders
 
                 return false;
             }
-            
+
             IntPtr[] pidls = new IntPtr[items.Length];
 
             for (int i = 0; i < items.Length; i++)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+
 using ManagedShell.ShellFolders.Interfaces;
 
 namespace ManagedShell.ShellFolders
@@ -19,7 +20,7 @@ namespace ManagedShell.ShellFolders
                 return _fileSize;
             }
         }
-        
+
         public ShellFile(ShellFolder parentFolder, string parsingName) : base(parsingName)
         {
             _parentItem = parentFolder;

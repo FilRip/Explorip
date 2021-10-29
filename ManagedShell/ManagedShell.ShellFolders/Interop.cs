@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
@@ -41,7 +42,7 @@ namespace ManagedShell.ShellFolders
         {
             return (ulong)ptr & 0xffff;
         }
-        
+
         // Retrieves the IShellFolder interface for the desktop folder,
         // which is the root of the Shell's namespace. 
         [DllImport("shell32.dll")]
@@ -91,7 +92,7 @@ namespace ManagedShell.ShellFolders
             uint uIDNewItem,
             [MarshalAs(UnmanagedType.LPTStr)]
             string lpNewItem);
-        
+
         [DllImport("user32",
             SetLastError = true,
             CharSet = CharSet.Auto)]

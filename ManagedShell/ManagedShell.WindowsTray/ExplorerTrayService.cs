@@ -1,13 +1,16 @@
-﻿using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+
+using Microsoft.Win32;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray
 {
-    public  class ExplorerTrayService
+    public class ExplorerTrayService
     {
         private SystrayDelegate trayDelegate;
 
@@ -281,6 +284,7 @@ namespace ManagedShell.WindowsTray
         {
             public int iBitmap;
             public int idCommand;
+#pragma warning disable IDE0044
             [StructLayout(LayoutKind.Explicit)]
             private struct TBBUTTON_U
             {
@@ -288,6 +292,7 @@ namespace ManagedShell.WindowsTray
                 [FieldOffset(1)] public byte fsStyle;
                 [FieldOffset(0)] private IntPtr bReserved;
             }
+#pragma warning restore IDE0044
             private TBBUTTON_U union;
             public byte FsState { get { return union.fsState; } set { union.fsState = value; } }
             public byte FsStyle { get { return union.fsStyle; } set { union.fsStyle = value; } }

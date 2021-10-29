@@ -1,10 +1,12 @@
-﻿using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Threading;
+
 using WindowsDesktop.Internal;
 using WindowsDesktop.Properties;
 
@@ -46,7 +44,8 @@ namespace WindowsDesktop.Interop
             if (ProductInfo.OSBuild >= 22449)
             {
                 this.VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal22449(this._assembly);
-            } else if (ProductInfo.OSBuild >= 21359)
+            }
+            else if (ProductInfo.OSBuild >= 21359)
             {
                 this.VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal21359(this._assembly);
             }

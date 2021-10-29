@@ -7,7 +7,7 @@ namespace ManagedShell.Interop
     {
         // Undocumented dark mode API for 1903 and later
         // https://github.com/ysc3839/win32-darkmode
-        
+
         public enum PreferredAppMode
         {
             Default,

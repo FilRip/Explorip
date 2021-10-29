@@ -5,10 +5,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+
 using WindowsDesktop.Properties;
 
 #if NET472
 using Microsoft.CSharp;
+
 using System.CodeDom.Compiler;
 #else
 using System.Runtime.Loader;
@@ -154,7 +156,7 @@ namespace WindowsDesktop.Interop
                 cp.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);
 
                 var result = provider.CompileAssemblyFromSource(cp, sources.ToArray());
-                if (result.Errors.Count > 0) 
+                if (result.Errors.Count > 0)
                 {
                     var nl = Environment.NewLine;
                     var message = $"Failed to compile COM interfaces assembly.{nl}{string.Join(nl, result.Errors.OfType<CompilerError>().Select(x => $"  {x}"))}";

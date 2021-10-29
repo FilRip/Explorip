@@ -7,11 +7,11 @@ namespace ManagedShell.AppBar
     public class AppBarScreen
     {
         public Rectangle Bounds { get; set; }
-        
+
         public string DeviceName { get; set; }
-        
+
         public bool Primary { get; set; }
-        
+
         public Rectangle WorkingArea { get; set; }
 
         public static AppBarScreen FromScreen(Screen screen)
@@ -33,7 +33,7 @@ namespace ManagedShell.AppBar
         public static List<AppBarScreen> FromAllScreens()
         {
             List<AppBarScreen> screens = new List<AppBarScreen>();
-            
+
             foreach (var screen in Screen.AllScreens)
             {
                 screens.Add(FromScreen(screen));

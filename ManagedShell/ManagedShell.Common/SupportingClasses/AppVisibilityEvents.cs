@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Interfaces;
 

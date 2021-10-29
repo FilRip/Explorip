@@ -1,5 +1,4 @@
 ﻿using System;
-using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray
 {

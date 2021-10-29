@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Structs;
 

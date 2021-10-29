@@ -1,4 +1,5 @@
 ﻿using System;
+
 using ManagedShell.Common.Enums;
 
 namespace ManagedShell.Common.SupportingClasses

@@ -1,7 +1,4 @@
-﻿using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
-using ManagedShell.Interop;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -9,7 +6,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+
 using ManagedShell.Common.Enums;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
 
 namespace ManagedShell.WindowsTasks
 {
@@ -158,7 +159,7 @@ namespace ManagedShell.WindowsTasks
                 OnPropertyChanged("Icon");
             }
         }
-        
+
         private ImageSource _overlayIcon;
 
         public ImageSource OverlayIcon

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using WindowsDesktop.Interop;
 
 namespace WindowsDesktop
@@ -24,12 +23,15 @@ namespace WindowsDesktop
 
         public bool AutoRestart { get; set; } = true;
 
-        internal ComObjects ComObjects {
-            get { 
-                while(!_comObjects.IsAvailable) {
+        internal ComObjects ComObjects
+        {
+            get
+            {
+                while (!_comObjects.IsAvailable)
+                {
                     Thread.Sleep(1);
                 }
-                return _comObjects; 
+                return _comObjects;
             }
             private set => _comObjects = value;
         }

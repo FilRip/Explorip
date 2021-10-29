@@ -14,7 +14,7 @@ namespace ManagedShell.Interop
         SavedGames,
         SavedSearches
     }
-    
+
     /// <summary>
     /// Class containing methods to retrieve specific file system paths that aren't provided by Environment.SpecialFolder.
     /// </summary>
@@ -63,7 +63,7 @@ namespace ManagedShell.Interop
         {
             int result = NativeMethods.SHGetKnownFolderPath(new Guid(_knownFolderGuids[(int)knownFolder]),
                 (uint)flags, new IntPtr(defaultUser ? -1 : 0), out IntPtr outPath);
-            
+
             if (result >= 0)
             {
                 return Marshal.PtrToStringUni(outPath);

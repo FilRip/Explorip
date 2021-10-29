@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 
@@ -19,7 +20,7 @@ namespace ManagedShell.Common.SupportingClasses
         {
             get
             {
-                if (icon == null && !_iconLoading)
+                if (MonIcone == null && !_iconLoading)
                 {
                     _iconLoading = true;
 
@@ -31,17 +32,17 @@ namespace ManagedShell.Common.SupportingClasses
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
 
-                return icon;
+                return MonIcone;
             }
             set
             {
-                icon = value;
+                MonIcone = value;
                 OnPropertyChanged("Icon");
             }
         }
 
         private bool _iconLoading = false;
-        private ImageSource icon { get; set; }
+        private ImageSource MonIcone { get; set; }
 
         #region INotifyPropertyChanged Members
 

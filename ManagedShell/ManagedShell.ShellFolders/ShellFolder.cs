@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+
 using ManagedShell.Common.Common;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
@@ -26,7 +27,7 @@ namespace ManagedShell.ShellFolders
         public bool IsDesktop { get; private set; }
 
         private IShellFolder _shellFolder;
-        
+
         public IShellFolder ShellFolderInterface
         {
             get
@@ -57,9 +58,9 @@ namespace ManagedShell.ShellFolders
                 return _files;
             }
         }
-        
+
         public ShellFolder(string parsingName, IntPtr hwndInput, bool loadAsync = false) : this(parsingName, hwndInput, loadAsync, true)
-        {}
+        { }
 
         public ShellFolder(string parsingName, IntPtr hwndInput, bool loadAsync, bool watchChanges) : base(parsingName)
         {
@@ -111,7 +112,7 @@ namespace ManagedShell.ShellFolders
         {
             // The Desktop can only be acquired via SHGetDesktopFolder*. If our parsing name matches the desktop directory, use this logic.
             // *This isn't true on Windows 10, but we should use this logic anyway to provide consistency with SHCreateDesktop behavior.
-            
+
             if (_userDesktopPath == null)
             {
                 SetUserDesktopPath();
@@ -143,7 +144,7 @@ namespace ManagedShell.ShellFolders
         private void Initialize()
         {
             // If this method is called outside of the main thread, deadlocks may occur
-            
+
             // Even if this ShellFolder was instantiated within an async folder enumeration, set IShellFolder here instead of the new thread.
             // The IShellFolder is used later (such as in context menus) where we need to be running on the UI thread, and the
             // IShellFolder from the background thread cannot be used.
@@ -151,9 +152,9 @@ namespace ManagedShell.ShellFolders
             {
                 return;
             }
-            
+
             _changeWatcher?.StartWatching();
-            
+
             if (_loadAsync)
             {
                 // Enumerate the directory on a new thread so that we don't block the UI during a potentially long operation
@@ -171,7 +172,7 @@ namespace ManagedShell.ShellFolders
             IntPtr hEnum = IntPtr.Zero;
 
             Files.Clear();
-            
+
             try
             {
                 if (ShellFolderInterface?.EnumObjects(_hwndInput, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS,
@@ -386,7 +387,7 @@ namespace ManagedShell.ShellFolders
         {
             _isDisposed = true;
             _changeWatcher?.Dispose();
-            
+
             try
             {
                 if (_files != null)
@@ -415,7 +416,7 @@ namespace ManagedShell.ShellFolders
                 Marshal.Release(_shellFolderPtr);
                 _shellFolderPtr = IntPtr.Zero;
             }
-            
+
             base.Dispose();
         }
     }

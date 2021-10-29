@@ -1,14 +1,16 @@
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Media;
-using System.Windows.Input;
-using static ManagedShell.Interop.NativeMethods;
-using ManagedShell.Common.Logging;
 using System.Collections.Generic;
-using System.Linq;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using System.Windows.Media;
+
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+
+using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray
 {
@@ -226,7 +228,7 @@ namespace ManagedShell.WindowsTray
         {
             Pin(_notificationArea.PinnedNotifyIcons.Length);
         }
-        
+
         public void Pin(int position)
         {
             bool updated = false;
@@ -354,6 +356,7 @@ namespace ManagedShell.WindowsTray
             }
         }
 
+#pragma warning disable IDE0060
         public void IconMouseUp(MouseButton button, uint mouse, int doubleClickTime)
         {
             ShellLogger.Debug($"NotifyIcon: {button} mouse button clicked: {Title}");
@@ -382,6 +385,7 @@ namespace ManagedShell.WindowsTray
                 _lastRClick = DateTime.Now;
             }
         }
+#pragma warning restore IDE0060
 
         internal bool SendMessage(uint message, uint mouse)
         {
@@ -460,7 +464,7 @@ namespace ManagedShell.WindowsTray
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void OnPropertyChanged([CallerMemberName]string PropertyName = "")
+        public void OnPropertyChanged([CallerMemberName] string PropertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }

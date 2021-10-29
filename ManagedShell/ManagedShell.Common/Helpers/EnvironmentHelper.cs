@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+
 using ManagedShell.Interop;
+
 using Microsoft.Win32;
 
 namespace ManagedShell.Common.Helpers
@@ -117,7 +119,7 @@ namespace ManagedShell.Common.Helpers
                 {
                     return false;
                 }
-                
+
                 if (osVersionMajor == 0)
                 {
                     GetOSVersion();

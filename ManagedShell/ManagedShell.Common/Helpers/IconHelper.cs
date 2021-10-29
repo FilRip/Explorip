@@ -1,9 +1,11 @@
-﻿using ManagedShell.Interop;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.Common.Helpers
@@ -12,7 +14,7 @@ namespace ManagedShell.Common.Helpers
     {
         public static ComTaskScheduler IconScheduler = new ComTaskScheduler();
         public static object ComLock = new object();
-        
+
         // IImageList references
         private static Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
         private static IImageList imlLarge; // 32pt
@@ -184,7 +186,7 @@ namespace ManagedShell.Common.Helpers
             {
                 return (IconSize)size;
             }
-            
+
             return IconSize.Small;
         }
 

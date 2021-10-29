@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Common.Structs;
+
 using Microsoft.Win32;
 
 namespace ManagedShell.Common.SupportingClasses
@@ -169,7 +171,7 @@ namespace ManagedShell.Common.SupportingClasses
                         {
                             continue;
                         }
-                        
+
                         // only add items that are not disabled
                         if (!disallowedItems.Contains(Path.GetFileName(startupFile)))
                         {

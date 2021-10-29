@@ -2,18 +2,18 @@
 
 namespace WindowsDesktop.Interop
 {
-	[ComInterfaceWrapper]
-	internal class ApplicationViewCollection : ComInterfaceWrapperBase
-	{
-		public ApplicationViewCollection(ComInterfaceAssembly assembly)
-			: base(assembly) { }
+    [ComInterfaceWrapper]
+    internal class ApplicationViewCollection : ComInterfaceWrapperBase
+    {
+        public ApplicationViewCollection(ComInterfaceAssembly assembly)
+            : base(assembly) { }
 
-		public ApplicationView GetViewForHwnd(IntPtr hWnd)
-		{
-			var param = Args(hWnd, null);
-			this.Invoke(param);
+        public ApplicationView GetViewForHwnd(IntPtr hWnd)
+        {
+            var param = Args(hWnd, null);
+            this.Invoke(param);
 
-			return new ApplicationView(this.ComInterfaceAssembly, param[1]);
-		}
-	}
+            return new ApplicationView(this.ComInterfaceAssembly, param[1]);
+        }
+    }
 }

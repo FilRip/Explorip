@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+
 using ManagedShell.Common.Logging;
 
 namespace ManagedShell.ShellFolders
@@ -12,7 +13,7 @@ namespace ManagedShell.ShellFolders
         private readonly FileSystemEventHandler _deletedEventHandler;
         private readonly RenamedEventHandler _renamedEventHandler;
         private List<FileSystemWatcher> _watchers = new List<FileSystemWatcher>();
-        
+
         public ChangeWatcher(List<string> pathList, FileSystemEventHandler changedEventHandler, FileSystemEventHandler createdEventHandler, FileSystemEventHandler deletedEventHandler, RenamedEventHandler renamedEventHandler)
         {
             if (pathList == null || pathList.Count < 1)
@@ -38,10 +39,10 @@ namespace ManagedShell.ShellFolders
                     watcher.Created += _createdEventHandler;
                     watcher.Deleted += _deletedEventHandler;
                     watcher.Renamed += _renamedEventHandler;
-                    
+
                     _watchers.Add(watcher);
                 }
-                
+
             }
             catch (Exception e)
             {

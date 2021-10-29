@@ -1,8 +1,9 @@
-﻿using ManagedShell.AppBar;
+﻿using System;
+
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
 using ManagedShell.WindowsTasks;
 using ManagedShell.WindowsTray;
-using System;
-using ManagedShell.Common.Helpers;
 
 namespace ManagedShell
 {
@@ -13,7 +14,7 @@ namespace ManagedShell
             EnableTasksService = true,
             AutoStartTasksService = true,
             TaskIconSize = TasksService.DEFAULT_ICON_SIZE,
-            
+
             EnableTrayService = true,
             AutoStartTrayService = true,
             PinnedNotifyIcons = NotificationArea.DEFAULT_PINNED
@@ -25,7 +26,7 @@ namespace ManagedShell
         public ShellManager() : this(DefaultShellConfig)
         {
         }
-        
+
         /// <summary>
         /// Initializes ManagedShell with a custom configuration.
         /// </summary>
