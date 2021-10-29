@@ -24,9 +24,9 @@ namespace WindowsDesktop
 
         public VirtualDesktopWallpaperChangedEventArgs(VirtualDesktop source, string oldPath, string newPath)
         {
-            this.Source = source;
-            this.OldPath = oldPath;
-            this.NewPath = newPath;
+            Source = source;
+            OldPath = oldPath;
+            NewPath = newPath;
         }
     }
 }

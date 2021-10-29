@@ -18,25 +18,25 @@ namespace WindowsDesktop.Interop
 
         public ComInterfaceWrapperAttribute(string interfaceName)
         {
-            this.InterfaceName = interfaceName;
+            InterfaceName = interfaceName;
         }
 
         public ComInterfaceWrapperAttribute(string interfaceName, int buildVersion)
         {
-            this.InterfaceName = interfaceName;
-            this.BuildVersion = buildVersion;
+            InterfaceName = interfaceName;
+            BuildVersion = buildVersion;
         }
 
         public ComInterfaceWrapperAttribute(string interfaceName, uint latestVersion, int buildVersion)
         {
-            this.InterfaceName = interfaceName;
-            this.LatestVersion = latestVersion;
-            this.BuildVersion = buildVersion;
+            InterfaceName = interfaceName;
+            LatestVersion = latestVersion;
+            BuildVersion = buildVersion;
         }
 
         public ComInterfaceWrapperAttribute(uint latestVersion)
         {
-            this.LatestVersion = latestVersion;
+            LatestVersion = latestVersion;
         }
 
         public static string GetInterfaceName(Type wrapperType)
@@ -50,7 +50,7 @@ namespace WindowsDesktop.Interop
         /// </summary>
         public static string GetComInterfaceNameIfWrapper(this Type type)
         {
-            var attr = type.GetCustomAttribute<ComInterfaceWrapperAttribute>();
+            ComInterfaceWrapperAttribute attr = type.GetCustomAttribute<ComInterfaceWrapperAttribute>();
             return attr != null
                 ? attr.InterfaceName ?? $"I{type.Name}"
                 : null;
@@ -61,8 +61,8 @@ namespace WindowsDesktop.Interop
         /// </summary>
         public static IEnumerable<string> GetComInterfaceNamesIfWrapper(this Type type, int targetBuild = -1)
         {
-            var attr = type.GetCustomAttribute<ComInterfaceWrapperAttribute>();
-            var baseName = attr != null
+            ComInterfaceWrapperAttribute attr = type.GetCustomAttribute<ComInterfaceWrapperAttribute>();
+            string baseName = attr != null
                 ? attr.InterfaceName ?? $"I{type.Name}"
                 : null;
             if (string.IsNullOrEmpty(baseName)) return Enumerable.Empty<string>();

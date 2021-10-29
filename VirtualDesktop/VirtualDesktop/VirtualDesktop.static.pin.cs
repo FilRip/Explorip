@@ -27,7 +27,7 @@ namespace WindowsDesktop
         {
             VirtualDesktopHelper.ThrowIfNotSupported();
 
-            var view = hWnd.GetApplicationView();
+            ApplicationView view = hWnd.GetApplicationView();
 
             if (!ComInterface.VirtualDesktopPinnedApps.IsViewPinned(view))
             {
@@ -43,7 +43,7 @@ namespace WindowsDesktop
         {
             VirtualDesktopHelper.ThrowIfNotSupported();
 
-            var view = hWnd.GetApplicationView();
+            ApplicationView view = hWnd.GetApplicationView();
 
             if (ComInterface.VirtualDesktopPinnedApps.IsViewPinned(view))
             {

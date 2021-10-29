@@ -12,8 +12,8 @@ namespace WindowsDesktop
 
         public VirtualDesktopChangedEventArgs(VirtualDesktop oldDesktop, VirtualDesktop newDesktop)
         {
-            this.OldDesktop = oldDesktop;
-            this.NewDesktop = newDesktop;
+            OldDesktop = oldDesktop;
+            NewDesktop = newDesktop;
         }
     }
 }

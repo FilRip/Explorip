@@ -37,38 +37,38 @@ namespace WindowsDesktop
         }
 
         public Task Initialize()
-            => this.Initialize(TaskScheduler.FromCurrentSynchronizationContext());
+            => Initialize(TaskScheduler.FromCurrentSynchronizationContext());
 
         public Task Initialize(TaskScheduler scheduler)
         {
-            if (this._initializationTask == null)
+            if (_initializationTask == null)
             {
-                this._initializationTask = Task.Run(() => Core());
+                _initializationTask = Task.Run(() => Core());
 
-                if (this.AutoRestart && scheduler != null)
+                if (AutoRestart && scheduler != null)
                 {
-                    this._initializationTask.ContinueWith(
-                        _ => this.ComObjects.Listen(),
+                    _initializationTask.ContinueWith(
+                        _ => ComObjects.Listen(),
                         CancellationToken.None,
                         TaskContinuationOptions.OnlyOnRanToCompletion,
                         scheduler);
                 }
             }
 
-            return this._initializationTask;
+            return _initializationTask;
 
             void Core()
             {
-                var assemblyProvider = new ComInterfaceAssemblyProvider(this.ComInterfaceAssemblyPath);
-                var assembly = new ComInterfaceAssembly(assemblyProvider.GetAssembly());
+                ComInterfaceAssemblyProvider assemblyProvider = new ComInterfaceAssemblyProvider(ComInterfaceAssemblyPath);
+                ComInterfaceAssembly assembly = new ComInterfaceAssembly(assemblyProvider.GetAssembly());
 
-                this.ComObjects = new ComObjects(assembly);
+                ComObjects = new ComObjects(assembly);
             }
         }
 
         public void Dispose()
         {
-            this.ComObjects?.Dispose();
+            ComObjects?.Dispose();
         }
     }
 

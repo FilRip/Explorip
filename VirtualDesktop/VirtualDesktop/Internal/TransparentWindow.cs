@@ -6,14 +6,14 @@ namespace WindowsDesktop.Internal
     {
         public override void Show()
         {
-            var parameters = new HwndSourceParameters(this.Name)
+            HwndSourceParameters parameters = new HwndSourceParameters(this.Name)
             {
                 Width = 1,
                 Height = 1,
                 WindowStyle = 0x800000,
             };
 
-            this.Show(parameters);
+            Show(parameters);
         }
     }
 }

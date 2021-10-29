@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace WindowsDesktop.Interop
 {
-    [ComImport]
+    [ComImport()]
     [Guid("92ca9dcd-5622-4bba-a805-5e9f541bd8c9")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IObjectArray

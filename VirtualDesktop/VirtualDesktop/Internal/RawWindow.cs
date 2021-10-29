@@ -12,28 +12,28 @@ namespace WindowsDesktop.Internal
 
         public HwndSource Source { get; private set; }
 
-        public IntPtr Handle => this.Source?.Handle ?? IntPtr.Zero;
+        public IntPtr Handle => Source?.Handle ?? IntPtr.Zero;
 
         public virtual void Show()
         {
-            this.Show(new HwndSourceParameters(this.Name));
+            Show(new HwndSourceParameters(Name));
         }
 
         protected void Show(HwndSourceParameters parameters)
         {
-            this.Source = new HwndSource(parameters);
-            this.Source.AddHook(this.WndProc);
+            Source = new HwndSource(parameters);
+            Source.AddHook(WndProc);
         }
 
         public virtual void Close()
         {
-            this.Source?.RemoveHook(this.WndProc);
+            Source?.RemoveHook(WndProc);
             // Source could have been created on a different thread, which means we 
             // have to Dispose of it on the UI thread or it will crash.
-            this.Source?.Dispatcher?.BeginInvoke(DispatcherPriority.Send, (Action)(() => this.Source?.Dispose()));
-            this.Source = null;
+            Source?.Dispatcher?.BeginInvoke(DispatcherPriority.Send, (Action)(() => Source?.Dispose()));
+            Source = null;
 
-            NativeMethods.CloseWindow(this.Handle);
+            NativeMethods.CloseWindow(Handle);
         }
 
         protected virtual IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

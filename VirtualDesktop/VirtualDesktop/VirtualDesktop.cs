@@ -30,8 +30,8 @@ namespace WindowsDesktop
         {
             get
             {
-                var desktops = GetDesktops();
-                var index = Array.IndexOf(desktops, this);
+                VirtualDesktop[] desktops = GetDesktops();
+                int index = Array.IndexOf(desktops, this);
                 return index;
             }
         }
@@ -43,10 +43,10 @@ namespace WindowsDesktop
         /// </summary>
         public string Name
         {
-            get => this._name;
+            get => _name;
             set
             {
-                if (ProductInfo.OSBuild < 20231 && this.ComVersion < 2) throw new PlatformNotSupportedException("This Windows 10 version is not supported.");
+                if (ProductInfo.OSBuild < 20231 && ComVersion < 2) throw new PlatformNotSupportedException("This Windows 10 version is not supported.");
 
                 ComInterface.VirtualDesktopManagerInternal.SetDesktopName(this, value);
             }
@@ -59,7 +59,7 @@ namespace WindowsDesktop
         /// </summary>
         public string WallpaperPath
         {
-            get => this._wallpaperPath;
+            get => _wallpaperPath;
             set
             {
                 if (ProductInfo.OSBuild < 21313) throw new PlatformNotSupportedException("This Windows 10 version is not supported.");
@@ -72,15 +72,15 @@ namespace WindowsDesktop
         internal VirtualDesktop(ComInterfaceAssembly assembly, Guid id, object comObject)
             : base(assembly, comObject, latestVersion: 2)
         {
-            this.Id = id;
+            Id = id;
 
-            if (ProductInfo.OSBuild >= 20231 || this.ComVersion >= 2)
+            if (ProductInfo.OSBuild >= 20231 || ComVersion >= 2)
             {
-                this._name = this.Invoke<string>(Args(), "GetName");
+                _name = Invoke<string>(Args(), "GetName");
 
                 if (ProductInfo.OSBuild >= 21313)
                 {
-                    this._wallpaperPath = this.Invoke<string>(Args(), "GetWallpaperPath");
+                    _wallpaperPath = Invoke<string>(Args(), "GetWallpaperPath");
                 }
             }
         }
@@ -108,8 +108,8 @@ namespace WindowsDesktop
         /// <remarks>If this is the last virtual desktop, a new one will be created to switch to.</remarks>
         public void Remove()
         {
-            var fallback = ComInterface.VirtualDesktopManagerInternal.GetDesktops().FirstOrDefault(x => x.Id != this.Id) ?? Create();
-            this.Remove(fallback);
+            VirtualDesktop fallback = ComInterface.VirtualDesktopManagerInternal.GetDesktops().FirstOrDefault(x => x.Id != this.Id) ?? Create();
+            Remove(fallback);
         }
 
         /// <summary>
@@ -155,20 +155,20 @@ namespace WindowsDesktop
 
         private void SetNameToCache(string name)
         {
-            if (this._name == name) return;
+            if (_name == name) return;
 
-            this.RaisePropertyChanging(nameof(this.Name));
-            this._name = name;
-            this.RaisePropertyChanged(nameof(this.Name));
+            RaisePropertyChanging(nameof(Name));
+            _name = name;
+            RaisePropertyChanged(nameof(Name));
         }
 
         private void SetDesktopWallpaperToCache(string path)
         {
-            if (this._wallpaperPath == path) return;
+            if (_wallpaperPath == path) return;
 
-            this.RaisePropertyChanging(nameof(this.WallpaperPath));
-            this._wallpaperPath = path;
-            this.RaisePropertyChanged(nameof(this.WallpaperPath));
+            RaisePropertyChanging(nameof(WallpaperPath));
+            _wallpaperPath = path;
+            RaisePropertyChanged(nameof(WallpaperPath));
         }
 
         #region IDisposable
@@ -180,14 +180,14 @@ namespace WindowsDesktop
         /// <param name="disposeOfManagedObjects">If <see langword="true"/>, disposes of managed objects.</param>
         protected virtual void Dispose(bool disposeOfManagedObjects)
         {
-            if (!this._disposed)
+            if (!_disposed)
             {
                 if (disposeOfManagedObjects)
                 {
-                    this.Remove();
+                    Remove();
                 }
 
-                this._disposed = true;
+                _disposed = true;
             }
         }
 
@@ -196,7 +196,7 @@ namespace WindowsDesktop
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
         #endregion

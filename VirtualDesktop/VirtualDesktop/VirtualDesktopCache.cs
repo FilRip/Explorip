@@ -21,7 +21,7 @@ namespace WindowsDesktop
         {
             if (_cache == null)
             {
-                var type2 = assembly.GetType("VirtualDesktopCacheImpl2");
+                Type type2 = assembly.GetType("VirtualDesktopCacheImpl2");
                 if (type2 != null)
                 {
                     _cache = (IVirtualDesktopCache)Activator.CreateInstance(type2);
@@ -29,7 +29,7 @@ namespace WindowsDesktop
                 }
                 else
                 {
-                    var type = assembly.GetType("VirtualDesktopCacheImpl");
+                    Type type = assembly.GetType("VirtualDesktopCacheImpl");
                     _cache = (IVirtualDesktopCache)Activator.CreateInstance(type);
                     _cache.Factory = (id, comObject) => new VirtualDesktop(assembly, id, comObject);
                 }

@@ -42,12 +42,12 @@ namespace WindowsDesktop
 
             if (Process.GetCurrentProcess().Id == processId)
             {
-                var guid = virtualDesktop.Id;
+                Guid guid = virtualDesktop.Id;
                 ComInterface.VirtualDesktopManager.MoveWindowToDesktop(hWnd, ref guid);
             }
             else
             {
-                var view = ComInterface.ApplicationViewCollection.GetViewForHwnd(hWnd);
+                ApplicationView view = ComInterface.ApplicationViewCollection.GetViewForHwnd(hWnd);
                 ComInterface.VirtualDesktopManagerInternal.MoveViewToDesktop(view, virtualDesktop);
             }
         }

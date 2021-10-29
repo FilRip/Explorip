@@ -12,14 +12,14 @@ namespace WindowsDesktop.Interop
 
         public ComInterfaceAssembly(Assembly compiledAssembly)
         {
-            this._compiledAssembly = compiledAssembly;
+            _compiledAssembly = compiledAssembly;
         }
 
         internal Type GetType(string typeName)
         {
-            if (!this._knownTypes.TryGetValue(typeName, out var type))
+            if (!_knownTypes.TryGetValue(typeName, out var type))
             {
-                type = this._knownTypes[typeName] = this._compiledAssembly
+                type = _knownTypes[typeName] = _compiledAssembly
                     .GetTypes()
                     .SingleOrDefault(x => x.Name.Split('.').Last() == typeName);
             }
@@ -29,8 +29,8 @@ namespace WindowsDesktop.Interop
 
         internal object CreateInstance(Type type, Guid? guidService)
         {
-            var shellType = Type.GetTypeFromCLSID(CLSID.ImmersiveShell);
-            var shell = (IServiceProvider)Activator.CreateInstance(shellType);
+            Type shellType = Type.GetTypeFromCLSID(CLSID.ImmersiveShell);
+            IServiceProvider shell = (IServiceProvider)Activator.CreateInstance(shellType);
 
             shell.QueryService(guidService ?? type.GUID, type.GUID, out var ppvObject);
 
@@ -39,8 +39,8 @@ namespace WindowsDesktop.Interop
 
         internal (Type type, object instance) CreateInstance(string comInterfaceName, Guid? guidService)
         {
-            var type = this.GetType(comInterfaceName);
-            var instance = this.CreateInstance(type, guidService);
+            Type type = GetType(comInterfaceName);
+            object instance = CreateInstance(type, guidService);
 
             return (type, instance);
         }

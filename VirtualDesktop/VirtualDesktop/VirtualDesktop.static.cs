@@ -6,7 +6,7 @@ using WindowsDesktop.Interop;
 
 namespace WindowsDesktop
 {
-    partial class VirtualDesktop
+    public partial class VirtualDesktop
     {
         private static bool? _isSupported = null;
 
@@ -80,7 +80,7 @@ namespace WindowsDesktop
 
             try
             {
-                var desktopId = ComInterface.VirtualDesktopManager.GetWindowDesktopId(hWnd);
+                Guid desktopId = ComInterface.VirtualDesktopManager.GetWindowDesktopId(hWnd);
                 return ComInterface.VirtualDesktopManagerInternal.FindDesktop(desktopId);
             }
             catch (COMException ex) when (ex.Match(HResult.REGDB_E_CLASSNOTREG, HResult.TYPE_E_ELEMENTNOTFOUND))

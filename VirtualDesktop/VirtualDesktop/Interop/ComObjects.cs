@@ -25,55 +25,55 @@ namespace WindowsDesktop.Interop
 
         public ComObjects(ComInterfaceAssembly assembly)
         {
-            this._assembly = assembly;
-            this.Initialize();
+            _assembly = assembly;
+            Initialize();
         }
 
         public void Listen()
         {
-            this._listenerWindow = new ExplorerRestartListenerWindow(() => this.Initialize());
-            this._listenerWindow.Show();
+            _listenerWindow = new ExplorerRestartListenerWindow(() => Initialize());
+            _listenerWindow.Show();
         }
 
         private void Initialize()
         {
-            this.IsAvailable = false;
-            VirtualDesktopCache.Initialize(this._assembly);
+            IsAvailable = false;
+            VirtualDesktopCache.Initialize(_assembly);
 
-            this.VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(CLSID.VirtualDesktopManager));
+            VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(CLSID.VirtualDesktopManager));
             if (ProductInfo.OSBuild >= 22449)
             {
-                this.VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal22449(this._assembly);
+                VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal22449(_assembly);
             }
             else if (ProductInfo.OSBuild >= 21359)
             {
-                this.VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal21359(this._assembly);
+                VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal21359(_assembly);
             }
             else if (ProductInfo.OSBuild >= 21313)
             {
-                this.VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal21313(this._assembly);
+                VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal21313(_assembly);
             }
             else if (ProductInfo.OSBuild >= 20231)
             {
-                this.VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal20231(this._assembly);
+                VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal20231(_assembly);
             }
             else
             {
-                this.VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal10240(this._assembly);
+                VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal10240(_assembly);
             }
-            this.VirtualDesktopNotificationService = new VirtualDesktopNotificationService(this._assembly);
-            this.VirtualDesktopPinnedApps = new VirtualDesktopPinnedApps(this._assembly);
-            this.ApplicationViewCollection = new ApplicationViewCollection(this._assembly);
+            VirtualDesktopNotificationService = new VirtualDesktopNotificationService(_assembly);
+            VirtualDesktopPinnedApps = new VirtualDesktopPinnedApps(_assembly);
+            ApplicationViewCollection = new ApplicationViewCollection(_assembly);
 
-            this._listener?.Dispose();
-            this._listener = this.VirtualDesktopNotificationService.Register(VirtualDesktopNotification.CreateInstance(this._assembly));
-            this.IsAvailable = true;
+            _listener?.Dispose();
+            _listener = VirtualDesktopNotificationService.Register(VirtualDesktopNotification.CreateInstance(_assembly));
+            IsAvailable = true;
         }
 
         public void Dispose()
         {
-            this._listener?.Dispose();
-            this._listenerWindow?.Close();
+            _listener?.Dispose();
+            _listenerWindow?.Close();
         }
 
         private class ExplorerRestartListenerWindow : TransparentWindow
@@ -83,21 +83,21 @@ namespace WindowsDesktop.Interop
 
             public ExplorerRestartListenerWindow(Action action)
             {
-                this.Name = nameof(ExplorerRestartListenerWindow);
-                this._action = action;
+                Name = nameof(ExplorerRestartListenerWindow);
+                _action = action;
             }
 
             public override void Show()
             {
                 base.Show();
-                this._explorerRestartedMessage = NativeMethods.RegisterWindowMessage("TaskbarCreated");
+                _explorerRestartedMessage = NativeMethods.RegisterWindowMessage("TaskbarCreated");
             }
 
             protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
             {
-                if (msg == this._explorerRestartedMessage)
+                if (msg == _explorerRestartedMessage)
                 {
-                    this._action();
+                    _action();
                     return IntPtr.Zero;
                 }
 

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace WindowsDesktop
 {
-    partial class VirtualDesktop : INotifyPropertyChanging, INotifyPropertyChanged
+    public partial class VirtualDesktop : INotifyPropertyChanging, INotifyPropertyChanged
     {
         /// <summary>
         /// Occurs when a virtual desktop property changing.
@@ -11,7 +11,9 @@ namespace WindowsDesktop
         public event PropertyChangingEventHandler PropertyChanging;
 
         private void RaisePropertyChanging([CallerMemberName] string propertyName = "")
-            => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
+        {
+            PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
+        }
 
         /// <summary>
         /// Occurs when a virtual desktop property changed.
@@ -19,6 +21,8 @@ namespace WindowsDesktop
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

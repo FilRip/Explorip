@@ -24,9 +24,9 @@ namespace WindowsDesktop
 
         public VirtualDesktopMovedEventArgs(VirtualDesktop source, int oldIndex, int newIndex)
         {
-            this.Source = source;
-            this.OldIndex = oldIndex;
-            this.NewIndex = newIndex;
+            Source = source;
+            OldIndex = oldIndex;
+            NewIndex = newIndex;
         }
     }
 }

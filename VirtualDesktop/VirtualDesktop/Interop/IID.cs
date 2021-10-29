@@ -20,20 +20,20 @@ namespace WindowsDesktop.Interop
         {
             var known = new Dictionary<string, Guid>();
 
-            foreach (var prop in Settings.Default.Properties.OfType<SettingsProperty>())
+            foreach (SettingsProperty prop in Settings.Default.Properties.OfType<SettingsProperty>())
             {
-                if (int.TryParse(_osBuildRegex.Match(prop.Name).Groups["build"]?.ToString(), out var build)
+                if (int.TryParse(_osBuildRegex.Match(prop.Name).Groups["build"]?.ToString(), out int build)
                     && build == ProductInfo.OSBuild)
                 {
-                    foreach (var str in (StringCollection)Settings.Default[prop.Name])
+                    foreach (string str in (StringCollection)Settings.Default[prop.Name])
                     {
-                        var pair = str.Split(',');
+                        string[] pair = str.Split(',');
                         if (pair.Length != 2) continue;
 
-                        var @interface = pair[0];
+                        string @interface = pair[0];
                         if (targets.All(x => @interface != x) || known.ContainsKey(@interface)) continue;
 
-                        if (!Guid.TryParse(pair[1], out var guid)) continue;
+                        if (!Guid.TryParse(pair[1], out Guid guid)) continue;
 
                         known.Add(@interface, guid);
                     }
@@ -42,11 +42,11 @@ namespace WindowsDesktop.Interop
                 }
             }
 
-            var except = targets.Except(known.Keys).ToArray();
+            string[] except = targets.Except(known.Keys).ToArray();
             if (except.Length > 0)
             {
-                var fromRegistry = GetIIDsFromRegistry(except);
-                foreach (var kvp in fromRegistry) known.Add(kvp.Key, kvp.Value);
+                Dictionary<string, Guid> fromRegistry = GetIIDsFromRegistry(except);
+                foreach (KeyValuePair<string, Guid> kvp in fromRegistry) known.Add(kvp.Key, kvp.Value);
             }
 
             return known;
@@ -62,10 +62,10 @@ namespace WindowsDesktop.Interop
                     throw new Exception(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");
                 }
 
-                var result = new Dictionary<string, Guid>();
-                var names = interfaceKey.GetSubKeyNames();
+                Dictionary<string, Guid> result = new Dictionary<string, Guid>();
+                string[] names = interfaceKey.GetSubKeyNames();
 
-                foreach (var name in names)
+                foreach (string name in names)
                 {
                     using (RegistryKey key = interfaceKey.OpenSubKey(name))
                     {

@@ -10,16 +10,16 @@ namespace WindowsDesktop.Interop
     {
         internal static VirtualDesktopNotification CreateInstance(ComInterfaceAssembly assembly)
         {
-            var type2 = assembly.GetType("VirtualDesktopNotificationListener2");
+            Type type2 = assembly.GetType("VirtualDesktopNotificationListener2");
             if (type2 != null)
             {
-                var instance = (VirtualDesktopNotification)Activator.CreateInstance(type2);
+                VirtualDesktopNotification instance = (VirtualDesktopNotification)Activator.CreateInstance(type2);
                 return instance;
             }
             else
             {
-                var type = assembly.GetType("VirtualDesktopNotificationListener");
-                var instance = (VirtualDesktopNotification)Activator.CreateInstance(type);
+                Type type = assembly.GetType("VirtualDesktopNotificationListener");
+                VirtualDesktopNotification instance = (VirtualDesktopNotification)Activator.CreateInstance(type);
                 return instance;
             }
         }

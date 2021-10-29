@@ -19,17 +19,17 @@ namespace WindowsDesktop.Interop
 
         private protected ComInterfaceWrapperBase(ComInterfaceAssembly assembly, string comInterfaceName = null, uint latestVersion = 1, Guid? service = null)
         {
-            var comInterfaceName2 = comInterfaceName ?? this.GetType().GetComInterfaceNameIfWrapper();
-            for (var version = latestVersion; version >= 1; version--)
+            string comInterfaceName2 = comInterfaceName ?? GetType().GetComInterfaceNameIfWrapper();
+            for (uint version = latestVersion; version >= 1; version--)
             {
-                var type = assembly.GetType(version != 1 ? $"{comInterfaceName2}{version}" : comInterfaceName2);
+                Type type = assembly.GetType(version != 1 ? $"{comInterfaceName2}{version}" : comInterfaceName2);
                 if (type != null)
                 {
-                    var instance = assembly.CreateInstance(type, service);
-                    this.ComInterfaceAssembly = assembly;
-                    this.ComInterfaceType = type;
-                    this.ComObject = instance;
-                    this.ComVersion = version;
+                    object instance = assembly.CreateInstance(type, service);
+                    ComInterfaceAssembly = assembly;
+                    ComInterfaceType = type;
+                    ComObject = instance;
+                    ComVersion = version;
                     return;
                 }
             }
@@ -39,16 +39,16 @@ namespace WindowsDesktop.Interop
 
         private protected ComInterfaceWrapperBase(ComInterfaceAssembly assembly, object comObject, string comInterfaceName = null, uint latestVersion = 1)
         {
-            var comInterfaceName2 = comInterfaceName ?? this.GetType().GetComInterfaceNameIfWrapper();
-            for (var version = latestVersion; version >= 1; version--)
+            string comInterfaceName2 = comInterfaceName ?? GetType().GetComInterfaceNameIfWrapper();
+            for (uint version = latestVersion; version >= 1; version--)
             {
-                var type = assembly.GetType(version != 1 ? $"{comInterfaceName2}{version}" : comInterfaceName2);
+                Type type = assembly.GetType(version != 1 ? $"{comInterfaceName2}{version}" : comInterfaceName2);
                 if (type != null)
                 {
-                    this.ComInterfaceAssembly = assembly;
-                    this.ComInterfaceType = type;
-                    this.ComObject = comObject;
-                    this.ComVersion = version;
+                    ComInterfaceAssembly = assembly;
+                    ComInterfaceType = type;
+                    ComObject = comObject;
+                    ComVersion = version;
                     return;
                 }
             }
@@ -64,9 +64,9 @@ namespace WindowsDesktop.Interop
 
         protected T Invoke<T>(object[] parameters = null, [CallerMemberName] string methodName = "")
         {
-            if (!this._methods.TryGetValue(methodName, out var methodInfo))
+            if (!_methods.TryGetValue(methodName, out var methodInfo))
             {
-                this._methods[methodName] = methodInfo = this.ComInterfaceType.GetMethod(methodName);
+                _methods[methodName] = methodInfo = ComInterfaceType.GetMethod(methodName);
 
                 if (methodInfo == null)
                 {
@@ -76,7 +76,7 @@ namespace WindowsDesktop.Interop
 
             try
             {
-                return (T)methodInfo.Invoke(this.ComObject, parameters);
+                return (T)methodInfo.Invoke(ComObject, parameters);
             }
             catch (TargetInvocationException ex) when (ex.InnerException != null)
             {

@@ -24,9 +24,9 @@ namespace WindowsDesktop
 
         public VirtualDesktopRenamedEventArgs(VirtualDesktop source, string oldName, string newName)
         {
-            this.Source = source;
-            this.OldName = oldName;
-            this.NewName = newName;
+            Source = source;
+            OldName = oldName;
+            NewName = newName;
         }
     }
 }

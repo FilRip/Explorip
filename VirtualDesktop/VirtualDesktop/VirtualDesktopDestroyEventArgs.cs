@@ -19,8 +19,8 @@ namespace WindowsDesktop
 
         public VirtualDesktopDestroyEventArgs(VirtualDesktop destroyed, VirtualDesktop fallback)
         {
-            this.Destroyed = destroyed;
-            this.Fallback = fallback;
+            Destroyed = destroyed;
+            Fallback = fallback;
         }
     }
 }

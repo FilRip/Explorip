@@ -16,15 +16,15 @@ namespace WindowsDesktop.Internal
 
             public AnonymousDisposable(Action dispose)
             {
-                this._dispose = dispose;
+                _dispose = dispose;
             }
 
             public void Dispose()
             {
-                if (this._isDisposed) return;
+                if (_isDisposed) return;
 
-                this._isDisposed = true;
-                this._dispose();
+                _isDisposed = true;
+                _dispose();
             }
         }
     }
