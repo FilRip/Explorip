@@ -1,5 +1,5 @@
-/bin/
-/obj/
+/Explorip/bin/
+/Explorip/obj/
 /.vs/
 *.user
 /packages/
