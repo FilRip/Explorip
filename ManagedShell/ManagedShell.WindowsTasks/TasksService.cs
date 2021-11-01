@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -118,13 +119,15 @@ namespace ManagedShell.WindowsTasks
 
         public void GetInitialWindows()
         {
+            List<ApplicationWindow> listeWindows = new List<ApplicationWindow>();
+
             EnumWindows((hwnd, lParam) =>
             {
                 ApplicationWindow win = new ApplicationWindow(this, hwnd);
 
-                if (win.CanAddToTaskbar && win.ShowInTaskbar && !Windows.Contains(win))
+                if (win.CanAddToTaskbar && win.ShowInTaskbar && !listeWindows.Contains(win))
                 {
-                    Windows.Add(win);
+                    listeWindows.Add(win);
 
                     SendTaskbarButtonCreatedMessage(win.Handle);
                 }
@@ -132,6 +135,7 @@ namespace ManagedShell.WindowsTasks
                 return true;
             }, 0);
 
+            Windows = new ObservableCollection<ApplicationWindow>(listeWindows.OrderBy(win => win.DateDemarrage).ToList());
             IntPtr hWndForeground = GetForegroundWindow();
             if (Windows.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
             {

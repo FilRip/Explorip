@@ -7,6 +7,7 @@ using WindowsDesktop;
 using ManagedShell.WindowsTasks;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace Explorip.TaskBar.Controls
 {
@@ -20,7 +21,7 @@ namespace Explorip.TaskBar.Controls
         private double TaskButtonLeftMargin;
         private double TaskButtonRightMargin;
         private readonly object _lockChangeDesktop = new object();
-        private ObservableCollection<ApplicationWindow> _listeFenetresBureauCourant;
+        private List<ApplicationWindow> _listeFenetresBureauCourant;
 
         public static DependencyProperty ButtonWidthProperty = DependencyProperty.Register("ButtonWidth", typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
 
@@ -74,7 +75,8 @@ namespace Explorip.TaskBar.Controls
         {
             lock (_lockChangeDesktop)
             {
-                Application.Current.Dispatcher.Invoke(new Action(() => {
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
                     Console.WriteLine("Change bureau");
                     if (_listeFenetresBureauCourant != null)
                     {
@@ -82,10 +84,11 @@ namespace Explorip.TaskBar.Controls
                     }
                     else
                     {
-                        _listeFenetresBureauCourant = new ObservableCollection<ApplicationWindow>();
+                        _listeFenetresBureauCourant = new List<ApplicationWindow>();
                     }
 
-                    WinAPI.User32.EnumWindows((hwnd, lParam) => {
+                    WinAPI.User32.EnumWindows((hwnd, lParam) =>
+                    {
                         if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
                         {
                             ApplicationWindow win = new ApplicationWindow(MyApp.MonShellManager.TasksService, hwnd);
@@ -107,7 +110,8 @@ namespace Explorip.TaskBar.Controls
                         win.SetShowInTaskbar();
                     }
 
-                    MyApp.MonShellManager.TasksService.Windows = _listeFenetresBureauCourant;
+                    _listeFenetresBureauCourant = _listeFenetresBureauCourant.OrderBy(win => win.DateDemarrage).ToList();
+                    MyApp.MonShellManager.TasksService.Windows = new ObservableCollection<ApplicationWindow>(_listeFenetresBureauCourant);
                     System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(_listeFenetresBureauCourant);
                     MyApp.MonShellManager.Tasks.groupedWindows = nouvelleListeGroupedWindows;
                     TasksList.ItemsSource = MyApp.MonShellManager.Tasks.GroupedWindows;

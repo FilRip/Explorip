@@ -88,6 +88,14 @@ namespace ManagedShell.WindowsTasks
 
         public uint? ProcId => _procId = _procId ?? ShellHelper.GetProcIdForHandle(Handle);
 
+        private int _position = 0;
+
+        public int Position
+        {
+            get { return _position; }
+            set { _position = value; }
+        }
+
         private string _category;
 
         public string Category
@@ -597,6 +605,22 @@ namespace ManagedShell.WindowsTasks
             BringToFront();
             IntPtr retval = IntPtr.Zero;
             NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
+        }
+
+        public DateTime DateDemarrage
+        {
+            get
+            {
+                if (_procId.HasValue)
+                {
+                    Process process = Process.GetProcessById((int)_procId.Value);
+                    if (process != null)
+                    {
+                        return process.StartTime;
+                    }
+                }
+                return DateTime.MinValue;
+            }
         }
 
         /// <summary>
