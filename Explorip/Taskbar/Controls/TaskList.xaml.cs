@@ -21,9 +21,10 @@ namespace Explorip.TaskBar.Controls
         private double TaskButtonLeftMargin;
         private double TaskButtonRightMargin;
         private readonly object _lockChangeDesktop = new object();
-        private List<ApplicationWindow> _listeFenetresBureauCourant;
+        private bool _mainScreen;
 
-        public static DependencyProperty ButtonWidthProperty = DependencyProperty.Register("ButtonWidth", typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
+        public static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
+        public static DependencyProperty EcranPrincipalProperty = DependencyProperty.Register(nameof(EcranPrincipal), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
 
         public TaskList()
         {
@@ -34,6 +35,12 @@ namespace Explorip.TaskBar.Controls
         {
             get { return (double)GetValue(ButtonWidthProperty); }
             set { SetValue(ButtonWidthProperty, value); }
+        }
+
+        public bool EcranPrincipal
+        {
+            get { return _mainScreen; }
+            set { _mainScreen = value; }
         }
 
         private void SetStyles()
@@ -78,13 +85,13 @@ namespace Explorip.TaskBar.Controls
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     Console.WriteLine("Change bureau");
-                    if (_listeFenetresBureauCourant != null)
+                    if (MyApp.MonShellManager.TasksService.Windows != null)
                     {
-                        _listeFenetresBureauCourant.Clear();
+                        MyApp.MonShellManager.TasksService.Windows.Clear();
                     }
                     else
                     {
-                        _listeFenetresBureauCourant = new List<ApplicationWindow>();
+                        MyApp.MonShellManager.TasksService.Windows = new ObservableCollection<ApplicationWindow>();
                     }
 
                     WinAPI.User32.EnumWindows((hwnd, lParam) =>
@@ -93,9 +100,9 @@ namespace Explorip.TaskBar.Controls
                         {
                             ApplicationWindow win = new ApplicationWindow(MyApp.MonShellManager.TasksService, hwnd);
 
-                            if (win.CanAddToTaskbar && win.ShowInTaskbar && !_listeFenetresBureauCourant.Contains(win))
+                            if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyApp.MonShellManager.TasksService.Windows.Contains(win))
                             {
-                                _listeFenetresBureauCourant.Add(win);
+                                MyApp.MonShellManager.TasksService.Windows.Add(win);
                                 MyApp.MonShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
                             }
                         }
@@ -103,16 +110,14 @@ namespace Explorip.TaskBar.Controls
                     }, 0);
 
                     IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
-                    if (_listeFenetresBureauCourant.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
+                    if (MyApp.MonShellManager.TasksService.Windows.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
                     {
-                        ApplicationWindow win = _listeFenetresBureauCourant.First(wnd => wnd.Handle == hWndForeground);
+                        ApplicationWindow win = MyApp.MonShellManager.TasksService.Windows.First(wnd => wnd.Handle == hWndForeground);
                         win.State = ApplicationWindow.WindowState.Active;
                         win.SetShowInTaskbar();
                     }
 
-                    _listeFenetresBureauCourant = _listeFenetresBureauCourant.OrderBy(win => win.DateDemarrage).ToList();
-                    MyApp.MonShellManager.TasksService.Windows = new ObservableCollection<ApplicationWindow>(_listeFenetresBureauCourant);
-                    System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(_listeFenetresBureauCourant);
+                    System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyApp.MonShellManager.TasksService.Windows);
                     MyApp.MonShellManager.Tasks.groupedWindows = nouvelleListeGroupedWindows;
                     TasksList.ItemsSource = MyApp.MonShellManager.Tasks.GroupedWindows;
                 }));

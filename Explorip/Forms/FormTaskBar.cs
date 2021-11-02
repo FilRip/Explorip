@@ -13,16 +13,10 @@ using WindowsDesktop;
 
 namespace Explorip.Forms
 {
-    // TODO : Utiliser ManagedShell pour la barre des taches
-    // Et peut etre : https://github.com/dbarros/WindowsAPICodePack
-    // Voir https://github.com/dremin/RetroBar
+    // Docs : https://github.com/dbarros/WindowsAPICodePack
     // https://stackoverflow.com/questions/24081665/windows-api-code-pack-where-is-it/25048686#25048686
-    // Si utilise WinForm, voir :
-    // http://www.codeproject.com/KB/cs/floatingform.aspx
-    // http://www.codeproject.com/KB/miscctrl/magicdocking.aspx?target=dockable|controls
-    // https://sourceforge.net/projects/dockpanelsuite/
-    // https://www.codeproject.com/Articles/17729/Add-Docking-and-Floating-Support-Easily-and-Quickl
     // Windows 11 (to 10) : https://github.com/valinet/ExplorerPatcher
+    // Ecrire sur le bureau : https://social.msdn.microsoft.com/Forums/vstudio/en-US/99354676-56c4-48b7-be62-ec34d53a073f/how-to-write-text-to-desktop-wallpaper?forum=csharpgeneral
     [Obsolete()]
     public partial class FormTaskBar : Form
     {

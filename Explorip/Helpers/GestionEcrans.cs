@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace WindowsDesktop.Helpers
+namespace Explorip.Helpers
 {
     public static class GestionEcrans
     {
@@ -25,6 +25,21 @@ namespace WindowsDesktop.Helpers
         private static void VerifSiEcranPresent()
         {
             if (Screen.AllScreens.Length == 0) throw new ExceptionGestionEcrans("Aucun écran connecté/détecté");
+        }
+
+        public static Screen[] ListeAutresEcrans()
+        {
+            List<Screen> retour = null;
+            if (NbEcran() > 1)
+            {
+                retour = new List<Screen>();
+                foreach (Screen ecran in Screen.AllScreens)
+                {
+                    if (!ecran.Primary)
+                        retour.Add(ecran);
+                }
+            }
+            return retour.ToArray();
         }
 
         /// <summary>

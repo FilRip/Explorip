@@ -6,6 +6,7 @@ using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using Application = System.Windows.Application;
+using System.Collections.Generic;
 
 namespace Explorip.TaskBar
 {
@@ -17,15 +18,16 @@ namespace Explorip.TaskBar
         public DictionaryManager DictionaryManager { get; }
 
         private ManagedShellLogger _logger;
-        private Taskbar _taskbar;
+        private readonly List<Taskbar> _taskbarList;
         private readonly StartMenuMonitor _startMenuMonitor;
         public static ShellManager MonShellManager;
 
         public MyApp()
         {
+            _taskbarList = new List<Taskbar>();
             MonShellManager = SetupManagedShell();
 
-            _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(false));
+            _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
             DictionaryManager = new DictionaryManager();
 
             // Startup
@@ -43,15 +45,24 @@ namespace Explorip.TaskBar
 
         public void ReopenTaskbar()
         {
-            _taskbar.AllowClose = true;
-            _taskbar?.Close();
+            foreach (Taskbar taskbar in _taskbarList)
+            {
+                taskbar.AllowClose = true;
+                taskbar?.Close();
+            }
             OpenTaskbar();
         }
 
         private void OpenTaskbar()
         {
-            _taskbar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen(), (AppBarEdge)Settings.Instance.Edge);
-            _taskbar.Show();
+            List<AppBarScreen> appBarScreens = AppBarScreen.FromAllScreens();
+            foreach (AppBarScreen appBarScreen in appBarScreens)
+            {
+                Taskbar taskBar;
+                taskBar = new Taskbar(_startMenuMonitor, appBarScreen, (AppBarEdge)Settings.Instance.Edge);
+                taskBar.Show();
+                _taskbarList.Add(taskBar);
+            }
         }
 
         private void App_OnExit(object sender, ExitEventArgs e)

@@ -19,12 +19,14 @@ namespace Explorip.TaskBar
     public partial class Taskbar : AppBarWindow
     {
         private bool _isReopening;
+        private readonly bool _mainScreen;
 
         public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
             : base(MyApp.MonShellManager.AppBarManager, MyApp.MonShellManager.ExplorerHelper, MyApp.MonShellManager.FullScreenHelper, screen, edge, 0)
         {
             InitializeComponent();
 
+            _mainScreen = screen.Primary;
             DataContext = MyApp.MonShellManager;
             StartButton.StartMenuMonitor = startMenuMonitor;
 
@@ -46,6 +48,11 @@ namespace Explorip.TaskBar
                 QuickLaunchToolbar.Visibility = Visibility.Visible;
                 DesiredHeight += 16;
             }
+        }
+
+        public bool MainScreen
+        {
+            get { return _mainScreen; }
         }
 
         protected override void OnSourceInitialized(object sender, EventArgs e)
@@ -206,7 +213,8 @@ namespace Explorip.TaskBar
 
         private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
+            if (_mainScreen)
+                WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
             MyApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
         }
     }
