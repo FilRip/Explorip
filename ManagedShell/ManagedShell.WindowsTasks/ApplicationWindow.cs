@@ -17,10 +17,27 @@ namespace ManagedShell.WindowsTasks
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
     public class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPropertyChanged, IDisposable
     {
-        const int TITLE_LENGTH = 1024;
+        public const int MAX_STRING_SIZE = 255;
         private readonly TasksService _tasksService;
-        readonly StringBuilder titleBuilder = new StringBuilder(TITLE_LENGTH);
-        private StringBuilder _classNameBuilder = new StringBuilder(255);
+
+        private bool _iconLoading;
+        private ImageSource _icon;
+        private IntPtr _hIcon = IntPtr.Zero;
+        private string _appUserModelId = null;
+        private bool? _isUWP = null;
+        private string _winFileName = "";
+        private uint? _procId;
+        private int _position = 0;
+        private string _category;
+        private string _title;
+        private string _className;
+        private ImageSource _overlayIcon;
+        private string _overlayIconDescription;
+        private NativeMethods.TBPFLAG _progressState;
+        private int _progressValue;
+        private WindowState _state;
+        private bool? _showInTaskbar;
+        private DateTime? _dateDemarrage;
 
         public ApplicationWindow(TasksService tasksService, IntPtr handle)
         {
@@ -40,8 +57,6 @@ namespace ManagedShell.WindowsTasks
             set;
         }
 
-        private string _appUserModelId = null;
-
         public string AppUserModelID
         {
             get
@@ -54,8 +69,6 @@ namespace ManagedShell.WindowsTasks
                 return _appUserModelId;
             }
         }
-
-        private bool? _isUWP = null;
 
         public bool IsUWP
         {
@@ -70,8 +83,6 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        private string _winFileName = "";
-
         public string WinFileName
         {
             get
@@ -85,19 +96,13 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        private uint? _procId;
-
         public uint? ProcId => _procId = _procId ?? ShellHelper.GetProcIdForHandle(Handle);
-
-        private int _position = 0;
 
         public int Position
         {
             get { return _position; }
             set { _position = value; }
         }
-
-        private string _category;
 
         public string Category
         {
@@ -114,8 +119,6 @@ namespace ManagedShell.WindowsTasks
                 }
             }
         }
-
-        private string _title;
 
         public string Title
         {
@@ -135,10 +138,10 @@ namespace ManagedShell.WindowsTasks
             string title = "";
             try
             {
-                titleBuilder.Clear();
-                NativeMethods.GetWindowText(Handle, titleBuilder, TITLE_LENGTH + 1);
+                StringBuilder stringBuilder = new StringBuilder(MAX_STRING_SIZE);
+                NativeMethods.GetWindowText(Handle, stringBuilder, MAX_STRING_SIZE);
 
-                title = titleBuilder.ToString();
+                title = stringBuilder.ToString();
             }
             catch { }
 
@@ -149,7 +152,6 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        private string _className;
         public string ClassName
         {
             get
@@ -166,21 +168,19 @@ namespace ManagedShell.WindowsTasks
             string className = "";
             try
             {
-                _classNameBuilder.Clear();
-                NativeMethods.GetClassName(Handle, _classNameBuilder, 255);
-                className = _classNameBuilder.ToString();
+                StringBuilder stringBuilder = new StringBuilder(MAX_STRING_SIZE);
+                NativeMethods.GetClassName(Handle, stringBuilder, MAX_STRING_SIZE);
+
+                className = stringBuilder.ToString();
             }
             catch { }
+
             if (_className != className)
             {
                 _className = className;
                 OnPropertyChanged(nameof(ClassName));
             }
         }
-
-        private bool _iconLoading;
-        private ImageSource _icon;
-        private IntPtr _hIcon = IntPtr.Zero;
 
         public ImageSource Icon
         {
@@ -198,8 +198,6 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        private ImageSource _overlayIcon;
-
         public ImageSource OverlayIcon
         {
             get
@@ -213,8 +211,6 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        private string _overlayIconDescription;
-
         public string OverlayIconDescription
         {
             get
@@ -227,8 +223,6 @@ namespace ManagedShell.WindowsTasks
                 OnPropertyChanged("OverlayIconDescription");
             }
         }
-
-        private NativeMethods.TBPFLAG _progressState;
 
         public NativeMethods.TBPFLAG ProgressState
         {
@@ -250,8 +244,6 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        private int _progressValue;
-
         public int ProgressValue
         {
             get
@@ -265,8 +257,6 @@ namespace ManagedShell.WindowsTasks
                 OnPropertyChanged("ProgressValue");
             }
         }
-
-        private WindowState _state;
 
         public WindowState State
         {
@@ -323,8 +313,6 @@ namespace ManagedShell.WindowsTasks
                 return isWindow && isVisible && (ownerWin == IntPtr.Zero || isAppWindow) && (!isNoActivate || isAppWindow) && !isToolWindow;
             }
         }
-
-        private bool? _showInTaskbar;
 
         // True if this window should be shown in the taskbar
         public bool ShowInTaskbar
@@ -642,15 +630,20 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (_procId.HasValue)
+                if (!_dateDemarrage.HasValue)
                 {
-                    Process process = Process.GetProcessById((int)_procId.Value);
-                    if (process != null)
+                    _dateDemarrage = DateTime.MinValue;
+                    if (_procId.HasValue)
                     {
-                        return process.StartTime;
+                        Process process = Process.GetProcessById((int)_procId.Value);
+                        if (process != null)
+                        {
+                            _dateDemarrage = process.StartTime;
+                        }
                     }
                 }
-                return DateTime.MinValue;
+
+                return _dateDemarrage.Value;
             }
         }
 
