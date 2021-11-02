@@ -33,7 +33,7 @@
     <s:String x:Key="taskman_button_tip">Affichage des tâches</s:String>
     <s:String x:Key="notification_button_tip">Centre de notification</s:String>
 
-    <s:String x:Key="retrobar_title">Barre des tâches RetroBar</s:String>
+    <s:String x:Key="retrobar_title">Barre des tâches Explorip</s:String>
     <s:String x:Key="toolbars">Barres d'ou_tils</s:String>
     <s:String x:Key="quick_launch">Lancement _rapide</s:String>
     <s:String x:Key="new_toolbar">_Nouvelle barre d'outils...</s:String>

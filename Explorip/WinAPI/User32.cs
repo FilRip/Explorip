@@ -127,5 +127,29 @@ namespace Explorip.WinAPI
 
         [DllImport("kernel32.dll", EntryPoint = "FreeConsole", SetLastError = true)]
         public static extern bool FreeConsole();
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        public enum ShowWindowCommand : int
+        {
+            Hide = 0,
+            Normal = 1,
+            ShowMinimized = 2,
+            ShowMaximized = 3,
+            ShowNoActivate = 4,
+            Show = 5,
+            Minimize = 6,
+            ShowMinNoActive = 7,
+            ShowNA = 8,
+            Restore = 9,
+            ShowDefault = 10,
+            ForceMinimize = 11
+        }
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, ShowWindowCommand nCmdShow);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
     }
 }

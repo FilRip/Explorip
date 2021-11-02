@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace WindowsDesktop.Interop
 {
@@ -13,5 +14,8 @@ namespace WindowsDesktop.Interop
 
         [DllImport("user32.dll")]
         public static extern bool CloseWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
     }
 }

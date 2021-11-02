@@ -20,6 +20,7 @@ namespace ManagedShell.WindowsTasks
         const int TITLE_LENGTH = 1024;
         private readonly TasksService _tasksService;
         readonly StringBuilder titleBuilder = new StringBuilder(TITLE_LENGTH);
+        private StringBuilder _classNameBuilder = new StringBuilder(255);
 
         public ApplicationWindow(TasksService tasksService, IntPtr handle)
         {
@@ -145,6 +146,35 @@ namespace ManagedShell.WindowsTasks
             {
                 _title = title;
                 OnPropertyChanged("Title");
+            }
+        }
+
+        private string _className;
+        public string ClassName
+        {
+            get
+            {
+                if (_className == null)
+                {
+                    SetClassName();
+                }
+                return _className;
+            }
+        }
+        private void SetClassName()
+        {
+            string className = "";
+            try
+            {
+                _classNameBuilder.Clear();
+                NativeMethods.GetClassName(Handle, _classNameBuilder, 255);
+                className = _classNameBuilder.ToString();
+            }
+            catch { }
+            if (_className != className)
+            {
+                _className = className;
+                OnPropertyChanged(nameof(ClassName));
             }
         }
 
@@ -531,6 +561,7 @@ namespace ManagedShell.WindowsTasks
             SetTitle();
             SetShowInTaskbar();
             SetIcon();
+            SetClassName();
         }
 
         public void BringToFront()

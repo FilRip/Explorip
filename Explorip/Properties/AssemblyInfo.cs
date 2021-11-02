@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Explorip")]
-[assembly: AssemblyDescription("Shell for Windows 11")]
+[assembly: AssemblyDescription("Shell for Windows 10 and 11")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CoolBytes")]
 [assembly: AssemblyProduct("Explorip")]
