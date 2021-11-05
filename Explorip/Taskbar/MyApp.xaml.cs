@@ -38,6 +38,11 @@ namespace Explorip.TaskBar
 
         public void ExitGracefully()
         {
+            foreach (Taskbar taskbar in _taskbarList)
+            {
+                taskbar.AllowClose = true;
+                taskbar.Close();
+            }
             MonShellManager.ExplorerHelper.HideExplorerTaskbar = false;
             MonShellManager.AppBarManager.SignalGracefulShutdown();
             Current.Shutdown();

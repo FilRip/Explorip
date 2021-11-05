@@ -10,7 +10,7 @@
         Left="0"
         LocationChanged="Taskbar_OnLocationChanged"
         AllowDrop="True"
-        Style="{DynamicResource TaskbarWindow}" Background="Black">
+        Style="{DynamicResource TaskbarWindow}">
     <Window.Resources>
         <ResourceDictionary>
             <converters:EdgeOrientationConverter x:Key="edgeOrientationConverter" />

@@ -16,7 +16,7 @@ namespace ManagedShell.AppBar
 
         public static AppBarScreen FromScreen(Screen screen)
         {
-            return new AppBarScreen
+            return new AppBarScreen()
             {
                 Bounds = screen.Bounds,
                 DeviceName = screen.DeviceName,
@@ -30,11 +30,24 @@ namespace ManagedShell.AppBar
             return FromScreen(Screen.PrimaryScreen);
         }
 
+        public static List<AppBarScreen> FromAllOthersScreen()
+        {
+            List<AppBarScreen> screens = new List<AppBarScreen>();
+
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                if (!screen.Primary)
+                    screens.Add(FromScreen(screen));
+            }
+
+            return screens;
+        }
+
         public static List<AppBarScreen> FromAllScreens()
         {
             List<AppBarScreen> screens = new List<AppBarScreen>();
 
-            foreach (var screen in Screen.AllScreens)
+            foreach (Screen screen in Screen.AllScreens)
             {
                 screens.Add(FromScreen(screen));
             }

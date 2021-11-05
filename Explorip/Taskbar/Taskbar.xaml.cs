@@ -191,7 +191,6 @@ namespace Explorip.TaskBar
 
         private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            _explorerHelper.HideExplorerTaskbar = true;
             ((MyApp)Application.Current).ExitGracefully();
         }
 
