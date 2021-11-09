@@ -134,6 +134,9 @@
     <Compile Include="TaskBar\Controls\SearchButton.xaml.cs">
       <DependentUpon>SearchButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TaskBar\Controls\TaskThumbButton.xaml.cs">
+      <DependentUpon>TaskThumbButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TaskBar\MyApp.xaml.cs">
       <DependentUpon>MyApp.xaml</DependentUpon>
     </Compile>
@@ -185,6 +188,7 @@
     <Compile Include="WinAPI\Modeles\BROWSEINFO.cs" />
     <Compile Include="WinAPI\Modeles\CMINVOKECOMMANDINFOEX.cs" />
     <Compile Include="FilesOperations\Interfaces\CopyEngineResult.cs" />
+    <Compile Include="WinAPI\Modeles\DWM_THUMBNAIL_PROPERTIES.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu2.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu3.cs" />
@@ -256,6 +260,10 @@
     <Page Include="TaskBar\Controls\SearchButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TaskBar\Controls\TaskThumbButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TaskBar\Languages\francais.xaml">
       <Generator>MSBuild:Compile</Generator>

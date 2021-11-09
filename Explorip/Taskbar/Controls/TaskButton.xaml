@@ -10,7 +10,9 @@
             PreviewMouseDown="AppButton_OnPreviewMouseDown"
             ContextMenuOpening="AppButton_OnContextMenuOpening"
             DragEnter="AppButton_OnDragEnter"
-            DragLeave="AppButton_OnDragLeave">
+            DragLeave="AppButton_OnDragLeave"
+            MouseEnter="AppButton_MouseEnter"
+            MouseLeave="AppButton_MouseLeave">
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
                    Grid.Column="0"
                    Style="{DynamicResource TaskIcon}" />

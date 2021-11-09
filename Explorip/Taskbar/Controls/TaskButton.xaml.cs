@@ -21,6 +21,7 @@ namespace Explorip.TaskBar.Controls
         private ApplicationWindow Window;
         private readonly TaskButtonStyleConverter StyleConverter = new TaskButtonStyleConverter();
         private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
+        private TaskThumbButton _thumb;
 
         private bool _isLoaded;
 
@@ -188,6 +189,11 @@ namespace Explorip.TaskBar.Controls
             }
         }
 
+        public ApplicationWindow ApplicationWindow
+        {
+            get { return Window; }
+        }
+
         #region Drag
         private bool inDrag;
         private DispatcherTimer dragTimer;
@@ -220,5 +226,27 @@ namespace Explorip.TaskBar.Controls
             }
         }
         #endregion
+
+        private void AppButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                if (_thumb != null)
+                    _thumb.Close();
+            }
+            catch (Exception) { }
+            _thumb = new TaskThumbButton(this);
+            _thumb.Show();
+        }
+
+        private void AppButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                if (_thumb != null)
+                    _thumb.Close();
+            }
+            catch (Exception) { }
+        }
     }
 }

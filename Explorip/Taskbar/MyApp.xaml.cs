@@ -7,6 +7,7 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using Application = System.Windows.Application;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Explorip.TaskBar
 {
@@ -107,6 +108,16 @@ namespace Explorip.TaskBar
             MonShellManager.Dispose();
             _startMenuMonitor.Dispose();
             _logger.Dispose();
+        }
+
+        public Taskbar MainTaskbar
+        {
+            get
+            {
+                if (_taskbarList != null)
+                    return _taskbarList[0];
+                return null;
+            }
         }
     }
 }
