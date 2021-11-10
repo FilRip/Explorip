@@ -115,7 +115,7 @@ namespace Explorip.TaskBar
             get
             {
                 if (_taskbarList != null)
-                    return _taskbarList[0];
+                    return _taskbarList.First(item => item.MainScreen);
                 return null;
             }
         }

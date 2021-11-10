@@ -22,8 +22,10 @@ namespace Explorip.TaskBar.Controls
         private readonly TaskButtonStyleConverter StyleConverter = new TaskButtonStyleConverter();
         private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
         private TaskThumbButton _thumb;
-
+        private Taskbar _parentTaskbar;
         private bool _isLoaded;
+
+        public static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(Taskbar), typeof(TaskButton), new PropertyMetadata(null));
 
         public TaskButton()
         {
@@ -247,6 +249,12 @@ namespace Explorip.TaskBar.Controls
                     _thumb.Close();
             }
             catch (Exception) { }
+        }
+
+        public Taskbar TaskbarParent
+        {
+            get { return _parentTaskbar; }
+            set { _parentTaskbar = value; }
         }
     }
 }

@@ -17,9 +17,9 @@
         MouseLeave="Window_MouseLeave"
         Closing="Window_Closing"
         ContentRendered="Window_ContentRendered"
-        WindowStartupLocation="CenterScreen"
+        Background="Transparent"
         Height="150" Width="250">
-    <Border>
+    <Grid>
 
-    </Border>
+    </Grid>
 </Window>

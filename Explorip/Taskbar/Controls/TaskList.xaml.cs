@@ -22,9 +22,11 @@ namespace Explorip.TaskBar.Controls
         private double TaskButtonRightMargin;
         private readonly object _lockChangeDesktop = new object();
         private bool _mainScreen;
+        private Taskbar _parentTaskbar;
 
         public static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
         public static DependencyProperty EcranPrincipalProperty = DependencyProperty.Register(nameof(EcranPrincipal), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
+        public static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
 
         public TaskList()
         {
@@ -41,6 +43,12 @@ namespace Explorip.TaskBar.Controls
         {
             get { return _mainScreen; }
             set { _mainScreen = value; }
+        }
+
+        public Taskbar TaskbarParent
+        {
+            get { return _parentTaskbar; }
+            set { _parentTaskbar = value; }
         }
 
         private void SetStyles()
