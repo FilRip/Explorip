@@ -77,7 +77,7 @@ namespace ManagedShell.Common.Helpers
                 return false;
         }
 
-        [ComImport]
+        [ComImport()]
         [Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
         private class MMDeviceEnumerator
         {
@@ -100,7 +100,7 @@ namespace ManagedShell.Common.Helpers
         {
             void _VtblGap1_1();
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice ppDevice);
         }
 #pragma warning restore IDE1006
@@ -108,7 +108,7 @@ namespace ManagedShell.Common.Helpers
         [Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDevice
         {
-            [PreserveSig]
+            [PreserveSig()]
             int Activate([MarshalAs(UnmanagedType.LPStruct)] Guid iid, int dwClsCtx, IntPtr pActivationParams, [MarshalAs(UnmanagedType.IUnknown)] out object ppInterface);
         }
     }

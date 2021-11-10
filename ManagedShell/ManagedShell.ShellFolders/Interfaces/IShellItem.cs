@@ -5,7 +5,7 @@ using ManagedShell.ShellFolders.Enums;
 
 namespace ManagedShell.ShellFolders.Interfaces
 {
-    [ComImport]
+    [ComImport()]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("43826d1e-e718-42ee-bc55-a1e261c37bfe")]
     public interface IShellItem

@@ -5,14 +5,14 @@ using ManagedShell.ShellFolders.Enums;
 
 namespace ManagedShell.ShellFolders.Interfaces
 {
-    [ComImport]
+    [ComImport()]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("000214E6-0000-0000-C000-000000000046")]
     public interface IShellFolder
     {
         // Translates a file object's or folder's display name into an item identifier list.
         // Return value: error code, if any
-        [PreserveSig]
+        [PreserveSig()]
         Int32 ParseDisplayName(
             IntPtr hwnd,
             IntPtr pbc,
@@ -25,7 +25,7 @@ namespace ManagedShell.ShellFolders.Interfaces
         // Allows a client to determine the contents of a folder by creating an item
         // identifier enumeration object and returning its IEnumIDList interface.
         // Return value: error code, if any
-        [PreserveSig]
+        [PreserveSig()]
         Int32 EnumObjects(
             IntPtr hwnd,
             SHCONTF grfFlags,
@@ -33,7 +33,7 @@ namespace ManagedShell.ShellFolders.Interfaces
 
         // Retrieves an IShellFolder object for a subfolder.
         // Return value: error code, if any
-        [PreserveSig]
+        [PreserveSig()]
         Int32 BindToObject(
             IntPtr pidl,
             IntPtr pbc,
@@ -42,7 +42,7 @@ namespace ManagedShell.ShellFolders.Interfaces
 
         // Requests a pointer to an object's storage interface. 
         // Return value: error code, if any
-        [PreserveSig]
+        [PreserveSig()]
         Int32 BindToStorage(
             IntPtr pidl,
             IntPtr pbc,
@@ -59,7 +59,7 @@ namespace ManagedShell.ShellFolders.Interfaces
         // Positive A positive return value indicates that the first item should
         // follow the second (pidl1 > pidl2).  Zero A return value of zero
         // indicates that the two items are the same (pidl1 = pidl2). 
-        [PreserveSig]
+        [PreserveSig()]
         Int32 CompareIDs(
             IntPtr lParam,
             IntPtr pidl1,
@@ -68,7 +68,7 @@ namespace ManagedShell.ShellFolders.Interfaces
         // Requests an object that can be used to obtain information from or interact
         // with a folder object.
         // Return value: error code, if any
-        [PreserveSig]
+        [PreserveSig()]
         Int32 CreateViewObject(
             IntPtr hwndOwner,
             Guid riid,
@@ -76,7 +76,7 @@ namespace ManagedShell.ShellFolders.Interfaces
 
         // Retrieves the attributes of one or more file objects or subfolders. 
         // Return value: error code, if any
-        [PreserveSig]
+        [PreserveSig()]
         Int32 GetAttributesOf(
             uint cidl,
             [MarshalAs(UnmanagedType.LPArray)]
@@ -86,7 +86,7 @@ namespace ManagedShell.ShellFolders.Interfaces
         // Retrieves an OLE interface that can be used to carry out actions on the
         // specified file objects or folders.
         // Return value: error code, if any
-        [PreserveSig]
+        [PreserveSig()]
         Int32 GetUIObjectOf(
             IntPtr hwndOwner,
             uint cidl,
@@ -107,7 +107,7 @@ namespace ManagedShell.ShellFolders.Interfaces
         // Sets the display name of a file object or subfolder, changing the item
         // identifier in the process.
         // Return value: error code, if any
-        [PreserveSig]
+        [PreserveSig()]
         Int32 SetNameOf(
             IntPtr hwnd,
             IntPtr pidl,

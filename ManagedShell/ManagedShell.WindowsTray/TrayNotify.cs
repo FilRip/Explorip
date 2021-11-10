@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace ManagedShell.WindowsTray
 {
-    [ComImport]
+    [ComImport()]
     [Guid("25DEAD04-1EAC-4911-9E3A-AD0A4AB560FD")]
     class TrayNotify
     {
@@ -30,7 +30,7 @@ namespace ManagedShell.WindowsTray
         public Guid guidItem;
     };
 
-    [ComImport]
+    [ComImport()]
     [Guid("D782CCBA-AFB0-43F1-94DB-FDA3779EACCB")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface INotificationCB
@@ -38,7 +38,7 @@ namespace ManagedShell.WindowsTray
         void Notify([In] uint nEvent, [In] ref NOTIFYITEM notifyItem);
     }
 
-    [ComImport]
+    [ComImport()]
     [Guid("FB852B2C-6BAD-4605-9551-F15F87830935")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface ITrayNotifyLegacy
@@ -48,7 +48,7 @@ namespace ManagedShell.WindowsTray
         void EnableAutoTray([In] bool enabled);
     }
 
-    [ComImport]
+    [ComImport()]
     [Guid("D133CE13-3537-48BA-93A7-AFCD5D2053B4")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface ITrayNotify

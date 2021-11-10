@@ -150,7 +150,7 @@ namespace ManagedShell.Interop
             GW_ENABLEDPOPUP = 6
         }
 
-        [Flags]
+        [Flags()]
         public enum ExtendedWindowStyles : uint
         {
             WS_EX_DLGMODALFRAME = 0x1,
@@ -181,7 +181,7 @@ namespace ManagedShell.Interop
             WS_EX_NOACTIVATE = 0x8000000
         }
 
-        [Flags]
+        [Flags()]
         public enum WindowStyles : uint
         {
             WS_OVERLAPPED = 0x0,
@@ -250,7 +250,7 @@ namespace ManagedShell.Interop
             public MinimizedMetricsArrangement iArrange;
         }
 
-        [Flags]
+        [Flags()]
         public enum MinimizedMetricsArrangement
         {
             BottomLeft = 0,
@@ -1548,7 +1548,7 @@ namespace ManagedShell.Interop
             SPI_SETFONTSMOOTHINGORIENTATION = 0x2013,
         }
 
-        [Flags]
+        [Flags()]
         public enum SPIF : uint
         {
             None = 0x00,
@@ -2989,6 +2989,20 @@ namespace ManagedShell.Interop
             IntPtr hMenu,
             IntPtr hInstance,
             IntPtr lpParam);
+
+        public enum MonitorOptions : uint
+        {
+            MONITOR_DEFAULTTONULL = 0x00000000,
+            MONITOR_DEFAULTTOPRIMARY = 0x00000001,
+            MONITOR_DEFAULTTONEAREST = 0x00000002
+        }
+
+        [DllImport(User32_DllName)]
+        public static extern IntPtr MonitorFromPoint(Point pt, MonitorOptions dwFlags);
+
+        public delegate bool MonitorEnumProc(IntPtr hDesktop, IntPtr hdc, ref Rect pRect, int dwData);
+        [DllImport(User32_DllName)]
+        public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lpRect, MonitorEnumProc callback, int dwData);
 
         public enum VK : int
         {

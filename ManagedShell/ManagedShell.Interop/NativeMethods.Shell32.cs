@@ -84,7 +84,7 @@ namespace ManagedShell.Interop
             public string szTypeName;
         }
 
-        [Flags]
+        [Flags()]
         public enum SHGFI : int
         {
             /// <summary>get icon</summary>
@@ -164,7 +164,7 @@ namespace ManagedShell.Interop
         /// <summary>
         /// Possible flags for the SHFileOperation method.
         /// </summary>
-        [Flags]
+        [Flags()]
         public enum FileOperationFlags : ushort
         {
             /// <summary>
@@ -284,7 +284,7 @@ namespace ManagedShell.Interop
         /// <summary>
         /// Shell_NotifyIcon flags.  NIF_*
         /// </summary>
-        [Flags]
+        [Flags()]
         public enum NIF : uint
         {
             MESSAGE = 0x0001,
@@ -310,7 +310,7 @@ namespace ManagedShell.Interop
         /// <summary>
         /// Notify icon info balloon flags
         /// </summary>
-        [Flags]
+        [Flags()]
         public enum NIIF : uint
         {
             NONE = 0x00000000,
@@ -507,62 +507,62 @@ namespace ManagedShell.Interop
         [InterfaceTypeAttribute(ComInterfaceType.InterfaceIsIUnknown)]
         public interface IImageList
         {
-            [PreserveSig]
+            [PreserveSig()]
             int Add(
                 IntPtr hbmImage,
                 IntPtr hbmMask,
                 ref int pi);
 
-            [PreserveSig]
+            [PreserveSig()]
             int ReplaceIcon(
                 int i,
                 IntPtr hicon,
                 ref int pi);
 
-            [PreserveSig]
+            [PreserveSig()]
             int SetOverlayImage(
                 int iImage,
                 int iOverlay);
 
-            [PreserveSig]
+            [PreserveSig()]
             int Replace(
                 int i,
                 IntPtr hbmImage,
                 IntPtr hbmMask);
 
-            [PreserveSig]
+            [PreserveSig()]
             int AddMasked(
                 IntPtr hbmImage,
                 int crMask,
                 ref int pi);
 
-            [PreserveSig]
+            [PreserveSig()]
             int Draw(
                 ref IMAGELISTDRAWPARAMS pimldp);
 
-            [PreserveSig]
+            [PreserveSig()]
             int Remove(
             int i);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetIcon(
                 int i,
                 int flags,
                 ref IntPtr picon);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetImageInfo(
                 int i,
                 ref IMAGEINFO pImageInfo);
 
-            [PreserveSig]
+            [PreserveSig()]
             int Copy(
                 int iDst,
                 IImageList punkSrc,
                 int iSrc,
                 int uFlags);
 
-            [PreserveSig]
+            [PreserveSig()]
             int Merge(
                 int i1,
                 IImageList punk2,
@@ -572,91 +572,91 @@ namespace ManagedShell.Interop
                 ref Guid riid,
                 ref IntPtr ppv);
 
-            [PreserveSig]
+            [PreserveSig()]
             int Clone(
                 ref Guid riid,
                 ref IntPtr ppv);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetImageRect(
                 int i,
                 ref Rect prc);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetIconSize(
                 ref int cx,
                 ref int cy);
 
-            [PreserveSig]
+            [PreserveSig()]
             int SetIconSize(
                 int cx,
                 int cy);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetImageCount(
             ref int pi);
 
-            [PreserveSig]
+            [PreserveSig()]
             int SetImageCount(
                 int uNewCount);
 
-            [PreserveSig]
+            [PreserveSig()]
             int SetBkColor(
                 int clrBk,
                 ref int pclr);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetBkColor(
                 ref int pclr);
 
-            [PreserveSig]
+            [PreserveSig()]
             int BeginDrag(
                 int iTrack,
                 int dxHotspot,
                 int dyHotspot);
 
-            [PreserveSig]
+            [PreserveSig()]
             int EndDrag();
 
-            [PreserveSig]
+            [PreserveSig()]
             int DragEnter(
                 IntPtr hwndLock,
                 int x,
                 int y);
 
-            [PreserveSig]
+            [PreserveSig()]
             int DragLeave(
                 IntPtr hwndLock);
 
-            [PreserveSig]
+            [PreserveSig()]
             int DragMove(
                 int x,
                 int y);
 
-            [PreserveSig]
+            [PreserveSig()]
             int SetDragCursorImage(
                 ref IImageList punk,
                 int iDrag,
                 int dxHotspot,
                 int dyHotspot);
 
-            [PreserveSig]
+            [PreserveSig()]
             int DragShowNolock(
                 int fShow);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetDragImage(
                 ref POINT ppt,
                 ref POINT pptHotspot,
                 ref Guid riid,
                 ref IntPtr ppv);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetItemFlags(
                 int i,
                 ref int dwFlags);
 
-            [PreserveSig]
+            [PreserveSig()]
             int GetOverlayImage(
                 int iOverlay,
                 ref int piIndex);
@@ -674,7 +674,7 @@ namespace ManagedShell.Interop
             [MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken,
             out IntPtr ppszPath);
 
-        [Flags]
+        [Flags()]
         public enum KnownFolderFlags : uint
         {
             None = 0,

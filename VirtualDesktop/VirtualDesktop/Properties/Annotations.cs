@@ -432,7 +432,7 @@ namespace JetBrains.Annotations
     /// Specify the details of implicitly used symbol when it is marked
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
     /// </summary>
-    [Flags]
+    [Flags()]
     internal enum ImplicitUseKindFlags
     {
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
@@ -453,7 +453,7 @@ namespace JetBrains.Annotations
     /// Specify what is considered to be used implicitly when marked
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
     /// </summary>
-    [Flags]
+    [Flags()]
     internal enum ImplicitUseTargetFlags
     {
         Default = Itself,
@@ -963,7 +963,7 @@ namespace JetBrains.Annotations
     /// Provides a value for the <see cref="CollectionAccessAttribute"/> to define
     /// how the collection method invocation affects the contents of the collection.
     /// </summary>
-    [Flags]
+    [Flags()]
     internal enum CollectionAccessType
     {
         /// <summary>Method does not use or modify content of the collection.</summary>

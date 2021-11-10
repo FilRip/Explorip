@@ -86,7 +86,7 @@ namespace ManagedShell.Interop
         [DllImport(Kernel32_DllName, SetLastError = true)]
         public static extern IntPtr OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
 
-        [Flags]
+        [Flags()]
         public enum ProcessAccessFlags : uint
         {
             All = 0x001F0FFF,
@@ -112,7 +112,7 @@ namespace ManagedShell.Interop
         public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress,
             uint dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
 
-        [Flags]
+        [Flags()]
         public enum AllocationType
         {
             Commit = 0x1000,
@@ -126,7 +126,7 @@ namespace ManagedShell.Interop
             LargePages = 0x20000000
         }
 
-        [Flags]
+        [Flags()]
         public enum MemoryProtection
         {
             Execute = 0x10,

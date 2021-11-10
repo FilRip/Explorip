@@ -6,7 +6,7 @@ using ManagedShell.ShellFolders.Structs;
 
 namespace ManagedShell.ShellFolders.Interfaces
 {
-    [ComImport]
+    [ComImport()]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     [Guid("000214e4-0000-0000-c000-000000000046")]
     public interface IContextMenu

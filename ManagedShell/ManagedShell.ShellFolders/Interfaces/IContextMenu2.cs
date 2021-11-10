@@ -7,7 +7,7 @@ using ManagedShell.ShellFolders.Structs;
 
 namespace ManagedShell.ShellFolders.Interfaces
 {
-    [ComImport]
+    [ComImport()]
     [Guid("000214f4-0000-0000-c000-000000000046")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IContextMenu2
@@ -40,7 +40,7 @@ namespace ManagedShell.ShellFolders.Interfaces
 
         // Allows client objects of the IContextMenu interface to 
         // handle messages associated with owner-drawn menu items
-        [PreserveSig]
+        [PreserveSig()]
         Int32 HandleMenuMsg(
             uint uMsg,
             IntPtr wParam,

@@ -2,7 +2,7 @@
 
 namespace ManagedShell.ShellFolders.Enums
 {
-    [Flags]
+    [Flags()]
     public enum SFGAO : uint
     {
         /// <summary>The specified items can be hosted inside a web browser or Windows Explorer frame.</summary>
