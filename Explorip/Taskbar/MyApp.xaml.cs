@@ -62,10 +62,10 @@ namespace Explorip.TaskBar
         private void OpenTaskbar()
         {
             Taskbar taskBar;
-            /*taskBar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen(), (AppBarEdge)Settings.Instance.Edge);
+            taskBar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen(), (AppBarEdge)Settings.Instance.Edge);
             taskBar.Show();
-            _taskbarList.Add(taskBar);*/
-            List<AppBarScreen> appBarScreens = AppBarScreen.FromAllScreens();
+            _taskbarList.Add(taskBar);
+            List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
             foreach (AppBarScreen appBarScreen in appBarScreens)
             {
                 taskBar = new Taskbar(_startMenuMonitor, appBarScreen, (AppBarEdge)Settings.Instance.Edge);

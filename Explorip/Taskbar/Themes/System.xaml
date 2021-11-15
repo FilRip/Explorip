@@ -684,12 +684,6 @@
                 Value="16" />
         <Setter Property="Margin"
                 Value="0,0,1,0" />
-        <Setter Property="SnapsToDevicePixels"
-                Value="True" />
-        <Setter Property="RenderOptions.BitmapScalingMode"
-                Value="HighQuality" />
-        <Setter Property="RenderOptions.EdgeMode"
-                Value="Aliased" />
     </Style>
 
     <Style TargetType="ItemsControl"

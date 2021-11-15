@@ -104,7 +104,7 @@ namespace ManagedShell.AppBar
                 DpiHelper.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
             }
 
-            //DpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
+            DpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
             DpiScale = Screen.DpiScale;
 
             SetPosition();
@@ -223,15 +223,13 @@ namespace ManagedShell.AppBar
             }
             else if (msg == (int)NativeMethods.WM.DPICHANGED)
             {
-                /*if (Screen.Primary)
+                if (Screen.Primary)
                 {
                     DpiHelper.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
                 }
 
-                DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;*/
-
+                DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
                 Screen.ChangeDpi();
-                DpiScale = Screen.DpiScale;
 
                 ProcessScreenChange(ScreenSetupReason.DpiChange);
             }
@@ -394,9 +392,6 @@ namespace ManagedShell.AppBar
         protected virtual void SetScreenProperties(ScreenSetupReason reason)
         {
             _fullScreenHelper.NotifyScreensChanged();
-
-            Screen = AppBarScreen.FromScreen(Screen.NumScreen);
-            DpiScale = Screen.DpiScale;
 
             SetScreenPosition();
         }
