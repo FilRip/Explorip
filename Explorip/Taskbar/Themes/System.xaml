@@ -520,7 +520,6 @@
                 Value="Aliased"/>
         <Setter Property="RenderOptions.BitmapScalingMode"
                 Value="HighQuality"/>
-        <Setter Property=""
     </Style>
 
     <Style TargetType="Image"

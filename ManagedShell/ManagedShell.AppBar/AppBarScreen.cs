@@ -77,6 +77,11 @@ namespace ManagedShell.AppBar
             return FromScreen(Screen.AllScreens[numScreen], numScreen);
         }
 
+        public static AppBarScreen FromPrimaryScreen()
+        {
+            return FromScreen(Screen.PrimaryScreen, 1);
+        }
+
         public static List<AppBarScreen> FromAllOthersScreen()
         {
             List<AppBarScreen> screens = new List<AppBarScreen>();
