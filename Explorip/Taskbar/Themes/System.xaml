@@ -648,14 +648,10 @@
                             Name="ButtonBorder">
                         <Border BorderThickness="0,0,0,0"
                                 BorderBrush="{TemplateBinding Background}"
-                                x:Name="ButtonRightBottomBorder">
-                            <Border BorderThickness="0,0,0,0"
-                                    BorderBrush="{TemplateBinding Background}"
-                                    Background="{TemplateBinding Background}"
-                                    Padding="2"
-                                    x:Name="ButtonLeftTopBorder">
-                                <ContentPresenter />
-                            </Border>
+                                Background="{TemplateBinding Background}"
+                                Padding="2"
+                                x:Name="ButtonLeftTopBorder">
+                            <ContentPresenter />
                         </Border>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -671,18 +667,6 @@
                                  Value="True">
                             <Setter TargetName="ButtonLeftTopBorder"
                                     Property="Background"
-                                    Value="{DynamicResource ButtonHighlight}" />
-                            <Setter TargetName="ButtonRightBottomBorder"
-                                    Property="BorderBrush"
-                                    Value="DarkBlue" />
-                        </Trigger>
-                        <Trigger Property="IsPressed"
-                                 Value="True">
-                            <Setter TargetName="ButtonRightBottomBorder"
-                                    Property="Background"
-                                    Value="{DynamicResource ButtonHighlight}" />
-                            <Setter TargetName="ButtonLeftTopBorder"
-                                    Property="BorderBrush"
                                     Value="DarkBlue" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -700,6 +684,12 @@
                 Value="16" />
         <Setter Property="Margin"
                 Value="0,0,1,0" />
+        <Setter Property="SnapsToDevicePixels"
+                Value="True" />
+        <Setter Property="RenderOptions.BitmapScalingMode"
+                Value="HighQuality" />
+        <Setter Property="RenderOptions.EdgeMode"
+                Value="Aliased" />
     </Style>
 
     <Style TargetType="ItemsControl"
