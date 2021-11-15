@@ -516,6 +516,11 @@
                 Value="32" />
         <Setter Property="Margin"
                 Value="0,0,3,0" />
+        <Setter Property="RenderOptions.EdgeMode"
+                Value="Aliased"/>
+        <Setter Property="RenderOptions.BitmapScalingMode"
+                Value="HighQuality"/>
+        <Setter Property=""
     </Style>
 
     <Style TargetType="Image"

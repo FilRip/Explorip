@@ -7,6 +7,8 @@ namespace ManagedShell.AppBar
 {
     public class AppBarScreen
     {
+        public int NumScreen { get; set; }
+
         public Rectangle Bounds { get; set; }
 
         public string DeviceName { get; set; }
@@ -35,11 +37,26 @@ namespace ManagedShell.AppBar
             }
         }
 
+        public double DpiScale
+        {
+            get
+            {
+                return (double)DpiScalePercent / 100;
+            }
+        }
+
+        public void ChangeDpi()
+        {
+            Interop.NativeMethods.GetDpiForMonitor(Handle, Interop.NativeMethods.DPI_TYPE.MDT_EFFECTIVE_DPI, out uint x, out uint y);
+            DpiX = x;
+            DpiY = y;
+        }
+
         public IntPtr Handle { get; set; }
 
         public int BitsPerPixel { get; set; }
 
-        public static AppBarScreen FromScreen(Screen screen)
+        public static AppBarScreen FromScreen(Screen screen, int numScreen)
         {
             AppBarScreen appBarScreen = new AppBarScreen()
             {
@@ -48,27 +65,27 @@ namespace ManagedShell.AppBar
                 Primary = screen.Primary,
                 WorkingArea = screen.WorkingArea,
                 BitsPerPixel = screen.BitsPerPixel,
+                NumScreen = numScreen,
             };
             appBarScreen.Handle = (IntPtr)typeof(Screen).GetField("hmonitor", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(screen);
-            Interop.NativeMethods.GetDpiForMonitor(appBarScreen.Handle, Interop.NativeMethods.DPI_TYPE.MDT_EFFECTIVE_DPI, out uint x, out uint y);
-            appBarScreen.DpiX = x;
-            appBarScreen.DpiY = y;
+            appBarScreen.ChangeDpi();
             return appBarScreen;
         }
 
-        public static AppBarScreen FromPrimaryScreen()
+        public static AppBarScreen FromScreen(int numScreen)
         {
-            return FromScreen(Screen.PrimaryScreen);
+            return FromScreen(Screen.AllScreens[numScreen], numScreen);
         }
 
         public static List<AppBarScreen> FromAllOthersScreen()
         {
             List<AppBarScreen> screens = new List<AppBarScreen>();
+            int i = 0;
 
             foreach (Screen screen in Screen.AllScreens)
             {
                 if (!screen.Primary)
-                    screens.Add(FromScreen(screen));
+                    screens.Add(FromScreen(screen, i++));
             }
 
             return screens;
@@ -77,10 +94,11 @@ namespace ManagedShell.AppBar
         public static List<AppBarScreen> FromAllScreens()
         {
             List<AppBarScreen> screens = new List<AppBarScreen>();
+            int i = 0;
 
             foreach (Screen screen in Screen.AllScreens)
             {
-                screens.Add(FromScreen(screen));
+                screens.Add(FromScreen(screen, i++));
             }
 
             return screens;

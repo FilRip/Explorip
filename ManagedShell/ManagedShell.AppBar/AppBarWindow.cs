@@ -104,18 +104,8 @@ namespace ManagedShell.AppBar
                 DpiHelper.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
             }
 
-            // TODO : Il y a un bug de définition de la taille et position de la barre ici, quand l'écran est à gauche de l'écran principal. C'est à dire quand le Bounds à une taille négative (mais vrai)
-            /* Voir ce tableau pour aide :
-            DPI     100%    125%
-            Bottom  959     783
-            Height  68      68
-            Left    -1920   -1920
-            Right   0       -384
-            Top     891     715
-            Width   1920    1536
-            */
-            DpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
-            DpiScale = (double)Screen.DpiScalePercent / 100;
+            //DpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
+            DpiScale = Screen.DpiScale;
 
             SetPosition();
 
@@ -233,12 +223,15 @@ namespace ManagedShell.AppBar
             }
             else if (msg == (int)NativeMethods.WM.DPICHANGED)
             {
-                if (Screen.Primary)
+                /*if (Screen.Primary)
                 {
                     DpiHelper.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
                 }
 
-                DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
+                DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;*/
+
+                Screen.ChangeDpi();
+                DpiScale = Screen.DpiScale;
 
                 ProcessScreenChange(ScreenSetupReason.DpiChange);
             }
@@ -402,7 +395,9 @@ namespace ManagedShell.AppBar
         {
             _fullScreenHelper.NotifyScreensChanged();
 
-            Screen = AppBarScreen.FromPrimaryScreen();
+            Screen = AppBarScreen.FromScreen(Screen.NumScreen);
+            DpiScale = Screen.DpiScale;
+
             SetScreenPosition();
         }
 
