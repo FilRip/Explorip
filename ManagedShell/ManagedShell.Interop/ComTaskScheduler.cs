@@ -166,11 +166,11 @@ namespace ManagedShell.Interop
         {
             try
             {
-                var token = this._cancellationToken.Token;
+                CancellationToken token = this._cancellationToken.Token;
 
                 this._initAction();
 
-                foreach (var task in this._tasks.GetConsumingEnumerable(token))
+                foreach (Task task in this._tasks.GetConsumingEnumerable(token))
                     this.TryExecuteTask(task);
             }
             finally

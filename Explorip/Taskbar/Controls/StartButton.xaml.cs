@@ -54,12 +54,13 @@ namespace Explorip.TaskBar.Controls
             if (allowOpenStart)
             {
                 pendingOpenTimer.Start();
-                ShellHelper.ShowStartMenu();
-                /*IntPtr pointeurMenuDemarrer;
-                pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Démarrer");
-                if (pointeurMenuDemarrer != IntPtr.Zero)
-                    WinAPI.User32.SendMessage(pointeurMenuDemarrer, 0x270, 0, 1);
-                //WinAPI.User32.ShowWindow(pointeurMenuDemarrer, WinAPI.User32.ShowWindowCommand.Normal);*/
+                try
+                {
+                    ShellHelper.ShowStartMenu();
+                }
+                catch (Exception)
+                {
+                }
                 return;
             }
 

@@ -3,6 +3,10 @@
   "Id": "001dcda7-f4c3-4bd6-a86c-c99b35a9798a",
   "Items": [
     {
+      "Id": "dcb90edb-cf47-4716-af85-f6300af89c24",
+      "Command": "taskbars"
+    },
+    {
       "Id": "a48e2e86-1f1b-48af-ab65-df93c15852fa",
       "Command": "taskbar"
     }

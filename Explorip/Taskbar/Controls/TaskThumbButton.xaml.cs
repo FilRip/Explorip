@@ -14,7 +14,7 @@ namespace Explorip.TaskBar.Controls
     /// </summary>
     public partial class TaskThumbButton : Window
     {
-        private TaskButton _parent;
+        private readonly TaskButton _parent;
         private IntPtr _handle;
         private IntPtr _thumbPtr;
         private WinAPI.Modeles.DWM_THUMBNAIL_PROPERTIES _thumb;
