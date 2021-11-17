@@ -12,10 +12,10 @@ namespace Explorip.Helpers
 {
     public class Icones
     {
-        private static Icon GetFileIcon(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
+        private static Icon GetFileIcon(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
         {
             SHFILEINFO shfi = new SHFILEINFO();
-            Shell32.SHGFI flags = Shell32.SHGFI.ICON/* | Shell32.SHGFI.USEFILEATTRIBUTES*/;
+            Shell32.SHGFI flags = Shell32.SHGFI.ICON;
 
             if (linkOverlay) flags |= Shell32.SHGFI.LINKOVERLAY;
 
@@ -28,8 +28,6 @@ namespace Explorip.Helpers
                 flags |= Shell32.SHGFI.ADDOVERLAYS;
 
             Shell32.FILE_ATTRIBUTE attribut = Shell32.FILE_ATTRIBUTE.NORMAL;
-            if (repertoire)
-                attribut = Shell32.FILE_ATTRIBUTE.DIRECTORY;
 
             Shell32.SHGetFileInfo(name,
                 attribut,
@@ -42,10 +40,10 @@ namespace Explorip.Helpers
             return icon;
         }
 
-        private static BitmapSource GetBitmapIcon(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
+        private static BitmapSource GetBitmapIcon(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
         {
             SHFILEINFO shfi = new SHFILEINFO();
-            Shell32.SHGFI flags = Shell32.SHGFI.ICON/* | Shell32.SHGFI.USEFILEATTRIBUTES*/;
+            Shell32.SHGFI flags = Shell32.SHGFI.ICON;
 
             if (linkOverlay) flags |= Shell32.SHGFI.LINKOVERLAY;
 
@@ -58,8 +56,6 @@ namespace Explorip.Helpers
                 flags |= Shell32.SHGFI.ADDOVERLAYS;
 
             Shell32.FILE_ATTRIBUTE attribut = Shell32.FILE_ATTRIBUTE.NORMAL;
-            if (repertoire)
-                attribut = Shell32.FILE_ATTRIBUTE.DIRECTORY;
 
             Shell32.SHGetFileInfo(name,
                 attribut,
@@ -70,9 +66,9 @@ namespace Explorip.Helpers
             return Imaging.CreateBitmapSourceFromHIcon(shfi.hIcon, new Int32Rect(0, 0, (petiteIcone ? 16 : 32), (petiteIcone ? 16 : 32)), BitmapSizeOptions.FromEmptyOptions());
         }
 
-        public static Bitmap GetBitmapIcone(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
+        public static Bitmap GetBitmapIcone(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
         {
-            BitmapSource source = GetBitmapIcon(name, linkOverlay, repertoire, othersOverlay, petiteIcone);
+            BitmapSource source = GetBitmapIcon(name, linkOverlay, othersOverlay, petiteIcone);
 
             Bitmap bmp = new Bitmap(source.PixelWidth, source.PixelHeight, PixelFormat.Format32bppPArgb);
             BitmapData data = bmp.LockBits(new Rectangle(System.Drawing.Point.Empty, bmp.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
@@ -82,9 +78,9 @@ namespace Explorip.Helpers
             return bmp;
         }
 
-        public static Bitmap GetIcone(string name, bool linkOverlay, bool repertoire, bool othersOverlay, bool petiteIcone)
+        public static Bitmap GetIcone(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
         {
-            Icon icone = GetFileIcon(name, linkOverlay, repertoire, othersOverlay, petiteIcone);
+            Icon icone = GetFileIcon(name, linkOverlay, othersOverlay, petiteIcone);
             Bitmap image = icone.ToBitmap();
             icone.Dispose();
             image.MakeTransparent();

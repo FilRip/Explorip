@@ -96,15 +96,15 @@ namespace Explorip.ComposantsWinForm
             if (element.GetType() == typeof(DirectoryInfo))
             {
                 DirectoryInfo sousDirInfo = (DirectoryInfo)element;
-                LargeImageList.Images.Add(nom, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, true, false));
-                SmallImageList.Images.Add(nom, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, true, true));
+                LargeImageList.Images.Add(nom, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, false));
+                SmallImageList.Images.Add(nom, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, true));
                 Items.Add(new ListViewItem(nom, nom) { Tag = sousDirInfo });
             }
             else if (element.GetType() == typeof(FileInfo))
             {
                 FileInfo file = (FileInfo)element;
-                LargeImageList.Images.Add(nom, Icones.GetIcone(file.FullName, file.IsShortcut(), false, true, false));
-                SmallImageList.Images.Add(nom, Icones.GetIcone(file.FullName, file.IsShortcut(), false, true, true));
+                LargeImageList.Images.Add(nom, Icones.GetIcone(file.FullName, file.IsShortcut(), true, false));
+                SmallImageList.Images.Add(nom, Icones.GetIcone(file.FullName, file.IsShortcut(), true, true));
                 Items.Add(new ListViewItem(nom, nom) { Tag = file });
             }
         }

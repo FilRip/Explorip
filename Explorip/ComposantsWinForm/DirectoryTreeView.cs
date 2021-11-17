@@ -66,7 +66,7 @@ namespace Explorip.ComposantsWinForm
                 _noeudMyComputer.Nodes.Add(noeudDesktop);
                 noeudDesktop.Name = "Desktop";
                 noeudDesktop.Tag = new DirectoryInfo(Environment.SpecialFolder.Desktop.Repertoire());
-                _listeIcones.Images.Add(Icones.GetIcone(Environment.SpecialFolder.Desktop.Repertoire(), false, true, false, true));
+                _listeIcones.Images.Add(Icones.GetIcone(Environment.SpecialFolder.Desktop.Repertoire(), true, true, true));
                 noeudDesktop.ImageIndex = _listeIcones.Images.Count - 1;
                 noeudDesktop.SelectedImageIndex = _listeIcones.Images.Count - 1;
                 if ((Directory.GetFiles(Environment.SpecialFolder.Desktop.Repertoire()).Length > 0) || (Directory.GetDirectories(Environment.SpecialFolder.Desktop.Repertoire()).Length > 0))
@@ -97,7 +97,7 @@ namespace Explorip.ComposantsWinForm
                                 nomVolume = remotePath.ToString();
                         }
 
-                        _listeIcones.Images.Add(Icones.GetIcone(drive.Name, false, true, false, true));
+                        _listeIcones.Images.Add(Icones.GetIcone(drive.Name, true, true, true));
                         TreeNode driveNode = new TreeNode($"{nomVolume} ({drive.Name})")
                         {
                             Name = drive.Name,
@@ -124,7 +124,7 @@ namespace Explorip.ComposantsWinForm
             if (string.IsNullOrWhiteSpace(path))
                 return;
             DirectoryInfo dirInfo = new DirectoryInfo(path);
-            _listeIcones.Images.Add(Icones.GetIcone(dirInfo.FullName, false, true, false, true));
+            _listeIcones.Images.Add(Icones.GetIcone(dirInfo.FullName, true, true, true));
             TreeNode nouveauNoeud;
             nouveauNoeud = new TreeNode(dirInfo.Name)
             {
@@ -211,7 +211,7 @@ namespace Explorip.ComposantsWinForm
                 {
                     Name = dirI.Name
                 };
-                _listeIcones.Images.Add(Icones.GetIcone(dirI.FullName, dirI.IsShortcut(), true, true, true));
+                _listeIcones.Images.Add(Icones.GetIcone(dirI.FullName, dirI.IsShortcut(), true, true));
                 int imgIndex = _listeIcones.Images.Count - 1;
                 node.ImageIndex = imgIndex;
                 node.SelectedImageIndex = imgIndex;
