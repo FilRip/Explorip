@@ -32,7 +32,7 @@ namespace Explorip.Helpers
                     if (sortie.hbmpItem != IntPtr.Zero)
                     {
                         icone = Image.FromHbitmap(sortie.hbmpItem);
-                        icone.MakeTransparent(Color.Black);
+                        icone.MakeTransparent();
                     }
                     etat = sortie.fState;
                     IdCmd = sortie.wID;

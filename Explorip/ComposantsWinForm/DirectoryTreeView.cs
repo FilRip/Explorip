@@ -55,7 +55,7 @@ namespace Explorip.ComposantsWinForm
                 };
                 IntPtr tempPidl = IntPtr.Zero;
                 Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref tempPidl);
-                _listeIcones.Images.Add(Icones.GetIcone(tempPidl));
+                _listeIcones.Images.Add(Icones.GetIcone(tempPidl, true));
                 _noeudMyComputer.ImageIndex = _listeIcones.Images.Count - 1;
                 _noeudMyComputer.SelectedImageIndex = _listeIcones.Images.Count - 1;
                 _noeudMyComputer.Tag = "My Computer";
@@ -111,6 +111,7 @@ namespace Explorip.ComposantsWinForm
                     }
                     catch (Exception) { }
                 }
+                SelectedNode = Nodes[0];
             }
             else
             {
@@ -144,7 +145,7 @@ namespace Explorip.ComposantsWinForm
 
         private void TreeRepertoire_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (e.Node.Text != "My Computer")
+            if (e.Node.Name != "My Computer")
             {
                 if (e.Node.Tag != null && e.Node.Tag.GetType() == typeof(DirectoryInfo))
                 {
@@ -165,6 +166,10 @@ namespace Explorip.ComposantsWinForm
                         }
                     }
                 }
+            }
+            else
+            {
+                _liensFichiers.Initialise(e.Node);
             }
         }
 

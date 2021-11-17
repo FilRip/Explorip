@@ -30,13 +30,12 @@ namespace Explorip.Helpers
             return pidl;
         }
 
-        public static TreeNode GetTreeNode(this Environment.SpecialFolder specialFolder, ImageList listeIcones)
+        public static TreeNode GetTreeNode(this Environment.SpecialFolder specialFolder, ImageList listeIcones, bool petiteIcone = true)
         {
             try
             {
-                IntPtr tempPidl = new IntPtr();
-                Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, (Shell32.CSIDL)Enum.Parse(typeof(Shell32.CSIDL), ((int)specialFolder).ToString()), ref tempPidl);
-                listeIcones.Images.Add(Icones.GetIcone(tempPidl));
+                IntPtr tempPidl = specialFolder.GetPIDL();
+                listeIcones.Images.Add(Icones.GetIcone(tempPidl, petiteIcone));
                 TreeNode retour;
                 retour = new TreeNode()
                 {

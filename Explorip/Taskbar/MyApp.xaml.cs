@@ -125,5 +125,10 @@ namespace Explorip.TaskBar
                 return null;
             }
         }
+
+        public List<Taskbar> ListeBarreDesTaches()
+        {
+            return _taskbarList;
+        }
     }
 }

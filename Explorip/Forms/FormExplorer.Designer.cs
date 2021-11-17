@@ -34,7 +34,7 @@ namespace Explorip.Forms
             this.filRipTabControl1 = new Explorip.ComposantsWinForm.FilRipTabControl.FilRipTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.TreeRepertoire = new ComposantsWinForm.DirectoryTreeView();
+            this.TreeRepertoire = new Explorip.ComposantsWinForm.DirectoryTreeView();
             this.lvFichiers = new Explorip.ComposantsWinForm.FichiersListView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.filRipTabControl2 = new Explorip.ComposantsWinForm.FilRipTabControl.FilRipTabControl();
@@ -142,7 +142,8 @@ namespace Explorip.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TreeRepertoire.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TreeRepertoire.ImageIndex = 6;
+            this.TreeRepertoire.ImageIndex = 0;
+            this.TreeRepertoire.LiensFichiers = null;
             this.TreeRepertoire.Location = new System.Drawing.Point(3, 3);
             this.TreeRepertoire.Name = "TreeRepertoire";
             this.TreeRepertoire.SelectedImageIndex = 0;
@@ -159,6 +160,7 @@ namespace Explorip.Forms
             this.lvFichiers.CouleurAlternee1 = System.Drawing.Color.White;
             this.lvFichiers.CouleurAlternee2 = System.Drawing.Color.LightGray;
             this.lvFichiers.HideSelection = false;
+            this.lvFichiers.LiensRepertoires = null;
             this.lvFichiers.Location = new System.Drawing.Point(3, 3);
             this.lvFichiers.Name = "lvFichiers";
             this.lvFichiers.OwnerDraw = true;
@@ -219,14 +221,14 @@ namespace Explorip.Forms
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // FrmMain
+            // FormExplorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(969, 457);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FrmMain";
+            this.Name = "FormExplorer";
             this.Text = "Explorateur de fichier";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

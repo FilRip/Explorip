@@ -6,6 +6,11 @@ namespace Explorip.Helpers
 {
     public static class WindowsSettings
     {
+        // Docs : https://github.com/dbarros/WindowsAPICodePack
+        // https://stackoverflow.com/questions/24081665/windows-api-code-pack-where-is-it/25048686#25048686
+        // Windows 11 (to 10) : https://github.com/valinet/ExplorerPatcher
+        // Ecrire sur le bureau : https://social.msdn.microsoft.com/Forums/vstudio/en-US/99354676-56c4-48b7-be62-ec34d53a073f/how-to-write-text-to-desktop-wallpaper?forum=csharpgeneral
+
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
         private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
 

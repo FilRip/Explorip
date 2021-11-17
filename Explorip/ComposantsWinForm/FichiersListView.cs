@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Explorip.ExploripEventArgs;
 using Explorip.Helpers;
 using Explorip.Sorters;
+using Explorip.WinAPI;
 
 namespace Explorip.ComposantsWinForm
 {
@@ -78,13 +79,48 @@ namespace Explorip.ComposantsWinForm
             get { return _repCourant; }
         }
 
+        public void Initialise(TreeNode noeud)
+        {
+            VideListe();
+            if (noeud != null)
+            {
+                foreach (TreeNode noeudEnfant in noeud.Nodes)
+                {
+                    AjouterElement(noeudEnfant.Text, (FileSystemInfo)noeudEnfant.Tag);
+                }
+            }
+        }
+
+        private void AjouterElement(string nom, FileSystemInfo element)
+        {
+            if (element.GetType() == typeof(DirectoryInfo))
+            {
+                DirectoryInfo sousDirInfo = (DirectoryInfo)element;
+                LargeImageList.Images.Add(nom, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, true, false));
+                SmallImageList.Images.Add(nom, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, true, true));
+                Items.Add(new ListViewItem(nom, nom) { Tag = sousDirInfo });
+            }
+            else if (element.GetType() == typeof(FileInfo))
+            {
+                FileInfo file = (FileInfo)element;
+                LargeImageList.Images.Add(nom, Icones.GetIcone(file.FullName, file.IsShortcut(), false, true, false));
+                SmallImageList.Images.Add(nom, Icones.GetIcone(file.FullName, file.IsShortcut(), false, true, true));
+                Items.Add(new ListViewItem(nom, nom) { Tag = file });
+            }
+        }
+
+        private void VideListe()
+        {
+            Items.Clear();
+            LargeImageList.Images.Clear();
+            SmallImageList.Images.Clear();
+        }
+
         public void Rafraichir(DirectoryInfo dirInfo)
         {
             _repCourant = dirInfo;
             // TODO : Utiliser les tuiles https://github.com/dbarros/WindowsAPICodePack
-            Items.Clear();
-            LargeImageList.Images.Clear();
-            SmallImageList.Images.Clear();
+            VideListe();
 
             DirectoryInfo[] dirs = null;
             try
@@ -97,9 +133,7 @@ namespace Explorip.ComposantsWinForm
                 Array.Sort(dirs, new TriAlphabetique());
                 foreach (DirectoryInfo sousDirInfo in dirs)
                 {
-                    LargeImageList.Images.Add(sousDirInfo.Name, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, true, false));
-                    SmallImageList.Images.Add(sousDirInfo.Name, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, true, true));
-                    Items.Add(new ListViewItem(sousDirInfo.Name, sousDirInfo.Name) { Tag = sousDirInfo });
+                    AjouterElement(sousDirInfo.Name, sousDirInfo);
                 }
             }
 
@@ -112,9 +146,7 @@ namespace Explorip.ComposantsWinForm
             Array.Sort(files, new TriAlphabetique());
             foreach (FileInfo file in files)
             {
-                LargeImageList.Images.Add(file.Name, Icones.GetIcone(file.FullName, file.IsShortcut(), false, true, false));
-                SmallImageList.Images.Add(file.Name, Icones.GetIcone(file.FullName, file.IsShortcut(), false, true, true));
-                Items.Add(new ListViewItem(file.Name, file.Name) { Tag = file });
+                AjouterElement(file.Name, file);
             }
         }
 

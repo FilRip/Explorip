@@ -109,12 +109,6 @@
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
-    <Compile Include="Forms\FormTaskBar.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormTaskBar.Designer.cs">
-      <DependentUpon>FormTaskBar.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -216,9 +210,6 @@
     <Compile Include="WinAPI\User32.cs" />
     <EmbeddedResource Include="ComposantsWinForm\FichiersListView.resx">
       <DependentUpon>FichiersListView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormTaskBar.resx">
-      <DependentUpon>FormTaskBar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormExplorer.resx">
       <SubType>Designer</SubType>
