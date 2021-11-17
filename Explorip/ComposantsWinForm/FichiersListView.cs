@@ -193,7 +193,6 @@ namespace Explorip.ComposantsWinForm
             // 
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FichiersListView_KeyUp);
             this.ResumeLayout(false);
-
         }
 
         private void FichiersListView_KeyUp(object sender, KeyEventArgs e)

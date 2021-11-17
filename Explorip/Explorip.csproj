@@ -51,6 +51,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
@@ -83,6 +84,12 @@
     </Compile>
     <Compile Include="ComposantsWinForm\ContextMenu\FilRipToolStripSeparator.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\PanelExplorer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\PanelExplorer.Designer.cs">
+      <DependentUpon>PanelExplorer.cs</DependentUpon>
     </Compile>
     <Compile Include="ComposantsWinForm\TabExplorer.cs">
       <SubType>Component</SubType>
@@ -210,6 +217,9 @@
     <Compile Include="WinAPI\User32.cs" />
     <EmbeddedResource Include="ComposantsWinForm\FichiersListView.resx">
       <DependentUpon>FichiersListView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ComposantsWinForm\PanelExplorer.resx">
+      <DependentUpon>PanelExplorer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormExplorer.resx">
       <SubType>Designer</SubType>

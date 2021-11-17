@@ -36,7 +36,6 @@ namespace Explorip.Forms
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TreeRepertoire = new Explorip.ComposantsWinForm.DirectoryTreeView();
             this.lvFichiers = new Explorip.ComposantsWinForm.FichiersListView();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.filRipTabControl2 = new Explorip.ComposantsWinForm.FilRipTabControl.FilRipTabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -86,7 +85,6 @@ namespace Explorip.Forms
             this.filRipTabControl1.BorderColorHot = System.Drawing.SystemColors.ControlDark;
             this.filRipTabControl1.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
             this.filRipTabControl1.Controls.Add(this.tabPage1);
-            this.filRipTabControl1.Controls.Add(this.tabPage3);
             this.filRipTabControl1.FocusColor = System.Drawing.Color.Orange;
             this.filRipTabControl1.FocusTrack = true;
             this.filRipTabControl1.HotTrack = true;
@@ -168,16 +166,6 @@ namespace Explorip.Forms
             this.lvFichiers.TabIndex = 0;
             this.lvFichiers.UseCompatibleStateImageBehavior = false;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 23);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(425, 400);
-            this.tabPage3.TabIndex = 1;
-            this.tabPage3.Text = "tabPage3";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
             // filRipTabControl2
             // 
             this.filRipTabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -255,7 +243,6 @@ namespace Explorip.Forms
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private ComposantsWinForm.FichiersListView lvFichiers;
-        private System.Windows.Forms.TabPage tabPage3;
     }
 }
 
