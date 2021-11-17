@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using Explorip.ExploripEventArgs;
 using Explorip.Helpers;
 using Explorip.Sorters;
-using Explorip.WinAPI;
 
 namespace Explorip.ComposantsWinForm
 {
@@ -22,6 +21,7 @@ namespace Explorip.ComposantsWinForm
 
         public FichiersListView() : base()
         {
+            InitializeComponent();
             _cms = new ContextMenuStrip();
             LargeImageList = new ImageList();
             SmallImageList = new ImageList();
@@ -59,7 +59,6 @@ namespace Explorip.ComposantsWinForm
         }
 
         // TODO : RafraichirRepertoire (apres suppression, ajout, renommer, etc...)
-        // rafraichir par F5/Actualiser
         // Repertoire parent par DEL
 
         public DirectoryTreeView LiensRepertoires
@@ -182,6 +181,39 @@ namespace Explorip.ComposantsWinForm
                     FilesOperations.ContextMenuPaste.RepDestination = _repCourant.FullName;
                     ShellContextMenu ctxMenu = new ShellContextMenu();
                     ctxMenu.ShowContextMenu(_repCourant, PointToScreen(new Point(e.X, e.Y)), _cms);
+                }
+            }
+        }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // FichiersListView
+            // 
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FichiersListView_KeyUp);
+            this.ResumeLayout(false);
+
+        }
+
+        private void FichiersListView_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F5)
+            {
+                Rafraichir(_repCourant);
+            }
+            else if (e.KeyCode == Keys.Back)
+            {
+                _repCourant = Directory.GetParent(_repCourant.FullName);
+                if (SelectionneRepertoire != null)
+                    SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(_repCourant), null, null);
+                if (_liensRepertoire != null)
+                {
+                    _liensRepertoire.RafraichirRepertoire(_repCourant);
+                }
+                else
+                {
+                    Rafraichir(_repCourant);
                 }
             }
         }

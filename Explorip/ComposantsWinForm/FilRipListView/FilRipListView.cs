@@ -26,7 +26,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
         public FilRipListView()
         {
             this.ColumnClick += new ColumnClickEventHandler(this.MonListView_ColumnClick);
-            ListViewItemSorter = new FilRipListViewComparateur();
+            //ListViewItemSorter = new FilRipListViewComparateur();
             this.MouseDown += ConstruireMenuColonnes;
             OwnerDraw = true;
             this.DrawItem += MonListView_DrawItem;
