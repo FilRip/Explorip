@@ -6,8 +6,8 @@ using ManagedShell.ShellFolders.Enums;
 namespace ManagedShell.ShellFolders.Interfaces
 {
     [ComImport()]
-    [GuidAttribute("bcc18b79-ba16-442f-80c4-8a59c30c463b")]
-    [InterfaceTypeAttribute(ComInterfaceType.InterfaceIsIUnknown)]
+    [Guid("bcc18b79-ba16-442f-80c4-8a59c30c463b")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IShellItemImageFactory
     {
         int GetImage(

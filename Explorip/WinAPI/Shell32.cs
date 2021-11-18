@@ -172,6 +172,6 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("shell32.dll")]
-        private extern static int SHGetImageList(SHIL iImageList, ref Guid riid, ref IImageList ppv);
+        public extern static int SHGetImageList(SHIL iImageList, ref Guid riid, out IImageList ppv);
     }
 }

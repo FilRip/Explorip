@@ -39,7 +39,12 @@ namespace Explorip.ComposantsWinForm
                 if (item.Tag.GetType() == typeof(FileInfo))
                 {
                     FileInfo fileInfo = (FileInfo)item.Tag;
-                    Process.Start(fileInfo.FullName);
+                    ProcessStartInfo psi = new ProcessStartInfo()
+                    {
+                        UseShellExecute = true,
+                        FileName = fileInfo.FullName,
+                    };
+                    Process.Start(psi);
                 }
                 else if (item.Tag.GetType() == typeof(DirectoryInfo))
                 {
@@ -57,9 +62,6 @@ namespace Explorip.ComposantsWinForm
                 }
             }
         }
-
-        // TODO : RafraichirRepertoire (apres suppression, ajout, renommer, etc...)
-        // Repertoire parent par DEL
 
         public DirectoryTreeView LiensRepertoires
         {
@@ -142,10 +144,13 @@ namespace Explorip.ComposantsWinForm
                 files = dirInfo.GetFiles();
             }
             catch (Exception) { return; }
-            Array.Sort(files, new TriAlphabetique());
-            foreach (FileInfo file in files)
+            if (files != null)
             {
-                AjouterElement(file.Name, file);
+                Array.Sort(files, new TriAlphabetique());
+                foreach (FileInfo file in files)
+                {
+                    AjouterElement(file.Name, file);
+                }
             }
         }
 

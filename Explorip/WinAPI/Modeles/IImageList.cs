@@ -3,6 +3,13 @@ using System.Runtime.InteropServices;
 
 namespace Explorip.WinAPI.Modeles
 {
+    [Flags()]
+    public enum ILD : int
+    {
+        TRANSPARENT = 0x00000001,
+        IMAGE = 0x00000020,
+    }
+
     [ComImport()]
     [Guid("46EB5926-582E-4017-9FDF-E8998DAA0950")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

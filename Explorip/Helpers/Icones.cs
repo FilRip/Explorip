@@ -3,59 +3,22 @@ using Explorip.WinAPI.Modeles;
 
 using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Windows;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
 
 namespace Explorip.Helpers
 {
     public class Icones
     {
-        private static Icon GetFileIcon(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
+        private static Icon GetFileIcon(string name, bool linkOverlay, bool othersOverlay, Shell32.SHIL taille)
         {
             SHFILEINFO shfi = new SHFILEINFO();
-            Shell32.SHGFI flags = Shell32.SHGFI.ICON;
+            Shell32.SHGFI flags = Shell32.SHGFI.SYSICONINDEX | Shell32.SHGFI.ICON;
 
-            if (linkOverlay) flags |= Shell32.SHGFI.LINKOVERLAY;
+            if ((linkOverlay) || (othersOverlay))
+            {
+                flags |= Shell32.SHGFI.OVERLAYINDEX;
+            }
 
-            if (petiteIcone)
-                flags |= Shell32.SHGFI.SMALLICON;
-            else
-                flags |= Shell32.SHGFI.LARGEICON;
-
-            if (othersOverlay)
-                flags |= Shell32.SHGFI.ADDOVERLAYS;
-
-            Shell32.FILE_ATTRIBUTE attribut = Shell32.FILE_ATTRIBUTE.NORMAL;
-
-            Shell32.SHGetFileInfo(name,
-                attribut,
-                ref shfi,
-                (uint)System.Runtime.InteropServices.Marshal.SizeOf(shfi),
-                flags);
-            
-            Icon icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();
-            User32.DestroyIcon(shfi.hIcon); // Cleanup
-            return icon;
-        }
-
-        private static BitmapSource GetBitmapIcon(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
-        {
-            SHFILEINFO shfi = new SHFILEINFO();
-            Shell32.SHGFI flags = Shell32.SHGFI.ICON;
-
-            if (linkOverlay) flags |= Shell32.SHGFI.LINKOVERLAY;
-
-            if (petiteIcone)
-                flags |= Shell32.SHGFI.SMALLICON;
-            else
-                flags |= Shell32.SHGFI.LARGEICON;
-
-            if (othersOverlay)
-                flags |= Shell32.SHGFI.ADDOVERLAYS;
-
-            Shell32.FILE_ATTRIBUTE attribut = Shell32.FILE_ATTRIBUTE.NORMAL;
+            Shell32.FILE_ATTRIBUTE attribut = Shell32.FILE_ATTRIBUTE.NULL;
 
             Shell32.SHGetFileInfo(name,
                 attribut,
@@ -63,24 +26,37 @@ namespace Explorip.Helpers
                 (uint)System.Runtime.InteropServices.Marshal.SizeOf(shfi),
                 flags);
 
-            return Imaging.CreateBitmapSourceFromHIcon(shfi.hIcon, new Int32Rect(0, 0, (petiteIcone ? 16 : 32), (petiteIcone ? 16 : 32)), BitmapSizeOptions.FromEmptyOptions());
-        }
+            Guid Id = typeof(IImageList).GUID;
+            IntPtr hIcon = IntPtr.Zero;
+            Shell32.SHGetImageList(taille, ref Id, out IImageList ppv);
 
-        public static Bitmap GetBitmapIcone(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
-        {
-            BitmapSource source = GetBitmapIcon(name, linkOverlay, othersOverlay, petiteIcone);
+            Bitmap bitmap;
 
-            Bitmap bmp = new Bitmap(source.PixelWidth, source.PixelHeight, PixelFormat.Format32bppPArgb);
-            BitmapData data = bmp.LockBits(new Rectangle(System.Drawing.Point.Empty, bmp.Size), ImageLockMode.WriteOnly, PixelFormat.Format32bppPArgb);
-            source.CopyPixels(Int32Rect.Empty, data.Scan0, data.Height * data.Stride, data.Stride);
-            bmp.UnlockBits(data);
-            bmp.MakeTransparent();
-            return bmp;
+            // Recup l'icone
+            ppv.GetIcon(shfi.iIcon & 0xFFFFFF, (int)ILD.TRANSPARENT, ref hIcon);
+            Image icone = Icon.FromHandle(hIcon).ToBitmap();
+            bitmap = new Bitmap(icone.Width, icone.Height);
+            Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.DrawImage(icone, new Point(0, 0));
+
+            // Recup l'overlay
+            int overlayIndex = 0;
+            if (ppv.GetOverlayImage(shfi.iIcon >> 24, ref overlayIndex) == (int)Commun.HRESULT.S_OK)
+            {
+                ppv.GetIcon(overlayIndex, (int)ILD.TRANSPARENT, ref hIcon);
+                Image overlay = Icon.FromHandle(hIcon).ToBitmap();
+                graphics.DrawImage(overlay, new Point(0, 0));
+            }
+
+            // Retourne l'icone construite
+            graphics.Save();
+
+            return Icon.FromHandle(bitmap.GetHicon());
         }
 
         public static Bitmap GetIcone(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
         {
-            Icon icone = GetFileIcon(name, linkOverlay, othersOverlay, petiteIcone);
+            Icon icone = GetFileIcon(name, linkOverlay, othersOverlay, petiteIcone ? Shell32.SHIL.SMALL : Shell32.SHIL.LARGE);
             Bitmap image = icone.ToBitmap();
             icone.Dispose();
             image.MakeTransparent();
@@ -121,8 +97,5 @@ namespace Explorip.Helpers
             image.MakeTransparent(Color.Black);
             return image;
         }
-
-        // TODO : Recupérer les icones des autres tailles
-        // voir : https://stackoverflow.com/questions/28012229/what-is-the-maximum-size-of-an-icon-returned-from-shgetfileinfo
     }
 }
