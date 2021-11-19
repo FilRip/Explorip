@@ -260,24 +260,54 @@ namespace Explorip.ComposantsWinForm
             {
                 if (SelectedItems.Count > 0)
                 {
-                    foreach (ListViewItem item in SelectedItems)
+                    foreach (FileSystemInfo item in RetourneListeFichiersDossiersSelectionnes())
                     {
-                        _fileOperation.DeleteItem(((FileSystemInfo)item.Tag).FullName);
+                        _fileOperation.DeleteItem(item.FullName);
                     }
                     _fileOperation.PerformOperations();
                 }
             }
             else if (e.Modifiers.HasFlag(Keys.Control))
             {
-                // TODO : Couper/copier/coller raccourcis
-                // docs pour support entre applications : https://stackoverflow.com/questions/2077981/cut-files-to-clipboard-in-c-sharp
                 if ((e.KeyCode == Keys.C) || (e.KeyCode == Keys.X))
                 {
+                    // Couper/copier
+                    bool deplace = (e.KeyCode == Keys.X);
                     if (SelectedItems.Count > 0)
                     {
+                        List<FileSystemInfo> listeFichiersDossiers = RetourneListeFichiersDossiersSelectionnes();
+                        ExtensionsClipboard.AjouterFichiersDossiers(listeFichiersDossiers, deplace);
+                    }
+                }
+                if (e.KeyCode == Keys.V)
+                {
+                    // Coller
+                    if (ExtensionsClipboard.LireFichiersDossiers(true, out List<FileSystemInfo> listeFichiersDossiers, out bool deplace))
+                    {
+                        foreach (FileSystemInfo fileSystemInfo in listeFichiersDossiers)
+                        {
+                            if (deplace)
+                                _fileOperation.MoveItem(fileSystemInfo.FullName, _repCourant.FullName, fileSystemInfo.Name);
+                            else
+                                _fileOperation.CopyItem(fileSystemInfo.FullName, _repCourant.FullName, fileSystemInfo.Name);
+                        }
+                        _fileOperation.PerformOperations();
                     }
                 }
             }
+        }
+
+        private List<FileSystemInfo> RetourneListeFichiersDossiersSelectionnes()
+        {
+            List<FileSystemInfo> retour = new List<FileSystemInfo>();
+            if (SelectedItems.Count > 0)
+            {
+                foreach (ListViewItem item in SelectedItems)
+                {
+                    retour.Add((FileSystemInfo)item.Tag);
+                }
+            }
+            return retour;
         }
 
         // TODO : Implémenter couper/copier/coller par drag & drop
