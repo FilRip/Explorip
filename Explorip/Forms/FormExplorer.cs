@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 
 using Explorip.ComposantsWinForm;
@@ -19,6 +20,12 @@ namespace Explorip.Forms
             TreeRepertoire.LiensFichiers = lvFichiers;
             lvFichiers.LiensRepertoires = TreeRepertoire;
             filRipTabControl1.TabPages.Add(new TabPageExplorer());
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+            Themes.AutoTheme.AppliqueThemeWindows(this);
         }
     }
 }

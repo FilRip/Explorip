@@ -8,7 +8,7 @@ namespace Explorip.Helpers
 {
     public class Icones
     {
-        private static Icon GetFileIcon(string name, bool linkOverlay, bool othersOverlay, Shell32.SHIL taille)
+        public static Icon GetFileIcon(string name, bool linkOverlay, bool othersOverlay, Shell32.SHIL taille)
         {
             SHFILEINFO shfi = new SHFILEINFO();
             Shell32.SHGFI flags = Shell32.SHGFI.SYSICONINDEX | Shell32.SHGFI.ICON;
@@ -52,15 +52,6 @@ namespace Explorip.Helpers
             graphics.Save();
 
             return Icon.FromHandle(bitmap.GetHicon());
-        }
-
-        public static Bitmap GetIcone(string name, bool linkOverlay, bool othersOverlay, bool petiteIcone)
-        {
-            Icon icone = GetFileIcon(name, linkOverlay, othersOverlay, petiteIcone ? Shell32.SHIL.SMALL : Shell32.SHIL.LARGE);
-            Bitmap image = icone.ToBitmap();
-            icone.Dispose();
-            image.MakeTransparent();
-            return image;
         }
 
         private static Icon GetFileIcon(IntPtr pidl, bool petiteIcone)

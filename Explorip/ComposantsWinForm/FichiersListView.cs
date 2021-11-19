@@ -120,15 +120,15 @@ namespace Explorip.ComposantsWinForm
             if (element.GetType() == typeof(DirectoryInfo))
             {
                 DirectoryInfo sousDirInfo = (DirectoryInfo)element;
-                LargeImageList.Images.Add(nom, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, false));
-                SmallImageList.Images.Add(nom, Icones.GetIcone(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, true));
+                LargeImageList.Images.Add(nom, Icones.GetFileIcon(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, WinAPI.Shell32.SHIL.LARGE));
+                SmallImageList.Images.Add(nom, Icones.GetFileIcon(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, WinAPI.Shell32.SHIL.SMALL));
                 Items.Add(new ListViewItem(nom, nom) { Tag = sousDirInfo });
             }
             else if (element.GetType() == typeof(FileInfo))
             {
                 FileInfo file = (FileInfo)element;
-                LargeImageList.Images.Add(nom, Icones.GetIcone(file.FullName, file.IsShortcut(), true, false));
-                SmallImageList.Images.Add(nom, Icones.GetIcone(file.FullName, file.IsShortcut(), true, true));
+                LargeImageList.Images.Add(nom, Icones.GetFileIcon(file.FullName, file.IsShortcut(), true, WinAPI.Shell32.SHIL.LARGE));
+                SmallImageList.Images.Add(nom, Icones.GetFileIcon(file.FullName, file.IsShortcut(), true, WinAPI.Shell32.SHIL.SMALL));
                 Items.Add(new ListViewItem(nom, nom) { Tag = file });
             }
         }

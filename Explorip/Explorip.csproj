@@ -105,6 +105,7 @@
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionsArray.cs" />
+    <Compile Include="Helpers\ExtensionsClass.cs" />
     <Compile Include="Helpers\ExtensionsClipboard.cs" />
     <Compile Include="Helpers\ExtensionsCommandLineArguments.cs" />
     <Compile Include="Helpers\ExtensionsDossiers.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="TaskBar\Utilities\Settings.cs" />
     <Compile Include="TaskBar\Utilities\StartMenuMonitor.cs" />
     <Compile Include="TaskBar\Utilities\TaskCategoryProvider.cs" />
+    <Compile Include="Themes\AutoTheme.cs" />
     <Compile Include="WinAPI\Commun.cs" />
     <Compile Include="WinAPI\Dwmapi.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
