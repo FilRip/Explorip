@@ -28,5 +28,15 @@ namespace Explorip.ComposantsWinForm
                 TreeRepertoire.Init(repertoire);
             }
         }
+
+        public DirectoryTreeView Repertoires
+        {
+            get { return TreeRepertoire; }
+        }
+
+        public FichiersListView Fichiers
+        {
+            get { return lvFichiers; }
+        }
     }
 }

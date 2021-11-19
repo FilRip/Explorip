@@ -91,6 +91,9 @@
     <Compile Include="ComposantsWinForm\PanelExplorer.Designer.cs">
       <DependentUpon>PanelExplorer.cs</DependentUpon>
     </Compile>
+    <Compile Include="ComposantsWinForm\TabExplorer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ComposantsWinForm\TabPageExplorer.cs">
       <SubType>Component</SubType>
     </Compile>

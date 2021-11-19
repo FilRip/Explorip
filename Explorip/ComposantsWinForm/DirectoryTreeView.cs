@@ -47,6 +47,7 @@ namespace Explorip.ComposantsWinForm
 
         public void Init(string path)
         {
+            Nodes.Clear();
             if (path == "My Computer")
             {
                 _noeudMyComputer = new TreeNode(Environment.SpecialFolder.MyComputer.NomTraduit())
@@ -170,6 +171,8 @@ namespace Explorip.ComposantsWinForm
             else
             {
                 _liensFichiers.Initialise(e.Node);
+                if (SelectionneRepertoire != null)
+                    SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(null), null, null);
             }
         }
 

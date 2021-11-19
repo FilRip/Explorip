@@ -1,7 +1,6 @@
 using System;
 using System.Windows.Forms;
 
-using Explorip.ComposantsWinForm;
 using Explorip.Helpers;
 
 namespace Explorip.Forms
@@ -14,12 +13,11 @@ namespace Explorip.Forms
 
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
                 WindowsSettings.UseImmersiveDarkMode(Handle, true);
-            TreeRepertoire.Init("My Computer");
+            string repertoire = "";
             if (args.Length > 0)
-                TreeRepertoire.RafraichirRepertoire(new System.IO.DirectoryInfo(args[0]));
-            TreeRepertoire.LiensFichiers = lvFichiers;
-            lvFichiers.LiensRepertoires = TreeRepertoire;
-            filRipTabControl1.TabPages.Add(new TabPageExplorer());
+                repertoire = args[0];
+            tabExplorer1.Initialise(repertoire);
+            tabExplorer2.Initialise("");
         }
 
         protected override void OnShown(EventArgs e)

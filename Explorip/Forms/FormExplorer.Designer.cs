@@ -28,27 +28,14 @@ namespace Explorip.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormExplorer));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.filRipTabControl1 = new Explorip.ComposantsWinForm.FilRipTabControl.FilRipTabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.TreeRepertoire = new Explorip.ComposantsWinForm.DirectoryTreeView();
-            this.lvFichiers = new Explorip.ComposantsWinForm.FichiersListView();
-            this.filRipTabControl2 = new Explorip.ComposantsWinForm.FilRipTabControl.FilRipTabControl();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabExplorer2 = new Explorip.ComposantsWinForm.TabExplorer();
+            this.tabExplorer1 = new Explorip.ComposantsWinForm.TabExplorer();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.filRipTabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.filRipTabControl2.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -61,153 +48,78 @@ namespace Explorip.Forms
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.filRipTabControl1);
+            this.splitContainer1.Panel1.Controls.Add(this.tabExplorer2);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.filRipTabControl2);
+            this.splitContainer1.Panel2.Controls.Add(this.tabExplorer1);
             this.splitContainer1.Size = new System.Drawing.Size(945, 433);
             this.splitContainer1.SplitterDistance = 439;
             this.splitContainer1.TabIndex = 4;
             // 
-            // filRipTabControl1
+            // tabExplorer2
             // 
-            this.filRipTabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabExplorer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.filRipTabControl1.BackgroundColorDebut = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(207)))), ((int)(((byte)(207)))));
-            this.filRipTabControl1.BackgroundColorFin = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(242)))));
-            this.filRipTabControl1.BackgroundColorHotDebut = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(246)))), ((int)(((byte)(253)))));
-            this.filRipTabControl1.BackgroundColorHotFin = System.Drawing.Color.FromArgb(((int)(((byte)(167)))), ((int)(((byte)(217)))), ((int)(((byte)(245)))));
-            this.filRipTabControl1.BackgroundColorSelectedDebut = System.Drawing.SystemColors.ControlLight;
-            this.filRipTabControl1.BackgroundColorSelectedFin = System.Drawing.SystemColors.Window;
-            this.filRipTabControl1.BorderColor = System.Drawing.SystemColors.ControlDark;
-            this.filRipTabControl1.BorderColorHot = System.Drawing.SystemColors.ControlDark;
-            this.filRipTabControl1.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
-            this.filRipTabControl1.Controls.Add(this.tabPage1);
-            this.filRipTabControl1.FocusColor = System.Drawing.Color.Orange;
-            this.filRipTabControl1.FocusTrack = true;
-            this.filRipTabControl1.HotTrack = true;
-            this.filRipTabControl1.ItemSize = new System.Drawing.Size(58, 18);
-            this.filRipTabControl1.Location = new System.Drawing.Point(3, 3);
-            this.filRipTabControl1.Name = "filRipTabControl1";
-            this.filRipTabControl1.Opacity = 1F;
-            this.filRipTabControl1.Overlap = 0;
-            this.filRipTabControl1.Radius = 2;
-            this.filRipTabControl1.SelectedIndex = 0;
-            this.filRipTabControl1.Size = new System.Drawing.Size(433, 427);
-            this.filRipTabControl1.StyleText = System.Drawing.FontStyle.Regular;
-            this.filRipTabControl1.StyleTextSelected = System.Drawing.FontStyle.Regular;
-            this.filRipTabControl1.TabIndex = 0;
-            this.filRipTabControl1.TextColor = System.Drawing.SystemColors.ControlText;
-            this.filRipTabControl1.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
-            this.filRipTabControl1.TextColorSelected = System.Drawing.SystemColors.ControlText;
+            this.tabExplorer2.BackgroundColorDebut = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(207)))), ((int)(((byte)(207)))));
+            this.tabExplorer2.BackgroundColorFin = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(242)))));
+            this.tabExplorer2.BackgroundColorHotDebut = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(246)))), ((int)(((byte)(253)))));
+            this.tabExplorer2.BackgroundColorHotFin = System.Drawing.Color.FromArgb(((int)(((byte)(167)))), ((int)(((byte)(217)))), ((int)(((byte)(245)))));
+            this.tabExplorer2.BackgroundColorSelectedDebut = System.Drawing.SystemColors.ControlLight;
+            this.tabExplorer2.BackgroundColorSelectedFin = System.Drawing.SystemColors.Window;
+            this.tabExplorer2.BorderColor = System.Drawing.SystemColors.ControlDark;
+            this.tabExplorer2.BorderColorHot = System.Drawing.SystemColors.ControlDark;
+            this.tabExplorer2.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
+            this.tabExplorer2.FocusColor = System.Drawing.Color.Orange;
+            this.tabExplorer2.FocusTrack = true;
+            this.tabExplorer2.HotTrack = true;
+            this.tabExplorer2.ItemSize = new System.Drawing.Size(42, 18);
+            this.tabExplorer2.Location = new System.Drawing.Point(3, 3);
+            this.tabExplorer2.Name = "tabExplorer2";
+            this.tabExplorer2.Opacity = 1F;
+            this.tabExplorer2.Overlap = 0;
+            this.tabExplorer2.Radius = 2;
+            this.tabExplorer2.SelectedIndex = 0;
+            this.tabExplorer2.Size = new System.Drawing.Size(433, 427);
+            this.tabExplorer2.StyleText = System.Drawing.FontStyle.Regular;
+            this.tabExplorer2.StyleTextSelected = System.Drawing.FontStyle.Regular;
+            this.tabExplorer2.TabIndex = 0;
+            this.tabExplorer2.TextColor = System.Drawing.SystemColors.ControlText;
+            this.tabExplorer2.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
+            this.tabExplorer2.TextColorSelected = System.Drawing.SystemColors.ControlText;
             // 
-            // tabPage1
+            // tabExplorer1
             // 
-            this.tabPage1.Controls.Add(this.splitContainer2);
-            this.tabPage1.Location = new System.Drawing.Point(4, 23);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(425, 400);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tabExplorer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer2.Location = new System.Drawing.Point(6, 6);
-            this.splitContainer2.Name = "splitContainer2";
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.TreeRepertoire);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.lvFichiers);
-            this.splitContainer2.Size = new System.Drawing.Size(413, 388);
-            this.splitContainer2.SplitterDistance = 137;
-            this.splitContainer2.TabIndex = 4;
-            // 
-            // TreeRepertoire
-            // 
-            this.TreeRepertoire.AllowDrop = true;
-            this.TreeRepertoire.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TreeRepertoire.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.TreeRepertoire.ImageIndex = 0;
-            this.TreeRepertoire.LiensFichiers = null;
-            this.TreeRepertoire.Location = new System.Drawing.Point(3, 3);
-            this.TreeRepertoire.Name = "TreeRepertoire";
-            this.TreeRepertoire.SelectedImageIndex = 0;
-            this.TreeRepertoire.Size = new System.Drawing.Size(131, 382);
-            this.TreeRepertoire.TabIndex = 3;
-            // 
-            // lvFichiers
-            // 
-            this.lvFichiers.ActiverCouleurAlternee = true;
-            this.lvFichiers.AddMenuShowColumns = true;
-            this.lvFichiers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvFichiers.CouleurAlternee1 = System.Drawing.Color.White;
-            this.lvFichiers.CouleurAlternee2 = System.Drawing.Color.LightGray;
-            this.lvFichiers.HideSelection = false;
-            this.lvFichiers.LiensRepertoires = null;
-            this.lvFichiers.Location = new System.Drawing.Point(3, 3);
-            this.lvFichiers.Name = "lvFichiers";
-            this.lvFichiers.OwnerDraw = true;
-            this.lvFichiers.Size = new System.Drawing.Size(266, 382);
-            this.lvFichiers.TabIndex = 0;
-            this.lvFichiers.UseCompatibleStateImageBehavior = false;
-            // 
-            // filRipTabControl2
-            // 
-            this.filRipTabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.filRipTabControl2.BackgroundColorDebut = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(207)))), ((int)(((byte)(207)))));
-            this.filRipTabControl2.BackgroundColorFin = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(242)))));
-            this.filRipTabControl2.BackgroundColorHotDebut = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(246)))), ((int)(((byte)(253)))));
-            this.filRipTabControl2.BackgroundColorHotFin = System.Drawing.Color.FromArgb(((int)(((byte)(167)))), ((int)(((byte)(217)))), ((int)(((byte)(245)))));
-            this.filRipTabControl2.BackgroundColorSelectedDebut = System.Drawing.SystemColors.ControlLight;
-            this.filRipTabControl2.BackgroundColorSelectedFin = System.Drawing.SystemColors.Window;
-            this.filRipTabControl2.BorderColor = System.Drawing.SystemColors.ControlDark;
-            this.filRipTabControl2.BorderColorHot = System.Drawing.SystemColors.ControlDark;
-            this.filRipTabControl2.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
-            this.filRipTabControl2.Controls.Add(this.tabPage2);
-            this.filRipTabControl2.FocusColor = System.Drawing.Color.Orange;
-            this.filRipTabControl2.FocusTrack = true;
-            this.filRipTabControl2.HotTrack = true;
-            this.filRipTabControl2.ItemSize = new System.Drawing.Size(58, 18);
-            this.filRipTabControl2.Location = new System.Drawing.Point(3, 3);
-            this.filRipTabControl2.Name = "filRipTabControl2";
-            this.filRipTabControl2.Opacity = 1F;
-            this.filRipTabControl2.Overlap = 0;
-            this.filRipTabControl2.Radius = 2;
-            this.filRipTabControl2.SelectedIndex = 0;
-            this.filRipTabControl2.Size = new System.Drawing.Size(496, 427);
-            this.filRipTabControl2.StyleText = System.Drawing.FontStyle.Regular;
-            this.filRipTabControl2.StyleTextSelected = System.Drawing.FontStyle.Regular;
-            this.filRipTabControl2.TabIndex = 0;
-            this.filRipTabControl2.TextColor = System.Drawing.SystemColors.ControlText;
-            this.filRipTabControl2.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
-            this.filRipTabControl2.TextColorSelected = System.Drawing.SystemColors.ControlText;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 23);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(488, 400);
-            this.tabPage2.TabIndex = 0;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabExplorer1.BackgroundColorDebut = System.Drawing.Color.FromArgb(((int)(((byte)(207)))), ((int)(((byte)(207)))), ((int)(((byte)(207)))));
+            this.tabExplorer1.BackgroundColorFin = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(242)))));
+            this.tabExplorer1.BackgroundColorHotDebut = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(246)))), ((int)(((byte)(253)))));
+            this.tabExplorer1.BackgroundColorHotFin = System.Drawing.Color.FromArgb(((int)(((byte)(167)))), ((int)(((byte)(217)))), ((int)(((byte)(245)))));
+            this.tabExplorer1.BackgroundColorSelectedDebut = System.Drawing.SystemColors.ControlLight;
+            this.tabExplorer1.BackgroundColorSelectedFin = System.Drawing.SystemColors.Window;
+            this.tabExplorer1.BorderColor = System.Drawing.SystemColors.ControlDark;
+            this.tabExplorer1.BorderColorHot = System.Drawing.SystemColors.ControlDark;
+            this.tabExplorer1.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(157)))), ((int)(((byte)(185)))));
+            this.tabExplorer1.FocusColor = System.Drawing.Color.Orange;
+            this.tabExplorer1.FocusTrack = true;
+            this.tabExplorer1.HotTrack = true;
+            this.tabExplorer1.ItemSize = new System.Drawing.Size(42, 18);
+            this.tabExplorer1.Location = new System.Drawing.Point(3, 3);
+            this.tabExplorer1.Name = "tabExplorer1";
+            this.tabExplorer1.Opacity = 1F;
+            this.tabExplorer1.Overlap = 0;
+            this.tabExplorer1.Radius = 2;
+            this.tabExplorer1.SelectedIndex = 0;
+            this.tabExplorer1.Size = new System.Drawing.Size(496, 427);
+            this.tabExplorer1.StyleText = System.Drawing.FontStyle.Regular;
+            this.tabExplorer1.StyleTextSelected = System.Drawing.FontStyle.Regular;
+            this.tabExplorer1.TabIndex = 0;
+            this.tabExplorer1.TextColor = System.Drawing.SystemColors.ControlText;
+            this.tabExplorer1.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
+            this.tabExplorer1.TextColorSelected = System.Drawing.SystemColors.ControlText;
             // 
             // FormExplorer
             // 
@@ -222,27 +134,14 @@ namespace Explorip.Forms
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.filRipTabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
-            this.filRipTabControl2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private ComposantsWinForm.DirectoryTreeView TreeRepertoire;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private ComposantsWinForm.FilRipTabControl.FilRipTabControl filRipTabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private ComposantsWinForm.FilRipTabControl.FilRipTabControl filRipTabControl2;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private ComposantsWinForm.FichiersListView lvFichiers;
+        private ComposantsWinForm.TabExplorer tabExplorer2;
+        private ComposantsWinForm.TabExplorer tabExplorer1;
     }
 }
 
