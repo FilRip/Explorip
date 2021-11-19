@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -18,6 +17,8 @@ namespace Explorip.ComposantsWinForm
         public delegate void DelegateEntrerRepertoire(object sender, SelectionneRepertoireEventArgs e);
         public event DelegateEntrerRepertoire SelectionneRepertoire;
         private DirectoryTreeView _liensRepertoire;
+        private FilesOperations.FileOperation _fileOperation = new FilesOperations.FileOperation();
+        private FileSystemWatcher _repCourantChangement;
 
         public FichiersListView() : base()
         {
@@ -29,6 +30,33 @@ namespace Explorip.ComposantsWinForm
             SmallImageList.ImageSize = new Size(16, 16);
             this.MouseUp += FichiersListView_MouseUp;
             MouseDoubleClick += FichiersListView_MouseDoubleClick;
+            InitialiseSurveillance();
+        }
+
+        private void InitialiseSurveillance()
+        {
+            _repCourantChangement = new FileSystemWatcher();
+            _repCourantChangement.Changed += ChangementDansRepCourant;
+            _repCourantChangement.Created += ChangementDansRepCourant;
+            _repCourantChangement.Deleted += ChangementDansRepCourant;
+            _repCourantChangement.Renamed += ChangementDansRepCourant_Renamed;
+            _repCourantChangement.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            _repCourantChangement.Error += ErreurChangementDansRepCourant;
+        }
+
+        private void ChangementDansRepCourant_Renamed(object sender, RenamedEventArgs e)
+        {
+            Rafraichir(_repCourant);
+        }
+
+        private void ErreurChangementDansRepCourant(object sender, ErrorEventArgs e)
+        {
+            InitialiseSurveillance();
+        }
+
+        private void ChangementDansRepCourant(object sender, FileSystemEventArgs e)
+        {
+            Rafraichir(_repCourant);
         }
 
         private void FichiersListView_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -108,13 +136,24 @@ namespace Explorip.ComposantsWinForm
         private void VideListe()
         {
             Items.Clear();
-            LargeImageList.Images.Clear();
-            SmallImageList.Images.Clear();
+            if (LargeImageList != null)
+                LargeImageList.Images.Clear();
+            if (SmallImageList != null)
+                SmallImageList.Images.Clear();
         }
 
+        private delegate void InvokeRafraichir(DirectoryInfo dirInfo);
         public void Rafraichir(DirectoryInfo dirInfo)
         {
+            if (InvokeRequired)
+            {
+                Invoke(new InvokeRafraichir(Rafraichir), dirInfo);
+                return;
+            }
             _repCourant = dirInfo;
+            _repCourantChangement.EnableRaisingEvents = false;
+            _repCourantChangement.Path = dirInfo.FullName;
+
             // TODO : Utiliser les tuiles https://github.com/dbarros/WindowsAPICodePack
             VideListe();
 
@@ -147,6 +186,8 @@ namespace Explorip.ComposantsWinForm
                     AjouterElement(file.Name, file);
                 }
             }
+
+            _repCourantChangement.EnableRaisingEvents = true;
         }
 
         private void FichiersListView_MouseUp(object sender, MouseEventArgs e)
@@ -191,7 +232,7 @@ namespace Explorip.ComposantsWinForm
             // 
             // FichiersListView
             // 
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FichiersListView_KeyUp);
+            this.KeyUp += new KeyEventHandler(this.FichiersListView_KeyUp);
             this.ResumeLayout(false);
         }
 
@@ -215,8 +256,60 @@ namespace Explorip.ComposantsWinForm
                     Rafraichir(_repCourant);
                 }
             }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                if (SelectedItems.Count > 0)
+                {
+                    foreach (ListViewItem item in SelectedItems)
+                    {
+                        _fileOperation.DeleteItem(((FileSystemInfo)item.Tag).FullName);
+                    }
+                    _fileOperation.PerformOperations();
+                }
+            }
+            else if (e.Modifiers.HasFlag(Keys.Control))
+            {
+                // TODO : Couper/copier/coller raccourcis
+                // docs pour support entre applications : https://stackoverflow.com/questions/2077981/cut-files-to-clipboard-in-c-sharp
+                if ((e.KeyCode == Keys.C) || (e.KeyCode == Keys.X))
+                {
+                    if (SelectedItems.Count > 0)
+                    {
+                    }
+                }
+            }
         }
+
         // TODO : Implémenter couper/copier/coller par drag & drop
         // docs : https://stackoverflow.com/questions/28139791/pass-drop-event-on-to-a-folder-using-c
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (_repCourantChangement != null)
+            {
+                _repCourantChangement.Changed -= ChangementDansRepCourant;
+                _repCourantChangement.Created -= ChangementDansRepCourant;
+                _repCourantChangement.Deleted -= ChangementDansRepCourant;
+                _repCourantChangement.Renamed -= ChangementDansRepCourant_Renamed;
+                _repCourantChangement.Dispose();
+            }
+            if (_fileOperation != null)
+            {
+                try
+                {
+                    _fileOperation.Dispose();
+                }
+                catch (Exception) { }
+            }
+            if ((_cms != null) && (!_cms.IsDisposed))
+            {
+                _cms.Dispose();
+            }
+            _fileOperation = null;
+            _liensRepertoire = null;
+            _repCourant = null;
+            VideListe();
+        }
     }
 }
