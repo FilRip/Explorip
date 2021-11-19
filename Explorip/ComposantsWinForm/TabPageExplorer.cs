@@ -2,11 +2,11 @@
 
 namespace Explorip.ComposantsWinForm
 {
-    public class TabExplorer : TabPage
+    public class TabPageExplorer : TabPage
     {
         private readonly PanelExplorer _panelExplorer;
 
-        public TabExplorer(string repertoire) : base()
+        public TabPageExplorer(string repertoire) : base()
         {
             _panelExplorer = new PanelExplorer();
             Controls.Add(_panelExplorer);
@@ -23,7 +23,7 @@ namespace Explorip.ComposantsWinForm
             }
         }
 
-        public TabExplorer() : this(null)
+        public TabPageExplorer() : this(null)
         {
         }
     }

@@ -39,12 +39,7 @@ namespace Explorip.ComposantsWinForm
                 if (item.Tag.GetType() == typeof(FileInfo))
                 {
                     FileInfo fileInfo = (FileInfo)item.Tag;
-                    ProcessStartInfo psi = new ProcessStartInfo()
-                    {
-                        UseShellExecute = true,
-                        FileName = fileInfo.FullName,
-                    };
-                    Process.Start(psi);
+                    ManagedShell.Common.Helpers.ShellHelper.ExecuteProcess(fileInfo.FullName);
                 }
                 else if (item.Tag.GetType() == typeof(DirectoryInfo))
                 {
@@ -222,5 +217,6 @@ namespace Explorip.ComposantsWinForm
             }
         }
         // TODO : Implémenter couper/copier/coller par drag & drop
+        // docs : https://stackoverflow.com/questions/28139791/pass-drop-event-on-to-a-folder-using-c
     }
 }

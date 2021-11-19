@@ -18,7 +18,7 @@ namespace Explorip.Forms
                 TreeRepertoire.RafraichirRepertoire(new System.IO.DirectoryInfo(args[0]));
             TreeRepertoire.LiensFichiers = lvFichiers;
             lvFichiers.LiensRepertoires = TreeRepertoire;
-            filRipTabControl1.TabPages.Add(new TabExplorer());
+            filRipTabControl1.TabPages.Add(new TabPageExplorer());
         }
     }
 }
