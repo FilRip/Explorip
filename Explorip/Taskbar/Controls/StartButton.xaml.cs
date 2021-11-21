@@ -59,12 +59,11 @@ namespace Explorip.TaskBar.Controls
                     ShellHelper.ShowStartMenu();
                 }
                 catch (Exception) { }
-                /*IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Démarrer");
+                /*IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Accueil");
                 if (pointeurMenuDemarrer != IntPtr.Zero)
                 {
-                    ManagedShell.Interop.NativeMethods.GetWindowRect(pointeurMenuDemarrer, out ManagedShell.Interop.NativeMethods.Rect rect);
-                    System.Windows.Forms.Screen ecran = System.Windows.Forms.Screen.FromPoint(System.Windows.Forms.Cursor.Position);
-                    WinAPI.User32.SetWindowPos(pointeurMenuDemarrer, ecran.Bounds.X, ecran.Bounds.Height - rect.Height, 0, 0, WinAPI.User32.SWP.NOSIZE | WinAPI.User32.SWP.SHOWWINDOW);
+                    Console.WriteLine("ShowWindow Démarrer");
+                    ManagedShell.Interop.NativeMethods.ShowWindow(pointeurMenuDemarrer, ManagedShell.Interop.NativeMethods.WindowShowStyle.Show);
                 }*/
                 return;
             }

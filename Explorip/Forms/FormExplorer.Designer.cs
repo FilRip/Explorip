@@ -43,7 +43,8 @@ namespace Explorip.Forms
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 12);
+            this.splitContainer1.Location = new System.Drawing.Point(24, 23);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -53,8 +54,9 @@ namespace Explorip.Forms
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabExplorer1);
-            this.splitContainer1.Size = new System.Drawing.Size(945, 433);
-            this.splitContainer1.SplitterDistance = 439;
+            this.splitContainer1.Size = new System.Drawing.Size(1890, 833);
+            this.splitContainer1.SplitterDistance = 878;
+            this.splitContainer1.SplitterWidth = 8;
             this.splitContainer1.TabIndex = 4;
             // 
             // tabExplorer2
@@ -75,13 +77,14 @@ namespace Explorip.Forms
             this.tabExplorer2.FocusTrack = true;
             this.tabExplorer2.HotTrack = true;
             this.tabExplorer2.ItemSize = new System.Drawing.Size(42, 18);
-            this.tabExplorer2.Location = new System.Drawing.Point(3, 3);
+            this.tabExplorer2.Location = new System.Drawing.Point(6, 6);
+            this.tabExplorer2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabExplorer2.Name = "tabExplorer2";
             this.tabExplorer2.Opacity = 1F;
             this.tabExplorer2.Overlap = 0;
             this.tabExplorer2.Radius = 2;
             this.tabExplorer2.SelectedIndex = 0;
-            this.tabExplorer2.Size = new System.Drawing.Size(433, 427);
+            this.tabExplorer2.Size = new System.Drawing.Size(866, 821);
             this.tabExplorer2.StyleText = System.Drawing.FontStyle.Regular;
             this.tabExplorer2.StyleTextSelected = System.Drawing.FontStyle.Regular;
             this.tabExplorer2.TabIndex = 0;
@@ -107,13 +110,14 @@ namespace Explorip.Forms
             this.tabExplorer1.FocusTrack = true;
             this.tabExplorer1.HotTrack = true;
             this.tabExplorer1.ItemSize = new System.Drawing.Size(42, 18);
-            this.tabExplorer1.Location = new System.Drawing.Point(3, 3);
+            this.tabExplorer1.Location = new System.Drawing.Point(6, 6);
+            this.tabExplorer1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tabExplorer1.Name = "tabExplorer1";
             this.tabExplorer1.Opacity = 1F;
             this.tabExplorer1.Overlap = 0;
             this.tabExplorer1.Radius = 2;
             this.tabExplorer1.SelectedIndex = 0;
-            this.tabExplorer1.Size = new System.Drawing.Size(496, 427);
+            this.tabExplorer1.Size = new System.Drawing.Size(992, 821);
             this.tabExplorer1.StyleText = System.Drawing.FontStyle.Regular;
             this.tabExplorer1.StyleTextSelected = System.Drawing.FontStyle.Regular;
             this.tabExplorer1.TabIndex = 0;
@@ -123,11 +127,12 @@ namespace Explorip.Forms
             // 
             // FormExplorer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(969, 457);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(1938, 879);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "FormExplorer";
             this.Text = "Explorateur de fichier";
             this.splitContainer1.Panel1.ResumeLayout(false);
