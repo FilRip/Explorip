@@ -191,6 +191,7 @@
     <Compile Include="Themes\AutoTheme.cs" />
     <Compile Include="WinAPI\Commun.cs" />
     <Compile Include="WinAPI\Dwmapi.cs" />
+    <Compile Include="WinAPI\Gdi32.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
     <Compile Include="WinAPI\Modeles\BROWSEINFO.cs" />
     <Compile Include="WinAPI\Modeles\CMINVOKECOMMANDINFOEX.cs" />

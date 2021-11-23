@@ -12,6 +12,7 @@ namespace Explorip.Helpers
 
         public static Icon GetFileIcon(string name, bool linkOverlay, bool othersOverlay, Shell32.SHIL taille)
         {
+            Icon retour = null;
             lock (_lockGetIcone)
             {
                 Bitmap bitmap = null;
@@ -60,13 +61,20 @@ namespace Explorip.Helpers
                         graphics.Save();
                     }
                     if (bitmap != null)
-                        return Icon.FromHandle(bitmap.GetHicon());
+                    {
+                        retour = Icon.FromHandle(bitmap.GetHicon());
+                        Gdi32.DeleteObject(bitmap.GetHbitmap());
+                        bitmap.Dispose();
+                    }
                 }
                 catch (Exception) { }
             }
-            Console.WriteLine("Pas d'icone pour " + name);
-            // TODO : Retourner une icone basique
-            return null;
+            if (retour == null)
+            {
+                // TODO : Retourner une icone basique
+                Console.WriteLine("Pas d'icone pour " + name);
+            }
+            return retour;
         }
 
         private static Icon GetFileIcon(IntPtr pidl, bool petiteIcone)
