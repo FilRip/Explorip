@@ -9,6 +9,7 @@ namespace Explorip.Forms
     {
         public FormExplorer(string[] args)
         {
+            AutoScaleMode = AutoScaleMode.Dpi;
             InitializeComponent();
 
             if (WindowsSettings.IsWindowsApplicationInDarkMode())

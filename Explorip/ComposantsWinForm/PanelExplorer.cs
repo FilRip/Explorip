@@ -6,6 +6,7 @@ namespace Explorip.ComposantsWinForm
     {
         public PanelExplorer()
         {
+            AutoScaleMode = AutoScaleMode.Dpi;
             InitializeComponent();
             lvFichiers.LiensRepertoires = TreeRepertoire;
             TreeRepertoire.LiensFichiers = lvFichiers;
