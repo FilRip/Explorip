@@ -59,5 +59,15 @@ namespace Explorip.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon ErreurIcone {
+            get {
+                object obj = ResourceManager.GetObject("ErreurIcone", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

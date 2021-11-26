@@ -8,7 +8,8 @@ namespace Explorip.WinAPI
 {
     public static class Shell32
     {
-        public const int MAX_PATH = 256;
+        public const int MAX_PATH = 260;
+        public const int NAMESIZE = 80;
 
         [Flags()]
         public enum KnownFolderFlags : uint
@@ -50,10 +51,10 @@ namespace Explorip.WinAPI
             DIRECTORY = 0x00000010,
         }
 
-        [DllImport("Shell32.dll")]
+        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr SHGetFileInfo(string pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
 
-        [DllImport("Shell32.dll")]
+        [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
 
         [DllImport("shell32.dll")]
@@ -142,10 +143,10 @@ namespace Explorip.WinAPI
             USEFILEATTRIBUTES = 0x000000010,
         }
 
-        [DllImport("shell32.dll", SetLastError = true)]
+        [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, CSIDL nFolder, ref IntPtr ppidl);
 
-        [DllImport("Shell32.dll", SetLastError = true)]
+        [DllImport("Shell32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern IntPtr ILCreateFromPath([MarshalAs(UnmanagedType.LPWStr)] string pszPath);
 
         [DllImport("Shell32.dll", SetLastError = true)]
@@ -154,7 +155,7 @@ namespace Explorip.WinAPI
         [DllImport("shell32.dll")]
         public static extern int SHGetFolderLocation(IntPtr hwndOwner, CSIDL nFolder, IntPtr hToken, uint dwReserved, out IntPtr ppidl);
 
-        [DllImport("shell32.dll")]
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
         public extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolderFlags flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
 
         [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
@@ -171,7 +172,7 @@ namespace Explorip.WinAPI
             LAST
         }
 
-        [DllImport("shell32.dll")]
+        [DllImport("shell32.dll", EntryPoint = "#727")]
         public extern static int SHGetImageList(SHIL iImageList, ref Guid riid, out IImageList ppv);
     }
 }

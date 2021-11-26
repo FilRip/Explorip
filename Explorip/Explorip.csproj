@@ -112,7 +112,6 @@
     <Compile Include="Helpers\ExtensionsClipboard.cs" />
     <Compile Include="Helpers\ExtensionsCommandLineArguments.cs" />
     <Compile Include="Helpers\ExtensionsDossiers.cs" />
-    <Compile Include="Helpers\ExtensionsFichiers.cs" />
     <Compile Include="Helpers\ExtensionsProcess.cs" />
     <Compile Include="Helpers\ExtensionsString.cs" />
     <Compile Include="Helpers\ExtensionsWindows.cs" />
@@ -191,6 +190,7 @@
     <Compile Include="Themes\AutoTheme.cs" />
     <Compile Include="WinAPI\Commun.cs" />
     <Compile Include="WinAPI\Dwmapi.cs" />
+    <Compile Include="WinAPI\Win32Error.cs" />
     <Compile Include="WinAPI\Gdi32.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
     <Compile Include="WinAPI\Modeles\BROWSEINFO.cs" />
@@ -222,6 +222,9 @@
     <Compile Include="WinAPI\Ntdll.cs" />
     <Compile Include="WinAPI\Shlwapi.cs" />
     <Compile Include="WinAPI\User32.cs" />
+    <EmbeddedResource Include="ComposantsWinForm\DirectoryTreeView.resx">
+      <DependentUpon>DirectoryTreeView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ComposantsWinForm\FichiersListView.resx">
       <DependentUpon>FichiersListView.cs</DependentUpon>
     </EmbeddedResource>
@@ -381,6 +384,9 @@
     <Resource Include="TaskBar\Resources\search10.png" />
     <Resource Include="TaskBar\Resources\start10.png" />
     <Resource Include="TaskBar\Resources\taskman10.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\ErreurIcone.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

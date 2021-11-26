@@ -117,20 +117,20 @@ namespace Explorip.ComposantsWinForm
 
         private void AjouterElement(string nom, FileSystemInfo element)
         {
-            if (element.GetType() == typeof(DirectoryInfo))
+            Icon petiteIcone, largeIcone;
+            petiteIcone = Icones.GetFileIcon(element.FullName, element.IsShortcut(), true, WinAPI.Shell32.SHIL.SMALL);
+            largeIcone = Icones.GetFileIcon(element.FullName, element.IsShortcut(), true, WinAPI.Shell32.SHIL.LARGE);
+            if (largeIcone != null)
             {
-                DirectoryInfo sousDirInfo = (DirectoryInfo)element;
-                LargeImageList.Images.Add(nom, Icones.GetFileIcon(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, WinAPI.Shell32.SHIL.LARGE));
-                SmallImageList.Images.Add(nom, Icones.GetFileIcon(sousDirInfo.FullName, sousDirInfo.IsShortcut(), true, WinAPI.Shell32.SHIL.SMALL));
-                Items.Add(new ListViewItem(nom, nom) { Tag = sousDirInfo });
+                LargeImageList.Images.Add(nom, largeIcone);
+                largeIcone.Dispose();
             }
-            else if (element.GetType() == typeof(FileInfo))
+            if (petiteIcone != null)
             {
-                FileInfo file = (FileInfo)element;
-                LargeImageList.Images.Add(nom, Icones.GetFileIcon(file.FullName, file.IsShortcut(), true, WinAPI.Shell32.SHIL.LARGE));
-                SmallImageList.Images.Add(nom, Icones.GetFileIcon(file.FullName, file.IsShortcut(), true, WinAPI.Shell32.SHIL.SMALL));
-                Items.Add(new ListViewItem(nom, nom) { Tag = file });
+                SmallImageList.Images.Add(nom, petiteIcone);
+                petiteIcone.Dispose();
             }
+            Items.Add(new ListViewItem(nom, nom) { Tag = element });
         }
 
         private void VideListe()
@@ -232,8 +232,13 @@ namespace Explorip.ComposantsWinForm
             // 
             // FichiersListView
             // 
-            this.KeyUp += new KeyEventHandler(this.FichiersListView_KeyUp);
+            this.AllowDrop = true;
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FichiersListView_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FichiersListView_DragEnter);
+            this.DragLeave += new System.EventHandler(this.FichiersListView_DragLeave);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FichiersListView_KeyUp);
             this.ResumeLayout(false);
+
         }
 
         private void FichiersListView_KeyUp(object sender, KeyEventArgs e)
@@ -340,6 +345,28 @@ namespace Explorip.ComposantsWinForm
             _liensRepertoire = null;
             _repCourant = null;
             VideListe();
+        }
+
+        private void FichiersListView_DragLeave(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FichiersListView_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Effect == DragDropEffects.Copy)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
+        private void FichiersListView_DragEnter(object sender, DragEventArgs e)
+        {
+
         }
     }
 }

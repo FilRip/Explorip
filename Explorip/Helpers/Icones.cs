@@ -2,20 +2,40 @@
 using Explorip.WinAPI.Modeles;
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 
 namespace Explorip.Helpers
 {
     public class Icones
     {
         private static readonly object _lockGetIcone = new object();
+        private static Dictionary<Shell32.SHIL, IImageList> _listeInterfaceIcones;
+
+        private static void InitialiseListeInterfaceIcones()
+        {
+            Guid Id = typeof(IImageList).GUID;
+            _listeInterfaceIcones = new Dictionary<Shell32.SHIL, IImageList>();
+            Shell32.SHGetImageList(Shell32.SHIL.LARGE, ref Id, out IImageList large);
+            _listeInterfaceIcones.Add(Shell32.SHIL.LARGE, large);
+            Shell32.SHGetImageList(Shell32.SHIL.SMALL, ref Id, out IImageList small);
+            _listeInterfaceIcones.Add(Shell32.SHIL.SMALL, small);
+            Shell32.SHGetImageList(Shell32.SHIL.EXTRALARGE, ref Id, out IImageList extraLarge);
+            _listeInterfaceIcones.Add(Shell32.SHIL.EXTRALARGE, extraLarge);
+            Shell32.SHGetImageList(Shell32.SHIL.JUMBO, ref Id, out IImageList jumbo);
+            _listeInterfaceIcones.Add(Shell32.SHIL.JUMBO, jumbo);
+        }
 
         public static Icon GetFileIcon(string name, bool linkOverlay, bool othersOverlay, Shell32.SHIL taille)
         {
+            if (_listeInterfaceIcones == null)
+                InitialiseListeInterfaceIcones();
+
             Icon retour = null;
+            Bitmap bitmap = null;
             lock (_lockGetIcone)
             {
-                Bitmap bitmap = null;
                 try
                 {
                     SHFILEINFO shfi = new SHFILEINFO();
@@ -28,52 +48,79 @@ namespace Explorip.Helpers
 
                     Shell32.FILE_ATTRIBUTE attribut = Shell32.FILE_ATTRIBUTE.NULL;
 
-                    Shell32.SHGetFileInfo(name,
-                        attribut,
-                        ref shfi,
-                        (uint)System.Runtime.InteropServices.Marshal.SizeOf(shfi),
-                        flags);
-
-                    Guid Id = typeof(IImageList).GUID;
-                    IntPtr hIcon = IntPtr.Zero;
-                    Shell32.SHGetImageList(taille, ref Id, out IImageList ppv);
-
-                    // Recup l'icone
-                    if (ppv.GetIcon(shfi.iIcon & 0xFFFFFF, (int)ILD.TRANSPARENT, ref hIcon) == (int)Commun.HRESULT.S_OK)
+                    IntPtr ptrFileInfo = Shell32.SHGetFileInfo(name, attribut, ref shfi, (uint)Marshal.SizeOf(shfi), flags);
+                    if (ptrFileInfo != IntPtr.Zero)
                     {
-                        Image icone = Icon.FromHandle(hIcon).ToBitmap();
-                        bitmap = new Bitmap(icone.Width, icone.Height);
-                        Graphics graphics = Graphics.FromImage(bitmap);
-                        graphics.DrawImage(icone, new Point(0, 0));
-                        User32.DestroyIcon(hIcon);
-
-                        // Recup l'overlay
-                        int overlayIndex = 0;
-                        if (ppv.GetOverlayImage(shfi.iIcon >> 24, ref overlayIndex) == (int)Commun.HRESULT.S_OK)
+                        int erreur = 0;
+                        Guid Id = typeof(IImageList).GUID;
+                        IntPtr hIcon = IntPtr.Zero;
+                        IImageList ppv = _listeInterfaceIcones[taille];
+                        if (ppv != null)
                         {
-                            ppv.GetIcon(overlayIndex, (int)ILD.TRANSPARENT, ref hIcon);
-                            Image overlay = Icon.FromHandle(hIcon).ToBitmap();
-                            graphics.DrawImage(overlay, new Point(0, 0));
-                            User32.DestroyIcon(hIcon);
-                        }
+                            erreur = ppv.GetIcon(shfi.iIcon & 0xFFFFFF, (int)ILD.TRANSPARENT, ref hIcon);
+                            // Recup l'icone
+                            if (erreur == (int)Commun.HRESULT.S_OK)
+                            {
+                                Image icone = Icon.FromHandle(hIcon).ToBitmap();
+                                bitmap = new Bitmap(icone.Width, icone.Height);
+                                Graphics graphics = Graphics.FromImage(bitmap);
+                                graphics.DrawImage(icone, new Point(0, 0));
+                                User32.DestroyIcon(hIcon);
+                                icone.Dispose();
 
-                        // Retourne l'icone construite
-                        graphics.Save();
+                                // Recup l'overlay
+                                int overlayIndex = 0;
+                                if (ppv.GetOverlayImage(shfi.iIcon >> 24, ref overlayIndex) == (int)Commun.HRESULT.S_OK)
+                                {
+                                    ppv.GetIcon(overlayIndex, (int)ILD.TRANSPARENT, ref hIcon);
+                                    Image overlay = Icon.FromHandle(hIcon).ToBitmap();
+                                    graphics.DrawImage(overlay, new Point(0, 0));
+                                    User32.DestroyIcon(hIcon);
+                                    overlay.Dispose();
+                                }
+
+                                graphics.Save();
+                            }
+
+                            if (bitmap != null)
+                            {
+                                retour = Icon.FromHandle(bitmap.GetHicon());
+                                Gdi32.DeleteObject(bitmap.GetHbitmap());
+                                bitmap.Dispose();
+                            }
+                            else
+                            {
+                                string message = "Erreur GetIcon num=" + erreur.ToString("X");
+
+                                uint err = Convert.ToUInt32("0x" + erreur.ToString("X"), 16);
+                                BetterWin32Errors.Win32Error win32Error;
+                                win32Error = (BetterWin32Errors.Win32Error)err;
+                                message += $", {win32Error:G}";
+
+                                throw new Exception(message);
+                            }
+                        }
+                        else
+                        {
+                            string message = "Erreur SHGetImageList introuvable pour taille " + taille.ToString("G");
+                            throw new Exception(message);
+                        }
                     }
-                    if (bitmap != null)
-                    {
-                        retour = Icon.FromHandle(bitmap.GetHicon());
-                        Gdi32.DeleteObject(bitmap.GetHbitmap());
-                        bitmap.Dispose();
-                    }
+                    else
+                        throw new Exception("Impossible de faire un SHGetFileInfo");
                 }
-                catch (Exception) { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
+
             if (retour == null)
             {
-                // TODO : Retourner une icone basique
+                // TODO : Retourner une icone par défaut
                 Console.WriteLine("Pas d'icone pour " + name);
             }
+
             return retour;
         }
 
@@ -95,7 +142,7 @@ namespace Explorip.Helpers
             Shell32.SHGetFileInfo(pidl,
                 0,
                 ref shfi,
-                (uint)System.Runtime.InteropServices.Marshal.SizeOf(shfi),
+                (uint)Marshal.SizeOf(shfi),
                 flag);
 
             Icon icon = (Icon)Icon.FromHandle(shfi.hIcon).Clone();

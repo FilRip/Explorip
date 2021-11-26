@@ -270,6 +270,17 @@ namespace Explorip.ComposantsWinForm
                 SelectedNode = noeudCourant;
             }
         }
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // DirectoryTreeView
+            // 
+            this.AllowDrop = true;
+            this.ResumeLayout(false);
+
+        }
         // TODO : Implémenter couper/copier/coller par drag & drop
     }
 }

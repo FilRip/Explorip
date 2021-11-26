@@ -9,13 +9,16 @@ namespace Explorip.Helpers
 {
     public static class ExtensionsDossiers
     {
-        public static bool IsShortcut(this DirectoryInfo repertoire)
+        public static bool IsShortcut(this FileSystemInfo repertoireOuFichier)
         {
-            // TODO : Gérer répertoire raccourcis (link)
-            if (Path.GetExtension(repertoire.Name).ToLower().Trim() == ".lnk")
-                return true;
+            if (repertoireOuFichier.GetType() == typeof(FileInfo))
+            {
+                return (Path.GetExtension(repertoireOuFichier.Name).ToLower().Trim() == ".lnk");
+            }
             else
-                return false;
+            {
+                return (repertoireOuFichier.Attributes.HasFlag(FileAttributes.ReparsePoint));
+            }
         }
 
         public static string Repertoire(this Environment.SpecialFolder specialFolder)
