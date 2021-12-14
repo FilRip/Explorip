@@ -19,6 +19,7 @@ namespace Explorip.ComposantsWinForm
         private DirectoryTreeView _liensRepertoire;
         private FilesOperations.FileOperation _fileOperation = new FilesOperations.FileOperation();
         private FileSystemWatcher _repCourantChangement;
+        private Dictionary<int, string> _listeIcones;
 
         public FichiersListView() : base()
         {
@@ -28,6 +29,7 @@ namespace Explorip.ComposantsWinForm
             SmallImageList = new ImageList();
             LargeImageList.ImageSize = new Size(32, 32);
             SmallImageList.ImageSize = new Size(16, 16);
+            _listeIcones = new Dictionary<int, string>();
             this.MouseUp += FichiersListView_MouseUp;
             MouseDoubleClick += FichiersListView_MouseDoubleClick;
             InitialiseSurveillance();
@@ -64,12 +66,12 @@ namespace Explorip.ComposantsWinForm
             if (SelectedItems.Count > 0)
             {
                 ListViewItem item = SelectedItems[0];
-                if (item.Tag.GetType() == typeof(FileInfo))
+                if (item.Tag is FileInfo)
                 {
                     FileInfo fileInfo = (FileInfo)item.Tag;
                     ManagedShell.Common.Helpers.ShellHelper.ExecuteProcess(fileInfo.FullName);
                 }
-                else if (item.Tag.GetType() == typeof(DirectoryInfo))
+                else if (item.Tag is DirectoryInfo)
                 {
                     DirectoryInfo directoryInfo = (DirectoryInfo)item.Tag;
                     if (SelectionneRepertoire != null)
@@ -117,19 +119,30 @@ namespace Explorip.ComposantsWinForm
 
         private void AjouterElement(string nom, FileSystemInfo element)
         {
-            Bitmap petiteIcone, largeIcone;
-            petiteIcone = Icones.GetFileIcon(element.FullName, element.IsShortcut(), true, WinAPI.Shell32.SHIL.SMALL);
-            largeIcone = Icones.GetFileIcon(element.FullName, element.IsShortcut(), true, WinAPI.Shell32.SHIL.LARGE);
-            if (largeIcone != null)
-                LargeImageList.Images.Add(nom, largeIcone);
-            if (petiteIcone != null)
-                SmallImageList.Images.Add(nom, petiteIcone);
-            Items.Add(new ListViewItem(nom, nom) { Tag = element });
+            IntPtr pidl;
+            string nomIcone = nom;
+            int numIcone = Icones.GetNumIcon(element.FullName, element.IsShortcut(), true, out pidl);
+            if (_listeIcones.ContainsKey(numIcone))
+                nomIcone = _listeIcones[numIcone];
+            else
+            {
+                _listeIcones.Add(numIcone, nom);
+                Bitmap petiteIcone, largeIcone;
+                petiteIcone = Icones.GetFileIcon(pidl, numIcone, WinAPI.Shell32.SHIL.SMALL);
+                largeIcone = Icones.GetFileIcon(pidl, numIcone, WinAPI.Shell32.SHIL.LARGE);
+                if (largeIcone != null)
+                    LargeImageList.Images.Add(nomIcone, largeIcone);
+                if (petiteIcone != null)
+                    SmallImageList.Images.Add(nomIcone, petiteIcone);
+            }
+
+            Items.Add(new ListViewItem(nom, nomIcone) { Tag = element });
         }
 
         private void VideListe()
         {
             Items.Clear();
+            _listeIcones.Clear();
             if (LargeImageList?.Images != null)
                 foreach (Bitmap img in LargeImageList.Images)
                     img.Dispose();
@@ -233,10 +246,10 @@ namespace Explorip.ComposantsWinForm
             // FichiersListView
             // 
             this.AllowDrop = true;
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FichiersListView_DragDrop);
-            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FichiersListView_DragEnter);
-            this.DragLeave += new System.EventHandler(this.FichiersListView_DragLeave);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FichiersListView_KeyUp);
+            this.DragDrop += new DragEventHandler(this.FichiersListView_DragDrop);
+            this.DragEnter += new DragEventHandler(this.FichiersListView_DragEnter);
+            this.DragLeave += new EventHandler(this.FichiersListView_DragLeave);
+            this.KeyUp += new KeyEventHandler(this.FichiersListView_KeyUp);
             this.ResumeLayout(false);
 
         }

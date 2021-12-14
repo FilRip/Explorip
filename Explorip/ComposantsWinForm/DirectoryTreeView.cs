@@ -68,7 +68,9 @@ namespace Explorip.ComposantsWinForm
                 _noeudMyComputer.Nodes.Add(noeudDesktop);
                 noeudDesktop.Name = "Desktop";
                 noeudDesktop.Tag = new DirectoryInfo(Environment.SpecialFolder.Desktop.Repertoire());
-                Bitmap monIcone = Icones.GetFileIcon(Environment.SpecialFolder.Desktop.Repertoire(), false, true, Shell32.SHIL.SMALL);
+                IntPtr pidl;
+                int numIcone = Icones.GetNumIcon(Environment.SpecialFolder.Desktop.Repertoire(), false, true, out pidl);
+                Bitmap monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
                 _listeIcones.Images.Add(monIcone);
                 noeudDesktop.ImageIndex = _listeIcones.Images.Count - 1;
                 noeudDesktop.SelectedImageIndex = _listeIcones.Images.Count - 1;
@@ -100,7 +102,8 @@ namespace Explorip.ComposantsWinForm
                                 nomVolume = remotePath.ToString();
                         }
 
-                        monIcone = Icones.GetFileIcon(drive.Name, false, true, Shell32.SHIL.SMALL);
+                        numIcone = Icones.GetNumIcon(drive.Name, false, true, out pidl);
+                        monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
                         _listeIcones.Images.Add(monIcone);
                         TreeNode driveNode = new TreeNode($"{nomVolume} ({drive.Name})")
                         {
@@ -128,7 +131,9 @@ namespace Explorip.ComposantsWinForm
             if (string.IsNullOrWhiteSpace(path))
                 return;
             DirectoryInfo dirInfo = new DirectoryInfo(path);
-            Bitmap monIcone = Icones.GetFileIcon(dirInfo.FullName, dirInfo.IsShortcut(), true, Shell32.SHIL.SMALL);
+            IntPtr pidl;
+            int numIcone = Icones.GetNumIcon(dirInfo.FullName, dirInfo.IsShortcut(), true, out pidl);
+            Bitmap monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
             _listeIcones.Images.Add(monIcone);
             TreeNode nouveauNoeud;
             nouveauNoeud = new TreeNode(dirInfo.Name)
@@ -218,7 +223,9 @@ namespace Explorip.ComposantsWinForm
                 {
                     Name = dirI.Name
                 };
-                Bitmap monIcone = Icones.GetFileIcon(dirI.FullName, dirI.IsShortcut(), true, Shell32.SHIL.SMALL);
+                IntPtr pidl;
+                int numIcone = Icones.GetNumIcon(dirI.FullName, dirI.IsShortcut(), true, out pidl);
+                Bitmap monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
                 _listeIcones.Images.Add(monIcone);
                 int imgIndex = _listeIcones.Images.Count - 1;
                 node.ImageIndex = imgIndex;
