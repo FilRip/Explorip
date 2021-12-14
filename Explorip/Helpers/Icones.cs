@@ -15,8 +15,12 @@ namespace Explorip.Helpers
 
         private static void InitialiseListeInterfaceIcones()
         {
+            if (_listeInterfaceIcones != null)
+                _listeInterfaceIcones.Clear();
+            else
+                _listeInterfaceIcones = new Dictionary<Shell32.SHIL, IImageList>();
+
             Guid Id = typeof(IImageList).GUID;
-            _listeInterfaceIcones = new Dictionary<Shell32.SHIL, IImageList>();
             Shell32.SHGetImageList(Shell32.SHIL.LARGE, ref Id, out IImageList large);
             _listeInterfaceIcones.Add(Shell32.SHIL.LARGE, large);
             Shell32.SHGetImageList(Shell32.SHIL.SMALL, ref Id, out IImageList small);
@@ -27,13 +31,12 @@ namespace Explorip.Helpers
             _listeInterfaceIcones.Add(Shell32.SHIL.JUMBO, jumbo);
         }
 
-        public static Icon GetFileIcon(string name, bool linkOverlay, bool othersOverlay, Shell32.SHIL taille)
+        public static Bitmap GetFileIcon(string name, bool linkOverlay, bool othersOverlay, Shell32.SHIL taille)
         {
             if (_listeInterfaceIcones == null)
                 InitialiseListeInterfaceIcones();
 
-            Icon retour = null;
-            Bitmap bitmap = null;
+            Bitmap retour = null;
             lock (_lockGetIcone)
             {
                 try
@@ -49,6 +52,10 @@ namespace Explorip.Helpers
                     Shell32.FILE_ATTRIBUTE attribut = Shell32.FILE_ATTRIBUTE.NULL;
 
                     IntPtr ptrFileInfo = Shell32.SHGetFileInfo(name, attribut, ref shfi, (uint)Marshal.SizeOf(shfi), flags);
+
+                    if (shfi.hIcon != IntPtr.Zero)
+                        User32.DestroyIcon(shfi.hIcon);
+
                     if (ptrFileInfo != IntPtr.Zero)
                     {
                         int erreur = 0;
@@ -61,34 +68,34 @@ namespace Explorip.Helpers
                             // Recup l'icone
                             if (erreur == (int)Commun.HRESULT.S_OK)
                             {
-                                Image icone = Icon.FromHandle(hIcon).ToBitmap();
-                                bitmap = new Bitmap(icone.Width, icone.Height);
-                                Graphics graphics = Graphics.FromImage(bitmap);
-                                graphics.DrawImage(icone, new Point(0, 0));
+                                Icon icone = Icon.FromHandle(hIcon);
+                                retour = new Bitmap(icone.Width, icone.Height);
+                                Graphics graphics = Graphics.FromImage(retour);
+                                graphics.DrawIcon(icone, 0, 0);
                                 User32.DestroyIcon(hIcon);
+                                Gdi32.DeleteObject(icone.Handle);
                                 icone.Dispose();
 
                                 // Recup l'overlay
                                 int overlayIndex = 0;
                                 if (ppv.GetOverlayImage(shfi.iIcon >> 24, ref overlayIndex) == (int)Commun.HRESULT.S_OK)
                                 {
-                                    ppv.GetIcon(overlayIndex, (int)ILD.TRANSPARENT, ref hIcon);
-                                    Image overlay = Icon.FromHandle(hIcon).ToBitmap();
-                                    graphics.DrawImage(overlay, new Point(0, 0));
-                                    User32.DestroyIcon(hIcon);
-                                    overlay.Dispose();
+                                    erreur = ppv.GetIcon(overlayIndex, (int)ILD.TRANSPARENT, ref hIcon);
+                                    if (erreur == (int)Commun.HRESULT.S_OK)
+                                    {
+                                        Icon overlay = Icon.FromHandle(hIcon);
+                                        graphics.DrawIcon(overlay, 0, 0);
+                                        User32.DestroyIcon(hIcon);
+                                        Gdi32.DeleteObject(overlay.Handle);
+                                        overlay.Dispose();
+                                    }
                                 }
 
                                 graphics.Save();
+                                graphics.Dispose();
                             }
 
-                            if (bitmap != null)
-                            {
-                                retour = Icon.FromHandle(bitmap.GetHicon());
-                                Gdi32.DeleteObject(bitmap.GetHbitmap());
-                                bitmap.Dispose();
-                            }
-                            else
+                            if (retour == null)
                             {
                                 string message = "Erreur GetIcon num=" + erreur.ToString("X");
 
@@ -111,7 +118,9 @@ namespace Explorip.Helpers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.Message + ex.StackTrace);
+                    if (System.Diagnostics.Debugger.IsAttached)
+                        System.Diagnostics.Debugger.Break();
                 }
             }
 

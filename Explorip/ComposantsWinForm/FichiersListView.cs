@@ -117,25 +117,25 @@ namespace Explorip.ComposantsWinForm
 
         private void AjouterElement(string nom, FileSystemInfo element)
         {
-            Icon petiteIcone, largeIcone;
+            Bitmap petiteIcone, largeIcone;
             petiteIcone = Icones.GetFileIcon(element.FullName, element.IsShortcut(), true, WinAPI.Shell32.SHIL.SMALL);
             largeIcone = Icones.GetFileIcon(element.FullName, element.IsShortcut(), true, WinAPI.Shell32.SHIL.LARGE);
             if (largeIcone != null)
-            {
                 LargeImageList.Images.Add(nom, largeIcone);
-                largeIcone.Dispose();
-            }
             if (petiteIcone != null)
-            {
                 SmallImageList.Images.Add(nom, petiteIcone);
-                petiteIcone.Dispose();
-            }
             Items.Add(new ListViewItem(nom, nom) { Tag = element });
         }
 
         private void VideListe()
         {
             Items.Clear();
+            if (LargeImageList?.Images != null)
+                foreach (Bitmap img in LargeImageList.Images)
+                    img.Dispose();
+            if (SmallImageList?.Images != null)
+                foreach (Bitmap img in SmallImageList.Images)
+                    img.Dispose();
             if (LargeImageList != null)
                 LargeImageList.Images.Clear();
             if (SmallImageList != null)
@@ -315,9 +315,6 @@ namespace Explorip.ComposantsWinForm
             return retour;
         }
 
-        // TODO : Implémenter couper/copier/coller par drag & drop
-        // docs : https://stackoverflow.com/questions/28139791/pass-drop-event-on-to-a-folder-using-c
-
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -347,6 +344,11 @@ namespace Explorip.ComposantsWinForm
             VideListe();
         }
 
+        #region Drag'n Drop
+
+        // TODO : Implémenter couper/copier/coller par drag & drop
+        // docs : https://stackoverflow.com/questions/28139791/pass-drop-event-on-to-a-folder-using-c
+
         private void FichiersListView_DragLeave(object sender, EventArgs e)
         {
 
@@ -368,5 +370,7 @@ namespace Explorip.ComposantsWinForm
         {
 
         }
+
+        #endregion
     }
 }
