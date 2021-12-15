@@ -162,6 +162,13 @@ namespace Explorip.WinAPI
         [return: MarshalAs(UnmanagedType.Interface)]
         public static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
 
+        [DllImport("shell32.dll", ExactSpelling = true, PreserveSig = false)]
+        public static extern void SHBindToParent(
+            IntPtr pidl,
+            ref Guid riid,
+            out IntPtr ppv,
+            IntPtr ppidlLast);
+
         public enum SHIL : int
         {
             LARGE = 0,

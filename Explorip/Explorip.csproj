@@ -119,6 +119,7 @@
     <Compile Include="Helpers\GestionEcrans.cs" />
     <Compile Include="Helpers\GestionFenetres.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
+    <Compile Include="Helpers\DragDropHelper.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
     <Compile Include="Forms\FormExplorer.cs">
@@ -191,6 +192,9 @@
     <Compile Include="Themes\AutoTheme.cs" />
     <Compile Include="WinAPI\Commun.cs" />
     <Compile Include="WinAPI\Dwmapi.cs" />
+    <Compile Include="WinAPI\Modeles\IDropSource.cs" />
+    <Compile Include="WinAPI\Modeles\IDropTarget.cs" />
+    <Compile Include="WinAPI\Ole32.cs" />
     <Compile Include="WinAPI\Win32Error.cs" />
     <Compile Include="WinAPI\Gdi32.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />

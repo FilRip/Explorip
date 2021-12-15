@@ -11,7 +11,7 @@ namespace Explorip.Helpers
     {
         public static bool IsShortcut(this FileSystemInfo repertoireOuFichier)
         {
-            if (repertoireOuFichier.GetType() == typeof(FileInfo))
+            if (repertoireOuFichier is FileInfo)
             {
                 return (Path.GetExtension(repertoireOuFichier.Name).ToLower().Trim() == ".lnk");
             }
