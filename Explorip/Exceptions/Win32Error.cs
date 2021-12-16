@@ -1,4 +1,6 @@
-﻿namespace BetterWin32Errors
+﻿using System;
+
+namespace BetterWin32Errors
 {
     /// <summary>
     /// Constants defined in winerror.h.
@@ -9369,5 +9371,16 @@
         UI_E_TIME_BEFORE_LAST_UPDATE = 0x802A0109,
         /// <summary>This client is already connected to a timer.</summary>
         UI_E_TIMER_CLIENT_ALREADY_CONNECTED = 0x802A010A,
+    }
+
+    public static class ErreurWindows
+    {
+        public static string RetourneTexteErreur(int numErreur)
+        {
+            uint err = Convert.ToUInt32("0x" + numErreur.ToString("X"), 16);
+            Win32Error win32Error;
+            win32Error = (Win32Error)err;
+            return win32Error.ToString("G");
+        }
     }
 }

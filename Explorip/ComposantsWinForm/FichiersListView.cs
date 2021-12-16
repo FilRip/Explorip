@@ -14,7 +14,7 @@ using Explorip.WinAPI.Modeles;
 
 namespace Explorip.ComposantsWinForm
 {
-    public class FichiersListView : FilRipListView.FilRipListView, IDropSource
+    public class FichiersListView : FilRipListView.FilRipListView
     {
         private ContextMenuStrip _cms;
         private DirectoryInfo _repCourant;
@@ -24,6 +24,7 @@ namespace Explorip.ComposantsWinForm
         private FilesOperations.FileOperation _fileOperation = new FilesOperations.FileOperation();
         private FileSystemWatcher _repCourantChangement;
         private Dictionary<int, string> _listeIcones;
+        private DragDropHelper _dragDropHelper;
 
         public FichiersListView() : base()
         {
@@ -34,8 +35,8 @@ namespace Explorip.ComposantsWinForm
             LargeImageList.ImageSize = new Size(32, 32);
             SmallImageList.ImageSize = new Size(16, 16);
             _listeIcones = new Dictionary<int, string>();
-            this.MouseUp += FichiersListView_MouseUp;
             MouseDoubleClick += FichiersListView_MouseDoubleClick;
+            _dragDropHelper = new DragDropHelper();
             InitialiseSurveillance();
         }
 
@@ -227,7 +228,7 @@ namespace Explorip.ComposantsWinForm
 
         private void FichiersListView_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
+            if ((e.Button == MouseButtons.Right) && (!_dragDropHelper.DragDropEnCours))
             {
                 if (SelectedItems.Count > 0)
                 {
@@ -268,9 +269,9 @@ namespace Explorip.ComposantsWinForm
             // FichiersListView
             // 
             this.AllowDrop = true;
+            this.MouseUp += new MouseEventHandler(this.FichiersListView_MouseUp);
             this.DragDrop += new DragEventHandler(this.FichiersListView_DragDrop);
-            this.DragEnter += new DragEventHandler(this.FichiersListView_DragEnter);
-            this.DragLeave += new EventHandler(this.FichiersListView_DragLeave);
+            //this.DragEnter += new DragEventHandler(this.FichiersListView_DragEnter);
             this.DragOver += new DragEventHandler(this.FichiersListView_DragOver);
             this.ItemDrag += new ItemDragEventHandler(this.FichiersListView_ItemDrag);
             this.KeyUp += new KeyEventHandler(this.FichiersListView_KeyUp);
@@ -387,40 +388,49 @@ namespace Explorip.ComposantsWinForm
         // TODO : Implémenter couper/copier/coller par drag & drop
         // docs : https://stackoverflow.com/questions/28139791/pass-drop-event-on-to-a-folder-using-c
 
-        private MouseButtons startButton;
-
-        private void FichiersListView_DragLeave(object sender, EventArgs e)
-        {
-
-        }
-
         private void FichiersListView_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Effect == DragDropEffects.Copy)
+            if (_dragDropHelper.StartButton == MouseButtons.Left)
             {
+                if (e.Effect == DragDropEffects.Copy)
+                {
 
+                }
+                else if (e.Effect == DragDropEffects.Move)
+                {
+
+                }
+                else // Raccourcis
+                {
+
+                }
             }
             else
             {
-
+                _dragDropHelper.DragDrop(sender, e);
             }
+            _dragDropHelper.DragDropEnCours = false;
         }
 
-        private void FichiersListView_DragEnter(object sender, DragEventArgs e)
+        /*private void FichiersListView_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effect = DragDropHelper.effetDragDrop;
             }
-        }
+        }*/
 
         private void FichiersListView_DragOver(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                if ((e.KeyState & 8) == 8)
+                if (e.KeyState.EtatBit(4)) // Touche Ctrl
                 {
                     e.Effect = DragDropEffects.Copy;
+                }
+                else if (e.KeyState.EtatBit(6)) // Touche Alt
+                {
+                    e.Effect = DragDropEffects.Link;
                 }
                 else
                 {
@@ -431,73 +441,8 @@ namespace Explorip.ComposantsWinForm
 
         private void FichiersListView_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            IntPtr pidlParent;
-            IShellFolder shellFolder;
-            int erreur;
-
-            // TODO : Penser a libérer les espaces mémoires/pointeurs réservés par cette méthode
-
-            startButton = e.Button;
-
-            if (_repCourant == null)
-            {
-                erreur = WinAPI.Shell32.SHGetDesktopFolder(out pidlParent);
-                if (erreur == (int)WinAPI.Commun.HRESULT.S_OK)
-                    return;
-                shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlParent, typeof(IShellFolder));
-            }
-            else
-            {
-                Guid guidSH = typeof(IShellFolder).GUID;
-                pidlParent = WinAPI.Shell32.ILCreateFromPath(_repCourant.FullName);
-                IntPtr pidlInterface;
-                WinAPI.Shell32.SHBindToParent(pidlParent, ref guidSH, out pidlInterface, IntPtr.Zero);
-                shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
-            }
-            if (pidlParent != IntPtr.Zero)
-            {
-                Guid guid = new Guid("{0000010e-0000-0000-C000-000000000046}");
-                IntPtr[] items = new IntPtr[SelectedItems.Count];
-                int position = 0;
-                foreach (ListViewItem item in SelectedItems)
-                    items[position++] = WinAPI.Shell32.ILCreateFromPath(((FileSystemInfo)item.Tag).FullName);
-                erreur = shellFolder.GetUIObjectOf(
-                    IntPtr.Zero,
-                    (uint)SelectedItems.Count,
-                    items,
-                    ref guid,
-                    IntPtr.Zero,
-                    out IntPtr data);
-                if (erreur == (int)WinAPI.Commun.HRESULT.S_OK)
-                {
-                    WinAPI.Ole32.DoDragDrop(data, this, DragDropHelper.effetDragDrop, out DragDropEffects effets);
-                }
-            }
+            _dragDropHelper.DemarreDrag(RetourneListeFichiersDossiersSelectionnes(), e.Button, _repCourant);
         }
-
-        #region Interface IDropSource
-
-        int IDropSource.QueryContinueDrag(bool fEscapePressed, MK grfKeyState)
-        {
-            if (fEscapePressed)
-                return WinAPI.Commun.DRAGDROP_S_CANCEL;
-            else
-            {
-                if ((startButton & MouseButtons.Left) != 0 && (grfKeyState & MK.LBUTTON) == 0)
-                    return WinAPI.Commun.DRAGDROP_S_DROP;
-                else if ((startButton & MouseButtons.Right) != 0 && (grfKeyState & MK.RBUTTON) == 0)
-                    return WinAPI.Commun.DRAGDROP_S_DROP;
-                else
-                    return (int)WinAPI.Commun.HRESULT.S_OK;
-            }
-        }
-
-        int IDropSource.GiveFeedback(DragDropEffects dwEffect)
-        {
-            return WinAPI.Commun.DRAGDROP_S_USEDEFAULTCURSORS;
-        }
-
-        #endregion
 
         #endregion
     }

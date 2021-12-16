@@ -107,11 +107,7 @@ namespace Explorip.Helpers
                         if (retour == null)
                         {
                             string message = "Erreur GetIcon num=" + erreur.ToString("X");
-
-                            uint err = Convert.ToUInt32("0x" + erreur.ToString("X"), 16);
-                            BetterWin32Errors.Win32Error win32Error;
-                            win32Error = (BetterWin32Errors.Win32Error)err;
-                            message += $", {win32Error:G}";
+                            message += $", {BetterWin32Errors.ErreurWindows.RetourneTexteErreur(erreur)}";
 
                             throw new ExploripException(message);
                         }
@@ -123,7 +119,7 @@ namespace Explorip.Helpers
                     }
                 }
                 else
-                    throw new ExploripException("Impossible de faire un SHGetFileInfo");
+                    throw new ArgumentNullException(nameof(pidl));
             }
             catch (Exception ex)
             {

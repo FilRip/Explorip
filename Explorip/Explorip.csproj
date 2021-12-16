@@ -113,6 +113,7 @@
     <Compile Include="Helpers\ExtensionsClipboard.cs" />
     <Compile Include="Helpers\ExtensionsCommandLineArguments.cs" />
     <Compile Include="Helpers\ExtensionsDossiers.cs" />
+    <Compile Include="Helpers\ExtensionsInt.cs" />
     <Compile Include="Helpers\ExtensionsProcess.cs" />
     <Compile Include="Helpers\ExtensionsString.cs" />
     <Compile Include="Helpers\ExtensionsWindows.cs" />
@@ -195,7 +196,7 @@
     <Compile Include="WinAPI\Modeles\IDropSource.cs" />
     <Compile Include="WinAPI\Modeles\IDropTarget.cs" />
     <Compile Include="WinAPI\Ole32.cs" />
-    <Compile Include="WinAPI\Win32Error.cs" />
+    <Compile Include="Exceptions\Win32Error.cs" />
     <Compile Include="WinAPI\Gdi32.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />
     <Compile Include="WinAPI\Modeles\BROWSEINFO.cs" />
