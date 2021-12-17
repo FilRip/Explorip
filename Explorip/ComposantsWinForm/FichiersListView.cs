@@ -271,12 +271,18 @@ namespace Explorip.ComposantsWinForm
             this.AllowDrop = true;
             this.MouseUp += new MouseEventHandler(this.FichiersListView_MouseUp);
             this.DragDrop += new DragEventHandler(this.FichiersListView_DragDrop);
-            //this.DragEnter += new DragEventHandler(this.FichiersListView_DragEnter);
+            this.DragEnter += new DragEventHandler(this.FichiersListView_DragEnter);
             this.DragOver += new DragEventHandler(this.FichiersListView_DragOver);
+            this.DragLeave += new EventHandler(this.FichiersListView_DragLeave);
             this.ItemDrag += new ItemDragEventHandler(this.FichiersListView_ItemDrag);
             this.KeyUp += new KeyEventHandler(this.FichiersListView_KeyUp);
             this.ResumeLayout(false);
 
+        }
+
+        private void FichiersListView_DragLeave(object sender, EventArgs e)
+        {
+            Console.WriteLine("DragLeave");
         }
 
         private void FichiersListView_KeyUp(object sender, KeyEventArgs e)
@@ -412,13 +418,13 @@ namespace Explorip.ComposantsWinForm
             _dragDropHelper.DragDropEnCours = false;
         }
 
-        /*private void FichiersListView_DragEnter(object sender, DragEventArgs e)
+        private void FichiersListView_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 e.Effect = DragDropHelper.effetDragDrop;
             }
-        }*/
+        }
 
         private void FichiersListView_DragOver(object sender, DragEventArgs e)
         {

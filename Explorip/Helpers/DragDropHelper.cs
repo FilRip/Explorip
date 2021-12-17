@@ -114,7 +114,7 @@ namespace Explorip.Helpers
                         out IntPtr _pointeurData);
                     if (erreur == (int)WinAPI.Commun.HRESULT.S_OK)
                     {
-                        Console.WriteLine("DoDragDrop");
+                        Console.WriteLine($"DoDragDrop de {repertoireCourant.FullName} parent de {listeFichiersDossiers[0]}");
                         WinAPI.Ole32.DoDragDrop(_pointeurData, this, effetDragDrop, out DragDropEffects effets);
                     }
                 }
@@ -129,7 +129,8 @@ namespace Explorip.Helpers
         private void GetParent()
         {
             Guid guidSH = typeof(IShellFolder).GUID;
-            _pidlParent = WinAPI.Shell32.ILCreateFromPath(Directory.GetParent(_repStart.FullName).FullName);
+            _repStart = _repStart.GetParent();
+            _pidlParent = WinAPI.Shell32.ILCreateFromPath(_repStart.FullName);
             IntPtr pidlInterface;
             WinAPI.Shell32.SHBindToParent(_pidlParent, ref guidSH, out pidlInterface, IntPtr.Zero);
             _shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
@@ -169,9 +170,11 @@ namespace Explorip.Helpers
                 int erreur;
                 Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
                 IntPtr ptrPrecedent = _pidlParent;
+                string _repPrecedent = _repStart.FullName;
 
                 GetParent();
 
+                Console.WriteLine($"GetIDropTarget {_repStart} parent de {_repPrecedent}");
                 erreur = _shellFolder.GetUIObjectOf(
                     IntPtr.Zero,
                     1,
