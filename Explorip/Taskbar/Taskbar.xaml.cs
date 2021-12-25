@@ -207,7 +207,7 @@ namespace Explorip.TaskBar
 
         private void PropertiesMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            PropertiesWindow.Open(((MyApp)Application.Current).DictionaryManager);
+            Program.MonApp.AfficheTaskBarAutresMoniteurs();
         }
 
         private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)

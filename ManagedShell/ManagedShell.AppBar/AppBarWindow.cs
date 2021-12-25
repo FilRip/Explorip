@@ -217,11 +217,11 @@ namespace ManagedShell.AppBar
                     wndPos.UpdateMessage(lParam);
                 }
             }
-            else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGED && EnableAppBar && !EnvironmentHelper.IsAppRunningAsShell && !AllowClose)
+            else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGED && EnableAppBar && !EnvironmentHelper.IsAppRunningAsShell && !AllowClose && !_positionAlreadyUnderChanged)
             {
                 _appBarManager.AppBarWindowPosChanged(hwnd);
             }
-            else if (msg == (int)NativeMethods.WM.DPICHANGED)
+            else if ((msg == (int)NativeMethods.WM.DPICHANGED) && !_positionAlreadyUnderChanged)
             {
                 if (Screen.Primary)
                 {
@@ -230,7 +230,7 @@ namespace ManagedShell.AppBar
 
                 DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
                 Screen.ChangeDpi();
-
+                
                 ProcessScreenChange(ScreenSetupReason.DpiChange);
             }
             else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE)
@@ -287,12 +287,20 @@ namespace ManagedShell.AppBar
             }
         }
 
+        private bool _positionAlreadyUnderChanged;
+
         internal void SetAppBarPosition(NativeMethods.Rect rect)
         {
-            Top = rect.Top / DpiScale;
-            Left = rect.Left / DpiScale;
-            Width = (rect.Right - rect.Left) / DpiScale;
-            Height = (rect.Bottom - rect.Top) / DpiScale;
+            try
+            {
+                _positionAlreadyUnderChanged = true;
+                Top = rect.Top / DpiScale;
+                Left = rect.Left / DpiScale;
+                Width = (rect.Right - rect.Left) / DpiScale;
+                Height = (rect.Bottom - rect.Top) / DpiScale;
+            }
+            catch (Exception) { }
+            finally { _positionAlreadyUnderChanged = false; }
         }
 
         private void ProcessScreenChange(ScreenSetupReason reason)

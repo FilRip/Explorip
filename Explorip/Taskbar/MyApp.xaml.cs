@@ -8,6 +8,7 @@ using ManagedShell.Interop;
 using Application = System.Windows.Application;
 using System.Collections.Generic;
 using System.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Explorip.TaskBar
 {
@@ -66,14 +67,18 @@ namespace Explorip.TaskBar
             taskBar.Show();
             _taskbarList.Add(taskBar);
             if (Helpers.ExtensionsCommandLineArguments.ArgumentPresent("taskbars"))
+                AfficheTaskBarAutresMoniteurs();
+        }
+
+        public void AfficheTaskBarAutresMoniteurs()
+        {
+            Taskbar taskBar;
+            List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
+            foreach (AppBarScreen appBarScreen in appBarScreens)
             {
-                List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
-                foreach (AppBarScreen appBarScreen in appBarScreens)
-                {
-                    taskBar = new Taskbar(_startMenuMonitor, appBarScreen, (AppBarEdge)Settings.Instance.Edge);
-                    taskBar.Show();
-                    _taskbarList.Add(taskBar);
-                }
+                taskBar = new Taskbar(_startMenuMonitor, appBarScreen, (AppBarEdge)Settings.Instance.Edge);
+                taskBar.Show();
+                _taskbarList.Add(taskBar);
             }
         }
 
