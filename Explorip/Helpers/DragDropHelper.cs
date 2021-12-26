@@ -102,7 +102,10 @@ namespace Explorip.Helpers
                     _listePointeursFichiersDossiers = new IntPtr[listeFichiersDossiers.Count];
                     int position = 0;
                     foreach (FileSystemInfo item in listeFichiersDossiers)
+                    {
                         _listePointeursFichiersDossiers[position++] = WinAPI.Shell32.ILCreateFromPath(item.FullName);
+                        _listeFichiersDossiers.Add(item);
+                    }
 
                     Guid guid = new Guid("{0000010e-0000-0000-C000-000000000046}");
                     erreur = _shellFolder.GetUIObjectOf(

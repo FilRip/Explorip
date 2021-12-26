@@ -135,9 +135,8 @@ namespace Explorip.ComposantsWinForm
 
         private void AjouterElement(string nom, FileSystemInfo element)
         {
-            IntPtr pidl;
             string nomIcone = nom;
-            int numIcone = Icones.GetNumIcon(element.FullName, element.IsShortcut(), true, out pidl);
+            int numIcone = Icones.GetNumIcon(element.FullName, element.IsShortcut(), true, out IntPtr pidl);
             if (_listeIcones.ContainsKey(numIcone))
                 nomIcone = _listeIcones[numIcone];
             else
@@ -400,15 +399,19 @@ namespace Explorip.ComposantsWinForm
             {
                 if (e.Effect == DragDropEffects.Copy)
                 {
-
+                    foreach (FileSystemInfo item in _dragDropHelper.ListeFichiersDossiers)
+                        _fileOperation.CopyItem(item.FullName, _repCourant.FullName, item.Name);
+                    _fileOperation.PerformOperations();
                 }
                 else if (e.Effect == DragDropEffects.Move)
                 {
-
+                    foreach (FileSystemInfo item in _dragDropHelper.ListeFichiersDossiers)
+                        _fileOperation.MoveItem(item.FullName, _repCourant.FullName, item.Name);
+                    _fileOperation.PerformOperations();
                 }
-                else // Raccourcis
+                else
                 {
-
+                    // TODO : Creer des raccourcis
                 }
             }
             else
