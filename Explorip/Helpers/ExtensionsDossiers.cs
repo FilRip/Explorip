@@ -48,9 +48,8 @@ namespace Explorip.Helpers
         public static IShellFolder GetShellFolder(DirectoryInfo directoryInfo)
         {
             IntPtr pidl = GetPIDL(directoryInfo);
-            IntPtr pidlInterface;
             Guid guid = typeof(IShellFolder).GUID;
-            Shell32.SHBindToParent(pidl, ref guid, out pidlInterface, IntPtr.Zero);
+            Shell32.SHBindToParent(pidl, ref guid, out IntPtr pidlInterface, IntPtr.Zero);
             return (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
         }
 

@@ -68,8 +68,7 @@ namespace Explorip.ComposantsWinForm
                 _noeudMyComputer.Nodes.Add(noeudDesktop);
                 noeudDesktop.Name = "Desktop";
                 noeudDesktop.Tag = new DirectoryInfo(Environment.SpecialFolder.Desktop.Repertoire());
-                IntPtr pidl;
-                int numIcone = Icones.GetNumIcon(Environment.SpecialFolder.Desktop.Repertoire(), false, true, out pidl);
+                int numIcone = Icones.GetNumIcon(Environment.SpecialFolder.Desktop.Repertoire(), false, true, out IntPtr pidl);
                 Bitmap monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
                 _listeIcones.Images.Add(monIcone);
                 noeudDesktop.ImageIndex = _listeIcones.Images.Count - 1;
@@ -131,8 +130,7 @@ namespace Explorip.ComposantsWinForm
             if (string.IsNullOrWhiteSpace(path))
                 return;
             DirectoryInfo dirInfo = new DirectoryInfo(path);
-            IntPtr pidl;
-            int numIcone = Icones.GetNumIcon(dirInfo.FullName, dirInfo.IsShortcut(), true, out pidl);
+            int numIcone = Icones.GetNumIcon(dirInfo.FullName, dirInfo.IsShortcut(), true, out IntPtr pidl);
             Bitmap monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
             _listeIcones.Images.Add(monIcone);
             TreeNode nouveauNoeud;
@@ -223,8 +221,7 @@ namespace Explorip.ComposantsWinForm
                 {
                     Name = dirI.Name
                 };
-                IntPtr pidl;
-                int numIcone = Icones.GetNumIcon(dirI.FullName, dirI.IsShortcut(), true, out pidl);
+                int numIcone = Icones.GetNumIcon(dirI.FullName, dirI.IsShortcut(), true, out IntPtr pidl);
                 Bitmap monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
                 _listeIcones.Images.Add(monIcone);
                 int imgIndex = _listeIcones.Images.Count - 1;

@@ -23,8 +23,8 @@ namespace Explorip.ComposantsWinForm
         private DirectoryTreeView _liensRepertoire;
         private FilesOperations.FileOperation _fileOperation = new FilesOperations.FileOperation();
         private FileSystemWatcher _repCourantChangement;
-        private Dictionary<int, string> _listeIcones;
-        private DragDropHelper _dragDropHelper;
+        private readonly Dictionary<int, string> _listeIcones;
+        private readonly DragDropHelper _dragDropHelper;
 
         public FichiersListView() : base()
         {
@@ -71,14 +71,12 @@ namespace Explorip.ComposantsWinForm
             if (SelectedItems.Count > 0)
             {
                 ListViewItem item = SelectedItems[0];
-                if (item.Tag is FileInfo)
+                if (item.Tag is FileInfo fileInfo)
                 {
-                    FileInfo fileInfo = (FileInfo)item.Tag;
                     ManagedShell.Common.Helpers.ShellHelper.ExecuteProcess(fileInfo.FullName);
                 }
-                else if (item.Tag is DirectoryInfo)
+                else if (item.Tag is DirectoryInfo directoryInfo)
                 {
-                    DirectoryInfo directoryInfo = (DirectoryInfo)item.Tag;
                     if (SelectionneRepertoire != null)
                         SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(directoryInfo), null, null);
                     if (_liensRepertoire != null)

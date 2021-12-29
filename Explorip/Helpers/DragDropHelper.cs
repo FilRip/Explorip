@@ -10,7 +10,7 @@ namespace Explorip.Helpers
 {
     public class DragDropHelper : IDropSource
     {
-        private Form _formInterception;
+        //private readonly Form _formInterception;
 
         private MouseButtons _startButton;
         private bool _dragDropEnCours;
@@ -26,10 +26,12 @@ namespace Explorip.Helpers
 
         public DragDropHelper()
         {
-            _formInterception = new Form();
-            _formInterception.ShowInTaskbar = false;
-            _formInterception.Text = "";
-            _formInterception.Visible = false;
+            /*_formInterception = new Form()
+            {
+                ShowInTaskbar = false,
+                Text = "",
+                Visible = false
+            };*/
             _listeFichiersDossiers = new List<FileSystemInfo>();
         }
 
@@ -93,8 +95,7 @@ namespace Explorip.Helpers
                 {
                     Guid guidSH = typeof(IShellFolder).GUID;
                     _pidlParent = WinAPI.Shell32.ILCreateFromPath(repertoireCourant.FullName);
-                    IntPtr pidlInterface;
-                    WinAPI.Shell32.SHBindToParent(_pidlParent, ref guidSH, out pidlInterface, IntPtr.Zero);
+                    WinAPI.Shell32.SHBindToParent(_pidlParent, ref guidSH, out IntPtr pidlInterface, IntPtr.Zero);
                     _shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
                 }
                 if (_pidlParent != IntPtr.Zero)
@@ -134,8 +135,7 @@ namespace Explorip.Helpers
             Guid guidSH = typeof(IShellFolder).GUID;
             _repStart = _repStart.GetParent();
             _pidlParent = WinAPI.Shell32.ILCreateFromPath(_repStart.FullName);
-            IntPtr pidlInterface;
-            WinAPI.Shell32.SHBindToParent(_pidlParent, ref guidSH, out pidlInterface, IntPtr.Zero);
+            WinAPI.Shell32.SHBindToParent(_pidlParent, ref guidSH, out IntPtr pidlInterface, IntPtr.Zero);
             _shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
         }
 
