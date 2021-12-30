@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Explorip.ExploripEventArgs;
 using Explorip.Helpers;
 using Explorip.Sorters;
-using Explorip.WinAPI.Modeles;
 
 namespace Explorip.ComposantsWinForm
 {
@@ -113,25 +110,16 @@ namespace Explorip.ComposantsWinForm
             VideListe();
             if (noeud != null)
             {
+                List<ListViewItem> liste = new List<ListViewItem>();
                 foreach (TreeNode noeudEnfant in noeud.Nodes)
                 {
-                    AjouterElement(noeudEnfant.Text, (FileSystemInfo)noeudEnfant.Tag);
+                    liste.Add(AjouterElement(noeudEnfant.Text, (FileSystemInfo)noeudEnfant.Tag));
                 }
+                Items.AddRange(liste.ToArray());
             }
         }
 
-        private delegate void DelegateAjouteItem(ListViewItem item);
-        private void AjouteItem(ListViewItem item)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new DelegateAjouteItem(AjouteItem), item);
-                return;
-            }
-            Items.Add(item);
-        }
-
-        private void AjouterElement(string nom, FileSystemInfo element)
+        private ListViewItem AjouterElement(string nom, FileSystemInfo element)
         {
             string nomIcone = nom;
             int numIcone = Icones.GetNumIcon(element.FullName, element.IsShortcut(), true, out IntPtr pidl);
@@ -149,8 +137,7 @@ namespace Explorip.ComposantsWinForm
                     SmallImageList.Images.Add(nomIcone, petiteIcone);
             }
 
-            Task maTache = new Task(() => { AjouteItem(new ListViewItem(nom, nomIcone) { Tag = element }); });
-            maTache.Start();
+            return new ListViewItem(nom, nomIcone) { Tag = element };
         }
 
         private void VideListe()
@@ -187,6 +174,7 @@ namespace Explorip.ComposantsWinForm
 
             // TODO : Utiliser les tuiles https://github.com/dbarros/WindowsAPICodePack
             VideListe();
+            List<ListViewItem> _liste = new List<ListViewItem>();
 
             DirectoryInfo[] dirs = null;
             try
@@ -199,7 +187,7 @@ namespace Explorip.ComposantsWinForm
                 Array.Sort(dirs, new TriAlphabetique());
                 foreach (DirectoryInfo sousDirInfo in dirs)
                 {
-                    AjouterElement(sousDirInfo.Name, sousDirInfo);
+                    _liste.Add(AjouterElement(sousDirInfo.Name, sousDirInfo));
                 }
             }
 
@@ -214,10 +202,11 @@ namespace Explorip.ComposantsWinForm
                 Array.Sort(files, new TriAlphabetique());
                 foreach (FileInfo file in files)
                 {
-                    AjouterElement(file.Name, file);
+                    _liste.Add(AjouterElement(file.Name, file));
                 }
             }
 
+            Items.AddRange(_liste.ToArray());
             _chronometre.Stop();
             Console.WriteLine("Temps d'exécution : " + _chronometre.ElapsedMilliseconds.ToString() + " millisecondes");
             _repCourantChangement.EnableRaisingEvents = true;
@@ -266,13 +255,13 @@ namespace Explorip.ComposantsWinForm
             // FichiersListView
             // 
             this.AllowDrop = true;
-            this.MouseUp += new MouseEventHandler(this.FichiersListView_MouseUp);
-            this.DragDrop += new DragEventHandler(this.FichiersListView_DragDrop);
-            this.DragEnter += new DragEventHandler(this.FichiersListView_DragEnter);
-            this.DragOver += new DragEventHandler(this.FichiersListView_DragOver);
-            this.DragLeave += new EventHandler(this.FichiersListView_DragLeave);
-            this.ItemDrag += new ItemDragEventHandler(this.FichiersListView_ItemDrag);
-            this.KeyUp += new KeyEventHandler(this.FichiersListView_KeyUp);
+            this.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.FichiersListView_ItemDrag);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FichiersListView_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FichiersListView_DragEnter);
+            this.DragOver += new System.Windows.Forms.DragEventHandler(this.FichiersListView_DragOver);
+            this.DragLeave += new System.EventHandler(this.FichiersListView_DragLeave);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FichiersListView_KeyUp);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FichiersListView_MouseUp);
             this.ResumeLayout(false);
 
         }
@@ -395,22 +384,31 @@ namespace Explorip.ComposantsWinForm
         {
             if (_dragDropHelper.StartButton == MouseButtons.Left)
             {
+                bool operationAFaire = false;
                 if (e.Effect == DragDropEffects.Copy)
                 {
                     foreach (FileSystemInfo item in _dragDropHelper.ListeFichiersDossiers)
-                        _fileOperation.CopyItem(item.FullName, _repCourant.FullName, item.Name);
-                    _fileOperation.PerformOperations();
+                        if (Path.GetDirectoryName(item.FullName) != _repCourant.FullName)
+                        {
+                            _fileOperation.CopyItem(item.FullName, _repCourant.FullName, item.Name);
+                            operationAFaire = true;
+                        }
                 }
                 else if (e.Effect == DragDropEffects.Move)
                 {
                     foreach (FileSystemInfo item in _dragDropHelper.ListeFichiersDossiers)
-                        _fileOperation.MoveItem(item.FullName, _repCourant.FullName, item.Name);
-                    _fileOperation.PerformOperations();
+                        if (Path.GetDirectoryName(item.FullName) != _repCourant.FullName)
+                        {
+                            _fileOperation.MoveItem(item.FullName, _repCourant.FullName, item.Name);
+                            operationAFaire = true;
+                        }
                 }
                 else
                 {
                     // TODO : Creer des raccourcis
                 }
+                if (operationAFaire)
+                    _fileOperation.PerformOperations();
             }
             else
             {
