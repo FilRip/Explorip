@@ -33,9 +33,9 @@ namespace Explorip.Helpers
             return Environment.GetFolderPath(specialFolder);
         }
 
-        public static IntPtr GetPIDL(this DirectoryInfo directoryInfo)
+        public static IntPtr GetPIDL(this FileSystemInfo fileSystemInfo)
         {
-            return Shell32.ILCreateFromPath(directoryInfo.FullName);
+            return Shell32.ILCreateFromPath(fileSystemInfo.FullName);
         }
 
         public static IntPtr GetPIDL(this Environment.SpecialFolder specialFolder)

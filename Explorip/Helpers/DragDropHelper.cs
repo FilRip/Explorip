@@ -4,7 +4,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
+using Explorip.WinAPI;
 using Explorip.WinAPI.Modeles;
+
+using ManagedShell.ShellFolders;
 
 namespace Explorip.Helpers
 {
@@ -186,7 +189,7 @@ namespace Explorip.Helpers
                     IntPtr.Zero,
                     out IntPtr dropTargetPtr);
 
-                if (erreur == (int)WinAPI.Commun.HRESULT.S_OK)
+                if (erreur == (int)Commun.HRESULT.S_OK)
                 {
                     MK touches = MK.RBUTTON;
                     if (e.KeyState.EtatBit(4))
@@ -214,17 +217,109 @@ namespace Explorip.Helpers
             else
             {
                 if ((_startButton & MouseButtons.Left) != 0 && (grfKeyState & MK.LBUTTON) == 0)
-                    return WinAPI.Commun.DRAGDROP_S_DROP;
+                    return Commun.DRAGDROP_S_DROP;
                 else if ((_startButton & MouseButtons.Right) != 0 && (grfKeyState & MK.RBUTTON) == 0)
-                    return WinAPI.Commun.DRAGDROP_S_DROP;
+                    return Commun.DRAGDROP_S_DROP;
                 else
-                    return (int)WinAPI.Commun.HRESULT.S_OK;
+                    return (int)Commun.HRESULT.S_OK;
             }
         }
 
         int IDropSource.GiveFeedback(DragDropEffects dwEffect)
         {
-            return WinAPI.Commun.DRAGDROP_S_USEDEFAULTCURSORS;
+            return Commun.DRAGDROP_S_USEDEFAULTCURSORS;
+        }
+
+        #endregion
+
+        #region Ajout pour Wrappers
+
+        /// <summary>
+        /// This method will use the GetUIObjectOf method of IShellFolder to obtain the IDataObject of a
+        /// ShellItem. 
+        /// </summary>
+        /// <param name="item">The item for which to obtain the IDataObject</param>
+        /// <param name="dataObjectPtr">A pointer to the returned IDataObject</param>
+        /// <returns>the IDataObject the ShellItem</returns>
+        public static IntPtr GetIDataObject(ShellItem[] items)
+        {
+            ShellItem parent = items[0].ParentItem != null ? items[0].ParentItem : items[0];
+
+            IntPtr[] pidls = new IntPtr[items.Length];
+            for (int i = 0; i < items.Length; i++)
+                pidls[i] = items[i].RelativePidl;
+
+            Guid guid = new Guid("{0000010e-0000-0000-C000-000000000046}");
+            if (parent.ShellFolder.GetUIObjectOf(
+                    IntPtr.Zero,
+                    (uint)pidls.Length,
+                    pidls,
+                    ref guid,
+                    IntPtr.Zero,
+                    out IntPtr dataObjectPtr) == (int)Commun.HRESULT.S_OK)
+            {
+                return dataObjectPtr;
+            }
+            else
+            {
+                return IntPtr.Zero;
+            }
+        }
+
+        /// <summary>
+        /// This method will use the GetUIObjectOf method of IShellFolder to obtain the IDropTarget of a
+        /// ShellItem. 
+        /// </summary>
+        /// <param name="item">The item for which to obtain the IDropTarget</param>
+        /// <param name="dropTargetPtr">A pointer to the returned IDropTarget</param>
+        /// <returns>the IDropTarget from the ShellItem</returns>
+        public static bool GetIDropTarget(ShellItem item, out IntPtr dropTargetPtr, out WinAPI.Modeles.IDropTarget dropTarget)
+        {
+            ShellItem parent = item.ParentItem != null ? item.ParentItem : item;
+
+            Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
+            if (parent.ShellFolder.GetUIObjectOf(
+                    IntPtr.Zero,
+                    1,
+                    new IntPtr[] { item.RelativePidl },
+                    ref guid,
+                    IntPtr.Zero,
+                    out dropTargetPtr) == (int)Commun.HRESULT.S_OK)
+            {
+                dropTarget =
+                    (WinAPI.Modeles.IDropTarget)Marshal.GetTypedObjectForIUnknown(dropTargetPtr, typeof(WinAPI.Modeles.IDropTarget));
+
+                return true;
+            }
+            else
+            {
+                dropTarget = null;
+                dropTargetPtr = IntPtr.Zero;
+                return false;
+            }
+        }
+
+        public static bool GetIDropTargetHelper(out IntPtr helperPtr, out IDropTargetHelper dropHelper)
+        {
+            Guid guid = typeof(IDropTargetHelper).GUID;
+            if (Ole32.CoCreateInstance(
+                ref Commun.CLSID_DragDropHelper,
+                IntPtr.Zero,
+                ManagedShell.ShellFolders.Enums.CLSCTX.INPROC_SERVER,
+                ref guid,
+                out helperPtr) == (int)Commun.HRESULT.S_OK)
+            {
+                dropHelper =
+                    (IDropTargetHelper)Marshal.GetTypedObjectForIUnknown(helperPtr, typeof(IDropTargetHelper));
+
+                return true;
+            }
+            else
+            {
+                dropHelper = null;
+                helperPtr = IntPtr.Zero;
+                return false;
+            }
         }
 
         #endregion

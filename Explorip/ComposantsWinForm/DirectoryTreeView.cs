@@ -22,6 +22,13 @@ namespace Explorip.ComposantsWinForm
         public event DelegateCliqueRepertoire SelectionneRepertoire;
 
         private TreeNode _noeudMyComputer;
+        private bool _selectionChange;
+
+        public bool SelectionChange
+        {
+            get { return _selectionChange; }
+            set { _selectionChange = value; }
+        }
 
         public DirectoryTreeView() : base()
         {
@@ -32,6 +39,7 @@ namespace Explorip.ComposantsWinForm
             MouseUp += new MouseEventHandler(TreeMain_MouseUp);
             _listeIcones = new ImageList();
             ImageList = _listeIcones;
+            _selectionChange = true;
         }
 
         public ContextMenuStrip MenuContextuel
@@ -153,6 +161,9 @@ namespace Explorip.ComposantsWinForm
 
         private void TreeRepertoire_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (!_selectionChange)
+                return;
+
             if (e.Node.Name != "My Computer")
             {
                 if (e.Node.Tag != null && e.Node.Tag.GetType() == typeof(DirectoryInfo))

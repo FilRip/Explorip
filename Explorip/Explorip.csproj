@@ -107,6 +107,8 @@
     <Compile Include="FilesOperations\Interfaces\FileOperationFlags.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
+    <Compile Include="Helpers\BrowserDragWrappers.cs" />
+    <Compile Include="Helpers\BrowserDropWrappers.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionsArray.cs" />
     <Compile Include="Helpers\ExtensionsClass.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Helpers\ExtensionsWindows.cs" />
     <Compile Include="Helpers\GestionEcrans.cs" />
     <Compile Include="Helpers\GestionFenetres.cs" />
+    <Compile Include="Helpers\IDropTargetHelper.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
     <Compile Include="Helpers\DragDropHelper.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />

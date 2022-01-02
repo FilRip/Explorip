@@ -652,5 +652,34 @@ namespace ManagedShell.ShellFolders
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+        private bool updateShellFolder;
+        private IShellFolder shellFolder;
+
+        public IShellFolder ShellFolder
+        {
+            get
+            {
+                if (updateShellFolder)
+                {
+                    Marshal.ReleaseComObject(shellFolder);
+                    IntPtr shellFolderPtr;
+                    Guid guid = typeof(IShellFolder).GUID;
+                    if (ParentItem.ShellFolder.BindToObject(
+                        RelativePidl,
+                        IntPtr.Zero,
+                        guid,
+                        out shellFolderPtr) == NativeMethods.S_OK)
+                    {
+                        shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(shellFolderPtr, typeof(IShellFolder));
+                    }
+
+                    updateShellFolder = false;
+                }
+
+                return shellFolder;
+            }
+        }
+
     }
 }

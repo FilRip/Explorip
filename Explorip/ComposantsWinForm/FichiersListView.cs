@@ -9,6 +9,8 @@ using Explorip.ExploripEventArgs;
 using Explorip.Helpers;
 using Explorip.Sorters;
 
+using ManagedShell.ShellFolders;
+
 namespace Explorip.ComposantsWinForm
 {
     public class FichiersListView : FilRipListView.FilRipListView
@@ -376,6 +378,19 @@ namespace Explorip.ComposantsWinForm
         }
 
         #region Drag'n Drop
+
+        public void SelectionChange(bool nouvelEtat)
+        {
+            _liensRepertoire.SelectionChange = nouvelEtat;
+        }
+
+        public ShellItem SelectedItem
+        {
+            get
+            {
+                return new ShellItem(((FileSystemInfo)SelectedItems[0].Tag).FullName);
+            }
+        }
 
         // TODO : Implémenter couper/copier/coller par drag & drop
         // docs : https://stackoverflow.com/questions/28139791/pass-drop-event-on-to-a-folder-using-c
