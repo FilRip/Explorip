@@ -11,6 +11,8 @@ using Explorip.Sorters;
 
 using ManagedShell.ShellFolders;
 
+using ShellContextMenu = Explorip.Helpers.ShellContextMenu;
+
 namespace Explorip.ComposantsWinForm
 {
     public class FichiersListView : FilRipListView.FilRipListView
