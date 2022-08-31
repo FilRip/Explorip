@@ -98,7 +98,7 @@ namespace Explorip.TaskBar
 
             _logger = new ManagedShellLogger();
 
-            ShellConfig config = new ShellConfig()
+            ShellConfig config = new()
             {
                 EnableTasksService = true,
                 AutoStartTasksService = false,

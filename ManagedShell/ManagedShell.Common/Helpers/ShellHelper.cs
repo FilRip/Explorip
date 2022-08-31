@@ -18,7 +18,7 @@ namespace ManagedShell.Common.Helpers
 
         public static string GetDisplayName(string filename)
         {
-            SHFILEINFO shinfo = new SHFILEINFO
+            SHFILEINFO shinfo = new()
             {
                 szDisplayName = string.Empty,
                 szTypeName = string.Empty
@@ -34,14 +34,14 @@ namespace ManagedShell.Common.Helpers
 
         public static string GetSpecialFolderPath(int FOLDER)
         {
-            StringBuilder sbPath = new StringBuilder(MAX_PATH);
+            StringBuilder sbPath = new(MAX_PATH);
             SHGetFolderPath(IntPtr.Zero, FOLDER, IntPtr.Zero, 0, sbPath);
             return sbPath.ToString();
         }
 
         public static bool ExecuteProcess(string filename)
         {
-            Process proc = new Process();
+            Process proc = new();
             proc.StartInfo.UseShellExecute = true;
             proc.StartInfo.FileName = filename;
 
@@ -66,7 +66,7 @@ namespace ManagedShell.Common.Helpers
                     filename.Replace("system32", "sysnative");
                 }
 
-                ProcessStartInfo psi = new ProcessStartInfo
+                ProcessStartInfo psi = new()
                 {
                     UseShellExecute = true
                 };
@@ -115,7 +115,7 @@ namespace ManagedShell.Common.Helpers
                     filename.Replace("system32", "sysnative");
                 }
 
-                ProcessStartInfo psi = new ProcessStartInfo
+                ProcessStartInfo psi = new()
                 {
                     UseShellExecute = true,
                     FileName = filename,
@@ -142,7 +142,7 @@ namespace ManagedShell.Common.Helpers
                     filename.Replace("system32", "sysnative");
                 }
 
-                Process proc = new Process();
+                Process proc = new();
                 proc.StartInfo.UseShellExecute = true;
                 proc.StartInfo.FileName = filename;
                 proc.StartInfo.Verb = verb;
@@ -231,7 +231,7 @@ namespace ManagedShell.Common.Helpers
 
         public static bool ShowFileProperties(string Filename)
         {
-            SHELLEXECUTEINFO info = new SHELLEXECUTEINFO();
+            SHELLEXECUTEINFO info = new();
             info.cbSize = Marshal.SizeOf(info);
             info.lpVerb = "properties";
             info.lpFile = Filename;
@@ -246,7 +246,7 @@ namespace ManagedShell.Common.Helpers
         /// <param name="fileName">Path to the file to open</param>
         public static void ShowOpenWithDialog(string fileName)
         {
-            Process owProc = new Process();
+            Process owProc = new();
             owProc.StartInfo.UseShellExecute = true;
             owProc.StartInfo.FileName = Environment.GetEnvironmentVariable("WINDIR") + @"\system32\rundll32.exe";
             owProc.StartInfo.Arguments =
@@ -349,7 +349,7 @@ namespace ManagedShell.Common.Helpers
                 {
                     EnumWindows((hwnd, lParam) =>
                     {
-                        StringBuilder cName = new StringBuilder(256);
+                        StringBuilder cName = new(256);
                         GetClassName(hwnd, cName, cName.Capacity);
                         if (cName.ToString() == "WorkerW")
                         {
@@ -374,7 +374,7 @@ namespace ManagedShell.Common.Helpers
 
         public static string GetPathForHandle(IntPtr hWnd)
         {
-            StringBuilder outFileName = new StringBuilder(1024);
+            StringBuilder outFileName = new(1024);
 
             // get process id
             var procId = GetProcIdForHandle(hWnd);
@@ -406,10 +406,10 @@ namespace ManagedShell.Common.Helpers
         {
             string aumid = string.Empty;
 
-            Guid g = new Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99");
+            Guid g = new("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99");
             SHGetPropertyStoreForWindow(hWnd, ref g, out IPropertyStore propStore);
 
-            PROPERTYKEY PKEY_AppUserModel_ID = new PROPERTYKEY
+            PROPERTYKEY PKEY_AppUserModel_ID = new()
             {
                 fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
                 pid = 5
@@ -446,7 +446,7 @@ namespace ManagedShell.Common.Helpers
                 IntPtr hProcess = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, (int)procId);
 
                 uint len = 130;
-                StringBuilder outAumid = new StringBuilder((int)len);
+                StringBuilder outAumid = new((int)len);
 
                 GetApplicationUserModelId(hProcess, ref len, outAumid);
 
@@ -484,7 +484,7 @@ namespace ManagedShell.Common.Helpers
             {
                 EnumWindows((hwnd, lParam) =>
                 {
-                    StringBuilder cName = new StringBuilder(256);
+                    StringBuilder cName = new(256);
                     GetClassName(hwnd, cName, cName.Capacity);
                     if (cName.ToString() == "WorkerW")
                     {
@@ -499,7 +499,7 @@ namespace ManagedShell.Common.Helpers
                 }, 0);
             }
 
-            WINDOWINFO info = new WINDOWINFO();
+            WINDOWINFO info = new();
             info.cbSize = (uint)Marshal.SizeOf(info);
             GetWindowInfo(hWnd, ref info);
             return (info.dwStyle & 0x10000000) == 0x10000000;
@@ -571,31 +571,27 @@ namespace ManagedShell.Common.Helpers
         {
             if (path1 == path2) return true;
 
-            using (var sfh1 = CreateFile(path1, FileAccess.Read, FileShare.ReadWrite,
-                IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero))
-            {
-                if (sfh1.IsInvalid)
-                    ShellLogger.Error($"Win32 error occured when trying to open file {path1}", Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
+            using var sfh1 = CreateFile(path1, FileAccess.Read, FileShare.ReadWrite,
+                IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+            if (sfh1.IsInvalid)
+                ShellLogger.Error($"Win32 error occured when trying to open file {path1}", Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
 
-                using (var sfh2 = CreateFile(path2, FileAccess.Read, FileShare.ReadWrite,
-                    IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero))
-                {
-                    if (sfh2.IsInvalid)
-                        ShellLogger.Error($"Win32 error occured when trying to open file {path2}", Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
+            using var sfh2 = CreateFile(path2, FileAccess.Read, FileShare.ReadWrite,
+                IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+            if (sfh2.IsInvalid)
+                ShellLogger.Error($"Win32 error occured when trying to open file {path2}", Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
 
-                    var result1 = GetFileInformationByHandle(sfh1, out BY_HANDLE_FILE_INFORMATION fileInfo1);
-                    if (!result1)
-                        ShellLogger.Error($"GetFileInformationByHandle has failed on {path1}");
+            var result1 = GetFileInformationByHandle(sfh1, out BY_HANDLE_FILE_INFORMATION fileInfo1);
+            if (!result1)
+                ShellLogger.Error($"GetFileInformationByHandle has failed on {path1}");
 
-                    var result2 = GetFileInformationByHandle(sfh2, out BY_HANDLE_FILE_INFORMATION fileInfo2);
-                    if (!result2)
-                        ShellLogger.Error($"GetFileInformationByHandle has failed on {path2}");
+            var result2 = GetFileInformationByHandle(sfh2, out BY_HANDLE_FILE_INFORMATION fileInfo2);
+            if (!result2)
+                ShellLogger.Error($"GetFileInformationByHandle has failed on {path2}");
 
-                    return fileInfo1.VolumeSerialNumber == fileInfo2.VolumeSerialNumber
-                           && fileInfo1.FileIndexHigh == fileInfo2.FileIndexHigh
-                           && fileInfo1.FileIndexLow == fileInfo2.FileIndexLow;
-                }
-            }
+            return fileInfo1.VolumeSerialNumber == fileInfo2.VolumeSerialNumber
+                   && fileInfo1.FileIndexHigh == fileInfo2.FileIndexHigh
+                   && fileInfo1.FileIndexLow == fileInfo2.FileIndexLow;
         }
     }
 }

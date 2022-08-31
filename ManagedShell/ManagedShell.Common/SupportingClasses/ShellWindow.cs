@@ -13,7 +13,7 @@ namespace ManagedShell.Common.SupportingClasses
 
         public ShellWindow()
         {
-            CreateParams cp = new CreateParams();
+            CreateParams cp = new();
             cp.Style |= (int)NativeMethods.WindowStyles.WS_VISIBLE;
             cp.Style |= unchecked((int)NativeMethods.WindowStyles.WS_POPUP);
             cp.ExStyle |= (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW |

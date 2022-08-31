@@ -34,7 +34,7 @@ namespace ManagedShell.WindowsTray
                     // we can't get tray icons that are in the hidden area, so disable that temporarily if enabled
                     try
                     {
-                        TrayNotify trayNotify = new TrayNotify();
+                        TrayNotify trayNotify = new();
 
                         SetAutoTrayEnabled(trayNotify, false);
                         GetTrayItems();
@@ -143,8 +143,8 @@ namespace ManagedShell.WindowsTray
 
         private TrayItem GetTrayItem(int i, IntPtr hBuffer, IntPtr hProcess, IntPtr toolbarHwnd)
         {
-            TBBUTTON tbButton = new TBBUTTON();
-            TrayItem trayItem = new TrayItem();
+            TBBUTTON tbButton = new();
+            TrayItem trayItem = new();
             IntPtr hTBButton = Marshal.AllocHGlobal(Marshal.SizeOf(tbButton));
             IntPtr hTrayItem = Marshal.AllocHGlobal(Marshal.SizeOf(trayItem));
 
@@ -179,7 +179,7 @@ namespace ManagedShell.WindowsTray
 
         private SafeNotifyIconData GetTrayItemIconData(TrayItem trayItem)
         {
-            SafeNotifyIconData nid = new SafeNotifyIconData
+            SafeNotifyIconData nid = new()
             {
                 hWnd = trayItem.hWnd,
                 uID = trayItem.uID,

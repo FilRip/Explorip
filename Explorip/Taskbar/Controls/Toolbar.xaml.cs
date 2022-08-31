@@ -82,14 +82,14 @@ namespace Explorip.TaskBar.Controls
 
         private void ToolbarIcon_OnPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (!(sender is ToolbarButton icon))
+            if (sender is not ToolbarButton icon)
             {
                 return;
             }
 
             _ = Mouse.Capture(null);
 
-            if (!(icon.DataContext is ShellFile file) || string.IsNullOrWhiteSpace(file.Path))
+            if (icon.DataContext is not ShellFile file || string.IsNullOrWhiteSpace(file.Path))
             {
                 return;
             }
@@ -102,7 +102,7 @@ namespace Explorip.TaskBar.Controls
 
         private void ToolbarIcon_OnPreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (!(sender is ToolbarButton icon))
+            if (sender is not ToolbarButton icon)
             {
                 return;
             }
@@ -147,10 +147,10 @@ namespace Explorip.TaskBar.Controls
                 return new ShellMenuCommandBuilder();
             }
 
-            ShellMenuCommandBuilder builder = new ShellMenuCommandBuilder();
+            ShellMenuCommandBuilder builder = new();
 
             builder.AddSeparator();
-            builder.AddCommand(new ShellMenuCommand
+            builder.AddCommand(new ShellMenuCommand()
             {
                 Flags = MFT.BYCOMMAND,
                 Label = (string)FindResource("open_folder"),
@@ -167,7 +167,7 @@ namespace Explorip.TaskBar.Controls
                 return false;
             }
             
-            var _ = new ShellItemContextMenu(new ShellItem[] { file }, Folder, IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
+            _ = new ShellItemContextMenu(new ShellItem[] { file }, Folder, IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
             return true;
         }
 
@@ -175,7 +175,7 @@ namespace Explorip.TaskBar.Controls
         {
             if (action == ((uint)MenuItem.OpenParentFolder).ToString())
             {
-                ShellHelper.StartProcess(Folder.Path);
+                _ = ShellHelper.StartProcess(Folder.Path);
                 return true;
             }
 

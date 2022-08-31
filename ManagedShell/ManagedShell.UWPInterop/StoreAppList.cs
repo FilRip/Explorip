@@ -5,7 +5,7 @@ namespace ManagedShell.UWPInterop
 {
     public class StoreAppList : IEnumerable<StoreApp>
     {
-        private readonly List<StoreApp> _appList = new List<StoreApp>();
+        private readonly List<StoreApp> _appList = new();
 
         public void FetchApps()
         {

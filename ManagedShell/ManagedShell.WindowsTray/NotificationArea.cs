@@ -29,14 +29,14 @@ namespace ManagedShell.WindowsTray
             VOLUME_GUID
         };
 
-        internal static readonly List<string> Win11ActionCenterIcons = new List<string>()
+        internal static readonly List<string> Win11ActionCenterIcons = new()
         {
             NETWORK_GUID,
             POWER_GUID,
             VOLUME_GUID
         };
 
-        readonly NativeMethods.Rect defaultPlacement = new NativeMethods.Rect
+        readonly NativeMethods.Rect defaultPlacement = new()
         {
             Top = 0,
             Left = GetSystemMetrics(0) - 200,
@@ -53,9 +53,9 @@ namespace ManagedShell.WindowsTray
         private SystrayDelegate trayDelegate;
         private IconDataDelegate iconDataDelegate;
         private TrayHostSizeDelegate trayHostSizeDelegate;
-        private readonly object _lockObject = new object();
+        private readonly object _lockObject = new();
         private ShellServiceObject shellServiceObject;
-        private TrayHostSizeData trayHostSizeData = new TrayHostSizeData
+        private TrayHostSizeData trayHostSizeData = new()
         {
             edge = ABEdge.ABE_TOP,
             rc = new NativeMethods.Rect
@@ -259,7 +259,7 @@ namespace ManagedShell.WindowsTray
             if (nicData.hWnd == IntPtr.Zero)
                 return false;
 
-            NotifyIcon trayIcon = new NotifyIcon(this, nicData.hWnd)
+            NotifyIcon trayIcon = new(this, nicData.hWnd)
             {
                 UID = nicData.uID
             };
@@ -423,8 +423,8 @@ namespace ManagedShell.WindowsTray
                 return;
             }
 
-            NotificationBalloon balloonInfo = new NotificationBalloon(nicData, notifyIcon);
-            NotificationBalloonEventArgs args = new NotificationBalloonEventArgs
+            NotificationBalloon balloonInfo = new(nicData, notifyIcon);
+            NotificationBalloonEventArgs args = new()
             {
                 Balloon = balloonInfo
             };

@@ -78,7 +78,7 @@ namespace Explorip.WinAPI.Modeles
                 return User32.CallNextHookEx(m_hhook, code, wParam, lParam);
 
             // Let clients determine what to do
-            HookEventArgs e = new HookEventArgs()
+            HookEventArgs e = new()
             {
                 HookCode = code,
                 wParam = wParam,

@@ -66,7 +66,7 @@ namespace ManagedShell.Common.SupportingClasses
             {
                 string[] procInfo = ExpandArgs(app);
 
-                ProcessStartInfo startInfo = new ProcessStartInfo
+                ProcessStartInfo startInfo = new()
                 {
                     UseShellExecute = true,
                     FileName = procInfo[0],
@@ -88,7 +88,7 @@ namespace ManagedShell.Common.SupportingClasses
 
         private List<StartupEntry> GetStartupApps()
         {
-            List<StartupEntry> startupApps = new List<StartupEntry>();
+            List<StartupEntry> startupApps = new();
 
             foreach (var entry in StartupEntries)
             {
@@ -100,7 +100,7 @@ namespace ManagedShell.Common.SupportingClasses
 
         private List<string> GetDisallowedItems(StartupLocation location, StartupEntryScope? overrideScope = null)
         {
-            List<string> disallowedApps = new List<string>();
+            List<string> disallowedApps = new();
 
             if (!string.IsNullOrEmpty(location.ApprovedLocation))
             {
@@ -157,7 +157,7 @@ namespace ManagedShell.Common.SupportingClasses
 
         private List<StartupEntry> GetAppsFromDirectory(StartupLocation location)
         {
-            List<StartupEntry> startupApps = new List<StartupEntry>();
+            List<StartupEntry> startupApps = new();
             List<string> disallowedItems = GetDisallowedItems(location);
             string locationExpanded = Environment.ExpandEnvironmentVariables(location.Location);
 
@@ -196,7 +196,7 @@ namespace ManagedShell.Common.SupportingClasses
         private List<StartupEntry> GetAppsFromRegistryKey(StartupLocation location)
         {
             RegistryKey[] roots = ScopeToRoots(location.Scope);
-            List<StartupEntry> startupApps = new List<StartupEntry>();
+            List<StartupEntry> startupApps = new();
 
             foreach (var root in roots)
             {

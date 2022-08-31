@@ -4,6 +4,7 @@
     <TargetFrameworks>net471</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

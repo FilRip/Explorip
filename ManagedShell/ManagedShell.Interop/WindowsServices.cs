@@ -31,7 +31,7 @@ namespace ManagedShell.Interop
         /// Otherwise, NotRunning</returns>
         public static ServiceStatus QueryStatus(string serviceName)
         {
-            ServiceController controller = new ServiceController(serviceName);
+            ServiceController controller = new(serviceName);
             try
             {
                 if (controller.Status == ServiceControllerStatus.Running)

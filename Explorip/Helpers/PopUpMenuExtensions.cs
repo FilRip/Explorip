@@ -18,7 +18,7 @@ namespace Explorip.Helpers
             etat = MFS.ENABLED;
             try
             {
-                MENUITEMINFO sortie = new MENUITEMINFO
+                MENUITEMINFO sortie = new()
                 {
                     cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
                     dwTypeData = new string('\0', 256),

@@ -207,7 +207,7 @@ namespace ManagedShell.WindowsTray
 
         internal void TriggerNotificationBalloon(NotificationBalloon balloonInfo)
         {
-            NotificationBalloonEventArgs args = new NotificationBalloonEventArgs
+            NotificationBalloonEventArgs args = new()
             {
                 Balloon = balloonInfo
             };

@@ -10,6 +10,7 @@
     <Description>C# wrapper for IVirtualDesktopManager on Windows 10 and 11.</Description>
     <Copyright>Copyright © 2020 Manato KAMEYA</Copyright>
     <Authors>Manato KAMEYA</Authors>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

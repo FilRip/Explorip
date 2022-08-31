@@ -26,29 +26,27 @@ namespace ManagedShell.Common.Helpers
         {
             try
             {
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey($"{SYSTEM_SOUND_ROOT_KEY}\\{app}\\{name}\\.Current"))
+                using RegistryKey key = Registry.CurrentUser.OpenSubKey($"{SYSTEM_SOUND_ROOT_KEY}\\{app}\\{name}\\.Current");
+                if (key == null)
                 {
-                    if (key == null)
-                    {
-                        ShellLogger.Error($"SoundHelper: Unable to find sound {name} for app {app}");
-                        return false;
-                    }
+                    ShellLogger.Error($"SoundHelper: Unable to find sound {name} for app {app}");
+                    return false;
+                }
 
-                    if (key.GetValue(null) is string soundFileName)
-                    {
-                        if (string.IsNullOrEmpty(soundFileName))
-                        {
-                            ShellLogger.Error($"SoundHelper: Missing file for sound {name} for app {app}");
-                            return false;
-                        }
-
-                        return PlaySound(soundFileName, IntPtr.Zero, (uint)(SND_ASYNC | SND_FILENAME | SND_SYSTEM));
-                    }
-                    else
+                if (key.GetValue(null) is string soundFileName)
+                {
+                    if (string.IsNullOrEmpty(soundFileName))
                     {
                         ShellLogger.Error($"SoundHelper: Missing file for sound {name} for app {app}");
                         return false;
                     }
+
+                    return PlaySound(soundFileName, IntPtr.Zero, (uint)(SND_ASYNC | SND_FILENAME | SND_SYSTEM));
+                }
+                else
+                {
+                    ShellLogger.Error($"SoundHelper: Missing file for sound {name} for app {app}");
+                    return false;
                 }
             }
             catch (Exception e)

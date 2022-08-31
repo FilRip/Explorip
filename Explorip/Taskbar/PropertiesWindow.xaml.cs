@@ -113,7 +113,7 @@ namespace Explorip.TaskBar
 
         private void SetQuickLaunchLocation_OnClick(object sender, RoutedEventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog
+            FolderBrowserDialog fbd = new()
             {
                 Description = (string)FindResource("quick_launch_folder"),
                 ShowNewFolderButton = false,

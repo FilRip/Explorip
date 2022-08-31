@@ -13,7 +13,7 @@ namespace WindowsDesktop.Interop
 {
     public static class IID
     {
-        private static readonly Regex _osBuildRegex = new Regex(@"v_(?<build>\d{5}?)");
+        private static readonly Regex _osBuildRegex = new(@"v_(?<build>\d{5}?)");
 
         // ReSharper disable once InconsistentNaming
         public static Dictionary<string, Guid> GetIIDs(string[] targets)
@@ -55,33 +55,29 @@ namespace WindowsDesktop.Interop
         // ReSharper disable once InconsistentNaming
         private static Dictionary<string, Guid> GetIIDsFromRegistry(string[] targets)
         {
-            using (RegistryKey interfaceKey = Registry.ClassesRoot.OpenSubKey("Interface"))
+            using RegistryKey interfaceKey = Registry.ClassesRoot.OpenSubKey("Interface");
+            if (interfaceKey == null)
             {
-                if (interfaceKey == null)
-                {
-                    throw new Exception(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");
-                }
+                throw new Exception(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");
+            }
 
-                Dictionary<string, Guid> result = new Dictionary<string, Guid>();
-                string[] names = interfaceKey.GetSubKeyNames();
+            Dictionary<string, Guid> result = new();
+            string[] names = interfaceKey.GetSubKeyNames();
 
-                foreach (string name in names)
+            foreach (string name in names)
+            {
+                using RegistryKey key = interfaceKey.OpenSubKey(name);
+                if (key?.GetValue("") is string value)
                 {
-                    using (RegistryKey key = interfaceKey.OpenSubKey(name))
+                    string match = targets.FirstOrDefault(x => x == value);
+                    if (match != null && Guid.TryParse(key.Name.Split('\\').Last(), out var guid))
                     {
-                        if (key?.GetValue("") is string value)
-                        {
-                            string match = targets.FirstOrDefault(x => x == value);
-                            if (match != null && Guid.TryParse(key.Name.Split('\\').Last(), out var guid))
-                            {
-                                result[match] = guid;
-                            }
-                        }
+                        result[match] = guid;
                     }
                 }
-
-                return result;
             }
+
+            return result;
         }
     }
 }

@@ -10,6 +10,7 @@
     <Copyright>Copyright © 2020 Manato KAMEYA</Copyright>
     <Product>VirtualDesktop</Product>
     <RootNamespace>WindowsDesktop</RootNamespace>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

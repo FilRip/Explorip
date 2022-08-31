@@ -24,7 +24,7 @@ namespace ManagedShell.WindowsTray
         private IntPtr HwndFwd;
         private readonly IntPtr hInstance = Marshal.GetHINSTANCE(typeof(TrayService).Module);
 
-        private readonly DispatcherTimer trayMonitor = new DispatcherTimer(DispatcherPriority.Background);
+        private readonly DispatcherTimer trayMonitor = new(DispatcherPriority.Background);
 
         public TrayService()
         {
@@ -304,7 +304,7 @@ namespace ManagedShell.WindowsTray
         #region Window helpers
         private ushort RegisterWndClass(string name)
         {
-            WNDCLASS newClass = new WNDCLASS
+            WNDCLASS newClass = new()
             {
                 lpszClassName = name,
                 hInstance = hInstance,

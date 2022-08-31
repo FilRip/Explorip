@@ -30,7 +30,7 @@ namespace Explorip.Localization
             IntPtr libraryHandle = Kernel32.GetModuleHandle(libraryName);
             if (libraryHandle != IntPtr.Zero)
             {
-                StringBuilder sb = new StringBuilder(1024);
+                StringBuilder sb = new(1024);
                 int size = User32.LoadString(libraryHandle, Ident, sb, 1024);
                 if (size > 0)
                     return sb.ToString();
@@ -52,7 +52,7 @@ namespace Explorip.Localization
                 {
                     IntPtr Pidl = IntPtr.Zero;
                     Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref Pidl);
-                    SHFILEINFO info = new SHFILEINFO();
+                    SHFILEINFO info = new();
                     if (Shell32.SHGetFileInfo(Pidl, Shell32.FILE_ATTRIBUTE.NULL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), Shell32.SHGFI.TYPENAME | Shell32.SHGFI.PIDL | Shell32.SHGFI.DISPLAYNAME) != IntPtr.Zero)
                     {
                         return info.szDisplayName;
@@ -62,7 +62,7 @@ namespace Explorip.Localization
                 }
                 else
                 {
-                    SHFILEINFO info = new SHFILEINFO();
+                    SHFILEINFO info = new();
                     if (Shell32.SHGetFileInfo(chemin, Shell32.FILE_ATTRIBUTE.NORMAL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), Shell32.SHGFI.DISPLAYNAME) != IntPtr.Zero)
                     {
                         return info.szDisplayName;

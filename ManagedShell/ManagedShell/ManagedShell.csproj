@@ -12,6 +12,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/cairoshell/ManagedShell</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

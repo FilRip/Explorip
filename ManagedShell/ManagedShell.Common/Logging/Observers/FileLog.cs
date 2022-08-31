@@ -15,7 +15,7 @@ namespace ManagedShell.Common.Logging.Observers
     /// </remarks>
     public class FileLog : ILog, IDisposable
     {
-        private readonly object _syncRoot = new object();
+        private readonly object _syncRoot = new();
         private bool _disposed;
 
         private readonly FileInfo _fileInfo;
@@ -94,7 +94,7 @@ namespace ManagedShell.Common.Logging.Observers
         /// <param name="e">Parameters of the log request.</param>
         public void Log(object sender, LogEventArgs e)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
             stringBuilder.AppendLine(string.Format("[{0}] {1}: {2}", e.Date, e.SeverityString, e.Message));
             if (e.Exception != null)
             {

@@ -3,6 +3,10 @@
   "Id": "001dcda7-f4c3-4bd6-a86c-c99b35a9798a",
   "Items": [
     {
+      "Id": "7c508d1d-4da7-4a72-ad47-7ce8b55dc8bb",
+      "Command": "explorer"
+    },
+    {
       "Id": "dcb90edb-cf47-4716-af85-f6300af89c24",
       "Command": "taskbars"
     },

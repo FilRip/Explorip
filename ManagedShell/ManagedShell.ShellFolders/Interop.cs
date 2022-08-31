@@ -12,13 +12,9 @@ namespace ManagedShell.ShellFolders
     {
         public const uint CMD_FIRST = 1;
         public const uint CMD_LAST = 30000;
-        public static Guid IID_IContextMenu = new Guid("{000214e4-0000-0000-c000-000000000046}");
-        public static Guid IID_IContextMenu2 = new Guid("{000214f4-0000-0000-c000-000000000046}");
-        public static Guid IID_IContextMenu3 = new Guid("{bcfce0a0-ec17-11d0-8d10-00a0c90f2719}");
-        public static Guid IID_IShellExtInit = new Guid("{000214e8-0000-0000-c000-000000000046}");
-        public static Guid CLSID_NewMenu = new Guid("{D969A300-E7FF-11d0-A93B-00A0C90F2719}");
+        public static Guid CLSID_NewMenu = new("{D969A300-E7FF-11d0-A93B-00A0C90F2719}");
         public static int cbInvokeCommand = Marshal.SizeOf(typeof(CMINVOKECOMMANDINFOEX));
-        public static ComTaskScheduler ShellItemScheduler = new ComTaskScheduler();
+        public static ComTaskScheduler ShellItemScheduler = new();
 
         /// <summary>
         /// Retrieves the High Word of a WParam of a WindowMessage

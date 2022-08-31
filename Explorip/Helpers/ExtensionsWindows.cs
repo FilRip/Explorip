@@ -35,7 +35,7 @@ namespace Explorip.Helpers
         private static bool FilterCallback(IntPtr hWnd, int lParam)
         {
             // Get the window's title.
-            StringBuilder sb_title = new StringBuilder(1024);
+            StringBuilder sb_title = new(1024);
             _ = User32.GetWindowText(hWnd, sb_title, sb_title.Capacity);
             string title = sb_title.ToString();
 

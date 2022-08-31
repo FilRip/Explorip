@@ -33,7 +33,8 @@ namespace ManagedShell.ShellFolders
 
                 nativeMenuPtr = Interop.GetSubMenu(parentNativeMenuPtr, position);
 
-                if (Marshal.QueryInterface(iContextMenuPtr, ref Interop.IID_IContextMenu2,
+                Guid guid = typeof(IContextMenu2).GUID;
+                if (Marshal.QueryInterface(iContextMenuPtr, ref guid,
                     out iContextMenu2Ptr) == NativeMethods.S_OK)
                 {
                     if (iContextMenu2Ptr != IntPtr.Zero)
@@ -50,7 +51,8 @@ namespace ManagedShell.ShellFolders
                     }
                 }
 
-                if (Marshal.QueryInterface(iContextMenuPtr, ref Interop.IID_IContextMenu3,
+                guid = typeof(IContextMenu3).GUID;
+                if (Marshal.QueryInterface(iContextMenuPtr, ref guid,
                     out iContextMenu3Ptr) == NativeMethods.S_OK)
                 {
                     if (iContextMenu3Ptr != IntPtr.Zero)
@@ -71,18 +73,20 @@ namespace ManagedShell.ShellFolders
 
         private bool GetNewContextMenu(ShellFolder folder)
         {
+            Guid guid = typeof(IContextMenu).GUID;
             if (Interop.CoCreateInstance(
                 ref Interop.CLSID_NewMenu,
                 IntPtr.Zero,
                 CLSCTX.INPROC_SERVER,
-                ref Interop.IID_IContextMenu,
+                ref guid,
                 out iContextMenuPtr) == NativeMethods.S_OK)
             {
                 iContextMenu = Marshal.GetTypedObjectForIUnknown(iContextMenuPtr, typeof(IContextMenu)) as IContextMenu;
 
+                guid = typeof(IShellExtInit).GUID;
                 if (Marshal.QueryInterface(
                     iContextMenuPtr,
-                    ref Interop.IID_IShellExtInit,
+                    ref guid,
                     out var iShellExtInitPtr) == NativeMethods.S_OK)
                 {
                     IShellExtInit iShellExtInit = Marshal.GetTypedObjectForIUnknown(

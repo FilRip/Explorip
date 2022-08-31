@@ -7,7 +7,7 @@ namespace WindowsDesktop.Interop
 {
     internal class ComInterfaceAssembly
     {
-        private readonly Dictionary<string, Type> _knownTypes = new Dictionary<string, Type>();
+        private readonly Dictionary<string, Type> _knownTypes = new();
         private readonly Assembly _compiledAssembly;
 
         public ComInterfaceAssembly(Assembly compiledAssembly)

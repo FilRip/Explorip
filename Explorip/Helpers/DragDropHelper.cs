@@ -111,7 +111,7 @@ namespace Explorip.Helpers
                         _listeFichiersDossiers.Add(item);
                     }
 
-                    Guid guid = new Guid("{0000010e-0000-0000-C000-000000000046}");
+                    Guid guid = new("{0000010e-0000-0000-C000-000000000046}");
                     erreur = _shellFolder.GetUIObjectOf(
                         IntPtr.Zero,
                         (uint)listeFichiersDossiers.Count,
@@ -136,8 +136,8 @@ namespace Explorip.Helpers
         private void GetParent()
         {
             Guid guidSH = typeof(IShellFolder).GUID;
-            _repStart = _repStart.GetParent();
-            _pidlParent = WinAPI.Shell32.ILCreateFromPath(_repStart.FullName);
+            _pidlParent = WinAPI.Shell32.ILCreateFromPath(_repStart.GetParent().FullName);
+            Console.WriteLine("Parent=" + _repStart.GetParent().FullName);
             WinAPI.Shell32.SHBindToParent(_pidlParent, ref guidSH, out IntPtr pidlInterface, IntPtr.Zero);
             _shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
         }
@@ -173,14 +173,13 @@ namespace Explorip.Helpers
 
             if (_pidlParent != IntPtr.Zero)
             {
-                int erreur;
-                Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
-                IntPtr ptrPrecedent = _pidlParent;
-                string _repPrecedent = _repStart.FullName;
-
                 GetParent();
 
-                Console.WriteLine($"GetIDropTarget {_repStart} parent de {_repPrecedent}");
+                int erreur;
+                Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
+                IntPtr ptrPrecedent = Shell32.ILCreateFromPath(_repStart.FullName);
+
+                Console.WriteLine($"GetIDropTarget Parent={_repStart.GetParent().FullName}, Item={_repStart}");
                 erreur = _shellFolder.GetUIObjectOf(
                     IntPtr.Zero,
                     1,
@@ -191,6 +190,8 @@ namespace Explorip.Helpers
 
                 if (erreur == (int)Commun.HRESULT.S_OK)
                 {
+                    if (dropTargetPtr == IntPtr.Zero)
+                        Console.WriteLine("dropTargetPtr=null");
                     MK touches = MK.RBUTTON;
                     if (e.KeyState.EtatBit(4))
                         touches |= MK.CONTROL;
@@ -243,13 +244,13 @@ namespace Explorip.Helpers
         /// <returns>the IDataObject the ShellItem</returns>
         public static IntPtr GetIDataObject(ShellItem[] items)
         {
-            ShellItem parent = items[0].ParentItem != null ? items[0].ParentItem : items[0];
+            ShellItem parent = items[0].ParentItem ?? items[0];
 
             IntPtr[] pidls = new IntPtr[items.Length];
             for (int i = 0; i < items.Length; i++)
                 pidls[i] = items[i].RelativePidl;
 
-            Guid guid = new Guid("{0000010e-0000-0000-C000-000000000046}");
+            Guid guid = new("{0000010e-0000-0000-C000-000000000046}");
             if (parent.ShellFolder.GetUIObjectOf(
                     IntPtr.Zero,
                     (uint)pidls.Length,
@@ -275,7 +276,7 @@ namespace Explorip.Helpers
         /// <returns>the IDropTarget from the ShellItem</returns>
         public static bool GetIDropTarget(ShellItem item, out IntPtr dropTargetPtr, out WinAPI.Modeles.IDropTarget dropTarget)
         {
-            ShellItem parent = item.ParentItem != null ? item.ParentItem : item;
+            ShellItem parent = item.ParentItem ?? item;
 
             Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
             if (parent.ShellFolder.GetUIObjectOf(

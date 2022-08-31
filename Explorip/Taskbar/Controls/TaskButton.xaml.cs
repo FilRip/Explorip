@@ -19,7 +19,7 @@ namespace Explorip.TaskBar.Controls
     public partial class TaskButton : UserControl
     {
         private ApplicationWindow Window;
-        private readonly TaskButtonStyleConverter StyleConverter = new TaskButtonStyleConverter();
+        private readonly TaskButtonStyleConverter StyleConverter = new();
         private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
         private TaskThumbButton _thumb;
         private Taskbar _parentTaskbar;
@@ -35,7 +35,7 @@ namespace Explorip.TaskBar.Controls
 
         private void SetStyle()
         {
-            MultiBinding multiBinding = new MultiBinding
+            MultiBinding multiBinding = new()
             {
                 Converter = StyleConverter
             };

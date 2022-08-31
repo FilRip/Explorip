@@ -526,7 +526,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 //	Special processing to hide tabs
                 int tabStripHeight = 5 + itemHeight * RowCount;
 
-                Rectangle rect = new Rectangle(4, tabStripHeight, Width - 8, Height - tabStripHeight - 4);
+                Rectangle rect = new(4, tabStripHeight, Width - 8, Height - tabStripHeight - 4);
                 switch (Alignment)
                 {
                     case TabAlignment.Top:
@@ -703,7 +703,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         {
             IntPtr hFont = Font.ToHfont();
 
-            Message msg = new Message
+            Message msg = new()
             {
                 Msg = 0x30,
                 WParam = hFont,
@@ -712,7 +712,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             };
             WndProc(ref msg);
 
-            msg = new Message
+            msg = new Message()
             {
                 Msg = 0x1d,
                 WParam = IntPtr.Zero,
@@ -1074,13 +1074,13 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 //	Paint the tabs on top of the background
 
                 // Create a new color matrix and set the alpha value to 0.5
-                ColorMatrix alphaMatrix = new ColorMatrix();
+                ColorMatrix alphaMatrix = new();
                 alphaMatrix.Matrix00 = alphaMatrix.Matrix11 = alphaMatrix.Matrix22 = alphaMatrix.Matrix44 = 1;
                 alphaMatrix.Matrix33 = Opacity;
 
                 // Create a new image attribute object and set the color matrix to
                 // the one just created
-                using (ImageAttributes alphaAttributes = new ImageAttributes())
+                using (ImageAttributes alphaAttributes = new())
                 {
                     alphaAttributes.SetColorMatrix(alphaMatrix);
 
@@ -1106,17 +1106,14 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
         private void PaintTab(int index, Graphics graphics)
         {
-            using (GraphicsPath tabpath = GetTabBorder(index))
-            {
-                using (Brush fillBrush = GetTabBackgroundBrush(index))
-                {
-                    //	Paint the background
-                    graphics.FillPath(fillBrush, tabpath);
+            using GraphicsPath tabpath = GetTabBorder(index);
+            using Brush fillBrush = GetTabBackgroundBrush(index);
 
-                    //	Paint a focus indication
-                    DrawTabFocusIndicator(tabpath, index, graphics);
-                }
-            }
+            //	Paint the background
+            graphics.FillPath(fillBrush, tabpath);
+
+            //	Paint a focus indication
+            DrawTabFocusIndicator(tabpath, index, graphics);
         }
 
         private void PaintTransparentBackground(Graphics graphics, Rectangle clipRect)
@@ -1135,7 +1132,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 graphics.SmoothingMode = SmoothingMode.HighSpeed;
 
                 //	Paint the parent
-                PaintEventArgs e = new PaintEventArgs(graphics, clipRect);
+                PaintEventArgs e = new(graphics, clipRect);
                 try
                 {
                     InvokePaintBackground(Parent, e);
@@ -1181,24 +1178,22 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             graphics.SmoothingMode = SmoothingMode.HighSpeed;
 
             //	Get TabPageBorder
-            using (GraphicsPath tabPageBorderPath = GetTabPageBorder(index))
+            using GraphicsPath tabPageBorderPath = GetTabPageBorder(index);
+
+            //	Paint the background
+            using (Brush fillBrush = GetPageBackgroundBrush(index))
             {
-
-                //	Paint the background
-                using (Brush fillBrush = GetPageBackgroundBrush(index))
-                {
-                    graphics.FillPath(fillBrush, tabPageBorderPath);
-                }
-
-                //	Paint the tab
-                PaintTab(index, graphics);
-
-                //	Draw the text
-                DrawTabText(index, graphics);
-
-                //	Paint the border
-                DrawTabBorder(tabPageBorderPath, index, graphics);
+                graphics.FillPath(fillBrush, tabPageBorderPath);
             }
+
+            //	Paint the tab
+            PaintTab(index, graphics);
+
+            //	Draw the text
+            DrawTabText(index, graphics);
+
+            //	Paint the border
+            DrawTabBorder(tabPageBorderPath, index, graphics);
         }
 
         private void DrawTabFocusIndicator(GraphicsPath tabpath, int index, Graphics graphics)
@@ -1229,7 +1224,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 }
 
                 //	Ensure the focus stip does not go outside the tab
-                Region focusRegion = new Region(focusRect);
+                Region focusRegion = new(focusRect);
                 focusRegion.Intersect(tabpath);
                 graphics.FillRegion(focusBrush, focusRegion);
                 focusRegion.Dispose();
@@ -1254,14 +1249,12 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 borderColor = BorderColor;
             }
 
-            using (Pen borderPen = new Pen(borderColor))
+            using Pen borderPen = new(borderColor);
+            if (index == 0)
             {
-                if (index == 0)
-                {
-                    path.AddLine(new PointF(Margin.Left, Margin.Top), new PointF(Margin.Left, Margin.Top + GetTabRect(0).Height));
-                }
-                graphics.DrawPath(borderPen, path);
+                path.AddLine(new PointF(Margin.Left, Margin.Top), new PointF(Margin.Left, Margin.Top + GetTabRect(0).Height));
             }
+            graphics.DrawPath(borderPen, path);
         }
 
         private void DrawTabText(int index, Graphics graphics)
@@ -1274,27 +1267,21 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             if (SelectedIndex == index)
             {
                 police = new Font(Font, _styleTextSelected);
-                using (Brush textBrush = new SolidBrush(TextColorSelected))
-                {
-                    graphics.DrawString(TabPages[index].Text, police, textBrush, tabBounds, GetStringFormat());
-                }
+                using Brush textBrush = new SolidBrush(TextColorSelected);
+                graphics.DrawString(TabPages[index].Text, police, textBrush, tabBounds, GetStringFormat());
             }
             else
             {
                 police = new Font(Font, _styleText);
                 if (TabPages[index].Enabled)
                 {
-                    using (Brush textBrush = new SolidBrush(TextColor))
-                    {
-                        graphics.DrawString(TabPages[index].Text, police, textBrush, tabBounds, GetStringFormat());
-                    }
+                    using Brush textBrush = new SolidBrush(TextColor);
+                    graphics.DrawString(TabPages[index].Text, police, textBrush, tabBounds, GetStringFormat());
                 }
                 else
                 {
-                    using (Brush textBrush = new SolidBrush(TextColorDisabled))
-                    {
-                        graphics.DrawString(TabPages[index].Text, police, textBrush, tabBounds, GetStringFormat());
-                    }
+                    using Brush textBrush = new SolidBrush(TextColorDisabled);
+                    graphics.DrawString(TabPages[index].Text, police, textBrush, tabBounds, GetStringFormat());
                 }
             }
         }
@@ -1699,7 +1686,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 relativePositions = new float[] { 0f, 0.5f, 0.51f, 1f };
             }
 
-            Blend blend = new Blend
+            Blend blend = new()
             {
                 Factors = relativeIntensities,
                 Positions = relativePositions
@@ -1711,7 +1698,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         private GraphicsPath GetTabBorder(int index)
         {
 
-            GraphicsPath path = new GraphicsPath();
+            GraphicsPath path = new();
             Rectangle tabBounds = GetTabRectStyle(index);
 
             AddTabBorder(path, tabBounds);
@@ -1723,7 +1710,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         private GraphicsPath GetTabPageBorder(int index)
         {
 
-            GraphicsPath path = new GraphicsPath();
+            GraphicsPath path = new();
             Rectangle pageBounds = GetPageBounds(index);
             Rectangle tabBounds = GetTabRect(index);
 
@@ -1752,7 +1739,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
         private Rectangle GetTabTextRect(int index)
         {
-            Rectangle textRect = new Rectangle();
+            Rectangle textRect = new();
             using (GraphicsPath path = GetTabBorder(index))
             {
                 RectangleF tabBounds = path.GetBounds();
@@ -1959,14 +1946,14 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
         private void ScrollTabs()
         {
-            Message msg = new Message
+            Message msg = new()
             {
                 Msg = WM_HSCROLL,
                 WParam = new IntPtr((_actualScrollPos << 16) + 4),
                 HWnd = Handle
             };
             WndProc(ref msg);
-            msg = new Message
+            msg = new Message()
             {
                 Msg = WM_HSCROLL,
                 WParam = new IntPtr((_actualScrollPos << 16) + 8),

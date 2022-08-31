@@ -465,7 +465,7 @@ namespace ManagedShell.ShellFolders
 
         private void GetParentAndItem()
         {
-            if (!(_shellItem is IParentAndItem pni))
+            if (_shellItem is not IParentAndItem pni)
             {
                 return;
             }
@@ -562,7 +562,7 @@ namespace ManagedShell.ShellFolders
                 try
                 {
                     int iconPoints = IconHelper.GetSize(size);
-                    SIZE imageSize = new SIZE { cx = (int)(iconPoints * DpiHelper.DpiScale), cy = (int)(iconPoints * DpiHelper.DpiScale) };
+                    SIZE imageSize = new() { cx = (int)(iconPoints * DpiHelper.DpiScale), cy = (int)(iconPoints * DpiHelper.DpiScale) };
 
                     IntPtr hBitmap = IntPtr.Zero;
                     SIIGBF flags = 0;
@@ -663,13 +663,12 @@ namespace ManagedShell.ShellFolders
                 if (updateShellFolder)
                 {
                     Marshal.ReleaseComObject(shellFolder);
-                    IntPtr shellFolderPtr;
                     Guid guid = typeof(IShellFolder).GUID;
                     if (ParentItem.ShellFolder.BindToObject(
                         RelativePidl,
                         IntPtr.Zero,
                         guid,
-                        out shellFolderPtr) == NativeMethods.S_OK)
+                        out IntPtr shellFolderPtr) == NativeMethods.S_OK)
                     {
                         shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(shellFolderPtr, typeof(IShellFolder));
                     }

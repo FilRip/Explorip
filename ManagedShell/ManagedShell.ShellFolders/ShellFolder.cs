@@ -83,7 +83,7 @@ namespace ManagedShell.ShellFolders
 
             if (_shellItem != null && IsFileSystem && IsFolder)
             {
-                List<string> watchList = new List<string>
+                List<string> watchList = new()
                 {
                     Path
                 };
@@ -308,14 +308,14 @@ namespace ManagedShell.ShellFolders
         #region Helpers
         private bool AddFile(string parsingName, int position = -1)
         {
-            ShellFile file = new ShellFile(this, parsingName);
+            ShellFile file = new(this, parsingName);
 
             return AddFile(file, position);
         }
 
         private bool AddFile(IntPtr relPidl, int position = -1)
         {
-            ShellFile file = new ShellFile(this, ShellFolderInterface, relPidl, _loadAsync);
+            ShellFile file = new(this, ShellFolderInterface, relPidl, _loadAsync);
 
             return AddFile(file, position);
         }

@@ -23,7 +23,7 @@ namespace ManagedShell.WindowsTasks
         public static readonly IconSize DEFAULT_ICON_SIZE = IconSize.Small;
 
         private NativeWindowEx _HookWin;
-        private readonly object _windowsLock = new object();
+        private readonly object _windowsLock = new();
         internal bool IsInitialized;
         public IconSize TaskIconSize;
 
@@ -121,7 +121,7 @@ namespace ManagedShell.WindowsTasks
         {
             EnumWindows((hwnd, lParam) =>
             {
-                ApplicationWindow win = new ApplicationWindow(this, hwnd);
+                ApplicationWindow win = new(this, hwnd);
 
                 if (win.CanAddToTaskbar && win.ShowInTaskbar && !Windows.Contains(win))
                 {
@@ -169,7 +169,7 @@ namespace ManagedShell.WindowsTasks
 
         private void SetMinimizedMetrics()
         {
-            MinimizedMetrics mm = new MinimizedMetrics
+            MinimizedMetrics mm = new()
             {
                 cbSize = (uint)Marshal.SizeOf(typeof(MinimizedMetrics))
             };
@@ -210,7 +210,7 @@ namespace ManagedShell.WindowsTasks
 
         private ApplicationWindow AddWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
         {
-            ApplicationWindow win = new ApplicationWindow(this, hWnd);
+            ApplicationWindow win = new(this, hWnd);
 
             // set window state if a non-default value is provided
             if (initialState != ApplicationWindow.WindowState.Inactive) win.State = initialState;
@@ -566,7 +566,7 @@ namespace ManagedShell.WindowsTasks
                     // Try to find and use the handle of the Explorer hook window
                     EnumChildWindows(taskbarHwnd, (hwnd, lParam) =>
                     {
-                        StringBuilder cName = new StringBuilder(256);
+                        StringBuilder cName = new(256);
                         GetClassName(hwnd, cName, cName.Capacity);
                         if (cName.ToString() == "MSTaskSwWClass")
                         {

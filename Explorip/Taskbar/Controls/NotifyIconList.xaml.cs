@@ -19,7 +19,7 @@ namespace Explorip.TaskBar.Controls
         private bool isLoaded;
         private CollectionViewSource allNotifyIconsSource;
         private CollectionViewSource pinnedNotifyIconsSource;
-        private readonly ObservableCollection<ManagedShell.WindowsTray.NotifyIcon> promotedIcons = new ObservableCollection<ManagedShell.WindowsTray.NotifyIcon>();
+        private readonly ObservableCollection<ManagedShell.WindowsTray.NotifyIcon> promotedIcons = new();
 
         public static DependencyProperty NotificationAreaProperty = DependencyProperty.Register("NotificationArea", typeof(NotificationArea), typeof(NotifyIconList));
         
@@ -59,14 +59,14 @@ namespace Explorip.TaskBar.Controls
         {
             if (!isLoaded && NotificationArea != null)
             {
-                CompositeCollection allNotifyIcons = new CompositeCollection
+                CompositeCollection allNotifyIcons = new()
                 {
                     new CollectionContainer { Collection = NotificationArea.UnpinnedIcons },
                     new CollectionContainer { Collection = NotificationArea.PinnedIcons }
                 };
                 allNotifyIconsSource = new CollectionViewSource { Source = allNotifyIcons };
 
-                CompositeCollection pinnedNotifyIcons = new CompositeCollection
+                CompositeCollection pinnedNotifyIcons = new()
                 {
                     new CollectionContainer { Collection = promotedIcons },
                     new CollectionContainer { Collection = NotificationArea.PinnedIcons }
@@ -120,7 +120,7 @@ namespace Explorip.TaskBar.Controls
 
             promotedIcons.Add(notifyIcon);
 
-            DispatcherTimer unpromoteTimer = new DispatcherTimer
+            DispatcherTimer unpromoteTimer = new()
             {
                 Interval = TimeSpan.FromMilliseconds(e.Balloon.Timeout + 500) // Keep it around for a few ms for the animation to complete
             };

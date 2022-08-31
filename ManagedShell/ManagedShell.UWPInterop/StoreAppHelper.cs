@@ -19,11 +19,11 @@ namespace ManagedShell.UWPInterop
         private static string userSID;
         private static double scale;
 
-        public static StoreAppList AppList = new StoreAppList();
+        public static StoreAppList AppList = new();
 
         internal static List<StoreApp> GetStoreApps()
         {
-            List<StoreApp> apps = new List<StoreApp>();
+            List<StoreApp> apps = new();
 
             try
             {
@@ -98,7 +98,7 @@ namespace ManagedShell.UWPInterop
 
             Dictionary<IconSize, string> icons = GetIcons(packagePath, appNode, xmlnsManager);
 
-            StoreApp storeApp = new StoreApp(package.Id.FamilyName + "!" + appIdNode.Value)
+            StoreApp storeApp = new(package.Id.FamilyName + "!" + appIdNode.Value)
             {
                 DisplayName = GetDisplayName(package.Id.Name, packagePath, appNode, xmlnsManager),
                 SmallIconPath = icons[IconSize.Small],
@@ -114,7 +114,7 @@ namespace ManagedShell.UWPInterop
 
         private static XmlDocument GetManifest(string path)
         {
-            XmlDocument manifest = new XmlDocument();
+            XmlDocument manifest = new();
             string manPath = path + "\\AppxManifest.xml";
 
             if (ShellHelper.Exists(manPath))
@@ -125,7 +125,7 @@ namespace ManagedShell.UWPInterop
 
         private static XmlNamespaceManager GetNamespaceManager(XmlDocument manifest)
         {
-            XmlNamespaceManager xmlnsManager = new XmlNamespaceManager(manifest.NameTable);
+            XmlNamespaceManager xmlnsManager = new(manifest.NameTable);
             xmlnsManager.AddNamespace("ns", "http://schemas.microsoft.com/appx/manifest/foundation/windows10");
             xmlnsManager.AddNamespace("uap", "http://schemas.microsoft.com/appx/manifest/uap/windows10");
             xmlnsManager.AddNamespace("uap2", "http://schemas.microsoft.com/appx/manifest/uap/windows10/2");
@@ -195,7 +195,7 @@ namespace ManagedShell.UWPInterop
 
         private static Dictionary<IconSize, string> GetIcons(string path, XmlNode app, XmlNamespaceManager xmlnsManager)
         {
-            Dictionary<IconSize, string> icons = new Dictionary<IconSize, string>();
+            Dictionary<IconSize, string> icons = new();
             XmlNode iconNode = GetXmlnsNode("uap:VisualElements/@Square44x44Logo", app, xmlnsManager);
 
             if (iconNode == null)
@@ -218,7 +218,7 @@ namespace ManagedShell.UWPInterop
 
         private static string GetIconPath(string[] files, string baseName, IconSize size)
         {
-            List<string> iconAssets = new List<string> {
+            List<string> iconAssets = new() {
                 ".targetsize-32_altform-unplated.png",
                 ".targetsize-32_altform-unplated_contrast-black.png",
                 ".targetsize-36_altform-unplated.png",

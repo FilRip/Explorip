@@ -36,7 +36,7 @@ namespace Explorip.Helpers
             pidl = IntPtr.Zero;
             try
             {
-                SHFILEINFO shfi = new SHFILEINFO();
+                SHFILEINFO shfi = new();
                 Shell32.SHGFI flags = Shell32.SHGFI.SYSICONINDEX | Shell32.SHGFI.ICON;
 
                 if ((linkOverlay) || (othersOverlay))
@@ -138,7 +138,7 @@ namespace Explorip.Helpers
 
         private static Icon GetFileIcon(IntPtr pidl, bool petiteIcone)
         {
-            SHFILEINFO shfi = new SHFILEINFO();
+            SHFILEINFO shfi = new();
 
             Shell32.SHGFI flag = Shell32.SHGFI.PIDL | Shell32.SHGFI.DISPLAYNAME | Shell32.SHGFI.ICON;
 

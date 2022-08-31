@@ -48,7 +48,7 @@ namespace ManagedShell.Common.Helpers
 
             // register for events
             // only works properly on Windows 10 or later
-            AppVisibilityEvents events = new AppVisibilityEvents();
+            AppVisibilityEvents events = new();
             events.AppVisibilityChanged += Events_AppVisibilityChanged;
             events.LauncherVisibilityChanged += Events_LauncherVisibilityChanged;
 

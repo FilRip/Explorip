@@ -21,7 +21,7 @@ namespace Explorip.FilesOperations
             if (flag != 2 && flag != 5)
                 return;
             bool cut = (flag == 2);
-            FileOperation fileOperation = new FileOperation();
+            FileOperation fileOperation = new();
             // TODO : Coller des raccourcis
             // Voir ShellLink dans github
             foreach (string file in files)

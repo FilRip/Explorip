@@ -50,7 +50,7 @@ namespace Explorip.TaskBar.Controls
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            WindowInteropHelper helper = new WindowInteropHelper(this);
+            WindowInteropHelper helper = new(this);
             _handle = helper.Handle;
             int result = Dwmapi.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.Handle, out _thumbPtr);
             if (result == (int)Commun.HRESULT.S_OK)

@@ -12,7 +12,7 @@ namespace ManagedShell.ShellFolders
         private readonly FileSystemEventHandler _createdEventHandler;
         private readonly FileSystemEventHandler _deletedEventHandler;
         private readonly RenamedEventHandler _renamedEventHandler;
-        private List<FileSystemWatcher> _watchers = new List<FileSystemWatcher>();
+        private List<FileSystemWatcher> _watchers = new();
 
         public ChangeWatcher(List<string> pathList, FileSystemEventHandler changedEventHandler, FileSystemEventHandler createdEventHandler, FileSystemEventHandler deletedEventHandler, RenamedEventHandler renamedEventHandler)
         {
@@ -30,7 +30,7 @@ namespace ManagedShell.ShellFolders
             {
                 foreach (string path in pathList)
                 {
-                    FileSystemWatcher watcher = new FileSystemWatcher(path)
+                    FileSystemWatcher watcher = new(path)
                     {
                         NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName | NotifyFilters.LastWrite | NotifyFilters.Size
                     };

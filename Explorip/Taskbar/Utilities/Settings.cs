@@ -255,20 +255,20 @@ namespace Explorip.TaskBar.Utilities
             {
                 string providerName = "LocalFileSettingsProvider";
 
-                SettingsAttributeDictionary attributes = new SettingsAttributeDictionary();
-                UserScopedSettingAttribute attr = new UserScopedSettingAttribute();
+                SettingsAttributeDictionary attributes = new();
+                UserScopedSettingAttribute attr = new();
                 attributes.Add(attr.TypeId, attr);
 
-                SettingsProperty prop = new SettingsProperty(
+                SettingsProperty prop = new(
                     new SettingsProperty(name
-                    , type
-                    , settings.Providers[providerName]
-                    , false
-                    , defaultValue
-                    , SettingsSerializeAs.String
-                    , attributes
-                    , false
-                    , false));
+                        , type
+                        , settings.Providers[providerName]
+                        , false
+                        , defaultValue
+                        , SettingsSerializeAs.String
+                        , attributes
+                        , false
+                        , false));
 
                 settings.Properties.Add(prop);
                 settings.Save();

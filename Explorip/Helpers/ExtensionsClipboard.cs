@@ -16,10 +16,10 @@ namespace Explorip.Helpers
 
             DragDropEffects dropEffect = (deplace ? DragDropEffects.Move : DragDropEffects.Copy);
 
-            StringCollection listeFichiersDossiers = new StringCollection();
+            StringCollection listeFichiersDossiers = new();
             listeFichiersDossiers.AddRange(fichiersDossiers.Select(x => x.FullName).ToArray());
 
-            DataObject data = new DataObject();
+            DataObject data = new();
             data.SetFileDropList(listeFichiersDossiers);
             data.SetData("Preferred Dropeffect", new MemoryStream(BitConverter.GetBytes((int)dropEffect)));
             Clipboard.SetDataObject(data);

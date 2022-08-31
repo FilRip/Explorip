@@ -6,7 +6,7 @@ namespace WindowsDesktop.Internal
     {
         public override void Show()
         {
-            HwndSourceParameters parameters = new HwndSourceParameters(this.Name)
+            HwndSourceParameters parameters = new(this.Name)
             {
                 Width = 1,
                 Height = 1,

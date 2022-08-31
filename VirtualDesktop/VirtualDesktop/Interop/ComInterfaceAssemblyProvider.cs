@@ -18,9 +18,9 @@ namespace WindowsDesktop.Interop
         private const string _placeholderGuid = "00000000-0000-0000-0000-000000000000";
         private const string _assemblyName = "VirtualDesktop.{0}.generated.dll";
 
-        private static readonly Regex _assemblyRegex = new Regex(@"VirtualDesktop\.(?<build>\d{5}?)(\.\w*|)\.dll");
+        private static readonly Regex _assemblyRegex = new(@"VirtualDesktop\.(?<build>\d{5}?)(\.\w*|)\.dll");
         private static readonly string _defaultAssemblyDirectoryPath = Path.Combine(ProductInfo.LocalAppData.FullName, "assemblies");
-        private static readonly Version _requireVersion = new Version("1.0");
+        private static readonly Version _requireVersion = new("1.0");
         private static readonly int[] _interfaceVersions = new[] { 10240, 20231, 21313, 21359, 22449 };
 
         private readonly string _assemblyDirectoryPath;
@@ -50,7 +50,7 @@ namespace WindowsDesktop.Interop
 
             foreach (string searchPath in searchTargets)
             {
-                DirectoryInfo dir = new DirectoryInfo(searchPath);
+                DirectoryInfo dir = new(searchPath);
                 if (!dir.Exists) continue;
 
                 foreach (FileInfo file in dir.GetFiles())
@@ -85,19 +85,17 @@ namespace WindowsDesktop.Interop
                 .Where(x => x != null)
                 .ToArray();
             Dictionary<string, Guid> iids = IID.GetIIDs(interfaceNames);
-            List<string> compileTargets = new List<string>();
+            List<string> compileTargets = new();
             {
                 string assemblyInfo = executingAssembly.GetManifestResourceNames().Single(x => x.Contains("AssemblyInfo"));
                 Stream stream = executingAssembly.GetManifestResourceStream(assemblyInfo);
                 if (stream != null)
                 {
-                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                    {
-                        string sourceCode = reader.ReadToEnd()
-                            .Replace("{VERSION}", ProductInfo.OSBuild.ToString())
-                            .Replace("{BUILD}", interfaceVersion.ToString());
-                        compileTargets.Add(sourceCode);
-                    }
+                    using StreamReader reader = new(stream, Encoding.UTF8);
+                    string sourceCode = reader.ReadToEnd()
+                        .Replace("{VERSION}", ProductInfo.OSBuild.ToString())
+                        .Replace("{BUILD}", interfaceVersion.ToString());
+                    compileTargets.Add(sourceCode);
                 }
             }
 
@@ -121,11 +119,9 @@ namespace WindowsDesktop.Interop
                 Stream stream = executingAssembly.GetManifestResourceStream(name);
                 if (stream == null) continue;
 
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    string sourceCode = reader.ReadToEnd().Replace(_placeholderGuid, iids[interfaceName].ToString());
-                    compileTargets.Add(sourceCode);
-                }
+                using StreamReader reader = new(stream, Encoding.UTF8);
+                string sourceCode = reader.ReadToEnd().Replace(_placeholderGuid, iids[interfaceName].ToString());
+                compileTargets.Add(sourceCode);
             }
 
             return Compile(compileTargets.ToArray());
@@ -140,29 +136,27 @@ namespace WindowsDesktop.Interop
                 dir.Create();
             }
 
-            using (CSharpCodeProvider provider = new CSharpCodeProvider())
+            using CSharpCodeProvider provider = new();
+            string path = Path.Combine(dir.FullName, string.Format(_assemblyName, ProductInfo.OSBuild));
+            CompilerParameters cp = new()
             {
-                string path = Path.Combine(dir.FullName, string.Format(_assemblyName, ProductInfo.OSBuild));
-                CompilerParameters cp = new CompilerParameters()
-                {
-                    OutputAssembly = path,
-                    GenerateExecutable = false,
-                    GenerateInMemory = false,
-                };
-                cp.ReferencedAssemblies.Add("System.dll");
-                cp.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);
+                OutputAssembly = path,
+                GenerateExecutable = false,
+                GenerateInMemory = false,
+            };
+            cp.ReferencedAssemblies.Add("System.dll");
+            cp.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);
 
-                CompilerResults result = provider.CompileAssemblyFromSource(cp, sources.ToArray());
-                if (result.Errors.Count > 0)
-                {
-                    string message = $"Failed to compile COM interfaces assembly.{Environment.NewLine}{string.Join(Environment.NewLine, result.Errors.OfType<CompilerError>().Select(x => $"  {x}"))}";
+            CompilerResults result = provider.CompileAssemblyFromSource(cp, sources.ToArray());
+            if (result.Errors.Count > 0)
+            {
+                string message = $"Failed to compile COM interfaces assembly.{Environment.NewLine}{string.Join(Environment.NewLine, result.Errors.OfType<CompilerError>().Select(x => $"  {x}"))}";
 
-                    throw new Exception(message);
-                }
-
-                System.Diagnostics.Debug.WriteLine($"Assembly compiled: {path}");
-                return result.CompiledAssembly;
+                throw new Exception(message);
             }
+
+            System.Diagnostics.Debug.WriteLine($"Assembly compiled: {path}");
+            return result.CompiledAssembly;
         }
     }
 }

@@ -93,7 +93,7 @@ namespace WindowsDesktop
         {
             return _isSupported ?? (_isSupported = Core()).Value;
 
-            bool Core()
+            static bool Core()
             {
 #if DEBUG
                 if (Environment.OSVersion.Version.Major < 10) return false;

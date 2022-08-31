@@ -28,28 +28,17 @@ namespace ManagedShell.UWPInterop
 
         private ImageSource GetShellItemImageSource(IconSize size)
         {
-            ImageSource img;
-            ShellItem item = new ShellItem("shell:appsfolder\\" + AppUserModelId)
+            ShellItem item = new("shell:appsfolder\\" + AppUserModelId)
             {
                 AllowAsync = false
             };
-
-            switch (size)
+            ImageSource img = size switch
             {
-                case IconSize.Small:
-                    img = item.SmallIcon;
-                    break;
-                case IconSize.ExtraLarge:
-                    img = item.ExtraLargeIcon;
-                    break;
-                case IconSize.Jumbo:
-                    img = item.JumboIcon;
-                    break;
-                default:
-                    img = item.LargeIcon;
-                    break;
-            }
-
+                IconSize.Small => item.SmallIcon,
+                IconSize.ExtraLarge => item.ExtraLargeIcon,
+                IconSize.Jumbo => item.JumboIcon,
+                _ => item.LargeIcon,
+            };
             item.Dispose();
 
             if (img != null)
@@ -62,27 +51,14 @@ namespace ManagedShell.UWPInterop
 
         public ImageSource GetIconImageSource(IconSize size)
         {
-            string iconPath;
-
-            switch (size)
+            string iconPath = size switch
             {
-                case IconSize.Small:
-                    iconPath = SmallIconPath;
-                    break;
-                case IconSize.Medium:
-                    iconPath = MediumIconPath;
-                    break;
-                case IconSize.ExtraLarge:
-                    iconPath = ExtraLargeIconPath;
-                    break;
-                case IconSize.Jumbo:
-                    iconPath = JumboIconPath;
-                    break;
-                default:
-                    iconPath = LargeIconPath;
-                    break;
-            }
-
+                IconSize.Small => SmallIconPath,
+                IconSize.Medium => MediumIconPath,
+                IconSize.ExtraLarge => ExtraLargeIconPath,
+                IconSize.Jumbo => JumboIconPath,
+                _ => LargeIconPath,
+            };
             if (string.IsNullOrEmpty(iconPath))
             {
                 return GetShellItemImageSource(size);
@@ -90,7 +66,7 @@ namespace ManagedShell.UWPInterop
 
             try
             {
-                BitmapImage img = new BitmapImage();
+                BitmapImage img = new();
                 img.BeginInit();
                 img.UriSource = new Uri(iconPath, UriKind.Absolute);
                 img.CacheOption = BitmapCacheOption.OnLoad;

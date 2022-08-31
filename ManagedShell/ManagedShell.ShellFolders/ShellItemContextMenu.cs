@@ -101,7 +101,8 @@ namespace ManagedShell.ShellFolders
 
                     if (isInteractive)
                     {
-                        if (Marshal.QueryInterface(iContextMenuPtr, ref Interop.IID_IContextMenu2,
+                        Guid guid = typeof(IContextMenu2).GUID;
+                        if (Marshal.QueryInterface(iContextMenuPtr, ref guid,
                             out iContextMenu2Ptr) == NativeMethods.S_OK)
                         {
                             if (iContextMenu2Ptr != IntPtr.Zero)
@@ -118,7 +119,8 @@ namespace ManagedShell.ShellFolders
                             }
                         }
 
-                        if (Marshal.QueryInterface(iContextMenuPtr, ref Interop.IID_IContextMenu3,
+                        guid = typeof(IContextMenu3).GUID;
+                        if (Marshal.QueryInterface(iContextMenuPtr, ref guid,
                             out iContextMenu3Ptr) == NativeMethods.S_OK)
                         {
                             if (iContextMenu3Ptr != IntPtr.Zero)
@@ -244,11 +246,12 @@ namespace ManagedShell.ShellFolders
                 pidls[i] = items[i].RelativePidl;
             }
 
+            Guid guid = typeof(IContextMenu).GUID;
             if (parentFolder.ShellFolderInterface.GetUIObjectOf(
                 hwndOwner,
                 (uint)pidls.Length,
                 pidls,
-                ref Interop.IID_IContextMenu,
+                ref guid,
                 IntPtr.Zero,
                 out icontextMenuPtr) == NativeMethods.S_OK)
             {

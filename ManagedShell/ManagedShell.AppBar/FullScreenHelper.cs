@@ -17,7 +17,7 @@ namespace ManagedShell.AppBar
     {
         private readonly DispatcherTimer fullscreenCheck;
 
-        public ObservableCollection<FullScreenApp> FullScreenApps = new ObservableCollection<FullScreenApp>();
+        public ObservableCollection<FullScreenApp> FullScreenApps = new();
 
         public FullScreenHelper()
         {
@@ -34,7 +34,7 @@ namespace ManagedShell.AppBar
         {
             IntPtr hWnd = GetForegroundWindow();
 
-            List<FullScreenApp> removeApps = new List<FullScreenApp>();
+            List<FullScreenApp> removeApps = new();
             bool skipAdd = false;
 
             // first check if this window is already in our list. if so, remove it if necessary
@@ -115,7 +115,7 @@ namespace ManagedShell.AppBar
                     }
 
                     // make sure this is not the shell desktop
-                    StringBuilder cName = new StringBuilder(256);
+                    StringBuilder cName = new(256);
                     GetClassName(hWnd, cName, cName.Capacity);
                     if (cName.ToString() == "Progman" || cName.ToString() == "WorkerW")
                     {

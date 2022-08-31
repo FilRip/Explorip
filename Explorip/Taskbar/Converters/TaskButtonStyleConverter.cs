@@ -10,7 +10,7 @@ namespace Explorip.TaskBar.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (!(values[0] is FrameworkElement fxElement))
+            if (values[0] is not FrameworkElement fxElement)
             {
                 return null;
             }

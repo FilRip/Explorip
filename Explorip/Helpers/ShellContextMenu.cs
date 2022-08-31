@@ -36,11 +36,6 @@ namespace Explorip.Helpers
 
         private Point _positionSouris;
 
-        private static Guid IID_IShellFolder = new Guid("{000214E6-0000-0000-C000-000000000046}");
-        private static Guid IID_IContextMenu = new Guid("{000214e4-0000-0000-c000-000000000046}");
-        private static Guid IID_IContextMenu2 = new Guid("{000214f4-0000-0000-c000-000000000046}");
-        private static Guid IID_IContextMenu3 = new Guid("{bcfce0a0-ec17-11d0-8d10-00a0c90f2719}");
-
         #endregion
 
         #region Constructor
@@ -68,11 +63,12 @@ namespace Explorip.Helpers
         /// <returns>true if it got the interfaces, otherwise false</returns>
         private bool GetContextMenuInterfaces(IShellFolder oParentFolder, IntPtr[] arrPIDLs, out IntPtr ctxMenuPtr)
         {
+            Guid guid = typeof(IContextMenu).GUID;
             int nResult = oParentFolder.GetUIObjectOf(
                 IntPtr.Zero,
                 (uint)arrPIDLs.Length,
                 arrPIDLs,
-                ref IID_IContextMenu,
+                ref guid,
                 IntPtr.Zero,
                 out ctxMenuPtr);
 
@@ -120,7 +116,7 @@ namespace Explorip.Helpers
         #region InvokeCommand
         private void InvokeCommand(IContextMenu oContextMenu, uint nCmd, string strFolder, Point pointInvoke)
         {
-            CMINVOKECOMMANDINFOEX invoke = new CMINVOKECOMMANDINFOEX()
+            CMINVOKECOMMANDINFOEX invoke = new()
             {
                 cbSize = cbInvokeCommand,
                 lpVerb = (IntPtr)(nCmd - CMD_FIRST),
@@ -224,13 +220,14 @@ namespace Explorip.Helpers
                     IntPtr pStrRet = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
                     Marshal.WriteInt32(pStrRet, 0, 0);
                     _ = _oDesktopFolder.GetDisplayNameOf(pPIDL, SHGNO.FORPARSING, pStrRet);
-                    StringBuilder strFolder = new StringBuilder(MAX_PATH);
+                    StringBuilder strFolder = new(MAX_PATH);
                     Shlwapi.StrRetToBuf(pStrRet, pPIDL, strFolder, MAX_PATH);
                     Marshal.FreeCoTaskMem(pStrRet);
                     _strParentFolder = strFolder.ToString();
 
                     // Get the IShellFolder for folder
-                    nResult = oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref IID_IShellFolder, out object pUnknownParentFolder);
+                    Guid guid = typeof(IShellFolder).GUID;
+                    nResult = oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref guid, out object pUnknownParentFolder);
                     // Free the PIDL first
                     Marshal.FreeCoTaskMem(pPIDL);
                     if (nResult != (int)Commun.HRESULT.S_OK)
@@ -270,15 +267,16 @@ namespace Explorip.Helpers
                             folderEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(folderEnumPtr, typeof(IEnumIDList));
                             while (folderEnum.Next(1, out IntPtr pidlSubItem, out int celtFetched) == (int)Commun.HRESULT.S_OK && celtFetched == 1)
                             {
+                                Guid guid = typeof(IShellFolder).GUID;
                                 if (_oParentFolder.BindToObject(
                                             pidlSubItem,
                                             IntPtr.Zero,
-                                            ref IID_IShellFolder,
+                                            ref guid,
                                             out object shellFolderPtr) == (int)Commun.HRESULT.S_OK)
                                 {
                                     IntPtr strr = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
                                     Marshal.WriteInt32(strr, 0, 0);
-                                    StringBuilder buf = new StringBuilder(MAX_PATH);
+                                    StringBuilder buf = new(MAX_PATH);
 
                                     string txt = "";
                                     if (_oParentFolder.GetDisplayNameOf(
@@ -513,8 +511,10 @@ namespace Explorip.Helpers
 
                 if (iContextMenuPtr != IntPtr.Zero)
                 {
-                    Marshal.QueryInterface(iContextMenuPtr, ref IID_IContextMenu2, out iContextMenuPtr2);
-                    Marshal.QueryInterface(iContextMenuPtr, ref IID_IContextMenu3, out iContextMenuPtr3);
+                    Guid guid = typeof(IContextMenu2).GUID;
+                    Marshal.QueryInterface(iContextMenuPtr, ref guid, out iContextMenuPtr2);
+                    guid = typeof(IContextMenu3).GUID;
+                    Marshal.QueryInterface(iContextMenuPtr, ref guid, out iContextMenuPtr3);
                     _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
                     _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
                 }

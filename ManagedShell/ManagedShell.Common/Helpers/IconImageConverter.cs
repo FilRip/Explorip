@@ -138,7 +138,7 @@ namespace ManagedShell.Common.Helpers
         {
             try
             {
-                BitmapImage img = new BitmapImage();
+                BitmapImage img = new();
                 img.BeginInit();
                 img.UriSource = new Uri("pack://application:,,,/ManagedShell.Common;component/Resources/nullIcon.png", UriKind.RelativeOrAbsolute);
                 img.EndInit();

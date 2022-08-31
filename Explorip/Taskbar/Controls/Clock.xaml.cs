@@ -27,8 +27,8 @@ namespace Explorip.TaskBar.Controls
             set { SetValue(ClockTipProperty, value); }
         }
 
-        private readonly DispatcherTimer clock = new DispatcherTimer(DispatcherPriority.Background);
-        private readonly DispatcherTimer singleClick = new DispatcherTimer(DispatcherPriority.Input);
+        private readonly DispatcherTimer clock = new(DispatcherPriority.Background);
+        private readonly DispatcherTimer singleClick = new(DispatcherPriority.Input);
 
         public Clock()
         {

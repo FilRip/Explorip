@@ -16,7 +16,7 @@ namespace Explorip.TaskBar.Controls
     public partial class NotifyBalloon : UserControl
     {
         private DispatcherTimer _closeTimer;
-        private NotificationBalloon _balloonInfo = new NotificationBalloon();
+        private NotificationBalloon _balloonInfo = new();
 
         public NotifyBalloon()
         {
@@ -43,30 +43,19 @@ namespace Explorip.TaskBar.Controls
 
         public CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
         {
-            CustomPopupPlacement placement;
-
             DpiScale dpiScale = VisualTreeHelper.GetDpi(this);
-
-            switch ((AppBarEdge)Settings.Instance.Edge)
+            var placement = (AppBarEdge)Settings.Instance.Edge switch
             {
-                case AppBarEdge.Top:
-                    placement = new CustomPopupPlacement(new Point((popupSize.Width * -1) + (offset.X * dpiScale.DpiScaleX),
-                        targetSize.Height + (offset.Y * dpiScale.DpiScaleY)),
-                        PopupPrimaryAxis.Horizontal);
-                    break;
-                case AppBarEdge.Left:
-                    placement = new CustomPopupPlacement(new Point(offset.X * dpiScale.DpiScaleX,
-                        (popupSize.Height * -1) + (offset.Y * dpiScale.DpiScaleY)),
-                        PopupPrimaryAxis.Horizontal);
-                    break;
-                default:
-                    // bottom or right taskbar
-                    placement = new CustomPopupPlacement(new Point((popupSize.Width * -1) + (offset.X * dpiScale.DpiScaleX),
-                        (popupSize.Height * -1) + (offset.Y * dpiScale.DpiScaleY)),
-                        PopupPrimaryAxis.Horizontal);
-                    break;
-            }
-
+                AppBarEdge.Top => new CustomPopupPlacement(new Point((popupSize.Width * -1) + (offset.X * dpiScale.DpiScaleX),
+                                       targetSize.Height + (offset.Y * dpiScale.DpiScaleY)),
+                                       PopupPrimaryAxis.Horizontal),
+                AppBarEdge.Left => new CustomPopupPlacement(new Point(offset.X * dpiScale.DpiScaleX,
+                                        (popupSize.Height * -1) + (offset.Y * dpiScale.DpiScaleY)),
+                                        PopupPrimaryAxis.Horizontal),
+                _ => new CustomPopupPlacement(new Point((popupSize.Width * -1) + (offset.X * dpiScale.DpiScaleX),
+                            (popupSize.Height * -1) + (offset.Y * dpiScale.DpiScaleY)),
+                            PopupPrimaryAxis.Horizontal),// bottom or right taskbar
+            };
             return new CustomPopupPlacement[] { placement };
         }
 

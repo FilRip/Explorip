@@ -51,19 +51,19 @@ namespace WindowsDesktop
 
             public static void RaiseDestroyBegin(object sender, VirtualDesktop pDesktopDestroyed, VirtualDesktop pDesktopFallback)
             {
-                VirtualDesktopDestroyEventArgs args = new VirtualDesktopDestroyEventArgs(pDesktopDestroyed, pDesktopFallback);
+                VirtualDesktopDestroyEventArgs args = new(pDesktopDestroyed, pDesktopFallback);
                 DestroyBegin?.Invoke(sender, args);
             }
 
             public static void RaiseDestroyFailed(object sender, VirtualDesktop pDesktopDestroyed, VirtualDesktop pDesktopFallback)
             {
-                VirtualDesktopDestroyEventArgs args = new VirtualDesktopDestroyEventArgs(pDesktopDestroyed, pDesktopFallback);
+                VirtualDesktopDestroyEventArgs args = new(pDesktopDestroyed, pDesktopFallback);
                 DestroyFailed?.Invoke(sender, args);
             }
 
             public static void RaiseDestroyed(object sender, VirtualDesktop pDesktopDestroyed, VirtualDesktop pDesktopFallback)
             {
-                VirtualDesktopDestroyEventArgs args = new VirtualDesktopDestroyEventArgs(pDesktopDestroyed, pDesktopFallback);
+                VirtualDesktopDestroyEventArgs args = new(pDesktopDestroyed, pDesktopFallback);
                 Destroyed?.Invoke(sender, args);
             }
 
@@ -76,13 +76,13 @@ namespace WindowsDesktop
 
             public static void RaiseCurrentChanged(object sender, VirtualDesktop pDesktopOld, VirtualDesktop pDesktopNew)
             {
-                VirtualDesktopChangedEventArgs args = new VirtualDesktopChangedEventArgs(pDesktopOld, pDesktopNew);
+                VirtualDesktopChangedEventArgs args = new(pDesktopOld, pDesktopNew);
                 CurrentChanged?.Invoke(sender, args);
             }
 
             public static void RaiseMoved(object sender, VirtualDesktop pDesktopMoved, int oldIndex, int newIndex)
             {
-                VirtualDesktopMovedEventArgs args = new VirtualDesktopMovedEventArgs(pDesktopMoved, oldIndex, newIndex);
+                VirtualDesktopMovedEventArgs args = new(pDesktopMoved, oldIndex, newIndex);
                 Moved?.Invoke(sender, args);
             }
 
@@ -91,7 +91,7 @@ namespace WindowsDesktop
                 string oldName = pDesktop.Name;
                 pDesktop.SetNameToCache(name);
 
-                VirtualDesktopRenamedEventArgs args = new VirtualDesktopRenamedEventArgs(pDesktop, oldName, name);
+                VirtualDesktopRenamedEventArgs args = new(pDesktop, oldName, name);
                 Renamed?.Invoke(sender, args);
             }
 
@@ -100,7 +100,7 @@ namespace WindowsDesktop
                 string oldPath = pDesktop.WallpaperPath;
                 pDesktop.SetDesktopWallpaperToCache(path);
 
-                VirtualDesktopWallpaperChangedEventArgs args = new VirtualDesktopWallpaperChangedEventArgs(pDesktop, oldPath, path);
+                VirtualDesktopWallpaperChangedEventArgs args = new(pDesktop, oldPath, path);
                 WallpaperChanged?.Invoke(sender, args);
             }
         }

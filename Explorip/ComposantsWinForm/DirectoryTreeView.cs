@@ -72,7 +72,7 @@ namespace Explorip.ComposantsWinForm
                 Nodes.Add(_noeudMyComputer);
 
                 // TODO : voir https://github.com/aybe/Windows-API-Code-Pack-1.1
-                TreeNode noeudDesktop = new TreeNode(Environment.SpecialFolder.Desktop.NomTraduit(), 2, 2);
+                TreeNode noeudDesktop = new(Environment.SpecialFolder.Desktop.NomTraduit(), 2, 2);
                 _noeudMyComputer.Nodes.Add(noeudDesktop);
                 noeudDesktop.Name = "Desktop";
                 noeudDesktop.Tag = new DirectoryInfo(Environment.SpecialFolder.Desktop.Repertoire());
@@ -102,7 +102,7 @@ namespace Explorip.ComposantsWinForm
                         string nomVolume = drive.VolumeLabel;
                         if (drive.DriveType == DriveType.Network)
                         {
-                            System.Text.StringBuilder remotePath = new System.Text.StringBuilder();
+                            System.Text.StringBuilder remotePath = new();
                             int taille = 250;
                             uint connRes = Mpr.WNetGetConnection(drive.Name.Substring(0, 2), remotePath, ref taille);
                             if (connRes == 0)
@@ -112,7 +112,7 @@ namespace Explorip.ComposantsWinForm
                         numIcone = Icones.GetNumIcon(drive.Name, false, true, out pidl);
                         monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
                         _listeIcones.Images.Add(monIcone);
-                        TreeNode driveNode = new TreeNode($"{nomVolume} ({drive.Name})")
+                        TreeNode driveNode = new($"{nomVolume} ({drive.Name})")
                         {
                             Name = drive.Name,
                             ImageIndex = _listeIcones.Images.Count - 1,
@@ -137,7 +137,7 @@ namespace Explorip.ComposantsWinForm
         {
             if (string.IsNullOrWhiteSpace(path))
                 return;
-            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            DirectoryInfo dirInfo = new(path);
             int numIcone = Icones.GetNumIcon(dirInfo.FullName, dirInfo.IsShortcut(), true, out IntPtr pidl);
             Bitmap monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
             _listeIcones.Images.Add(monIcone);
@@ -200,7 +200,7 @@ namespace Explorip.ComposantsWinForm
             {
                 TreeNode noeudClicke;
                 noeudClicke = this.GetNodeAt(e.X, e.Y);
-                ShellContextMenu ctxMnu = new ShellContextMenu();
+                ShellContextMenu ctxMnu = new();
                 DirectoryInfo[] dir = new DirectoryInfo[1];
                 dir[0] = new DirectoryInfo(GetFolderPath(noeudClicke));
                 ctxMnu.ShowContextMenu(dir, this.PointToScreen(new Point(e.X, e.Y)), _cms);
@@ -228,7 +228,7 @@ namespace Explorip.ComposantsWinForm
             Array.Sort(dirs, new TriAlphabetique());
             foreach (DirectoryInfo dirI in dirs)
             {
-                TreeNode node = new TreeNode(dirI.Name, 6, 6)
+                TreeNode node = new(dirI.Name, 6, 6)
                 {
                     Name = dirI.Name
                 };

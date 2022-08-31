@@ -11,7 +11,7 @@ namespace ManagedShell.Common
     [Serializable]
     public abstract class DisposableObject : IDisposable
     {
-        private readonly object _syncRoot = new object();
+        private readonly object _syncRoot = new();
         private bool _disposed;
 
         /// <summary>

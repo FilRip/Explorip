@@ -9,7 +9,7 @@ namespace ManagedShell
 {
     public class ShellManager : IDisposable
     {
-        public static readonly ShellConfig DefaultShellConfig = new ShellConfig()
+        public static readonly ShellConfig DefaultShellConfig = new()
         {
             EnableTasksService = true,
             AutoStartTasksService = true,

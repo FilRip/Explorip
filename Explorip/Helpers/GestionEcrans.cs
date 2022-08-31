@@ -93,7 +93,7 @@ namespace Explorip.Helpers
                 return Screen.PrimaryScreen;
             Math.DivRem(Screen.AllScreens.Length, 2, out int nbEcranPair);
             if (nbEcranPair == 0) return Screen.PrimaryScreen; // A voir si on retourne une exception ou l'écran principal quand il n'y a pas d'écran central (nombre paire d'écran)
-            List<Screen> EcranTries = new List<Screen>();
+            List<Screen> EcranTries = new();
             EcranTries = Screen.AllScreens.OrderBy(item => item.WorkingArea.Location.X).ToList();
             while (EcranTries.Count > 1)
             {
@@ -105,17 +105,13 @@ namespace Explorip.Helpers
 
         public static Screen RetourneEcran(POSITION_ECRAN posEcran)
         {
-            switch (posEcran)
+            return posEcran switch
             {
-                case POSITION_ECRAN.GAUCHE:
-                    return EcranGauche();
-                case POSITION_ECRAN.CENTRE:
-                    return EcranCentre();
-                case POSITION_ECRAN.DROITE:
-                    return EcranDroite();
-                default:
-                    throw new ExceptionGestionEcrans("Position de l'écran demandé inconnu");
-            }
+                POSITION_ECRAN.GAUCHE => EcranGauche(),
+                POSITION_ECRAN.CENTRE => EcranCentre(),
+                POSITION_ECRAN.DROITE => EcranDroite(),
+                _ => throw new ExceptionGestionEcrans("Position de l'écran demandé inconnu"),
+            };
         }
 
         public enum POSITION_ECRAN

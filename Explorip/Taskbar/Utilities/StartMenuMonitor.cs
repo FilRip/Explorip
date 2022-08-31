@@ -66,7 +66,7 @@ namespace Explorip.TaskBar.Utilities
 
             _isVisible = isVisible;
 
-            LauncherVisibilityEventArgs args = new LauncherVisibilityEventArgs
+            LauncherVisibilityEventArgs args = new()
             {
                 Visible = _isVisible
             };

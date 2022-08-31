@@ -237,23 +237,21 @@ namespace ManagedShell.Common.Helpers
                 {
                     if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 6)
                     {
-                        using (Process p = Process.GetCurrentProcess())
+                        using Process p = Process.GetCurrentProcess();
+                        try
                         {
-                            try
-                            {
-                                if (!NativeMethods.IsWow64Process(p.Handle, out bool retVal))
-                                {
-                                    isWow64 = false;
-                                }
-                                else
-                                {
-                                    isWow64 = retVal;
-                                }
-                            }
-                            catch (Exception)
+                            if (!NativeMethods.IsWow64Process(p.Handle, out bool retVal))
                             {
                                 isWow64 = false;
                             }
+                            else
+                            {
+                                isWow64 = retVal;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            isWow64 = false;
                         }
                     }
                     else

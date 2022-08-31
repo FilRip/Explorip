@@ -87,7 +87,7 @@ namespace Explorip.Helpers
 
             if (dataObjectPtr != IntPtr.Zero)
             {
-                OnDragStart(new DragEnterEventArgs((item.ParentItem != null ? item.ParentItem : item), br));
+                OnDragStart(new DragEnterEventArgs(item.ParentItem ?? item, br));
                 WinAPI.Ole32.DoDragDrop(dataObjectPtr, this, DragDropEffects.Copy | DragDropEffects.Link | DragDropEffects.Move, out DragDropEffects effects);
                 OnDragEnd(new EventArgs());
             }
@@ -229,7 +229,7 @@ namespace Explorip.Helpers
 
             if (dataObjectPtr != IntPtr.Zero)
             {
-                OnDragStart(new DragEnterEventArgs((items[0].ParentItem != null ? items[0].ParentItem : items[0]), br));
+                OnDragStart(new DragEnterEventArgs(items[0].ParentItem ?? items[0], br));
                 WinAPI.Ole32.DoDragDrop(dataObjectPtr, this, DragDropEffects.Copy | DragDropEffects.Link | DragDropEffects.Move, out DragDropEffects effects);
                 OnDragEnd(new EventArgs());
             }

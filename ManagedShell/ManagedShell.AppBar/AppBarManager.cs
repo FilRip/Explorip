@@ -12,7 +12,7 @@ namespace ManagedShell.AppBar
 {
     public class AppBarManager : IDisposable
     {
-        private static readonly object appBarLock = new object();
+        private static readonly object appBarLock = new();
 
         private readonly ExplorerHelper _explorerHelper;
         private int uCallBack;
@@ -35,7 +35,7 @@ namespace ManagedShell.AppBar
 
         public void NotifyAppBarEvent(AppBarWindow sender, AppBarEventReason reason)
         {
-            AppBarEventArgs args = new AppBarEventArgs { Reason = reason };
+            AppBarEventArgs args = new() { Reason = reason };
             AppBarEvent?.Invoke(sender, args);
         }
 
@@ -44,7 +44,7 @@ namespace ManagedShell.AppBar
         {
             lock (appBarLock)
             {
-                APPBARDATA abd = new APPBARDATA
+                APPBARDATA abd = new()
                 {
                     cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                     hWnd = abWindow.Handle
@@ -97,7 +97,7 @@ namespace ManagedShell.AppBar
 
         public void AppBarActivate(IntPtr hwnd)
         {
-            APPBARDATA abd = new APPBARDATA
+            APPBARDATA abd = new()
             {
                 cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                 hWnd = hwnd,
@@ -115,7 +115,7 @@ namespace ManagedShell.AppBar
 
         public void AppBarWindowPosChanged(IntPtr hwnd)
         {
-            APPBARDATA abd = new APPBARDATA
+            APPBARDATA abd = new()
             {
                 cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                 hWnd = hwnd
@@ -134,7 +134,7 @@ namespace ManagedShell.AppBar
         {
             lock (appBarLock)
             {
-                APPBARDATA abd = new APPBARDATA
+                APPBARDATA abd = new()
                 {
                     cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                     hWnd = abWindow.Handle,

@@ -96,7 +96,7 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        public uint? ProcId => _procId = _procId ?? ShellHelper.GetProcIdForHandle(Handle);
+        public uint? ProcId => _procId ??= ShellHelper.GetProcIdForHandle(Handle);
 
         public int Position
         {
@@ -138,7 +138,7 @@ namespace ManagedShell.WindowsTasks
             string title = "";
             try
             {
-                StringBuilder stringBuilder = new StringBuilder(MAX_STRING_SIZE);
+                StringBuilder stringBuilder = new(MAX_STRING_SIZE);
                 NativeMethods.GetWindowText(Handle, stringBuilder, MAX_STRING_SIZE);
 
                 title = stringBuilder.ToString();
@@ -168,7 +168,7 @@ namespace ManagedShell.WindowsTasks
             string className = "";
             try
             {
-                StringBuilder stringBuilder = new StringBuilder(MAX_STRING_SIZE);
+                StringBuilder stringBuilder = new(MAX_STRING_SIZE);
                 NativeMethods.GetClassName(Handle, stringBuilder, MAX_STRING_SIZE);
 
                 className = stringBuilder.ToString();
@@ -361,7 +361,7 @@ namespace ManagedShell.WindowsTasks
                 }
 
                 // UWP shell windows that are not cloaked should be hidden from the taskbar, too.
-                StringBuilder cName = new StringBuilder(256);
+                StringBuilder cName = new(256);
                 NativeMethods.GetClassName(Handle, cName, cName.Capacity);
                 string className = cName.ToString();
                 if (className == "ApplicationFrameWindow" || className == "Windows.UI.Core.CoreWindow")
@@ -653,7 +653,7 @@ namespace ManagedShell.WindowsTasks
         /// <param name="hWnd">The handle of the window.</param>
         private NativeMethods.WindowShowStyle GetWindowShowStyle(IntPtr hWnd)
         {
-            NativeMethods.WINDOWPLACEMENT placement = new NativeMethods.WINDOWPLACEMENT();
+            NativeMethods.WINDOWPLACEMENT placement = new();
             NativeMethods.GetWindowPlacement(hWnd, ref placement);
             return placement.showCmd;
         }

@@ -16,7 +16,7 @@ namespace ManagedShell.ShellFolders
     public abstract class ShellContextMenu : NativeWindow
     {
         // Properties
-        protected List<ShellNewMenuCommand> ShellNewMenus = new List<ShellNewMenuCommand>();
+        protected List<ShellNewMenuCommand> ShellNewMenus = new();
 
         internal IContextMenu iContextMenu;
         internal IContextMenu2 iContextMenu2;
@@ -158,7 +158,7 @@ namespace ManagedShell.ShellFolders
         /// <param name="ptInvoke">the point (in screen coordinates) from which to invoke</param>
         protected void InvokeCommand(IContextMenu iContextMenu, uint cmd, Point ptInvoke)
         {
-            CMINVOKECOMMANDINFOEX invoke = new CMINVOKECOMMANDINFOEX
+            CMINVOKECOMMANDINFOEX invoke = new()
             {
                 cbSize = Interop.cbInvokeCommand,
                 lpVerb = (IntPtr)cmd,

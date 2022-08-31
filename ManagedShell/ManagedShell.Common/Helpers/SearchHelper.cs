@@ -14,7 +14,7 @@ namespace ManagedShell.Common.Helpers
 {
     public class SearchHelper : DependencyObject
     {
-        private static readonly object searchLock = new object();
+        private static readonly object searchLock = new();
         private static int QueryNum;
         private static string SearchString;
 
@@ -68,7 +68,7 @@ namespace ManagedShell.Common.Helpers
 
             string query;
             OleDbConnection cConnection;
-            List<SearchResult> results = new List<SearchResult>();
+            List<SearchResult> results = new();
 
             if (EnvironmentHelper.IsWindows81OrBetter)
             {
@@ -121,20 +121,16 @@ namespace ManagedShell.Common.Helpers
                     CONNECTION_STRING))
                 {
                     cConnection.Open();
-                    using (OleDbCommand cmd = new OleDbCommand(
+                    using OleDbCommand cmd = new(
                         query,
-                        cConnection))
+                        cConnection);
+                    if (cConnection.State == ConnectionState.Open)
                     {
-                        if (cConnection.State == ConnectionState.Open)
+                        using OleDbDataReader reader = cmd.ExecuteReader();
+                        while (!reader.IsClosed && reader.Read() && QueryNum == localQueryNum)
                         {
-                            using (OleDbDataReader reader = cmd.ExecuteReader())
-                            {
-                                while (!reader.IsClosed && reader.Read() && QueryNum == localQueryNum)
-                                {
-                                    SearchResult result = BuildSearchResult(reader);
-                                    results.Add(result);
-                                }
-                            }
+                            SearchResult result = BuildSearchResult(reader);
+                            results.Add(result);
                         }
                     }
                 }
@@ -170,7 +166,7 @@ namespace ManagedShell.Common.Helpers
 
         static SearchResult BuildSearchResult(OleDbDataReader reader)
         {
-            SearchResult result = new SearchResult
+            SearchResult result = new()
             {
                 Name = reader[0].ToString(),
                 Path = reader[1].ToString(),

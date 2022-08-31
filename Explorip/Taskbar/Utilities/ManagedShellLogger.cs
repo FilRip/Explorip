@@ -11,7 +11,7 @@ namespace Explorip.TaskBar.Utilities
         private readonly string _logName = DateTime.Now.ToString("yyyy-MM-dd_HHmmssfff");
         private readonly string _logExt = "log";
         private readonly LogSeverity _logSeverity = LogSeverity.Debug;
-        private TimeSpan _logRetention = new TimeSpan(7, 0, 0);
+        private TimeSpan _logRetention = new(7, 0, 0);
         private FileLog _fileLog;
 
         public ManagedShellLogger()
@@ -43,7 +43,7 @@ namespace Explorip.TaskBar.Utilities
             try
             {
                 // look for all of the log files
-                DirectoryInfo info = new DirectoryInfo(_logPath);
+                DirectoryInfo info = new(_logPath);
                 FileInfo[] files = info.GetFiles($"*.{_logExt}", SearchOption.TopDirectoryOnly);
 
                 // delete any files that are older than the retention period

@@ -20,7 +20,7 @@ namespace Explorip.TaskBar.Controls
         private double DefaultButtonWidth;
         private double TaskButtonLeftMargin;
         private double TaskButtonRightMargin;
-        private readonly object _lockChangeDesktop = new object();
+        private readonly object _lockChangeDesktop = new();
         private bool _mainScreen;
         private Taskbar _parentTaskbar;
 
@@ -106,7 +106,7 @@ namespace Explorip.TaskBar.Controls
                     {
                         if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
                         {
-                            ApplicationWindow win = new ApplicationWindow(MyApp.MonShellManager.TasksService, hwnd);
+                            ApplicationWindow win = new(MyApp.MonShellManager.TasksService, hwnd);
 
                             if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyApp.MonShellManager.TasksService.Windows.Contains(win))
                             {

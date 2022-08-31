@@ -12,11 +12,11 @@ namespace ManagedShell.Common.Helpers
 {
     public static class IconHelper
     {
-        public static ComTaskScheduler IconScheduler = new ComTaskScheduler();
-        public static object ComLock = new object();
+        public static ComTaskScheduler IconScheduler = new();
+        public static object ComLock = new();
 
         // IImageList references
-        private static Guid iidImageList = new Guid("46EB5926-582E-4017-9FDF-E8998DAA0950");
+        private static Guid iidImageList = new("46EB5926-582E-4017-9FDF-E8998DAA0950");
         private static IImageList imlLarge; // 32pt
         private static IImageList imlSmall; // 16pt
         private static IImageList imlExtraLarge; // 48pt
@@ -96,7 +96,7 @@ namespace ManagedShell.Common.Helpers
                 {
                     filename = TranslateIconExceptions(filename);
 
-                    SHFILEINFO shinfo = new SHFILEINFO
+                    SHFILEINFO shinfo = new()
                     {
                         szDisplayName = string.Empty,
                         szTypeName = string.Empty
@@ -126,7 +126,7 @@ namespace ManagedShell.Common.Helpers
             {
                 try
                 {
-                    SHFILEINFO shinfo = new SHFILEINFO
+                    SHFILEINFO shinfo = new()
                     {
                         szDisplayName = string.Empty,
                         szTypeName = string.Empty
@@ -197,21 +197,15 @@ namespace ManagedShell.Common.Helpers
 
         public static int GetSize(IconSize size)
         {
-            switch (size)
+            return size switch
             {
-                case IconSize.Large:
-                    return 32;
-                case IconSize.Small:
-                    return 16;
-                case IconSize.Medium:
-                    return 24;
-                case IconSize.ExtraLarge:
-                    return 48;
-                case IconSize.Jumbo:
-                    return 96;
-                default:
-                    return 16;
-            }
+                IconSize.Large => 32,
+                IconSize.Small => 16,
+                IconSize.Medium => 24,
+                IconSize.ExtraLarge => 48,
+                IconSize.Jumbo => 96,
+                _ => 16,
+            };
         }
     }
 }

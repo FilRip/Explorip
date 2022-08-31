@@ -71,10 +71,8 @@ namespace ManagedShell.Common.Helpers
 
         private static double GetDpiScale()
         {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                return (g.DpiX / 96);
-            }
+            using Graphics g = Graphics.FromHwnd(IntPtr.Zero);
+            return (g.DpiX / 96);
         }
 
     }

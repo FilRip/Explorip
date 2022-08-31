@@ -22,7 +22,7 @@ namespace Explorip.ComposantsWinForm
         public delegate void DelegateEntrerRepertoire(object sender, SelectionneRepertoireEventArgs e);
         public event DelegateEntrerRepertoire SelectionneRepertoire;
         private DirectoryTreeView _liensRepertoire;
-        private FilesOperations.FileOperation _fileOperation = new FilesOperations.FileOperation();
+        private FilesOperations.FileOperation _fileOperation = new();
         private FileSystemWatcher _repCourantChangement;
         private readonly Dictionary<int, string> _listeIcones;
         private readonly DragDropHelper _dragDropHelper;
@@ -114,7 +114,7 @@ namespace Explorip.ComposantsWinForm
             VideListe();
             if (noeud != null)
             {
-                List<ListViewItem> liste = new List<ListViewItem>();
+                List<ListViewItem> liste = new();
                 foreach (TreeNode noeudEnfant in noeud.Nodes)
                 {
                     liste.Add(AjouterElement(noeudEnfant.Text, (FileSystemInfo)noeudEnfant.Tag));
@@ -169,7 +169,7 @@ namespace Explorip.ComposantsWinForm
                 return;
             }
 
-            Stopwatch _chronometre = new Stopwatch();
+            Stopwatch _chronometre = new();
             _chronometre.Restart();
 
             _repCourant = dirInfo;
@@ -178,7 +178,7 @@ namespace Explorip.ComposantsWinForm
 
             // TODO : Utiliser les tuiles https://github.com/dbarros/WindowsAPICodePack
             VideListe();
-            List<ListViewItem> _liste = new List<ListViewItem>();
+            List<ListViewItem> _liste = new();
 
             DirectoryInfo[] dirs = null;
             try
@@ -222,8 +222,8 @@ namespace Explorip.ComposantsWinForm
             {
                 if (SelectedItems.Count > 0)
                 {
-                    List<FileInfo> arrFI = new List<FileInfo>();
-                    List<DirectoryInfo> arrDI = new List<DirectoryInfo>();
+                    List<FileInfo> arrFI = new();
+                    List<DirectoryInfo> arrDI = new();
                     foreach (ListViewItem item in SelectedItems)
                     {
                         if (item.Tag.GetType() == typeof(FileInfo))
@@ -234,19 +234,19 @@ namespace Explorip.ComposantsWinForm
                     // TODO : Menu contextuel quand on a sélectionné des fichiers ET des dossiers
                     if (arrFI.Count > 0)
                     {
-                        ShellContextMenu ctxMnu = new ShellContextMenu();
+                        ShellContextMenu ctxMnu = new();
                         ctxMnu.ShowContextMenu(arrFI.ToArray(), PointToScreen(new Point(e.X, e.Y)), _cms);
                     }
                     else if (arrDI.Count > 0)
                     {
-                        ShellContextMenu ctxMnu = new ShellContextMenu();
+                        ShellContextMenu ctxMnu = new();
                         ctxMnu.ShowContextMenu(arrDI.ToArray(), PointToScreen(new Point(e.X, e.Y)), _cms);
                     }
                 }
                 else
                 {
                     FilesOperations.ContextMenuPaste.RepDestination = _repCourant.FullName;
-                    ShellContextMenu ctxMenu = new ShellContextMenu();
+                    ShellContextMenu ctxMenu = new();
                     ctxMenu.ShowContextMenu(_repCourant, PointToScreen(new Point(e.X, e.Y)), _cms);
                 }
             }
@@ -338,7 +338,7 @@ namespace Explorip.ComposantsWinForm
 
         private List<FileSystemInfo> RetourneListeFichiersDossiersSelectionnes()
         {
-            List<FileSystemInfo> retour = new List<FileSystemInfo>();
+            List<FileSystemInfo> retour = new();
             if (SelectedItems.Count > 0)
             {
                 foreach (ListViewItem item in SelectedItems)
@@ -420,7 +420,7 @@ namespace Explorip.ComposantsWinForm
                             operationAFaire = true;
                         }
                 }
-                else
+                else if (e.Effect == DragDropEffects.Link)
                 {
                     // TODO : Creer des raccourcis
                 }

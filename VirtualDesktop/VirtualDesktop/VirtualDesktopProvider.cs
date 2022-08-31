@@ -10,7 +10,7 @@ namespace WindowsDesktop
     {
         #region Default instance
 
-        private static readonly Lazy<VirtualDesktopProvider> _default = new Lazy<VirtualDesktopProvider>(() => new VirtualDesktopProvider());
+        private static readonly Lazy<VirtualDesktopProvider> _default = new(() => new VirtualDesktopProvider());
 
         public static VirtualDesktopProvider Default => _default.Value;
 
@@ -59,8 +59,8 @@ namespace WindowsDesktop
 
             void Core()
             {
-                ComInterfaceAssemblyProvider assemblyProvider = new ComInterfaceAssemblyProvider(ComInterfaceAssemblyPath);
-                ComInterfaceAssembly assembly = new ComInterfaceAssembly(assemblyProvider.GetAssembly());
+                ComInterfaceAssemblyProvider assemblyProvider = new(ComInterfaceAssemblyPath);
+                ComInterfaceAssembly assembly = new(assemblyProvider.GetAssembly());
 
                 ComObjects = new ComObjects(assembly);
             }

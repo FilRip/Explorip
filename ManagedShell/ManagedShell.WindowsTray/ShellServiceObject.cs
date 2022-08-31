@@ -19,7 +19,7 @@ namespace ManagedShell.WindowsTray
                 try
                 {
                     sysTrayObject = (IOleCommandTarget)new SysTrayObject();
-                    Guid sso = new Guid(CGID_SHELLSERVICEOBJECT);
+                    Guid sso = new(CGID_SHELLSERVICEOBJECT);
                     sysTrayObject.Exec(ref sso, OLECMDID_NEW, OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
                 }
                 catch
@@ -35,7 +35,7 @@ namespace ManagedShell.WindowsTray
             {
                 try
                 {
-                    Guid sso = new Guid(CGID_SHELLSERVICEOBJECT);
+                    Guid sso = new(CGID_SHELLSERVICEOBJECT);
                     sysTrayObject.Exec(ref sso, OLECMDID_SAVE, OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
                 }
                 catch

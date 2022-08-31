@@ -14,7 +14,7 @@ namespace ManagedShell.ShellFolders
 {
     public class FileOperationWorker
     {
-        private readonly BackgroundWorker _worker = new BackgroundWorker();
+        private readonly BackgroundWorker _worker = new();
 
         public FileOperationWorker()
         {

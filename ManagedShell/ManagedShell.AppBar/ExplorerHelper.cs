@@ -17,7 +17,7 @@ namespace ManagedShell.AppBar
         private readonly NotificationArea _notificationArea;
 
 
-        private readonly DispatcherTimer taskbarMonitor = new DispatcherTimer(DispatcherPriority.Background);
+        private readonly DispatcherTimer taskbarMonitor = new(DispatcherPriority.Background);
 
         private bool _hideExplorerTaskbar;
 
@@ -109,7 +109,7 @@ namespace ManagedShell.AppBar
         {
             Task.Run(() =>
             {
-                APPBARDATA abd = new APPBARDATA
+                APPBARDATA abd = new()
                 {
                     cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                     hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle),
@@ -122,7 +122,7 @@ namespace ManagedShell.AppBar
 
         public TaskbarState GetTaskbarState()
         {
-            APPBARDATA abd = new APPBARDATA
+            APPBARDATA abd = new()
             {
                 cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
                 hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle)
