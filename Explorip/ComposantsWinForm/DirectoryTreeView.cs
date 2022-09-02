@@ -100,7 +100,7 @@ namespace Explorip.ComposantsWinForm
                     try
                     {
                         string nomVolume = drive.VolumeLabel;
-                        if (drive.DriveType == DriveType.Network)
+                        if (drive.DriveType == DriveType.Network && drive.IsReady)
                         {
                             System.Text.StringBuilder remotePath = new();
                             int taille = 250;
@@ -200,6 +200,8 @@ namespace Explorip.ComposantsWinForm
             {
                 TreeNode noeudClicke;
                 noeudClicke = this.GetNodeAt(e.X, e.Y);
+                if (noeudClicke == null)
+                    return;
                 ShellContextMenu ctxMnu = new();
                 DirectoryInfo[] dir = new DirectoryInfo[1];
                 dir[0] = new DirectoryInfo(GetFolderPath(noeudClicke));
@@ -251,7 +253,7 @@ namespace Explorip.ComposantsWinForm
 
         private string GetFolderPath(TreeNode parentNode)
         {
-            if (parentNode.Tag != null)
+            if (parentNode?.Tag != null)
             {
                 if (parentNode.Tag.GetType() == typeof(DirectoryInfo))
                 {

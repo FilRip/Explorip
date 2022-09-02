@@ -656,13 +656,19 @@ namespace ManagedShell.ShellFolders
         private bool updateShellFolder;
         private IShellFolder shellFolder;
 
+        public void ForceUpdateShellFolder()
+        {
+            updateShellFolder = true;
+        }
+
         public IShellFolder ShellFolder
         {
             get
             {
                 if (updateShellFolder)
                 {
-                    Marshal.ReleaseComObject(shellFolder);
+                    if (shellFolder != null)
+                        Marshal.ReleaseComObject(shellFolder);
                     Guid guid = typeof(IShellFolder).GUID;
                     if (ParentItem.ShellFolder.BindToObject(
                         RelativePidl,

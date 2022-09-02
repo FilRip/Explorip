@@ -25,7 +25,6 @@ namespace Explorip.ComposantsWinForm
         private FilesOperations.FileOperation _fileOperation = new();
         private FileSystemWatcher _repCourantChangement;
         private readonly Dictionary<int, string> _listeIcones;
-        private readonly DragDropHelper _dragDropHelper;
 
         public FichiersListView() : base()
         {
@@ -37,7 +36,6 @@ namespace Explorip.ComposantsWinForm
             SmallImageList.ImageSize = new Size(16, 16);
             _listeIcones = new Dictionary<int, string>();
             MouseDoubleClick += FichiersListView_MouseDoubleClick;
-            _dragDropHelper = new DragDropHelper();
             InitialiseSurveillance();
         }
 
@@ -218,7 +216,7 @@ namespace Explorip.ComposantsWinForm
 
         private void FichiersListView_MouseUp(object sender, MouseEventArgs e)
         {
-            if ((e.Button == MouseButtons.Right) && (!_dragDropHelper.DragDropEnCours))
+            if ((e.Button == MouseButtons.Right) && (!DragDropHelper.GetInstance().DragDropEnCours))
             {
                 if (SelectedItems.Count > 0)
                 {
@@ -399,12 +397,12 @@ namespace Explorip.ComposantsWinForm
 
         private void FichiersListView_DragDrop(object sender, DragEventArgs e)
         {
-            if (_dragDropHelper.StartButton == MouseButtons.Left)
+            if (DragDropHelper.GetInstance().StartButton == MouseButtons.Left)
             {
                 bool operationAFaire = false;
                 if (e.Effect == DragDropEffects.Copy)
                 {
-                    foreach (FileSystemInfo item in _dragDropHelper.ListeFichiersDossiers)
+                    foreach (FileSystemInfo item in DragDropHelper.GetInstance().ListeFichiersDossiers)
                         if (Path.GetDirectoryName(item.FullName) != _repCourant.FullName)
                         {
                             _fileOperation.CopyItem(item.FullName, _repCourant.FullName, item.Name);
@@ -413,7 +411,7 @@ namespace Explorip.ComposantsWinForm
                 }
                 else if (e.Effect == DragDropEffects.Move)
                 {
-                    foreach (FileSystemInfo item in _dragDropHelper.ListeFichiersDossiers)
+                    foreach (FileSystemInfo item in DragDropHelper.GetInstance().ListeFichiersDossiers)
                         if (Path.GetDirectoryName(item.FullName) != _repCourant.FullName)
                         {
                             _fileOperation.MoveItem(item.FullName, _repCourant.FullName, item.Name);
@@ -427,11 +425,11 @@ namespace Explorip.ComposantsWinForm
                 if (operationAFaire)
                     _fileOperation.PerformOperations();
             }
-            else
+            else if (DragDropHelper.GetInstance().StartButton == MouseButtons.Right)
             {
-                _dragDropHelper.DragDrop(sender, e);
+                DragDropHelper.GetInstance().DragDrop(sender, e);
             }
-            _dragDropHelper.DragDropEnCours = false;
+            DragDropHelper.GetInstance().DragDropEnCours = false;
         }
 
         private void FichiersListView_DragEnter(object sender, DragEventArgs e)
@@ -463,7 +461,7 @@ namespace Explorip.ComposantsWinForm
 
         private void FichiersListView_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            _dragDropHelper.DemarreDrag(RetourneListeFichiersDossiersSelectionnes(), e.Button, _repCourant);
+            DragDropHelper.GetInstance().DemarreDrag(RetourneListeFichiersDossiersSelectionnes(), e.Button, _repCourant);
         }
 
         #endregion

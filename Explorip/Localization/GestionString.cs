@@ -15,16 +15,13 @@ namespace Explorip.Localization
         ///   care about translation problems.
         /// </summary>
         /// <example>
-        ///   btnCancel.Text = StoWindowsString.Load("user32.dll", 801, "Cancel");
-        ///   btnYes.Text = StoWindowsString.Load("user32.dll", 805, "Yes");
+        ///   btnCancel.Text = GestionString.Load("user32.dll", 801, "Cancel");
+        ///   btnYes.Text = GestionString.Load("user32.dll", 805, "Yes");
         /// </example>
-        /// <param name="LibraryName">Name of the windows library like
-        ///   "user32.dll" or "shell32.dll"</param>
+        /// <param name="libraryName">Name of the windows library, with extension ; like user32.dll or shell32.dll</param>
         /// <param name="Ident">Id of the string resource.</param>
-        /// <param name="DefaultText">Return this text, if the resource
-        ///   string could not be found.</param>
-        /// <returns>Desired string if the resource was found, otherwise
-        ///   the DefaultText</returns>
+        /// <param name="DefaultText">Return this text, if the resource string could not be found.</param>
+        /// <returns>Desired string if the resource was found, otherwise the DefaultText</returns>
         public static string Load(string libraryName, uint Ident, string DefaultText)
         {
             IntPtr libraryHandle = Kernel32.GetModuleHandle(libraryName);
@@ -43,6 +40,11 @@ namespace Explorip.Localization
             }
         }
 
+        /// <summary>
+        /// Return the localized name of special folder (windows) like in C:\User<br/>
+        /// For example : downloads, my documents, ...
+        /// </summary>
+        /// <param name="specialFolder">The special folder what you want to localize</param>
         public static string NomTraduit(this Environment.SpecialFolder specialFolder)
         {
             string chemin = Environment.GetFolderPath(specialFolder);

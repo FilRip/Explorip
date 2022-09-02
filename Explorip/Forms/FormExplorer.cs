@@ -15,10 +15,12 @@ namespace Explorip.Forms
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
                 WindowsSettings.UseImmersiveDarkMode(Handle, true);
             string repertoire = "";
-            if (args.Length > 0)
+            if (args.Length > 0 && args[0].ToLower() != "explorer")
                 repertoire = args[0];
+            else if (args.Length > 1 && args[0].ToLower() == "explorer")
+                repertoire = args[1];
             tabExplorer1.Initialise(repertoire);
-            tabExplorer2.Initialise("");
+            tabExplorer2.Initialise(repertoire);
         }
 
         protected override void OnShown(EventArgs e)

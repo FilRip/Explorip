@@ -15,6 +15,14 @@ namespace Explorip.Helpers
     {
         //private readonly Form _formInterception;
 
+        private static DragDropHelper _instance;
+        public static DragDropHelper GetInstance()
+        {
+            if (_instance == null)
+                _instance = new();
+            return _instance;
+        }
+
         private MouseButtons _startButton;
         private bool _dragDropEnCours;
         private DirectoryInfo _repStart;
@@ -22,12 +30,12 @@ namespace Explorip.Helpers
         private readonly List<FileSystemInfo> _listeFichiersDossiers;
         private IntPtr[] _listePointeursFichiersDossiers;
 
-        private IntPtr _pidlParent, _pointeurData;
+        private IntPtr _pidlParent;
         private IShellFolder _shellFolder;
 
         public const DragDropEffects effetDragDrop = DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link;
 
-        public DragDropHelper()
+        private DragDropHelper()
         {
             /*_formInterception = new Form()
             {
@@ -50,8 +58,8 @@ namespace Explorip.Helpers
             set
             {
                 _dragDropEnCours = value;
-                if (!value)
-                    LibererMemoire();
+                /*if (!value)
+                    LibererMemoire();*/
             }
         }
 
@@ -118,11 +126,11 @@ namespace Explorip.Helpers
                         _listePointeursFichiersDossiers,
                         ref guid,
                         IntPtr.Zero,
-                        out IntPtr _pointeurData);
+                        out IntPtr pointeurData);
                     if (erreur == (int)WinAPI.Commun.HRESULT.S_OK)
                     {
-                        Console.WriteLine($"DoDragDrop de {repertoireCourant.FullName} parent de {listeFichiersDossiers[0]}");
-                        WinAPI.Ole32.DoDragDrop(_pointeurData, this, effetDragDrop, out DragDropEffects effets);
+                        Console.WriteLine($"DoDragDrop dans {repertoireCourant.FullName} parent de {listeFichiersDossiers[0]}");
+                        WinAPI.Ole32.DoDragDrop(pointeurData, this, effetDragDrop, out DragDropEffects effets);
                     }
                 }
 
@@ -135,11 +143,16 @@ namespace Explorip.Helpers
 
         private void GetParent()
         {
-            Guid guidSH = typeof(IShellFolder).GUID;
-            _pidlParent = WinAPI.Shell32.ILCreateFromPath(_repStart.GetParent().FullName);
-            Console.WriteLine("Parent=" + _repStart.GetParent().FullName);
-            WinAPI.Shell32.SHBindToParent(_pidlParent, ref guidSH, out IntPtr pidlInterface, IntPtr.Zero);
-            _shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
+            Guid guid = typeof(IShellFolder).GUID;
+            IShellFolder oDesktopFolder;
+            Shell32.SHGetDesktopFolder(out IntPtr pUnkownDesktopFolder);
+            oDesktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnkownDesktopFolder, typeof(IShellFolder));
+            uint pchEaten = 0;
+            SFGAO pdwAttributes = 0;
+            oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, _repStart.GetParent().FullName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
+            Console.WriteLine("Parent défini sur " + _repStart.GetParent());
+            oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref guid, out object pUnknownParentFolder);
+            _shellFolder = (IShellFolder)pUnknownParentFolder;
         }
 
         private void LibererMemoire()
@@ -160,50 +173,54 @@ namespace Explorip.Helpers
                 Marshal.FreeCoTaskMem(_pidlParent);
                 _pidlParent = IntPtr.Zero;
             }
-            if (_pointeurData != IntPtr.Zero)
-            {
-                Marshal.FreeCoTaskMem(_pointeurData);
-                _pointeurData = IntPtr.Zero;
-            }
         }
 
         public void DragDrop(object sender, DragEventArgs e)
         {
             // TODO : Menu contextuel shell drag'n drop
 
-            if (_pidlParent != IntPtr.Zero)
+            GetParent();
+            ShellItem item = new(_repStart.FullName);
+            Console.WriteLine("Item défini sur = " + item.ToString());
+            int erreur;
+            Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
+
+            erreur = _shellFolder.GetUIObjectOf(
+                IntPtr.Zero,
+                1,
+                new IntPtr[] { item.RelativePidl },
+                ref guid,
+                IntPtr.Zero,
+                out IntPtr dropTargetPtr);
+
+            if (erreur == (int)Commun.HRESULT.S_OK)
             {
-                GetParent();
+                MK touches = MK.RBUTTON;
+                if (e.KeyState.EtatBit(4))
+                    touches |= MK.CONTROL;
+                if (e.KeyState.EtatBit(6))
+                    touches |= MK.ALT;
+                DragDropEffects effets = effetDragDrop;
+                WinAPI.Modeles.IDropTarget dropTarget = (WinAPI.Modeles.IDropTarget)Marshal.GetTypedObjectForIUnknown(dropTargetPtr, typeof(WinAPI.Modeles.IDropTarget));
 
-                int erreur;
-                Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
-                IntPtr ptrPrecedent = Shell32.ILCreateFromPath(_repStart.FullName);
-
-                Console.WriteLine($"GetIDropTarget Parent={_repStart.GetParent().FullName}, Item={_repStart}");
-                erreur = _shellFolder.GetUIObjectOf(
-                    IntPtr.Zero,
-                    1,
-                    new IntPtr[] { ptrPrecedent },
-                    ref guid,
-                    IntPtr.Zero,
-                    out IntPtr dropTargetPtr);
-
-                if (erreur == (int)Commun.HRESULT.S_OK)
+                if (_listeFichiersDossiers == null || _listeFichiersDossiers.Count == 0)
                 {
-                    if (dropTargetPtr == IntPtr.Zero)
-                        Console.WriteLine("dropTargetPtr=null");
-                    MK touches = MK.RBUTTON;
-                    if (e.KeyState.EtatBit(4))
-                        touches |= MK.CONTROL;
-                    if (e.KeyState.EtatBit(6))
-                        touches |= MK.ALT;
-                    DragDropEffects effets = effetDragDrop;
-                    WinAPI.Modeles.IDropTarget dropTarget = (WinAPI.Modeles.IDropTarget)Marshal.GetTypedObjectForIUnknown(dropTargetPtr, typeof(WinAPI.Modeles.IDropTarget));
-                    dropTarget.DragDrop(_pointeurData, touches, new POINT(Cursor.Position.X, Cursor.Position.Y), ref effets);
+                    Console.WriteLine("Liste fichier/dossier vide");
+                    return;
+                }
+                IntPtr pointeurData = GetIDataObject(new ShellItem[] { new ShellItem(_listeFichiersDossiers[0].FullName) });
+                if (pointeurData != IntPtr.Zero)
+                {
+                    Console.WriteLine("Pointeur data sur " + _listeFichiersDossiers[0].FullName);
+                    Console.WriteLine("OpenPopUp DragDrop");
+                    erreur = dropTarget.DragDrop(pointeurData, 0, new POINT(Cursor.Position.X, Cursor.Position.Y), ref effets);
+                    Console.WriteLine("Retour de la popUp : " + erreur.ToString());
                 }
                 else
-                    throw new Exceptions.ExploripException($"DropHandler, err {erreur}={BetterWin32Errors.ErreurWindows.RetourneTexteErreur(erreur)}");
+                    Console.WriteLine("GetIDataObject retourne null");
             }
+            else
+                throw new Exceptions.ExploripException($"DropHandler, err {erreur}={BetterWin32Errors.ErreurWindows.RetourneTexteErreur(erreur)}");
         }
 
         #region Interface IDropSource
@@ -233,8 +250,6 @@ namespace Explorip.Helpers
 
         #endregion
 
-        #region Ajout pour Wrappers
-
         /// <summary>
         /// This method will use the GetUIObjectOf method of IShellFolder to obtain the IDataObject of a
         /// ShellItem. 
@@ -242,16 +257,14 @@ namespace Explorip.Helpers
         /// <param name="item">The item for which to obtain the IDataObject</param>
         /// <param name="dataObjectPtr">A pointer to the returned IDataObject</param>
         /// <returns>the IDataObject the ShellItem</returns>
-        public static IntPtr GetIDataObject(ShellItem[] items)
+        public IntPtr GetIDataObject(ShellItem[] items)
         {
-            ShellItem parent = items[0].ParentItem ?? items[0];
-
             IntPtr[] pidls = new IntPtr[items.Length];
             for (int i = 0; i < items.Length; i++)
                 pidls[i] = items[i].RelativePidl;
 
             Guid guid = new("{0000010e-0000-0000-C000-000000000046}");
-            if (parent.ShellFolder.GetUIObjectOf(
+            if (_shellFolder.GetUIObjectOf(
                     IntPtr.Zero,
                     (uint)pidls.Length,
                     pidls,
@@ -266,63 +279,5 @@ namespace Explorip.Helpers
                 return IntPtr.Zero;
             }
         }
-
-        /// <summary>
-        /// This method will use the GetUIObjectOf method of IShellFolder to obtain the IDropTarget of a
-        /// ShellItem. 
-        /// </summary>
-        /// <param name="item">The item for which to obtain the IDropTarget</param>
-        /// <param name="dropTargetPtr">A pointer to the returned IDropTarget</param>
-        /// <returns>the IDropTarget from the ShellItem</returns>
-        public static bool GetIDropTarget(ShellItem item, out IntPtr dropTargetPtr, out WinAPI.Modeles.IDropTarget dropTarget)
-        {
-            ShellItem parent = item.ParentItem ?? item;
-
-            Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
-            if (parent.ShellFolder.GetUIObjectOf(
-                    IntPtr.Zero,
-                    1,
-                    new IntPtr[] { item.RelativePidl },
-                    ref guid,
-                    IntPtr.Zero,
-                    out dropTargetPtr) == (int)Commun.HRESULT.S_OK)
-            {
-                dropTarget =
-                    (WinAPI.Modeles.IDropTarget)Marshal.GetTypedObjectForIUnknown(dropTargetPtr, typeof(WinAPI.Modeles.IDropTarget));
-
-                return true;
-            }
-            else
-            {
-                dropTarget = null;
-                dropTargetPtr = IntPtr.Zero;
-                return false;
-            }
-        }
-
-        public static bool GetIDropTargetHelper(out IntPtr helperPtr, out IDropTargetHelper dropHelper)
-        {
-            Guid guid = typeof(IDropTargetHelper).GUID;
-            if (Ole32.CoCreateInstance(
-                ref Commun.CLSID_DragDropHelper,
-                IntPtr.Zero,
-                ManagedShell.ShellFolders.Enums.CLSCTX.INPROC_SERVER,
-                ref guid,
-                out helperPtr) == (int)Commun.HRESULT.S_OK)
-            {
-                dropHelper =
-                    (IDropTargetHelper)Marshal.GetTypedObjectForIUnknown(helperPtr, typeof(IDropTargetHelper));
-
-                return true;
-            }
-            else
-            {
-                dropHelper = null;
-                helperPtr = IntPtr.Zero;
-                return false;
-            }
-        }
-
-        #endregion
     }
 }
