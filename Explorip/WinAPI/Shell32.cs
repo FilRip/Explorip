@@ -8,7 +8,6 @@ namespace Explorip.WinAPI
 {
     public static class Shell32
     {
-        public const int MAX_PATH = 260;
         public const int NAMESIZE = 80;
 
         [Flags()]

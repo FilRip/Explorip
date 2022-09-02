@@ -113,7 +113,7 @@ namespace Explorip.Themes
                     item.BackColor = Color.White;
                     item.ForeColor = Color.Black;
                 }
-                if ((item.GetType() == typeof(ToolStripMenuItem) && ((ToolStripMenuItem)item).HasDropDownItems))
+                if ((item is ToolStripMenuItem) && ((ToolStripMenuItem)item).HasDropDownItems)
                     ChangeThemeMenu(((ToolStripMenuItem)item).DropDownItems, sombre);
             }
         }

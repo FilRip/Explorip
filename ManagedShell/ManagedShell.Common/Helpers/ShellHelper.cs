@@ -14,7 +14,7 @@ namespace ManagedShell.Common.Helpers
 {
     public static class ShellHelper
     {
-        private const int MAX_PATH = 260;
+        public const int MAX_PATH = 260;
 
         public static string GetDisplayName(string filename)
         {

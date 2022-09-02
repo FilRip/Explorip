@@ -8,6 +8,13 @@ using System.IO;
 using Explorip.WinAPI;
 using Explorip.WinAPI.Modeles;
 using Explorip.Exceptions;
+using ManagedShell.ShellFolders.Interfaces;
+using IContextMenu = Explorip.WinAPI.Modeles.IContextMenu;
+using IShellFolder = Explorip.WinAPI.Modeles.IShellFolder;
+using IContextMenu2 = Explorip.WinAPI.Modeles.IContextMenu2;
+using IContextMenu3 = Explorip.WinAPI.Modeles.IContextMenu3;
+using IEnumIDList = Explorip.WinAPI.Modeles.IEnumIDList;
+using ManagedShell.ShellFolders;
 
 namespace Explorip.Helpers
 {
@@ -28,9 +35,8 @@ namespace Explorip.Helpers
         private IShellFolder _oParentFolder;
         private IntPtr[] _arrPIDLs;
         private string _strParentFolder;
-        private const int MAX_PATH = 260;
-        private const uint CMD_FIRST = 1;
-        private const uint CMD_LAST = 30000;
+        private const uint CMD_FIRST = 0;
+        private const uint CMD_LAST = (uint)short.MaxValue;
 
         private static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CMINVOKECOMMANDINFOEX));
 
@@ -56,18 +62,34 @@ namespace Explorip.Helpers
         }
         #endregion
 
+        private bool _dragDrop;
+        private ShellItem _shellItem;
+        public bool DragDrop
+        {
+            get { return _dragDrop; }
+            set { _dragDrop = value; }
+        }
+
         #region GetContextMenuInterfaces()
         /// <summary>Gets the interfaces to the context menu</summary>
         /// <param name="oParentFolder">Parent folder</param>
         /// <param name="arrPIDLs">PIDLs</param>
         /// <returns>true if it got the interfaces, otherwise false</returns>
-        private bool GetContextMenuInterfaces(IShellFolder oParentFolder, IntPtr[] arrPIDLs, out IntPtr ctxMenuPtr)
+        private bool GetContextMenuInterfaces(IntPtr[] arrPIDLs, out IntPtr ctxMenuPtr)
         {
+            string repPrecedent = null;
+            if (_dragDrop)
+            {
+                repPrecedent = _strParentFolder;
+                _oParentFolder = null;
+                _oParentFolder = GetParentFolder(new DirectoryInfo(_strParentFolder).GetParent().FullName, false);
+            }
+
             Guid guid = typeof(IContextMenu).GUID;
-            int nResult = oParentFolder.GetUIObjectOf(
+            int nResult = _oParentFolder.GetUIObjectOf(
                 IntPtr.Zero,
-                (uint)arrPIDLs.Length,
-                arrPIDLs,
+                (_dragDrop ? 1 : (uint)arrPIDLs.Length),
+                (_dragDrop ? new IntPtr[] { new ShellItem(repPrecedent).RelativePidl } : arrPIDLs),
                 ref guid,
                 IntPtr.Zero,
                 out ctxMenuPtr);
@@ -75,6 +97,18 @@ namespace Explorip.Helpers
             if (nResult == (int)Commun.HRESULT.S_OK)
             {
                 _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
+                if (_dragDrop)
+                {
+                    IShellExtInit shellExtInit = (IShellExtInit)_oContextMenu;
+                    if (shellExtInit != null)
+                    {
+                        int erreur = shellExtInit.Initialize(new ShellItem(repPrecedent).AbsolutePidl, DragDropHelper.GetInstance().GetIDataObject(new ShellItem[] { _shellItem }, _oParentFolder), 0);
+                        if (erreur != 0)
+                        {
+                            Console.WriteLine("Erreur à l'envoi de la commande Initialize aux handlers DragDrop");
+                        }
+                    }
+                }
                 return true;
             }
             else
@@ -217,11 +251,11 @@ namespace Explorip.Helpers
                     if (nResult != (int)Commun.HRESULT.S_OK)
                         return null;
 
-                    IntPtr pStrRet = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
+                    IntPtr pStrRet = Marshal.AllocCoTaskMem(ManagedShell.Common.Helpers.ShellHelper.MAX_PATH * 2 + 4);
                     Marshal.WriteInt32(pStrRet, 0, 0);
                     _ = _oDesktopFolder.GetDisplayNameOf(pPIDL, SHGNO.FORPARSING, pStrRet);
-                    StringBuilder strFolder = new(MAX_PATH);
-                    Shlwapi.StrRetToBuf(pStrRet, pPIDL, strFolder, MAX_PATH);
+                    StringBuilder strFolder = new(ManagedShell.Common.Helpers.ShellHelper.MAX_PATH);
+                    Shlwapi.StrRetToBuf(pStrRet, pPIDL, strFolder, ManagedShell.Common.Helpers.ShellHelper.MAX_PATH);
                     Marshal.FreeCoTaskMem(pStrRet);
                     _strParentFolder = strFolder.ToString();
 
@@ -234,7 +268,6 @@ namespace Explorip.Helpers
                         return null;
 
                     _oParentFolder = (IShellFolder)pUnknownParentFolder;
-                    //_oParentFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnknownParentFolder, typeof(IShellFolder));
                 }
             }
             else
@@ -274,9 +307,9 @@ namespace Explorip.Helpers
                                             ref guid,
                                             out object shellFolderPtr) == (int)Commun.HRESULT.S_OK)
                                 {
-                                    IntPtr strr = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
+                                    IntPtr strr = Marshal.AllocCoTaskMem(ManagedShell.Common.Helpers.ShellHelper.MAX_PATH * 2 + 4);
                                     Marshal.WriteInt32(strr, 0, 0);
-                                    StringBuilder buf = new(MAX_PATH);
+                                    StringBuilder buf = new(ManagedShell.Common.Helpers.ShellHelper.MAX_PATH);
 
                                     string txt = "";
                                     if (_oParentFolder.GetDisplayNameOf(
@@ -284,7 +317,7 @@ namespace Explorip.Helpers
                                                     SHGNO.INFOLDER,
                                                     strr) == (int)Commun.HRESULT.S_OK)
                                     {
-                                        Shlwapi.StrRetToBuf(strr, pidlSubItem, buf, MAX_PATH);
+                                        Shlwapi.StrRetToBuf(strr, pidlSubItem, buf, ManagedShell.Common.Helpers.ShellHelper.MAX_PATH);
                                         txt = buf.ToString();
                                     }
 
@@ -448,6 +481,7 @@ namespace Explorip.Helpers
             // Release all resources first.
             ReleaseAll();
             _arrPIDLs = GetPIDLs(files);
+            _shellItem = new ShellItem(files[0].FullName);
             this.ShowContextMenu(pointScreen, cms);
         }
 
@@ -468,7 +502,6 @@ namespace Explorip.Helpers
         {
             ReleaseAll();
             _arrPIDLs = GetPIDLs(new DirectoryInfo[] { dir }, true);
-            //GetParentFolder(dir.FullName, false);
             ShowContextMenu(pointScreen, cms, true);
         }
 
@@ -489,9 +522,9 @@ namespace Explorip.Helpers
                     return;
                 }
 
-                if (!background)
+                if (!background || _dragDrop)
                 {
-                    if (!GetContextMenuInterfaces(_oParentFolder, _arrPIDLs, out iContextMenuPtr))
+                    if (!GetContextMenuInterfaces(_arrPIDLs, out iContextMenuPtr))
                     {
                         ReleaseAll();
                         return;
@@ -505,11 +538,12 @@ namespace Explorip.Helpers
                     0,
                     CMD_FIRST,
                     CMD_LAST,
-                    CMF.EXPLORE |
-                    CMF.NORMAL | CMF.CANRENAME | 
-                    CMF.EXTENDEDVERBS);
+                    (_dragDrop ? CMF.NORMAL : (CMF.NORMAL |
+                        CMF.CANRENAME | 
+                        CMF.EXTENDEDVERBS))
+                );
 
-                if (iContextMenuPtr != IntPtr.Zero)
+                if (iContextMenuPtr != IntPtr.Zero && !_dragDrop)
                 {
                     Guid guid = typeof(IContextMenu2).GUID;
                     Marshal.QueryInterface(iContextMenuPtr, ref guid, out iContextMenuPtr2);
@@ -518,7 +552,7 @@ namespace Explorip.Helpers
                     _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
                     _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
                 }
-                else
+                else if (!_dragDrop)
                 {
                     _oContextMenu2 = (IContextMenu2)_oContextMenu;
                     _oContextMenu3 = (IContextMenu3)_oContextMenu;

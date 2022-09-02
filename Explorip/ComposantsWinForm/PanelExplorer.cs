@@ -26,7 +26,8 @@ namespace Explorip.ComposantsWinForm
             }
             else
             {
-                TreeRepertoire.Init(repertoire);
+                TreeNode noeud = TreeRepertoire.RafraichirRepertoire(new System.IO.DirectoryInfo(repertoire));
+                TreeRepertoire.SelectedNode = noeud;
             }
         }
 

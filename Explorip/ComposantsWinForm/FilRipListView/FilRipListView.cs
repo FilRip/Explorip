@@ -200,9 +200,8 @@ namespace Explorip.ComposantsWinForm.FilRipListView
 
         private void ClickOnColumnMenu(object sender, EventArgs e)
         {
-            if ((sender != null) && (sender.GetType() == typeof(ToolStripMenuItem)))
+            if ((sender != null) && (sender is ToolStripMenuItem menu))
             {
-                ToolStripMenuItem menu = (ToolStripMenuItem)sender;
                 if (menu.Checked)
                     ((ColumnHeader)menu.Tag).AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);
                 else

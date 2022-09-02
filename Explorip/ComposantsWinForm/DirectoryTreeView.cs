@@ -61,7 +61,7 @@ namespace Explorip.ComposantsWinForm
             {
                 _noeudMyComputer = new TreeNode(Environment.SpecialFolder.MyComputer.NomTraduit())
                 {
-                    Name = "My Computer"
+                    Name = "My Computer",
                 };
                 IntPtr tempPidl = IntPtr.Zero;
                 Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref tempPidl);
@@ -72,7 +72,10 @@ namespace Explorip.ComposantsWinForm
                 Nodes.Add(_noeudMyComputer);
 
                 // TODO : voir https://github.com/aybe/Windows-API-Code-Pack-1.1
-                TreeNode noeudDesktop = new(Environment.SpecialFolder.Desktop.NomTraduit(), 2, 2);
+                TreeNode noeudDesktop = new(Environment.SpecialFolder.Desktop.NomTraduit(), 2, 2)
+                {
+                    Name = "Desktop",
+                };
                 _noeudMyComputer.Nodes.Add(noeudDesktop);
                 noeudDesktop.Name = "Desktop";
                 noeudDesktop.Tag = new DirectoryInfo(Environment.SpecialFolder.Desktop.Repertoire());
@@ -144,12 +147,13 @@ namespace Explorip.ComposantsWinForm
             TreeNode nouveauNoeud;
             nouveauNoeud = new TreeNode(dirInfo.Name)
             {
-                Name = dirInfo.Name,
+                Name = dirInfo.FullName,
                 ImageIndex = _listeIcones.Images.Count - 1,
                 SelectedImageIndex = _listeIcones.Images.Count - 1,
                 Tag = dirInfo
             };
             nouveauNoeud.Nodes.Add("");
+            parent.Name = dirInfo.GetParent().FullName;
             parent.Nodes.Add(nouveauNoeud);
         }
 
@@ -166,9 +170,8 @@ namespace Explorip.ComposantsWinForm
 
             if (e.Node.Name != "My Computer")
             {
-                if (e.Node.Tag != null && e.Node.Tag.GetType() == typeof(DirectoryInfo))
+                if (e.Node.Tag is DirectoryInfo dirInfo)
                 {
-                    DirectoryInfo dirInfo = (DirectoryInfo)e.Node.Tag;
                     if (SelectionneRepertoire != null)
                         SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(dirInfo), null, null);
                     if (_liensFichiers != null) _liensFichiers.Rafraichir(dirInfo);
@@ -238,6 +241,7 @@ namespace Explorip.ComposantsWinForm
                 Bitmap monIcone = Icones.GetFileIcon(pidl, numIcone, Shell32.SHIL.SMALL);
                 _listeIcones.Images.Add(monIcone);
                 int imgIndex = _listeIcones.Images.Count - 1;
+                node.Name = dirI.FullName;
                 node.ImageIndex = imgIndex;
                 node.SelectedImageIndex = imgIndex;
                 node.Tag = dirI;
@@ -255,12 +259,12 @@ namespace Explorip.ComposantsWinForm
         {
             if (parentNode?.Tag != null)
             {
-                if (parentNode.Tag.GetType() == typeof(DirectoryInfo))
+                if (parentNode.Tag is DirectoryInfo dirInfo)
                 {
-                    if (((DirectoryInfo)(parentNode.Tag)).FullName == Environment.SpecialFolder.Desktop.Repertoire())
+                    if (dirInfo.FullName == Environment.SpecialFolder.Desktop.Repertoire())
                         return "Desktop";
                     else
-                        return ((DirectoryInfo)(parentNode.Tag)).FullName;
+                        return dirInfo.FullName;
                 }
                 if (parentNode == _noeudMyComputer)
                     return "My Computer";
@@ -269,8 +273,9 @@ namespace Explorip.ComposantsWinForm
             return "";
         }
 
-        public void RafraichirRepertoire(DirectoryInfo directoryInfo)
+        public TreeNode RafraichirRepertoire(DirectoryInfo directoryInfo)
         {
+            TreeNode retour = null;
             // TODO : RafraichirRepertoire (apres suppression, ajout, renommer, etc...)
             if ((directoryInfo != null) && (directoryInfo.Exists))
             {
@@ -279,18 +284,23 @@ namespace Explorip.ComposantsWinForm
                 {
                     foreach (TreeNode treeNode in noeudCourant.Nodes)
                     {
-                        if (treeNode.Tag.GetType() == typeof(DirectoryInfo))
+                        if (treeNode?.Tag is DirectoryInfo dirInfo)
                         {
-                            if (((DirectoryInfo)treeNode.Tag).Name.ToLower().Trim().Trim('\\') == rep.ToLower().Trim())
+                            if (dirInfo.Name.ToLower().Trim().Trim('\\') == rep.ToLower().Trim().Trim('\\'))
                             {
+                                noeudCourant.Expand();
                                 treeNode.Expand();
+                                TreeRepertoire_AfterExpand(null, new TreeViewEventArgs(treeNode));
                                 noeudCourant = treeNode;
+                                if (dirInfo.FullName == directoryInfo.FullName)
+                                    retour = treeNode;
                             }
                         }
                     }
                 }
                 SelectedNode = noeudCourant;
             }
+            return retour;
         }
 
         private void InitializeComponent()

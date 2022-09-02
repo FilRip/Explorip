@@ -7,12 +7,11 @@ namespace Explorip.TaskBar.Utilities
     {
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         static extern uint GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
-        static readonly int MAX_PATH = 260;
 
         internal static string GetExecutablePath()
         {
-            var sb = new StringBuilder(MAX_PATH);
-            GetModuleFileName(IntPtr.Zero, sb, MAX_PATH);
+            var sb = new StringBuilder(ManagedShell.Common.Helpers.ShellHelper.MAX_PATH);
+            GetModuleFileName(IntPtr.Zero, sb, ManagedShell.Common.Helpers.ShellHelper.MAX_PATH);
             return sb.ToString();
         }
 	}

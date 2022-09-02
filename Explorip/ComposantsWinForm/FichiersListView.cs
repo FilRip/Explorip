@@ -167,6 +167,9 @@ namespace Explorip.ComposantsWinForm
                 return;
             }
 
+            if (dirInfo == null || !dirInfo.Exists)
+                return;
+
             Stopwatch _chronometre = new();
             _chronometre.Restart();
 
@@ -224,10 +227,10 @@ namespace Explorip.ComposantsWinForm
                     List<DirectoryInfo> arrDI = new();
                     foreach (ListViewItem item in SelectedItems)
                     {
-                        if (item.Tag.GetType() == typeof(FileInfo))
-                            arrFI.Add((FileInfo)item.Tag);
-                        else if (item.Tag.GetType() == typeof(DirectoryInfo))
-                            arrDI.Add((DirectoryInfo)item.Tag);
+                        if (item.Tag is FileInfo fi)
+                            arrFI.Add(fi);
+                        else if (item.Tag is DirectoryInfo di)
+                            arrDI.Add(di);
                     }
                     // TODO : Menu contextuel quand on a sélectionné des fichiers ET des dossiers
                     if (arrFI.Count > 0)
@@ -427,7 +430,10 @@ namespace Explorip.ComposantsWinForm
             }
             else if (DragDropHelper.GetInstance().StartButton == MouseButtons.Right)
             {
-                DragDropHelper.GetInstance().DragDrop(sender, e);
+                //DragDropHelper.GetInstance().DragDrop(sender, e);
+                ShellContextMenu ctxMnu = new();
+                ctxMnu.DragDrop = true;
+                ctxMnu.ShowContextMenu(new FileInfo[] { (FileInfo)SelectedItems[0].Tag }, PointToScreen(new Point(e.X, e.Y)), null);
             }
             DragDropHelper.GetInstance().DragDropEnCours = false;
         }

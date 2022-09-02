@@ -67,7 +67,7 @@ namespace Explorip.Helpers
                             GetMenuItem(IdMenu, pointeurMenu, false, out libelle, out IdCmd, out icone, out etat);//)
                             if (string.IsNullOrWhiteSpace(libelle))
                             {
-                                if (cms.Items[cms.Items.Count - 1].GetType() == typeof(ToolStripSeparator))
+                                if (cms.Items[cms.Items.Count - 1] is ToolStripSeparator)
                                     continue;
                                 menuAAjouter = new ToolStripSeparator();
                             }
@@ -101,11 +101,11 @@ namespace Explorip.Helpers
                             }
                             else
                             {
-                                if ((menuAAjouter.GetType() == typeof(ToolStripSeparator)) && (nbMenu == 1))
+                                if ((menuAAjouter is ToolStripSeparator) && (nbMenu == 1))
                                     cms.Items.Add(menuAAjouter);
                                 else
                                 {
-                                    if ((sousMenu.DropDownItems.Count > 0) && (sousMenu.DropDownItems[sousMenu.DropDownItems.Count - 1].GetType() == typeof(ToolStripSeparator)) && (menuAAjouter.GetType() == typeof(ToolStripSeparator)))
+                                    if ((sousMenu.DropDownItems.Count > 0) && (sousMenu.DropDownItems[sousMenu.DropDownItems.Count - 1] is ToolStripSeparator) && (menuAAjouter is ToolStripSeparator))
                                         continue;
                                     sousMenu.DropDownItems.Add(menuAAjouter);
                                 }
@@ -136,12 +136,12 @@ namespace Explorip.Helpers
                     }
                     if ((cms != null) && (cms.Items.Count > 0))
                     {
-                        if (cms.Items[cms.Items.Count - 1].GetType() == typeof(ToolStripSeparator))
+                        if (cms.Items[cms.Items.Count - 1] is ToolStripSeparator)
                             cms.Items.RemoveAt(cms.Items.Count - 1);
                     }
                     if ((sousMenu != null) && (sousMenu.DropDownItems != null) && (sousMenu.DropDownItems.Count > 0))
                     {
-                        if (sousMenu.DropDownItems[sousMenu.DropDownItems.Count - 1].GetType() == typeof(ToolStripSeparator))
+                        if (sousMenu.DropDownItems[sousMenu.DropDownItems.Count - 1] is ToolStripSeparator)
                             sousMenu.DropDownItems.RemoveAt(sousMenu.DropDownItems.Count - 1);
                     }
                 }

@@ -213,8 +213,13 @@ namespace Explorip.Helpers
                 {
                     Console.WriteLine("Pointeur data sur " + _listeFichiersDossiers[0].FullName);
                     Console.WriteLine("OpenPopUp DragDrop");
-                    erreur = dropTarget.DragDrop(pointeurData, 0, new POINT(Cursor.Position.X, Cursor.Position.Y), ref effets);
+                    erreur = dropTarget.DragDrop(pointeurData, touches, new POINT(Cursor.Position.X, Cursor.Position.Y), ref effets);
                     Console.WriteLine("Retour de la popUp : " + erreur.ToString());
+                    ShellNewMenuCommand entreeMenu = new();
+                    entreeMenu.AddSubMenu(new ShellFolder(_repStart.FullName, IntPtr.Zero), 0, ref _pidlParent);
+                    ShellMenuCommandBuilder commande = new();
+                    commande.AddCommand(entreeMenu);
+                    ShellItemContextMenu monMenu = new(new ShellItem[] { item }, new ShellFolder(_repStart.FullName, IntPtr.Zero), IntPtr.Zero, null, true, commande, commande);
                 }
                 else
                     Console.WriteLine("GetIDataObject retourne null");
@@ -257,11 +262,14 @@ namespace Explorip.Helpers
         /// <param name="item">The item for which to obtain the IDataObject</param>
         /// <param name="dataObjectPtr">A pointer to the returned IDataObject</param>
         /// <returns>the IDataObject the ShellItem</returns>
-        public IntPtr GetIDataObject(ShellItem[] items)
+        public IntPtr GetIDataObject(ShellItem[] items, IShellFolder parent = null)
         {
             IntPtr[] pidls = new IntPtr[items.Length];
             for (int i = 0; i < items.Length; i++)
                 pidls[i] = items[i].RelativePidl;
+
+            if (parent != null)
+                _shellFolder = parent;
 
             Guid guid = new("{0000010e-0000-0000-C000-000000000046}");
             if (_shellFolder.GetUIObjectOf(
