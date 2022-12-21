@@ -298,7 +298,7 @@ namespace Explorip.ComposantsWinForm
                         }
                     }
                 }
-                SelectedNode = noeudCourant;
+                TreeRepertoire_AfterSelect(this, new TreeViewEventArgs(noeudCourant));
             }
             return retour;
         }

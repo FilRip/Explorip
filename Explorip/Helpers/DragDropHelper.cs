@@ -129,7 +129,7 @@ namespace Explorip.Helpers
                         out IntPtr pointeurData);
                     if (erreur == (int)WinAPI.Commun.HRESULT.S_OK)
                     {
-                        Console.WriteLine($"DoDragDrop dans {repertoireCourant.FullName} parent de {listeFichiersDossiers[0]}");
+                        Console.WriteLine($"DemarreDragDrop dans {repertoireCourant.FullName} parent de {listeFichiersDossiers[0]}");
                         WinAPI.Ole32.DoDragDrop(pointeurData, this, effetDragDrop, out DragDropEffects effets);
                     }
                 }

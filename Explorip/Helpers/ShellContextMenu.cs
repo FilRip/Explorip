@@ -587,10 +587,6 @@ namespace Explorip.Helpers
                     return;
                 }
             }
-            catch
-            {
-                throw;
-            }
             finally
             {
                 if (cms == null)

@@ -219,6 +219,7 @@ namespace Explorip.ComposantsWinForm
 
         private void FichiersListView_MouseUp(object sender, MouseEventArgs e)
         {
+            Console.WriteLine("MouseUp " + DragDropHelper.GetInstance().DragDropEnCours.ToString());
             if ((e.Button == MouseButtons.Right) && (!DragDropHelper.GetInstance().DragDropEnCours))
             {
                 if (SelectedItems.Count > 0)
@@ -250,6 +251,12 @@ namespace Explorip.ComposantsWinForm
                     ShellContextMenu ctxMenu = new();
                     ctxMenu.ShowContextMenu(_repCourant, PointToScreen(new Point(e.X, e.Y)), _cms);
                 }
+            }
+            else if (DragDropHelper.GetInstance().DragDropEnCours)
+            {
+                // TODO : Affiche popup
+                Console.WriteLine("AffichePopUp ici ?");
+                DragDropHelper.GetInstance().DragDropEnCours = false;
             }
         }
 
@@ -430,10 +437,11 @@ namespace Explorip.ComposantsWinForm
             }
             else if (DragDropHelper.GetInstance().StartButton == MouseButtons.Right)
             {
-                //DragDropHelper.GetInstance().DragDrop(sender, e);
-                ShellContextMenu ctxMnu = new();
+                Console.WriteLine("DragDrop " + DragDropHelper.GetInstance().DragDropEnCours.ToString());
+                DragDropHelper.GetInstance().DragDrop(sender, e);
+                /*ShellContextMenu ctxMnu = new();
                 ctxMnu.DragDrop = true;
-                ctxMnu.ShowContextMenu(new FileInfo[] { (FileInfo)SelectedItems[0].Tag }, PointToScreen(new Point(e.X, e.Y)), null);
+                ctxMnu.ShowContextMenu(new FileInfo[] { (FileInfo)SelectedItems[0].Tag }, PointToScreen(new Point(e.X, e.Y)), null);*/
             }
             DragDropHelper.GetInstance().DragDropEnCours = false;
         }
