@@ -111,7 +111,6 @@ namespace Explorip.Helpers
                     ListeFichiersDossiers = listeFichiersDossiers;
                     GetIDropTarget();
                     CreerPointeurData();
-                    Console.WriteLine($"DemarreDragDrop dans {repertoireCourant?.FullName} parent de {listeFichiersDossiers[0]}");
                     Ole32.DoDragDrop(_pointeurData, this, effetDragDrop, out DragDropEffects effets);
                 }
 
@@ -124,7 +123,6 @@ namespace Explorip.Helpers
 
         private void LibererMemoire()
         {
-            Console.WriteLine("Liberer mémoire");
             ListeFichiersDossiers.Clear();
             if (ListePointeursFichiersDossiers != null)
                 foreach (IntPtr pointeur in ListePointeursFichiersDossiers)
@@ -163,14 +161,9 @@ namespace Explorip.Helpers
                     out IntPtr dropTargetPtr);
                 if (erreur == (int)Commun.HRESULT.S_OK)
                 {
-                    Console.WriteLine("GetIDropTarget Created with Parent="+ _shellFolder.ToString() + " of " + ListeFichiersDossiers[0].ToString() + " par " + new System.Diagnostics.StackTrace().GetFrame(1).GetMethod().Name);
                     _dropTarget = (WinAPI.Modeles.IDropTarget)Marshal.GetTypedObjectForIUnknown(dropTargetPtr, typeof(WinAPI.Modeles.IDropTarget));
                 }
-                else
-                    Console.WriteLine("Pas de IDropTarget");
             }
-            else
-                Console.WriteLine("Pas de ShellFolder Parent");
         }
 
         public void DragDrop(object sender, DragEventArgs e)
@@ -184,19 +177,14 @@ namespace Explorip.Helpers
 
             if (ListeFichiersDossiers == null || ListeFichiersDossiers.Count == 0)
             {
-                Console.WriteLine("Liste fichier/dossier vide");
                 return;
             }
             if (_pointeurData != IntPtr.Zero)
             {
-                Console.WriteLine("Pointeur data sur " + ListeFichiersDossiers[0].FullName);
-                Console.WriteLine("OpenPopUp DragDrop");
-                int erreur = _dropTarget.DragDrop(_pointeurData, touches, new POINT(e.X, e.Y), ref effets);
+                if (_dropTarget != null)
+                    _dropTarget.DragDrop(_pointeurData, touches, new POINT(e.X, e.Y), ref effets);
                 _dropTargetHelper.Drop(_pointeurData, new POINT(e.X, e.Y), effets);
-                Console.WriteLine("Retour de la popUp : " + erreur.ToString());
             }
-            else
-                Console.WriteLine("GetIDataObject retourne null");
             _dragDropEnCours = false;
         }
 
@@ -288,6 +276,7 @@ namespace Explorip.Helpers
             _dropTargetHelper.DragLeave();
             _dropTarget.DragLeave();
             LibererMemoire();
+            _dragDropEnCours = false;
         }
 
         private void GetIDropTargetHelper()

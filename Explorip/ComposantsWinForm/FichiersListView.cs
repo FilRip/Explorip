@@ -222,7 +222,6 @@ namespace Explorip.ComposantsWinForm
 
         private void FichiersListView_MouseUp(object sender, MouseEventArgs e)
         {
-            Console.WriteLine("MouseUp " + DragDropHelper.GetInstance().DragDropEnCours.ToString());
             if ((e.Button == MouseButtons.Right) && (!DragDropHelper.GetInstance().DragDropEnCours))
             {
                 if (SelectedItems.Count > 0)
@@ -427,7 +426,6 @@ namespace Explorip.ComposantsWinForm
             }
             else if (DragDropHelper.GetInstance().StartButton == MouseButtons.Right)
             {
-                Console.WriteLine("DragDrop " + DragDropHelper.GetInstance().DragDropEnCours.ToString());
                 DragDropHelper.GetInstance().DragDrop(sender, e);
             }
             DragDropHelper.GetInstance().DragDropEnCours = false;
@@ -464,7 +462,6 @@ namespace Explorip.ComposantsWinForm
 
         private void FichiersListView_DragLeave(object sender, EventArgs e)
         {
-            Console.WriteLine("DragLeave");
             DragDropHelper.GetInstance().DragLeave(sender, e);
             SelectionChange(true);
         }
