@@ -471,6 +471,14 @@ namespace Explorip.ComposantsWinForm
             DragDropHelper.GetInstance().ItemDrag(RetourneListeFichiersDossiersSelectionnes(), e.Button, _repCourant);
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            /*ManagedShell.Interop.NativeMethods.WM typeMsg = (ManagedShell.Interop.NativeMethods.WM)m.Msg;
+            Console.WriteLine(typeMsg.ToString("G"));
+            if (typeMsg != ManagedShell.Interop.NativeMethods.WM.CONTEXTMENU)*/
+                base.WndProc(ref m);
+        }
+
         #endregion
     }
 }

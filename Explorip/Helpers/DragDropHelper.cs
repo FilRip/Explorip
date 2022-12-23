@@ -181,9 +181,11 @@ namespace Explorip.Helpers
             }
             if (_pointeurData != IntPtr.Zero)
             {
+                Console.WriteLine("Menu Start");
                 if (_dropTarget != null)
                     _dropTarget.DragDrop(_pointeurData, touches, new POINT(e.X, e.Y), ref effets);
                 _dropTargetHelper.Drop(_pointeurData, new POINT(e.X, e.Y), effets);
+                Console.WriteLine("Menu end");
             }
             _dragDropEnCours = false;
         }

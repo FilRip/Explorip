@@ -2820,7 +2820,12 @@ namespace ManagedShell.Interop
             /// </summary>
             DPICHANGED = 0x02E0,
             GETDPISCALEDSIZE = 0x02E4,
-
+            LVM_GETNEXTITEM = 0x100C,
+            LVM_GETITEMRECT = 0x100E,
+            LVM_GETITEMSTATE = 0x102C,
+            LVM_GETSELECTEDCOUNT = 0x1032,
+            LVM_GETITEMW = 0x104B,
+            OCM_NOTIFY = 0x204E,
             /// <summary>
             /// The WM_APP constant is used by applications to help define private messages, usually of the form WM_APP+X, where X is an integer value. 
             /// </summary>
