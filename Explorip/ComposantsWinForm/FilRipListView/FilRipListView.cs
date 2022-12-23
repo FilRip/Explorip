@@ -12,13 +12,9 @@ namespace Explorip.ComposantsWinForm.FilRipListView
     /// </summary>
     public class FilRipListView : ListView
     {
-        private bool _addMenuShowColumns = true;
         private ToolStripMenuItem _menuColonnes;
         private readonly FilRipColumnHeaderCollection columnHeaderCollection;
         private const string titreSousMenuColonne = "Colonnes affichées";
-        private bool _alternerCouleur = true;
-        private Color _couleurAlternee1 = Color.White;
-        private Color _couleurAlternee2 = Color.LightGray;
 
         /// <summary>
         /// Constructeur de base
@@ -83,9 +79,9 @@ namespace Explorip.ComposantsWinForm.FilRipListView
                         else
                             e.SubItem.ForeColor = enTete.CouleurSinon;
                     }
-                    if (_alternerCouleur)
+                    if (ActiverCouleurAlternee)
                     {
-                        e.SubItem.BackColor = e.ItemIndex % 2 == 0 ? _couleurAlternee1 : _couleurAlternee2;
+                        e.SubItem.BackColor = e.ItemIndex % 2 == 0 ? CouleurAlternee1 : CouleurAlternee2;
                     }
                 }
                 e.DrawDefault = true;
@@ -103,42 +99,25 @@ namespace Explorip.ComposantsWinForm.FilRipListView
         /// Ajoute (ou non) le menu contextuel à ce contrôle permettant de choisir les colonnes à afficher/cacher
         /// </summary>
         [Category("Menu colonnes"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
-        public bool AddMenuShowColumns
-        {
-            get { return _addMenuShowColumns; }
-            set { _addMenuShowColumns = value; }
-            
-        }
+        public bool AddMenuShowColumns { get; set; }
 
         /// <summary>
         /// Active ou non l'alternative de couleur de fond une ligne sur deux
         /// </summary>
         [Category("Couleur alternée"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
-        public bool ActiverCouleurAlternee
-        {
-            get { return _alternerCouleur; }
-            set { _alternerCouleur = value; }
-        }
+        public bool ActiverCouleurAlternee { get; set; }
 
         /// <summary>
         /// Couleur de fond pour les lignes impaires
         /// </summary>
         [Category("Couleur alternée"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
-        public Color CouleurAlternee1
-        {
-            get { return _couleurAlternee1; }
-            set { _couleurAlternee1 = value; }
-        }
+        public Color CouleurAlternee1 { get; set; } = Color.White;
 
         /// <summary>
         /// Couleur de fond pour les lignes paires
         /// </summary>
         [Category("Couleur alternée"), Browsable(true), EditorBrowsable(EditorBrowsableState.Always)]
-        public Color CouleurAlternee2
-        {
-            get { return _couleurAlternee2; }
-            set { _couleurAlternee2 = value; }
-        }
+        public Color CouleurAlternee2 { get; set; } = Color.LightGray;
 
         /// <summary>
         /// Liste des colonnes
@@ -158,7 +137,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
         private void ConstruireMenuColonnes(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right) return;
-            if (!_addMenuShowColumns || Columns.Count == 0) return;
+            if (!AddMenuShowColumns || Columns.Count == 0) return;
 
             if (ContextMenuStrip == null)
                 ContextMenuStrip = new ContextMenuStrip();
@@ -200,7 +179,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
 
         private void ClickOnColumnMenu(object sender, EventArgs e)
         {
-            if ((sender != null) && (sender is ToolStripMenuItem menu))
+            if (sender is ToolStripMenuItem menu)
             {
                 if (menu.Checked)
                     ((ColumnHeader)menu.Tag).AutoResize(ColumnHeaderAutoResizeStyle.HeaderSize);

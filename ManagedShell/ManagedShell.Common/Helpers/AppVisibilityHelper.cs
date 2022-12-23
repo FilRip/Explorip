@@ -119,13 +119,10 @@ namespace ManagedShell.Common.Helpers
                 return;
             }
 
-            if (_useEvents && _eventCookie > 0)
+            if (_useEvents && _eventCookie > 0 && _appVis.Unadvise(_eventCookie) == 0)
             {
                 // unregister from events
-                if (_appVis.Unadvise(_eventCookie) == 0)
-                {
-                    ShellLogger.Debug("AppVisibilityHelper: Unsubscribed from change events");
-                }
+                ShellLogger.Debug("AppVisibilityHelper: Unsubscribed from change events");
             }
         }
     }

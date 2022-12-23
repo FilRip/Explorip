@@ -6,15 +6,15 @@ namespace Explorip.WinAPI
     public static class Kernel32
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr GetModuleHandle(string lpModuleName);
+        internal static extern IntPtr GetModuleHandle(string lpModuleName);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetExitCodeProcess(IntPtr hProcess, out uint lpExitCode);
+        internal static extern bool GetExitCodeProcess(IntPtr hProcess, out uint lpExitCode);
 
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPTStr)] string lpFileName);
+        internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPTStr)] string lpFileName);
 
         [DllImport("Kernel32.dll", SetLastError = true)]
-        public static extern bool FreeLibrary(IntPtr hModule);
+        internal static extern bool FreeLibrary(IntPtr hModule);
     }
 }

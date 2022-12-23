@@ -8,6 +8,7 @@ using Explorip.WinAPI;
 using Explorip.WinAPI.Modeles;
 
 using ManagedShell.ShellFolders;
+using ManagedShell.ShellFolders.Enums;
 
 namespace Explorip.Helpers
 {
@@ -19,19 +20,21 @@ namespace Explorip.Helpers
         public static DragDropHelper GetInstance()
         {
             if (_instance == null)
+            {
                 _instance = new();
+                _instance.GetIDropTargetHelper();
+            }
             return _instance;
         }
 
-        private MouseButtons _startButton;
         private bool _dragDropEnCours;
-        private DirectoryInfo _repStart;
-
-        private readonly List<FileSystemInfo> _listeFichiersDossiers;
-        private IntPtr[] _listePointeursFichiersDossiers;
 
         private IntPtr _pidlParent;
         private IShellFolder _shellFolder;
+        private WinAPI.Modeles.IDropTarget _dropTarget;
+        private IntPtr _dropTargetHelperPtr;
+        private IDropTargetHelper _dropTargetHelper;
+        private IntPtr _pointeurData;
 
         public const DragDropEffects effetDragDrop = DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link;
 
@@ -43,14 +46,10 @@ namespace Explorip.Helpers
                 Text = "",
                 Visible = false
             };*/
-            _listeFichiersDossiers = new List<FileSystemInfo>();
+            ListeFichiersDossiers = new List<FileSystemInfo>();
         }
 
-        public MouseButtons StartButton
-        {
-            get { return _startButton; }
-            set { _startButton = value; }
-        }
+        public MouseButtons StartButton { get; set; }
 
         public bool DragDropEnCours
         {
@@ -58,36 +57,44 @@ namespace Explorip.Helpers
             set
             {
                 _dragDropEnCours = value;
-                /*if (!value)
-                    LibererMemoire();*/
+                if (!value)
+                    LibererMemoire();
             }
         }
 
-        public DirectoryInfo RepertoireDemarrage
+        public DirectoryInfo RepertoireDemarrage { get; set; }
+
+        public List<FileSystemInfo> ListeFichiersDossiers { get; private set; }
+
+        public IntPtr[] ListePointeursFichiersDossiers { get; private set; }
+
+        private void CreerPointeurData()
         {
-            get { return _repStart; }
-            set { _repStart = value; }
+            ListePointeursFichiersDossiers = new IntPtr[ListeFichiersDossiers.Count];
+            int position = 0;
+            foreach (FileSystemInfo item in ListeFichiersDossiers)
+            {
+                ListePointeursFichiersDossiers[position++] = new ShellItem(item.FullName).RelativePidl;
+            }
+
+            Guid guid = new("{0000010e-0000-0000-C000-000000000046}");
+            _shellFolder.GetUIObjectOf(
+                IntPtr.Zero,
+                (uint)ListePointeursFichiersDossiers.Length,
+                ListePointeursFichiersDossiers,
+                ref guid,
+                IntPtr.Zero,
+                out _pointeurData);
         }
 
-        public List<FileSystemInfo> ListeFichiersDossiers
-        {
-            get { return _listeFichiersDossiers; }
-        }
-
-        public IntPtr[] ListePointeursFichiersDossiers
-        {
-            get { return _listePointeursFichiersDossiers; }
-            set { _listePointeursFichiersDossiers = value; }
-        }
-
-        public bool DemarreDrag(List<FileSystemInfo> listeFichiersDossiers, MouseButtons boutonsSouris, DirectoryInfo repertoireCourant)
+        public bool ItemDrag(List<FileSystemInfo> listeFichiersDossiers, MouseButtons boutonsSouris, DirectoryInfo repertoireCourant)
         {
             try
             {
-                _startButton = boutonsSouris;
+                StartButton = boutonsSouris;
                 int erreur;
 
-                _repStart = repertoireCourant;
+                RepertoireDemarrage = repertoireCourant;
 
                 if ((listeFichiersDossiers == null) || (listeFichiersDossiers.Count == 0))
                     return false;
@@ -97,41 +104,25 @@ namespace Explorip.Helpers
 
                 if (repertoireCourant == null)
                 {
-                    erreur = WinAPI.Shell32.SHGetDesktopFolder(out _pidlParent);
-                    if (erreur == (int)WinAPI.Commun.HRESULT.S_OK)
+                    erreur = Shell32.SHGetDesktopFolder(out _pidlParent);
+                    if (erreur == (int)Commun.HRESULT.S_OK)
                         return false;
                     _shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(_pidlParent, typeof(IShellFolder));
                 }
                 else
                 {
                     Guid guidSH = typeof(IShellFolder).GUID;
-                    _pidlParent = WinAPI.Shell32.ILCreateFromPath(repertoireCourant.FullName);
-                    WinAPI.Shell32.SHBindToParent(_pidlParent, ref guidSH, out IntPtr pidlInterface, IntPtr.Zero);
+                    _pidlParent = Shell32.ILCreateFromPath(repertoireCourant.FullName);
+                    Shell32.SHBindToParent(_pidlParent, ref guidSH, out IntPtr pidlInterface, IntPtr.Zero);
                     _shellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
                 }
                 if (_pidlParent != IntPtr.Zero)
                 {
-                    _listePointeursFichiersDossiers = new IntPtr[listeFichiersDossiers.Count];
-                    int position = 0;
-                    foreach (FileSystemInfo item in listeFichiersDossiers)
-                    {
-                        _listePointeursFichiersDossiers[position++] = WinAPI.Shell32.ILCreateFromPath(item.FullName);
-                        _listeFichiersDossiers.Add(item);
-                    }
-
-                    Guid guid = new("{0000010e-0000-0000-C000-000000000046}");
-                    erreur = _shellFolder.GetUIObjectOf(
-                        IntPtr.Zero,
-                        (uint)listeFichiersDossiers.Count,
-                        _listePointeursFichiersDossiers,
-                        ref guid,
-                        IntPtr.Zero,
-                        out IntPtr pointeurData);
-                    if (erreur == (int)WinAPI.Commun.HRESULT.S_OK)
-                    {
-                        Console.WriteLine($"DemarreDragDrop dans {repertoireCourant.FullName} parent de {listeFichiersDossiers[0]}");
-                        WinAPI.Ole32.DoDragDrop(pointeurData, this, effetDragDrop, out DragDropEffects effets);
-                    }
+                    ListeFichiersDossiers = listeFichiersDossiers;
+                    GetIDropTarget();
+                    CreerPointeurData();
+                    Console.WriteLine($"DemarreDragDrop dans {repertoireCourant.FullName} parent de {listeFichiersDossiers[0]}");
+                    Ole32.DoDragDrop(_pointeurData, this, effetDragDrop, out DragDropEffects effets);
                 }
 
                 _dragDropEnCours = true;
@@ -148,9 +139,9 @@ namespace Explorip.Helpers
             Shell32.SHGetDesktopFolder(out IntPtr pUnkownDesktopFolder);
             oDesktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnkownDesktopFolder, typeof(IShellFolder));
             uint pchEaten = 0;
-            SFGAO pdwAttributes = 0;
-            oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, _repStart.GetParent().FullName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
-            Console.WriteLine("Parent défini sur " + _repStart.GetParent());
+            WinAPI.Modeles.SFGAO pdwAttributes = 0;
+            oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, RepertoireDemarrage.FullName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
+            Console.WriteLine("Parent défini sur " + RepertoireDemarrage.FullName);
             oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref guid, out object pUnknownParentFolder);
             _shellFolder = (IShellFolder)pUnknownParentFolder;
         }
@@ -158,11 +149,11 @@ namespace Explorip.Helpers
         private void LibererMemoire()
         {
             // TODO : Libérer les mémoires/pointeurs aliés
-            _listeFichiersDossiers.Clear();
-            if (_listePointeursFichiersDossiers != null)
-                foreach (IntPtr pointeur in _listePointeursFichiersDossiers)
+            ListeFichiersDossiers.Clear();
+            if (ListePointeursFichiersDossiers != null)
+                foreach (IntPtr pointeur in ListePointeursFichiersDossiers)
                     Marshal.FreeCoTaskMem(pointeur);
-            _listePointeursFichiersDossiers = new IntPtr[0];
+            ListePointeursFichiersDossiers = new IntPtr[0];
             if (_shellFolder != null)
             {
                 Marshal.ReleaseComObject(_shellFolder);
@@ -175,12 +166,10 @@ namespace Explorip.Helpers
             }
         }
 
-        public void DragDrop(object sender, DragEventArgs e)
+        private void GetIDropTarget()
         {
-            // TODO : Menu contextuel shell drag'n drop
-
             GetParent();
-            ShellItem item = new(_repStart.FullName);
+            ShellItem item = new(Path.GetDirectoryName(ListeFichiersDossiers[0].FullName));
             Console.WriteLine("Item défini sur = " + item.ToString());
             int erreur;
             Guid guid = typeof(WinAPI.Modeles.IDropTarget).GUID;
@@ -195,37 +184,41 @@ namespace Explorip.Helpers
 
             if (erreur == (int)Commun.HRESULT.S_OK)
             {
-                MK touches = MK.RBUTTON;
-                if (e.KeyState.EtatBit(4))
-                    touches |= MK.CONTROL;
-                if (e.KeyState.EtatBit(6))
-                    touches |= MK.ALT;
-                DragDropEffects effets = effetDragDrop;
-                WinAPI.Modeles.IDropTarget dropTarget = (WinAPI.Modeles.IDropTarget)Marshal.GetTypedObjectForIUnknown(dropTargetPtr, typeof(WinAPI.Modeles.IDropTarget));
-
-                if (_listeFichiersDossiers == null || _listeFichiersDossiers.Count == 0)
-                {
-                    Console.WriteLine("Liste fichier/dossier vide");
-                    return;
-                }
-                IntPtr pointeurData = GetIDataObject(new ShellItem[] { new ShellItem(_listeFichiersDossiers[0].FullName) });
-                if (pointeurData != IntPtr.Zero)
-                {
-                    Console.WriteLine("Pointeur data sur " + _listeFichiersDossiers[0].FullName);
-                    Console.WriteLine("OpenPopUp DragDrop");
-                    erreur = dropTarget.DragDrop(pointeurData, touches, new POINT(Cursor.Position.X, Cursor.Position.Y), ref effets);
-                    Console.WriteLine("Retour de la popUp : " + erreur.ToString());
-                    ShellNewMenuCommand entreeMenu = new();
-                    entreeMenu.AddSubMenu(new ShellFolder(_repStart.FullName, IntPtr.Zero), 0, ref _pidlParent);
-                    ShellMenuCommandBuilder commande = new();
-                    commande.AddCommand(entreeMenu);
-                    ShellItemContextMenu monMenu = new(new ShellItem[] { item }, new ShellFolder(_repStart.FullName, IntPtr.Zero), IntPtr.Zero, null, true, commande, commande);
-                }
-                else
-                    Console.WriteLine("GetIDataObject retourne null");
+                Console.WriteLine("GetUIObjectOf Created with " + item.ToString());
+                _dropTarget = (WinAPI.Modeles.IDropTarget)Marshal.GetTypedObjectForIUnknown(dropTargetPtr, typeof(WinAPI.Modeles.IDropTarget));
             }
             else
                 throw new Exceptions.ExploripException($"DropHandler, err {erreur}={BetterWin32Errors.ErreurWindows.RetourneTexteErreur(erreur)}");
+        }
+
+        public void DragDrop(object sender, DragEventArgs e)
+        {
+            MK touches = MK.RBUTTON;
+            if (e.KeyState.EtatBit(4))
+                touches |= MK.CONTROL;
+            if (e.KeyState.EtatBit(6))
+                touches |= MK.ALT;
+            DragDropEffects effets = effetDragDrop;
+
+            if (ListeFichiersDossiers == null || ListeFichiersDossiers.Count == 0)
+            {
+                Console.WriteLine("Liste fichier/dossier vide");
+                return;
+            }
+            //_pointeurData = GetIDataObject(new ShellItem[] { new ShellItem(ListeFichiersDossiers[0].FullName) });
+            if (_pointeurData != IntPtr.Zero)
+            {
+                Console.WriteLine("Pointeur data sur " + ListeFichiersDossiers[0].FullName);
+                Console.WriteLine("OpenPopUp DragDrop");
+                /*dropTarget.DragEnter(_pointeurData, touches, new POINT(Cursor.Position.X, Cursor.Position.Y), ref effets);
+                dropTarget.DragOver(touches, new POINT(Cursor.Position.X, Cursor.Position.Y), ref effets);*/
+                int erreur = _dropTarget.DragDrop(_pointeurData, touches, new POINT(e.X, e.Y), ref effets);
+                _dropTargetHelper.Drop(_pointeurData, new POINT(e.X, e.Y), effets);
+                Console.WriteLine("Retour de la popUp : " + erreur.ToString());
+            }
+            else
+                Console.WriteLine("GetIDataObject retourne null");
+            _dragDropEnCours = false;
         }
 
         #region Interface IDropSource
@@ -235,13 +228,13 @@ namespace Explorip.Helpers
             if (fEscapePressed)
             {
                 _dragDropEnCours = false;
-                return WinAPI.Commun.DRAGDROP_S_CANCEL;
+                return Commun.DRAGDROP_S_CANCEL;
             }
             else
             {
-                if ((_startButton & MouseButtons.Left) != 0 && (grfKeyState & MK.LBUTTON) == 0)
+                if ((StartButton & MouseButtons.Left) != 0 && (grfKeyState & MK.LBUTTON) == 0)
                     return Commun.DRAGDROP_S_DROP;
-                else if ((_startButton & MouseButtons.Right) != 0 && (grfKeyState & MK.RBUTTON) == 0)
+                else if ((StartButton & MouseButtons.Right) != 0 && (grfKeyState & MK.RBUTTON) == 0)
                     return Commun.DRAGDROP_S_DROP;
                 else
                     return (int)Commun.HRESULT.S_OK;
@@ -285,6 +278,59 @@ namespace Explorip.Helpers
             else
             {
                 return IntPtr.Zero;
+            }
+        }
+
+        public void DragEnter(object sender, DragEventArgs e)
+        {
+            MK touches = MK.RBUTTON;
+            if (e.KeyState.EtatBit(4))
+                touches |= MK.CONTROL;
+            if (e.KeyState.EtatBit(6))
+                touches |= MK.ALT;
+            DragDropEffects effets = effetDragDrop;
+            _dropTarget.DragEnter(_pointeurData, touches, new POINT(e.X, e.Y), ref effets);
+            _dropTargetHelper.DragEnter(((Control)sender).Handle, _pointeurData, new POINT(e.X, e.Y), effetDragDrop);
+        }
+
+        public void DragOver(object sender, DragEventArgs e)
+        {
+            MK touches = MK.RBUTTON;
+            if (e.KeyState.EtatBit(4))
+                touches |= MK.CONTROL;
+            if (e.KeyState.EtatBit(6))
+                touches |= MK.ALT;
+            DragDropEffects effets = effetDragDrop;
+            _dropTarget.DragOver(touches, new POINT(e.X, e.Y), ref effets);
+            _dropTargetHelper.DragOver(new POINT(e.X, e.Y), effetDragDrop);
+        }
+
+        public void DragLeave(object sender, EventArgs e)
+        {
+            _dropTargetHelper.DragLeave();
+        }
+
+        public bool GetIDropTargetHelper()
+        {
+            Guid guidDropTarget = typeof(IDropTargetHelper).GUID, guidDropHelper = Shell32.CLSID_DragDropHelper;
+
+            if (Ole32.CoCreateInstance(
+                    ref guidDropHelper,
+                    IntPtr.Zero,
+                    CLSCTX.INPROC_SERVER,
+                    ref guidDropTarget,
+                    out _dropTargetHelperPtr) == (int)Commun.HRESULT.S_OK)
+            {
+                _dropTargetHelper =
+                    (IDropTargetHelper)Marshal.GetTypedObjectForIUnknown(_dropTargetHelperPtr, typeof(IDropTargetHelper));
+
+                return true;
+            }
+            else
+            {
+                _dropTargetHelper = null;
+                _dropTargetHelperPtr = IntPtr.Zero;
+                return false;
             }
         }
     }

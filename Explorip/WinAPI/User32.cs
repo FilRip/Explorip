@@ -32,68 +32,68 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("user32.dll")]
-        public static extern int GetMenuItemCount(IntPtr hMenu);
+        internal static extern int GetMenuItemCount(IntPtr hMenu);
 
         [DllImport("user32.dll")]
-        public static extern int GetMenuItemID(IntPtr hMenu, int nPos);
+        internal static extern int GetMenuItemID(IntPtr hMenu, int nPos);
 
         [DllImport("User32.dll")]
-        public static extern int DestroyIcon(IntPtr hIcon);
+        internal static extern int DestroyIcon(IntPtr hIcon);
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern bool GetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, ref MENUITEMINFO lpmii);
+        internal static extern bool GetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, ref MENUITEMINFO lpmii);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr GetSubMenu(IntPtr hMenu, int nPos);
+        internal static extern IntPtr GetSubMenu(IntPtr hMenu, int nPos);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
+        internal static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr SetWindowsHookEx(HookType code, LocalWindowsHook.HookProc func, IntPtr hInstance, int threadID);
+        internal static extern IntPtr SetWindowsHookEx(HookType code, LocalWindowsHook.HookProc func, IntPtr hInstance, int threadID);
 
         [DllImport("user32.dll")]
-        public static extern int UnhookWindowsHookEx(IntPtr hhook);
+        internal static extern int UnhookWindowsHookEx(IntPtr hhook);
 
         [DllImport("user32.dll")]
-        public static extern int CallNextHookEx(IntPtr hhook, int code, IntPtr wParam, IntPtr lParam);
+        internal static extern int CallNextHookEx(IntPtr hhook, int code, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
-        public static extern uint TrackPopupMenuEx(IntPtr hmenu, TPM flags, int x, int y, IntPtr hwnd, IntPtr lptpm);
+        internal static extern uint TrackPopupMenuEx(IntPtr hmenu, TPM flags, int x, int y, IntPtr hwnd, IntPtr lptpm);
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern IntPtr CreatePopupMenu();
+        internal static extern IntPtr CreatePopupMenu();
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool DestroyMenu(IntPtr hMenu);
+        internal static extern bool DestroyMenu(IntPtr hMenu);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IsWindowVisible(IntPtr hWnd);
+        internal static extern bool IsWindowVisible(IntPtr hWnd);
 
         [DllImport("user32.dll", EntryPoint = "GetWindowText", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpWindowText, int nMaxCount);
+        internal static extern int GetWindowText(IntPtr hWnd, StringBuilder lpWindowText, int nMaxCount);
 
         // Define the callback delegate's type.
         public delegate bool EnumDelegate(IntPtr hWnd, int lParam);
 
         [DllImport("user32.dll", EntryPoint = "EnumDesktopWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpEnumCallbackFunction, int lParam);
+        internal static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpEnumCallbackFunction, int lParam);
 
         [DllImport("user32.dll", EntryPoint = "EnumWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int EnumWindows(EnumDelegate callPtr, int lParam);
+        internal static extern int EnumWindows(EnumDelegate callPtr, int lParam);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetForegroundWindow();
+        internal static extern IntPtr GetForegroundWindow();
 
         [DllImport("USER32.DLL")]
-        public static extern IntPtr GetShellWindow();
+        internal static extern IntPtr GetShellWindow();
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+        internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+        internal static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
 
         public enum GWL
         {
@@ -107,29 +107,29 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern int GetWindowLong(IntPtr hWnd, GWL gwl);
+        internal static extern int GetWindowLong(IntPtr hWnd, GWL gwl);
 
         [DllImport("user32.dll", EntryPoint = "GetWindowLongPtr")]
         private static extern IntPtr GetWindowLongPtr(IntPtr hWnd, GWL gwl);
 
         [DllImport("user32.dll")]
-        public static extern bool IsIconic(IntPtr hWnd);
+        internal static extern bool IsIconic(IntPtr hWnd);
 
         public delegate bool EnumDesktopsDelegate(string desktop, IntPtr lParam);
         [DllImport("user32.dll")]
-        public static extern bool EnumDesktops(IntPtr hwinsta, EnumDesktopsDelegate lpEnumFunc, IntPtr lParam);
+        internal static extern bool EnumDesktops(IntPtr hwinsta, EnumDesktopsDelegate lpEnumFunc, IntPtr lParam);
 
         [DllImport("kernel32.dll", EntryPoint = "GetConsoleWindow", SetLastError = true)]
-        public static extern IntPtr GetConsoleWindow();
+        internal static extern IntPtr GetConsoleWindow();
 
         [DllImport("kernel32.dll", EntryPoint = "AttachConsole", SetLastError = true)]
-        public static extern bool AttachConsole(int IdProcessus);
+        internal static extern bool AttachConsole(int IdProcessus);
 
         [DllImport("kernel32.dll", EntryPoint = "FreeConsole", SetLastError = true)]
-        public static extern bool FreeConsole();
+        internal static extern bool FreeConsole();
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
         public enum ShowWindowCommand : int
         {
@@ -147,13 +147,13 @@ namespace Explorip.WinAPI
             ForceMinimize = 11
         }
         [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hWnd, ShowWindowCommand nCmdShow);
+        internal static extern bool ShowWindow(IntPtr hWnd, ShowWindowCommand nCmdShow);
 
         [DllImport("user32.dll")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+        internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr hWndChildAfter, string className, string windowTitle);
+        internal static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr hWndChildAfter, string className, string windowTitle);
 
         [Flags()]
         public enum SWP : int
@@ -175,8 +175,8 @@ namespace Explorip.WinAPI
             ASYNCWINDOWPOS = 0x4000,
         }
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SWP uFlags);
+        internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SWP uFlags);
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool SetWindowPos(IntPtr hWnd, int X, int Y, int cx, int cy, SWP uFlags);
+        internal static extern bool SetWindowPos(IntPtr hWnd, int X, int Y, int cx, int cy, SWP uFlags);
     }
 }

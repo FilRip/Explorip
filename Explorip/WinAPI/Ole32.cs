@@ -11,7 +11,7 @@ namespace Explorip.WinAPI
     public static class Ole32
     {
         [DllImport("ole32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern int DoDragDrop(
+        internal static extern int DoDragDrop(
             IntPtr pDataObject,
             [MarshalAs(UnmanagedType.Interface)]
             IDropSource pDropSource,
@@ -19,13 +19,13 @@ namespace Explorip.WinAPI
             out DragDropEffects pdwEffect);
 
         [DllImport("ole32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int RegisterDragDrop(
+        internal static extern int RegisterDragDrop(
             IntPtr hWnd,
             Modeles.IDropTarget IdropTgt);
 
         // Retrieves a drag/drop helper interface for drawing the drag/drop images
         [DllImport("ole32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int CoCreateInstance(
+        internal static extern int CoCreateInstance(
             ref Guid rclsid,
             IntPtr pUnkOuter,
             CLSCTX dwClsContext,
@@ -35,6 +35,6 @@ namespace Explorip.WinAPI
         // Revokes the registration of the specified application window as a potential target for 
         // OLE drag-and-drop operations
         [DllImport("ole32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int RevokeDragDrop(IntPtr hWnd);
+        internal static extern int RevokeDragDrop(IntPtr hWnd);
     }
 }

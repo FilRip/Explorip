@@ -26,23 +26,23 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("mpr.dll", CharSet = CharSet.Auto)]
-        public static extern int WNetGetUniversalName(
+        internal static extern int WNetGetUniversalName(
             string lpLocalPath,
             InfoLevel dwInfoLevel,
             ref UNIVERSAL_NAME_INFO lpBuffer,
             ref int lpBufferSize);
 
         [DllImport("mpr.dll", CharSet = CharSet.Auto)]
-        public static extern int WNetGetUniversalName(
+        internal static extern int WNetGetUniversalName(
             string lpLocalPath,
             InfoLevel dwInfoLevel,
             IntPtr lpBuffer,
             ref int lpBufferSize);
 
         [DllImport("mpr.dll")]
-        public static extern uint WNetGetConnection(string lpLocalName, StringBuilder lpRemoteName, ref int lpnLength);
+        internal static extern uint WNetGetConnection(string lpLocalName, StringBuilder lpRemoteName, ref int lpnLength);
 
         [DllImport("mpr.dll")]
-        public static extern int WNetAddConnection2(NETRESOURCE netResource, string password, string username, uint flags);
+        internal static extern int WNetAddConnection2(NETRESOURCE netResource, string password, string username, uint flags);
     }
 }

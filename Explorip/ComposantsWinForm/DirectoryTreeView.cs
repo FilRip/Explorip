@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 
 using Explorip.ExploripEventArgs;
@@ -14,45 +15,30 @@ namespace Explorip.ComposantsWinForm
     // https://www.codeproject.com/Articles/18811/Customizing-Folders-in-C
     public class DirectoryTreeView : TreeView
     {
-        private ContextMenuStrip _cms;
         private readonly ImageList _listeIcones;
-        private FichiersListView _liensFichiers;
 
         public delegate void DelegateCliqueRepertoire(object sender, SelectionneRepertoireEventArgs e);
         public event DelegateCliqueRepertoire SelectionneRepertoire;
 
         private TreeNode _noeudMyComputer;
-        private bool _selectionChange;
 
-        public bool SelectionChange
-        {
-            get { return _selectionChange; }
-            set { _selectionChange = value; }
-        }
+        public bool SelectionChange { get; set; }
 
         public DirectoryTreeView() : base()
         {
             InitializeComponent();
-            _cms = new ContextMenuStrip();
+            MenuContextuel = new ContextMenuStrip();
             AfterExpand += TreeRepertoire_AfterExpand;
             AfterSelect += TreeRepertoire_AfterSelect;
             MouseUp += new MouseEventHandler(TreeMain_MouseUp);
             _listeIcones = new ImageList();
             ImageList = _listeIcones;
-            _selectionChange = true;
+            SelectionChange = true;
         }
 
-        public ContextMenuStrip MenuContextuel
-        {
-            get { return _cms; }
-            set { _cms = value; }
-        }
+        public ContextMenuStrip MenuContextuel { get; set; }
 
-        public FichiersListView LiensFichiers
-        {
-            get { return _liensFichiers; }
-            set { _liensFichiers = value; }
-        }
+        public FichiersListView LiensFichiers { get; set; }
 
         public void Init(string path)
         {
@@ -92,9 +78,10 @@ namespace Explorip.ComposantsWinForm
                 _noeudMyComputer.Nodes.Add(Environment.SpecialFolder.MyDocuments.GetTreeNode(_listeIcones));
                 _noeudMyComputer.Nodes.Add(Environment.SpecialFolder.MyPictures.GetTreeNode(_listeIcones));
                 _noeudMyComputer.Nodes.Add(Environment.SpecialFolder.MyMusic.GetTreeNode(_listeIcones));
-                Shell32.SHGetKnownFolderPath(ref Commun.KnownFolder.Objects3D, Shell32.KnownFolderFlags.DontVerify, IntPtr.Zero, out string repertoire);
+                Guid guidObjet3D = Commun.KnownFolder.Objects3D, guidDownload = Commun.KnownFolder.Downloads;
+                Shell32.SHGetKnownFolderPath(ref guidObjet3D, Shell32.KnownFolder.DontVerify, IntPtr.Zero, out string repertoire);
                 AjouteRepertoire(repertoire, _noeudMyComputer);
-                Shell32.SHGetKnownFolderPath(ref Commun.KnownFolder.Downloads, Shell32.KnownFolderFlags.DontVerify, IntPtr.Zero, out repertoire);
+                Shell32.SHGetKnownFolderPath(ref guidDownload, Shell32.KnownFolder.DontVerify, IntPtr.Zero, out repertoire);
                 AjouteRepertoire(repertoire, _noeudMyComputer);
                 _noeudMyComputer.Nodes.Add(Environment.SpecialFolder.MyVideos.GetTreeNode(_listeIcones));
 
@@ -153,7 +140,7 @@ namespace Explorip.ComposantsWinForm
                 Tag = dirInfo
             };
             nouveauNoeud.Nodes.Add("");
-            parent.Name = dirInfo.GetParent().FullName;
+            parent.Name = dirInfo.Parent.FullName;
             parent.Nodes.Add(nouveauNoeud);
         }
 
@@ -165,7 +152,7 @@ namespace Explorip.ComposantsWinForm
 
         private void TreeRepertoire_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (!_selectionChange)
+            if (!SelectionChange)
                 return;
 
             if (e.Node.Name != "My Computer")
@@ -173,8 +160,9 @@ namespace Explorip.ComposantsWinForm
                 if (e.Node.Tag is DirectoryInfo dirInfo)
                 {
                     if (SelectionneRepertoire != null)
-                        SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(dirInfo), null, null);
-                    if (_liensFichiers != null) _liensFichiers.Rafraichir(dirInfo);
+                        SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(dirInfo), new AsyncCallback(SelectionneRepertoire_Termine), null);
+                    if (LiensFichiers != null)
+                        LiensFichiers.Rafraichir(dirInfo);
                     if (!e.Node.IsExpanded)
                     {
                         try
@@ -191,10 +179,22 @@ namespace Explorip.ComposantsWinForm
             }
             else
             {
-                _liensFichiers.Initialise(e.Node);
+                LiensFichiers.Initialise(e.Node);
                 if (SelectionneRepertoire != null)
-                    SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(null), null, null);
+                    SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(null), new AsyncCallback(SelectionneRepertoire_Termine), null);
             }
+        }
+
+        private void SelectionneRepertoire_Termine(IAsyncResult ar)
+        {
+            try
+            {
+                AsyncResult result;
+                result = (AsyncResult)ar;
+                DelegateCliqueRepertoire caller = (DelegateCliqueRepertoire)result.AsyncDelegate;
+                caller.EndInvoke(ar);
+            }
+            catch (Exception) { /* Les erreurs ici ne sont pas interessantes */ }
         }
 
         private void TreeMain_MouseUp(object sender, MouseEventArgs e)
@@ -208,7 +208,7 @@ namespace Explorip.ComposantsWinForm
                 ShellContextMenu ctxMnu = new();
                 DirectoryInfo[] dir = new DirectoryInfo[1];
                 dir[0] = new DirectoryInfo(GetFolderPath(noeudClicke));
-                ctxMnu.ShowContextMenu(dir, this.PointToScreen(new Point(e.X, e.Y)), _cms);
+                ctxMnu.ShowContextMenu(dir, this.PointToScreen(new Point(e.X, e.Y)), MenuContextuel);
             }
         }
 
@@ -284,17 +284,15 @@ namespace Explorip.ComposantsWinForm
                 {
                     foreach (TreeNode treeNode in noeudCourant.Nodes)
                     {
-                        if (treeNode?.Tag is DirectoryInfo dirInfo)
+                        if (treeNode?.Tag is DirectoryInfo dirInfo &&
+                            dirInfo.Name.ToLower().Trim().Trim('\\') == rep.ToLower().Trim().Trim('\\'))
                         {
-                            if (dirInfo.Name.ToLower().Trim().Trim('\\') == rep.ToLower().Trim().Trim('\\'))
-                            {
-                                noeudCourant.Expand();
-                                treeNode.Expand();
-                                TreeRepertoire_AfterExpand(null, new TreeViewEventArgs(treeNode));
-                                noeudCourant = treeNode;
-                                if (dirInfo.FullName == directoryInfo.FullName)
-                                    retour = treeNode;
-                            }
+                            noeudCourant.Expand();
+                            treeNode.Expand();
+                            TreeRepertoire_AfterExpand(null, new TreeViewEventArgs(treeNode));
+                            noeudCourant = treeNode;
+                            if (dirInfo.FullName == directoryInfo.FullName)
+                                retour = treeNode;
                         }
                     }
                 }

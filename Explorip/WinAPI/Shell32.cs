@@ -9,9 +9,10 @@ namespace Explorip.WinAPI
     public static class Shell32
     {
         public const int NAMESIZE = 80;
+        public static readonly Guid CLSID_DragDropHelper = new("{4657278A-411B-11d2-839A-00C04FD918D0}");
 
         [Flags()]
-        public enum KnownFolderFlags : uint
+        public enum KnownFolder : uint
         {
             SimpleIDList = 0x00000100,
             NotParentRelative = 0x00000200,
@@ -51,16 +52,16 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-        public static extern IntPtr SHGetFileInfo(string pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
+        internal static extern IntPtr SHGetFileInfo(string pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
 
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-        public static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
+        internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
 
         [DllImport("shell32.dll")]
-        public static extern int SHGetDesktopFolder(out IntPtr ppshf);
+        internal static extern int SHGetDesktopFolder(out IntPtr ppshf);
 
         [DllImport("Shell32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern int SHGetDesktopFolder(out IShellFolder ppshf);
+        internal static extern int SHGetDesktopFolder(out IShellFolder ppshf);
 
         public enum CSIDL
         {
@@ -143,26 +144,26 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, CSIDL nFolder, ref IntPtr ppidl);
+        internal static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, CSIDL nFolder, ref IntPtr ppidl);
 
         [DllImport("Shell32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern IntPtr ILCreateFromPath([MarshalAs(UnmanagedType.LPWStr)] string pszPath);
+        internal static extern IntPtr ILCreateFromPath([MarshalAs(UnmanagedType.LPWStr)] string pszPath);
 
         [DllImport("Shell32.dll", SetLastError = true)]
-        public static extern void ILFree(IntPtr pidl);
+        internal static extern void ILFree(IntPtr pidl);
 
         [DllImport("shell32.dll")]
-        public static extern int SHGetFolderLocation(IntPtr hwndOwner, CSIDL nFolder, IntPtr hToken, uint dwReserved, out IntPtr ppidl);
+        internal static extern int SHGetFolderLocation(IntPtr hwndOwner, CSIDL nFolder, IntPtr hToken, uint dwReserved, out IntPtr ppidl);
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-        public extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolderFlags flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
+        public extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolder flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
 
         [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
         [return: MarshalAs(UnmanagedType.Interface)]
-        public static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
+        internal static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
 
         [DllImport("shell32.dll", ExactSpelling = true, PreserveSig = false)]
-        public static extern void SHBindToParent(
+        internal static extern void SHBindToParent(
             IntPtr pidl,
             ref Guid riid,
             out IntPtr ppv,

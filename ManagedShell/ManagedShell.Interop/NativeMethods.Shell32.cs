@@ -20,7 +20,7 @@ namespace ManagedShell.Interop
             public IntPtr lParam;
         }
 
-        public enum ABMsg : int
+        public enum ABMsg
         {
             ABM_NEW = 0,
             ABM_REMOVE,
@@ -34,7 +34,7 @@ namespace ManagedShell.Interop
             ABM_WINDOWPOSCHANGED,
             ABM_SETSTATE
         }
-        public enum ABEdge : int
+        public enum ABEdge
         {
             ABE_LEFT = 0,
             ABE_TOP,
@@ -85,7 +85,7 @@ namespace ManagedShell.Interop
         }
 
         [Flags()]
-        public enum SHGFI : int
+        public enum SHGFI
         {
             /// <summary>get icon</summary>
             Icon = 0x000000100,

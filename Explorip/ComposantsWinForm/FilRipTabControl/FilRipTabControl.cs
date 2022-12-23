@@ -924,6 +924,16 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             }
         }
 
+        /// <summary>
+        /// Force la sélection d'une TabPage
+        /// </summary>
+        /// <param name="tab">TabPage à sélectionner</param>
+        public void ForceSelectedTab(TabPage tab)
+        {
+            _forceSelectParClick = true;
+            SelectedTab = tab;
+        }
+
         [Browsable(false)]
         private int ActiveIndex
         {
@@ -992,6 +1002,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
         #region	Dessine Tab
 
+        private bool _painting = false;
         /// <summary>
         /// Evenement déclenché à chaque fois que l'on redessine ce contrôle
         /// </summary>
@@ -999,12 +1010,14 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         protected override void OnPaint(PaintEventArgs e)
         {
             //	We must always paint the entire area of the tab control
-            if (e.ClipRectangle.Equals(ClientRectangle))
+            if (e.ClipRectangle.Equals(ClientRectangle) || _painting)
             {
+                _painting = false;
                 CustomPaint(e.Graphics);
             }
             else
             {
+                _painting = true;
                 //	it is less intensive to just reinvoke the paint with the whole surface available to draw on.
                 Invalidate();
             }
@@ -1228,7 +1241,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 focusRegion.Intersect(tabpath);
                 graphics.FillRegion(focusBrush, focusRegion);
                 focusRegion.Dispose();
-                focusBrush.Dispose();
+                focusBrush?.Dispose();
             }
         }
 
@@ -1292,15 +1305,11 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
         private StringFormat GetStringFormat()
         {
-            StringFormat format = null;
+            StringFormat format = new();
 
             //	Rotate Text by 90 degrees for left and right tabs
             switch (Alignment)
             {
-                case TabAlignment.Top:
-                case TabAlignment.Bottom:
-                    format = new StringFormat();
-                    break;
                 case TabAlignment.Left:
                 case TabAlignment.Right:
                     format = new StringFormat(StringFormatFlags.DirectionVertical);
@@ -1669,7 +1678,8 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             }
 
             //	Add the blend
-            fillBrush.Blend = GetBackgroundBlend();
+            if (fillBrush != null)
+                fillBrush.Blend = GetBackgroundBlend();
 
             return fillBrush;
         }
@@ -1928,6 +1938,9 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             }
         }
 
+        /// <summary>
+        /// Force scrolling à gauche de la liste des onglets
+        /// </summary>
         public void ScrollLeft()
         {
             if (_actualScrollPos <= 0)
@@ -1936,6 +1949,9 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             ScrollTabs();
         }
 
+        /// <summary>
+        /// Force scrolling à droite de la liste des onglets
+        /// </summary>
         public void ScrollRight()
         {
             if (_actualScrollPos >= TabCount - 1)
@@ -1963,6 +1979,11 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         }
 
         private const int WM_HSCROLL = 0x114;
+        /// <summary>
+        /// Méthode lisant les messages Windows reçu.
+        /// Permet surtout d'intercepter si l'utilisateur à demander un scrolling dans la liste des onglets
+        /// </summary>
+        /// <param name="m"></param>
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == WM_HSCROLL)
@@ -1970,11 +1991,6 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 _actualScrollPos = HiWord(m.WParam);
             }
             base.WndProc(ref m);
-        }
-
-        private int LoWord(IntPtr dWord)
-        {
-            return dWord.ToInt32() & 0xffff;
         }
 
         private int HiWord(IntPtr dWord)

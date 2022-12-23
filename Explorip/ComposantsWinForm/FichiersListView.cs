@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 
 using Explorip.ExploripEventArgs;
@@ -17,11 +18,9 @@ namespace Explorip.ComposantsWinForm
 {
     public class FichiersListView : FilRipListView.FilRipListView
     {
-        private ContextMenuStrip _cms;
         private DirectoryInfo _repCourant;
         public delegate void DelegateEntrerRepertoire(object sender, SelectionneRepertoireEventArgs e);
         public event DelegateEntrerRepertoire SelectionneRepertoire;
-        private DirectoryTreeView _liensRepertoire;
         private FilesOperations.FileOperation _fileOperation = new();
         private FileSystemWatcher _repCourantChangement;
         private readonly Dictionary<int, string> _listeIcones;
@@ -29,7 +28,7 @@ namespace Explorip.ComposantsWinForm
         public FichiersListView() : base()
         {
             InitializeComponent();
-            _cms = new ContextMenuStrip();
+            MenuContextuel = new ContextMenuStrip();
             LargeImageList = new ImageList();
             SmallImageList = new ImageList();
             LargeImageList.ImageSize = new Size(32, 32);
@@ -77,10 +76,10 @@ namespace Explorip.ComposantsWinForm
                 else if (item.Tag is DirectoryInfo directoryInfo)
                 {
                     if (SelectionneRepertoire != null)
-                        SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(directoryInfo), null, null);
-                    if (_liensRepertoire != null)
+                        SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(directoryInfo), new AsyncCallback(SelectionneRepertoire_Termine), null);
+                    if (LiensRepertoires != null)
                     {
-                        _liensRepertoire.RafraichirRepertoire(directoryInfo);
+                        LiensRepertoires.RafraichirRepertoire(directoryInfo);
                     }
                     else
                     {
@@ -90,17 +89,21 @@ namespace Explorip.ComposantsWinForm
             }
         }
 
-        public DirectoryTreeView LiensRepertoires
+        private void SelectionneRepertoire_Termine(IAsyncResult ar)
         {
-            get { return _liensRepertoire; }
-            set { _liensRepertoire = value; }
+            try
+            {
+                AsyncResult result;
+                result = (AsyncResult)ar;
+                DelegateEntrerRepertoire caller = (DelegateEntrerRepertoire)result.AsyncDelegate;
+                caller.EndInvoke(ar);
+            }
+            catch (Exception) { }
         }
 
-        public ContextMenuStrip MenuContextuel
-        {
-            get { return _cms; }
-            set { _cms = value; }
-        }
+        public DirectoryTreeView LiensRepertoires { get; set; }
+
+        public ContextMenuStrip MenuContextuel { get; set; }
 
         public DirectoryInfo RepertoireCourant
         {
@@ -237,19 +240,19 @@ namespace Explorip.ComposantsWinForm
                     if (arrFI.Count > 0)
                     {
                         ShellContextMenu ctxMnu = new();
-                        ctxMnu.ShowContextMenu(arrFI.ToArray(), PointToScreen(new Point(e.X, e.Y)), _cms);
+                        ctxMnu.ShowContextMenu(arrFI.ToArray(), PointToScreen(new Point(e.X, e.Y)), MenuContextuel);
                     }
                     else if (arrDI.Count > 0)
                     {
                         ShellContextMenu ctxMnu = new();
-                        ctxMnu.ShowContextMenu(arrDI.ToArray(), PointToScreen(new Point(e.X, e.Y)), _cms);
+                        ctxMnu.ShowContextMenu(arrDI.ToArray(), PointToScreen(new Point(e.X, e.Y)), MenuContextuel);
                     }
                 }
                 else
                 {
                     FilesOperations.ContextMenuPaste.RepDestination = _repCourant.FullName;
                     ShellContextMenu ctxMenu = new();
-                    ctxMenu.ShowContextMenu(_repCourant, PointToScreen(new Point(e.X, e.Y)), _cms);
+                    ctxMenu.ShowContextMenu(_repCourant, PointToScreen(new Point(e.X, e.Y)), MenuContextuel);
                 }
             }
             else if (DragDropHelper.GetInstance().DragDropEnCours)
@@ -278,11 +281,6 @@ namespace Explorip.ComposantsWinForm
 
         }
 
-        private void FichiersListView_DragLeave(object sender, EventArgs e)
-        {
-            Console.WriteLine("DragLeave");
-        }
-
         private void FichiersListView_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F5)
@@ -293,10 +291,10 @@ namespace Explorip.ComposantsWinForm
             {
                 _repCourant = Directory.GetParent(_repCourant.FullName);
                 if (SelectionneRepertoire != null)
-                    SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(_repCourant), null, null);
-                if (_liensRepertoire != null)
+                    SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(_repCourant), new AsyncCallback(SelectionneRepertoire_Termine), null);
+                if (LiensRepertoires != null)
                 {
-                    _liensRepertoire.RafraichirRepertoire(_repCourant);
+                    LiensRepertoires.RafraichirRepertoire(_repCourant);
                 }
                 else
                 {
@@ -316,30 +314,24 @@ namespace Explorip.ComposantsWinForm
             }
             else if (e.Modifiers.HasFlag(Keys.Control))
             {
-                if ((e.KeyCode == Keys.C) || (e.KeyCode == Keys.X))
+                if (((e.KeyCode == Keys.C) || (e.KeyCode == Keys.X)) &&
+                    SelectedItems.Count > 0)
                 {
                     // Couper/copier
-                    bool deplace = (e.KeyCode == Keys.X);
-                    if (SelectedItems.Count > 0)
-                    {
-                        List<FileSystemInfo> listeFichiersDossiers = RetourneListeFichiersDossiersSelectionnes();
-                        ExtensionsClipboard.AjouterFichiersDossiers(listeFichiersDossiers, deplace);
-                    }
+                    ExtensionsClipboard.AjouterFichiersDossiers(RetourneListeFichiersDossiersSelectionnes(), e.KeyCode == Keys.X);
                 }
-                if (e.KeyCode == Keys.V)
+                else if (e.KeyCode == Keys.V &&
+                    ExtensionsClipboard.LireFichiersDossiers(true, out List<FileSystemInfo> listeFichiersDossiers, out bool deplace))
                 {
                     // Coller
-                    if (ExtensionsClipboard.LireFichiersDossiers(true, out List<FileSystemInfo> listeFichiersDossiers, out bool deplace))
+                    foreach (FileSystemInfo fileSystemInfo in listeFichiersDossiers)
                     {
-                        foreach (FileSystemInfo fileSystemInfo in listeFichiersDossiers)
-                        {
-                            if (deplace)
-                                _fileOperation.MoveItem(fileSystemInfo.FullName, _repCourant.FullName, fileSystemInfo.Name);
-                            else
-                                _fileOperation.CopyItem(fileSystemInfo.FullName, _repCourant.FullName, fileSystemInfo.Name);
-                        }
-                        _fileOperation.PerformOperations();
+                        if (deplace)
+                            _fileOperation.MoveItem(fileSystemInfo.FullName, _repCourant.FullName, fileSystemInfo.Name);
+                        else
+                            _fileOperation.CopyItem(fileSystemInfo.FullName, _repCourant.FullName, fileSystemInfo.Name);
                     }
+                    _fileOperation.PerformOperations();
                 }
             }
         }
@@ -377,12 +369,12 @@ namespace Explorip.ComposantsWinForm
                 }
                 catch (Exception) { }
             }
-            if ((_cms != null) && (!_cms.IsDisposed))
+            if ((MenuContextuel != null) && (!MenuContextuel.IsDisposed))
             {
-                _cms.Dispose();
+                MenuContextuel.Dispose();
             }
             _fileOperation = null;
-            _liensRepertoire = null;
+            LiensRepertoires = null;
             _repCourant = null;
             VideListe();
         }
@@ -391,7 +383,7 @@ namespace Explorip.ComposantsWinForm
 
         public void SelectionChange(bool nouvelEtat)
         {
-            _liensRepertoire.SelectionChange = nouvelEtat;
+            LiensRepertoires.SelectionChange = nouvelEtat;
         }
 
         public ShellItem SelectedItem
@@ -439,9 +431,6 @@ namespace Explorip.ComposantsWinForm
             {
                 Console.WriteLine("DragDrop " + DragDropHelper.GetInstance().DragDropEnCours.ToString());
                 DragDropHelper.GetInstance().DragDrop(sender, e);
-                /*ShellContextMenu ctxMnu = new();
-                ctxMnu.DragDrop = true;
-                ctxMnu.ShowContextMenu(new FileInfo[] { (FileInfo)SelectedItems[0].Tag }, PointToScreen(new Point(e.X, e.Y)), null);*/
             }
             DragDropHelper.GetInstance().DragDropEnCours = false;
         }
@@ -452,6 +441,7 @@ namespace Explorip.ComposantsWinForm
             {
                 e.Effect = DragDropHelper.effetDragDrop;
             }
+            DragDropHelper.GetInstance().DragEnter(sender, e);
         }
 
         private void FichiersListView_DragOver(object sender, DragEventArgs e)
@@ -470,12 +460,19 @@ namespace Explorip.ComposantsWinForm
                 {
                     e.Effect = DragDropEffects.Move;
                 }
+                DragDropHelper.GetInstance().DragOver(sender, e);
             }
+        }
+
+        private void FichiersListView_DragLeave(object sender, EventArgs e)
+        {
+            Console.WriteLine("DragLeave");
+            DragDropHelper.GetInstance().DragLeave(sender, e);
         }
 
         private void FichiersListView_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            DragDropHelper.GetInstance().DemarreDrag(RetourneListeFichiersDossiersSelectionnes(), e.Button, _repCourant);
+            DragDropHelper.GetInstance().ItemDrag(RetourneListeFichiersDossiersSelectionnes(), e.Button, _repCourant);
         }
 
         #endregion

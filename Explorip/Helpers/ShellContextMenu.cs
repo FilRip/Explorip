@@ -62,14 +62,6 @@ namespace Explorip.Helpers
         }
         #endregion
 
-        private bool _dragDrop;
-        private ShellItem _shellItem;
-        public bool DragDrop
-        {
-            get { return _dragDrop; }
-            set { _dragDrop = value; }
-        }
-
         #region GetContextMenuInterfaces()
         /// <summary>Gets the interfaces to the context menu</summary>
         /// <param name="oParentFolder">Parent folder</param>
@@ -77,19 +69,11 @@ namespace Explorip.Helpers
         /// <returns>true if it got the interfaces, otherwise false</returns>
         private bool GetContextMenuInterfaces(IntPtr[] arrPIDLs, out IntPtr ctxMenuPtr)
         {
-            string repPrecedent = null;
-            if (_dragDrop)
-            {
-                repPrecedent = _strParentFolder;
-                _oParentFolder = null;
-                _oParentFolder = GetParentFolder(new DirectoryInfo(_strParentFolder).GetParent().FullName, false);
-            }
-
             Guid guid = typeof(IContextMenu).GUID;
             int nResult = _oParentFolder.GetUIObjectOf(
                 IntPtr.Zero,
-                (_dragDrop ? 1 : (uint)arrPIDLs.Length),
-                (_dragDrop ? new IntPtr[] { new ShellItem(repPrecedent).RelativePidl } : arrPIDLs),
+                (uint)arrPIDLs.Length,
+                arrPIDLs,
                 ref guid,
                 IntPtr.Zero,
                 out ctxMenuPtr);
@@ -97,18 +81,6 @@ namespace Explorip.Helpers
             if (nResult == (int)Commun.HRESULT.S_OK)
             {
                 _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
-                if (_dragDrop)
-                {
-                    IShellExtInit shellExtInit = (IShellExtInit)_oContextMenu;
-                    if (shellExtInit != null)
-                    {
-                        int erreur = shellExtInit.Initialize(new ShellItem(repPrecedent).AbsolutePidl, DragDropHelper.GetInstance().GetIDataObject(new ShellItem[] { _shellItem }, _oParentFolder), 0);
-                        if (erreur != 0)
-                        {
-                            Console.WriteLine("Erreur à l'envoi de la commande Initialize aux handlers DragDrop");
-                        }
-                    }
-                }
                 return true;
             }
             else
@@ -481,7 +453,6 @@ namespace Explorip.Helpers
             // Release all resources first.
             ReleaseAll();
             _arrPIDLs = GetPIDLs(files);
-            _shellItem = new ShellItem(files[0].FullName);
             this.ShowContextMenu(pointScreen, cms);
         }
 
@@ -522,7 +493,7 @@ namespace Explorip.Helpers
                     return;
                 }
 
-                if (!background || _dragDrop)
+                if (!background)
                 {
                     if (!GetContextMenuInterfaces(_arrPIDLs, out iContextMenuPtr))
                     {
@@ -538,12 +509,9 @@ namespace Explorip.Helpers
                     0,
                     CMD_FIRST,
                     CMD_LAST,
-                    (_dragDrop ? CMF.NORMAL : (CMF.NORMAL |
-                        CMF.CANRENAME | 
-                        CMF.EXTENDEDVERBS))
-                );
+                    (CMF.NORMAL | CMF.CANRENAME | CMF.EXTENDEDVERBS));
 
-                if (iContextMenuPtr != IntPtr.Zero && !_dragDrop)
+                if (iContextMenuPtr != IntPtr.Zero)
                 {
                     Guid guid = typeof(IContextMenu2).GUID;
                     Marshal.QueryInterface(iContextMenuPtr, ref guid, out iContextMenuPtr2);
@@ -552,7 +520,7 @@ namespace Explorip.Helpers
                     _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
                     _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
                 }
-                else if (!_dragDrop)
+                else
                 {
                     _oContextMenu2 = (IContextMenu2)_oContextMenu;
                     _oContextMenu3 = (IContextMenu3)_oContextMenu;
@@ -586,6 +554,11 @@ namespace Explorip.Helpers
                     cms.Show(pointScreen);
                     return;
                 }
+            }
+            catch (Exception)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
             }
             finally
             {

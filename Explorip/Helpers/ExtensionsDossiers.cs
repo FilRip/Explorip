@@ -23,11 +23,6 @@ namespace Explorip.Helpers
             }
         }
 
-        public static DirectoryInfo GetParent(this DirectoryInfo directoryInfo)
-        {
-            return Directory.GetParent(directoryInfo.FullName);
-        }
-
         public static string Repertoire(this Environment.SpecialFolder specialFolder)
         {
             return Environment.GetFolderPath(specialFolder);

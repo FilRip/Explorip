@@ -19,17 +19,17 @@ namespace Explorip.Themes
             if ((sombre))
             {
                 control.BackColor = Color.Black;
-                if ((control.GetType().EstTypeOuSousTypeDe(typeof(Form))))
+                if (control is Form)
                 {
                     control.ForeColor = Color.White;
                     control.BackColor = Color.Black;
                 }
-                else if ((control.GetType().EstTypeOuSousTypeDe(typeof(FilRipListView))))
+                else if (control is FilRipListView lv)
                 {
                     control.ForeColor = Color.White;
-                    ((FilRipListView)control).CouleurAlternee1 = Color.Black;
-                    ((FilRipListView)control).CouleurAlternee2 = Color.FromArgb(0x30, 0x30, 0x30);
-                    foreach (FilRipColumnHeader col in ((FilRipListView)control).Columns)
+                    lv.CouleurAlternee1 = Color.Black;
+                    lv.CouleurAlternee2 = Color.FromArgb(0x30, 0x30, 0x30);
+                    foreach (FilRipColumnHeader col in lv.Columns)
                     {
                         col.ActiveCouleur = true;
                         col.CouleurArrierePlan = Color.Black;
@@ -43,29 +43,29 @@ namespace Explorip.Themes
                         }
                     }
                 }
-                else if (((control.GetType().EstTypeOuSousTypeDe(typeof(ButtonBase))) || (control.GetType().EstTypeOuSousTypeDe(typeof(TabPage))) || (control.GetType().EstTypeOuSousTypeDe(typeof(GroupBox))) || (control.GetType().EstTypeOuSousTypeDe(typeof(Label)))))
+                else if (control is ButtonBase || control is TabPage || control is GroupBox || control is Label)
                 {
                     control.BackColor = Color.Black;
                     control.ForeColor = Color.White;
                 }
-                else if ((!(control.GetType().EstTypeOuSousTypeDe(typeof(ProgressBar)))))
+                else if (control is not ProgressBar)
                     control.ForeColor = Color.White;
             }
             else
             {
                 control.BackColor = SystemColors.Window;
                 control.ForeColor = SystemColors.WindowText;
-                if ((control.GetType().EstTypeOuSousTypeDe(typeof(Form))))
+                if (control is Form)
                 {
                     control.ForeColor = SystemColors.WindowText;
                     control.BackColor = SystemColors.Window;
                 }
-                else if ((control.GetType().EstTypeOuSousTypeDe(typeof(FilRipListView))))
+                else if (control is FilRipListView lv)
                 {
                     control.ForeColor = Color.Black;
-                    ((FilRipListView)control).CouleurAlternee1 = Color.White;
-                    ((FilRipListView)control).CouleurAlternee2 = Color.FromArgb(0xEF, 0xEF, 0xEF);
-                    foreach (FilRipColumnHeader col in ((FilRipListView)control).Columns)
+                    lv.CouleurAlternee1 = Color.White;
+                    lv.CouleurAlternee2 = Color.FromArgb(0xEF, 0xEF, 0xEF);
+                    foreach (FilRipColumnHeader col in lv.Columns)
                     {
                         col.ActiveCouleur = false;
                         col.CouleurArrierePlan = SystemColors.Control;
@@ -79,12 +79,12 @@ namespace Explorip.Themes
                         }
                     }
                 }
-                else if (((control.GetType().EstTypeOuSousTypeDe(typeof(ButtonBase))) || (control.GetType().EstTypeOuSousTypeDe(typeof(TabPage))) || (control.GetType().EstTypeOuSousTypeDe(typeof(GroupBox))) || (control.GetType().EstTypeOuSousTypeDe(typeof(Label)))))
+                else if (control is ButtonBase || control is TabPage || control is GroupBox || control is Label)
                 {
                     control.ForeColor = SystemColors.ControlText;
                     control.BackColor = SystemColors.Control;
                 }
-                else if ((control.GetType().EstTypeOuSousTypeDe(typeof(ProgressBar))))
+                else if (control is ProgressBar)
                 {
                     control.BackColor = SystemColors.Control;
                     control.ForeColor = Color.Red;
