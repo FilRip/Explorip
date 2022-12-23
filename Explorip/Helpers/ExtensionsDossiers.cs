@@ -40,12 +40,24 @@ namespace Explorip.Helpers
             return pidl;
         }
 
-        public static IShellFolder GetShellFolder(DirectoryInfo directoryInfo)
+        public static IShellFolder GetDesktopFolder()
         {
-            IntPtr pidl = GetPIDL(directoryInfo);
+            IntPtr pointeurDesktop;
+            if (Shell32.SHGetDesktopFolder(out pointeurDesktop) != (int)Commun.HRESULT.S_OK)
+                return null;
+            return (IShellFolder)Marshal.GetTypedObjectForIUnknown(pointeurDesktop, typeof(IShellFolder));
+        }
+
+        public static IShellFolder GetShellFolder(this DirectoryInfo directoryInfo)
+        {
+            // TODO : Rewrite, check https://www.codeproject.com/Articles/39224/Rewrite-DirectoryInfo-using-IShellFolder
+            IShellFolder sfd = GetDesktopFolder();
+            uint pchEaten = 0;
+            SFGAO pdwAttributes = 0;
+            sfd.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, directoryInfo.FullName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
             Guid guid = typeof(IShellFolder).GUID;
-            Shell32.SHBindToParent(pidl, ref guid, out IntPtr pidlInterface, IntPtr.Zero);
-            return (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlInterface, typeof(IShellFolder));
+            sfd.BindToObject(pPIDL, IntPtr.Zero, ref guid, out object pUnknownParentFolder);
+            return (IShellFolder)pUnknownParentFolder;
         }
 
         public static TreeNode GetTreeNode(this Environment.SpecialFolder specialFolder, ImageList listeIcones, bool petiteIcone = true)

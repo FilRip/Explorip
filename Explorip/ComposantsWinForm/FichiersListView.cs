@@ -257,8 +257,6 @@ namespace Explorip.ComposantsWinForm
             }
             else if (DragDropHelper.GetInstance().DragDropEnCours)
             {
-                // TODO : Affiche popup
-                Console.WriteLine("AffichePopUp ici ?");
                 DragDropHelper.GetInstance().DragDropEnCours = false;
             }
         }
@@ -468,6 +466,7 @@ namespace Explorip.ComposantsWinForm
         {
             Console.WriteLine("DragLeave");
             DragDropHelper.GetInstance().DragLeave(sender, e);
+            SelectionChange(true);
         }
 
         private void FichiersListView_ItemDrag(object sender, ItemDragEventArgs e)
