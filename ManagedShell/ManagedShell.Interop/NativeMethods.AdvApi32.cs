@@ -39,12 +39,12 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(AdvApi32_DllName, SetLastError = true)]
-        public static extern bool OpenProcessToken(IntPtr processHandle, uint desiredAccess, out IntPtr tokenHandle);
+        internal static extern bool OpenProcessToken(IntPtr processHandle, uint desiredAccess, out IntPtr tokenHandle);
 
         [DllImport(AdvApi32_DllName, SetLastError = true)]
-        public static extern bool AdjustTokenPrivileges(IntPtr tokenHandle, bool disableAllPrivileges, ref TOKEN_PRIVILEGES newState, uint bufferLength, IntPtr previousState, IntPtr returnLength);
+        internal static extern bool AdjustTokenPrivileges(IntPtr tokenHandle, bool disableAllPrivileges, ref TOKEN_PRIVILEGES newState, uint bufferLength, IntPtr previousState, IntPtr returnLength);
 
         [DllImport(AdvApi32_DllName, SetLastError = true)]
-        public static extern bool LookupPrivilegeValue(string host, string name, ref LUID pluid);
+        internal static extern bool LookupPrivilegeValue(string host, string name, ref LUID pluid);
     }
 }

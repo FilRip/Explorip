@@ -12,32 +12,32 @@ namespace ManagedShell.Interop
         const string DwmApi_DllName = "dwmapi";
 
         [DllImport(DwmApi_DllName)]
-        public static extern int DwmRegisterThumbnail(IntPtr dest, IntPtr src, out IntPtr thumb);
+        internal static extern int DwmRegisterThumbnail(IntPtr dest, IntPtr src, out IntPtr thumb);
 
         [DllImport(DwmApi_DllName)]
-        public static extern int DwmUnregisterThumbnail(IntPtr thumb);
+        internal static extern int DwmUnregisterThumbnail(IntPtr thumb);
 
         [DllImport(DwmApi_DllName)]
-        public static extern int DwmQueryThumbnailSourceSize(IntPtr thumb, out PSIZE size);
+        internal static extern int DwmQueryThumbnailSourceSize(IntPtr thumb, out PSIZE size);
 
         [DllImport(DwmApi_DllName)]
-        public static extern int DwmUpdateThumbnailProperties(IntPtr hThumb, ref DWM_THUMBNAIL_PROPERTIES props);
+        internal static extern int DwmUpdateThumbnailProperties(IntPtr hThumb, ref DWM_THUMBNAIL_PROPERTIES props);
 
         [DllImport(DwmApi_DllName, EntryPoint = "#113", SetLastError = true)]
-        public static extern uint DwmActivateLivePreview(uint enable, IntPtr targetHwnd, IntPtr callingHwnd, AeroPeekType type);
+        internal static extern uint DwmActivateLivePreview(uint enable, IntPtr targetHwnd, IntPtr callingHwnd, AeroPeekType type);
 
         // Windows 8.1+ version has an extra unknown parameter
         [DllImport(DwmApi_DllName, EntryPoint = "#113", SetLastError = true)]
-        public static extern uint DwmActivateLivePreview(uint enable, IntPtr targetHwnd, IntPtr callingHwnd, AeroPeekType type, IntPtr unknown);
+        internal static extern uint DwmActivateLivePreview(uint enable, IntPtr targetHwnd, IntPtr callingHwnd, AeroPeekType type, IntPtr unknown);
 
         [DllImport(DwmApi_DllName)]
-        public static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out uint pvAttribute, int cbAttribute);
+        internal static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out uint pvAttribute, int cbAttribute);
 
         [DllImport(DwmApi_DllName)]
-        public static extern int DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, ref int pvAttribute, int cbAttribute);
+        internal static extern int DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, ref int pvAttribute, int cbAttribute);
 
         [DllImport(DwmApi_DllName, PreserveSig = false)]
-        public static extern bool DwmIsCompositionEnabled();
+        internal static extern bool DwmIsCompositionEnabled();
 
         [StructLayout(LayoutKind.Sequential)]
         public struct DWM_THUMBNAIL_PROPERTIES

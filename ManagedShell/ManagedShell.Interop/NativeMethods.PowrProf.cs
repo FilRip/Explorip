@@ -88,10 +88,10 @@ namespace ManagedShell.Interop
 
         // There is a method for this in System.Windows.Forms, however it calls the same p/invoke and I would prefer not to reference that lib
         [DllImport(PowrProf_DllName)]
-        public static extern bool SetSuspendState(bool hibernate, bool forceCritical, bool disableWakeEvent);
+        internal static extern bool SetSuspendState(bool hibernate, bool forceCritical, bool disableWakeEvent);
 
         [DllImport(PowrProf_DllName, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool GetPwrCapabilities(out SYSTEM_POWER_CAPABILITIES systemPowerCapabilites);
+        internal static extern bool GetPwrCapabilities(out SYSTEM_POWER_CAPABILITIES systemPowerCapabilites);
     }
 }

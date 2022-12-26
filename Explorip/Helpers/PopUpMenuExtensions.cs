@@ -73,6 +73,13 @@ namespace Explorip.Helpers
                             }
                             else
                             {
+                                string shortcut = null;
+                                if (libelle.Contains("\t"))
+                                {
+                                    string[] splitter = libelle.Split("\t");
+                                    libelle = splitter[0];
+                                    shortcut = splitter[1];
+                                }
                                 menuAAjouter = new ToolStripMenuItem()
                                 {
                                     Text = libelle,
@@ -80,6 +87,52 @@ namespace Explorip.Helpers
                                     Tag = IdCmd,
                                     Enabled = (etat == MFS.ENABLED),
                                 };
+                                if (!string.IsNullOrWhiteSpace(shortcut))
+                                {
+                                    try
+                                    {
+                                        Keys touche = Keys.None;
+                                        ((ToolStripMenuItem)menuAAjouter).ShortcutKeyDisplayString = shortcut;
+                                        int maxInteration = 0;
+                                        while (shortcut.IndexOf("+") > 0 && maxInteration <= 4)
+                                        {
+                                            maxInteration++;
+                                            if (shortcut.StartsWith("Ctrl"))
+                                            {
+                                                touche |= Keys.Control;
+                                                shortcut = shortcut.Replace("Ctrl", "");
+                                            }
+                                            else if (shortcut.StartsWith("Alt"))
+                                            {
+                                                touche |= Keys.Alt;
+                                                shortcut = shortcut.Replace("Alt", "");
+                                            }
+                                            else if (shortcut.StartsWith("Shift"))
+                                            {
+                                                touche |= Keys.Shift;
+                                                shortcut = shortcut.Replace("Shift", "");
+                                            }
+                                            else if (shortcut.StartsWith("Win"))
+                                            {
+                                                touche |= Keys.LWin;
+                                                shortcut = shortcut.Replace("Win", "");
+                                            }
+                                        }
+                                        if (shortcut.IndexOf("+") >= 0)
+                                        {
+                                            shortcut = shortcut.Substring(shortcut.IndexOf("+") + 1);
+                                        }
+                                        foreach (char caractere in shortcut)
+                                        {
+                                            if (Enum.TryParse(caractere.ToString(), out Keys toucheRaccourcis))
+                                            {
+                                                touche |= toucheRaccourcis;
+                                            }
+                                        }
+                                        ((ToolStripMenuItem)menuAAjouter).ShortcutKeys = touche;
+                                    }
+                                    catch (Exception) { }
+                                }
                                 menuAAjouter.Click += ClickMenu;
                                 if (background)
                                 {

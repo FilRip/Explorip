@@ -51,72 +51,72 @@ namespace ManagedShell.Interop
             #region union members
 
 #pragma warning disable IDE1006
-            sbyte cVal // CHAR cVal;
+            sbyte cVal
             {
                 get { return (sbyte)GetDataBytes()[0]; }
             }
 
-            byte bVal // UCHAR bVal;
+            byte bVal
             {
                 get { return GetDataBytes()[0]; }
             }
 
-            short iVal // SHORT iVal;
+            short iVal
             {
                 get { return BitConverter.ToInt16(GetDataBytes(), 0); }
             }
 
-            ushort uiVal // USHORT uiVal;
+            ushort uiVal
             {
                 get { return BitConverter.ToUInt16(GetDataBytes(), 0); }
             }
 
-            int lVal // LONG lVal;
+            int lVal
             {
                 get { return BitConverter.ToInt32(GetDataBytes(), 0); }
             }
 
-            uint ulVal // ULONG ulVal;
+            uint ulVal
             {
                 get { return BitConverter.ToUInt32(GetDataBytes(), 0); }
             }
 
-            long hVal // LARGE_INTEGER hVal;
+            long hVal
             {
                 get { return BitConverter.ToInt64(GetDataBytes(), 0); }
             }
 
-            ulong uhVal // ULARGE_INTEGER uhVal;
+            ulong uhVal
             {
                 get { return BitConverter.ToUInt64(GetDataBytes(), 0); }
             }
 
-            float fltVal // FLOAT fltVal;
+            float fltVal
             {
                 get { return BitConverter.ToSingle(GetDataBytes(), 0); }
             }
 
-            double dblVal // DOUBLE dblVal;
+            double dblVal
             {
                 get { return BitConverter.ToDouble(GetDataBytes(), 0); }
             }
 
-            bool boolVal // VARIANT_BOOL boolVal;
+            bool boolVal
             {
                 get { return (iVal != 0); }
             }
 
-            int scode // SCODE scode;
+            int scode
             {
                 get { return lVal; }
             }
 
-            decimal cyVal // CY cyVal;
+            decimal cyVal
             {
                 get { return decimal.FromOACurrency(hVal); }
             }
 
-            DateTime date // DATE date;
+            DateTime date
             {
                 get { return DateTime.FromOADate(dblVal); }
             }

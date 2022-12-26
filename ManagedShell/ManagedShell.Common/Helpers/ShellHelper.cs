@@ -383,7 +383,7 @@ namespace ManagedShell.Common.Helpers
             {
                 // open process
                 // QueryLimitedInformation flag allows us to access elevated applications as well
-                IntPtr hProc = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, (int)procId);
+                IntPtr hProc = OpenProcess(ProcessAccess.QueryLimitedInformation, false, (int)procId);
 
                 // get filename
                 int len = outFileName.Capacity;
@@ -443,7 +443,7 @@ namespace ManagedShell.Common.Helpers
 
             if (procId > 0 && procId < int.MaxValue)
             {
-                IntPtr hProcess = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, (int)procId);
+                IntPtr hProcess = OpenProcess(ProcessAccess.QueryLimitedInformation, false, (int)procId);
 
                 uint len = 130;
                 StringBuilder outAumid = new((int)len);

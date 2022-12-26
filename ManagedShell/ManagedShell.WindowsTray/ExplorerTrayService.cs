@@ -78,7 +78,7 @@ namespace ManagedShell.WindowsTray
             }
 
             GetWindowThreadProcessId(toolbarHwnd, out var processId);
-            IntPtr hProcess = OpenProcess(ProcessAccessFlags.All, false, (int)processId);
+            IntPtr hProcess = OpenProcess(ProcessAccess.All, false, (int)processId);
             IntPtr hBuffer = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)Marshal.SizeOf(new TBBUTTON()), AllocationType.Commit,
                 MemoryProtection.ReadWrite);
 

@@ -66,7 +66,7 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(Shell32_DllName, CallingConvention = CallingConvention.StdCall)]
-        public static extern uint SHAppBarMessage(int dwMessage, ref APPBARDATA pData);
+        internal static extern uint SHAppBarMessage(int dwMessage, ref APPBARDATA pData);
 
         public const uint FILE_ATTRIBUTE_NORMAL = 0x80;
         public const uint FILE_ATTRIBUTE_DIRECTORY = 0x10;
@@ -126,13 +126,13 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-        public static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+        internal static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-        public static extern IntPtr SHGetFileInfo(IntPtr pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+        internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
-        public static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
+        internal static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public struct SHELLEXECUTEINFO
@@ -237,7 +237,7 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
-        public static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOp);
+        internal static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOp);
 
         public enum NIN : uint
         {
@@ -426,7 +426,7 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(Shell32_DllName, SetLastError = true)]
-        public static extern int SHGetPropertyStoreForWindow(IntPtr handle, ref Guid riid, out IPropertyStore propertyStore);
+        internal static extern int SHGetPropertyStoreForWindow(IntPtr handle, ref Guid riid, out IPropertyStore propertyStore);
 
         [Flags()]
         public enum RunFileDialogFlags : uint
@@ -464,7 +464,7 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Auto, EntryPoint = "#61", SetLastError = true)]
-        public static extern bool SHRunFileDialog(IntPtr hwndOwner,
+        internal static extern bool SHRunFileDialog(IntPtr hwndOwner,
             IntPtr hIcon,
             string lpszPath,
             string lpszDialogTitle,
@@ -663,14 +663,14 @@ namespace ManagedShell.Interop
         };
 
         [DllImport(Shell32_DllName, EntryPoint = "#727")]
-        public static extern int SHGetImageList(
+        internal static extern int SHGetImageList(
             int iImageList,
             ref Guid riid,
             out IImageList ppv
             );
 
         [DllImport(Shell32_DllName)]
-        public static extern int SHGetKnownFolderPath(
+        internal static extern int SHGetKnownFolderPath(
             [MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken,
             out IntPtr ppszPath);
 

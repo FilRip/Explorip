@@ -18,9 +18,9 @@ namespace ManagedShell.Interop
         };
 
         [DllImport("uxtheme.dll", EntryPoint = "#135")]
-        public static extern bool SetPreferredAppMode(PreferredAppMode mode);
+        internal static extern bool SetPreferredAppMode(PreferredAppMode mode);
 
         [DllImport("uxtheme.dll", EntryPoint = "#133")]
-        public static extern bool AllowDarkModeForWindow(IntPtr hWnd, bool allow);
+        internal static extern bool AllowDarkModeForWindow(IntPtr hWnd, bool allow);
     }
 }

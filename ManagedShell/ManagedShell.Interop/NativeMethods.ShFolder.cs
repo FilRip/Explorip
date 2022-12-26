@@ -64,6 +64,6 @@ namespace ManagedShell.Interop
         }//CSIDL
 
         [DllImport(ShFolder_DllName, CharSet = CharSet.Auto)]
-        public static extern int SHGetFolderPath(IntPtr hwndOwner, int nFolder, IntPtr hToken, int dwFlags, StringBuilder lpszPath);
+        internal static extern int SHGetFolderPath(IntPtr hwndOwner, int nFolder, IntPtr hToken, int dwFlags, StringBuilder lpszPath);
     }
 }

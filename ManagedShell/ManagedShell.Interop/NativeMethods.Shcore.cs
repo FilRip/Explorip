@@ -13,6 +13,6 @@ namespace ManagedShell.Interop
         }
 
         [DllImport("shcore.dll")]
-        public static extern int GetDpiForMonitor(IntPtr hwndMoniteur, DPI_TYPE dpiType, out uint x, out uint y);
+        internal static extern int GetDpiForMonitor(IntPtr hwndMoniteur, DPI_TYPE dpiType, out uint x, out uint y);
     }
 }

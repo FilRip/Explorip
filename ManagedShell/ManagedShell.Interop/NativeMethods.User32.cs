@@ -13,28 +13,28 @@ namespace ManagedShell.Interop
         public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
 
         [DllImport(User32_DllName)]
-        public static extern int EnumWindows(CallBackPtr callPtr, int lPar);
+        internal static extern int EnumWindows(CallBackPtr callPtr, int lPar);
 
         [DllImport(User32_DllName)]
-        public static extern int EnumChildWindows(IntPtr hParent, CallBackPtr callPtr, int lPar);
+        internal static extern int EnumChildWindows(IntPtr hParent, CallBackPtr callPtr, int lPar);
 
         [DllImport(User32_DllName, CharSet = CharSet.Unicode)]
-        public static extern int GetWindowText(IntPtr hwnd, StringBuilder sb, int Length);
+        internal static extern int GetWindowText(IntPtr hwnd, StringBuilder sb, int Length);
 
         [DllImport(User32_DllName)]
-        public static extern bool DestroyWindow(IntPtr hWnd);
+        internal static extern bool DestroyWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern bool LockWorkStation();
+        internal static extern bool LockWorkStation();
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr GetShellWindow();
+        internal static extern IntPtr GetShellWindow();
 
         [DllImport(User32_DllName)]
-        public static extern int SetShellWindow(IntPtr hWnd);
+        internal static extern int SetShellWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName)]
-        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
+        internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
         public enum WindowZOrder
         {
@@ -122,22 +122,22 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(User32_DllName)]
-        public static extern bool ExitWindowsEx(uint flags, uint reason);
+        internal static extern bool ExitWindowsEx(uint flags, uint reason);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern IntPtr FindWindow(string className, string windowName);
+        internal static extern IntPtr FindWindow(string className, string windowName);
 
         [DllImport(User32_DllName, CharSet = CharSet.Auto)]
-        public static extern int RegisterWindowMessage(string msg);
+        internal static extern int RegisterWindowMessage(string msg);
 
         [DllImport(User32_DllName)]
-        public static extern int GetSystemMetrics(int Index);
+        internal static extern int GetSystemMetrics(int Index);
 
         [DllImport(User32_DllName)]
-        public static extern int DestroyIcon(IntPtr hIcon);
+        internal static extern int DestroyIcon(IntPtr hIcon);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern IntPtr GetWindow(IntPtr hWnd, GetWindow_Cmd uCmd);
+        internal static extern IntPtr GetWindow(IntPtr hWnd, GetWindow_Cmd uCmd);
 
         public enum GetWindow_Cmd : uint
         {
@@ -267,20 +267,20 @@ namespace ManagedShell.Interop
         public delegate IntPtr WndProcDelegate(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        internal static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
+        internal static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
 
         [DllImport(User32_DllName)]
-        public static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, IntPtr wparam, IntPtr lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
+        internal static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, IntPtr wparam, IntPtr lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
 
         [DllImport(User32_DllName)]
-        public static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, uint wparam, uint lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
+        internal static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, uint wparam, uint lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int messageId, IntPtr wparam, IntPtr lparam);
+        internal static extern IntPtr SendMessage(IntPtr hWnd, int messageId, IntPtr wparam, IntPtr lparam);
 
 #pragma warning disable IDE0060
         [StructLayout(LayoutKind.Sequential)]
@@ -306,19 +306,19 @@ namespace ManagedShell.Interop
 #pragma warning restore IDE0060
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr GetClassLong(IntPtr handle, int longClass);
+        internal static extern IntPtr GetClassLong(IntPtr handle, int longClass);
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr GetClassLongPtr(IntPtr handle, int longClass);
+        internal static extern IntPtr GetClassLongPtr(IntPtr handle, int longClass);
 
         [DllImport(User32_DllName)]
-        public static extern bool AllowSetForegroundWindow(uint procId);
+        internal static extern bool AllowSetForegroundWindow(uint procId);
 
         [DllImport(User32_DllName)]
-        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        internal static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr GetParent(IntPtr handle);
+        internal static extern IntPtr GetParent(IntPtr handle);
 
         public struct WINDOWPLACEMENT
         {
@@ -332,17 +332,17 @@ namespace ManagedShell.Interop
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+        internal static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IsIconic(IntPtr hWnd);
+        internal static extern bool IsIconic(IntPtr hWnd);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref Rect pvParam, uint fWinIni);
+        internal static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref Rect pvParam, uint fWinIni);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, string pvParam, SPIF fWinIni);
+        internal static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, string pvParam, SPIF fWinIni);
 
         /// <summary>
         /// SPI System-wide parameter - Used in SystemParametersInfo function
@@ -1595,7 +1595,7 @@ namespace ManagedShell.Interop
         /// If the window was previously hidden, the return value is zero.
         /// </returns>
         [DllImport(User32_DllName)]
-        public static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
+        internal static extern bool ShowWindow(IntPtr hWnd, WindowShowStyle nCmdShow);
 
         /// <summary>Enumeration of the different ways of showing a window using 
         /// ShowWindow</summary>
@@ -1660,65 +1660,65 @@ namespace ManagedShell.Interop
 
 
         [DllImport(User32_DllName)]
-        public static extern bool RegisterShellHookWindow(IntPtr hWnd);
+        internal static extern bool RegisterShellHookWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName)]
-        public static extern bool SetTaskmanWindow(IntPtr hWnd);
+        internal static extern bool SetTaskmanWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr GetForegroundWindow();
+        internal static extern IntPtr GetForegroundWindow();
 
         [DllImport(User32_DllName)]
-        public static extern bool DeregisterShellHookWindow(IntPtr hWnd);
+        internal static extern bool DeregisterShellHookWindow(IntPtr hWnd);
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowRect(IntPtr hWnd, out Rect lpRect);
+        internal static extern bool GetWindowRect(IntPtr hWnd, out Rect lpRect);
 
         [DllImport(User32_DllName)]
-        public static extern bool GetClientRect(IntPtr hWnd, out Rect lpRect);
+        internal static extern bool GetClientRect(IntPtr hWnd, out Rect lpRect);
 
         [DllImport(User32_DllName, ExactSpelling = true, SetLastError = true)]
-        public static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Rect rect, [MarshalAs(UnmanagedType.U4)] int cPoints);
+        internal static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Rect rect, [MarshalAs(UnmanagedType.U4)] int cPoints);
 
         [DllImport(User32_DllName)]
-        public static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, IntPtr pvParam, SPIF fWinIni);
+        internal static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, IntPtr pvParam, SPIF fWinIni);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+        internal static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IsWindowVisible(IntPtr hWnd);
+        internal static extern bool IsWindowVisible(IntPtr hWnd);
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        internal static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, IntPtr className, string windowTitle);
+        internal static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, IntPtr className, string windowTitle);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string className, string windowTitle);
+        internal static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string className, string windowTitle);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string className, IntPtr windowTitle);
+        internal static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string className, IntPtr windowTitle);
 
         [DllImport(User32_DllName, CharSet = CharSet.Auto)]
-        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+        internal static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IsWindow(IntPtr hWnd);
+        internal static extern bool IsWindow(IntPtr hWnd);
 
         // Begin Windows 10 blur
         // https://github.com/riverar/sample-win32-acrylicblur
         // License: MIT
 
         [DllImport(User32_DllName)]
-        public static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
+        internal static extern int SetWindowCompositionAttribute(IntPtr hwnd, ref WindowCompositionAttributeData data);
 
         [StructLayout(LayoutKind.Sequential)]
         public struct WindowCompositionAttributeData
@@ -1758,16 +1758,16 @@ namespace ManagedShell.Interop
         // End Windows 10 blur
 
         [DllImport(User32_DllName)]
-        public static extern uint SendInput(uint numberOfInputs, INPUT[] input, int structSize);
+        internal static extern uint SendInput(uint numberOfInputs, INPUT[] input, int structSize);
 
         [DllImport(User32_DllName, SetLastError = false)]
-        public static extern IntPtr GetMessageExtraInfo();
+        internal static extern IntPtr GetMessageExtraInfo();
 
         [DllImport(User32_DllName)]
-        public static extern bool RegisterHotKey(IntPtr hWnd, int id, UInt32 fsModifiers, UInt32 vlc);
+        internal static extern bool RegisterHotKey(IntPtr hWnd, int id, UInt32 fsModifiers, UInt32 vlc);
 
         [DllImport(User32_DllName)]
-        public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         public const int INPUT_KEYBOARD = 1;
         public const uint KEYEVENTF_KEYUP = 0x0002;
@@ -1826,7 +1826,7 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr DefWindowProc(IntPtr hWnd, int uMsg, IntPtr wParam, IntPtr lParam);
+        internal static extern IntPtr DefWindowProc(IntPtr hWnd, int uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport(User32_DllName)]
         public extern static short GetAsyncKeyState(int key);
@@ -1840,7 +1840,7 @@ namespace ManagedShell.Interop
         /// <param name="threadId">The thread you want to attach the event to, can be null</param>
         /// <returns>a handle to the desired hook</returns>
         [DllImport(User32_DllName)]
-        public static extern IntPtr SetWindowsHookEx(int idHook, keyboardHookProc callback, IntPtr hInstance, uint threadId);
+        internal static extern IntPtr SetWindowsHookEx(int idHook, keyboardHookProc callback, IntPtr hInstance, uint threadId);
 
         /// <summary>
         /// defines the callback type for the hook
@@ -1862,7 +1862,7 @@ namespace ManagedShell.Interop
         /// <param name="hInstance">The hook handle that was returned from SetWindowsHookEx</param>
         /// <returns>True if successful, false otherwise</returns>
         [DllImport(User32_DllName)]
-        public static extern bool UnhookWindowsHookEx(IntPtr hInstance);
+        internal static extern bool UnhookWindowsHookEx(IntPtr hInstance);
 
         /// <summary>
         /// Calls the next hook.
@@ -1873,7 +1873,7 @@ namespace ManagedShell.Interop
         /// <param name="lParam">The lparam.</param>
         /// <returns></returns>
         [DllImport(User32_DllName)]
-        public static extern int CallNextHookEx(IntPtr idHook, int nCode, int wParam, ref KeyboardHookStruct lParam);
+        internal static extern int CallNextHookEx(IntPtr idHook, int nCode, int wParam, ref KeyboardHookStruct lParam);
 
         /// <summary>
         /// The SetProp function adds a new entry or changes an existing entry in the property list of the specified window. The function adds a new entry to the list if the specified character string does not exist already in the list. The new entry contains the string and the handle. Otherwise, the function replaces the string's current handle with the specified handle.
@@ -1888,7 +1888,7 @@ namespace ManagedShell.Interop
         /// <param name="hData">Handle to the data to be copied to the property list. The data handle can identify any value useful to the application. </param>
         /// <returns>If the data handle and string are added to the property list, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.</returns>
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern bool SetProp(IntPtr hWnd, string lpString, IntPtr hData);
+        internal static extern bool SetProp(IntPtr hWnd, string lpString, IntPtr hData);
 
         public enum TBPFLAG
         {
@@ -1900,10 +1900,10 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
+        internal static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, UIntPtr wParam, IntPtr lParam);
 
         [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+        internal static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
 
         public static IntPtr HWND_BROADCAST = new(0xffff);
         public static int WINEVENT_OUTOFCONTEXT = 0;
@@ -1913,10 +1913,10 @@ namespace ManagedShell.Interop
         public delegate void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern IntPtr SetWinEventHook(int eventMin, int eventMax, IntPtr hmodWinEventProc, WinEventProc lpfnWinEventProc, int idProcess, int idThread, int dwflags);
+        internal static extern IntPtr SetWinEventHook(int eventMin, int eventMax, IntPtr hmodWinEventProc, WinEventProc lpfnWinEventProc, int idProcess, int idThread, int dwflags);
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern int UnhookWinEvent(IntPtr hWinEventHook);
+        internal static extern int UnhookWinEvent(IntPtr hWinEventHook);
 
         /// <summary>
         /// Windows Messages
@@ -2926,7 +2926,7 @@ namespace ManagedShell.Interop
 
         [DllImport(User32_DllName, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.U2)]
-        public static extern ushort RegisterClass([In] ref WNDCLASS lpwcx);
+        internal static extern ushort RegisterClass([In] ref WNDCLASS lpwcx);
 
         /// <summary>
         /// Unregisters a window class, freeing the memory required for the class.
@@ -2952,7 +2952,7 @@ namespace ManagedShell.Interop
         /// 
         /// </returns>
         [DllImport(User32_DllName)]
-        public static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
+        internal static extern bool UnregisterClass(string lpClassName, IntPtr hInstance);
 
         /// <summary>
         /// The CreateWindowEx function creates an overlapped, pop-up, or child window with an extended window style; otherwise, this function is identical to the CreateWindow function. 
@@ -2981,7 +2981,7 @@ namespace ManagedShell.Interop
         /// </list></returns>
 
         [DllImport(User32_DllName, SetLastError = true)]
-        public static extern IntPtr CreateWindowEx(
+        internal static extern IntPtr CreateWindowEx(
             ExtendedWindowStyles dwExStyle,
             ushort lpClassName,
             [MarshalAs(UnmanagedType.LPStr)] string lpWindowName,
@@ -3003,11 +3003,11 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(User32_DllName)]
-        public static extern IntPtr MonitorFromPoint(Point pt, MonitorOptions dwFlags);
+        internal static extern IntPtr MonitorFromPoint(Point pt, MonitorOptions dwFlags);
 
         public delegate bool MonitorEnumProc(IntPtr hDesktop, IntPtr hdc, ref Rect pRect, int dwData);
         [DllImport(User32_DllName)]
-        public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lpRect, MonitorEnumProc callback, int dwData);
+        internal static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lpRect, MonitorEnumProc callback, int dwData);
 
         public enum VK : int
         {
