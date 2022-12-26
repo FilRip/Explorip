@@ -3,7 +3,7 @@
 namespace Explorip.FilesOperations.Interfaces
 {
     [Flags()]
-    internal enum FileOperationFlags : uint
+    internal enum FileOperation : uint
     {
         FOF_MULTIDESTFILES = 0x0001,
         FOF_CONFIRMMOUSE = 0x0002,

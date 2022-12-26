@@ -14,7 +14,7 @@ namespace Explorip.FilesOperations.Interfaces
         uint Advise(IFileOperationProgressSink pfops);
         void Unadvise(uint dwCookie);
 
-        void SetOperationFlags(FileOperationFlags dwOperationFlags);
+        void SetOperationFlags(FileOperation dwOperationFlags);
         void SetProgressMessage([MarshalAs(UnmanagedType.LPWStr)] string pszMessage);
         void SetProgressDialog([MarshalAs(UnmanagedType.Interface)] object popd);
         void SetProperties([MarshalAs(UnmanagedType.Interface)] object pproparray);

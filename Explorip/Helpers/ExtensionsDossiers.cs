@@ -42,8 +42,7 @@ namespace Explorip.Helpers
 
         public static IShellFolder GetDesktopFolder()
         {
-            IntPtr pointeurDesktop;
-            if (Shell32.SHGetDesktopFolder(out pointeurDesktop) != (int)Commun.HRESULT.S_OK)
+            if (Shell32.SHGetDesktopFolder(out IntPtr pointeurDesktop) != (int)Commun.HRESULT.S_OK)
                 return null;
             return (IShellFolder)Marshal.GetTypedObjectForIUnknown(pointeurDesktop, typeof(IShellFolder));
         }

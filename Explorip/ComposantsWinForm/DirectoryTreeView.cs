@@ -168,7 +168,7 @@ namespace Explorip.ComposantsWinForm
                         try
                         {
                             if (dirInfo.GetDirectories().Length == 0)
-                                throw new Exception("Répertoire vide");
+                                throw new Exceptions.ExploripException("Répertoire vide");
                         }
                         catch (Exception)
                         {

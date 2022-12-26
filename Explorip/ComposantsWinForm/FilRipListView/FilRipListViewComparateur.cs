@@ -8,7 +8,6 @@ namespace Explorip.ComposantsWinForm.FilRipListView
     /// </summary>
     public class FilRipListViewComparateur : IComparer
     {
-        private int _numColonne;
         private SortOrder _triActuel;
 
         /// <summary>
@@ -21,11 +20,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
         /// <summary>
         /// Numéro de la colonne sur laquelle le tri se fait actuellement
         /// </summary>
-        public int NumColonne
-        {
-            get { return _numColonne; }
-            set { _numColonne = value; }
-        }
+        public int NumColonne { get; set; }
 
         /// <summary>
         /// Change l'ordre du tri (ascendant, descendant)
@@ -49,12 +44,12 @@ namespace Explorip.ComposantsWinForm.FilRipListView
             string itemX, itemY;
             try
             {
-                itemX = ((ListViewItem)x).SubItems[_numColonne].Text;
+                itemX = ((ListViewItem)x).SubItems[NumColonne].Text;
             }
             catch { itemX = ""; }
             try
             {
-                itemY = ((ListViewItem)y).SubItems[_numColonne].Text;
+                itemY = ((ListViewItem)y).SubItems[NumColonne].Text;
             }
             catch { itemY = ""; }
             if (_triActuel == SortOrder.Ascending)

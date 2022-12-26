@@ -30,7 +30,7 @@ namespace Explorip.WinAPI.Modeles
         WS_VSCROLL = 0x200000
     }
 
-    public enum ShowWindowCommands : int
+    public enum ShowWindowCommands
     {
         Hide = 0,
         Normal = 1,

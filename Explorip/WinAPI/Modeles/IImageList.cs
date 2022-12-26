@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Explorip.WinAPI.Modeles
 {
     [Flags()]
-    public enum ILD : int
+    public enum ILD
     {
         TRANSPARENT = 0x00000001,
         IMAGE = 0x00000020,

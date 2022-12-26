@@ -189,6 +189,11 @@ namespace Explorip.ComposantsWinForm
             {
                 dirs = dirInfo.GetDirectories();
             }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show(this, "Accès non autorisé", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             catch (Exception) { }
             if (dirs != null)
             {
@@ -249,7 +254,7 @@ namespace Explorip.ComposantsWinForm
                 }
                 else
                 {
-                    FilesOperations.ContextMenuPaste.RepDestination = _repCourant.FullName;
+                    DefinirRepDest(_repCourant);
                     ShellContextMenu ctxMenu = new();
                     ctxMenu.ShowContextMenu(_repCourant, PointToScreen(new Point(e.X, e.Y)), MenuContextuel);
                 }
@@ -258,6 +263,11 @@ namespace Explorip.ComposantsWinForm
             {
                 DragDropHelper.GetInstance().DragDropEnCours = false;
             }
+        }
+
+        private static void DefinirRepDest(DirectoryInfo directoryInfo)
+        {
+            FilesOperations.ContextMenuPaste.RepDestination = directoryInfo.FullName;
         }
 
         private void InitializeComponent()
@@ -469,14 +479,6 @@ namespace Explorip.ComposantsWinForm
         private void FichiersListView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             DragDropHelper.GetInstance().ItemDrag(RetourneListeFichiersDossiersSelectionnes(), e.Button, _repCourant);
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            /*ManagedShell.Interop.NativeMethods.WM typeMsg = (ManagedShell.Interop.NativeMethods.WM)m.Msg;
-            Console.WriteLine(typeMsg.ToString("G"));
-            if (typeMsg != ManagedShell.Interop.NativeMethods.WM.CONTEXTMENU)*/
-                base.WndProc(ref m);
         }
 
         #endregion

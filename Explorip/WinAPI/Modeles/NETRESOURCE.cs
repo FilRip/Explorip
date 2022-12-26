@@ -2,7 +2,7 @@
 
 namespace Explorip.WinAPI.Modeles
 {
-    public enum ResourceScope : int
+    public enum ResourceScope
     {
         Connected = 1,
         GlobalNetwork,
@@ -11,7 +11,7 @@ namespace Explorip.WinAPI.Modeles
         Context
     }
 
-    public enum ResourceType : int
+    public enum ResourceType
     {
         Any = 0,
         Disk = 1,
@@ -19,7 +19,7 @@ namespace Explorip.WinAPI.Modeles
         Reserved = 8,
     }
 
-    public enum ResourceDisplaytype : int
+    public enum ResourceDisplaytype
     {
         Generic = 0x0,
         Domain = 0x01,

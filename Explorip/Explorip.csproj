@@ -105,7 +105,7 @@
     <Compile Include="FilesOperations\ContextMenuPaste.cs" />
     <Compile Include="FilesOperations\FileOperation.cs" />
     <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
-    <Compile Include="FilesOperations\Interfaces\FileOperationFlags.cs" />
+    <Compile Include="FilesOperations\Interfaces\FileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />

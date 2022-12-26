@@ -45,9 +45,5 @@ namespace Explorip.ComposantsWinForm
         {
             _panelExplorer.Initialise(repertoire);
         }
-
-        public TabPageExplorer() : this(null)
-        {
-        }
     }
 }

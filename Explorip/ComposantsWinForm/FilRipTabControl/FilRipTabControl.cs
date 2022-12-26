@@ -25,30 +25,30 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         private Point _Padding;
         private bool _HotTrack;
 
-        private int _Radius = 1;
+        private int _Radius;
         private int _Overlap;
         private bool _FocusTrack;
-        private float _Opacity = 1;
+        private float _Opacity;
 
-        private Color _BorderColorSelected = Color.Empty;
-        private Color _BorderColor = Color.Empty;
-        private Color _BorderColorHot = Color.Empty;
+        private Color _BorderColorSelected;
+        private Color _BorderColor;
+        private Color _BorderColorHot;
 
-        private Color _FocusColor = Color.Empty;
+        private Color _FocusColor;
 
-        private Color _TextColor = Color.Empty;
-        private Color _TextColorSelected = Color.Empty;
-        private Color _TextColorDisabled = Color.Empty;
+        private Color _TextColor;
+        private Color _TextColorSelected;
+        private Color _TextColorDisabled;
 
-        private Color _backgroundColorDebut = Color.FromArgb(207, 207, 207);
-        private Color _backgroundColorFin = Color.FromArgb(242, 242, 242);
-        private Color _backgroundColorSelectedDebut = SystemColors.ControlLight;
-        private Color _backgroundColorSelectedFin = SystemColors.Window;
-        private Color _backgroundColorHotDebut = Color.FromArgb(234, 246, 253);
-        private Color _backgroundColorHotFin = Color.FromArgb(167, 217, 245);
-        private FontStyle _styleText = FontStyle.Regular;
-        private FontStyle _styleTextSelected = FontStyle.Regular;
-        private int _lastActiveIndex = -1;
+        private Color _backgroundColorDebut;
+        private Color _backgroundColorFin;
+        private Color _backgroundColorSelectedDebut;
+        private Color _backgroundColorSelectedFin;
+        private Color _backgroundColorHotDebut;
+        private Color _backgroundColorHotFin;
+        private FontStyle _styleText;
+        private FontStyle _styleTextSelected;
+        private int _lastActiveIndex;
         private int _actualScrollPos;
 
         #endregion
@@ -69,12 +69,30 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
             _BorderColor = Color.Empty;
             _BorderColorSelected = Color.Empty;
+            _BorderColorHot = Color.Empty;
+
             _FocusColor = Color.Orange;
             _HotTrack = true;
+
+            _styleText = FontStyle.Regular;
+            _styleTextSelected = FontStyle.Regular;
+            _TextColor = Color.Empty;
+            _TextColorSelected = Color.Empty;
+            _TextColorDisabled = Color.Empty;
+
+            _backgroundColorDebut = Color.FromArgb(207, 207, 207);
+            _backgroundColorFin = Color.FromArgb(242, 242, 242);
+            _backgroundColorSelectedDebut = SystemColors.ControlLight;
+            _backgroundColorSelectedFin = SystemColors.Window;
+            _backgroundColorHotDebut = Color.FromArgb(234, 246, 253);
+            _backgroundColorHotFin = Color.FromArgb(167, 217, 245);
+
             //	Must set after the _Overlap as this is used in the calculations of the actual padding
             _Padding = new Point(6, 3);
             _FocusTrack = true;
             _Radius = 2;
+            _Opacity = 1;
+            _lastActiveIndex = -1;
             _toolBorder = new Color[] { Color.FromArgb(127, 157, 185), Color.FromArgb(164, 185, 127), Color.FromArgb(165, 172, 178), Color.FromArgb(132, 130, 132) };
         }
 

@@ -60,7 +60,7 @@ namespace Explorip.Localization
                         return info.szDisplayName;
                     }
                     else
-                        throw new Exception();
+                        throw new Exceptions.ExploripException();
                 }
                 else
                 {
@@ -70,7 +70,7 @@ namespace Explorip.Localization
                         return info.szDisplayName;
                     }
                     else
-                        throw new Exception();
+                        throw new Exceptions.ExploripException();
                 }
             }
             catch (Exception)

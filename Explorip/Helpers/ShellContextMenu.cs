@@ -344,8 +344,7 @@ namespace Explorip.Helpers
                 // Get the file relative to folder
                 uint pchEaten = 0;
                 SFGAO pdwAttributes = 0;
-                IntPtr pPIDL = IntPtr.Zero;
-                int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out pPIDL, ref pdwAttributes);
+                int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 if (nResult != (int)Commun.HRESULT.S_OK)
                 {
                     FreePIDLs(arrPIDLs);
@@ -396,8 +395,7 @@ namespace Explorip.Helpers
                 // Get the file relative to folder
                 uint pchEaten = 0;
                 SFGAO pdwAttributes = 0;
-                IntPtr pPIDL = IntPtr.Zero;
-                int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out pPIDL, ref pdwAttributes);
+                int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 if (nResult != (int)Commun.HRESULT.S_OK)
                 {
                     if ((fi.Name == "Desktop") && (!fi.Exists))
@@ -493,18 +491,16 @@ namespace Explorip.Helpers
                     return;
                 }
 
-                if (!background)
+                if (!background &&
+                    !GetContextMenuInterfaces(_arrPIDLs, out iContextMenuPtr))
                 {
-                    if (!GetContextMenuInterfaces(_arrPIDLs, out iContextMenuPtr))
-                    {
-                        ReleaseAll();
-                        return;
-                    }
+                    ReleaseAll();
+                    return;
                 }
 
                 pMenu = User32.CreatePopupMenu();
 
-                int nResult = _oContextMenu.QueryContextMenu(
+                _oContextMenu.QueryContextMenu(
                     pMenu,
                     0,
                     CMD_FIRST,

@@ -131,7 +131,7 @@ namespace Explorip.WinAPI
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-        public enum ShowWindowCommand : int
+        public enum ShowWindowCommand
         {
             Hide = 0,
             Normal = 1,
@@ -156,7 +156,7 @@ namespace Explorip.WinAPI
         internal static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr hWndChildAfter, string className, string windowTitle);
 
         [Flags()]
-        public enum SWP : int
+        public enum SWP
         {
             NOSIZE = 0x0001,
             NOMOVE = 0x0002,

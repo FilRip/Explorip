@@ -4,7 +4,7 @@ namespace Explorip.WinAPI
 {
     public static class Commun
     {
-        public enum HRESULT : int
+        public enum HRESULT
         {
             S_OK = 0,
             S_FALSE = 1,
@@ -19,8 +19,7 @@ namespace Explorip.WinAPI
         public const int DRAGDROP_S_CANCEL = 0x00040101;
         public const int DRAGDROP_S_USEDEFAULTCURSORS = 0x00040102;
 
-        [Flags()]
-        public enum WM : uint
+        public enum WM
         {
             ACTIVATE = 0x6,
             ACTIVATEAPP = 0x1C,

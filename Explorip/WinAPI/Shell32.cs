@@ -156,7 +156,7 @@ namespace Explorip.WinAPI
         internal static extern int SHGetFolderLocation(IntPtr hwndOwner, CSIDL nFolder, IntPtr hToken, uint dwReserved, out IntPtr ppidl);
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-        public extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolder flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
+        internal extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolder flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
 
         [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
         [return: MarshalAs(UnmanagedType.Interface)]
@@ -169,7 +169,7 @@ namespace Explorip.WinAPI
             out IntPtr ppv,
             IntPtr ppidlLast);
 
-        public enum SHIL : int
+        public enum SHIL
         {
             LARGE = 0,
             SMALL = 1,
@@ -180,6 +180,6 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("shell32.dll", EntryPoint = "#727")]
-        public extern static int SHGetImageList(SHIL iImageList, ref Guid riid, out IImageList ppv);
+        internal extern static int SHGetImageList(SHIL iImageList, ref Guid riid, out IImageList ppv);
     }
 }
