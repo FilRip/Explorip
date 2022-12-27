@@ -21,6 +21,7 @@ namespace Explorip.Forms
                 repertoire = args[1];
             tabExplorer1.Initialise(repertoire);
             tabExplorer2.Initialise(repertoire);
+            Icon = Properties.Resources.IconeExplorateur;
         }
 
         protected override void OnShown(EventArgs e)

@@ -1,0 +1,17 @@
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Shell.csproj.AssemblyReference.cache
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Controls\CommandLinkWPF.baml
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\ExplorerBrowser\ExplorerBrowser.WPF.baml
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Controls\CommandLinkWPF.g.cs
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\ExplorerBrowser\ExplorerBrowser.WPF.g.cs
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Microsoft.WindowsAPICodePack.Shell_MarkupCompile.cache
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Microsoft.WindowsAPICodePack.Shell.g.resources
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Microsoft.WindowsAPICodePack.Shell.Resources.LocalizedMessages.resources
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Shell.csproj.GenerateResource.cache
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Shell.csproj.CoreCompileInputs.cache
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\bin\Debug\Microsoft.WindowsAPICodePack.Shell.pdb
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\bin\Debug\Microsoft.WindowsAPICodePack.pdb
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Shell.csproj.CopyComplete
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+C:\Code\Tests\Explorip\WindowsAPICodePack\Shell\obj\Debug\Microsoft.WindowsAPICodePack.Shell.pdb

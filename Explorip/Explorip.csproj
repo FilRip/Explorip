@@ -115,6 +115,12 @@
     <Compile Include="FilesOperations\Interfaces\FileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
+    <Compile Include="Forms\FormExplorerBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormExplorerBrowser.Designer.cs">
+      <DependentUpon>FormExplorerBrowser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionsArray.cs" />
     <Compile Include="Helpers\ExtensionsClass.cs" />
@@ -204,7 +210,8 @@
     <Compile Include="WinAPI\Modeles\IDropSource.cs" />
     <Compile Include="WinAPI\Modeles\IDropTarget.cs" />
     <Compile Include="WinAPI\Modeles\IDropTargetHelper.cs" />
-    <Compile Include="WinAPI\Modeles\Uxtheme.cs" />
+    <Compile Include="WinAPI\Modeles\DWM_COLORIZATION_PARAMS.cs" />
+    <Compile Include="WinAPI\Uxtheme.cs" />
     <Compile Include="WinAPI\Ole32.cs" />
     <Compile Include="Exceptions\Win32Error.cs" />
     <Compile Include="WinAPI\Gdi32.cs" />
@@ -246,6 +253,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ComposantsWinForm\PanelExplorer.resx">
       <DependentUpon>PanelExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormExplorerBrowser.resx">
+      <DependentUpon>FormExplorerBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormFilRipExplorer.resx">
       <SubType>Designer</SubType>
@@ -351,6 +361,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GUI\CustomTabControl\CustomTabControl.csproj">
+      <Project>{2b296f74-67a8-42c7-81ee-26506611a9ff}</Project>
+      <Name>CustomTabControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj">
       <Project>{faed8422-bac8-4909-a199-e16595a1f448}</Project>
       <Name>ManagedShell.AppBar</Name>
@@ -395,6 +409,10 @@
       <Project>{4a2d2831-b4d0-403f-a749-9e9143798c8d}</Project>
       <Name>VirtualDesktop</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WindowsAPICodePack\Shell\Shell.csproj">
+      <Project>{aa0c00cb-8699-4f37-bfae-40ca87acc06d}</Project>
+      <Name>Shell</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TaskBar\Resources\notification10.png" />
@@ -404,6 +422,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Ressources\ErreurIcone.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\icone.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -28,7 +28,6 @@ namespace Explorip.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFilRipExplorer));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabExplorer2 = new Explorip.ComposantsWinForm.TabExplorer();
             this.tabExplorer1 = new Explorip.ComposantsWinForm.TabExplorer();
@@ -81,6 +80,7 @@ namespace Explorip.Forms
             this.tabExplorer2.Overlap = 0;
             this.tabExplorer2.Radius = 2;
             this.tabExplorer2.SelectedIndex = 0;
+            this.tabExplorer2.ShowTabCloser = false;
             this.tabExplorer2.Size = new System.Drawing.Size(433, 427);
             this.tabExplorer2.StyleText = System.Drawing.FontStyle.Regular;
             this.tabExplorer2.StyleTextSelected = System.Drawing.FontStyle.Regular;
@@ -113,6 +113,7 @@ namespace Explorip.Forms
             this.tabExplorer1.Overlap = 0;
             this.tabExplorer1.Radius = 2;
             this.tabExplorer1.SelectedIndex = 0;
+            this.tabExplorer1.ShowTabCloser = false;
             this.tabExplorer1.Size = new System.Drawing.Size(496, 427);
             this.tabExplorer1.StyleText = System.Drawing.FontStyle.Regular;
             this.tabExplorer1.StyleTextSelected = System.Drawing.FontStyle.Regular;
@@ -121,14 +122,13 @@ namespace Explorip.Forms
             this.tabExplorer1.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
             this.tabExplorer1.TextColorSelected = System.Drawing.SystemColors.ControlText;
             // 
-            // FormExplorer
+            // FormFilRipExplorer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(969, 457);
             this.Controls.Add(this.splitContainer1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FormExplorer";
+            this.Name = "FormFilRipExplorer";
             this.Text = "Explorateur de fichier";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);

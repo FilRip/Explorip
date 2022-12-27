@@ -939,7 +939,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 if (!DesignMode && _lastActiveIndex > -1 && ShowTabCloser && GetTabCloserRect(_lastActiveIndex).Contains(MousePosition))
                 {
                     TabPage tab = TabPages[_lastActiveIndex];
-                    TabControlCancelEventArgs args = new TabControlCancelEventArgs(tab, _lastActiveIndex, false, TabControlAction.Deselecting);
+                    TabControlCancelEventArgs args = new(tab, _lastActiveIndex, false, TabControlAction.Deselecting);
                     OnTabClosing(args);
                     if (!args.Cancel)
                     {

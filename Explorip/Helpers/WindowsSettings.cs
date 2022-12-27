@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Drawing;
+
+using Explorip.WinAPI.Modeles;
 
 using Microsoft.Win32;
 
@@ -18,7 +21,7 @@ namespace Explorip.Helpers
         {
             try
             {
-                RegistryKey reg = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+                RegistryKey reg = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", false);
                 if (reg != null)
                 {
                     int lightMode = int.Parse(reg.GetValue("AppsUseLightTheme").ToString());
@@ -47,6 +50,30 @@ namespace Explorip.Helpers
                 return WinAPI.Dwmapi.DwmSetWindowAttribute(pointeurFenetre, attribut, ref immersiveActif, IntPtr.Size);
             }
             return false;
+        }
+
+        public static Color GetWindowsAccentColor()
+        {
+            RegistryKey cle = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\Dwm", false);
+            if (cle != null)
+            {
+                object valeurCle = cle.GetValue("AccentColor");
+                if (valeurCle is Int32 accentColor)
+                {
+                    return ParseDWordColor(accentColor);
+                }
+            }
+            return Color.CadetBlue;
+        }
+
+        private static Color ParseDWordColor(Int32 color)
+        {
+            byte a = (byte)((color >> 24) & 0xFF),
+                b = (byte)((color >> 16) & 0xFF),
+                g = (byte)((color >> 8) & 0xFF),
+                r = (byte)((color >> 0) & 0xFF);
+
+            return Color.FromArgb(a, r, g, b);
         }
     }
 }
