@@ -118,21 +118,21 @@ namespace Explorip.ComposantsWinForm
                 List<ListViewItem> liste = new();
                 foreach (TreeNode noeudEnfant in noeud.Nodes)
                 {
-                    liste.Add(AjouterElement(noeudEnfant.Text, (FileSystemInfo)noeudEnfant.Tag));
+                    liste.Add(AjouterElement((FileSystemInfo)noeudEnfant.Tag));
                 }
                 Items.AddRange(liste.ToArray());
             }
         }
 
-        private ListViewItem AjouterElement(string nom, FileSystemInfo element)
+        private ListViewItem AjouterElement(FileSystemInfo element)
         {
-            string nomIcone = nom;
+            string nomIcone = element.Name;
             int numIcone = Icones.GetNumIcon(element.FullName, element.IsShortcut(), true, out IntPtr pidl);
             if (_listeIcones.ContainsKey(numIcone))
                 nomIcone = _listeIcones[numIcone];
             else
             {
-                _listeIcones.Add(numIcone, nom);
+                _listeIcones.Add(numIcone, element.Name);
                 Bitmap petiteIcone, largeIcone;
                 petiteIcone = Icones.GetFileIcon(pidl, numIcone, WinAPI.Shell32.SHIL.SMALL);
                 largeIcone = Icones.GetFileIcon(pidl, numIcone, WinAPI.Shell32.SHIL.LARGE);
@@ -142,7 +142,7 @@ namespace Explorip.ComposantsWinForm
                     SmallImageList.Images.Add(nomIcone, petiteIcone);
             }
 
-            return new ListViewItem(nom, nomIcone) { Tag = element };
+            return new ListViewItem(element.Name, nomIcone) { Tag = element };
         }
 
         private void VideListe()
@@ -200,7 +200,7 @@ namespace Explorip.ComposantsWinForm
                 Array.Sort(dirs, new TriAlphabetique());
                 foreach (DirectoryInfo sousDirInfo in dirs)
                 {
-                    _liste.Add(AjouterElement(sousDirInfo.Name, sousDirInfo));
+                    _liste.Add(AjouterElement(sousDirInfo));
                 }
             }
 
@@ -215,7 +215,7 @@ namespace Explorip.ComposantsWinForm
                 Array.Sort(files, new TriAlphabetique());
                 foreach (FileInfo file in files)
                 {
-                    _liste.Add(AjouterElement(file.Name, file));
+                    _liste.Add(AjouterElement(file));
                 }
             }
 

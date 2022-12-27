@@ -49,7 +49,6 @@ namespace Explorip.Helpers
 
         public static IShellFolder GetShellFolder(this DirectoryInfo directoryInfo)
         {
-            // TODO : Rewrite, check https://www.codeproject.com/Articles/39224/Rewrite-DirectoryInfo-using-IShellFolder
             IShellFolder sfd = GetDesktopFolder();
             uint pchEaten = 0;
             SFGAO pdwAttributes = 0;

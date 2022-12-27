@@ -23,15 +23,10 @@ namespace ManagedShell.Common.Helpers
                 {
                     speakers.Activate(typeof(IAudioEndpointVolume).GUID, 0, IntPtr.Zero, out object o);
 
-                    if (o != null)
+                    if (o is IAudioEndpointVolume aepv)
                     {
-                        IAudioEndpointVolume aepv = (IAudioEndpointVolume)o;
-
-                        if (aepv != null)
-                        {
-                            volume = aepv.GetMasterVolumeLevelScalar();
-                            Marshal.ReleaseComObject(aepv);
-                        }
+                        volume = aepv.GetMasterVolumeLevelScalar();
+                        Marshal.ReleaseComObject(aepv);
                     }
                     Marshal.ReleaseComObject(speakers);
                 }
@@ -56,15 +51,10 @@ namespace ManagedShell.Common.Helpers
                 {
                     speakers.Activate(typeof(IAudioEndpointVolume).GUID, 0, IntPtr.Zero, out object o);
 
-                    if (o != null)
+                    if (o is IAudioEndpointVolume aepv)
                     {
-                        IAudioEndpointVolume aepv = (IAudioEndpointVolume)o;
-
-                        if (aepv != null)
-                        {
-                            isMuted = aepv.GetMute();
-                            Marshal.ReleaseComObject(aepv);
-                        }
+                        isMuted = aepv.GetMute();
+                        Marshal.ReleaseComObject(aepv);
                     }
                     Marshal.ReleaseComObject(speakers);
                 }
@@ -83,7 +73,6 @@ namespace ManagedShell.Common.Helpers
         {
         }
 
-#pragma warning disable IDE1006
         [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IAudioEndpointVolume
         {
@@ -92,9 +81,7 @@ namespace ManagedShell.Common.Helpers
             void _VtblGap8_5();
             int GetMute();
         }
-#pragma warning restore IDE1006
 
-#pragma warning disable IDE1006
         [Guid("A95664D2-9614-4F35-A746-DE8DB63617E6"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDeviceEnumerator
         {
@@ -103,7 +90,6 @@ namespace ManagedShell.Common.Helpers
             [PreserveSig()]
             int GetDefaultAudioEndpoint(int dataFlow, int role, out IMMDevice ppDevice);
         }
-#pragma warning restore IDE1006
 
         [Guid("D666063F-1587-4E43-81F1-B948E807363F"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         private interface IMMDevice

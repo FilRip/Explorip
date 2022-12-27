@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Explorip.Exceptions
 {
@@ -8,5 +9,7 @@ namespace Explorip.Exceptions
         public ShellContextMenuException(string message) : base(message)
         {
         }
+
+        protected ShellContextMenuException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

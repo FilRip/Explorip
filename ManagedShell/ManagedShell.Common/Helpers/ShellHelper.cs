@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -61,11 +62,6 @@ namespace ManagedShell.Common.Helpers
         {
             try
             {
-                if (!Environment.Is64BitProcess)
-                {
-                    filename.Replace("system32", "sysnative");
-                }
-
                 ProcessStartInfo psi = new()
                 {
                     UseShellExecute = true
@@ -110,11 +106,6 @@ namespace ManagedShell.Common.Helpers
         {
             try
             {
-                if (!Environment.Is64BitProcess)
-                {
-                    filename.Replace("system32", "sysnative");
-                }
-
                 ProcessStartInfo psi = new()
                 {
                     UseShellExecute = true,
@@ -132,19 +123,14 @@ namespace ManagedShell.Common.Helpers
             }
         }
 
-#pragma warning disable IDE0060
         public static bool StartProcess(string filename, string args, string verb)
         {
             try
             {
-                if (!Environment.Is64BitProcess)
-                {
-                    filename.Replace("system32", "sysnative");
-                }
-
                 Process proc = new();
                 proc.StartInfo.UseShellExecute = true;
                 proc.StartInfo.FileName = filename;
+                proc.StartInfo.Arguments = args;
                 proc.StartInfo.Verb = verb;
                 try
                 {
@@ -163,17 +149,11 @@ namespace ManagedShell.Common.Helpers
                 return false;
             }
         }
-#pragma warning restore IDE0060
 
         public static bool Exists(string filename)
         {
-            foreach (char invalid in Path.GetInvalidPathChars())
-            {
-                if (filename.Contains(invalid.ToString()))
-                {
-                    return false;
-                }
-            }
+            if (Path.GetInvalidPathChars().Any(invalid => filename.Contains(invalid)))
+                return false;
 
             return !filename.StartsWith("\\\\") && (File.Exists(filename) || Directory.Exists(filename));
         }
@@ -196,7 +176,7 @@ namespace ManagedShell.Common.Helpers
                     }
                 }
             }
-            catch { }
+            catch (Exception) { /* Ignore errors */ }
 
             return menuDropAlignment;
         }
@@ -423,8 +403,8 @@ namespace ManagedShell.Common.Helpers
                 {
                     aumid = prop.Value.ToString();
                 }
-                catch
-                { }
+                catch (Exception)
+                { /* Ignore errors */ }
 
                 prop.Clear();
             }

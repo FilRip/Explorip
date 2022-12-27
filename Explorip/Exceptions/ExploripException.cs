@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Explorip.Exceptions
 {
@@ -12,5 +13,7 @@ namespace Explorip.Exceptions
         public ExploripException(string message) : base(message)
         {
         }
+
+        protected ExploripException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

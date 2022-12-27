@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
+using Explorip.Exceptions;
+
 namespace Explorip.Helpers
 {
     public static class GestionEcrans
@@ -24,7 +26,7 @@ namespace Explorip.Helpers
 
         private static void VerifSiEcranPresent()
         {
-            if (Screen.AllScreens.Length == 0) throw new ExceptionGestionEcrans("Aucun écran connecté/détecté");
+            if (Screen.AllScreens.Length == 0) throw new GestionEcransException("Aucun écran connecté/détecté");
         }
 
         public static Screen[] ListeAutresEcrans()
@@ -39,7 +41,7 @@ namespace Explorip.Helpers
                         retour.Add(ecran);
                 }
             }
-            return retour.ToArray();
+            return retour?.ToArray();
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace Explorip.Helpers
         public static Screen Ecran(int id)
         {
             VerifSiEcranPresent();
-            if (id > Screen.AllScreens.Length - 1) throw new ExceptionGestionEcrans("Ce numéro d'écran n'existe pas");
+            if (id > Screen.AllScreens.Length - 1) throw new GestionEcransException("Ce numéro d'écran n'existe pas");
             return Screen.AllScreens[id];
         }
 
@@ -93,7 +95,7 @@ namespace Explorip.Helpers
                 return Screen.PrimaryScreen;
             Math.DivRem(Screen.AllScreens.Length, 2, out int nbEcranPair);
             if (nbEcranPair == 0) return Screen.PrimaryScreen; // A voir si on retourne une exception ou l'écran principal quand il n'y a pas d'écran central (nombre paire d'écran)
-            List<Screen> EcranTries = new();
+            List<Screen> EcranTries;
             EcranTries = Screen.AllScreens.OrderBy(item => item.WorkingArea.Location.X).ToList();
             while (EcranTries.Count > 1)
             {
@@ -110,7 +112,7 @@ namespace Explorip.Helpers
                 POSITION_ECRAN.GAUCHE => EcranGauche(),
                 POSITION_ECRAN.CENTRE => EcranCentre(),
                 POSITION_ECRAN.DROITE => EcranDroite(),
-                _ => throw new ExceptionGestionEcrans("Position de l'écran demandé inconnu"),
+                _ => throw new GestionEcransException("Position de l'écran demandé inconnu"),
             };
         }
 
@@ -130,7 +132,7 @@ namespace Explorip.Helpers
 
         public static void DeplaceFenetreSurEcran(Form form, int numEcran, bool pleinEcran)
         {
-            if (numEcran > Screen.AllScreens.Length - 1) throw new ExceptionGestionEcrans("Ce numéro d'écran n'existe pas");
+            if (numEcran > Screen.AllScreens.Length - 1) throw new GestionEcransException("Ce numéro d'écran n'existe pas");
             DeplaceFenetreSurEcran(form, Screen.AllScreens[numEcran], pleinEcran);
         }
 
@@ -170,7 +172,7 @@ namespace Explorip.Helpers
 
         public static void DeplaceFenetreSurEcran(System.Windows.Window fenetre, int numEcran, bool pleinEcran)
         {
-            if (numEcran > Screen.AllScreens.Length - 1) throw new ExceptionGestionEcrans("Ce numéro d'écran n'existe pas");
+            if (numEcran > Screen.AllScreens.Length - 1) throw new GestionEcransException("Ce numéro d'écran n'existe pas");
             DeplaceFenetreSurEcran(fenetre, Screen.AllScreens[numEcran], pleinEcran);
         }
 
@@ -200,23 +202,5 @@ namespace Explorip.Helpers
         }
 
         #endregion
-
-        public class ExceptionGestionEcrans : Exception
-        {
-            private readonly string _erreur = "";
-
-            public ExceptionGestionEcrans(string erreur)
-            {
-                _erreur = erreur;
-            }
-
-            public override string Message
-            {
-                get
-                {
-                    return _erreur;
-                }
-            }
-        }
     }
 }
