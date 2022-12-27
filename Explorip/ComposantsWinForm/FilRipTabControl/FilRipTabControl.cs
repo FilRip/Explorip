@@ -146,6 +146,8 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
         #region Propriétés
 
+        public bool ShowTabCloser { get; set; }
+
         /// <summary>
         /// Ajoute une marge dans le titre de l'onglet. Obsolete : utiliser Radius
         /// </summary>
@@ -855,13 +857,10 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         /// <param name="e">Argument de l'evenement</param>
         protected override void OnMove(EventArgs e)
         {
-            if (Width > 0 && Height > 0)
+            if (Width > 0 && Height > 0 && _BackImage != null)
             {
-                if (_BackImage != null)
-                {
-                    _BackImage.Dispose();
-                    _BackImage = null;
-                }
+                _BackImage.Dispose();
+                _BackImage = null;
             }
             base.OnMove(e);
             Invalidate();
@@ -885,6 +884,12 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
+            if (ShowTabCloser)
+            {
+                Rectangle tabRect = GetTabRect(_lastActiveIndex);
+                if (tabRect.Contains(MousePosition))
+                    Invalidate();
+            }
             if (_lastActiveIndex != ActiveIndex)
             {
                 _lastActiveIndex = ActiveIndex;
@@ -916,6 +921,13 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             }
         }
 
+        public event EventHandler<TabControlCancelEventArgs> TabClosing;
+        protected virtual void OnTabClosing(TabControlCancelEventArgs e)
+        {
+            if (TabClosing != null)
+                TabClosing?.Invoke(this, e);
+        }
+
         /// <summary>
         /// Evenement reçu quand l'utilisateur clique sur un des boutons des onglets
         /// </summary>
@@ -924,7 +936,18 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         {
             if (SizeMode == TabSizeMode.Fixed)
             {
-                if ((_lastActiveIndex >= 0) && (_lastActiveIndex != SelectedIndex))
+                if (!DesignMode && _lastActiveIndex > -1 && ShowTabCloser && GetTabCloserRect(_lastActiveIndex).Contains(MousePosition))
+                {
+                    TabPage tab = TabPages[_lastActiveIndex];
+                    TabControlCancelEventArgs args = new TabControlCancelEventArgs(tab, _lastActiveIndex, false, TabControlAction.Deselecting);
+                    OnTabClosing(args);
+                    if (!args.Cancel)
+                    {
+                        TabPages.Remove(tab);
+                        tab.Dispose();
+                    }
+                }
+                else if ((_lastActiveIndex >= 0) && (_lastActiveIndex != SelectedIndex))
                 {
                     _forceSelectParClick = true;
                     SelectedIndex = _lastActiveIndex;
@@ -1767,7 +1790,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
 
         private Rectangle GetTabTextRect(int index)
         {
-            Rectangle textRect = new();
+            Rectangle textRect;
             using (GraphicsPath path = GetTabBorder(index))
             {
                 RectangleF tabBounds = path.GetBounds();
@@ -1823,6 +1846,79 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             }
 
             return textRect;
+        }
+
+        public Rectangle GetTabCloserRect(int index)
+        {
+            Rectangle closerRect;
+            using (GraphicsPath path = this.GetTabBorder(index))
+            {
+                RectangleF rect = path.GetBounds();
+
+                //	Make it shorter or thinner to fit the height or width because of the padding added to the tab for painting
+                switch (this.Alignment)
+                {
+                    case TabAlignment.Top:
+                        rect.Y += 4;
+                        rect.Height -= 6;
+                        break;
+                    case TabAlignment.Bottom:
+                        rect.Y += 2;
+                        rect.Height -= 6;
+                        break;
+                    case TabAlignment.Left:
+                        rect.X += 4;
+                        rect.Width -= 6;
+                        break;
+                    case TabAlignment.Right:
+                        rect.X += 2;
+                        rect.Width -= 6;
+                        break;
+                }
+                if (this.Alignment <= TabAlignment.Bottom)
+                {
+                    if (this.RightToLeftLayout)
+                    {
+                        closerRect = new Rectangle((int)rect.Left, (int)rect.Y + (int)Math.Floor((double)((int)rect.Height - 6) / 2), 6, 6);
+                        while (!path.IsVisible(closerRect.Left, closerRect.Y) && closerRect.Right < this.Width)
+                        {
+                            closerRect.X += 1;
+                        }
+                        closerRect.X += 4;
+                    }
+                    else
+                    {
+                        closerRect = new Rectangle((int)rect.Right, (int)rect.Y + (int)Math.Floor((double)((int)rect.Height - 6) / 2), 6, 6);
+                        while (!path.IsVisible(closerRect.Right, closerRect.Y) && closerRect.Right > -6)
+                        {
+                            closerRect.X -= 1;
+                        }
+                        closerRect.X -= 4;
+                    }
+                }
+                else
+                {
+                    if (this.RightToLeftLayout)
+                    {
+                        closerRect = new Rectangle((int)rect.X + (int)Math.Floor((double)((int)rect.Width - 6) / 2), (int)rect.Top, 6, 6);
+                        while (!path.IsVisible(closerRect.X, closerRect.Top) && closerRect.Bottom < this.Height)
+                        {
+                            closerRect.Y += 1;
+                        }
+                        closerRect.Y += 4;
+                    }
+                    else
+                    {
+                        closerRect = new Rectangle((int)rect.X + (int)Math.Floor((double)((int)rect.Width - 6) / 2), (int)rect.Bottom, 6, 6);
+                        while (!path.IsVisible(closerRect.X, closerRect.Bottom) && closerRect.Top > -6)
+                        {
+                            closerRect.Y -= 1;
+                        }
+                        closerRect.Y -= 4;
+                    }
+                }
+            }
+            return closerRect;
         }
 
         private int GetTabRow(int index)
@@ -2018,6 +2114,107 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             else
                 return (dWord.ToInt32() >> 16) & 0xffff;
         }
+
+        /*private Rectangle GetTabImageRect(int index)
+        {
+            using (GraphicsPath tabBorderPath = GetTabBorder(index))
+            {
+                return this.GetTabImageRect(tabBorderPath);
+            }
+        }
+
+        private Rectangle GetTabImageRect(GraphicsPath tabBorderPath)
+        {
+            Rectangle imageRect = new Rectangle();
+            RectangleF rect = tabBorderPath.GetBounds();
+
+            //	Make it shorter or thinner to fit the height or width because of the padding added to the tab for painting
+            switch (this.Alignment)
+            {
+                case TabAlignment.Top:
+                    rect.Y += 4;
+                    rect.Height -= 6;
+                    break;
+                case TabAlignment.Bottom:
+                    rect.Y += 2;
+                    rect.Height -= 6;
+                    break;
+                case TabAlignment.Left:
+                    rect.X += 4;
+                    rect.Width -= 6;
+                    break;
+                case TabAlignment.Right:
+                    rect.X += 2;
+                    rect.Width -= 6;
+                    break;
+            }
+
+            //	Ensure image is fully visible
+            if (this.Alignment <= TabAlignment.Bottom)
+            {
+                if ((ImageAlign & NativeMethods.AnyLeftAlign) != ((ContentAlignment)0))
+                {
+                    imageRect = new Rectangle((int)rect.X, (int)rect.Y + (int)Math.Floor((double)((int)rect.Height - 16) / 2), 16, 16);
+                    while (!tabBorderPath.IsVisible(imageRect.X, imageRect.Y))
+                    {
+                        imageRect.X += 1;
+                    }
+                    imageRect.X += 4;
+
+                }
+                else if ((ImageAlign & NativeMethods.AnyCenterAlign) != ((ContentAlignment)0))
+                {
+                    imageRect = new Rectangle((int)rect.X + (int)Math.Floor((double)(((int)rect.Right - (int)rect.X - (int)rect.Height + 2) / 2)), (int)rect.Y + (int)Math.Floor((double)((int)rect.Height - 16) / 2), 16, 16);
+                }
+                else
+                {
+                    imageRect = new Rectangle((int)rect.Right, (int)rect.Y + (int)Math.Floor((double)((int)rect.Height - 16) / 2), 16, 16);
+                    while (!tabBorderPath.IsVisible(imageRect.Right, imageRect.Y))
+                    {
+                        imageRect.X -= 1;
+                    }
+                    imageRect.X -= 4;
+
+                    //	Move it in further to allow for the tab closer
+                    if (ShowTabCloser && !this.RightToLeftLayout)
+                    {
+                        imageRect.X -= 10;
+                    }
+                }
+            }
+            else
+            {
+                if ((ImageAlign & NativeMethods.AnyLeftAlign) != ((ContentAlignment)0))
+                {
+                    imageRect = new Rectangle((int)rect.X + (int)Math.Floor((double)((int)rect.Width - 16) / 2), (int)rect.Y, 16, 16);
+                    while (!tabBorderPath.IsVisible(imageRect.X, imageRect.Y))
+                    {
+                        imageRect.Y += 1;
+                    }
+                    imageRect.Y += 4;
+                }
+                else if ((ImageAlign & NativeMethods.AnyCenterAlign) != ((ContentAlignment)0))
+                {
+                    imageRect = new Rectangle((int)rect.X + (int)Math.Floor((double)((int)rect.Width - 16) / 2), (int)rect.Y + (int)Math.Floor((double)(((int)rect.Bottom - (int)rect.Y - (int)rect.Width + 2) / 2)), 16, 16);
+                }
+                else
+                {
+                    imageRect = new Rectangle((int)rect.X + (int)Math.Floor((double)((int)rect.Width - 16) / 2), (int)rect.Bottom, 16, 16);
+                    while (!tabBorderPath.IsVisible(imageRect.X, imageRect.Bottom))
+                    {
+                        imageRect.Y -= 1;
+                    }
+                    imageRect.Y -= 4;
+
+                    //	Move it in further to allow for the tab closer
+                    if (ShowTabCloser && !this.RightToLeftLayout)
+                    {
+                        imageRect.Y -= 10;
+                    }
+                }
+            }
+            return imageRect;
+        }*/
 
         #endregion
     }

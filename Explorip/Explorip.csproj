@@ -48,7 +48,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>FilRip.snk</AssemblyOriginatorKeyFile>
@@ -131,11 +131,11 @@
     <Compile Include="Helpers\DragDropHelper.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
-    <Compile Include="Forms\FormExplorer.cs">
+    <Compile Include="Forms\FormFilRipExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormExplorer.Designer.cs">
-      <DependentUpon>FormExplorer.cs</DependentUpon>
+    <Compile Include="Forms\FormFilRipExplorer.Designer.cs">
+      <DependentUpon>FormFilRipExplorer.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Icones.cs" />
     <Compile Include="Localization\GestionString.cs" />
@@ -204,6 +204,7 @@
     <Compile Include="WinAPI\Modeles\IDropSource.cs" />
     <Compile Include="WinAPI\Modeles\IDropTarget.cs" />
     <Compile Include="WinAPI\Modeles\IDropTargetHelper.cs" />
+    <Compile Include="WinAPI\Modeles\Uxtheme.cs" />
     <Compile Include="WinAPI\Ole32.cs" />
     <Compile Include="Exceptions\Win32Error.cs" />
     <Compile Include="WinAPI\Gdi32.cs" />
@@ -246,9 +247,9 @@
     <EmbeddedResource Include="ComposantsWinForm\PanelExplorer.resx">
       <DependentUpon>PanelExplorer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormExplorer.resx">
+    <EmbeddedResource Include="Forms\FormFilRipExplorer.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>FormExplorer.cs</DependentUpon>
+      <DependentUpon>FormFilRipExplorer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

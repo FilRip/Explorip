@@ -23,7 +23,6 @@ namespace Explorip.ComposantsWinForm
         public event DelegateEntrerRepertoire SelectionneRepertoire;
         private FilesOperations.FileOperation _fileOperation = new();
         private FileSystemWatcher _repCourantChangement;
-        private readonly Dictionary<int, string> _listeIcones;
 
         public FichiersListView() : base()
         {
@@ -33,7 +32,6 @@ namespace Explorip.ComposantsWinForm
             SmallImageList = new ImageList();
             LargeImageList.ImageSize = new Size(32, 32);
             SmallImageList.ImageSize = new Size(16, 16);
-            _listeIcones = new Dictionary<int, string>();
             MouseDoubleClick += FichiersListView_MouseDoubleClick;
             InitialiseSurveillance();
         }
@@ -98,7 +96,7 @@ namespace Explorip.ComposantsWinForm
                 DelegateEntrerRepertoire caller = (DelegateEntrerRepertoire)result.AsyncDelegate;
                 caller.EndInvoke(ar);
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
         }
 
         public DirectoryTreeView LiensRepertoires { get; set; }
@@ -126,13 +124,10 @@ namespace Explorip.ComposantsWinForm
 
         private ListViewItem AjouterElement(FileSystemInfo element)
         {
-            string nomIcone = element.Name;
             int numIcone = Icones.GetNumIcon(element.FullName, element.IsShortcut(), true, out IntPtr pidl);
-            if (_listeIcones.ContainsKey(numIcone))
-                nomIcone = _listeIcones[numIcone];
-            else
+            string nomIcone = numIcone.ToString();
+            if (!SmallImageList.Images.ContainsKey(nomIcone))
             {
-                _listeIcones.Add(numIcone, element.Name);
                 Bitmap petiteIcone, largeIcone;
                 petiteIcone = Icones.GetFileIcon(pidl, numIcone, WinAPI.Shell32.SHIL.SMALL);
                 largeIcone = Icones.GetFileIcon(pidl, numIcone, WinAPI.Shell32.SHIL.LARGE);
@@ -148,7 +143,6 @@ namespace Explorip.ComposantsWinForm
         private void VideListe()
         {
             Items.Clear();
-            _listeIcones.Clear();
             if (LargeImageList?.Images != null)
                 foreach (Bitmap img in LargeImageList.Images)
                     img.Dispose();
@@ -194,7 +188,7 @@ namespace Explorip.ComposantsWinForm
                 MessageBox.Show(this, "Accès non autorisé", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore others errors */ }
             if (dirs != null)
             {
                 Array.Sort(dirs, new TriAlphabetique());
@@ -209,7 +203,7 @@ namespace Explorip.ComposantsWinForm
             {
                 files = dirInfo.GetFiles();
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
             if (files != null)
             {
                 Array.Sort(files, new TriAlphabetique());

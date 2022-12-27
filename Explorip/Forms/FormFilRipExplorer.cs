@@ -5,9 +5,9 @@ using Explorip.Helpers;
 
 namespace Explorip.Forms
 {
-    public partial class FormExplorer : Form
+    public partial class FormFilRipExplorer : Form
     {
-        public FormExplorer(string[] args)
+        public FormFilRipExplorer(string[] args)
         {
             AutoScaleMode = AutoScaleMode.Dpi;
             InitializeComponent();

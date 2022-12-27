@@ -1,6 +1,6 @@
 namespace Explorip.Forms
 {
-    partial class FormExplorer
+    partial class FormFilRipExplorer
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@ namespace Explorip.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormExplorer));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFilRipExplorer));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabExplorer2 = new Explorip.ComposantsWinForm.TabExplorer();
             this.tabExplorer1 = new Explorip.ComposantsWinForm.TabExplorer();

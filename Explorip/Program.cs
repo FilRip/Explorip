@@ -25,7 +25,7 @@ namespace Explorip
             }
             else
             {
-                Application.Run(new FormExplorer(args));
+                Application.Run(new FormFilRipExplorer(args));
             }
         }
 
