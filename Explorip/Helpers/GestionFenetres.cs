@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 
+using Explorip.Exceptions;
 using Explorip.WinAPI;
 
 namespace Explorip.Helpers
@@ -24,7 +26,7 @@ namespace Explorip.Helpers
         public static IntPtr RetourneFenetrePrincipale(int IdProcessus)
         {
             Process processus = Process.GetProcessById(IdProcessus);
-            if (processus == null) throw new ExceptionGestionFenetres($"Aucun processus trouvé avec l'Id {IdProcessus}");
+            if (processus == null) throw new GestionFenetresException($"Aucun processus trouvé avec l'Id {IdProcessus}");
             return processus.MainWindowHandle;
         }
 
@@ -35,8 +37,8 @@ namespace Explorip.Helpers
         public static IntPtr RetourneFenetrePrincipale(string nomProcessus)
         {
             Process[] processus = Process.GetProcessesByName(nomProcessus);
-            if ((processus == null) || (processus.Length == 0)) throw new ExceptionGestionFenetres($"Aucun processus trouvé sous le nom {nomProcessus}");
-            if (processus.Length > 1) throw new ExceptionGestionFenetres($"Plusieurs processus trouvé sous le nom {nomProcessus}");
+            if ((processus == null) || (processus.Length == 0)) throw new GestionFenetresException($"Aucun processus trouvé sous le nom {nomProcessus}");
+            if (processus.Length > 1) throw new GestionFenetresException($"Plusieurs processus trouvé sous le nom {nomProcessus}");
             return processus[0].MainWindowHandle;
         }
 
@@ -47,7 +49,7 @@ namespace Explorip.Helpers
         public static IntPtr RetourneConsoleProcessus(int IdProcessus)
         {
             IntPtr retour = IntPtr.Zero;
-            if (Process.GetProcessById(IdProcessus) == null) throw new ExceptionGestionFenetres($"Aucun processus trouvé avec l'Id {IdProcessus}");
+            if (Process.GetProcessById(IdProcessus) == null) throw new GestionFenetresException($"Aucun processus trouvé avec l'Id {IdProcessus}");
             if (User32.AttachConsole(IdProcessus))
             {
                 try
@@ -56,7 +58,7 @@ namespace Explorip.Helpers
                 }
                 catch (Exception ex)
                 {
-                    throw new ExceptionGestionFenetres(ex.Message);
+                    throw new GestionFenetresException(ex.Message);
                 }
                 finally
                 {
@@ -75,30 +77,9 @@ namespace Explorip.Helpers
         {
             if (string.IsNullOrWhiteSpace(nomProcessus)) throw new ArgumentNullException(nameof(nomProcessus));
             Process[] processus = Process.GetProcessesByName(nomProcessus);
-            if ((processus == null) || (processus.Length == 0)) throw new ExceptionGestionFenetres($"Aucun processus trouvé sous le nom {nomProcessus}");
-            if (processus.Length > 1) throw new ExceptionGestionFenetres($"Plusieurs processus trouvé sous le nom {nomProcessus}");
+            if ((processus == null) || (processus.Length == 0)) throw new GestionFenetresException($"Aucun processus trouvé sous le nom {nomProcessus}");
+            if (processus.Length > 1) throw new GestionFenetresException($"Plusieurs processus trouvé sous le nom {nomProcessus}");
             return RetourneConsoleProcessus(processus[0].Id);
-        }
-
-        /// <summary>
-        /// Exception levée si erreur dans une méthode de gestionFenetres
-        /// </summary>
-        public class ExceptionGestionFenetres : Exception
-        {
-            private readonly string _erreur;
-
-            public ExceptionGestionFenetres(string erreur)
-            {
-                _erreur = erreur;
-            }
-
-            public override string Message
-            {
-                get
-                {
-                    return _erreur;
-                }
-            }
         }
 
         /// <summary>
@@ -112,7 +93,7 @@ namespace Explorip.Helpers
             }
             catch (Exception ex)
             {
-                throw new ExceptionGestionFenetres("Erreur pendant la tentative de lister les fenêtres de l'application. Est-ce une application Windows Forms ?" + Environment.NewLine + ex.Message);
+                throw new GestionFenetresException("Erreur pendant la tentative de lister les fenêtres de l'application. Est-ce une application Windows Forms ?" + Environment.NewLine + ex.Message);
             }
         }
 
@@ -127,7 +108,7 @@ namespace Explorip.Helpers
             }
             catch (Exception ex)
             {
-                throw new ExceptionGestionFenetres("Erreur pendant la tentative de lister les fenêtres de l'application. Est-ce une application WPF ?" + Environment.NewLine + ex.Message);
+                throw new GestionFenetresException("Erreur pendant la tentative de lister les fenêtres de l'application. Est-ce une application WPF ?" + Environment.NewLine + ex.Message);
             }
         }
     }

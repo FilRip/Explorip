@@ -22,7 +22,7 @@ namespace Explorip.TaskBar
         private ManagedShellLogger _logger;
         private readonly List<Taskbar> _taskbarList;
         private readonly StartMenuMonitor _startMenuMonitor;
-        public static ShellManager MonShellManager;
+        public static ShellManager MonShellManager { get; private set; }
 
         public MyApp()
         {

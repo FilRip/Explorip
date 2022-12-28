@@ -174,7 +174,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.Interop
         /// <returns>True if this message is equal argument; false otherwise.</returns>
         public override bool Equals(object obj)
         {
-            return (obj != null && obj is Message message) ? this == message : false;
+            return (obj is Message message && this == message);
         }
 
         /// <summary>

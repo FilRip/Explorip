@@ -13,7 +13,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// functions and methods which use these constants. 
     /// </summary>
     [Flags]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue", Justification = "Follows native api.")]
     public enum AccessModes
     {
         /// <summary>

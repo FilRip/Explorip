@@ -344,7 +344,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                 {
                     if (isMonitorOn == null)
                     {
-                        EventHandler dummy = delegate (object sender, EventArgs args) { };
+                        static void dummy(object sender, EventArgs args) { /* Dummy method */ }
                         IsMonitorOnChanged += dummy;
                         // Wait until Windows updates the power source 
                         // (through RegisterPowerSettingNotification)

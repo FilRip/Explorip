@@ -48,13 +48,7 @@ namespace Explorip.TaskBar.Utilities
 
         private static ResourceDictionary GetActualThemeDictionary()
         {
-            foreach (ResourceDictionary rd in GetMergedDictionaries()
-                .Where(rd => rd.Source.ToString().Contains($"{THEME_FOLDER}/")))
-            {
-                return rd;
-            }
-
-            return null;
+            return GetMergedDictionaries().FirstOrDefault(rd => rd.Source.ToString().Contains($"{THEME_FOLDER}/"));
         }
 
         private void ClearPreviousThemes()

@@ -94,7 +94,7 @@ namespace Explorip.Helpers
                                         Keys touche = Keys.None;
                                         ((ToolStripMenuItem)menuAAjouter).ShortcutKeyDisplayString = shortcut;
                                         int maxInteration = 0;
-                                        while (shortcut.IndexOf("+") > 0 && maxInteration <= 4)
+                                        while (shortcut.IndexOf("+") >= 0 && maxInteration <= 4)
                                         {
                                             maxInteration++;
                                             if (shortcut.StartsWith("Ctrl"))
@@ -134,18 +134,13 @@ namespace Explorip.Helpers
                                     catch (Exception) { }
                                 }
                                 menuAAjouter.Click += ClickMenu;
-                                if (background)
+                                if ((background) && (libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER.Trim().ToLower() ||
+                                        libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER_RACCOURCI.Trim().ToLower()) &&
+                                        (FilesOperations.ContextMenuPaste.CollerDispo()))
                                 {
-                                    if (libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER.Trim().ToLower() ||
-                                        libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER_RACCOURCI.Trim().ToLower())
-                                    {
-                                        if (FilesOperations.ContextMenuPaste.CollerDispo())
-                                        {
-                                            menuAAjouter.Enabled = true;
-                                            menuAAjouter.Click -= ClickMenu;
-                                            menuAAjouter.Click += FilesOperations.ContextMenuPaste.MenuColler;
-                                        }
-                                    }
+                                    menuAAjouter.Enabled = true;
+                                    menuAAjouter.Click -= ClickMenu;
+                                    menuAAjouter.Click += FilesOperations.ContextMenuPaste.MenuColler;
                                 }
                             }
                             if (sousMenu == null)
@@ -187,15 +182,16 @@ namespace Explorip.Helpers
                             }
                         }
                     }
-                    if ((cms != null) && (cms.Items.Count > 0))
+                    if ((cms != null) && (cms.Items.Count > 0) && (cms.Items[cms.Items.Count - 1] is ToolStripSeparator))
                     {
-                        if (cms.Items[cms.Items.Count - 1] is ToolStripSeparator)
-                            cms.Items.RemoveAt(cms.Items.Count - 1);
+                        cms.Items.RemoveAt(cms.Items.Count - 1);
                     }
-                    if ((sousMenu != null) && (sousMenu.DropDownItems != null) && (sousMenu.DropDownItems.Count > 0))
+                    if ((sousMenu != null) &&
+                        (sousMenu.DropDownItems != null) &&
+                        (sousMenu.DropDownItems.Count > 0) &&
+                        (sousMenu.DropDownItems[sousMenu.DropDownItems.Count - 1] is ToolStripSeparator))
                     {
-                        if (sousMenu.DropDownItems[sousMenu.DropDownItems.Count - 1] is ToolStripSeparator)
-                            sousMenu.DropDownItems.RemoveAt(sousMenu.DropDownItems.Count - 1);
+                        sousMenu.DropDownItems.RemoveAt(sousMenu.DropDownItems.Count - 1);
                     }
                 }
             }

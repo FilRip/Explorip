@@ -117,23 +117,20 @@ namespace Explorip.TaskBar.Controls
 
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is bool visible)
+            if (e.NewValue is bool visible && e.NewValue != e.OldValue)
             {
-                if (e.NewValue != e.OldValue)
+                if (visible)
                 {
-                    if (visible)
+                    if (Folder != null)
                     {
-                        if (Folder != null)
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        SetupFolder(Path);
-                    }
-                    else
-                    {
-                        UnloadFolder();
-                    }
+                    SetupFolder(Path);
+                }
+                else
+                {
+                    UnloadFolder();
                 }
             }
         }

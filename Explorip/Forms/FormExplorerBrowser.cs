@@ -12,7 +12,7 @@ namespace Explorip.Forms
 {
     public partial class FormExplorerBrowser : Form
     {
-        private string _repertoireDemarrage;
+        private readonly string _repertoireDemarrage;
         private TabExplorerBrowser _tabGauche, _tabDroite;
 
         public FormExplorerBrowser(string[] args)

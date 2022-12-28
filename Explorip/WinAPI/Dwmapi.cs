@@ -20,6 +20,6 @@ namespace Explorip.WinAPI
         internal static extern int DwmUnregisterThumbnail(IntPtr thumb);
 
         [DllImport("dwmapi.dll", EntryPoint = "#127")]
-        public static extern void DwmGetColorizationParameters(ref DWM_COLORIZATION_PARAMS colors);
+        internal static extern void DwmGetColorizationParameters(ref DWM_COLORIZATION_PARAMS colors);
     }
 }
