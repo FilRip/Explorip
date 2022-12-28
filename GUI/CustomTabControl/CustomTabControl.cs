@@ -299,6 +299,17 @@ namespace System.Windows.Forms
             }
         }
 
+        public void ForceSelectedTab(TabPage tab)
+        {
+            SelectedTab = tab;
+        }
+
+        public void ForceSelectedTab(int index)
+        {
+            if (index < TabCount)
+                SelectedTab = TabPages[index];
+        }
+
         [Browsable(false)]
         public TabPage ActiveTab
         {
@@ -311,6 +322,8 @@ namespace System.Windows.Forms
                 }
                 else
                 {
+                    if (TabCount == 1)
+                        return TabPages[0];
                     return null;
                 }
             }

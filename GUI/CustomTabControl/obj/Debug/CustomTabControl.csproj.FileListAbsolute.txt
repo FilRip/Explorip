@@ -1,6 +1,0 @@
-C:\Code\Tests\Explorip\GUI\CustomTabControl\obj\Debug\CustomTabControl.csproj.AssemblyReference.cache
-C:\Code\Tests\Explorip\GUI\CustomTabControl\obj\Debug\CustomTabControl.csproj.CoreCompileInputs.cache
-C:\Code\Tests\Explorip\GUI\CustomTabControl\bin\Debug\CustomTabControl.dll
-C:\Code\Tests\Explorip\GUI\CustomTabControl\bin\Debug\CustomTabControl.pdb
-C:\Code\Tests\Explorip\GUI\CustomTabControl\obj\Debug\CustomTabControl.dll
-C:\Code\Tests\Explorip\GUI\CustomTabControl\obj\Debug\CustomTabControl.pdb

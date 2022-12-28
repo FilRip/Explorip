@@ -25,3 +25,9 @@
 /ManagedShell/ManagedShell.WindowsTasks/obj/
 /ManagedShell/ManagedShell.WindowsTray/bin/
 /ManagedShell/ManagedShell.WindowsTray/obj/
+/GUI/CustomTabControl/bin/
+/GUI/CustomTabControl/obj/
+/WindowsAPICodePack/Core/bin/
+/WindowsAPICodePack/Core/obj/
+/WindowsAPICodePack/Shell/bin/
+/WindowsAPICodePack/Shell/obj/

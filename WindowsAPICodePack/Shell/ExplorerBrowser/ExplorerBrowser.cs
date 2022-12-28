@@ -285,7 +285,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         {
             base.OnCreateControl();
 
-            if (DesignMode == false)
+            if (!DesignMode)
             {
                 explorerBrowserControl = new ExplorerBrowserClass();
 

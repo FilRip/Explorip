@@ -101,8 +101,20 @@
     <Compile Include="ComposantsWinForm\TabExplorer.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ComposantsWinForm\TabExplorerBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\TabExplorerBrowser.Designer.cs">
+      <DependentUpon>TabExplorerBrowser.cs</DependentUpon>
+    </Compile>
     <Compile Include="ComposantsWinForm\TabPageExplorer.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\TabPageExplorerBrowser.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ComposantsWinForm\TabPageExplorerBrowser.Designer.cs">
+      <DependentUpon>TabPageExplorerBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Constantes\Localisation.cs" />
     <Compile Include="Exceptions\ExploripException.cs" />
@@ -135,6 +147,7 @@
     <Compile Include="Helpers\GestionFenetres.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
     <Compile Include="Helpers\DragDropHelper.cs" />
+    <Compile Include="Helpers\Themes.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
     <Compile Include="Forms\FormFilRipExplorer.cs">
@@ -253,6 +266,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ComposantsWinForm\PanelExplorer.resx">
       <DependentUpon>PanelExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ComposantsWinForm\TabExplorerBrowser.resx">
+      <DependentUpon>TabExplorerBrowser.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormExplorerBrowser.resx">
       <DependentUpon>FormExplorerBrowser.cs</DependentUpon>

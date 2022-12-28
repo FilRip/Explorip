@@ -1,8 +1,0 @@
-C:\Code\Tests\Explorip\WindowsAPICodePack\Core\bin\Debug\Microsoft.WindowsAPICodePack.dll
-C:\Code\Tests\Explorip\WindowsAPICodePack\Core\bin\Debug\Microsoft.WindowsAPICodePack.pdb
-C:\Code\Tests\Explorip\WindowsAPICodePack\Core\obj\Debug\Microsoft.WindowsAPICodePack.Resources.LocalizedMessages.resources
-C:\Code\Tests\Explorip\WindowsAPICodePack\Core\obj\Debug\Core.csproj.GenerateResource.cache
-C:\Code\Tests\Explorip\WindowsAPICodePack\Core\obj\Debug\Core.csproj.CoreCompileInputs.cache
-C:\Code\Tests\Explorip\WindowsAPICodePack\Core\obj\Debug\Microsoft.WindowsAPICodePack.dll
-C:\Code\Tests\Explorip\WindowsAPICodePack\Core\obj\Debug\Microsoft.WindowsAPICodePack.pdb
-C:\Code\Tests\Explorip\WindowsAPICodePack\Core\obj\Debug\Core.csproj.AssemblyReference.cache
