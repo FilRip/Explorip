@@ -119,6 +119,7 @@
     <Compile Include="Constantes\Localisation.cs" />
     <Compile Include="Exceptions\ExploripException.cs" />
     <Compile Include="Exceptions\GestionEcransException.cs" />
+    <Compile Include="Exceptions\GestionFenetresException.cs" />
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
     <Compile Include="FilesOperations\ContextMenuPaste.cs" />
