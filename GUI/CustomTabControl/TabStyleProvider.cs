@@ -21,7 +21,17 @@ namespace System.Windows.Forms
             _BorderColor = Color.Empty;
             _BorderColorSelected = Color.Empty;
             _FocusColor = Color.Orange;
+            _Radius = 1;
+            _Opacity = 1;
+            _BorderColorHot = Color.Empty;
+            _CloserColorActive = Color.Black;
+            _CloserColor = Color.DarkGray;
             DisplayStyle = TabStyle.Default;
+            _TextColor = Color.Empty;
+            _TextColorSelected = Color.Empty;
+            _TextColorDisabled = Color.Empty;
+            _BackgroundColor = Color.White;
+            _ActiveBlend = false;
             if (_TabControl.RightToLeftLayout)
             {
                 _ImageAlign = ContentAlignment.MiddleRight;
@@ -67,21 +77,23 @@ namespace System.Windows.Forms
         protected Point _Padding;
         protected bool _HotTrack;
         protected ContentAlignment _ImageAlign;
-        protected int _Radius = 1;
+        protected int _Radius;
         protected int _Overlap;
         protected bool _FocusTrack;
-        protected float _Opacity = 1;
+        protected float _Opacity;
         protected bool _ShowTabCloser;
         protected Color _BorderColorSelected;
         protected Color _BorderColor;
-        protected Color _BorderColorHot = Color.Empty;
-        protected Color _CloserColorActive = Color.Black;
-        protected Color _CloserColor = Color.DarkGray;
+        protected Color _BorderColorHot;
+        protected Color _CloserColorActive;
+        protected Color _CloserColor;
         protected Color _FocusColor;
-        protected Color _TextColor = Color.Empty;
-        protected Color _TextColorSelected = Color.Empty;
-        protected Color _TextColorDisabled = Color.Empty;
-        protected Color _BackgroundColor = Color.White;
+        protected Color _TextColor;
+        protected Color _TextColorSelected;
+        protected Color _TextColorDisabled;
+        protected Color _BackgroundColor;
+        protected bool _ActiveBlend;
+        protected Color _BackgroundEndColor;
 
         #endregion
 
@@ -589,6 +601,17 @@ namespace System.Windows.Forms
             }
         }
 
+        [Category("Appearance"), DefaultValue(typeof(Color), "Orange")]
+        public Color BackgroundEndColor
+        {
+            get { return _BackgroundEndColor; }
+            set
+            {
+                _BackgroundEndColor = value;
+                _TabControl.Invalidate();
+            }
+        }
+
         [Category("Appearance"), DefaultValue(typeof(Color), "Black")]
         public Color CloserColorActive
         {
@@ -705,6 +728,9 @@ namespace System.Windows.Forms
 
         private Blend GetBackgroundBlend()
         {
+            if (!_ActiveBlend)
+                return null;
+
             float[] relativeIntensities = new float[] { 0f, 0.7f, 1f };
             float[] relativePositions = new float[] { 0f, 0.6f, 1f };
 

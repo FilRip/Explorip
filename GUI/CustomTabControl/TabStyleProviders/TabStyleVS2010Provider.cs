@@ -23,14 +23,14 @@ namespace System.Windows.Forms
             _BorderColor = Color.Transparent;
             _BorderColorHot = Color.FromArgb(155, 167, 183);
             _BackgroundColor = Color.FromArgb(229, 195, 101);
-
+            _BackgroundEndColor = SystemColors.Window;
             //	Must set after the _Radius as this is used in the calculations of the actual padding
             Padding = new Point(6, 5);
         }
 
         protected override Brush GetTabBackgroundBrush(int index)
         {
-            LinearGradientBrush fillBrush = null;
+            LinearGradientBrush fillBrush;
 
             //	Capture the colours dependant on selection state of the tab
             Color dark = Color.Transparent;
@@ -39,7 +39,7 @@ namespace System.Windows.Forms
             if (_TabControl.SelectedIndex == index)
             {
                 dark = _BackgroundColor;
-                light = SystemColors.Window;
+                light = _BackgroundEndColor;
             }
             else if (!_TabControl.TabPages[index].Enabled)
             {
@@ -59,9 +59,6 @@ namespace System.Windows.Forms
             tabBounds.Y -= 1;
             switch (_TabControl.Alignment)
             {
-                case TabAlignment.Top:
-                    fillBrush = new LinearGradientBrush(tabBounds, light, dark, LinearGradientMode.Vertical);
-                    break;
                 case TabAlignment.Bottom:
                     fillBrush = new LinearGradientBrush(tabBounds, dark, light, LinearGradientMode.Vertical);
                     break;
@@ -71,10 +68,14 @@ namespace System.Windows.Forms
                 case TabAlignment.Right:
                     fillBrush = new LinearGradientBrush(tabBounds, dark, light, LinearGradientMode.Horizontal);
                     break;
+                default:
+                    fillBrush = new LinearGradientBrush(tabBounds, light, dark, LinearGradientMode.Vertical);
+                    break;
             }
 
             //	Add the blend
-            fillBrush.Blend = GetBackgroundBlend();
+            if (_ActiveBlend)
+                fillBrush.Blend = GetBackgroundBlend();
 
             return fillBrush;
         }
@@ -83,7 +84,6 @@ namespace System.Windows.Forms
         {
             float[] relativeIntensities = new float[] { 0f, 0.5f, 1f, 1f };
             float[] relativePositions = new float[] { 0f, 0.5f, 0.51f, 1f };
-
 
             Blend blend = new();
             blend.Factors = relativeIntensities;

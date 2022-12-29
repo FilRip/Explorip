@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 using Explorip.Helpers;
@@ -33,6 +32,7 @@ namespace Explorip.ComposantsWinForm
                 TabClosing += TabExplorerBrowser_TabClosing;
                 MouseClick += TabExplorerBrowser_MouseClick;
                 DisplayStyleProvider.BackgroundColor = WindowsSettings.GetWindowsAccentColor();
+                DisplayStyleProvider.BackgroundEndColor = WindowsSettings.GetWindowsAccentColor();
                 Themes.AutoTheme.ChangeThemeMenu(ContextMenuTab.Items, WindowsSettings.IsWindowsApplicationInDarkMode());
             }
         }

@@ -45,6 +45,8 @@ namespace Explorip.Forms
             MainSplitter.Panel2.Controls.Add(_tabDroite);
             _tabGauche.Dock = DockStyle.Fill;
             _tabDroite.Dock = DockStyle.Fill;
+            if (WindowsSettings.IsWindowsApplicationInDarkMode())
+                Themes.AutoTheme.AppliqueThemeWindows(this);
         }
     }
 }
