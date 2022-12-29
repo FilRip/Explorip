@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Interop;
 
 using Explorip.Exceptions;
 
@@ -21,12 +23,13 @@ namespace Explorip.Helpers
 
         public static bool EcranConnecte
         {
-            get { return (Screen.AllScreens.Length > 0); }
+            get { return Screen.AllScreens.Length > 0; }
         }
 
         private static void VerifSiEcranPresent()
         {
-            if (Screen.AllScreens.Length == 0) throw new GestionEcransException("Aucun écran connecté/détecté");
+            if (Screen.AllScreens.Length == 0)
+                throw new GestionEcransException("Aucun écran connecté/détecté");
         }
 
         public static Screen[] ListeAutresEcrans()
@@ -161,6 +164,8 @@ namespace Explorip.Helpers
             DeplaceFenetreSurEcran(form, s, pleinEcran);
         }
 
+        // TODO : CentrerSurEcran en WinForm
+
         #endregion
 
         #region WPF
@@ -199,6 +204,37 @@ namespace Explorip.Helpers
         {
             Screen s = RetourneEcran(ecran);
             DeplaceFenetreSurEcran(fenetre, s, pleinEcran);
+        }
+
+        /// <summary>
+        /// Retourne l'écran courant de l'application d'où provient l'appel
+        /// </summary>
+        public static Screen GetEcranCourant()
+        {
+            var ecranCourant = System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                System.Windows.Window fenetreCourante = System.Windows.Application.Current.Windows.OfType<System.Windows.Window>().FirstOrDefault();
+                Screen ecran = Screen.FromHandle(new WindowInteropHelper(fenetreCourante).Handle);
+                return ecran;
+            });
+
+            return ecranCourant;
+        }
+
+        /// <summary>
+        /// Affichage sur l'écran choisi dans le fichier de config puis centrage
+        /// TODO : vérifier avec tous les écrans, s'inspirer de DeplacerSurEcran ?
+        public static void CentrerSurEcran(System.Windows.Window targetWindow, int numeroEcran = -1)
+        {
+            Screen ecran;
+            if (numeroEcran < 0)
+                ecran = GetEcranCourant();
+            else
+                ecran = Ecran(numeroEcran);
+
+            Rectangle r = ecran.WorkingArea;
+            targetWindow.Top = r.Top + r.Height / 2 - targetWindow.ActualHeight / 2;
+            targetWindow.Left = r.Left + r.Width / 2 - targetWindow.ActualWidth / 2;
         }
 
         #endregion

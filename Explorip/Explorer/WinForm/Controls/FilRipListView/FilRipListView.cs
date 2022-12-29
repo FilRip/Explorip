@@ -21,13 +21,13 @@ namespace Explorip.ComposantsWinForm.FilRipListView
         /// </summary>
         public FilRipListView()
         {
-            this.ColumnClick += new ColumnClickEventHandler(this.MonListView_ColumnClick);
+            ColumnClick += new ColumnClickEventHandler(MonListView_ColumnClick);
             //ListViewItemSorter = new FilRipListViewComparateur();
-            this.MouseDown += ConstruireMenuColonnes;
+            MouseDown += ConstruireMenuColonnes;
             OwnerDraw = true;
-            this.DrawItem += MonListView_DrawItem;
-            this.DrawSubItem += MonListView_DrawSubItem;
-            this.DrawColumnHeader += MonListView_DrawColumnHeader;
+            DrawItem += MonListView_DrawItem;
+            DrawSubItem += MonListView_DrawSubItem;
+            DrawColumnHeader += MonListView_DrawColumnHeader;
             columnHeaderCollection = new FilRipColumnHeaderCollection(this);
         }
 
@@ -38,11 +38,11 @@ namespace Explorip.ComposantsWinForm.FilRipListView
         /// <param name="nouvelHandler">Nouvel handler pointant sur une méthode pour dessiner les entetes de colonnes, si null, on remet par défaut</param>
         public void DefinirHandlerOfDrawColumnHeader(DrawListViewColumnHeaderEventHandler nouvelHandler)
         {
-            this.DrawColumnHeader -= MonListView_DrawColumnHeader;
+            DrawColumnHeader -= MonListView_DrawColumnHeader;
             if (nouvelHandler == null)
-                this.DrawColumnHeader += MonListView_DrawColumnHeader;
+                DrawColumnHeader += MonListView_DrawColumnHeader;
             else
-                this.DrawColumnHeader += nouvelHandler;
+                DrawColumnHeader += nouvelHandler;
         }
 
         private void MonListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
@@ -168,8 +168,8 @@ namespace Explorip.ComposantsWinForm.FilRipListView
                             CheckOnClick = true,
                             Checked = (ch.Width != 0),
                             Tag = ch,
-                            BackColor = this.BackColor,
-                            ForeColor = this.ForeColor
+                            BackColor = BackColor,
+                            ForeColor = ForeColor
                         };
                         col.Click += ClickOnColumnMenu;
                         _menuColonnes.DropDownItems.Add(col);
@@ -193,7 +193,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
             if (((FilRipListViewComparateur)ListViewItemSorter).NumColonne == e.Column)
             {
                 ((FilRipListViewComparateur)ListViewItemSorter).ChangeOrdre();
-                this.Sort();
+                Sort();
             }
             else
                 ((FilRipListViewComparateur)ListViewItemSorter).NumColonne = e.Column;

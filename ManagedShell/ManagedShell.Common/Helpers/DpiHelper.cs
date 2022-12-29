@@ -69,10 +69,16 @@ namespace ManagedShell.Common.Helpers
             pixelY = (int)(unitY / DpiScale);
         }
 
-        private static double GetDpiScale()
+        public static double GetDpiScale()
         {
             using Graphics g = Graphics.FromHwnd(IntPtr.Zero);
-            return (g.DpiX / 96);
+            return g.DpiX / 96;
+        }
+
+        public static double GetDpiScale(IntPtr windowHandle)
+        {
+            using Graphics g = Graphics.FromHwnd(windowHandle);
+            return g.DpiX / 96;
         }
 
     }

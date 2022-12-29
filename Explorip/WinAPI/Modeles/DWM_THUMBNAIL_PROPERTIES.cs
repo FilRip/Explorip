@@ -9,7 +9,7 @@ namespace Explorip.WinAPI.Modeles
         RECTDESTINATION = 0x00000001,
         RECTSOURCE = 0x00000002,
         OPACITY = 0x00000004,
-        VISIBLE= 0x00000008,
+        VISIBLE = 0x00000008,
         SOURCECLIENTAREAONLY = 0x00000010,
     }
 

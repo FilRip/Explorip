@@ -13,7 +13,7 @@ namespace Explorip.ComposantsWinForm.ContextMenu
         /// </summary>
         public FilRipToolStripSeparator()
         {
-            this.Paint += MonToolStripSeparator_Paint;
+            Paint += MonToolStripSeparator_Paint;
         }
 
         private void MonToolStripSeparator_Paint(object sender, PaintEventArgs e)

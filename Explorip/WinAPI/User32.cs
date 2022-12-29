@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
+
 using Explorip.WinAPI.Modeles;
 
 namespace Explorip.WinAPI

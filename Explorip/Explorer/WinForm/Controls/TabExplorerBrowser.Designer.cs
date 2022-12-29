@@ -31,7 +31,7 @@ namespace Explorip.ComposantsWinForm
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.ContextMenuTab = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ContextMenuTab = new System.Windows.Forms.ContextMenuStrip();
             this.ouvrirUnNouvelOngletToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fermerTousLesOngletsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ouvrirUnNouvelOngletSurLautrePanneauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();

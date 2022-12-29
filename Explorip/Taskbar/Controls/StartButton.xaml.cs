@@ -3,8 +3,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using ManagedShell.Common.Helpers;
+
 using Explorip.TaskBar.Utilities;
+
+using ManagedShell.Common.Helpers;
 
 namespace Explorip.TaskBar.Controls
 {

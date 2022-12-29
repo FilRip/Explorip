@@ -18,8 +18,8 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
     /// This class is a wrapper around the Windows Explorer Browser control.
     /// </summary>
     public sealed class ExplorerBrowser :
-        System.Windows.Forms.UserControl,
-        Microsoft.WindowsAPICodePack.Controls.IServiceProvider,
+        UserControl,
+        IServiceProvider,
         IExplorerPaneVisibility,
         IExplorerBrowserEvents,
         ICommDlgBrowser3,
@@ -114,12 +114,13 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         #endregion
 
         #region operations
+
         /// <summary>
         /// Clears the Explorer Browser of existing content, fills it with
         /// content from the specified container, and adds a new point to the Travel Log.
         /// </summary>
         /// <param name="shellObject">The shell container to navigate to.</param>
-        /// <exception cref="System.Runtime.InteropServices.COMException">Will throw if navigation fails for any other reason.</exception>
+        /// <exception cref="COMException">Will throw if navigation fails for any other reason.</exception>
         public void Navigate(ShellObject shellObject)
         {
             if (shellObject == null)
@@ -171,6 +172,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         {
             return NavigationLog.NavigateLog(navigationLogIndex);
         }
+
         #endregion
 
         #region events
@@ -220,6 +222,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         #region implementation
 
         #region construction
+
         internal ExplorerBrowserClass explorerBrowserControl;
 
         // for the IExplorerBrowserEvents Advise call
@@ -378,6 +381,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         #region object interfaces
 
         #region IServiceProvider
+
         /// <summary>
         /// 
         /// </summary>
@@ -385,10 +389,10 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         /// <param name="riid">requested interface guid</param>
         /// <param name="ppvObject">caller-allocated memory for interface pointer</param>
         /// <returns></returns>
-        HResult Microsoft.WindowsAPICodePack.Controls.IServiceProvider.QueryService(
+        HResult IServiceProvider.QueryService(
             ref Guid guidService, ref Guid riid, out IntPtr ppvObject)
         {
-            HResult hr = HResult.Ok;
+            HResult hr;
 
             if (guidService.CompareTo(new Guid(ExplorerBrowserIIDGuid.IExplorerPaneVisibility)) == 0)
             {
@@ -437,6 +441,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         #endregion
 
         #region IExplorerPaneVisibility
+
         /// <summary>
         /// Controls the visibility of the explorer borwser panes
         /// </summary>
@@ -496,6 +501,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         #endregion
 
         #region IExplorerBrowserEvents
+
         HResult IExplorerBrowserEvents.OnNavigationPending(IntPtr pidlFolder)
         {
             bool canceled = false;
@@ -558,6 +564,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         #endregion
 
         #region ICommDlgBrowser
+
         HResult ICommDlgBrowser3.OnDefaultCommand(IntPtr ppshv)
         {
             return HResult.False;
@@ -639,7 +646,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
 
         #region IMessageFilter Members
 
-        bool IMessageFilter.PreFilterMessage(ref System.Windows.Forms.Message m)
+        bool IMessageFilter.PreFilterMessage(ref Message m)
         {
             HResult hr = HResult.False;
             if (explorerBrowserControl != null)
@@ -687,7 +694,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         internal IFolderView2 GetFolderView2()
         {
             Guid iid = new(ExplorerBrowserIIDGuid.IFolderView2);
-            IntPtr view = IntPtr.Zero;
+            IntPtr view;
             if (explorerBrowserControl != null)
             {
                 HResult hr = explorerBrowserControl.GetCurrentView(ref iid, out view);
@@ -836,6 +843,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         #endregion
 
         #region view event forwarding
+
         internal void FireSelectionChanged()
         {
             SelectionChanged?.Invoke(this, EventArgs.Empty);
@@ -867,7 +875,5 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         #endregion
 
         #endregion
-
     }
-
 }

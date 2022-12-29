@@ -1,20 +1,19 @@
 using System;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.Drawing;
-using System.Windows.Forms;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
 
+using Explorip.Exceptions;
 using Explorip.WinAPI;
 using Explorip.WinAPI.Modeles;
-using Explorip.Exceptions;
-using ManagedShell.ShellFolders.Interfaces;
+
 using IContextMenu = Explorip.WinAPI.Modeles.IContextMenu;
-using IShellFolder = Explorip.WinAPI.Modeles.IShellFolder;
 using IContextMenu2 = Explorip.WinAPI.Modeles.IContextMenu2;
 using IContextMenu3 = Explorip.WinAPI.Modeles.IContextMenu3;
 using IEnumIDList = Explorip.WinAPI.Modeles.IEnumIDList;
-using ManagedShell.ShellFolders;
+using IShellFolder = Explorip.WinAPI.Modeles.IShellFolder;
 
 namespace Explorip.Helpers
 {
@@ -49,7 +48,7 @@ namespace Explorip.Helpers
         public ShellContextMenu()
         {
             CleanUp();
-            this.CreateHandle(new CreateParams());
+            CreateHandle(new CreateParams());
         }
         #endregion
 
@@ -451,7 +450,7 @@ namespace Explorip.Helpers
             // Release all resources first.
             ReleaseAll();
             _arrPIDLs = GetPIDLs(files);
-            this.ShowContextMenu(pointScreen, cms);
+            ShowContextMenu(pointScreen, cms);
         }
 
         /// <summary>
@@ -464,7 +463,7 @@ namespace Explorip.Helpers
             // Release all resources first.
             ReleaseAll();
             _arrPIDLs = GetPIDLs(dirs);
-            this.ShowContextMenu(pointScreen, cms);
+            ShowContextMenu(pointScreen, cms);
         }
 
         public void ShowContextMenu(DirectoryInfo dir, Point pointScreen, ContextMenuStrip cms)
@@ -531,7 +530,7 @@ namespace Explorip.Helpers
                         User32.TPM.RETURNCMD,
                         pointScreen.X,
                         pointScreen.Y,
-                        this.Handle,
+                        Handle,
                         IntPtr.Zero);
 
                     User32.DestroyMenu(pMenu);

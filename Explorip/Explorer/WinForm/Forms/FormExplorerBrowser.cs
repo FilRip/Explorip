@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 using Explorip.ComposantsWinForm;
@@ -22,13 +21,15 @@ namespace Explorip.Forms
             else if (args.Length > 1 && args[0].ToLower() == "explorer")
                 _repertoireDemarrage = args[1];
             InitializeComponent();
+            AutoScaleMode = AutoScaleMode.Dpi;
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
-                WindowsSettings.UseImmersiveDarkMode(this.Handle, true);
+                WindowsSettings.UseImmersiveDarkMode(Handle, true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
-                Helpers.Themes.ChangeThemeRecursif(this, true);
+                Themes.AutoTheme.AppliqueThemeWindows(this);
             }
             Icon = Properties.Resources.IconeExplorateur;
+            MainSplitter.SplitterDistance = MainSplitter.Width / 2;
         }
 
         private void FormExplorerBrowser_Shown(object sender, EventArgs e)

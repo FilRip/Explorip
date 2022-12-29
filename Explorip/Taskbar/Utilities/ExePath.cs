@@ -14,5 +14,5 @@ namespace Explorip.TaskBar.Utilities
             GetModuleFileName(IntPtr.Zero, sb, ManagedShell.Common.Helpers.ShellHelper.MAX_PATH);
             return sb.ToString();
         }
-	}
+    }
 }

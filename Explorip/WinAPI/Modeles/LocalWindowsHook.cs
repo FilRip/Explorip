@@ -61,7 +61,7 @@ namespace Explorip.WinAPI.Modeles
         public LocalWindowsHook(HookType hook)
         {
             m_hookType = hook;
-            m_filterFunc = new HookProc(this.CoreHookProc);
+            m_filterFunc = new HookProc(CoreHookProc);
         }
         public LocalWindowsHook(HookType hook, HookProc func)
         {

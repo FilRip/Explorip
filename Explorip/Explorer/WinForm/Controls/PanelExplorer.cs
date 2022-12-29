@@ -10,7 +10,7 @@ namespace Explorip.ComposantsWinForm
             InitializeComponent();
             lvFichiers.LiensRepertoires = TreeRepertoire;
             TreeRepertoire.LiensFichiers = lvFichiers;
-            this.Resize += PanelExplorer_Resize;
+            Resize += PanelExplorer_Resize;
         }
 
         private void PanelExplorer_Resize(object sender, System.EventArgs e)

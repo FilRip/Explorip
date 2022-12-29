@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
+using Explorip.ComposantsWinForm;
 using Explorip.ComposantsWinForm.FilRipListView;
 using Explorip.Helpers;
 
@@ -23,6 +24,11 @@ namespace Explorip.Themes
                 {
                     control.ForeColor = Color.White;
                     control.BackColor = Color.Black;
+                }
+                else if (control is Button)
+                {
+                    control.BackColor = Color.LightGray;
+                    control.ForeColor = Color.Black;
                 }
                 else if (control is FilRipListView lv)
                 {
@@ -48,8 +54,15 @@ namespace Explorip.Themes
                     control.BackColor = Color.Black;
                     control.ForeColor = Color.White;
                 }
+                else if (control is TabExplorerBrowser tabControl)
+                {
+                    tabControl.DisplayStyleProvider.TextColorSelected = Color.White;
+                    tabControl.DisplayStyleProvider.TextColor = Color.White;
+                }
                 else if (control is not ProgressBar)
+                {
                     control.ForeColor = Color.White;
+                }
             }
             else
             {
@@ -89,21 +102,30 @@ namespace Explorip.Themes
                     control.BackColor = SystemColors.Control;
                     control.ForeColor = Color.Red;
                 }
+                else if (control is TabExplorerBrowser tabControl)
+                {
+                    tabControl.DisplayStyleProvider.TextColorSelected = Color.Black;
+                    tabControl.DisplayStyleProvider.TextColor = Color.Black;
+                }
             }
-            if ((control.ContextMenuStrip != null))
+
+            if (control.ContextMenuStrip != null)
+            {
                 ChangeThemeMenu(control.ContextMenuStrip.Items, sombre);
-            if ((control.HasChildren))
+            }
+
+            if (control.HasChildren)
             {
                 foreach (Control sousControle in control.Controls)
                     ChangeThemeRecursif(sousControle, sombre);
             }
         }
 
-        private static void ChangeThemeMenu(ToolStripItemCollection sousMenu, bool sombre)
+        public static void ChangeThemeMenu(ToolStripItemCollection sousMenu, bool sombre)
         {
             foreach (ToolStripItem item in sousMenu)
             {
-                if ((sombre))
+                if (sombre)
                 {
                     item.BackColor = Color.FromArgb(60, 60, 60);
                     item.ForeColor = Color.White;
@@ -113,8 +135,11 @@ namespace Explorip.Themes
                     item.BackColor = Color.White;
                     item.ForeColor = Color.Black;
                 }
-                if ((item is ToolStripMenuItem menuItem) && menuItem.HasDropDownItems)
+
+                if (item is ToolStripMenuItem menuItem && menuItem.HasDropDownItems)
+                {
                     ChangeThemeMenu(menuItem.DropDownItems, sombre);
+                }
             }
         }
     }

@@ -5,11 +5,13 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
+
+using Explorip.TaskBar.Converters;
+using Explorip.TaskBar.Utilities;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
-using Explorip.TaskBar.Converters;
-using Explorip.TaskBar.Utilities;
 
 namespace Explorip.TaskBar.Controls
 {

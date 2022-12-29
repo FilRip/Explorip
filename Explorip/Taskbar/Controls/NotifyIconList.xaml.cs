@@ -6,8 +6,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
-using ManagedShell.WindowsTray;
+
 using Explorip.TaskBar.Utilities;
+
+using ManagedShell.WindowsTray;
 
 namespace Explorip.TaskBar.Controls
 {
@@ -22,7 +24,7 @@ namespace Explorip.TaskBar.Controls
         private readonly ObservableCollection<ManagedShell.WindowsTray.NotifyIcon> promotedIcons = new();
 
         public static DependencyProperty NotificationAreaProperty = DependencyProperty.Register("NotificationArea", typeof(NotificationArea), typeof(NotifyIconList));
-        
+
         public NotificationArea NotificationArea
         {
             get { return (NotificationArea)GetValue(NotificationAreaProperty); }

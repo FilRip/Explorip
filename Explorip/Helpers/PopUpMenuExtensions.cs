@@ -43,7 +43,7 @@ namespace Explorip.Helpers
             {
                 Console.WriteLine("Erreur " + ex.Message);
             }
-            return false;           
+            return false;
         }
 
         public static void CopierVersCms(ContextMenuStrip cms, ToolStripMenuItem sousMenu, IntPtr pointeurMenu, EventHandler ClickMenu, bool background)

@@ -131,8 +131,6 @@ namespace Microsoft.WindowsAPICodePack.Controls
     // To successfully import a COM interface, all inherited methods need to be declared again with 
     // the exception of those already declared in "IUnknown"
 #pragma warning disable 108
-
-
     [ComImport,
      TypeLibType(TypeLibTypeFlags.FCanCreate),
      ClassInterface(ClassInterfaceType.None),

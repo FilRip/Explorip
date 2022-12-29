@@ -1,15 +1,18 @@
-﻿using ManagedShell.AppBar;
-using ManagedShell.Common.Helpers;
-using ManagedShell.Interop;
-using ManagedShell.WindowsTray;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Explorip.TaskBar.Utilities;
-using Application = System.Windows.Application;
+
 using Explorip.TaskBar.Controls;
+using Explorip.TaskBar.Utilities;
+
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
+using ManagedShell.WindowsTray;
+
+using Application = System.Windows.Application;
 
 namespace Explorip.TaskBar
 {
@@ -61,13 +64,13 @@ namespace Explorip.TaskBar
 
             SetBlur(AllowsTransparency);
         }
-        
+
         protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             base.WndProc(hwnd, msg, wParam, lParam, ref handled);
 
-            if ((msg == (int)NativeMethods.WM.SYSCOLORCHANGE || 
-                    msg == (int)NativeMethods.WM.SETTINGCHANGE) && 
+            if ((msg == (int)NativeMethods.WM.SYSCOLORCHANGE ||
+                    msg == (int)NativeMethods.WM.SETTINGCHANGE) &&
                 Settings.Instance.Theme == DictionaryManager.THEME_DEFAULT)
             {
                 handled = true;
@@ -88,10 +91,10 @@ namespace Explorip.TaskBar
                 edge = (NativeMethods.ABEdge)AppBarEdge,
                 rc = new NativeMethods.Rect
                 {
-                    Top = (int) (Top * DpiScale),
-                    Left = (int) (Left * DpiScale),
-                    Bottom = (int) ((Top + Height) * DpiScale),
-                    Right = (int) ((Left + Width) * DpiScale)
+                    Top = (int)(Top * DpiScale),
+                    Left = (int)(Left * DpiScale),
+                    Bottom = (int)((Top + Height) * DpiScale),
+                    Right = (int)((Left + Width) * DpiScale)
                 }
             });
         }
@@ -200,14 +203,14 @@ namespace Explorip.TaskBar
             {
                 if (!_isReopening) _explorerHelper.HideExplorerTaskbar = false;
                 QuickLaunchToolbar.Visibility = Visibility.Collapsed;
-                
+
                 Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
             }
         }
 
         private void PropertiesMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            Program.MonApp.AfficheTaskBarAutresMoniteurs();
+            ((MyApp)Program.MonApp).AfficheTaskBarAutresMoniteurs();
         }
 
         private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)

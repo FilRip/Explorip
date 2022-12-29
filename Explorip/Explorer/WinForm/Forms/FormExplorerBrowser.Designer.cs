@@ -37,6 +37,7 @@
             // 
             this.MainSplitter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainSplitter.Location = new System.Drawing.Point(0, 0);
+            this.MainSplitter.Margin = new System.Windows.Forms.Padding(0);
             this.MainSplitter.Name = "MainSplitter";
             this.MainSplitter.Size = new System.Drawing.Size(1039, 488);
             this.MainSplitter.SplitterDistance = 520;
@@ -51,8 +52,6 @@
             this.Name = "FormExplorerBrowser";
             this.Text = "Explorateur de fichiers";
             this.Shown += new System.EventHandler(this.FormExplorerBrowser_Shown);
-            this.MainSplitter.Panel1.ResumeLayout(false);
-            this.MainSplitter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitter)).EndInit();
             this.MainSplitter.ResumeLayout(false);
             this.ResumeLayout(false);

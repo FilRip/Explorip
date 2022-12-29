@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using ManagedShell.Common.Helpers;
-using Explorip.TaskBar.Utilities;
 using System.Windows;
-using ManagedShell.Common.Logging;
-using Microsoft.Win32;
-using ManagedShell.AppBar;
 using System.Windows.Forms;
+
+using Explorip.TaskBar.Utilities;
+
+using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
+
+using Microsoft.Win32;
 
 namespace Explorip.TaskBar
 {

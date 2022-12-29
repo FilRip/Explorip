@@ -1,13 +1,15 @@
-﻿using ManagedShell.AppBar;
-using Explorip.TaskBar.Utilities;
-using System;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using WindowsDesktop;
+
+using Explorip.TaskBar.Utilities;
+
+using ManagedShell.AppBar;
 using ManagedShell.WindowsTasks;
-using System.Linq;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
+
+using WindowsDesktop;
 
 namespace Explorip.TaskBar.Controls
 {

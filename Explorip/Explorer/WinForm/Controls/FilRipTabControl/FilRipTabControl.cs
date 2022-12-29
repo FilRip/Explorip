@@ -1182,7 +1182,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 GraphicsState state = graphics.Save();
 
                 //	Set the graphicsobject to be relative to the parent
-                graphics.TranslateTransform((float)-Location.X, (float)-Location.Y);
+                graphics.TranslateTransform(-Location.X, -Location.Y);
                 graphics.SmoothingMode = SmoothingMode.HighSpeed;
 
                 //	Paint the parent
@@ -1851,12 +1851,12 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         public Rectangle GetTabCloserRect(int index)
         {
             Rectangle closerRect;
-            using (GraphicsPath path = this.GetTabBorder(index))
+            using (GraphicsPath path = GetTabBorder(index))
             {
                 RectangleF rect = path.GetBounds();
 
                 //	Make it shorter or thinner to fit the height or width because of the padding added to the tab for painting
-                switch (this.Alignment)
+                switch (Alignment)
                 {
                     case TabAlignment.Top:
                         rect.Y += 4;
@@ -1875,12 +1875,12 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                         rect.Width -= 6;
                         break;
                 }
-                if (this.Alignment <= TabAlignment.Bottom)
+                if (Alignment <= TabAlignment.Bottom)
                 {
-                    if (this.RightToLeftLayout)
+                    if (RightToLeftLayout)
                     {
                         closerRect = new Rectangle((int)rect.Left, (int)rect.Y + (int)Math.Floor((double)((int)rect.Height - 6) / 2), 6, 6);
-                        while (!path.IsVisible(closerRect.Left, closerRect.Y) && closerRect.Right < this.Width)
+                        while (!path.IsVisible(closerRect.Left, closerRect.Y) && closerRect.Right < Width)
                         {
                             closerRect.X += 1;
                         }
@@ -1898,10 +1898,10 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 }
                 else
                 {
-                    if (this.RightToLeftLayout)
+                    if (RightToLeftLayout)
                     {
                         closerRect = new Rectangle((int)rect.X + (int)Math.Floor((double)((int)rect.Width - 6) / 2), (int)rect.Top, 6, 6);
-                        while (!path.IsVisible(closerRect.X, closerRect.Top) && closerRect.Bottom < this.Height)
+                        while (!path.IsVisible(closerRect.X, closerRect.Top) && closerRect.Bottom < Height)
                         {
                             closerRect.Y += 1;
                         }

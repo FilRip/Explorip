@@ -202,13 +202,13 @@ namespace Explorip.ComposantsWinForm
             if (e.Button == MouseButtons.Right)
             {
                 TreeNode noeudClicke;
-                noeudClicke = this.GetNodeAt(e.X, e.Y);
+                noeudClicke = GetNodeAt(e.X, e.Y);
                 if (noeudClicke == null)
                     return;
                 ShellContextMenu ctxMnu = new();
                 DirectoryInfo[] dir = new DirectoryInfo[1];
                 dir[0] = new DirectoryInfo(GetFolderPath(noeudClicke));
-                ctxMnu.ShowContextMenu(dir, this.PointToScreen(new Point(e.X, e.Y)), MenuContextuel);
+                ctxMnu.ShowContextMenu(dir, PointToScreen(new Point(e.X, e.Y)), MenuContextuel);
             }
         }
 
@@ -303,12 +303,12 @@ namespace Explorip.ComposantsWinForm
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // DirectoryTreeView
             // 
-            this.AllowDrop = true;
-            this.ResumeLayout(false);
+            AllowDrop = true;
+            ResumeLayout(false);
 
         }
         // TODO : Implémenter couper/copier/coller par drag & drop

@@ -74,5 +74,11 @@
     </Compile>
     <Compile Include="ThemedColors.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj">
+      <Project>{B5AFDC3A-12D6-44BB-8B03-D4A3D6CDCE0D}</Project>
+      <Name>ManagedShell.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

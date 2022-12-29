@@ -8,7 +8,7 @@ namespace Explorip.TaskBar.Utilities
     {
         public void Dispose()
         {
-            
+
         }
 
         public string GetCategory(ApplicationWindow window)

@@ -21,7 +21,7 @@ namespace System.Windows.Forms
             _BorderColor = Color.Empty;
             _BorderColorSelected = Color.Empty;
             _FocusColor = Color.Orange;
-
+            DisplayStyle = TabStyle.Default;
             if (_TabControl.RightToLeftLayout)
             {
                 _ImageAlign = ContentAlignment.MiddleRight;
@@ -55,7 +55,7 @@ namespace System.Windows.Forms
                 TabStyle.VS2010 => new TabStyleVS2010Provider(tabControl),
                 _ => new TabStyleDefaultProvider(tabControl),
             };
-            provider._Style = tabControl.DisplayStyle;
+            provider.DisplayStyle = tabControl.DisplayStyle;
             return provider;
         }
 
@@ -66,19 +66,18 @@ namespace System.Windows.Forms
         protected CustomTabControl _TabControl;
         protected Point _Padding;
         protected bool _HotTrack;
-        protected TabStyle _Style = TabStyle.Default;
         protected ContentAlignment _ImageAlign;
         protected int _Radius = 1;
         protected int _Overlap;
         protected bool _FocusTrack;
         protected float _Opacity = 1;
         protected bool _ShowTabCloser;
-        protected Color _BorderColorSelected = Color.Empty;
-        protected Color _BorderColor = Color.Empty;
+        protected Color _BorderColorSelected;
+        protected Color _BorderColor;
         protected Color _BorderColorHot = Color.Empty;
         protected Color _CloserColorActive = Color.Black;
         protected Color _CloserColor = Color.DarkGray;
-        protected Color _FocusColor = Color.Empty;
+        protected Color _FocusColor;
         protected Color _TextColor = Color.Empty;
         protected Color _TextColorSelected = Color.Empty;
         protected Color _TextColorDisabled = Color.Empty;
@@ -92,7 +91,6 @@ namespace System.Windows.Forms
 
         public virtual Rectangle GetTabRect(int index)
         {
-
             if (index < 0)
             {
                 return new Rectangle();
@@ -122,7 +120,6 @@ namespace System.Windows.Forms
                     tabBounds.Width += 2;
                     break;
             }
-
 
             //	Greate Overlap unless first tab in the row to align with tabpage
             if ((!firstTabinRow || _TabControl.RightToLeftLayout) && _Overlap > 0)
@@ -240,13 +237,6 @@ namespace System.Windows.Forms
             tabBounds.Y -= 1;
             switch (_TabControl.Alignment)
             {
-                case TabAlignment.Top:
-                    if (_TabControl.SelectedIndex == index)
-                    {
-                        dark = light;
-                    }
-                    fillBrush = new LinearGradientBrush(tabBounds, light, dark, LinearGradientMode.Vertical);
-                    break;
                 case TabAlignment.Bottom:
                     fillBrush = new LinearGradientBrush(tabBounds, light, dark, LinearGradientMode.Vertical);
                     break;
@@ -255,6 +245,13 @@ namespace System.Windows.Forms
                     break;
                 case TabAlignment.Right:
                     fillBrush = new LinearGradientBrush(tabBounds, light, dark, LinearGradientMode.Horizontal);
+                    break;
+                default:
+                    if (_TabControl.SelectedIndex == index)
+                    {
+                        dark = light;
+                    }
+                    fillBrush = new LinearGradientBrush(tabBounds, light, dark, LinearGradientMode.Vertical);
                     break;
             }
 
@@ -269,11 +266,7 @@ namespace System.Windows.Forms
         #region	Base Properties
 
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public TabStyle DisplayStyle
-        {
-            get { return _Style; }
-            set { _Style = value; }
-        }
+        public TabStyle DisplayStyle { get; set; }
 
         [Category("Appearance")]
         public ContentAlignment ImageAlign
@@ -645,7 +638,7 @@ namespace System.Windows.Forms
             {
                 Rectangle closerRect = _TabControl.GetTabCloserRect(index);
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                using GraphicsPath closerPath = TabStyleProvider.GetCloserPath(closerRect);
+                using GraphicsPath closerPath = GetCloserPath(closerRect);
                 if (closerRect.Contains(_TabControl.MousePosition))
                 {
                     using Pen closerPen = new(_CloserColorActive);
@@ -666,7 +659,7 @@ namespace System.Windows.Forms
             closerPath.CloseFigure();
             closerPath.AddLine(closerRect.Right, closerRect.Y, closerRect.X, closerRect.Bottom);
             closerPath.CloseFigure();
-
+            
             return closerPath;
         }
 
@@ -762,7 +755,6 @@ namespace System.Windows.Forms
 
         public GraphicsPath GetTabBorder(int index)
         {
-
             GraphicsPath path = new();
             Rectangle tabBounds = GetTabRect(index);
 

@@ -1,7 +1,8 @@
-﻿using ManagedShell.Common.Logging;
-using ManagedShell.Common.Logging.Observers;
-using System;
+﻿using System;
 using System.IO;
+
+using ManagedShell.Common.Logging;
+using ManagedShell.Common.Logging.Observers;
 
 namespace Explorip.TaskBar.Utilities
 {

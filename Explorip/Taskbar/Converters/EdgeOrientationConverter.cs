@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Controls;
 using System.Windows.Data;
-using ManagedShell.AppBar;
+
 using Explorip.TaskBar.Utilities;
+
+using ManagedShell.AppBar;
 
 namespace Explorip.TaskBar.Converters
 {

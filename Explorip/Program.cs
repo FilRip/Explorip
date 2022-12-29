@@ -1,12 +1,13 @@
-using Explorip.Forms;
 using System;
 using System.Windows.Forms;
+
+using Explorip.Forms;
 
 namespace Explorip
 {
     public static class Program
     {
-        private static TaskBar.MyApp _WpfHost;
+        private static System.Windows.Application _WpfHost;
 
         /// <summary>
         /// The main entry point for the application.
@@ -27,10 +28,12 @@ namespace Explorip
             {
                 //Application.Run(new FormFilRipExplorer(args));
                 Application.Run(new FormExplorerBrowser(args));
+                /*_WpfHost = new WPF.MyApp();
+                _WpfHost.Run();*/
             }
         }
 
-        public static TaskBar.MyApp MonApp
+        public static System.Windows.Application MonApp
         {
             get { return _WpfHost; }
         }
@@ -39,7 +42,7 @@ namespace Explorip
         {
             if (_WpfHost != null)
             {
-                _WpfHost.ExitGracefully();
+                ((TaskBar.MyApp)_WpfHost).ExitGracefully();
             }
         }
     }

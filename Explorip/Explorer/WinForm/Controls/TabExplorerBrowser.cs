@@ -11,21 +11,30 @@ namespace Explorip.ComposantsWinForm
     public partial class TabExplorerBrowser : CustomTabControl
     {
         private readonly bool _autoriseFermerDernierTab;
-        
+
+        public TabExplorerBrowser() : base()
+        {
+            InitializeComponent();
+        }
+
         /// <summary>
         /// Constructeur
         /// </summary>
         /// <param name="repertoireDemarrage"></param>
         /// <param name="autoriseFermerDernierTab"></param>
-        public TabExplorerBrowser(ShellObject repertoireDemarrage, bool autoriseFermerDernierTab)
+        public TabExplorerBrowser(ShellObject repertoireDemarrage, bool autoriseFermerDernierTab) : this()
         {
-            InitializeComponent();
-            _autoriseFermerDernierTab = autoriseFermerDernierTab;
-            TabPages.Add(new TabPageExplorerBrowser(repertoireDemarrage));
-            TabClosing += TabExplorerBrowser_TabClosing;
-            MouseClick += TabExplorerBrowser_MouseClick;
-            DisplayStyleProvider.BackgroundColor = WindowsSettings.GetWindowsAccentColor();
-            Helpers.Themes.ChangeThemeMenu(ContextMenuTab.Items, WindowsSettings.IsWindowsApplicationInDarkMode());
+            if (!DesignMode)
+            {
+                _autoriseFermerDernierTab = autoriseFermerDernierTab;
+                ShowBorder = false;
+                Margin = new Padding(0);
+                TabPages.Add(NouvelOnglet(repertoireDemarrage));
+                TabClosing += TabExplorerBrowser_TabClosing;
+                MouseClick += TabExplorerBrowser_MouseClick;
+                DisplayStyleProvider.BackgroundColor = WindowsSettings.GetWindowsAccentColor();
+                Themes.AutoTheme.ChangeThemeMenu(ContextMenuTab.Items, WindowsSettings.IsWindowsApplicationInDarkMode());
+            }
         }
 
         private void TabExplorerBrowser_MouseClick(object sender, MouseEventArgs e)
@@ -47,7 +56,7 @@ namespace Explorip.ComposantsWinForm
         private void FermerTousLesOngletsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             for (int i = TabCount - 1; i >= 0; i--)
-                if (i > 0 || _autoriseFermerDernierTab)
+                if (i != SelectedTab.TabIndex || _autoriseFermerDernierTab)
                     TabPages.RemoveAt(i);
             if (_autoriseFermerDernierTab)
                 RetourneSplitContainer().Panel2Collapsed = true;
@@ -61,25 +70,26 @@ namespace Explorip.ComposantsWinForm
             tab = NouvelOnglet(repDemarrage);
             if (_autoriseFermerDernierTab)
             {
-                ((TabExplorerBrowser)(RetourneSplitContainer().Panel1.Controls[0])).TabPages.Add(tab);
-                ((TabExplorerBrowser)(RetourneSplitContainer().Panel1.Controls[0])).ForceSelectedTab(((TabExplorerBrowser)(RetourneSplitContainer().Panel1.Controls[0])).TabCount - 1);
+                ((TabExplorerBrowser)RetourneSplitContainer().Panel1.Controls[0]).TabPages.Add(tab);
+                ((TabExplorerBrowser)RetourneSplitContainer().Panel1.Controls[0]).ForceSelectedTab(((TabExplorerBrowser)RetourneSplitContainer().Panel1.Controls[0]).TabCount - 1);
             }
             else
             {
                 RetourneSplitContainer().Panel2Collapsed = false;
-                ((TabExplorerBrowser)(RetourneSplitContainer().Panel2.Controls[0])).TabPages.Add(tab);
-                ((TabExplorerBrowser)(RetourneSplitContainer().Panel2.Controls[0])).ForceSelectedTab(((TabExplorerBrowser)(RetourneSplitContainer().Panel2.Controls[0])).TabCount - 1);
+                ((TabExplorerBrowser)RetourneSplitContainer().Panel2.Controls[0]).TabPages.Add(tab);
+                ((TabExplorerBrowser)RetourneSplitContainer().Panel2.Controls[0]).ForceSelectedTab(((TabExplorerBrowser)RetourneSplitContainer().Panel2.Controls[0]).TabCount - 1);
             }
         }
 
         private SplitContainer RetourneSplitContainer()
         {
-            return ((SplitContainer)Parent.Parent);
+            return (SplitContainer)Parent.Parent;
         }
 
         private TabPageExplorerBrowser NouvelOnglet(ShellObject repDemarrage)
         {
             TabPageExplorerBrowser newTab = new(repDemarrage);
+            newTab.Margin = new Padding(0);
             return newTab;
         }
 

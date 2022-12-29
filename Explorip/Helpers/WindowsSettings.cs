@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 
-using Explorip.WinAPI.Modeles;
-
 using Microsoft.Win32;
 
 namespace Explorip.Helpers

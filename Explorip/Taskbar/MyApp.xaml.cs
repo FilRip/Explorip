@@ -1,14 +1,16 @@
 ﻿using System;
-using ManagedShell;
-using Explorip.TaskBar.Utilities;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
+
+using Explorip.TaskBar.Utilities;
+
+using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+
 using Application = System.Windows.Application;
-using System.Collections.Generic;
-using System.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Explorip.TaskBar
 {

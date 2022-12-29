@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Interop;
 
 using Explorip.WinAPI;
-
-using ManagedShell.Common.Helpers;
 
 namespace Explorip.TaskBar.Controls
 {

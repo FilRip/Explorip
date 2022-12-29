@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Threading;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Common.SupportingClasses;

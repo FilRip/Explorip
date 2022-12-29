@@ -12,7 +12,7 @@ namespace Explorip.ComposantsWinForm
         {
             _panelExplorer = new PanelExplorer();
             Controls.Add(_panelExplorer);
-            this.Resize += TabExplorer_Resize;
+            Resize += TabExplorer_Resize;
             _panelExplorer.Initialise(repertoire);
             _panelExplorer.Repertoires.SelectionneRepertoire += Repertoires_SelectionneRepertoire;
             Text = System.Environment.SpecialFolder.MyComputer.NomTraduit();
@@ -27,7 +27,7 @@ namespace Explorip.ComposantsWinForm
                 return;
             }
             if (e.DirInfo != null)
-                this.Text = e.DirInfo.Name;
+                Text = e.DirInfo.Name;
             else
                 Text = System.Environment.SpecialFolder.MyComputer.NomTraduit();
         }

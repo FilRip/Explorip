@@ -11,6 +11,8 @@ namespace Explorip.ComposantsWinForm
 
         public TabPageExplorerBrowser(ShellObject repertoireDemarrage)
         {
+            BorderStyle = BorderStyle.None;
+            Margin = new Padding(0);
             InitializeComponent();
             _explorerBrowser = new ExplorerBrowser();
             Controls.Add(_explorerBrowser);

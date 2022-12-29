@@ -9,7 +9,6 @@ using System.Windows.Threading;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
-
 namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
 {
     /// <summary>
@@ -20,11 +19,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
         /// <summary>
         /// The underlying WinForms control
         /// </summary>
-        public Microsoft.WindowsAPICodePack.Controls.WindowsForms.ExplorerBrowser ExplorerBrowserControl
-        {
-            get;
-            set;
-        }
+        public WindowsForms.ExplorerBrowser ExplorerBrowserControl { get; set; }
 
         private readonly ObservableCollection<ShellObject> selectedItems;
         private readonly ObservableCollection<ShellObject> items;
@@ -46,7 +41,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             InitializeComponent();
 
             // the ExplorerBrowser WinForms control
-            ExplorerBrowserControl = new Microsoft.WindowsAPICodePack.Controls.WindowsForms.ExplorerBrowser();
+            ExplorerBrowserControl = new WindowsForms.ExplorerBrowser();
 
             // back the dependency collection properties with instances
             SelectedItems = selectedItems = new ObservableCollection<ShellObject>();

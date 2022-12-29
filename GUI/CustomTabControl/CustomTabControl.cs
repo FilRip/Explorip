@@ -13,15 +13,15 @@ using System.Security.Permissions;
 namespace System.Windows.Forms
 {
 
-    [ToolboxBitmapAttribute(typeof(TabControl))]
+    [ToolboxBitmap(typeof(TabControl))]
     public class CustomTabControl : TabControl
     {
-
         #region	Construction
 
         public CustomTabControl()
         {
-
+            ShowBorder = true;
+            
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.Opaque | ControlStyles.ResizeRedraw, true);
 
             _BackBuffer = new Bitmap(Width, Height);
@@ -30,7 +30,6 @@ namespace System.Windows.Forms
             _TabBufferGraphics = Graphics.FromImage(_TabBuffer);
 
             DisplayStyle = TabStyle.Default;
-
         }
 
         protected override void OnCreateControl()
@@ -239,8 +238,8 @@ namespace System.Windows.Forms
                 }
                 else
                 {
-                    int tabStripHeight = 0;
-                    int itemHeight = 0;
+                    int tabStripHeight;
+                    int itemHeight;
 
                     if (Alignment <= TabAlignment.Bottom)
                     {
@@ -287,27 +286,9 @@ namespace System.Windows.Forms
                 }
                 else
                 {
-                    if (TabPages[index].Enabled)
-                    {
-                        return index;
-                    }
-                    else
-                    {
-                        return -1;
-                    }
+                    return TabPages[index].Enabled ? index : -1;
                 }
             }
-        }
-
-        public void ForceSelectedTab(TabPage tab)
-        {
-            SelectedTab = tab;
-        }
-
-        public void ForceSelectedTab(int index)
-        {
-            if (index < TabCount)
-                SelectedTab = TabPages[index];
         }
 
         [Browsable(false)]
@@ -329,9 +310,22 @@ namespace System.Windows.Forms
             }
         }
 
+        public bool ShowBorder { get; set; }
+
         #endregion
 
         #region	Extension methods
+
+        public void ForceSelectedTab(TabPage tab)
+        {
+            SelectedTab = tab;
+        }
+
+        public void ForceSelectedTab(int index)
+        {
+            if (index < TabCount)
+                SelectedTab = TabPages[index];
+        }
 
         public void HideTab(TabPage page)
         {
@@ -430,7 +424,7 @@ namespace System.Windows.Forms
         private bool IsValidTabIndex(int index)
         {
             BackupTabPages();
-            return ((index >= 0) && (index < _TabPages.Count));
+            return (index >= 0) && (index < _TabPages.Count);
         }
 
         private void BackupTabPages()
@@ -709,7 +703,7 @@ namespace System.Windows.Forms
                 case NativeMethods.WM_HSCROLL:
                     //	Raise the scroll event when the scroller is scrolled
                     base.WndProc(ref m);
-                    OnHScroll(new ScrollEventArgs(((ScrollEventType)NativeMethods.LoWord(m.WParam)), _oldValue, NativeMethods.HiWord(m.WParam), ScrollOrientation.HorizontalScroll));
+                    OnHScroll(new ScrollEventArgs((ScrollEventType)NativeMethods.LoWord(m.WParam), _oldValue, NativeMethods.HiWord(m.WParam), ScrollOrientation.HorizontalScroll));
                     break;
                 default:
                     base.WndProc(ref m);
@@ -847,7 +841,6 @@ namespace System.Windows.Forms
 
                 if (TabCount > 0)
                 {
-
                     //	When top or bottom and scrollable we need to clip the sides from painting the tabs.
                     //	Left and right are always multiline.
                     if (Alignment <= TabAlignment.Bottom && !Multiline)
@@ -900,7 +893,6 @@ namespace System.Windows.Forms
                 // the one just created
                 using (ImageAttributes alphaAttributes = new())
                 {
-
                     alphaAttributes.SetColorMatrix(alphaMatrix);
 
                     // Draw the original image with the image attributes specified
@@ -933,7 +925,7 @@ namespace System.Windows.Forms
         protected void PaintTransparentBackground(Graphics graphics, Rectangle clipRect)
         {
 
-            if ((Parent != null))
+            if (Parent != null)
             {
 
                 //	Set the cliprect to be relative to the parent
@@ -976,7 +968,6 @@ namespace System.Windows.Forms
 
             if (_Style != TabStyle.None)
             {
-
                 //	Paint the tab
                 _StyleProvider.PaintTab(index, graphics);
 
@@ -985,11 +976,11 @@ namespace System.Windows.Forms
 
                 //	Draw the text
                 DrawTabText(index, graphics);
-
             }
 
             //	Paint the border
-            DrawTabBorder(tabPageBorderPath, index, graphics);
+            if (ShowBorder)
+                DrawTabBorder(tabPageBorderPath, index, graphics);
         }
 
         private void DrawTabBorder(GraphicsPath path, int index, Graphics graphics)
@@ -1016,7 +1007,7 @@ namespace System.Windows.Forms
         private void DrawTabText(int index, Graphics graphics)
         {
             graphics.SmoothingMode = SmoothingMode.HighQuality;
-            graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            graphics.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             Rectangle tabBounds = GetTabTextRect(index);
 
             if (SelectedIndex == index)
@@ -1046,7 +1037,7 @@ namespace System.Windows.Forms
             {
                 tabImage = ImageList.Images[TabPages[index].ImageIndex];
             }
-            else if ((!string.IsNullOrEmpty(TabPages[index].ImageKey) && !TabPages[index].ImageKey.Equals("(none)", StringComparison.OrdinalIgnoreCase))
+            else if (!string.IsNullOrEmpty(TabPages[index].ImageKey) && !TabPages[index].ImageKey.Equals("(none)", StringComparison.OrdinalIgnoreCase)
                      && ImageList != null && ImageList.Images.ContainsKey(TabPages[index].ImageKey))
             {
                 tabImage = ImageList.Images[TabPages[index].ImageKey];
@@ -1109,12 +1100,12 @@ namespace System.Windows.Forms
 
         private GraphicsPath GetTabPageBorder(int index)
         {
-
             GraphicsPath path = new();
             Rectangle pageBounds = GetPageBounds(index);
             Rectangle tabBounds = _StyleProvider.GetTabRect(index);
             _StyleProvider.AddTabBorder(path, tabBounds);
-            AddPageBorder(path, pageBounds, tabBounds);
+            if (ShowBorder)
+                AddPageBorder(path, pageBounds, tabBounds);
 
             path.CloseFigure();
             return path;
@@ -1130,7 +1121,7 @@ namespace System.Windows.Forms
 
             if (pageBounds.Bottom > Height - 4)
             {
-                pageBounds.Height -= (pageBounds.Bottom - Height + 4);
+                pageBounds.Height -= pageBounds.Bottom - Height + 4;
             }
             return pageBounds;
         }
@@ -1177,12 +1168,12 @@ namespace System.Windows.Forms
                         if (Alignment <= TabAlignment.Bottom)
                         {
                             textRect.X = imageRect.Right + 4;
-                            textRect.Width -= (textRect.Right - (int)tabBounds.Right);
+                            textRect.Width -= textRect.Right - (int)tabBounds.Right;
                         }
                         else
                         {
                             textRect.Y = imageRect.Y + 4;
-                            textRect.Height -= (textRect.Bottom - (int)tabBounds.Bottom);
+                            textRect.Height -= textRect.Bottom - (int)tabBounds.Bottom;
                         }
                         //	If there is a closer allow for it
                         if (_StyleProvider.ShowTabCloser)
@@ -1192,24 +1183,24 @@ namespace System.Windows.Forms
                             {
                                 if (RightToLeftLayout)
                                 {
-                                    textRect.Width -= (closerRect.Right + 4 - textRect.X);
+                                    textRect.Width -= closerRect.Right + 4 - textRect.X;
                                     textRect.X = closerRect.Right + 4;
                                 }
                                 else
                                 {
-                                    textRect.Width -= ((int)tabBounds.Right - closerRect.X + 4);
+                                    textRect.Width -= (int)tabBounds.Right - closerRect.X + 4;
                                 }
                             }
                             else
                             {
                                 if (RightToLeftLayout)
                                 {
-                                    textRect.Height -= (closerRect.Bottom + 4 - textRect.Y);
+                                    textRect.Height -= closerRect.Bottom + 4 - textRect.Y;
                                     textRect.Y = closerRect.Bottom + 4;
                                 }
                                 else
                                 {
-                                    textRect.Height -= ((int)tabBounds.Bottom - closerRect.Y + 4);
+                                    textRect.Height -= (int)tabBounds.Bottom - closerRect.Y + 4;
                                 }
                             }
                         }
@@ -1224,24 +1215,24 @@ namespace System.Windows.Forms
                             {
                                 if (RightToLeftLayout)
                                 {
-                                    textRect.Width -= (closerRect.Right + 4 - textRect.X);
+                                    textRect.Width -= closerRect.Right + 4 - textRect.X;
                                     textRect.X = closerRect.Right + 4;
                                 }
                                 else
                                 {
-                                    textRect.Width -= ((int)tabBounds.Right - closerRect.X + 4);
+                                    textRect.Width -= (int)tabBounds.Right - closerRect.X + 4;
                                 }
                             }
                             else
                             {
                                 if (RightToLeftLayout)
                                 {
-                                    textRect.Height -= (closerRect.Bottom + 4 - textRect.Y);
+                                    textRect.Height -= closerRect.Bottom + 4 - textRect.Y;
                                     textRect.Y = closerRect.Bottom + 4;
                                 }
                                 else
                                 {
-                                    textRect.Height -= ((int)tabBounds.Bottom - closerRect.Y + 4);
+                                    textRect.Height -= (int)tabBounds.Bottom - closerRect.Y + 4;
                                 }
                             }
                         }
@@ -1250,11 +1241,11 @@ namespace System.Windows.Forms
                     {
                         if (Alignment <= TabAlignment.Bottom)
                         {
-                            textRect.Width -= ((int)tabBounds.Right - imageRect.X + 4);
+                            textRect.Width -= (int)tabBounds.Right - imageRect.X + 4;
                         }
                         else
                         {
-                            textRect.Height -= ((int)tabBounds.Bottom - imageRect.Y + 4);
+                            textRect.Height -= (int)tabBounds.Bottom - imageRect.Y + 4;
                         }
                         //	If there is a closer allow for it
                         if (_StyleProvider.ShowTabCloser)
@@ -1264,24 +1255,24 @@ namespace System.Windows.Forms
                             {
                                 if (RightToLeftLayout)
                                 {
-                                    textRect.Width -= (closerRect.Right + 4 - textRect.X);
+                                    textRect.Width -= closerRect.Right + 4 - textRect.X;
                                     textRect.X = closerRect.Right + 4;
                                 }
                                 else
                                 {
-                                    textRect.Width -= ((int)tabBounds.Right - closerRect.X + 4);
+                                    textRect.Width -= (int)tabBounds.Right - closerRect.X + 4;
                                 }
                             }
                             else
                             {
                                 if (RightToLeftLayout)
                                 {
-                                    textRect.Height -= (closerRect.Bottom + 4 - textRect.Y);
+                                    textRect.Height -= closerRect.Bottom + 4 - textRect.Y;
                                     textRect.Y = closerRect.Bottom + 4;
                                 }
                                 else
                                 {
-                                    textRect.Height -= ((int)tabBounds.Bottom - closerRect.Y + 4);
+                                    textRect.Height -= (int)tabBounds.Bottom - closerRect.Y + 4;
                                 }
                             }
                         }
@@ -1297,24 +1288,24 @@ namespace System.Windows.Forms
                         {
                             if (RightToLeftLayout)
                             {
-                                textRect.Width -= (closerRect.Right + 4 - textRect.X);
+                                textRect.Width -= closerRect.Right + 4 - textRect.X;
                                 textRect.X = closerRect.Right + 4;
                             }
                             else
                             {
-                                textRect.Width -= ((int)tabBounds.Right - closerRect.X + 4);
+                                textRect.Width -= (int)tabBounds.Right - closerRect.X + 4;
                             }
                         }
                         else
                         {
                             if (RightToLeftLayout)
                             {
-                                textRect.Height -= (closerRect.Bottom + 4 - textRect.Y);
+                                textRect.Height -= closerRect.Bottom + 4 - textRect.Y;
                                 textRect.Y = closerRect.Bottom + 4;
                             }
                             else
                             {
-                                textRect.Height -= ((int)tabBounds.Bottom - closerRect.Y + 4);
+                                textRect.Height -= (int)tabBounds.Bottom - closerRect.Y + 4;
                             }
                         }
                     }
@@ -1375,16 +1366,27 @@ namespace System.Windows.Forms
             return row;
         }
 
+        /*public new Rectangle GetTabRect(int index)
+        {
+            Rectangle retour;
+            retour = base.GetTabRect(index);
+            if (index > 0)
+            {
+                Rectangle retourPrecedent = GetTabRect(index - 1);
+                retour.X = retourPrecedent.X + retourPrecedent.Width;
+            }
+            return retour;
+        }*/
+        
         public Point GetTabPosition(int index)
         {
-
-            //	If we are not multiline then the column is the index and the row is 0.
+            // If we are not multiline then the column is the index and the row is 0.
             if (!Multiline)
             {
                 return new Point(0, index);
             }
 
-            //	If there is only one row then the column is the index
+            // If there is only one row then the column is the index
             if (RowCount == 1)
             {
                 return new Point(0, index);
@@ -1395,7 +1397,7 @@ namespace System.Windows.Forms
             Rectangle rect = GetTabRect(index);
             int column = -1;
 
-            //	Scan from left to right along rows, skipping to next row if it is not the one we want.
+            // Scan from left to right along rows, skipping to next row if it is not the one we want.
             for (int testIndex = 0; testIndex < TabCount; testIndex++)
             {
                 Rectangle testRect = GetTabRect(testIndex);
@@ -1429,7 +1431,7 @@ namespace System.Windows.Forms
             {
                 return false;
             }
-            bool firstTabinRow = (index == 0);
+            bool firstTabinRow = index == 0;
             if (!firstTabinRow)
             {
                 if (Alignment <= TabAlignment.Bottom)
@@ -1663,13 +1665,12 @@ namespace System.Windows.Forms
                 Point loc = PointToClient(Control.MousePosition);
                 if (RightToLeftLayout)
                 {
-                    loc.X = (Width - loc.X);
+                    loc.X = Width - loc.X;
                 }
                 return loc;
             }
         }
 
         #endregion
-
     }
 }

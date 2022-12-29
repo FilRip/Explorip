@@ -1,8 +1,8 @@
-﻿using Explorip.WinAPI;
-using Explorip.WinAPI.Modeles;
-
-using System;
+﻿using System;
 using System.Text;
+
+using Explorip.WinAPI;
+using Explorip.WinAPI.Modeles;
 
 namespace Explorip.Localization
 {

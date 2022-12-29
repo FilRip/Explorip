@@ -1,8 +1,9 @@
-﻿using ManagedShell.AppBar;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Configuration;
 using System.Runtime.CompilerServices;
+
+using ManagedShell.AppBar;
 
 namespace Explorip.TaskBar.Utilities
 {

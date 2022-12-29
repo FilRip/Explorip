@@ -71,49 +71,49 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComposantsWinForm\FilRipListView\FilRipColumnHeaderCollection.cs" />
-    <Compile Include="ComposantsWinForm\FilRipListView\FilRipColumnsCollectionEditor.cs" />
-    <Compile Include="ComposantsWinForm\FilRipListView\FilRipColumnsHeader.cs">
+    <Compile Include="Explorer\WinForm\Controls\FilRipListView\FilRipColumnHeaderCollection.cs" />
+    <Compile Include="Explorer\WinForm\Controls\FilRipListView\FilRipColumnsCollectionEditor.cs" />
+    <Compile Include="Explorer\WinForm\Controls\FilRipListView\FilRipColumnsHeader.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\FilRipListView\FilRipListView.cs">
+    <Compile Include="Explorer\WinForm\Controls\FilRipListView\FilRipListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\FilRipListView\FilRipListViewComparateur.cs" />
-    <Compile Include="ComposantsWinForm\DirectoryTreeView.cs">
+    <Compile Include="Explorer\WinForm\Controls\FilRipListView\FilRipListViewComparateur.cs" />
+    <Compile Include="Explorer\WinForm\Controls\DirectoryTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\FichiersListView.cs">
+    <Compile Include="Explorer\WinForm\Controls\FichiersListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\FilRipTabControl\FilRipTabControl.cs">
+    <Compile Include="Explorer\WinForm\Controls\FilRipTabControl\FilRipTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\ContextMenu\FilRipToolStripSeparator.cs">
+    <Compile Include="Explorer\WinForm\Controls\ContextMenu\FilRipToolStripSeparator.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\PanelExplorer.cs">
+    <Compile Include="Explorer\WinForm\Controls\PanelExplorer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\PanelExplorer.Designer.cs">
+    <Compile Include="Explorer\WinForm\Controls\PanelExplorer.Designer.cs">
       <DependentUpon>PanelExplorer.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComposantsWinForm\TabExplorer.cs">
+    <Compile Include="Explorer\WinForm\Controls\TabExplorer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\TabExplorerBrowser.cs">
+    <Compile Include="Explorer\WinForm\Controls\TabExplorerBrowser.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\TabExplorerBrowser.Designer.cs">
+    <Compile Include="Explorer\WinForm\Controls\TabExplorerBrowser.Designer.cs">
       <DependentUpon>TabExplorerBrowser.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComposantsWinForm\TabPageExplorer.cs">
+    <Compile Include="Explorer\WinForm\Controls\TabPageExplorer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\TabPageExplorerBrowser.cs">
+    <Compile Include="Explorer\WinForm\Controls\TabPageExplorerBrowser.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ComposantsWinForm\TabPageExplorerBrowser.Designer.cs">
+    <Compile Include="Explorer\WinForm\Controls\TabPageExplorerBrowser.Designer.cs">
       <DependentUpon>TabPageExplorerBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Constantes\Localisation.cs" />
@@ -128,13 +128,14 @@
     <Compile Include="FilesOperations\Interfaces\FileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
-    <Compile Include="Forms\FormExplorerBrowser.cs">
+    <Compile Include="Explorer\WinForm\Forms\FormExplorerBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormExplorerBrowser.Designer.cs">
+    <Compile Include="Explorer\WinForm\Forms\FormExplorerBrowser.Designer.cs">
       <DependentUpon>FormExplorerBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ComReleaser.cs" />
+    <Compile Include="Helpers\ExtensionIEnumerable.cs" />
     <Compile Include="Helpers\ExtensionsArray.cs" />
     <Compile Include="Helpers\ExtensionsClass.cs" />
     <Compile Include="Helpers\ExtensionsClipboard.cs" />
@@ -144,17 +145,17 @@
     <Compile Include="Helpers\ExtensionsProcess.cs" />
     <Compile Include="Helpers\ExtensionsString.cs" />
     <Compile Include="Helpers\ExtensionsWindows.cs" />
+    <Compile Include="Helpers\ExtensionsWinForm.cs" />
     <Compile Include="Helpers\GestionEcrans.cs" />
     <Compile Include="Helpers\GestionFenetres.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
     <Compile Include="Helpers\DragDropHelper.cs" />
-    <Compile Include="Helpers\Themes.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
-    <Compile Include="Forms\FormFilRipExplorer.cs">
+    <Compile Include="Explorer\WinForm\Forms\FormFilRipExplorer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormFilRipExplorer.Designer.cs">
+    <Compile Include="Explorer\WinForm\Forms\FormFilRipExplorer.Designer.cs">
       <DependentUpon>FormFilRipExplorer.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Icones.cs" />
@@ -259,22 +260,31 @@
     <Compile Include="WinAPI\Ntdll.cs" />
     <Compile Include="WinAPI\Shlwapi.cs" />
     <Compile Include="WinAPI\User32.cs" />
-    <EmbeddedResource Include="ComposantsWinForm\DirectoryTreeView.resx">
+    <Compile Include="Explorer\WPF\Controls\TabExplorerBrowser.xaml.cs">
+      <DependentUpon>TabExplorerBrowser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Explorer\WPF\MyApp.xaml.cs">
+      <DependentUpon>MyApp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Explorer\WPF\Window\WpfExplorerBrowser.xaml.cs">
+      <DependentUpon>WpfExplorerBrowser.xaml</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Explorer\WinForm\Controls\DirectoryTreeView.resx">
       <DependentUpon>DirectoryTreeView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ComposantsWinForm\FichiersListView.resx">
+    <EmbeddedResource Include="Explorer\WinForm\Controls\FichiersListView.resx">
       <DependentUpon>FichiersListView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ComposantsWinForm\PanelExplorer.resx">
+    <EmbeddedResource Include="Explorer\WinForm\Controls\PanelExplorer.resx">
       <DependentUpon>PanelExplorer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ComposantsWinForm\TabExplorerBrowser.resx">
+    <EmbeddedResource Include="Explorer\WinForm\Controls\TabExplorerBrowser.resx">
       <DependentUpon>TabExplorerBrowser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormExplorerBrowser.resx">
+    <EmbeddedResource Include="Explorer\WinForm\Forms\FormExplorerBrowser.resx">
       <DependentUpon>FormExplorerBrowser.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormFilRipExplorer.resx">
+    <EmbeddedResource Include="Explorer\WinForm\Forms\FormFilRipExplorer.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormFilRipExplorer.cs</DependentUpon>
     </EmbeddedResource>
@@ -376,6 +386,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Explorer\WPF\Controls\TabExplorerBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Explorer\WPF\MyApp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Explorer\WPF\Window\WpfExplorerBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GUI\CustomTabControl\CustomTabControl.csproj">
@@ -443,6 +465,7 @@
   <ItemGroup>
     <None Include="Ressources\icone.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

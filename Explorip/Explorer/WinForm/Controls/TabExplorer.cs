@@ -4,7 +4,7 @@
     {
         public TabExplorer(string repertoire) : base()
         {
-            this.TabPages.Add(new TabPageExplorer(repertoire));
+            TabPages.Add(new TabPageExplorer(repertoire));
         }
 
         public TabExplorer() : this("")
