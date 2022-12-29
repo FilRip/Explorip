@@ -19,7 +19,8 @@ namespace Explorip.Themes
         {
             if (sombre)
             {
-                control.BackColor = Color.Black;
+                if (control.BackColor != Color.Transparent)
+                    control.BackColor = Color.Black;
                 if (control is Form)
                 {
                     control.ForeColor = Color.White;
@@ -27,8 +28,10 @@ namespace Explorip.Themes
                 }
                 else if (control is Button)
                 {
-                    control.BackColor = Color.LightGray;
-                    control.ForeColor = Color.Black;
+                    if (control.BackColor != Color.Transparent)
+                        control.BackColor = Color.LightGray;
+                    if (control.ForeColor != Color.Transparent)
+                        control.ForeColor = Color.Black;
                 }
                 else if (control is FilRipListView lv)
                 {
@@ -62,15 +65,17 @@ namespace Explorip.Themes
                     tabControl.DisplayStyleProvider.TextColorSelected = Color.White;
                     tabControl.DisplayStyleProvider.TextColor = Color.White;
                 }
-                else if (control is not ProgressBar)
+                else if (control is not ProgressBar && control.ForeColor != Color.Transparent)
                 {
                     control.ForeColor = Color.White;
                 }
             }
             else
             {
-                control.BackColor = SystemColors.Window;
-                control.ForeColor = SystemColors.WindowText;
+                if (control.BackColor != Color.Transparent)
+                    control.BackColor = SystemColors.Window;
+                if (control.ForeColor != Color.Transparent)
+                    control.ForeColor = SystemColors.WindowText;
                 if (control is Form)
                 {
                     control.ForeColor = SystemColors.WindowText;
