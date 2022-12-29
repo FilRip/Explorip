@@ -90,6 +90,8 @@ namespace Explorip.ComposantsWinForm
         {
             TabPageExplorerBrowser newTab = new(repDemarrage);
             newTab.Margin = new Padding(0);
+            if (WindowsSettings.IsWindowsApplicationInDarkMode())
+                Themes.AutoTheme.ChangeThemeRecursif(newTab, true);
             return newTab;
         }
 

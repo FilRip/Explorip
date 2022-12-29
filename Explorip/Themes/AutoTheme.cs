@@ -15,9 +15,9 @@ namespace Explorip.Themes
             ChangeThemeRecursif(form, sombre);
         }
 
-        private static void ChangeThemeRecursif(Control control, bool sombre)
+        public static void ChangeThemeRecursif(Control control, bool sombre)
         {
-            if ((sombre))
+            if (sombre)
             {
                 control.BackColor = Color.Black;
                 if (control is Form)
@@ -40,19 +40,22 @@ namespace Explorip.Themes
                         col.ActiveCouleur = true;
                         col.CouleurArrierePlan = Color.Black;
                         col.CouleurTexte = Color.White;
-                        if ((col.ActiveCouleurOk))
+                        if (col.ActiveCouleurOk)
                         {
-                            if ((col.CouleurOk == Color.Black))
+                            if (col.CouleurOk == Color.Black)
                                 col.CouleurOk = Color.White;
-                            if ((col.CouleurSinon == Color.Black))
+                            if (col.CouleurSinon == Color.Black)
                                 col.CouleurSinon = Color.White;
                         }
                     }
                 }
-                else if (control is ButtonBase || control is TabPage || control is GroupBox || control is Label)
+                else if (control is ButtonBase or TabPage or GroupBox or Label)
                 {
-                    control.BackColor = Color.Black;
-                    control.ForeColor = Color.White;
+                    if (control.BackColor != Color.Transparent)
+                    {
+                        control.BackColor = Color.Black;
+                        control.ForeColor = Color.White;
+                    }
                 }
                 else if (control is TabExplorerBrowser tabControl)
                 {
@@ -83,19 +86,22 @@ namespace Explorip.Themes
                         col.ActiveCouleur = false;
                         col.CouleurArrierePlan = SystemColors.Control;
                         col.CouleurTexte = SystemColors.ControlText;
-                        if ((col.ActiveCouleurOk))
+                        if (col.ActiveCouleurOk)
                         {
-                            if ((col.CouleurOk == Color.White))
+                            if (col.CouleurOk == Color.White)
                                 col.CouleurOk = Color.Black;
-                            if ((col.CouleurSinon == Color.White))
+                            if (col.CouleurSinon == Color.White)
                                 col.CouleurSinon = Color.Black;
                         }
                     }
                 }
-                else if (control is ButtonBase || control is TabPage || control is GroupBox || control is Label)
+                else if (control is ButtonBase or TabPage or GroupBox or Label)
                 {
-                    control.ForeColor = SystemColors.ControlText;
-                    control.BackColor = SystemColors.Control;
+                    if (control.BackColor != Color.Transparent)
+                    {
+                        control.ForeColor = SystemColors.ControlText;
+                        control.BackColor = SystemColors.Control;
+                    }
                 }
                 else if (control is ProgressBar)
                 {

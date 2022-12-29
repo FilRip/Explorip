@@ -465,7 +465,12 @@
   <ItemGroup>
     <None Include="Ressources\icone.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Ressources\NextButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Ressources\PreviousButton.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
