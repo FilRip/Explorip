@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -17,7 +18,8 @@ namespace Explorip.ComposantsWinForm
         private readonly Button _previousButton, _nextButton;
         private readonly SplitContainer _splitContainer;
         private readonly LinkLabel _pathLink;
-        private Image _pbDisable, _pbEnable, _nbDisable, _nbEnable;
+        private readonly Image _pbDisable, _pbEnable, _nbDisable, _nbEnable;
+        private readonly TextBox _txtEditPath;
 
         public TabPageExplorerBrowser(ShellObject repertoireDemarrage)
         {
@@ -31,6 +33,7 @@ namespace Explorip.ComposantsWinForm
             _splitContainer.SplitterDistance = Font.Height;
             _splitContainer.FixedPanel = FixedPanel.Panel1;
             _splitContainer.IsSplitterFixed = true;
+            _splitContainer.SplitterWidth = 1;
             _splitContainer.Panel1.BackColor = Color.Transparent;
             _splitContainer.Panel1.ForeColor = Color.Transparent;
             _explorerBrowser = new ExplorerBrowser();
@@ -92,9 +95,58 @@ namespace Explorip.ComposantsWinForm
                 ForeColor = Color.Yellow,
             };
             _pathLink.LinkClicked += PathLink_LinkClicked;
+            _pathLink.Click += PathLink_Click;
             _splitContainer.Panel1.Controls.Add(_pathLink);
 
+            _txtEditPath = new TextBox()
+            {
+                Location = new Point(36, 0),
+                Width = _splitContainer.Panel1.Width - 32,
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right,
+                ForeColor = Color.Black,
+                BackColor = Color.White,
+                Visible = false,
+            };
+            _txtEditPath.KeyDown += TxtEditPath_KeyDown;
+            _splitContainer.Panel1.Controls.Add(_txtEditPath);
+
             RefreshNavigationHistory();
+        }
+
+        private void TxtEditPath_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                _txtEditPath.Visible = false;
+                _pathLink.Visible = true;
+            }
+            else if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+            {
+                string nouvelEmplacement = _txtEditPath.Text;
+                if (new DirectoryInfo(nouvelEmplacement).Exists)
+                {
+                    _txtEditPath.Visible = false;
+                    _pathLink.Visible = true;
+                    _explorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
+                }
+            }
+        }
+
+        private void PathLink_Click(object sender, EventArgs e)
+        {
+            if (e is MouseEventArgs args)
+            {
+                Size tailleTexte = TextRenderer.MeasureText(_pathLink.Text, _pathLink.Font);
+                Rectangle rect = new(new Point(0, 0), tailleTexte);
+                if (!rect.Contains(args.Location))
+                {
+                    _pathLink.Visible = false;
+                    _txtEditPath.Visible = true;
+                    _txtEditPath.Text = _pathLink.Text.Replace(@"\ ", @"\");
+                    _txtEditPath.Focus();
+                    _txtEditPath.SelectAll();
+                }
+            }
         }
 
         private void PathLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
