@@ -54,7 +54,7 @@ namespace Explorip.Themes
                 }
                 else if (control is ButtonBase or TabPage or GroupBox or Label)
                 {
-                    if (control.BackColor != Color.Transparent)
+                    if (control.BackColor != Color.Transparent && control is not LinkLabel)
                     {
                         control.BackColor = Color.Black;
                         control.ForeColor = Color.White;
@@ -102,7 +102,7 @@ namespace Explorip.Themes
                 }
                 else if (control is ButtonBase or TabPage or GroupBox or Label)
                 {
-                    if (control.BackColor != Color.Transparent)
+                    if (control.BackColor != Color.Transparent && control is not LinkLabel)
                     {
                         control.ForeColor = SystemColors.ControlText;
                         control.BackColor = SystemColors.Control;

@@ -141,6 +141,7 @@
     <Compile Include="Helpers\ExtensionsClipboard.cs" />
     <Compile Include="Helpers\ExtensionsCommandLineArguments.cs" />
     <Compile Include="Helpers\ExtensionsDossiers.cs" />
+    <Compile Include="Helpers\ExtensionsImage.cs" />
     <Compile Include="Helpers\ExtensionsInt.cs" />
     <Compile Include="Helpers\ExtensionsProcess.cs" />
     <Compile Include="Helpers\ExtensionsString.cs" />
