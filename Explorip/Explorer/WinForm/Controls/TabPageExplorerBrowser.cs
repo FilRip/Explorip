@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
@@ -20,6 +21,7 @@ namespace Explorip.ComposantsWinForm
         private readonly LinkLabel _pathLink;
         private readonly Image _pbDisable, _pbEnable, _nbDisable, _nbEnable;
         private readonly TextBox _txtEditPath;
+        private readonly Stopwatch _stopWatch;
 
         public TabPageExplorerBrowser(ShellObject repertoireDemarrage)
         {
@@ -40,6 +42,8 @@ namespace Explorip.ComposantsWinForm
             _splitContainer.Panel2.Controls.Add(_explorerBrowser);
             _explorerBrowser.Dock = DockStyle.Fill;
             _explorerBrowser.NavigationComplete += ExplorerBrowser_NavigationComplete;
+            _explorerBrowser.NavigationPending += ExplorerBrowser_NavigationPending;
+            _explorerBrowser.NavigationFailed += ExplorerBrowser_NavigationFailed;
             _explorerBrowser.Navigate(repertoireDemarrage);
 
             _previousButton = new Button()
@@ -87,7 +91,7 @@ namespace Explorip.ComposantsWinForm
             _pathLink = new LinkLabel()
             {
                 Location = new Point(36, 0),
-                Width = _splitContainer.Panel1.Width - 32,
+                Width = _splitContainer.Panel1.Width - 36,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right,
                 LinkColor = Color.Yellow,
                 BackColor = Color.Transparent,
@@ -101,16 +105,34 @@ namespace Explorip.ComposantsWinForm
             _txtEditPath = new TextBox()
             {
                 Location = new Point(36, 0),
-                Width = _splitContainer.Panel1.Width - 32,
+                Width = _splitContainer.Panel1.Width - 36,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right,
                 ForeColor = Color.Black,
                 BackColor = Color.White,
                 Visible = false,
             };
             _txtEditPath.KeyDown += TxtEditPath_KeyDown;
+            _txtEditPath.MouseDoubleClick += TxtEditPath_MouseDoubleClick;
             _splitContainer.Panel1.Controls.Add(_txtEditPath);
 
+            _stopWatch = new Stopwatch();
             RefreshNavigationHistory();
+        }
+
+        private void TxtEditPath_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                int pos = _txtEditPath.Text.LastIndexOf(@"\");
+                _txtEditPath.SelectionStart = pos + 1;
+                _txtEditPath.SelectionLength = _txtEditPath.Text.Length - pos;
+                if (_txtEditPath.SelectionLength == 0)
+                    _txtEditPath.SelectAll();
+            }
+            catch (Exception)
+            {
+                _txtEditPath.SelectAll();
+            }
         }
 
         private void TxtEditPath_KeyDown(object sender, KeyEventArgs e)
@@ -122,11 +144,8 @@ namespace Explorip.ComposantsWinForm
             else if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
             {
                 string nouvelEmplacement = _txtEditPath.Text;
-                if (new DirectoryInfo(nouvelEmplacement).Exists)
-                {
-                    HideEditPath();
-                    _explorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
-                }
+                HideEditPath();
+                _explorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
             }
         }
 
@@ -180,8 +199,19 @@ namespace Explorip.ComposantsWinForm
             _nextButton.BackgroundImage = _nextButton.Enabled ? _nbEnable : _nbDisable;
         }
 
+        private void ExplorerBrowser_NavigationFailed(object sender, NavigationFailedEventArgs e)
+        {
+            _stopWatch.Stop();
+        }
+
+        private void ExplorerBrowser_NavigationPending(object sender, NavigationPendingEventArgs e)
+        {
+            _stopWatch.Start();
+        }
+
         private void ExplorerBrowser_NavigationComplete(object sender, NavigationCompleteEventArgs e)
         {
+            _stopWatch.Stop();
             Text = e.NewLocation.Name;
             string fullPath = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
             try
