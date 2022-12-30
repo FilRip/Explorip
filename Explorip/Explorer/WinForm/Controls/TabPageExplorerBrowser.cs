@@ -117,16 +117,14 @@ namespace Explorip.ComposantsWinForm
         {
             if (e.KeyCode == Keys.Escape)
             {
-                _txtEditPath.Visible = false;
-                _pathLink.Visible = true;
+                HideEditPath();
             }
             else if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
             {
                 string nouvelEmplacement = _txtEditPath.Text;
                 if (new DirectoryInfo(nouvelEmplacement).Exists)
                 {
-                    _txtEditPath.Visible = false;
-                    _pathLink.Visible = true;
+                    HideEditPath();
                     _explorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
                 }
             }
@@ -157,12 +155,20 @@ namespace Explorip.ComposantsWinForm
         private void NextButton_Click(object sender, EventArgs e)
         {
             _explorerBrowser.NavigateLogLocation(NavigationLogDirection.Forward);
+            HideEditPath();
             RefreshNavigationHistory();
+        }
+
+        private void HideEditPath()
+        {
+            _txtEditPath.Visible = false;
+            _pathLink.Visible = true;
         }
 
         private void PreviousButton_Click(object sender, EventArgs e)
         {
             _explorerBrowser.NavigateLogLocation(NavigationLogDirection.Backward);
+            HideEditPath();
             RefreshNavigationHistory();
         }
 
@@ -202,6 +208,7 @@ namespace Explorip.ComposantsWinForm
                 _pathLink.Text = fullPath;
             }
             RefreshNavigationHistory();
+            HideEditPath();
             _explorerBrowser.Focus();
         }
 
