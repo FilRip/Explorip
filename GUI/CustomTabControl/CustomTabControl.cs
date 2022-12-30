@@ -443,94 +443,43 @@ namespace System.Windows.Forms
 
         #region Drag 'n' Drop
 
+        private TabPage _dragTab;
+
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
-            if (AllowDrop)
+            if (TabCount > 1)
+                _dragTab = ActiveTab;
+            if (_StyleProvider.ShowTabCloser)
             {
-                _dragStartPosition = new Point(e.X, e.Y);
+                int index = ActiveIndex;
+                if (!DesignMode && index > -1 && GetTabCloserRect(index).Contains(MousePosition))
+                {
+                    _dragTab = null;
+                    OnMouseClick(e);
+                }
             }
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
-            if (AllowDrop)
-            {
-                _dragStartPosition = Point.Empty;
-            }
+            _dragTab = null;
         }
 
         protected override void OnDragOver(DragEventArgs drgevent)
         {
+            if (_dragTab != null && _dragTab != ActiveTab)
+            {
+                int indexSrc, indexDest;
+                indexSrc = TabPages.IndexOf(_dragTab);
+                indexDest = TabPages.IndexOf(ActiveTab);
+                TabPages[indexSrc] = ActiveTab;
+                TabPages[indexDest] = _dragTab;
+                SelectedIndex = indexDest;
+                Invalidate();
+            }
             base.OnDragOver(drgevent);
-
-            if (drgevent.Data.GetDataPresent(typeof(TabPage)))
-            {
-                drgevent.Effect = DragDropEffects.Move;
-            }
-            else
-            {
-                drgevent.Effect = DragDropEffects.None;
-            }
-        }
-
-        protected override void OnDragDrop(DragEventArgs drgevent)
-        {
-            base.OnDragDrop(drgevent);
-            if (drgevent.Data.GetDataPresent(typeof(TabPage)))
-            {
-                drgevent.Effect = DragDropEffects.Move;
-
-                TabPage dragTab = (TabPage)drgevent.Data.GetData(typeof(TabPage));
-
-                if (ActiveTab == dragTab)
-                {
-                    return;
-                }
-
-                //	Capture insert point and adjust for removal of tab
-                //	We cannot assess this after removal as differeing tab sizes will cause
-                //	inaccuracies in the activeTab at insert point.
-                int insertPoint = ActiveIndex;
-                if (dragTab.Parent.Equals(this) && TabPages.IndexOf(dragTab) < insertPoint)
-                {
-                    insertPoint--;
-                }
-                if (insertPoint < 0)
-                {
-                    insertPoint = 0;
-                }
-
-              //	Remove from current position (could be another tabcontrol)
-              ((TabControl)dragTab.Parent).TabPages.Remove(dragTab);
-
-                //	Add to current position
-                TabPages.Insert(insertPoint, dragTab);
-                SelectedTab = dragTab;
-
-                //	deal with hidden tab handling?
-            }
-        }
-
-        private void StartDragDrop()
-        {
-            if (!_dragStartPosition.IsEmpty)
-            {
-                TabPage dragTab = SelectedTab;
-                if (dragTab != null)
-                {
-                    //	Test for movement greater than the drag activation trigger area
-                    Rectangle dragTestRect = new(_dragStartPosition, Size.Empty);
-                    dragTestRect.Inflate(SystemInformation.DragSize);
-                    Point pt = PointToClient(Control.MousePosition);
-                    if (!dragTestRect.Contains(pt))
-                    {
-                        DoDragDrop(dragTab, DragDropEffects.All);
-                        _dragStartPosition = Point.Empty;
-                    }
-                }
-            }
         }
 
         #endregion
@@ -729,7 +678,6 @@ namespace System.Windows.Forms
             }
             else if (!DesignMode && index > -1 && _StyleProvider.ShowTabCloser && GetTabCloserRect(index).Contains(MousePosition))
             {
-
                 //	If we are clicking on a closer then remove the tab instead of raising the standard mouse click event
                 //	But raise the tab closing event first
                 TabPage tab = ActiveTab;
@@ -784,11 +732,9 @@ namespace System.Windows.Forms
                     Invalidate();
                 }
             }
-
-            //	Initialise Drag Drop
-            if (AllowDrop && e.Button == MouseButtons.Left)
+            if (AllowDrop && _dragTab != null && e.Button == MouseButtons.Left)
             {
-                StartDragDrop();
+                DoDragDrop(_dragTab, DragDropEffects.Move);
             }
         }
 

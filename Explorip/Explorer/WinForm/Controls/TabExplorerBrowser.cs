@@ -113,7 +113,8 @@ namespace Explorip.ComposantsWinForm
                 if (ActiveTab != null && ActiveTab != SelectedTab)
                     SelectedTab = ActiveTab;
             }
-            base.OnDragOver(drgevent);
+            else
+                base.OnDragOver(drgevent);
         }
     }
 }
