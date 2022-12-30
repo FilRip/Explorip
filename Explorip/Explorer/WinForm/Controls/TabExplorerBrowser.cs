@@ -34,6 +34,7 @@ namespace Explorip.ComposantsWinForm
                 DisplayStyleProvider.BackgroundColor = WindowsSettings.GetWindowsAccentColor();
                 DisplayStyleProvider.BackgroundEndColor = WindowsSettings.GetWindowsAccentColor();
                 Themes.AutoTheme.ChangeThemeMenu(ContextMenuTab.Items, WindowsSettings.IsWindowsApplicationInDarkMode());
+                AllowDrop = true;
             }
         }
 
@@ -103,6 +104,16 @@ namespace Explorip.ComposantsWinForm
             tab = NouvelOnglet(repDemarrage);
             TabPages.Add(tab);
             ForceSelectedTab(TabCount - 1);
+        }
+
+        protected override void OnDragOver(DragEventArgs drgevent)
+        {
+            if (drgevent.Data != null && drgevent.Data.GetData("FileDrop") != null)
+            {
+                if (ActiveTab != null && ActiveTab != SelectedTab)
+                    SelectedTab = ActiveTab;
+            }
+            base.OnDragOver(drgevent);
         }
     }
 }
