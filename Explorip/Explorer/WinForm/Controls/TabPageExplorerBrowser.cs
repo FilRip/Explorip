@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Explorip.Helpers;
@@ -143,9 +144,22 @@ namespace Explorip.ComposantsWinForm
             }
             else if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
             {
+                ShellObject previousLocation = _explorerBrowser.NavigationLog.CurrentLocation;
                 string nouvelEmplacement = _txtEditPath.Text;
                 HideEditPath();
-                _explorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
+                _stopWatch.Restart();
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        _explorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Chemin non trouvé");
+                        _explorerBrowser.Navigate(previousLocation);
+                    }
+                });
             }
         }
 
@@ -206,7 +220,8 @@ namespace Explorip.ComposantsWinForm
 
         private void ExplorerBrowser_NavigationPending(object sender, NavigationPendingEventArgs e)
         {
-            _stopWatch.Start();
+            if (!_stopWatch.IsRunning)
+                _stopWatch.Restart();
         }
 
         private void ExplorerBrowser_NavigationComplete(object sender, NavigationCompleteEventArgs e)
