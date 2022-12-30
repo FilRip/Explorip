@@ -117,6 +117,7 @@ namespace Explorip.ComposantsWinForm
             _splitContainer.Panel1.Controls.Add(_txtEditPath);
 
             _stopWatch = new Stopwatch();
+
             RefreshNavigationHistory();
         }
 
@@ -160,6 +161,7 @@ namespace Explorip.ComposantsWinForm
                         _explorerBrowser.Navigate(previousLocation);
                     }
                 });
+                _explorerBrowser.Focus();
             }
         }
 
@@ -175,7 +177,6 @@ namespace Explorip.ComposantsWinForm
                     _txtEditPath.Visible = true;
                     _txtEditPath.Text = _pathLink.Text.Replace(@"\ ", @"\");
                     _txtEditPath.Focus();
-                    _txtEditPath.SelectAll();
                 }
             }
         }

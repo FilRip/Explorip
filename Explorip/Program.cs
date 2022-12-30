@@ -1,13 +1,17 @@
 using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Windows.Forms;
 
 using Explorip.Forms;
+using Explorip.Helpers;
 
 namespace Explorip
 {
     public static class Program
     {
         private static System.Windows.Application _WpfHost;
+        private static Mutex _mutexTaskbar;
 
         /// <summary>
         /// The main entry point for the application.
@@ -15,21 +19,36 @@ namespace Explorip
         [STAThread()]
         public static void Main(string[] args)
         {
+            bool modeShell = true;
+            bool taskBarLaunched = false;
+
+            _mutexTaskbar = new Mutex(true, "ExploripTaskbar", out taskBarLaunched);
+            Process[] process = Process.GetProcessesByName("explorer");
+            if (process != null && process.Length > 0)
+            {
+                foreach (Process proc in process)
+                {
+                    if (StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.Repertoire() + "\\explorer.exe"))
+                    {
+                        modeShell = false;
+                        break;
+                    }
+                }
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ApplicationExit += Application_ApplicationExit;
 
-            if (Helpers.ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
+            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") && !taskBarLaunched)
             {
+                _mutexTaskbar.Dispose();
                 _WpfHost = new TaskBar.MyApp();
                 _WpfHost.Run();
             }
             else
             {
-                //Application.Run(new FormFilRipExplorer(args));
                 Application.Run(new FormExplorerBrowser(args));
-                /*_WpfHost = new WPF.MyApp();
-                _WpfHost.Run();*/
             }
         }
 
