@@ -30,6 +30,7 @@ namespace Explorip.Forms
             }
             Icon = Properties.Resources.IconeExplorateur;
             MainSplitter.SplitterDistance = MainSplitter.Width / 2;
+            MainSplitter.AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         private void FormExplorerBrowser_Shown(object sender, EventArgs e)
