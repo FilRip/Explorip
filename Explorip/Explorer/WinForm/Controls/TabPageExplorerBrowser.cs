@@ -60,6 +60,12 @@ namespace Explorip.ComposantsWinForm
                 FlatStyle = FlatStyle.Flat,
                 ForeColor = Color.Transparent,
             };
+            _previousButton.FlatAppearance.BorderSize = 0;
+            _previousButton.FlatAppearance.MouseDownBackColor = WindowsSettings.GetWindowsAccentColor();
+            _previousButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60);
+            _previousButton.Click += PreviousButton_Click;
+            _previousButton.TabStop = false;
+
             _nextButton = new Button()
             {
                 BackgroundImage = Properties.Resources.NextButton,
@@ -72,16 +78,12 @@ namespace Explorip.ComposantsWinForm
                 FlatStyle = FlatStyle.Flat,
                 ForeColor = Color.Transparent,
             };
-            _previousButton.FlatAppearance.BorderSize = 0;
-            _previousButton.FlatAppearance.MouseDownBackColor = WindowsSettings.GetWindowsAccentColor();
-            _previousButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60);
-            _previousButton.Click += PreviousButton_Click;
-            _previousButton.TabStop = false;
             _nextButton.FlatAppearance.BorderSize = 0;
             _nextButton.FlatAppearance.MouseDownBackColor = WindowsSettings.GetWindowsAccentColor();
             _nextButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60);
             _nextButton.Click += NextButton_Click;
             _nextButton.TabStop = false;
+
             _splitContainer.Panel1.Controls.AddRange(new Control[] { _previousButton, _nextButton });
 
             _pbDisable = Properties.Resources.PreviousButton.ChangeCouleur(Color.White, Color.LightGray);
@@ -92,7 +94,7 @@ namespace Explorip.ComposantsWinForm
 
             _pathLink = new LinkLabel()
             {
-                Location = new Point(_nextButton.Location.X + _nextButton.Size.Width * (DeviceDpi / 96), 0),
+                Location = new Point(_nextButton.Location.X + _nextButton.Size.Width + 3, 0),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right,
                 LinkColor = Color.Yellow,
                 BackColor = Color.Transparent,
@@ -100,27 +102,29 @@ namespace Explorip.ComposantsWinForm
                 ForeColor = Color.Yellow,
             };
             _pathLink.Height *= (DeviceDpi / 96);
-            _pathLink.Font = new Font(Font.FontFamily, Font.Size * (DeviceDpi / 96));
-            _pathLink.Width = _splitContainer.Panel1.Width - (_nextButton.Location.X + _nextButton.Size.Width + (2 * (DeviceDpi / 96)));
+            _pathLink.Font = new Font(_pathLink.Font.FontFamily, _pathLink.Font.Size * (DeviceDpi / 96));
+            _pathLink.Width = _splitContainer.Panel1.Width - _pathLink.Location.X;
             _pathLink.LinkClicked += PathLink_LinkClicked;
             _pathLink.Click += PathLink_Click;
             _splitContainer.Panel1.Controls.Add(_pathLink);
 
             _txtEditPath = new TextBox()
             {
-                Location = new Point(_nextButton.Location.X + _nextButton.Size.Width * (DeviceDpi / 96), 0),
+                Location = new Point(_nextButton.Location.X + _nextButton.Size.Width + 3, 0),
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right,
                 ForeColor = Color.Black,
                 BackColor = Color.White,
                 Visible = false,
-                BorderStyle = BorderStyle.None,
+                BorderStyle = BorderStyle.FixedSingle,
             };
             _txtEditPath.Height *= (DeviceDpi / 96);
-            _txtEditPath.Font = new Font(Font.FontFamily, Font.Size * (DeviceDpi / 96));
-            _txtEditPath.Width = _splitContainer.Panel1.Width - (_nextButton.Location.X + _nextButton.Size.Width + (2 * (DeviceDpi / 96)));
+            _txtEditPath.Font = new Font(_txtEditPath.Font.FontFamily, _txtEditPath.Font.Size * (DeviceDpi / 96));
+            _txtEditPath.Width = _splitContainer.Panel1.Width - _txtEditPath.Location.X;
             _txtEditPath.KeyDown += TxtEditPath_KeyDown;
             _txtEditPath.MouseDoubleClick += TxtEditPath_MouseDoubleClick;
             _splitContainer.Panel1.Controls.Add(_txtEditPath);
+
+            _splitContainer.SplitterDistance = _txtEditPath.Location.Y + _txtEditPath.Size.Height + 4;
 
             _stopWatch = new Stopwatch();
 
