@@ -201,7 +201,7 @@ namespace ManagedShell.AppBar
 
 
 
-        public enum TaskbarState : int
+        public enum TaskbarState
         {
             AutoHide = 1,
             OnTop = 0

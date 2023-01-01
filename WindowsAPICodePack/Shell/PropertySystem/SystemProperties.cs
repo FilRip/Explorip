@@ -2011,7 +2011,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     UInt32 -- VT_UI4</para>
             /// <para>FormatID: (FMTID_ShellDetails) {28636AA6-953D-11D2-B5D6-00C04FD918D0}, 25</para>
             /// </summary>
-            [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags")]
             public static PropertyKey SFGAOFlags
             {
                 get
@@ -11617,7 +11616,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Multivalue String -- VT_VECTOR | VT_LPWSTR  (For variants: VT_ARRAY | VT_BSTR)</para>
                 /// <para>FormatID: {D6942081-D53B-443D-AD47-5E059D9CD27A}, 2</para>
                 /// </summary>
-                [SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags")]
                 public static PropertyKey SFGAOFlagsStrings
                 {
                     get

@@ -34,18 +34,13 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <param name="recursive">Whether to listen for changes recursively (for when monitoring a container)</param>
         public ShellObjectWatcher(ShellObject shellObject, bool recursive)
         {
-            if (shellObject == null)
-            {
-                throw new ArgumentNullException(nameof(shellObject));
-            }
-
             if (_context == null)
             {
                 _context = new SynchronizationContext();
                 SynchronizationContext.SetSynchronizationContext(_context);
             }
 
-            _shellObject = shellObject;
+            _shellObject = shellObject ?? throw new ArgumentNullException(nameof(shellObject));
             _recursive = recursive;
 
             var result = MessageListenerFilter.Register(OnWindowMessageReceived);

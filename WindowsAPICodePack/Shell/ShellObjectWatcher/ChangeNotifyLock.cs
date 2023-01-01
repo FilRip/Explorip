@@ -40,17 +40,14 @@ namespace Microsoft.WindowsAPICodePack.Shell
                     ImageIndex = notifyStruct.item1.ToInt32();
                 }
 
-                if (notifyStruct.item2 != IntPtr.Zero)
+                if (notifyStruct.item2 != IntPtr.Zero &&
+                    CoreErrorHelper.Succeeded(ShellNativeMethods.SHCreateItemFromIDList(notifyStruct.item2, ref guid, out IShellItem2 nativeShellItem2)))
                 {
-                    if (CoreErrorHelper.Succeeded(ShellNativeMethods.SHCreateItemFromIDList(
-                        notifyStruct.item2, ref guid, out IShellItem2 nativeShellItem)))
-                    {
-                        nativeShellItem.GetDisplayName(ShellNativeMethods.ShellItemDesignNameOptions.FileSystemPath,
-                            out string name);
-                        ItemName2 = name;
+                    nativeShellItem2.GetDisplayName(ShellNativeMethods.ShellItemDesignNameOptions.FileSystemPath,
+                        out string name);
+                    ItemName2 = name;
 
-                        Trace.TraceInformation("Item2: {0}", ItemName2);
-                    }
+                    Trace.TraceInformation("Item2: {0}", ItemName2);
                 }
             }
             finally

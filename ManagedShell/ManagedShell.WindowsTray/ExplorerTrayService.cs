@@ -153,24 +153,21 @@ namespace ManagedShell.WindowsTray
             {
                 tbButton = (TBBUTTON)Marshal.PtrToStructure(hTBButton, typeof(TBBUTTON));
 
-                if (tbButton.dwData != UIntPtr.Zero)
+                if (tbButton.dwData != UIntPtr.Zero &&
+                    ReadProcessMemory(hProcess, tbButton.dwData, hTrayItem, Marshal.SizeOf(trayItem), out _))
                 {
-                    if (ReadProcessMemory(hProcess, tbButton.dwData, hTrayItem, Marshal.SizeOf(trayItem), out _))
+                    trayItem = (TrayItem)Marshal.PtrToStructure(hTrayItem, typeof(TrayItem));
+
+                    if ((tbButton.FsState & TBSTATE_HIDDEN) != 0)
                     {
-                        trayItem = (TrayItem)Marshal.PtrToStructure(hTrayItem, typeof(TrayItem));
-
-                        if ((tbButton.FsState & TBSTATE_HIDDEN) != 0)
-                        {
-                            trayItem.dwState = 1;
-                        }
-                        else
-                        {
-                            trayItem.dwState = 0;
-                        }
-
-                        ShellLogger.Debug(
-                            $"ExplorerTrayService: Got tray item: {trayItem.szIconText}");
+                        trayItem.dwState = 1;
                     }
+                    else
+                    {
+                        trayItem.dwState = 0;
+                    }
+
+                    ShellLogger.Debug($"ExplorerTrayService: Got tray item: {trayItem.szIconText}");
                 }
             }
 

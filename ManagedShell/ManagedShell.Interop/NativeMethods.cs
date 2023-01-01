@@ -29,6 +29,7 @@ namespace ManagedShell.Interop
             public int Height => Bottom - Top;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
         public struct POINT
         {
             public POINT(long x, long y)

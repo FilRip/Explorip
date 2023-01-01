@@ -152,7 +152,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
                 pendingNavigation.Location.NativeShellItem.Compare(
                     args.NewLocation.NativeShellItem, SICHINTF.SICHINT_ALLFIELDS, out int result);
                 bool shellItemsEqual = (result == 0);
-                if (shellItemsEqual == false)
+                if (!shellItemsEqual)
                 {
                     // new location is different than traversal request, 
                     // behave is if it never happened!

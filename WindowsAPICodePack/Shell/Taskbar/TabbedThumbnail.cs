@@ -128,19 +128,10 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// recomended for hidden WPF controls as it is difficult to calculate their offset.</param>
         public TabbedThumbnail(Window parentWindow, UIElement windowsControl, Vector peekOffset)
         {
-            if (windowsControl == null)
-            {
-                throw new ArgumentNullException(nameof(windowsControl));
-            }
-            if (parentWindow == null)
-            {
-                throw new ArgumentNullException(nameof(parentWindow));
-            }
-
             WindowHandle = IntPtr.Zero;
 
-            WindowsControl = windowsControl;
-            WindowsControlParentWindow = parentWindow;
+            WindowsControl = windowsControl ?? throw new ArgumentNullException(nameof(windowsControl));
+            WindowsControlParentWindow = parentWindow ?? throw new ArgumentNullException(nameof(parentWindow));
             ParentWindowHandle = (new WindowInteropHelper(parentWindow)).Handle;
             PeekOffset = peekOffset;
         }

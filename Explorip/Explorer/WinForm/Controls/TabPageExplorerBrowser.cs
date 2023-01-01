@@ -31,7 +31,7 @@ namespace Explorip.ComposantsWinForm
             Margin = new Padding(0);
             _splitContainer = new SplitContainer();
             Controls.Add(_splitContainer);
-            _splitContainer.AutoScaleMode = AutoScaleMode.Dpi;
+            _splitContainer.AutoScaleMode = AutoScaleMode.Font;
             _splitContainer.Orientation = Orientation.Horizontal;
             _splitContainer.Dock = DockStyle.Fill;
             _splitContainer.SplitterDistance = Font.Height * (DeviceDpi / 96);
@@ -100,6 +100,7 @@ namespace Explorip.ComposantsWinForm
                 BackColor = Color.Transparent,
                 TextAlign = ContentAlignment.MiddleLeft,
                 ForeColor = Color.Yellow,
+                AutoSize = true,
             };
             _pathLink.Height *= (DeviceDpi / 96);
             _pathLink.Font = new Font(_pathLink.Font.FontFamily, _pathLink.Font.Size * (DeviceDpi / 96));
@@ -122,6 +123,7 @@ namespace Explorip.ComposantsWinForm
             _txtEditPath.Width = _splitContainer.Panel1.Width - _txtEditPath.Location.X;
             _txtEditPath.KeyDown += TxtEditPath_KeyDown;
             _txtEditPath.MouseDoubleClick += TxtEditPath_MouseDoubleClick;
+            _txtEditPath.LostFocus += TxtEditPath_LostFocus;
             _splitContainer.Panel1.Controls.Add(_txtEditPath);
 
             _splitContainer.SplitterDistance = _txtEditPath.Location.Y + _txtEditPath.Size.Height + 4;
@@ -129,6 +131,11 @@ namespace Explorip.ComposantsWinForm
             _stopWatch = new Stopwatch();
 
             RefreshNavigationHistory();
+        }
+
+        private void TxtEditPath_LostFocus(object sender, EventArgs e)
+        {
+            HideEditPath();
         }
 
         private void TxtEditPath_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -203,7 +210,7 @@ namespace Explorip.ComposantsWinForm
             RefreshNavigationHistory();
         }
 
-        private void HideEditPath()
+        public void HideEditPath()
         {
             _txtEditPath.Visible = false;
             _pathLink.Visible = true;

@@ -30,12 +30,9 @@ namespace ManagedShell.ShellFolders
                 return;
             }
 
-            if (clipFiles.GetDataPresent(DataFormats.FileDrop))
+            if (clipFiles.GetDataPresent(DataFormats.FileDrop) && clipFiles.GetData(DataFormats.FileDrop) is string[] files)
             {
-                if (clipFiles.GetData(DataFormats.FileDrop) is string[] files)
-                {
-                    PerformOperation(FileOperation.Copy, files, targetDirectory);
-                }
+                PerformOperation(FileOperation.Copy, files, targetDirectory);
             }
         }
 

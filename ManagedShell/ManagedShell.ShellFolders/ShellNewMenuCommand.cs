@@ -35,37 +35,31 @@ namespace ManagedShell.ShellFolders
 
                 Guid guid = typeof(IContextMenu2).GUID;
                 if (Marshal.QueryInterface(iContextMenuPtr, ref guid,
-                    out iContextMenu2Ptr) == NativeMethods.S_OK)
+                    out iContextMenu2Ptr) == NativeMethods.S_OK && iContextMenu2Ptr != IntPtr.Zero)
                 {
-                    if (iContextMenu2Ptr != IntPtr.Zero)
+                    try
                     {
-                        try
-                        {
-                            iContextMenu2 =
-                                (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenu2Ptr, typeof(IContextMenu2));
-                        }
-                        catch (Exception e)
-                        {
-                            ShellLogger.Error($"ShellContextMenu: Error retrieving IContextMenu2 interface: {e.Message}");
-                        }
+                        iContextMenu2 =
+                            (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenu2Ptr, typeof(IContextMenu2));
+                    }
+                    catch (Exception e)
+                    {
+                        ShellLogger.Error($"ShellContextMenu: Error retrieving IContextMenu2 interface: {e.Message}");
                     }
                 }
 
                 guid = typeof(IContextMenu3).GUID;
                 if (Marshal.QueryInterface(iContextMenuPtr, ref guid,
-                    out iContextMenu3Ptr) == NativeMethods.S_OK)
+                    out iContextMenu3Ptr) == NativeMethods.S_OK && iContextMenu3Ptr != IntPtr.Zero)
                 {
-                    if (iContextMenu3Ptr != IntPtr.Zero)
+                    try
                     {
-                        try
-                        {
-                            iContextMenu3 =
-                                (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenu3Ptr, typeof(IContextMenu3));
-                        }
-                        catch (Exception e)
-                        {
-                            ShellLogger.Error($"ShellContextMenu: Error retrieving IContextMenu3 interface: {e.Message}");
-                        }
+                        iContextMenu3 =
+                            (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenu3Ptr, typeof(IContextMenu3));
+                    }
+                    catch (Exception e)
+                    {
+                        ShellLogger.Error($"ShellContextMenu: Error retrieving IContextMenu3 interface: {e.Message}");
                     }
                 }
             }

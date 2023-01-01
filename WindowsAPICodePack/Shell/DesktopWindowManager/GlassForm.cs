@@ -97,16 +97,14 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// </summary>
         /// <param name="m"></param>
 
-        protected override void WndProc(ref System.Windows.Forms.Message m)
+        protected override void WndProc(ref Message m)
         {
-            if (m.Msg == DWMMessages.WM_DWMCOMPOSITIONCHANGED
-                || m.Msg == DWMMessages.WM_DWMNCRENDERINGCHANGED)
+            if ((m.Msg == DWMMessages.WM_DWMCOMPOSITIONCHANGED
+                || m.Msg == DWMMessages.WM_DWMNCRENDERINGCHANGED) &&
+                AeroGlassCompositionChanged != null)
             {
-                if (AeroGlassCompositionChanged != null)
-                {
-                    AeroGlassCompositionChanged.Invoke(this,
-                        new AeroGlassCompositionChangedEventArgs(AeroGlassCompositionEnabled));
-                }
+                AeroGlassCompositionChanged.Invoke(this,
+                    new AeroGlassCompositionChangedEventArgs(AeroGlassCompositionEnabled));
             }
 
             base.WndProc(ref m);
@@ -130,13 +128,10 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             base.OnPaint(e);
 
-            if (DesignMode == false)
+            if (!DesignMode && AeroGlassCompositionEnabled && e != null)
             {
-                if (AeroGlassCompositionEnabled && e != null)
-                {
-                    // Paint the all the regions black to enable glass
-                    e.Graphics.FillRectangle(Brushes.Black, ClientRectangle);
-                }
+                // Paint the all the regions black to enable glass
+                e.Graphics.FillRectangle(Brushes.Black, ClientRectangle);
             }
         }
 

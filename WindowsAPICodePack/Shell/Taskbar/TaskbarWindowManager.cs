@@ -240,7 +240,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 // Fire an event to let the user update their bitmap
                 taskbarWindow.TabbedThumbnail.OnTabbedThumbnailBitmapRequested();
 
-                IntPtr hBitmap = IntPtr.Zero;
+                IntPtr hBitmap;
 
                 // Default size for the thumbnail
                 Size realWindowSize = new(200, 200);
@@ -277,7 +277,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                     }
 
                     // Clip the bitmap we just got.
-                    Bitmap bmp = Bitmap.FromHbitmap(hBitmap);
+                    Bitmap bmp = Image.FromHbitmap(hBitmap);
 
                     Rectangle clippingRectangle = taskbarWindow.TabbedThumbnail.ClippingRectangle.Value;
 
@@ -391,7 +391,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 // correctly on the app window
                 if (taskbarWindow.TabbedThumbnail.ParentWindowHandle != IntPtr.Zero && taskbarWindow.TabbedThumbnail.WindowHandle != IntPtr.Zero)
                 {
-                    System.Drawing.Point offset = new();
+                    Point offset;
 
                     // if we don't have a offset specified already by the user...
                     if (!taskbarWindow.TabbedThumbnail.PeekOffset.HasValue)
@@ -400,22 +400,19 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                     }
                     else
                     {
-                        offset = new System.Drawing.Point(Convert.ToInt32(taskbarWindow.TabbedThumbnail.PeekOffset.Value.X),
+                        offset = new Point(Convert.ToInt32(taskbarWindow.TabbedThumbnail.PeekOffset.Value.X),
                             Convert.ToInt32(taskbarWindow.TabbedThumbnail.PeekOffset.Value.Y));
                     }
 
                     // Only set the peek bitmap if it's not null. 
                     // If it's null (either we didn't get the bitmap or size was 0),
                     // let DWM handle it
-                    if (hBitmap != IntPtr.Zero)
+                    if (hBitmap != IntPtr.Zero && offset.X >= 0 && offset.Y >= 0)
                     {
-                        if (offset.X >= 0 && offset.Y >= 0)
-                        {
-                            TabbedThumbnailNativeMethods.SetPeekBitmap(
-                                taskbarWindow.WindowToTellTaskbarAbout,
-                                hBitmap, offset,
-                                taskbarWindow.TabbedThumbnail.DisplayFrameAroundBitmap);
-                        }
+                        TabbedThumbnailNativeMethods.SetPeekBitmap(
+                            taskbarWindow.WindowToTellTaskbarAbout,
+                            hBitmap, offset,
+                            taskbarWindow.TabbedThumbnail.DisplayFrameAroundBitmap);
                     }
 
                     // If the bitmap we have is not coming from the user (i.e. we created it here),

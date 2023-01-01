@@ -403,14 +403,14 @@ hresult),
         {
             AssertCurrentlyShowing();
             SendMessageHelper(
-                TaskDialogNativeMethods.TaskDialogMessages.EnableButton, buttonID, enabled == true ? 1 : 0);
+                TaskDialogNativeMethods.TaskDialogMessages.EnableButton, buttonID, enabled ? 1 : 0);
         }
 
         internal void UpdateRadioButtonEnabled(int buttonID, bool enabled)
         {
             AssertCurrentlyShowing();
             SendMessageHelper(TaskDialogNativeMethods.TaskDialogMessages.EnableRadioButton,
-                buttonID, enabled == true ? 1 : 0);
+                buttonID, enabled ? 1 : 0);
         }
 
         internal void AssertCurrentlyShowing()

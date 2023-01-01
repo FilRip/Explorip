@@ -694,10 +694,9 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         internal IFolderView2 GetFolderView2()
         {
             Guid iid = new(ExplorerBrowserIIDGuid.IFolderView2);
-            IntPtr view;
             if (explorerBrowserControl != null)
             {
-                HResult hr = explorerBrowserControl.GetCurrentView(ref iid, out view);
+                HResult hr = explorerBrowserControl.GetCurrentView(ref iid, out IntPtr view);
                 switch (hr)
                 {
                     case HResult.Ok:

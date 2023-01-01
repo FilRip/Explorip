@@ -41,7 +41,6 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
         /// <summary>
         /// Gets or sets the current index of the selected item.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public int SelectedIndex
         {
             get { return selectedIndex; }
@@ -62,7 +61,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
                 }
                 else
                 {
+#pragma warning disable S112
                     throw new IndexOutOfRangeException(LocalizedMessages.RadioButtonListIndexOutOfBounds);
+#pragma warning restore S112
                 }
             }
         }
@@ -119,7 +120,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
             }
             else if (selectedIndex != -1)
             {
+#pragma warning disable S112
                 throw new IndexOutOfRangeException(LocalizedMessages.RadioButtonListIndexOutOfBounds);
+#pragma warning restore S112
             }
 
             // Sync unmanaged properties with managed properties

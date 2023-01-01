@@ -52,7 +52,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
         {
             bool isMessageCaught = false;
 
-            if (eventGuid == EventManager.BatteryCapacityChange)
+            if (eventGuid == BatteryCapacityChange)
             {
                 if (!batteryLifeCaught)
                 {
@@ -60,7 +60,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                     isMessageCaught = true;
                 }
             }
-            else if (eventGuid == EventManager.MonitorPowerStatus)
+            else if (eventGuid == MonitorPowerStatus)
             {
                 if (!monitorOnCaught)
                 {
@@ -68,7 +68,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                     isMessageCaught = true;
                 }
             }
-            else if (eventGuid == EventManager.PowerPersonalityChange)
+            else if (eventGuid == PowerPersonalityChange)
             {
                 if (!personalityCaught)
                 {
@@ -76,13 +76,10 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                     isMessageCaught = true;
                 }
             }
-            else if (eventGuid == EventManager.PowerSourceChange)
+            else if (eventGuid == PowerSourceChange && !powerSrcCaught)
             {
-                if (!powerSrcCaught)
-                {
-                    powerSrcCaught = true;
-                    isMessageCaught = true;
-                }
+                powerSrcCaught = true;
+                isMessageCaught = true;
             }
 
             return isMessageCaught;

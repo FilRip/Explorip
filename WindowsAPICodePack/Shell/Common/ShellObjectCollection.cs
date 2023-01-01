@@ -91,7 +91,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <param name="disposing">Indicates that this is being called from Dispose(), rather than the finalizer.</param>
         protected virtual void Dispose(bool disposing)
         {
-            if (isDisposed == false)
+            if (!isDisposed)
             {
                 if (disposing)
                 {

@@ -1,6 +1,6 @@
 ﻿namespace ManagedShell.Common.Enums
 {
-    public enum IconSize : int
+    public enum IconSize
     {
         ///<summary>32 pixels</summary>
         Large = 0,

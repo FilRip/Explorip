@@ -897,11 +897,11 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             {
                 customize.GetControlState(control.Id, out ShellNativeMethods.ControlState state);
 
-                if (dialogControl.Visible == true)
+                if (dialogControl.Visible)
                 {
                     state |= ShellNativeMethods.ControlState.Visible;
                 }
-                else if (dialogControl.Visible == false)
+                else if (!dialogControl.Visible)
                 {
                     state &= ~ShellNativeMethods.ControlState.Visible;
                 }
@@ -912,11 +912,11 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             {
                 customize.GetControlState(control.Id, out ShellNativeMethods.ControlState state);
 
-                if (dialogControl.Enabled == true)
+                if (dialogControl.Enabled)
                 {
                     state |= ShellNativeMethods.ControlState.Enable;
                 }
-                else if (dialogControl.Enabled == false)
+                else if (!dialogControl.Enabled)
                 {
                     state &= ~ShellNativeMethods.ControlState.Enable;
                 }
@@ -934,12 +934,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                     customize.SetSelectedControlItem(box.Id, box.SelectedIndex);
                 }
             }
-            else if (propertyName == "IsChecked")
+            else if (propertyName == "IsChecked" && control is CommonFileDialogCheckBox checkBox)
             {
-                if (control is CommonFileDialogCheckBox checkBox)
-                {
-                    customize.SetCheckButtonState(checkBox.Id, checkBox.IsChecked);
-                }
+                customize.SetCheckButtonState(checkBox.Id, checkBox.IsChecked);
             }
         }
 
@@ -1123,30 +1120,25 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 CancelEventArgs args = new();
                 parent.OnFileOk(args);
 
-                if (!args.Cancel)
+                if (!args.Cancel && parent.Controls != null)
                 {
                     // Make sure all custom properties are sync'ed
-                    if (parent.Controls != null)
+                    foreach (CommonFileDialogControl control in parent.Controls)
                     {
-                        foreach (CommonFileDialogControl control in parent.Controls)
+                        if (control is CommonFileDialogTextBox textBox)
                         {
-                            ;
-
-                            if (control is CommonFileDialogTextBox textBox)
+                            textBox.SyncValue();
+                            textBox.Closed = true;
+                        }
+                        // Also check subcontrols
+                        else if (control is CommonFileDialogGroupBox groupBox)
+                        {
+                            foreach (CommonFileDialogControl subcontrol in groupBox.Items)
                             {
-                                textBox.SyncValue();
-                                textBox.Closed = true;
-                            }
-                            // Also check subcontrols
-                            else if (control is CommonFileDialogGroupBox groupBox)
-                            {
-                                foreach (CommonFileDialogControl subcontrol in groupBox.Items)
+                                if (subcontrol is CommonFileDialogTextBox textbox)
                                 {
-                                    if (subcontrol is CommonFileDialogTextBox textbox)
-                                    {
-                                        textbox.SyncValue();
-                                        textbox.Closed = true;
-                                    }
+                                    textbox.SyncValue();
+                                    textbox.Closed = true;
                                 }
                             }
                         }

@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 
 using Microsoft.Win32;
 
+using WindowsDesktop.Exceptions;
 using WindowsDesktop.Properties;
 
 namespace WindowsDesktop.Interop
@@ -58,7 +59,7 @@ namespace WindowsDesktop.Interop
             using RegistryKey interfaceKey = Registry.ClassesRoot.OpenSubKey("Interface");
             if (interfaceKey == null)
             {
-                throw new Exception(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");
+                throw new VirtualDesktopException(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");
             }
 
             Dictionary<string, Guid> result = new();

@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using WindowsDesktop.Properties;
 
 using Microsoft.CSharp;
+using WindowsDesktop.Exceptions;
 
 namespace WindowsDesktop.Interop
 {
@@ -86,17 +87,16 @@ namespace WindowsDesktop.Interop
                 .ToArray();
             Dictionary<string, Guid> iids = IID.GetIIDs(interfaceNames);
             List<string> compileTargets = new();
+
+            string assemblyInfo = executingAssembly.GetManifestResourceNames().Single(x => x.Contains("AssemblyInfo"));
+            Stream sr = executingAssembly.GetManifestResourceStream(assemblyInfo);
+            if (sr != null)
             {
-                string assemblyInfo = executingAssembly.GetManifestResourceNames().Single(x => x.Contains("AssemblyInfo"));
-                Stream stream = executingAssembly.GetManifestResourceStream(assemblyInfo);
-                if (stream != null)
-                {
-                    using StreamReader reader = new(stream, Encoding.UTF8);
-                    string sourceCode = reader.ReadToEnd()
-                        .Replace("{VERSION}", ProductInfo.OSBuild.ToString())
-                        .Replace("{BUILD}", interfaceVersion.ToString());
-                    compileTargets.Add(sourceCode);
-                }
+                using StreamReader reader = new(sr, Encoding.UTF8);
+                string sourceCode = reader.ReadToEnd()
+                    .Replace("{VERSION}", ProductInfo.OSBuild.ToString())
+                    .Replace("{BUILD}", interfaceVersion.ToString());
+                compileTargets.Add(sourceCode);
             }
 
             foreach (string name in executingAssembly.GetManifestResourceNames())
@@ -152,7 +152,7 @@ namespace WindowsDesktop.Interop
             {
                 string message = $"Failed to compile COM interfaces assembly.{Environment.NewLine}{string.Join(Environment.NewLine, result.Errors.OfType<CompilerError>().Select(x => $"  {x}"))}";
 
-                throw new Exception(message);
+                throw new VirtualDesktopException(message);
             }
 
             System.Diagnostics.Debug.WriteLine($"Assembly compiled: {path}");

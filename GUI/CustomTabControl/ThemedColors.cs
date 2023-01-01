@@ -8,11 +8,9 @@ using System.Windows.Forms.VisualStyles;
 
 namespace System.Drawing
 {
-
     internal sealed class ThemedColors
     {
-
-        #region "    Variables and Constants "
+        #region Variables and Constants
 
         private const string NormalColor = "NormalColor";
         private const string HomeStead = "HomeStead";
@@ -22,7 +20,7 @@ namespace System.Drawing
         private static readonly Color[] _toolBorder;
         #endregion
 
-        #region "    Properties "
+        #region Properties
 
         public static ColorScheme CurrentThemeIndex
         {
@@ -36,7 +34,7 @@ namespace System.Drawing
 
         #endregion
 
-        #region "    Constructors "
+        #region Constructors
 
         static ThemedColors()
         {
@@ -76,5 +74,4 @@ namespace System.Drawing
         }
 
     }
-
 }

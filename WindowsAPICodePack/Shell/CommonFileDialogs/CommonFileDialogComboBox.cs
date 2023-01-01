@@ -46,7 +46,6 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
         /// <summary>
         /// Gets or sets the current index of the selected item.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public int SelectedIndex
         {
             get { return selectedIndex; }
@@ -70,7 +69,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
                 }
                 else
                 {
+#pragma warning disable S112
                     throw new IndexOutOfRangeException(LocalizedMessages.ComboBoxIndexOutsideBounds);
+#pragma warning restore S112
                 }
             }
         }
@@ -109,7 +110,6 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
         /// Attach the ComboBox control to the dialog object
         /// </summary>
         /// <param name="dialog">The target dialog</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         internal override void Attach(IFileDialogCustomize dialog)
         {
             Debug.Assert(dialog != null, "CommonFileDialogComboBox.Attach: dialog parameter can not be null");
@@ -128,7 +128,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
             }
             else if (selectedIndex != -1)
             {
+#pragma warning disable S112
                 throw new IndexOutOfRangeException(LocalizedMessages.ComboBoxIndexOutsideBounds);
+#pragma warning restore S112
             }
 
             // Make this control prominent if needed
@@ -146,15 +148,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
     /// </summary>
     public class CommonFileDialogComboBoxItem
     {
-        private string text = string.Empty;
         /// <summary>
         /// Gets or sets the string that is displayed for this item.
         /// </summary>
-        public string Text
-        {
-            get { return text; }
-            set { text = value; }
-        }
+        public string Text { get; set; }
 
         /// <summary>
         /// Creates a new instance of this class.
@@ -169,7 +166,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
         /// <param name="text">The text to use for the combo box item.</param>
         public CommonFileDialogComboBoxItem(string text)
         {
-            this.text = text;
+            this.Text = text;
         }
     }
 }

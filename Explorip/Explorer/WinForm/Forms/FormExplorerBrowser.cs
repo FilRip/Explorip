@@ -33,6 +33,29 @@ namespace Explorip.Forms
             MainSplitter.AutoScaleMode = AutoScaleMode.Dpi;
         }
 
+        private void FormExplorerBrowser_Move(object sender, EventArgs e)
+        {
+            HideEditPath();
+        }
+
+        private void HideEditPath()
+        {
+            if (_tabGauche?.SelectedTab != null)
+                ((TabPageExplorerBrowser)_tabGauche.SelectedTab).HideEditPath();
+            if (_tabDroite?.SelectedTab != null)
+                ((TabPageExplorerBrowser)_tabDroite.SelectedTab).HideEditPath();
+        }
+
+        private void FormExplorerBrowser_SizeChanged(object sender, EventArgs e)
+        {
+            HideEditPath();
+        }
+
+        private void FormExplorerBrowser_DpiChanged(object sender, DpiChangedEventArgs e)
+        {
+            // TODO : Refresh position/size of linklabel & txteditpath of all tabs
+        }
+
         private void FormExplorerBrowser_Shown(object sender, EventArgs e)
         {
             ShellObject sfDemarrage = (ShellObject)KnownFolders.Desktop;

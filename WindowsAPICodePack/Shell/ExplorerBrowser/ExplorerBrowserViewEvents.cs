@@ -20,7 +20,6 @@ namespace MS.WindowsAPICodePack.Internal
         private uint viewConnectionPointCookie;
         private object viewDispatch;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2006:UseSafeHandleToEncapsulateNativeResources")]
         private IntPtr nullPtr = IntPtr.Zero;
 
         private Guid IID_DShellFolderViewEvents = new(ExplorerBrowserIIDGuid.DShellFolderViewEvents);

@@ -12,7 +12,6 @@ using System.Security.Permissions;
 
 namespace System.Windows.Forms
 {
-
     [ToolboxBitmap(typeof(TabControl))]
     public class CustomTabControl : TabControl
     {
@@ -95,7 +94,6 @@ namespace System.Windows.Forms
         private Graphics _TabBufferGraphics;
 
         private int _oldValue;
-        private Point _dragStartPosition = Point.Empty;
 
         private TabStyle _Style;
         private TabStyleProvider _StyleProvider;

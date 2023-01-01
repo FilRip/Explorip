@@ -196,19 +196,17 @@ namespace ManagedShell.ShellFolders
             if (iContextMenu2 != null &&
                 (m.Msg == (int)NativeMethods.WM.INITMENUPOPUP ||
                     m.Msg == (int)NativeMethods.WM.MEASUREITEM ||
-                    m.Msg == (int)NativeMethods.WM.DRAWITEM))
+                    m.Msg == (int)NativeMethods.WM.DRAWITEM) &&
+                    (iContextMenu2.HandleMenuMsg((uint)m.Msg, m.WParam, m.LParam) == NativeMethods.S_OK))
             {
-                if (iContextMenu2.HandleMenuMsg(
-                    (uint)m.Msg, m.WParam, m.LParam) == NativeMethods.S_OK)
-                    return;
+                return;
             }
 
             if (iContextMenu3 != null &&
-                m.Msg == (int)NativeMethods.WM.MENUCHAR)
+                m.Msg == (int)NativeMethods.WM.MENUCHAR &&
+                iContextMenu3.HandleMenuMsg2((uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == NativeMethods.S_OK)
             {
-                if (iContextMenu3.HandleMenuMsg2(
-                    (uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == NativeMethods.S_OK)
-                    return;
+                return;
             }
 
             foreach (var subMenu in ShellNewMenus)
@@ -221,19 +219,17 @@ namespace ManagedShell.ShellFolders
                 if (subMenu.iContextMenu2 != null &&
                     (m.Msg == (int)NativeMethods.WM.INITMENUPOPUP ||
                         m.Msg == (int)NativeMethods.WM.MEASUREITEM ||
-                        m.Msg == (int)NativeMethods.WM.DRAWITEM))
+                        m.Msg == (int)NativeMethods.WM.DRAWITEM) &&
+                        subMenu.iContextMenu2.HandleMenuMsg((uint)m.Msg, m.WParam, m.LParam) == NativeMethods.S_OK)
                 {
-                    if (subMenu.iContextMenu2.HandleMenuMsg(
-                        (uint)m.Msg, m.WParam, m.LParam) == NativeMethods.S_OK)
-                        return;
+                    return;
                 }
 
                 if (subMenu.iContextMenu3 != null &&
-                    m.Msg == (int)NativeMethods.WM.MENUCHAR)
+                    m.Msg == (int)NativeMethods.WM.MENUCHAR &&
+                    subMenu.iContextMenu3.HandleMenuMsg2((uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == NativeMethods.S_OK)
                 {
-                    if (subMenu.iContextMenu3.HandleMenuMsg2(
-                        (uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == NativeMethods.S_OK)
-                        return;
+                    return;
                 }
             }
 

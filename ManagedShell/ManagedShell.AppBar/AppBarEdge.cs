@@ -1,6 +1,6 @@
 ﻿namespace ManagedShell.AppBar
 {
-    public enum AppBarEdge : int
+    public enum AppBarEdge
     {
         Left = 0,
         Top,

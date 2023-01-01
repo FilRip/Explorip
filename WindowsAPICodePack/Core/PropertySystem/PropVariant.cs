@@ -370,7 +370,7 @@ namespace MS.WindowsAPICodePack.Internal
         public PropVariant(bool value)
         {
             _valueType = (ushort)VarEnum.VT_BOOL;
-            _int32 = (value == true) ? -1 : 0;
+            _int32 = value ? -1 : 0;
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+using ManagedShell.Common.Exceptions;
 using ManagedShell.Interop;
 
 namespace ManagedShell.Common.Helpers
@@ -21,14 +22,14 @@ namespace ManagedShell.Common.Helpers
             bool tokenOpenResult = NativeMethods.OpenProcessToken(procHandle, NativeMethods.TOKENADJUSTPRIVILEGES | NativeMethods.TOKENQUERY, out IntPtr tokenHandle);
             if (!tokenOpenResult)
             {
-                throw new ApplicationException("Error attempting to open process token to raise level for shutdown.\nWin32 Error Code: " + Marshal.GetLastWin32Error());
+                throw new ManagedShellException("Error attempting to open process token to raise level for shutdown.\nWin32 Error Code: " + Marshal.GetLastWin32Error());
             }
 
             NativeMethods.LUID luid = new();
             bool privLookupResult = NativeMethods.LookupPrivilegeValue(null, "SeShutdownPrivilege", ref luid);
             if (!privLookupResult)
             {
-                throw new ApplicationException("Error attempting to lookup value for shutdown privilege.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
+                throw new ManagedShellException("Error attempting to lookup value for shutdown privilege.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
             }
 
             NativeMethods.TOKEN_PRIVILEGES newPriv = new()
@@ -42,7 +43,7 @@ namespace ManagedShell.Common.Helpers
             bool tokenPrivResult = NativeMethods.AdjustTokenPrivileges(tokenHandle, false, ref newPriv, 0, IntPtr.Zero, IntPtr.Zero);
             if (!tokenPrivResult)
             {
-                throw new ApplicationException("Error attempting to adjust the token privileges to allow shutdown.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
+                throw new ManagedShellException("Error attempting to adjust the token privileges to allow shutdown.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
             }
         }
 

@@ -98,19 +98,17 @@ namespace Explorip.Helpers
             if (_oContextMenu2 != null &&
                 (m.Msg == (int)Commun.WM.INITMENUPOPUP ||
                  m.Msg == (int)Commun.WM.MEASUREITEM ||
-                 m.Msg == (int)Commun.WM.DRAWITEM))
+                 m.Msg == (int)Commun.WM.DRAWITEM) &&
+                 _oContextMenu2.HandleMenuMsg((uint)m.Msg, m.WParam, m.LParam) == (int)Commun.HRESULT.S_OK)
             {
-                if (_oContextMenu2.HandleMenuMsg(
-                    (uint)m.Msg, m.WParam, m.LParam) == (int)Commun.HRESULT.S_OK)
-                    return;
+                return;
             }
 
             if (_oContextMenu3 != null &&
-                m.Msg == (int)Commun.WM.MENUCHAR)
+                m.Msg == (int)Commun.WM.MENUCHAR &&
+                _oContextMenu3.HandleMenuMsg2((uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == (int)Commun.HRESULT.S_OK)
             {
-                if (_oContextMenu3.HandleMenuMsg2(
-                    (uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == (int)Commun.HRESULT.S_OK)
-                    return;
+                return;
             }
 
             base.WndProc(ref m);

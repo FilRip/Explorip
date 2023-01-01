@@ -50,14 +50,13 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 
         internal ThumbnailToolbarProxyWindow(System.Windows.UIElement windowsControl, ThumbnailToolBarButton[] buttons)
         {
-            if (windowsControl == null) { throw new ArgumentNullException(nameof(windowsControl)); }
             if (buttons != null && buttons.Length == 0)
             {
                 throw new ArgumentException(LocalizedMessages.ThumbnailToolbarManagerNullEmptyArray, nameof(buttons));
             }
 
             _internalWindowHandle = IntPtr.Zero;
-            WindowsControl = windowsControl;
+            WindowsControl = windowsControl ?? throw new ArgumentNullException(nameof(windowsControl));
             _thumbnailButtons = buttons;
 
             // Set the window handle on the buttons (for future updates)

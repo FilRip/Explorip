@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Explorip.WinAPI.Modeles
 {
     [Flags()]
-    public enum DWM_TNP : int
+    public enum DWM_TNP
     {
         RECTDESTINATION = 0x00000001,
         RECTSOURCE = 0x00000002,

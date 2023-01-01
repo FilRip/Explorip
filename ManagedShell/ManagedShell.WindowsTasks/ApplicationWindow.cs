@@ -460,17 +460,14 @@ namespace ManagedShell.WindowsTasks
                             NativeMethods.SendMessageTimeout(Handle, WM_QUERYDRAGICON, 0, 0, 0, 1000, ref hIco);
                         }
 
-                        if (hIco == IntPtr.Zero && _icon == null)
+                        if (hIco == IntPtr.Zero && _icon == null && ShellHelper.Exists(WinFileName))
                         {
                             // last resort: find icon by executable. if we already have an icon from a previous fetch, then just skip this
-                            if (ShellHelper.Exists(WinFileName))
-                            {
-                                IconSize size = IconSize.Small;
-                                if (sizeSetting != size)
-                                    size = IconSize.Large;
+                            IconSize size = IconSize.Small;
+                            if (sizeSetting != size)
+                                size = IconSize.Large;
 
-                                hIco = IconHelper.GetIconByFilename(WinFileName, size);
-                            }
+                            hIco = IconHelper.GetIconByFilename(WinFileName, size);
                         }
 
                         if (hIco != IntPtr.Zero)

@@ -172,7 +172,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 IShellProperty prop = Items.FirstOrDefault(p => p.CanonicalName == canonicalName);
                 if (prop == null)
                 {
+#pragma warning disable S112
                     throw new IndexOutOfRangeException(LocalizedMessages.PropertyCollectionCanonicalInvalidIndex);
+#pragma warning restore S112
                 }
                 return prop;
             }
@@ -193,7 +195,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 IShellProperty prop = Items.FirstOrDefault(p => p.PropertyKey == key);
                 if (prop != null) return prop;
 
+#pragma warning disable S112
                 throw new IndexOutOfRangeException(LocalizedMessages.PropertyCollectionInvalidIndex);
+#pragma warning restore S112
             }
         }
 

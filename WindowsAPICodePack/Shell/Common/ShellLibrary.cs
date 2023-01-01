@@ -322,12 +322,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             get
             {
-                ShellNativeMethods.LibraryOptions flags = ShellNativeMethods.LibraryOptions.PinnedToNavigationPane;
+                nativeShellLibrary.GetOptions(out ShellNativeMethods.LibraryOptions flags);
 
-                nativeShellLibrary.GetOptions(out flags);
-
-                return (
-                    (flags & ShellNativeMethods.LibraryOptions.PinnedToNavigationPane) ==
+                return ((flags & ShellNativeMethods.LibraryOptions.PinnedToNavigationPane) ==
                     ShellNativeMethods.LibraryOptions.PinnedToNavigationPane);
             }
             set
@@ -412,13 +409,13 @@ namespace Microsoft.WindowsAPICodePack.Shell
             if (!CoreErrorHelper.Succeeded(hr))
                 throw new ShellException(hr);
 
-            INativeShellLibrary nativeShellLibrary = (INativeShellLibrary)new ShellLibraryCoClass();
+            INativeShellLibrary nsl = (INativeShellLibrary)new ShellLibraryCoClass();
             AccessModes flags = isReadOnly ?
                     AccessModes.Read :
                     AccessModes.ReadWrite;
-            nativeShellLibrary.LoadLibraryFromItem(nativeShellItem, flags);
+            nsl.LoadLibraryFromItem(nativeShellItem, flags);
 
-            ShellLibrary library = new(nativeShellLibrary);
+            ShellLibrary library = new(nsl);
             try
             {
                 library.nativeShellItem = (IShellItem2)nativeShellItem;
@@ -449,13 +446,13 @@ namespace Microsoft.WindowsAPICodePack.Shell
             ShellFile item = ShellFile.FromFilePath(shellItemPath);
 
             IShellItem nativeShellItem = item.NativeShellItem;
-            INativeShellLibrary nativeShellLibrary = (INativeShellLibrary)new ShellLibraryCoClass();
+            INativeShellLibrary nsl = (INativeShellLibrary)new ShellLibraryCoClass();
             AccessModes flags = isReadOnly ?
                     AccessModes.Read :
                     AccessModes.ReadWrite;
-            nativeShellLibrary.LoadLibraryFromItem(nativeShellItem, flags);
+            nsl.LoadLibraryFromItem(nativeShellItem, flags);
 
-            ShellLibrary library = new(nativeShellLibrary);
+            ShellLibrary library = new(nsl);
             try
             {
                 library.nativeShellItem = (IShellItem2)nativeShellItem;
@@ -473,30 +470,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <summary>
         /// Load the library using a number of options
         /// </summary>
-        /// <param name="nativeShellItem">IShellItem</param>
-        /// <param name="isReadOnly">read-only flag</param>
-        /// <returns>A ShellLibrary Object</returns>
-        internal static ShellLibrary FromShellItem(IShellItem nativeShellItem, bool isReadOnly)
-        {
-            CoreHelpers.ThrowIfNotWin7();
-
-            INativeShellLibrary nativeShellLibrary = (INativeShellLibrary)new ShellLibraryCoClass();
-
-            AccessModes flags = isReadOnly ?
-                    AccessModes.Read :
-                    AccessModes.ReadWrite;
-
-            nativeShellLibrary.LoadLibraryFromItem(nativeShellItem, flags);
-
-            ShellLibrary library = new(nativeShellLibrary);
-            library.nativeShellItem = (IShellItem2)nativeShellItem;
-
-            return library;
-        }
-
-        /// <summary>
-        /// Load the library using a number of options
-        /// </summary>
         /// <param name="sourceKnownFolder">A known folder.</param>
         /// <param name="isReadOnly">If <B>true</B>, opens the library in read-only mode.</param>
         /// <returns>A ShellLibrary Object</returns>
@@ -504,6 +477,30 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             CoreHelpers.ThrowIfNotWin7();
             return new ShellLibrary(sourceKnownFolder, isReadOnly);
+        }
+
+        /// <summary>
+        /// Load the library using a number of options
+        /// </summary>
+        /// <param name="nativeShellItem">IShellItem</param>
+        /// <param name="isReadOnly">read-only flag</param>
+        /// <returns>A ShellLibrary Object</returns>
+        internal static ShellLibrary FromShellItem(IShellItem nativeShellItem, bool isReadOnly)
+        {
+            CoreHelpers.ThrowIfNotWin7();
+
+            INativeShellLibrary nsl = (INativeShellLibrary)new ShellLibraryCoClass();
+
+            AccessModes flags = isReadOnly ?
+                    AccessModes.Read :
+                    AccessModes.ReadWrite;
+
+            nsl.LoadLibraryFromItem(nativeShellItem, flags);
+
+            ShellLibrary library = new(nsl);
+            library.nativeShellItem = (IShellItem2)nativeShellItem;
+
+            return library;
         }
 
         private static void ShowManageLibraryUI(ShellLibrary shellLibrary, IntPtr windowHandle, string title, string instruction, bool allowAllLocations)

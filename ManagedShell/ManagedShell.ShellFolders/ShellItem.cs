@@ -528,12 +528,9 @@ namespace ManagedShell.ShellFolders
 
             try
             {
-                if (_shellItem?.GetDisplayName(purpose, out hString) == NativeMethods.S_OK)
+                if (_shellItem?.GetDisplayName(purpose, out hString) == NativeMethods.S_OK && hString != IntPtr.Zero)
                 {
-                    if (hString != IntPtr.Zero)
-                    {
-                        name = Marshal.PtrToStringAuto(hString);
-                    }
+                    name = Marshal.PtrToStringAuto(hString);
                 }
             }
             catch (Exception e)
@@ -573,12 +570,9 @@ namespace ManagedShell.ShellFolders
                         flags = SIIGBF.ICONONLY;
                     }
 
-                    if (imageFactory?.GetImage(imageSize, flags, out hBitmap) == NativeMethods.S_OK)
+                    if (imageFactory?.GetImage(imageSize, flags, out hBitmap) == NativeMethods.S_OK && hBitmap != IntPtr.Zero)
                     {
-                        if (hBitmap != IntPtr.Zero)
-                        {
-                            icon = IconImageConverter.GetImageFromHBitmap(hBitmap);
-                        }
+                        icon = IconImageConverter.GetImageFromHBitmap(hBitmap);
                     }
                 }
                 catch (Exception e)

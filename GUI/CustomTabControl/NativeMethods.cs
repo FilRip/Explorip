@@ -104,7 +104,7 @@ namespace System.Windows.Forms
 
         public static IntPtr ToIntPtr(object structure)
         {
-            IntPtr lparam = IntPtr.Zero;
+            IntPtr lparam;
             lparam = Marshal.AllocCoTaskMem(Marshal.SizeOf(structure));
             Marshal.StructureToPtr(structure, lparam, false);
             return lparam;

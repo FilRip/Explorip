@@ -60,7 +60,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns>True if this NativePoint is equal obj; false otherwise.</returns>
         public override bool Equals(object obj)
         {
-            return (obj != null && obj is NativePoint point) ? this == point : false;
+            return (obj is NativePoint point) && this == point;
         }
 
         /// <summary>

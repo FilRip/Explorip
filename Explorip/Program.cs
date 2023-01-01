@@ -12,6 +12,7 @@ namespace Explorip
     {
         private static System.Windows.Application _WpfHost;
         private static Mutex _mutexTaskbar;
+        public static bool ModeShell;
 
         /// <summary>
         /// The main entry point for the application.
@@ -19,10 +20,9 @@ namespace Explorip
         [STAThread()]
         public static void Main(string[] args)
         {
-            bool modeShell = true;
-            bool taskBarLaunched = false;
+            ModeShell = true;
 
-            _mutexTaskbar = new Mutex(true, "ExploripTaskbar", out taskBarLaunched);
+            _mutexTaskbar = new Mutex(true, "ExploripTaskbar", out bool taskBarLaunched);
             Process[] process = Process.GetProcessesByName("explorer");
             if (process != null && process.Length > 0)
             {
@@ -30,7 +30,7 @@ namespace Explorip
                 {
                     if (StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.Repertoire() + "\\explorer.exe"))
                     {
-                        modeShell = false;
+                        ModeShell = false;
                         break;
                     }
                 }

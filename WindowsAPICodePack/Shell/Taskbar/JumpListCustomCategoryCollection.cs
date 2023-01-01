@@ -67,7 +67,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         {
             bool removed = categories.Remove(category);
 
-            if (removed == true)
+            if (removed)
             {
                 // Trigger CollectionChanged event
                 CollectionChanged(

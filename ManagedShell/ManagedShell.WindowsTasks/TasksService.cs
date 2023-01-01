@@ -544,13 +544,10 @@ namespace ManagedShell.WindowsTasks
 
         private void UncloakEventCallback(IntPtr hWinEventHook, uint eventType, IntPtr hWnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0)
+            if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && Windows.Any(i => i.Handle == hWnd))
             {
-                if (Windows.Any(i => i.Handle == hWnd))
-                {
-                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == hWnd);
-                    win.Uncloak();
-                }
+                ApplicationWindow win = Windows.First(wnd => wnd.Handle == hWnd);
+                win.Uncloak();
             }
         }
 
