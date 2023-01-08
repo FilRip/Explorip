@@ -31,7 +31,7 @@ namespace Explorip.ComposantsWinForm
             Margin = new Padding(0);
             _splitContainer = new SplitContainer();
             Controls.Add(_splitContainer);
-            _splitContainer.AutoScaleMode = AutoScaleMode.Font;
+            _splitContainer.AutoScaleMode = AutoScaleMode.Dpi;
             _splitContainer.Orientation = Orientation.Horizontal;
             _splitContainer.Dock = DockStyle.Fill;
             _splitContainer.SplitterDistance = Font.Height * (DeviceDpi / 96);
@@ -100,10 +100,9 @@ namespace Explorip.ComposantsWinForm
                 BackColor = Color.Transparent,
                 TextAlign = ContentAlignment.MiddleLeft,
                 ForeColor = Color.Yellow,
-                AutoSize = true,
             };
             _pathLink.Height *= (DeviceDpi / 96);
-            _pathLink.Font = new Font(_pathLink.Font.FontFamily, _pathLink.Font.Size * (DeviceDpi / 96));
+            _pathLink.Font = new Font(_pathLink.Font.FontFamily, _pathLink.Height / 4);
             _pathLink.Width = _splitContainer.Panel1.Width - _pathLink.Location.X;
             _pathLink.LinkClicked += PathLink_LinkClicked;
             _pathLink.Click += PathLink_Click;
@@ -119,7 +118,7 @@ namespace Explorip.ComposantsWinForm
                 BorderStyle = BorderStyle.FixedSingle,
             };
             _txtEditPath.Height *= (DeviceDpi / 96);
-            _txtEditPath.Font = new Font(_txtEditPath.Font.FontFamily, _txtEditPath.Font.Size * (DeviceDpi / 96));
+            _txtEditPath.Font = _pathLink.Font;
             _txtEditPath.Width = _splitContainer.Panel1.Width - _txtEditPath.Location.X;
             _txtEditPath.KeyDown += TxtEditPath_KeyDown;
             _txtEditPath.MouseDoubleClick += TxtEditPath_MouseDoubleClick;
