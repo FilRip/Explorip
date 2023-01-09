@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,24 +22,31 @@ namespace Explorip.ComposantsWinForm
         private readonly Image _pbDisable, _pbEnable, _nbDisable, _nbEnable;
         private readonly TextBox _txtEditPath;
         private readonly Stopwatch _stopWatch;
+        private readonly TableLayoutPanel _panneauNavigation;
 
         public TabPageExplorerBrowser(ShellObject repertoireDemarrage)
         {
             InitializeComponent();
+            SuspendLayout();
+            DpiChangedAfterParent += TabPageExplorerBrowser_DpiChangedAfterParent;
             BorderStyle = BorderStyle.None;
             Margin = new Padding(0);
             _splitContainer = new SplitContainer();
-            Controls.Add(_splitContainer);
+            _splitContainer.SuspendLayout();
             _splitContainer.AutoScaleMode = AutoScaleMode.Dpi;
+            _splitContainer.AutoScaleDimensions = new SizeF(96F, 96F);
             _splitContainer.Orientation = Orientation.Horizontal;
             _splitContainer.Dock = DockStyle.Fill;
-            _splitContainer.SplitterDistance = Font.Height * (DeviceDpi / 96);
+            _splitContainer.SplitterDistance = 16;
             _splitContainer.FixedPanel = FixedPanel.Panel1;
-            _splitContainer.IsSplitterFixed = true;
             _splitContainer.SplitterWidth = 1;
+            _splitContainer.IsSplitterFixed = true;
             _splitContainer.Panel1.BackColor = Color.Transparent;
             _splitContainer.Panel1.ForeColor = Color.Transparent;
+            Controls.Add(_splitContainer);
+
             _explorerBrowser = new ExplorerBrowser();
+            _explorerBrowser.SuspendLayout();
             _splitContainer.Panel2.Controls.Add(_explorerBrowser);
             _explorerBrowser.Dock = DockStyle.Fill;
             _explorerBrowser.NavigationComplete += ExplorerBrowser_NavigationComplete;
@@ -48,43 +54,54 @@ namespace Explorip.ComposantsWinForm
             _explorerBrowser.NavigationFailed += ExplorerBrowser_NavigationFailed;
             _explorerBrowser.Navigate(repertoireDemarrage);
 
-            _previousButton = new Button()
-            {
-                BackgroundImage = Properties.Resources.PreviousButton,
-                BackgroundImageLayout = ImageLayout.Stretch,
-                Location = new Point(0, 3 * (DeviceDpi / 96)),
-                Size = new Size(16 * (DeviceDpi / 96), 16 * (DeviceDpi / 96)),
-                BackColor = Color.Transparent,
-                Margin = new Padding(0),
-                Padding = new Padding(0),
-                FlatStyle = FlatStyle.Flat,
-                ForeColor = Color.Transparent,
-            };
+            _panneauNavigation = new TableLayoutPanel();
+            _panneauNavigation.SuspendLayout();
+            _panneauNavigation.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
+            _panneauNavigation.AutoSize = true;
+            _panneauNavigation.Margin = new Padding(0);
+            _panneauNavigation.Padding = new Padding(0);
+            _panneauNavigation.Dock = DockStyle.Fill;
+            _panneauNavigation.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 16));
+            _panneauNavigation.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 16));
+            _panneauNavigation.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            _panneauNavigation.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+            _splitContainer.Panel1.Controls.Add(_panneauNavigation);
+
+            _previousButton = new Button();
+            _previousButton.SuspendLayout();
+            _previousButton.BackgroundImage = Properties.Resources.PreviousButton;
+            _previousButton.BackgroundImageLayout = ImageLayout.Center;
+            _previousButton.BackColor = Color.Transparent;
+            _previousButton.Margin = new Padding(0);
+            _previousButton.Padding = new Padding(0);
+            _previousButton.FlatStyle = FlatStyle.Flat;
+            _previousButton.ForeColor = Color.Transparent;
+            _previousButton.Dock = DockStyle.Fill;
             _previousButton.FlatAppearance.BorderSize = 0;
             _previousButton.FlatAppearance.MouseDownBackColor = WindowsSettings.GetWindowsAccentColor();
             _previousButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60);
             _previousButton.Click += PreviousButton_Click;
             _previousButton.TabStop = false;
 
-            _nextButton = new Button()
-            {
-                BackgroundImage = Properties.Resources.NextButton,
-                BackgroundImageLayout = ImageLayout.Stretch,
-                Location = new Point(_previousButton.Location.X + _previousButton.Size.Width + 2 * (DeviceDpi / 96), 3 * (DeviceDpi / 96)),
-                Size = new Size(16 * (DeviceDpi / 96), 16 * (DeviceDpi / 96)),
-                BackColor = Color.Transparent,
-                Margin = new Padding(0),
-                Padding = new Padding(0),
-                FlatStyle = FlatStyle.Flat,
-                ForeColor = Color.Transparent,
-            };
+            _nextButton = new Button();
+            _nextButton.SuspendLayout();
+            _nextButton.BackgroundImage = Properties.Resources.NextButton;
+            _nextButton.BackgroundImageLayout = ImageLayout.Center;
+            _nextButton.BackColor = Color.Transparent;
+            _nextButton.Margin = new Padding(0);
+            _nextButton.Padding = new Padding(0);
+            _nextButton.FlatStyle = FlatStyle.Flat;
+            _nextButton.ForeColor = Color.Transparent;
+            _nextButton.Dock = DockStyle.Fill;
             _nextButton.FlatAppearance.BorderSize = 0;
             _nextButton.FlatAppearance.MouseDownBackColor = WindowsSettings.GetWindowsAccentColor();
             _nextButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 60, 60);
             _nextButton.Click += NextButton_Click;
             _nextButton.TabStop = false;
 
-            _splitContainer.Panel1.Controls.AddRange(new Control[] { _previousButton, _nextButton });
+            _panneauNavigation.Controls.Add(_previousButton, 0, 0);
+            _panneauNavigation.Controls.Add(_nextButton, 1, 0);
 
             _pbDisable = Properties.Resources.PreviousButton.ChangeCouleur(Color.White, Color.LightGray);
             _pbEnable = Properties.Resources.PreviousButton.ChangeCouleur(Color.White, WindowsSettings.GetWindowsAccentColor());
@@ -92,44 +109,49 @@ namespace Explorip.ComposantsWinForm
             _nbDisable = Properties.Resources.NextButton.ChangeCouleur(Color.White, Color.LightGray);
             _nbEnable = Properties.Resources.NextButton.ChangeCouleur(Color.White, WindowsSettings.GetWindowsAccentColor());
 
-            _pathLink = new LinkLabel()
-            {
-                Location = new Point(_nextButton.Location.X + _nextButton.Size.Width + 3, 0),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right,
-                LinkColor = Color.Yellow,
-                BackColor = Color.Transparent,
-                TextAlign = ContentAlignment.MiddleLeft,
-                ForeColor = Color.Yellow,
-            };
-            _pathLink.Height *= (DeviceDpi / 96);
-            _pathLink.Font = new Font(_pathLink.Font.FontFamily, _pathLink.Height / 4);
-            _pathLink.Width = _splitContainer.Panel1.Width - _pathLink.Location.X;
+            _pathLink = new LinkLabel();
+            _pathLink.SuspendLayout();
+            _pathLink.LinkColor = Color.Yellow;
+            _pathLink.BackColor = Color.Red;
+            _pathLink.TextAlign = ContentAlignment.MiddleLeft;
+            _pathLink.ForeColor = Color.Yellow;
+            _pathLink.AutoSize = true;
+            _pathLink.Dock = DockStyle.Fill;
             _pathLink.LinkClicked += PathLink_LinkClicked;
             _pathLink.Click += PathLink_Click;
-            _splitContainer.Panel1.Controls.Add(_pathLink);
+            _panneauNavigation.Controls.Add(_pathLink, 2, 0);
 
-            _txtEditPath = new TextBox()
-            {
-                Location = new Point(_nextButton.Location.X + _nextButton.Size.Width + 3, 0),
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Right,
-                ForeColor = Color.Black,
-                BackColor = Color.White,
-                Visible = false,
-                BorderStyle = BorderStyle.FixedSingle,
-            };
-            _txtEditPath.Height *= (DeviceDpi / 96);
-            _txtEditPath.Font = _pathLink.Font;
-            _txtEditPath.Width = _splitContainer.Panel1.Width - _txtEditPath.Location.X;
+            _txtEditPath = new TextBox();
+            _txtEditPath.SuspendLayout();
+            _txtEditPath.ForeColor = Color.Black;
+            _txtEditPath.BackColor = Color.White;
+            _txtEditPath.Visible = false;
+            _txtEditPath.BorderStyle = BorderStyle.FixedSingle;
+            _txtEditPath.Dock = DockStyle.Fill;
             _txtEditPath.KeyDown += TxtEditPath_KeyDown;
             _txtEditPath.MouseDoubleClick += TxtEditPath_MouseDoubleClick;
             _txtEditPath.LostFocus += TxtEditPath_LostFocus;
-            _splitContainer.Panel1.Controls.Add(_txtEditPath);
+            _panneauNavigation.Controls.Add(_txtEditPath, 2, 0);
+
+            _txtEditPath.ResumeLayout(false);
+            _pathLink.ResumeLayout(false);
+            _nextButton.ResumeLayout(false);
+            _previousButton.ResumeLayout(false);
+            _panneauNavigation.ResumeLayout(false);
+            _explorerBrowser.ResumeLayout(false);
+            _splitContainer.ResumeLayout(false);
+            ResumeLayout(false);
 
             _splitContainer.SplitterDistance = _txtEditPath.Location.Y + _txtEditPath.Size.Height + 4;
 
             _stopWatch = new Stopwatch();
 
             RefreshNavigationHistory();
+        }
+
+        private void TabPageExplorerBrowser_DpiChangedAfterParent(object sender, EventArgs e)
+        {
+            _splitContainer.SplitterDistance = (int)(25F * ((float)DeviceDpi / 96));
         }
 
         private void TxtEditPath_LostFocus(object sender, EventArgs e)

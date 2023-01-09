@@ -39,22 +39,23 @@
             this.MainSplitter.Location = new System.Drawing.Point(0, 0);
             this.MainSplitter.Margin = new System.Windows.Forms.Padding(0);
             this.MainSplitter.Name = "MainSplitter";
-            this.MainSplitter.Size = new System.Drawing.Size(2078, 938);
-            this.MainSplitter.SplitterDistance = 1040;
+            this.MainSplitter.Size = new System.Drawing.Size(933, 527);
+            this.MainSplitter.SplitterDistance = 466;
             this.MainSplitter.SplitterWidth = 8;
             this.MainSplitter.TabIndex = 0;
+            this.MainSplitter.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.MainSplitter.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             // 
             // FormExplorerBrowser
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2078, 938);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(933, 527);
             this.Controls.Add(this.MainSplitter);
-            this.Margin = new System.Windows.Forms.Padding(6);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "FormExplorerBrowser";
             this.Text = "Explorateur de fichiers";
             this.Shown += new System.EventHandler(this.FormExplorerBrowser_Shown);
-            this.DpiChanged += new System.Windows.Forms.DpiChangedEventHandler(this.FormExplorerBrowser_DpiChanged);
             this.SizeChanged += new System.EventHandler(this.FormExplorerBrowser_SizeChanged);
             this.Move += new System.EventHandler(this.FormExplorerBrowser_Move);
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitter)).EndInit();

@@ -21,7 +21,6 @@ namespace Explorip.Forms
             else if (args.Length > 1 && args[0].ToLower() == "explorer")
                 _repertoireDemarrage = args[1];
             InitializeComponent();
-            AutoScaleMode = AutoScaleMode.Dpi;
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
                 WindowsSettings.UseImmersiveDarkMode(Handle, true);
@@ -30,7 +29,6 @@ namespace Explorip.Forms
             }
             Icon = Properties.Resources.IconeExplorateur;
             MainSplitter.SplitterDistance = MainSplitter.Width / 2;
-            MainSplitter.AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         private void FormExplorerBrowser_Move(object sender, EventArgs e)
@@ -51,11 +49,6 @@ namespace Explorip.Forms
             HideEditPath();
         }
 
-        private void FormExplorerBrowser_DpiChanged(object sender, DpiChangedEventArgs e)
-        {
-            // TODO : Refresh position/size of linklabel & txteditpath of all tabs
-        }
-
         private void FormExplorerBrowser_Shown(object sender, EventArgs e)
         {
             ShellObject sfDemarrage = (ShellObject)KnownFolders.Desktop;
@@ -63,12 +56,16 @@ namespace Explorip.Forms
             {
                 sfDemarrage = ShellObject.FromParsingName(_repertoireDemarrage);
             }
+            SuspendLayout();
+            MainSplitter.SuspendLayout();
             _tabGauche = new TabExplorerBrowser(sfDemarrage, false);
             _tabDroite = new TabExplorerBrowser(sfDemarrage, true);
             MainSplitter.Panel1.Controls.Add(_tabGauche);
             MainSplitter.Panel2.Controls.Add(_tabDroite);
             _tabGauche.Dock = DockStyle.Fill;
             _tabDroite.Dock = DockStyle.Fill;
+            MainSplitter.ResumeLayout(false);
+            ResumeLayout(false);
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
                 Themes.AutoTheme.AppliqueThemeWindows(this);
         }

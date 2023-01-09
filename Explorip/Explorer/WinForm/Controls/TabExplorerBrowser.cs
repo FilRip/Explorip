@@ -28,7 +28,9 @@ namespace Explorip.ComposantsWinForm
                 _autoriseFermerDernierTab = autoriseFermerDernierTab;
                 ShowBorder = false;
                 Margin = new Padding(0);
+                SuspendLayout();
                 TabPages.Add(NouvelOnglet(repertoireDemarrage));
+                ResumeLayout(false);
                 TabClosing += TabExplorerBrowser_TabClosing;
                 MouseClick += TabExplorerBrowser_MouseClick;
                 DisplayStyleProvider.BackgroundColor = WindowsSettings.GetWindowsAccentColor();
