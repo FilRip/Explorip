@@ -29,7 +29,6 @@ namespace Explorip.ComposantsWinForm
         {
             InitializeComponent();
             SuspendLayout();
-            DpiChangedAfterParent += TabPageExplorerBrowser_DpiChangedAfterParent;
             BorderStyle = BorderStyle.None;
             Margin = new Padding(0);
             _splitContainer = new SplitContainer();
@@ -147,13 +146,6 @@ namespace Explorip.ComposantsWinForm
             _stopWatch = new Stopwatch();
 
             RefreshNavigationHistory();
-        }
-
-        private void TabPageExplorerBrowser_DpiChangedAfterParent(object sender, EventArgs e)
-        {
-            _panneauNavigation.ColumnStyles[0].Width = (DEFAULT_BUTTON_SIZE * ((float)DeviceDpi / 96));
-            _panneauNavigation.ColumnStyles[1].Width = (DEFAULT_BUTTON_SIZE * ((float)DeviceDpi / 96));
-            _splitContainer.SplitterDistance = (int)(MinSizeNavigation * ((float)DeviceDpi / 96));
         }
 
         private void TxtEditPath_LostFocus(object sender, EventArgs e)
