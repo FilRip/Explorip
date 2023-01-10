@@ -1035,6 +1035,7 @@ namespace System.Windows.Forms
             {
                 format.FormatFlags |= StringFormatFlags.DirectionRightToLeft;
             }
+            format.FormatFlags |= StringFormatFlags.NoWrap;
             return format;
         }
 
