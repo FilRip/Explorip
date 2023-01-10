@@ -294,8 +294,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// <returns>The app id or null if no app id has been defined.</returns>
         private string GetCurrentProcessAppId()
         {
-            string appId = string.Empty;
-            TaskbarNativeMethods.GetCurrentProcessExplicitAppUserModelID(out appId);
+            TaskbarNativeMethods.GetCurrentProcessExplicitAppUserModelID(out string appId);
             return appId;
         }
 

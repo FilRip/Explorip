@@ -737,7 +737,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         {
             TabbedThumbnail preview = sender as TabbedThumbnail;
 
-            TaskbarWindow taskbarWindow = null;
+            TaskbarWindow taskbarWindow;
 
             if (preview.WindowHandle == IntPtr.Zero)
             {

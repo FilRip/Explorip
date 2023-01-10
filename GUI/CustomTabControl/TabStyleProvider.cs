@@ -220,7 +220,7 @@ namespace System.Windows.Forms
 
         protected virtual Brush GetTabBackgroundBrush(int index)
         {
-            LinearGradientBrush fillBrush = null;
+            LinearGradientBrush fillBrush;
 
             //	Capture the colours dependant on selection state of the tab
             Color dark = Color.FromArgb(207, 207, 207);
