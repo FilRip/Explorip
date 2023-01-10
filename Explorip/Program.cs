@@ -40,6 +40,8 @@ namespace Explorip
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ApplicationExit += Application_ApplicationExit;
 
+            Themes.AutoTheme.InitButtons();
+
             if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") && !taskBarLaunched)
             {
                 _mutexTaskbar.Dispose();

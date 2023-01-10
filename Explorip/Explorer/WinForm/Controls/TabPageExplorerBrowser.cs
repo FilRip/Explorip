@@ -19,10 +19,11 @@ namespace Explorip.ComposantsWinForm
         private readonly Button _previousButton, _nextButton;
         private readonly SplitContainer _splitContainer;
         private readonly LinkLabel _pathLink;
-        private readonly Image _pbDisable, _pbEnable, _nbDisable, _nbEnable;
         private readonly TextBox _txtEditPath;
         private readonly Stopwatch _stopWatch;
         private readonly TableLayoutPanel _panneauNavigation;
+        private const int MinSizeNavigation = 25;
+        private const int DEFAULT_BUTTON_SIZE = 16;
 
         public TabPageExplorerBrowser(ShellObject repertoireDemarrage)
         {
@@ -37,7 +38,10 @@ namespace Explorip.ComposantsWinForm
             _splitContainer.AutoScaleDimensions = new SizeF(96F, 96F);
             _splitContainer.Orientation = Orientation.Horizontal;
             _splitContainer.Dock = DockStyle.Fill;
-            _splitContainer.SplitterDistance = 16;
+            _splitContainer.Panel1.Margin = new Padding(0);
+            _splitContainer.Panel1.Padding = new Padding(0);
+            _splitContainer.Panel1MinSize = MinSizeNavigation;
+            _splitContainer.SplitterDistance = MinSizeNavigation;
             _splitContainer.FixedPanel = FixedPanel.Panel1;
             _splitContainer.SplitterWidth = 1;
             _splitContainer.IsSplitterFixed = true;
@@ -58,16 +62,19 @@ namespace Explorip.ComposantsWinForm
             _panneauNavigation.SuspendLayout();
             _panneauNavigation.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
             _panneauNavigation.AutoSize = true;
+            _panneauNavigation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             _panneauNavigation.Margin = new Padding(0);
             _panneauNavigation.Padding = new Padding(0);
             _panneauNavigation.Dock = DockStyle.Fill;
-            _panneauNavigation.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 16));
-            _panneauNavigation.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 16));
+            _panneauNavigation.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, DEFAULT_BUTTON_SIZE));
+            _panneauNavigation.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, DEFAULT_BUTTON_SIZE));
             _panneauNavigation.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            _panneauNavigation.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            _panneauNavigation.ColumnCount = 3;
+            _panneauNavigation.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            _panneauNavigation.RowCount = 1;
 
             _splitContainer.Panel1.Controls.Add(_panneauNavigation);
-
+            
             _previousButton = new Button();
             _previousButton.SuspendLayout();
             _previousButton.BackgroundImage = Properties.Resources.PreviousButton;
@@ -103,12 +110,6 @@ namespace Explorip.ComposantsWinForm
             _panneauNavigation.Controls.Add(_previousButton, 0, 0);
             _panneauNavigation.Controls.Add(_nextButton, 1, 0);
 
-            _pbDisable = Properties.Resources.PreviousButton.ChangeCouleur(Color.White, Color.LightGray);
-            _pbEnable = Properties.Resources.PreviousButton.ChangeCouleur(Color.White, WindowsSettings.GetWindowsAccentColor());
-
-            _nbDisable = Properties.Resources.NextButton.ChangeCouleur(Color.White, Color.LightGray);
-            _nbEnable = Properties.Resources.NextButton.ChangeCouleur(Color.White, WindowsSettings.GetWindowsAccentColor());
-
             _pathLink = new LinkLabel();
             _pathLink.SuspendLayout();
             _pathLink.LinkColor = Color.Yellow;
@@ -119,6 +120,7 @@ namespace Explorip.ComposantsWinForm
             _pathLink.Dock = DockStyle.Fill;
             _pathLink.LinkClicked += PathLink_LinkClicked;
             _pathLink.Click += PathLink_Click;
+            _pathLink.UseCompatibleTextRendering = true;
             _panneauNavigation.Controls.Add(_pathLink, 2, 0);
 
             _txtEditPath = new TextBox();
@@ -142,8 +144,6 @@ namespace Explorip.ComposantsWinForm
             _splitContainer.ResumeLayout(false);
             ResumeLayout(false);
 
-            _splitContainer.SplitterDistance = _txtEditPath.Location.Y + _txtEditPath.Size.Height + 4;
-
             _stopWatch = new Stopwatch();
 
             RefreshNavigationHistory();
@@ -151,7 +151,9 @@ namespace Explorip.ComposantsWinForm
 
         private void TabPageExplorerBrowser_DpiChangedAfterParent(object sender, EventArgs e)
         {
-            _splitContainer.SplitterDistance = (int)(25F * ((float)DeviceDpi / 96));
+            _panneauNavigation.ColumnStyles[0].Width = (DEFAULT_BUTTON_SIZE * ((float)DeviceDpi / 96));
+            _panneauNavigation.ColumnStyles[1].Width = (DEFAULT_BUTTON_SIZE * ((float)DeviceDpi / 96));
+            _splitContainer.SplitterDistance = (int)(MinSizeNavigation * ((float)DeviceDpi / 96));
         }
 
         private void TxtEditPath_LostFocus(object sender, EventArgs e)
@@ -247,9 +249,9 @@ namespace Explorip.ComposantsWinForm
         private void RefreshNavigationHistory()
         {
             _previousButton.Enabled = _explorerBrowser.NavigationLog.CanNavigateBackward;
-            _previousButton.BackgroundImage = _previousButton.Enabled ? _pbEnable : _pbDisable;
+            _previousButton.BackgroundImage = _previousButton.Enabled ? Themes.AutoTheme.ButtonPreviousEnabled : Themes.AutoTheme.ButtonPreviousDisabled;
             _nextButton.Enabled = _explorerBrowser.NavigationLog.CanNavigateForward;
-            _nextButton.BackgroundImage = _nextButton.Enabled ? _nbEnable : _nbDisable;
+            _nextButton.BackgroundImage = _nextButton.Enabled ? Themes.AutoTheme.ButtonNextEnabled : Themes.AutoTheme.ButtonNextDisabled;
         }
 
         private void ExplorerBrowser_NavigationFailed(object sender, NavigationFailedEventArgs e)
@@ -263,6 +265,26 @@ namespace Explorip.ComposantsWinForm
                 _stopWatch.Restart();
         }
 
+        private void RefreshSplitLinkLabel(string newPath)
+        {
+            _pathLink.Text = newPath.Replace(@"\", @"\ ");
+            _pathLink.Links.Clear();
+            int start = 0;
+            StringBuilder partialPath = new();
+            foreach (string path in _pathLink.Text.Split(@"\ "))
+            {
+                partialPath.Append(path + @"\");
+                LinkLabel.Link lien = new()
+                {
+                    Start = start,
+                    Length = path.Length,
+                    Tag = partialPath.ToString(),
+                };
+                _pathLink.Links.Add(lien);
+                start += path.Length + 2;
+            }
+        }
+
         private void ExplorerBrowser_NavigationComplete(object sender, NavigationCompleteEventArgs e)
         {
             _stopWatch.Stop();
@@ -270,22 +292,7 @@ namespace Explorip.ComposantsWinForm
             string fullPath = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
             try
             {
-                _pathLink.Text = fullPath.Replace(@"\", @"\ ");
-                _pathLink.Links.Clear();
-                int start = 0;
-                StringBuilder partialPath = new();
-                foreach (string path in _pathLink.Text.Split(@"\ "))
-                {
-                    partialPath.Append(path + @"\");
-                    LinkLabel.Link lien = new()
-                    {
-                        Start = start,
-                        Length = path.Length,
-                        Tag = partialPath.ToString(),
-                    };
-                    _pathLink.Links.Add(lien);
-                    start += path.Length + 2;
-                }
+                RefreshSplitLinkLabel(fullPath);
             }
             catch (Exception)
             {
