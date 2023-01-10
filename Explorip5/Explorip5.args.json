@@ -1,0 +1,22 @@
+{
+  "FileVersion": 2,
+  "Id": "c5e4ed3c-20bb-4bd9-9ad4-787740d9966c",
+  "Items": [
+    {
+      "Id": "e9b75f08-9773-4a3e-9089-cbde312444c8",
+      "Command": "explorer"
+    },
+    {
+      "Id": "55e16fd5-3541-4f6f-aa1e-fb229baaf466",
+      "Command": "C:\\Code"
+    },
+    {
+      "Id": "185ed1d4-fa7c-4e13-b4c4-f83c6031793b",
+      "Command": "taskbar"
+    },
+    {
+      "Id": "3b1a0eb4-0314-4a9a-a5a9-3ca0d20d584f",
+      "Command": "taskbars"
+    }
+  ]
+}
