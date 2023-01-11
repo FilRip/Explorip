@@ -55,6 +55,7 @@ namespace Explorip.ComposantsWinForm
             _explorerBrowser.NavigationComplete += ExplorerBrowser_NavigationComplete;
             _explorerBrowser.NavigationPending += ExplorerBrowser_NavigationPending;
             _explorerBrowser.NavigationFailed += ExplorerBrowser_NavigationFailed;
+            _explorerBrowser.NavigationOptions.PaneVisibility.Commands = PaneVisibilityState.Hide;
             _explorerBrowser.Navigate(repertoireDemarrage);
 
             _panneauNavigation = new TableLayoutPanel();

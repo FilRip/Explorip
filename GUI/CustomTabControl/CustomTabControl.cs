@@ -1079,7 +1079,7 @@ namespace System.Windows.Forms
                 RectangleF tabBounds = path.GetBounds();
 
                 Size tailleTexte = TextRenderer.MeasureText(TabPages[index].Text, new Font(Font, FontStyle.Bold));
-                textRect = new Rectangle((int)tabBounds.X, (int)tabBounds.Y, Math.Max((int)tabBounds.Width, tailleTexte.Width + (int)tabBounds.X), (int)tabBounds.Height);
+                textRect = new Rectangle((int)tabBounds.X, (int)tabBounds.Y, Math.Max((int)tabBounds.Width, tailleTexte.Width + 10 + (int)tabBounds.X), (int)tabBounds.Height);
 
                 //	Make it shorter or thinner to fit the height or width because of the padding added to the tab for painting
                 switch (Alignment)

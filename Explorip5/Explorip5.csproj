@@ -7,6 +7,8 @@
     <UseWPF>true</UseWPF>
     <StartupObject>Explorip.Program</StartupObject>
     <RootNamespace>Explorip</RootNamespace>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>FilRip.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
