@@ -36,12 +36,37 @@ namespace ManagedShell.Interop
         [DllImport(User32_DllName)]
         internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
+        [DllImport(User32_DllName)]
+        internal static extern IntPtr BeginPaint(IntPtr hWnd, ref PAINTSTRUCT ps);
+
+        [DllImport(User32_DllName)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool EndPaint(IntPtr hWnd, ref PAINTSTRUCT ps);
+
+        [DllImport(User32_DllName)]
+        internal static extern int FillRect(IntPtr hDC, [In] ref Rect lprc, IntPtr hbr);
+
+        [DllImport(User32_DllName)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool GetCursorPos(ref Point lpPoint);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool PtInRect([In] ref Rect lprc, Point pt);
+
         public enum WindowZOrder
         {
             HWND_TOP = 0,
             HWND_BOTTOM = 1,
             HWND_TOPMOST = -1,
             HWND_NOTOPMOST = -2,
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NCCALCSIZE_PARAMS
+        {
+            public Rect rect0, rect1, rect2;
+            public IntPtr lppos;
         }
 
         [Flags()]

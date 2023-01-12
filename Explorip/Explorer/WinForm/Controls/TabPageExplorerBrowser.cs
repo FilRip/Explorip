@@ -56,6 +56,7 @@ namespace Explorip.ComposantsWinForm
             _explorerBrowser.NavigationComplete += ExplorerBrowser_NavigationComplete;
             _explorerBrowser.NavigationPending += ExplorerBrowser_NavigationPending;
             _explorerBrowser.NavigationFailed += ExplorerBrowser_NavigationFailed;
+            _explorerBrowser.NavigationOptions.PaneVisibility.Commands = PaneVisibilityState.Hide;
             _explorerBrowser.Navigate(repertoireDemarrage);
 
             _panneauNavigation = new TableLayoutPanel();
@@ -113,7 +114,7 @@ namespace Explorip.ComposantsWinForm
             _pathLink = new LinkLabel();
             _pathLink.SuspendLayout();
             _pathLink.LinkColor = Color.Yellow;
-            _pathLink.BackColor = Color.Red;
+            _pathLink.BackColor = Color.Transparent;
             _pathLink.TextAlign = ContentAlignment.MiddleLeft;
             _pathLink.ForeColor = Color.Yellow;
             _pathLink.AutoSize = true;

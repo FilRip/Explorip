@@ -405,6 +405,10 @@
       <Project>{2b296f74-67a8-42c7-81ee-26506611a9ff}</Project>
       <Name>CustomTabControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GUI\CustomWinForm\CustomWinForm.csproj">
+      <Project>{ba89c958-015e-49f0-bf9f-f68287f9ebb2}</Project>
+      <Name>CustomWinForm</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj">
       <Project>{faed8422-bac8-4909-a199-e16595a1f448}</Project>
       <Name>ManagedShell.AppBar</Name>

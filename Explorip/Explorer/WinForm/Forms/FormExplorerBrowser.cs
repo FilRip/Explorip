@@ -9,12 +9,12 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Forms
 {
-    public partial class FormExplorerBrowser : Form
+    public partial class FormExplorerBrowser : CustomForm
     {
         private readonly string _repertoireDemarrage;
         private TabExplorerBrowser _tabGauche, _tabDroite;
 
-        public FormExplorerBrowser(string[] args)
+        public FormExplorerBrowser(string[] args) : base()
         {
             if (args.Length > 0 && args[0].ToLower() != "explorer")
                 _repertoireDemarrage = args[0];
@@ -27,8 +27,13 @@ namespace Explorip.Forms
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
                 Themes.AutoTheme.AppliqueThemeWindows(this);
             }
+            SuspendLayout();
+            MainSplitter.SuspendLayout();
             Icon = Properties.Resources.IconeExplorateur;
             MainSplitter.SplitterDistance = MainSplitter.Width / 2;
+            MainSplitter.ResumeLayout(false);
+            RemoveNoClientArea = true;
+            ResumeLayout(false);
         }
 
         private void FormExplorerBrowser_Move(object sender, EventArgs e)

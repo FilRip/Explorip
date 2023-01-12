@@ -39,6 +39,46 @@ namespace ManagedShell.Interop
         [DllImport(DwmApi_DllName, PreserveSig = false)]
         internal static extern bool DwmIsCompositionEnabled();
 
+        [DllImport(DwmApi_DllName)]
+        internal static extern int DwmExtendFrameIntoClientArea(IntPtr hdc, ref MARGINS marInset);
+
+        [DllImport(DwmApi_DllName)]
+        internal static extern int DwmDefWindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, out IntPtr result);
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct PAINTSTRUCT
+        {
+            internal IntPtr hdc;
+            internal int fErase;
+            internal Rect rcPaint;
+            internal int fRestore;
+            internal int fIncUpdate;
+            internal int Reserved1;
+            internal int Reserved2;
+            internal int Reserved3;
+            internal int Reserved4;
+            internal int Reserved5;
+            internal int Reserved6;
+            internal int Reserved7;
+            internal int Reserved8;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MARGINS
+        {
+            public int cxLeftWidth;
+            public int cxRightWidth;
+            public int cyTopHeight;
+            public int cyBottomHeight;
+            public MARGINS(int Left, int Right, int Top, int Bottom)
+            {
+                this.cxLeftWidth = Left;
+                this.cxRightWidth = Right;
+                this.cyTopHeight = Top;
+                this.cyBottomHeight = Bottom;
+            }
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         public struct DWM_THUMBNAIL_PROPERTIES
         {
