@@ -113,7 +113,7 @@ namespace Explorip.ComposantsWinForm
             _pathLink = new LinkLabel();
             _pathLink.SuspendLayout();
             _pathLink.LinkColor = Color.Yellow;
-            _pathLink.BackColor = Color.Red;
+            _pathLink.BackColor = Color.Transparent;
             _pathLink.TextAlign = ContentAlignment.MiddleLeft;
             _pathLink.ForeColor = Color.Yellow;
             _pathLink.AutoSize = true;

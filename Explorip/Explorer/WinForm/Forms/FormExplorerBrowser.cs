@@ -9,7 +9,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Forms
 {
-    public partial class FormExplorerBrowser : CustomForm
+    public partial class FormExplorerBrowser : Form
     {
         private readonly string _repertoireDemarrage;
         private TabExplorerBrowser _tabGauche, _tabDroite;
@@ -32,7 +32,6 @@ namespace Explorip.Forms
             Icon = Properties.Resources.IconeExplorateur;
             MainSplitter.SplitterDistance = MainSplitter.Width / 2;
             MainSplitter.ResumeLayout(false);
-            RemoveNoClientArea = true;
             ResumeLayout(false);
         }
 

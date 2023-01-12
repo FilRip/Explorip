@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Explorip5": {
-      "commandName": "Project",
-      "commandLineArgs": "explorer C:\\Code"
+      "commandName": "Project"
     }
   }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.MainSplitter = new System.Windows.Forms.SplitContainer();
             ((System.ComponentModel.ISupportInitialize)(this.MainSplitter)).BeginInit();
             this.MainSplitter.SuspendLayout();

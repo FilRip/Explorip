@@ -27,8 +27,12 @@ namespace Explorip.Forms
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
                 Themes.AutoTheme.AppliqueThemeWindows(this);
             }
+            SuspendLayout();
+            MainSplitter.SuspendLayout();
             Icon = Properties.Resources.IconeExplorateur;
             MainSplitter.SplitterDistance = MainSplitter.Width / 2;
+            MainSplitter.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         private void FormExplorerBrowser_Move(object sender, EventArgs e)

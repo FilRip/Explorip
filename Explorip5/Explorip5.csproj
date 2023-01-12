@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GUI\CustomTabControl\CustomTabControl.csproj" />
+    <ProjectReference Include="..\GUI\CustomWinForm\CustomWinForm.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj" />
