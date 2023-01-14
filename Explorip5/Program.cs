@@ -22,7 +22,7 @@ namespace Explorip
         {
             ModeShell = true;
 
-            _mutexTaskbar = new Mutex(true, "ExploripTaskbar", out bool taskBarLaunched);
+            _mutexTaskbar = new Mutex(true, "ExploripTaskbar", out bool taskBarNotLaunched);
             Process[] process = Process.GetProcessesByName("explorer");
             if (process != null && process.Length > 0)
             {
@@ -43,7 +43,7 @@ namespace Explorip
 
             Themes.AutoTheme.InitButtons();
 
-            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") && !taskBarLaunched)
+            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") && taskBarNotLaunched)
             {
                 _mutexTaskbar.Dispose();
                 _WpfHost = new TaskBar.MyApp();

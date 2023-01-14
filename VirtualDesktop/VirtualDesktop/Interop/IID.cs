@@ -19,7 +19,7 @@ namespace WindowsDesktop.Interop
         // ReSharper disable once InconsistentNaming
         public static Dictionary<string, Guid> GetIIDs(string[] targets)
         {
-            var known = new Dictionary<string, Guid>();
+            Dictionary<string, Guid> known = new();
 
             foreach (SettingsProperty prop in Settings.Default.Properties.OfType<SettingsProperty>())
             {

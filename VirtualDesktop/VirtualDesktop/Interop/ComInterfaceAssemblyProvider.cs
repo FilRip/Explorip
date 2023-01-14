@@ -117,7 +117,8 @@ namespace WindowsDesktop.Interop
                 }
 
                 Stream stream = executingAssembly.GetManifestResourceStream(name);
-                if (stream == null) continue;
+                if (stream == null)
+                    continue;
 
                 using StreamReader reader = new(stream, Encoding.UTF8);
                 string sourceCode = reader.ReadToEnd().Replace(_placeholderGuid, iids[interfaceName].ToString());
