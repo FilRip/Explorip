@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Explorip.WPF.Controls
+namespace Explorip.Explorer.WPF.Controls
 {
     /// <summary>
     /// Logique d'interaction pour TabExplorerBrowser.xaml

@@ -1,4 +1,4 @@
-﻿<Application x:Class="Explorip.TaskBar.MyApp"
+﻿<Application x:Class="Explorip.TaskBar.MyDesktopApp"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              ShutdownMode="OnExplicitShutdown"

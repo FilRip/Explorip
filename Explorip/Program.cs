@@ -45,12 +45,14 @@ namespace Explorip
             if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") && taskBarNotLaunched)
             {
                 _mutexTaskbar.Dispose();
-                _WpfHost = new TaskBar.MyApp();
+                _WpfHost = new TaskBar.MyDesktopApp();
                 _WpfHost.Run();
             }
             else
             {
-                Application.Run(new FormExplorerBrowser(args));
+                //Application.Run(new FormExplorerBrowser(args));
+                _WpfHost = new Explorer.WPF.MyExplorerApp();
+                _WpfHost.Run();
             }
         }
 
@@ -63,7 +65,7 @@ namespace Explorip
         {
             if (_WpfHost != null)
             {
-                ((TaskBar.MyApp)_WpfHost).ExitGracefully();
+                ((TaskBar.MyDesktopApp)_WpfHost).ExitGracefully();
             }
         }
     }

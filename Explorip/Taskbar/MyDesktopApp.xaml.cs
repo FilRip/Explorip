@@ -17,7 +17,7 @@ namespace Explorip.TaskBar
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class MyApp : Application
+    public partial class MyDesktopApp : Application
     {
         public DictionaryManager DictionaryManager { get; }
 
@@ -26,7 +26,7 @@ namespace Explorip.TaskBar
         private readonly StartMenuMonitor _startMenuMonitor;
         public static ShellManager MonShellManager { get; private set; }
 
-        public MyApp()
+        public MyDesktopApp()
         {
             _taskbarList = new List<Taskbar>();
             MonShellManager = SetupManagedShell();

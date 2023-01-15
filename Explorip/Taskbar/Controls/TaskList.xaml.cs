@@ -63,11 +63,11 @@ namespace Explorip.TaskBar.Controls
 
         private void TaskList_OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (!isLoaded && MyApp.MonShellManager.Tasks != null)
+            if (!isLoaded && MyDesktopApp.MonShellManager.Tasks != null)
             {
-                TasksList.ItemsSource = MyApp.MonShellManager.Tasks.GroupedWindows;
-                if (MyApp.MonShellManager.Tasks.GroupedWindows != null)
-                    MyApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
+                TasksList.ItemsSource = MyDesktopApp.MonShellManager.Tasks.GroupedWindows;
+                if (MyDesktopApp.MonShellManager.Tasks.GroupedWindows != null)
+                    MyDesktopApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
 
                 Console.WriteLine("Abonnement changement VirtualDesktop");
                 VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
@@ -85,48 +85,48 @@ namespace Explorip.TaskBar.Controls
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     Console.WriteLine("Change bureau");
-                    if (MyApp.MonShellManager.TasksService.Windows != null)
+                    if (MyDesktopApp.MonShellManager.TasksService.Windows != null)
                     {
-                        MyApp.MonShellManager.TasksService.Windows.Clear();
+                        MyDesktopApp.MonShellManager.TasksService.Windows.Clear();
                     }
                     else
                     {
-                        MyApp.MonShellManager.TasksService.Windows = new ObservableCollection<ApplicationWindow>();
+                        MyDesktopApp.MonShellManager.TasksService.Windows = new ObservableCollection<ApplicationWindow>();
                     }
 
                     WinAPI.User32.EnumWindows((hwnd, lParam) =>
                     {
                         if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
                         {
-                            ApplicationWindow win = new(MyApp.MonShellManager.TasksService, hwnd);
+                            ApplicationWindow win = new(MyDesktopApp.MonShellManager.TasksService, hwnd);
 
-                            if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyApp.MonShellManager.TasksService.Windows.Contains(win))
+                            if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyDesktopApp.MonShellManager.TasksService.Windows.Contains(win))
                             {
-                                MyApp.MonShellManager.TasksService.Windows.Add(win);
-                                MyApp.MonShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
+                                MyDesktopApp.MonShellManager.TasksService.Windows.Add(win);
+                                MyDesktopApp.MonShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
                             }
                         }
                         return true;
                     }, 0);
 
                     IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
-                    if (MyApp.MonShellManager.TasksService.Windows.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
+                    if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
                     {
-                        ApplicationWindow win = MyApp.MonShellManager.TasksService.Windows.First(wnd => wnd.Handle == hWndForeground);
+                        ApplicationWindow win = MyDesktopApp.MonShellManager.TasksService.Windows.First(wnd => wnd.Handle == hWndForeground);
                         win.State = ApplicationWindow.WindowState.Active;
                         win.SetShowInTaskbar();
                     }
 
-                    System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyApp.MonShellManager.TasksService.Windows);
-                    MyApp.MonShellManager.Tasks.groupedWindows = nouvelleListeGroupedWindows;
-                    TasksList.ItemsSource = MyApp.MonShellManager.Tasks.GroupedWindows;
+                    System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyDesktopApp.MonShellManager.TasksService.Windows);
+                    MyDesktopApp.MonShellManager.Tasks.groupedWindows = nouvelleListeGroupedWindows;
+                    TasksList.ItemsSource = MyDesktopApp.MonShellManager.Tasks.GroupedWindows;
                 }));
             }
         }
 
         private void TaskList_OnUnloaded(object sender, RoutedEventArgs e)
         {
-            MyApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
+            MyDesktopApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
             Console.WriteLine("Désabonnement changement VirtualDesktop");
             VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
             isLoaded = false;

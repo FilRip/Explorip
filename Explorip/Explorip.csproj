@@ -120,6 +120,9 @@
     <Compile Include="Exceptions\ExploripException.cs" />
     <Compile Include="Exceptions\GestionEcransException.cs" />
     <Compile Include="Exceptions\GestionFenetresException.cs" />
+    <Compile Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml.cs">
+      <DependentUpon>TabItemExplorerBrowser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
     <Compile Include="FilesOperations\ContextMenuPaste.cs" />
@@ -175,8 +178,8 @@
     <Compile Include="TaskBar\Controls\TaskThumbButton.xaml.cs">
       <DependentUpon>TaskThumbButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\MyApp.xaml.cs">
-      <DependentUpon>MyApp.xaml</DependentUpon>
+    <Compile Include="TaskBar\MyDesktopApp.xaml.cs">
+      <DependentUpon>MyDesktopApp.xaml</DependentUpon>
     </Compile>
     <Compile Include="TaskBar\Controls\Clock.xaml.cs">
       <DependentUpon>Clock.xaml</DependentUpon>
@@ -264,8 +267,8 @@
     <Compile Include="Explorer\WPF\Controls\TabExplorerBrowser.xaml.cs">
       <DependentUpon>TabExplorerBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\WPF\MyApp.xaml.cs">
-      <DependentUpon>MyApp.xaml</DependentUpon>
+    <Compile Include="Explorer\WPF\MyExplorerApp.xaml.cs">
+      <DependentUpon>MyExplorerApp.xaml</DependentUpon>
     </Compile>
     <Compile Include="Explorer\WPF\Window\WpfExplorerBrowser.xaml.cs">
       <DependentUpon>WpfExplorerBrowser.xaml</DependentUpon>
@@ -315,6 +318,10 @@
     <Compile Include="Helpers\ShellContextMenu.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TaskBar\Controls\NotificationButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -335,7 +342,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TaskBar\MyApp.xaml">
+    <Page Include="TaskBar\MyDesktopApp.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -391,7 +398,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\MyApp.xaml">
+    <Page Include="Explorer\WPF\MyExplorerApp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
