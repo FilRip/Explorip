@@ -24,7 +24,7 @@ namespace WindowsDesktop.Interop
 
         void ViewVirtualDesktopChanged(IApplicationView pView);
 
-        void CurrentVirtualDesktopChanged(IVirtualDesktop pDesktopOld, IVirtualDesktop pDesktopNew);
+        void CurrentVirtualDesktopChanged(IObjectArray p0, IVirtualDesktop pDesktopOld, IVirtualDesktop pDesktopNew);
 
         void VirtualDesktopWallpaperChanged(IVirtualDesktop pDesktop, [MarshalAs(UnmanagedType.HString)] string chPath);
     }
@@ -70,7 +70,7 @@ namespace WindowsDesktop.Interop
             this.ViewVirtualDesktopChangedCore(pView);
         }
 
-        public void CurrentVirtualDesktopChanged(IVirtualDesktop pDesktopOld, IVirtualDesktop pDesktopNew)
+        public void CurrentVirtualDesktopChanged(IObjectArray p0, IVirtualDesktop pDesktopOld, IVirtualDesktop pDesktopNew)
         {
             this.CurrentVirtualDesktopChangedCore(pDesktopOld, pDesktopNew);
         }
