@@ -123,6 +123,7 @@
     <Compile Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml.cs">
       <DependentUpon>TabItemExplorerBrowser.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Explorer\WPF\ViewModels\TabItemExplorerBrowserViewModel.cs" />
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
     <Compile Include="FilesOperations\ContextMenuPaste.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Helpers\GestionFenetres.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
     <Compile Include="Helpers\DragDropHelper.cs" />
+    <Compile Include="Helpers\ViewModelBase.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
     <Compile Include="Explorer\WinForm\CS\FormFilRipExplorer.cs">

@@ -5,8 +5,12 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
          xmlns:explorer="clr-namespace:Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation;assembly=Microsoft.WindowsAPICodePack.Shell"
          xmlns:local="clr-namespace:Explorip.Explorer.WPF.Controls"
-         mc:Ignorable="d" 
-         d:DesignHeight="450" d:DesignWidth="800">
+         xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
+         mc:Ignorable="d"
+         d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
+    <TabItem.DataContext>
+        <viewmodels:TabItemExplorerBrowserViewModel/>
+    </TabItem.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
