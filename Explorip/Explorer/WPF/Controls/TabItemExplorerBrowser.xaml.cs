@@ -2,7 +2,10 @@
 
 using Microsoft.WindowsAPICodePack.Shell;
 
+using System;
+using System.Text;
 using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace Explorip.Explorer.WPF.Controls
 {
@@ -24,6 +27,27 @@ namespace Explorip.Explorer.WPF.Controls
         private void ExplorerBrowserControl_NavigationComplete(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationCompleteEventArgs e)
         {
             MyDataContext.TabTitle = e.NewLocation.Name;
+            CurrentPath.Inlines?.Clear();
+
+            string pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+            StringBuilder partialPath = new();
+            foreach (string path in pathLink.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                partialPath.Append(path + @"\");
+                Hyperlink lb = new()
+                {
+                    NavigateUri = new Uri(partialPath.ToString()),
+                };
+                lb.RequestNavigate += Lb_RequestNavigate;
+                lb.Inlines.Add(path);
+                CurrentPath.Inlines.Add(lb);
+                CurrentPath.Inlines.Add("\\");
+            }
+        }
+
+        private void Lb_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            ExplorerBrowser.ExplorerBrowserControl.Navigate(ShellObject.FromParsingName(e.Uri.ToString()));
         }
 
         public void Navigation(string repertoire)

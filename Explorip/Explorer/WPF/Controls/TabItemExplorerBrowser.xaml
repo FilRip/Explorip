@@ -6,6 +6,7 @@
          xmlns:explorer="clr-namespace:Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation;assembly=Microsoft.WindowsAPICodePack.Shell"
          xmlns:local="clr-namespace:Explorip.Explorer.WPF.Controls"
          xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
+         xmlns:converters="clr-namespace:Explorip.Explorer.WPF.Converters"
          mc:Ignorable="d"
          d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
     <TabItem.DataContext>
@@ -16,9 +17,21 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0">
-            <Hyperlink>TEST</Hyperlink>TEST2
-        </TextBlock>
-        <explorer:ExplorerBrowser Grid.Row="1" Name="ExplorerBrowser" NavigationPane="Show" CommandsPane="Hide"/>
+        
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Content="P"/>
+            <Button Grid.Column="1" Content="N"/>
+            <TextBlock Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}"/>
+            <ComboBox Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}"/>
+
+        </Grid>
+
+        <explorer:ExplorerBrowser Grid.Row="1" Name="ExplorerBrowser" NavigationPane="Show" CommandsPane="Hide" IsTabStop="False"/>
     </Grid>
 </TabItem>

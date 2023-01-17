@@ -123,6 +123,7 @@
     <Compile Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml.cs">
       <DependentUpon>TabItemExplorerBrowser.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Explorer\WPF\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Explorer\WPF\ViewModels\TabItemExplorerBrowserViewModel.cs" />
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />

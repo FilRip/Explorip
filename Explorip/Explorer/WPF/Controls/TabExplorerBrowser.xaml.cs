@@ -10,8 +10,6 @@ namespace Explorip.Explorer.WPF.Controls
         public TabExplorerBrowser()
         {
             InitializeComponent();
-            TabItem tabItem = new();
-            AddChild(tabItem);
         }
 
         public bool AutoriseFermerDernierOnglet { get; set; }
