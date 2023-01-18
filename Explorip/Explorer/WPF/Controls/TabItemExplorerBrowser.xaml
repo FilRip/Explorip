@@ -27,7 +27,7 @@
 
             <Button Grid.Column="0" Content="P"/>
             <Button Grid.Column="1" Content="N"/>
-            <TextBlock Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}"/>
+            <TextBlock Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow"/>
             <ComboBox Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}"/>
 
         </Grid>

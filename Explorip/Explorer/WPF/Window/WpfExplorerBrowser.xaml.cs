@@ -22,6 +22,8 @@ namespace Explorip.Explorer.WPF.Window
 
             Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
+            // TODO : https://stackoverflow.com/questions/59141916/how-do-i-get-a-black-title-bar-for-dark-mode-in-wpf
+            //        https://stackoverflow.com/questions/59366391/is-there-any-way-to-make-a-wpf-app-respect-the-system-choice-of-dark-light-theme
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);

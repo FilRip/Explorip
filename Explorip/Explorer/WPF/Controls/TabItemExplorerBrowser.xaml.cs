@@ -6,6 +6,7 @@ using System;
 using System.Text;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace Explorip.Explorer.WPF.Controls
 {
@@ -24,6 +25,7 @@ namespace Explorip.Explorer.WPF.Controls
         {
             get { return (TabItemExplorerBrowserViewModel)DataContext; }
         }
+
         private void ExplorerBrowserControl_NavigationComplete(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationCompleteEventArgs e)
         {
             MyDataContext.TabTitle = e.NewLocation.Name;
@@ -36,6 +38,7 @@ namespace Explorip.Explorer.WPF.Controls
                 partialPath.Append(path + @"\");
                 Hyperlink lb = new()
                 {
+                    Foreground = Brushes.Yellow,
                     NavigateUri = new Uri(partialPath.ToString()),
                 };
                 lb.RequestNavigate += Lb_RequestNavigate;
