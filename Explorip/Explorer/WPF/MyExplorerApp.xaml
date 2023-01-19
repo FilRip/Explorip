@@ -6,4 +6,11 @@
              xmlns:local="clr-namespace:Explorip.Explorer.WPF"
              StartupUri="Window/WpfExplorerBrowser.xaml"
              mc:Ignorable="d">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/StyleCommun.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
 </Application>

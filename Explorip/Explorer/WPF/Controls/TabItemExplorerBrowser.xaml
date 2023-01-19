@@ -17,7 +17,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
@@ -25,10 +25,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Content="P"/>
-            <Button Grid.Column="1" Content="N"/>
-            <TextBlock Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow"/>
-            <ComboBox Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}"/>
+            <Button Grid.Column="0" Content="P" Name="PreviousButton" Click="PreviousButton_Click" IsEnabled="{Binding AllowNavigatePrevious}"/>
+            <Button Grid.Column="1" Content="N" Name="NextButton" Click="NextButton_Click" IsEnabled="{Binding AllowNavigateNext}"/>
+            <TextBlock Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow" Background="Black"/>
+            <ComboBox Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}" Background="Transparent"/>
 
         </Grid>
 

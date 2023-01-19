@@ -25,5 +25,25 @@ namespace Explorip.Explorer.WPF.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private bool _previous, _next;
+        public bool AllowNavigatePrevious
+        {
+            get { return _previous; }
+            set
+            {
+                _previous = value;
+                OnPropertyChanged();
+            }
+        }
+        public bool AllowNavigateNext
+        {
+            get { return _next; }
+            set
+            {
+                _next = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

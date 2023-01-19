@@ -125,6 +125,7 @@
     </Compile>
     <Compile Include="Explorer\WPF\Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Explorer\WPF\ViewModels\TabItemExplorerBrowserViewModel.cs" />
+    <Compile Include="Explorer\WPF\ViewModels\WpfExplorerBrowserViewModel.cs" />
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
     <Compile Include="FilesOperations\ContextMenuPaste.cs" />
@@ -322,6 +323,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Explorer\WPF\Styles\StyleCommun.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

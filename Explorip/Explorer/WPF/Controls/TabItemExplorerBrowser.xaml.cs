@@ -57,5 +57,15 @@ namespace Explorip.Explorer.WPF.Controls
         {
             ExplorerBrowser.ExplorerBrowserControl.Navigate(ShellObject.FromParsingName(repertoire));
         }
+
+        private void NextButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(Microsoft.WindowsAPICodePack.Controls.NavigationLogDirection.Forward);
+        }
+
+        private void PreviousButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(Microsoft.WindowsAPICodePack.Controls.NavigationLogDirection.Backward);
+        }
     }
 }

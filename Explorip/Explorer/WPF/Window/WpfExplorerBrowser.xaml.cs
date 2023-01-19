@@ -6,6 +6,7 @@ using Explorip.WinAPI;
 
 using Microsoft.WindowsAPICodePack.Shell;
 using System.Windows.Media.Imaging;
+using Explorip.Explorer.WPF.ViewModels;
 
 namespace Explorip.Explorer.WPF.Window
 {
@@ -29,6 +30,33 @@ namespace Explorip.Explorer.WPF.Window
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
+        }
+
+        private WpfExplorerBrowserViewModel MyDataContext
+        {
+            get { return (WpfExplorerBrowserViewModel)DataContext; }
+        }
+
+        private void CloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
+        private void RestoreWindow_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Normal;
+            MyDataContext.WindowMaximized = false;
+        }
+
+        private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Maximized;
+            MyDataContext.WindowMaximized = true;
         }
     }
 }
