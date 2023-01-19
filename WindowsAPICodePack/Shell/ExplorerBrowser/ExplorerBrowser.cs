@@ -450,40 +450,18 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         /// <returns></returns>
         HResult IExplorerPaneVisibility.GetPaneState(ref Guid explorerPane, out ExplorerPaneState peps)
         {
-            switch (explorerPane.ToString())
+            peps = explorerPane.ToString() switch
             {
-                case ExplorerBrowserViewPanes.AdvancedQuery:
-                    peps = VisibilityToPaneState(NavigationOptions.PaneVisibility.AdvancedQuery);
-                    break;
-                case ExplorerBrowserViewPanes.Commands:
-                    peps = VisibilityToPaneState(NavigationOptions.PaneVisibility.Commands);
-                    break;
-                case ExplorerBrowserViewPanes.CommandsOrganize:
-                    peps = VisibilityToPaneState(NavigationOptions.PaneVisibility.CommandsOrganize);
-                    break;
-                case ExplorerBrowserViewPanes.CommandsView:
-                    peps = VisibilityToPaneState(NavigationOptions.PaneVisibility.CommandsView);
-                    break;
-                case ExplorerBrowserViewPanes.Details:
-                    peps = VisibilityToPaneState(NavigationOptions.PaneVisibility.Details);
-                    break;
-                case ExplorerBrowserViewPanes.Navigation:
-                    peps = VisibilityToPaneState(NavigationOptions.PaneVisibility.Navigation);
-                    break;
-                case ExplorerBrowserViewPanes.Preview:
-                    peps = VisibilityToPaneState(NavigationOptions.PaneVisibility.Preview);
-                    break;
-                case ExplorerBrowserViewPanes.Query:
-                    peps = VisibilityToPaneState(NavigationOptions.PaneVisibility.Query);
-                    break;
-                default:
-#if LOG_UNKNOWN_PANES
-                    System.Diagnostics.Debugger.Log( 4, "ExplorerBrowser", "unknown pane view state. id=" + explorerPane.ToString( ) );
-#endif
-                    peps = VisibilityToPaneState(PaneVisibilityState.Show);
-                    break;
-            }
-
+                ExplorerBrowserViewPanes.AdvancedQuery => VisibilityToPaneState(NavigationOptions.PaneVisibility.AdvancedQuery),
+                ExplorerBrowserViewPanes.Commands => VisibilityToPaneState(NavigationOptions.PaneVisibility.Commands),
+                ExplorerBrowserViewPanes.CommandsOrganize => VisibilityToPaneState(NavigationOptions.PaneVisibility.CommandsOrganize),
+                ExplorerBrowserViewPanes.CommandsView => VisibilityToPaneState(NavigationOptions.PaneVisibility.CommandsView),
+                ExplorerBrowserViewPanes.Details => VisibilityToPaneState(NavigationOptions.PaneVisibility.Details),
+                ExplorerBrowserViewPanes.Navigation => VisibilityToPaneState(NavigationOptions.PaneVisibility.Navigation),
+                ExplorerBrowserViewPanes.Preview => VisibilityToPaneState(NavigationOptions.PaneVisibility.Preview),
+                ExplorerBrowserViewPanes.Query => VisibilityToPaneState(NavigationOptions.PaneVisibility.Query),
+                _ => VisibilityToPaneState(PaneVisibilityState.Show),
+            };
             return HResult.Ok;
         }
 

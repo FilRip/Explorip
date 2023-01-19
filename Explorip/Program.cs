@@ -18,7 +18,7 @@ namespace Explorip
         /// The main entry point for the application.
         /// </summary>
         [STAThread()]
-        public static void Main(string[] args)
+        public static void Main()
         {
             ModeShell = true;
 

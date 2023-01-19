@@ -10,41 +10,36 @@
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
         Title="Explorateur de fichiers" Background="{x:Null}">
+    
     <Window.DataContext>
         <viewmodels:WpfExplorerBrowserViewModel/>
     </Window.DataContext>
+    
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="0"/>
+        <WindowChrome GlassFrameThickness="0" CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
+    
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
+
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
-        <controls:TabExplorerBrowser Grid.Column="0" Grid.Row="1" AutoriseFermerDernierOnglet="False" x:Name="LeftTab"/>
+        <controls:TabExplorerBrowser Grid.Column="0" AutoriseFermerDernierOnglet="False" x:Name="LeftTab"/>
 
-        <GridSplitter Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Black" Width="5"/>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Black" Width="5"/>
 
-        <controls:TabExplorerBrowser Grid.Column="2" Grid.Row="1" AutoriseFermerDernierOnglet="True" x:Name="RightTab"/>
+        <controls:TabExplorerBrowser Grid.Column="2" Grid.ColumnSpan="4" AutoriseFermerDernierOnglet="True" x:Name="RightTab"/>
 
-        <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" Click="MinimizeWindow_Click"/>
-            <Button Grid.Column="2" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Click="MaximizeWindow_Click" Visibility="{Binding WindowMaximized, Converter={converters:InverseBoolToVisibilityConverter}}"/>
-            <Button Grid.Column="2" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Click="RestoreWindow_Click" Visibility="{Binding WindowMaximized, Converter={converters:BoolToVisibilityConverter}}"/>
-            <Button Grid.Column="3" Style="{DynamicResource CloseButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="CloseWindow" Click="CloseWindow_Click"/>
-        </Grid>
+        <Button Grid.Column="3" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" Click="MinimizeWindow_Click"/>
+        <Button Grid.Column="4" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Click="MaximizeWindow_Click" Visibility="{Binding WindowMaximized, Converter={converters:InverseBoolToVisibilityConverter}}"/>
+        <Button Grid.Column="4" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Click="RestoreWindow_Click" Visibility="{Binding WindowMaximized, Converter={converters:BoolToVisibilityConverter}}"/>
+        <Button Grid.Column="5" Style="{DynamicResource CloseButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="CloseWindow" Click="CloseWindow_Click"/>
 
     </Grid>
 </Window>

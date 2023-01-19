@@ -44,8 +44,11 @@ namespace Explorip.Explorer.WPF.Controls
                 lb.RequestNavigate += Lb_RequestNavigate;
                 lb.Inlines.Add(path);
                 CurrentPath.Inlines.Add(lb);
-                CurrentPath.Inlines.Add("\\");
+                CurrentPath.Inlines.Add(" \\ ");
             }
+
+            MyDataContext.AllowNavigatePrevious = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CanNavigateBackward;
+            MyDataContext.AllowNavigateNext = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CanNavigateForward;
         }
 
         private void Lb_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
