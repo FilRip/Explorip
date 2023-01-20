@@ -7,6 +7,7 @@ using Explorip.WinAPI;
 using Microsoft.WindowsAPICodePack.Shell;
 using System.Windows.Media.Imaging;
 using Explorip.Explorer.WPF.ViewModels;
+using System;
 
 namespace Explorip.Explorer.WPF.Window
 {
@@ -48,14 +49,40 @@ namespace Explorip.Explorer.WPF.Window
 
         private void RestoreWindow_Click(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState.Normal;
-            MyDataContext.WindowMaximized = false;
+            SetWindowNormal();
         }
 
         private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Maximized;
             MyDataContext.WindowMaximized = true;
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            SetWindowNormal();
+        }
+
+        private void SetWindowNormal()
+        {
+            if (WindowState == WindowState.Maximized)
+            {
+                WindowState = WindowState.Normal;
+                MyDataContext.WindowMaximized = false;
+            }
+        }
+
+        private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            try
+            {
+                if (e.ChangedButton == System.Windows.Input.MouseButton.Left && e.GetPosition(this).Y <= 16)
+                {
+                    SetWindowNormal();
+                    DragMove();
+                }
+            }
+            catch (Exception) { /* No need to catch error */ }
         }
     }
 }

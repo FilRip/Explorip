@@ -9,14 +9,19 @@
         xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
-        Title="Explorateur de fichiers" Background="{x:Null}">
+        Title="Explorateur de fichiers" Background="Transparent"
+        LocationChanged="Window_LocationChanged" MouseDown="Window_MouseDown">
     
     <Window.DataContext>
         <viewmodels:WpfExplorerBrowserViewModel/>
     </Window.DataContext>
     
     <WindowChrome.WindowChrome>
-        <WindowChrome GlassFrameThickness="0" CaptionHeight="0"/>
+        <WindowChrome
+            GlassFrameThickness="0"
+            CaptionHeight="0"
+            NonClientFrameEdges="Bottom"
+        />
     </WindowChrome.WindowChrome>
     
     <Grid>
