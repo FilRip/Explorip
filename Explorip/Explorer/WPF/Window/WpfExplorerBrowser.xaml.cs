@@ -56,6 +56,7 @@ namespace Explorip.Explorer.WPF.Window
         {
             WindowState = WindowState.Maximized;
             MyDataContext.WindowMaximized = true;
+            BorderThickness = new Thickness(6);
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -69,6 +70,7 @@ namespace Explorip.Explorer.WPF.Window
             {
                 WindowState = WindowState.Normal;
                 MyDataContext.WindowMaximized = false;
+                BorderThickness = new Thickness(0);
             }
         }
 
