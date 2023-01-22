@@ -42,8 +42,7 @@ namespace Explorip.Explorer.WPF.Controls
             if (MyTabControl.Items.Count == 1 && !AutoriseFermerDernierOnglet)
                 return;
             MyTabControl.Items.Remove(MyTabControl.SelectedItem);
-            if (MyTabControl.Items.Count == 0)
-                MyTabControl.Visibility = Visibility.Collapsed;
+            HideTab();
         }
 
         private void CloseAllTab_Click(object sender, RoutedEventArgs e)
@@ -51,6 +50,17 @@ namespace Explorip.Explorer.WPF.Controls
             for (int i = MyTabControl.Items.Count - 1; i >= 0; i--)
                 if (MyTabControl.SelectedItem != MyTabControl.Items[i] || AutoriseFermerDernierOnglet)
                     MyTabControl.Items.Remove(MyTabControl.Items[i]);
+            HideTab();
+        }
+
+        private void HideTab()
+        {
+            if (MyTabControl.Items.Count == 0)
+            {
+                MyTabControl.Visibility = Visibility.Collapsed;
+                WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
+                fenetre.HideRightTab();
+            }
         }
 
         private void NewTabOther_Click(object sender, RoutedEventArgs e)
@@ -68,6 +78,9 @@ namespace Explorip.Explorer.WPF.Controls
             item.Navigation(location);
             MyTabControl.Items.Add(item);
             MyTabControl.SelectedItem = item;
+            WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
+            if (fenetre.RightTab == MyTabControl && MyTabControl.Items.Count == 1)
+                fenetre.ShowRightTab();
         }
     }
 }

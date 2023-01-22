@@ -23,11 +23,11 @@
             NonClientFrameEdges="Left, Bottom, Right"/>
     </WindowChrome.WindowChrome>
 
-    <Grid>
+    <Grid Name="MainGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.5*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*" x:Name="LeftGrid"/>
+            <ColumnDefinition Width="Auto" x:Name="SeparatorGrid"/>
+            <ColumnDefinition Width="*" x:Name="RightGrid"/>
 
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>

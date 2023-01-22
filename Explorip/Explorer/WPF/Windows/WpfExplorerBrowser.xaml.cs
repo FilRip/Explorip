@@ -8,6 +8,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 using System.Windows.Media.Imaging;
 using Explorip.Explorer.WPF.ViewModels;
 using System;
+using System.Windows.Controls;
 
 namespace Explorip.Explorer.WPF.Windows
 {
@@ -85,6 +86,19 @@ namespace Explorip.Explorer.WPF.Windows
                 }
             }
             catch (Exception) { /* No need to catch error */ }
+        }
+
+        public void HideRightTab()
+        {
+            RightGrid.Width = new GridLength(0);
+            LeftTab.SetValue(Grid.ColumnSpanProperty, 6);
+        }
+
+        public void ShowRightTab()
+        {
+            RightGrid.Width = new GridLength(1, GridUnitType.Star);
+            RightTab.Visibility = Visibility.Visible;
+            LeftTab.SetValue(Grid.ColumnSpanProperty, 1);
         }
     }
 }
