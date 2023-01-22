@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using Explorip.Explorer.WPF.ViewModels;
 using System;
 using System.Windows.Controls;
+using ManagedShell.Common.Helpers;
 
 namespace Explorip.Explorer.WPF.Windows
 {
@@ -28,7 +29,7 @@ namespace Explorip.Explorer.WPF.Windows
             // TODO : https://stackoverflow.com/questions/59366391/is-there-any-way-to-make-a-wpf-app-respect-the-system-choice-of-dark-light-theme
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
-                //WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);
+                WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
         }
@@ -57,7 +58,6 @@ namespace Explorip.Explorer.WPF.Windows
         {
             WindowState = WindowState.Maximized;
             MyDataContext.WindowMaximized = true;
-            BorderThickness = new Thickness(6);
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
@@ -71,7 +71,6 @@ namespace Explorip.Explorer.WPF.Windows
             {
                 WindowState = WindowState.Normal;
                 MyDataContext.WindowMaximized = false;
-                BorderThickness = new Thickness(0);
             }
         }
 
@@ -79,7 +78,7 @@ namespace Explorip.Explorer.WPF.Windows
         {
             try
             {
-                if (e.ChangedButton == System.Windows.Input.MouseButton.Left && e.GetPosition(this).Y <= 16)
+                if (e.ChangedButton == System.Windows.Input.MouseButton.Left && e.GetPosition(this).Y <= 16.0D * DpiHelper.DpiScale)
                 {
                     SetWindowNormal();
                     DragMove();
