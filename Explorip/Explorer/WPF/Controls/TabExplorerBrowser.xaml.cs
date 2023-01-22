@@ -1,7 +1,9 @@
 ﻿using Explorip.Explorer.WPF.Windows;
+using Explorip.Helpers;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
+using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,6 +16,7 @@ namespace Explorip.Explorer.WPF.Controls
     {
         public TabExplorerBrowser()
         {
+            DataContext = this;
             InitializeComponent();
         }
 
@@ -53,7 +56,7 @@ namespace Explorip.Explorer.WPF.Controls
             HideTab();
         }
 
-        private void HideTab()
+        public void HideTab()
         {
             if (MyTabControl.Items.Count == 0)
             {
@@ -81,6 +84,11 @@ namespace Explorip.Explorer.WPF.Controls
             WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
             if (fenetre.RightTab == MyTabControl && MyTabControl.Items.Count == 1)
                 fenetre.ShowRightTab();
+        }
+
+        public Color AccentColor
+        {
+            get { return WindowsSettings.GetWindowsAccentColor(); }
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Explorip.Helpers;
 
+using System.Windows.Media;
+
 namespace Explorip.Explorer.WPF.ViewModels
 {
     public class TabItemExplorerBrowserViewModel : ViewModelBase
@@ -43,6 +45,16 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _next = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public Brush AccentColor
+        {
+            get
+            {
+                System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
+                Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
+                return new SolidColorBrush(mColor);
             }
         }
     }
