@@ -154,7 +154,7 @@ namespace Explorip.Explorer.WPF.Controls
             if (MyTabControl.Items.Count == 1 && !MyTabControl.AutoriseFermerDernierOnglet)
                 return;
             TabExplorerBrowser previousTabControl = MyTabControl;
-            MyTabControl.Items.Remove(MyTabControl.SelectedItem);
+            MyTabControl.Items.Remove(this);
             previousTabControl.HideTab();
         }
 
