@@ -274,7 +274,7 @@
     <Compile Include="Explorer\WPF\MyExplorerApp.xaml.cs">
       <DependentUpon>MyExplorerApp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\WPF\Window\WpfExplorerBrowser.xaml.cs">
+    <Compile Include="Explorer\WPF\Windows\WpfExplorerBrowser.xaml.cs">
       <DependentUpon>WpfExplorerBrowser.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Explorer\WinForm\CS\DirectoryTreeView.resx">
@@ -410,7 +410,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Window\WpfExplorerBrowser.xaml">
+    <Page Include="Explorer\WPF\Windows\WpfExplorerBrowser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

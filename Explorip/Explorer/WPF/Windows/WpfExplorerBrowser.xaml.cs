@@ -9,12 +9,12 @@ using System.Windows.Media.Imaging;
 using Explorip.Explorer.WPF.ViewModels;
 using System;
 
-namespace Explorip.Explorer.WPF.Window
+namespace Explorip.Explorer.WPF.Windows
 {
     /// <summary>
     /// Logique d'interaction pour WpfExplorerBrowser.xaml
     /// </summary>
-    public partial class WpfExplorerBrowser : System.Windows.Window
+    public partial class WpfExplorerBrowser : Window
     {
         public WpfExplorerBrowser()
         {
