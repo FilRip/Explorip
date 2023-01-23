@@ -22,11 +22,9 @@ namespace Explorip.Explorer.WPF.Controls
             InitializeComponent();
             ExplorerBrowser.ExplorerBrowserControl.NavigationComplete += ExplorerBrowserControl_NavigationComplete;
 
-            // Create an instance of the usercontrol
+            // Support close button in header
             HeaderWithCloseButton closableTabHeader = new();
-            // Assign the usercontrol to the tab header
             Header = closableTabHeader;
-            // Attach to the CloseableHeader events (Mouse Enter/Leave, Button Click, and Label resize)
             closableTabHeader.ButtonClose.MouseEnter += ButtonClose_MouseEnter;
             closableTabHeader.ButtonClose.MouseLeave += ButtonClose_MouseLeave;
             closableTabHeader.ButtonClose.Click += ButtonClose_Click;

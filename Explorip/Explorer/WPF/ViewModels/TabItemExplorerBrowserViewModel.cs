@@ -1,6 +1,7 @@
 ﻿using Explorip.Helpers;
 
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Explorip.Explorer.WPF.ViewModels
 {
@@ -36,6 +37,7 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _previous = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ButtonPreviousImage));
             }
         }
         public bool AllowNavigateNext
@@ -45,6 +47,29 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _next = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ButtonNextImage));
+            }
+        }
+
+        public ImageSource ButtonPreviousImage
+        {
+            get
+            {
+                if (AllowNavigatePrevious)
+                    return Themes.AutoTheme.PreviousButtonEnabled;
+                else
+                    return Themes.AutoTheme.PreviousButtonDisabled;
+            }
+        }
+
+        public ImageSource ButtonNextImage
+        {
+            get
+            {
+                if (AllowNavigateNext)
+                    return Themes.AutoTheme.NextButtonEnabled;
+                else
+                    return Themes.AutoTheme.NextButtonDisabled;
             }
         }
 
