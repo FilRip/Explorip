@@ -1,5 +1,6 @@
 ﻿using Explorip.Helpers;
 
+using System.Collections.Generic;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -80,6 +81,28 @@ namespace Explorip.Explorer.WPF.ViewModels
                 System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
                 Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
                 return new SolidColorBrush(mColor);
+            }
+        }
+
+        private string _editPath;
+        public string EditPath
+        {
+            get { return _editPath; }
+            set
+            {
+                _editPath = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private List<string> _listEditPath;
+        public List<string> ComboBoxEditPath
+        {
+            get { return _listEditPath; }
+            set
+            {
+                _listEditPath = value;
+                OnPropertyChanged();
             }
         }
     }

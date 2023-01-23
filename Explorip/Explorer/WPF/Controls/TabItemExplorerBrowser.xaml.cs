@@ -29,6 +29,17 @@ namespace Explorip.Explorer.WPF.Controls
             closableTabHeader.ButtonClose.MouseLeave += ButtonClose_MouseLeave;
             closableTabHeader.ButtonClose.Click += ButtonClose_Click;
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
+
+            CurrentPath.MouseDown += CurrentPath_MouseDown;
+        }
+
+        private void CurrentPath_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MyDataContext.ModeEdit = true;
+            EditPath.ApplyTemplate();
+            TextBox comboTextBoxChild = EditPath.Template.FindName("PART_EditableTextBox", EditPath) as TextBox;
+            comboTextBoxChild.Focus();
+            comboTextBoxChild.SelectAll();
         }
 
         public HeaderWithCloseButton MyHeader
@@ -62,6 +73,7 @@ namespace Explorip.Explorer.WPF.Controls
             CurrentPath.Inlines?.Clear();
 
             string pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+            MyDataContext.EditPath = pathLink;
             StringBuilder partialPath = new();
             foreach (string path in pathLink.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries))
             {

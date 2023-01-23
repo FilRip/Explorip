@@ -32,8 +32,8 @@
                 <Image Source="{Binding ButtonNextImage}"/>
             </Button>
 
-            <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent"/>
+            <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+            <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True"/>
 
         </Grid>
 

@@ -10,6 +10,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/StyleCommun.xaml"/>
+                <ResourceDictionary Source="Styles/StyleBrush.xaml"/>
+                <ResourceDictionary Source="Styles/StyleComboBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

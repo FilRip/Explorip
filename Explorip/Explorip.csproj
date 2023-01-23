@@ -333,6 +333,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Explorer\WPF\Styles\StyleBrush.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Explorer\WPF\Styles\StyleComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Explorer\WPF\Styles\StyleCommun.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
