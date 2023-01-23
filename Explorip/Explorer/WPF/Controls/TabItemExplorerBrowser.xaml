@@ -25,14 +25,14 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Name="PreviousButton" Click="PreviousButton_Click" BorderThickness="0" Background="Transparent">
+            <Button Grid.Column="0" Name="PreviousButton" Click="PreviousButton_Click" BorderThickness="0" Background="Transparent" Margin="0 5 5 5">
                 <Image Source="{Binding ButtonPreviousImage}"/>
             </Button>
-            <Button Grid.Column="1" Name="NextButton" Click="NextButton_Click" BorderThickness="0" Background="Transparent">
+            <Button Grid.Column="1" Name="NextButton" Click="NextButton_Click" BorderThickness="0" Background="Transparent" Margin="0 5 5 5">
                 <Image Source="{Binding ButtonNextImage}"/>
             </Button>
 
-            <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent"/>
+            <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent"/>
 
         </Grid>

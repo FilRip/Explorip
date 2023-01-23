@@ -78,7 +78,7 @@ namespace Explorip.Explorer.WPF.Windows
         {
             try
             {
-                if (e.ChangedButton == System.Windows.Input.MouseButton.Left && e.GetPosition(this).Y <= 16.0D * DpiHelper.DpiScale)
+                if (e.ChangedButton == System.Windows.Input.MouseButton.Left && e.GetPosition(this).Y <= 32)
                 {
                     SetWindowNormal();
                     DragMove();

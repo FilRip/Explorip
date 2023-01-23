@@ -9,16 +9,11 @@ namespace Explorip.Helpers
         public static Bitmap ChangeCouleur(this Bitmap image, Color ancienneCouleur, Color nouvelleColeur)
         {
             Bitmap retour = new(image.Width, image.Height);
-            ColorMap[] colorMap = new ColorMap[2];
+            ColorMap[] colorMap = new ColorMap[1];
             colorMap[0] = new ColorMap()
             {
                 OldColor = ancienneCouleur,
                 NewColor = nouvelleColeur,
-            };
-            colorMap[1] = new ColorMap()
-            {
-                OldColor = Color.Transparent,
-                NewColor = WindowsSettings.IsWindowsApplicationInDarkMode() ? Color.Black : Color.White,
             };
             ImageAttributes attr = new();
             attr.SetRemapTable(colorMap);
