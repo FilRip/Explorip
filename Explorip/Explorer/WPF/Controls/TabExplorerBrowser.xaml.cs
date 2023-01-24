@@ -94,7 +94,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (!(e.Source is TabItem tabItem))
+            if (e.Source is not TabItem tabItem)
             {
                 return;
             }

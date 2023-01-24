@@ -4,6 +4,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -33,15 +34,6 @@ namespace Explorip.Explorer.WPF.Controls
             CurrentPath.MouseDown += CurrentPath_MouseDown;
         }
 
-        private void CurrentPath_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            MyDataContext.ModeEdit = true;
-            EditPath.ApplyTemplate();
-            TextBox comboTextBoxChild = EditPath.Template.FindName("PART_EditableTextBox", EditPath) as TextBox;
-            comboTextBoxChild.Focus();
-            comboTextBoxChild.SelectAll();
-        }
-
         public HeaderWithCloseButton MyHeader
         {
             get { return (HeaderWithCloseButton)Header; }
@@ -69,6 +61,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void ExplorerBrowserControl_NavigationComplete(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationCompleteEventArgs e)
         {
+            MyDataContext.ModeEdit = false;
             SetTitle(e.NewLocation.Name);
             CurrentPath.Inlines?.Clear();
 
@@ -171,6 +164,53 @@ namespace Explorip.Explorer.WPF.Controls
         private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             MyHeader.ButtonClose.Margin = new Thickness(MyHeader.Label_TabTitle.ActualWidth + 5, 3, 4, 0);
+        }
+
+        #endregion
+
+        #region Edit path manually
+
+        private void EditPath_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                MyDataContext.ModeEdit = false;
+                MyDataContext.EditPath = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                ExplorerBrowser.ExplorerBrowserControl.Focus();
+            }
+            else if (e.Key is Key.Enter or Key.Return)
+            {
+                ShellObject previousLocation = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation;
+                string nouvelEmplacement = EditPath.Text;
+                MyDataContext.ModeEdit = false;
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        ExplorerBrowser.ExplorerBrowserControl.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Chemin non trouvé");
+                        ExplorerBrowser.ExplorerBrowserControl.Navigate(previousLocation);
+                    }
+                });
+                ExplorerBrowser.ExplorerBrowserControl.Focus();
+            }
+        }
+
+        private void CurrentPath_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MyDataContext.ModeEdit = true;
+            EditPath.ApplyTemplate();
+            TextBox comboTextBoxChild = EditPath.Template.FindName("PART_EditableTextBox", EditPath) as TextBox;
+            comboTextBoxChild.SelectAll();
+            comboTextBoxChild.Focus();
+        }
+
+        private void EditPath_LostFocus(object sender, RoutedEventArgs e)
+        {
+            MyDataContext.ModeEdit = false;
         }
 
         #endregion
