@@ -80,8 +80,15 @@ namespace Explorip.Explorer.WPF.Windows
             {
                 if (e.ChangedButton == System.Windows.Input.MouseButton.Left && e.GetPosition(this).Y <= 32)
                 {
-                    SetWindowNormal();
-                    DragMove();
+                    if (e.ClickCount == 2 && WindowState == WindowState.Normal)
+                    {
+                        MaximizeWindow_Click(this, new RoutedEventArgs());
+                    }
+                    else
+                    {
+                        SetWindowNormal();
+                        DragMove();
+                    }
                 }
             }
             catch (Exception) { /* No need to catch error */ }

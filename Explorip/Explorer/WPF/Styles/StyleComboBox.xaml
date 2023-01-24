@@ -78,7 +78,7 @@
                 CornerRadius="2,0,0,2"
                 Margin="1" >
                 <Border.Background>
-                    <SolidColorBrush Color="{DynamicResource ControlLightColor}"/>
+                    <SolidColorBrush Color="#FF303030"/>
                 </Border.Background>
             </Border>
             <Path x:Name="Arrow"
@@ -169,8 +169,10 @@
                             VerticalAlignment="Bottom"
                             Margin="3,3,23,3"
                             Focusable="True"
+                            Foreground="Yellow"
                             Background="Transparent"
                             Visibility="Hidden"
+                            CaretBrush="White"
                             IsReadOnly="{TemplateBinding IsReadOnly}" />
                         <Popup x:Name="Popup"
                             Placement="Bottom"
