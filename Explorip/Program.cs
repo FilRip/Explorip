@@ -40,8 +40,6 @@ namespace Explorip
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ApplicationExit += Application_ApplicationExit;
 
-            Themes.AutoTheme.InitButtons();
-
             if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") && taskBarNotLaunched)
             {
                 _mutexTaskbar.Dispose();
@@ -50,7 +48,11 @@ namespace Explorip
             }
             else
             {
+                // WinForm
+                //Themes.AutoTheme.InitButtons();
                 //Application.Run(new FormExplorerBrowser(args));
+
+                // WPF
                 _WpfHost = new Explorer.WPF.MyExplorerApp();
                 _WpfHost.Run();
             }

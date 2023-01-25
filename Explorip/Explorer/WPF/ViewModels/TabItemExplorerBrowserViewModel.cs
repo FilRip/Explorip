@@ -7,13 +7,14 @@ namespace Explorip.Explorer.WPF.ViewModels
 {
     public class TabItemExplorerBrowserViewModel : ViewModelBase
     {
-        private readonly Brush _accentColor;
+        private readonly SolidColorBrush _accentColor, _disabledColor;
 
         public TabItemExplorerBrowserViewModel()
         {
             System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
             Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
             _accentColor = new SolidColorBrush(mColor);
+            _disabledColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
         }
 
         private string _path;
@@ -46,6 +47,8 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _previous = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ForegroundPrevious));
+                OnPropertyChanged(nameof(ForegroundNext));
             }
         }
         public bool AllowNavigateNext
@@ -55,6 +58,8 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _next = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ForegroundNext));
+                OnPropertyChanged(nameof(ForegroundPrevious));
             }
         }
 
@@ -70,7 +75,7 @@ namespace Explorip.Explorer.WPF.ViewModels
         {
             get
             {
-                return new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
+                return _disabledColor;
             }
         }
 
@@ -93,6 +98,28 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _listEditPath = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public Brush ForegroundPrevious
+        {
+            get
+            {
+                if (AllowNavigatePrevious)
+                    return _accentColor;
+                else
+                    return _disabledColor;
+            }
+        }
+
+        public Brush ForegroundNext
+        {
+            get
+            {
+                if (AllowNavigateNext)
+                    return _accentColor;
+                else
+                    return _disabledColor;
             }
         }
     }
