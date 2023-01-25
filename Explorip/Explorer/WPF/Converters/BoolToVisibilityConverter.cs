@@ -10,7 +10,6 @@ namespace Explorip.Explorer.WPF.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             Visibility enumVisibility = Visibility.Collapsed;
 
             if (value is bool booleen && booleen)
@@ -35,7 +34,6 @@ namespace Explorip.Explorer.WPF.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             Visibility enumVisibility = Visibility.Collapsed;
 
             if (value is bool booleen && !booleen)

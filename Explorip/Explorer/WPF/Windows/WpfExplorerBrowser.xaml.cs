@@ -9,7 +9,6 @@ using System.Windows.Media.Imaging;
 using Explorip.Explorer.WPF.ViewModels;
 using System;
 using System.Windows.Controls;
-using ManagedShell.Common.Helpers;
 
 namespace Explorip.Explorer.WPF.Windows
 {

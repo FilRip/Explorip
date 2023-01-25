@@ -10,7 +10,7 @@ namespace Explorip.Themes
     public static class AutoTheme
     {
         private static Image _pbDisable, _pbEnable, _nbDisable, _nbEnable;
-        private static System.Windows.Media.Imaging.BitmapSource _pbWpfDisable, _pbWpfEnable, _nbWpfDisable, _nbWpfEnable;
+        //private static System.Windows.Media.Imaging.BitmapSource _pbWpfDisable, _pbWpfEnable, _nbWpfDisable, _nbWpfEnable;
 
         public static void InitButtons()
         {
@@ -20,11 +20,11 @@ namespace Explorip.Themes
             _nbDisable = Properties.Resources.NextButton.ChangeCouleur(Color.White, Color.LightGray);
             _nbEnable = Properties.Resources.NextButton.ChangeCouleur(Color.White, WindowsSettings.GetWindowsAccentColor());
 
-            _pbWpfDisable = new Bitmap(_pbDisable).ToBitmapSource();
+            /*_pbWpfDisable = new Bitmap(_pbDisable).ToBitmapSource();
             _pbWpfEnable = new Bitmap(_pbEnable).ToBitmapSource();
 
             _nbWpfDisable = new Bitmap(_nbDisable).ToBitmapSource();
-            _nbWpfEnable = new Bitmap(_nbEnable).ToBitmapSource();
+            _nbWpfEnable = new Bitmap(_nbEnable).ToBitmapSource();*/
         }
 
         #region WinForm
@@ -197,7 +197,7 @@ namespace Explorip.Themes
         #endregion
 
         #region WPF
-
+        /*
         public static System.Windows.Media.ImageSource PreviousButtonDisabled
         {
             get { return _pbWpfDisable; }
@@ -217,7 +217,7 @@ namespace Explorip.Themes
         {
             get { return _nbWpfEnable; }
         }
-
+        */
         #endregion
     }
 }

@@ -10,8 +10,11 @@ namespace Explorip.Explorer.WPF.ViewModels
             get { return _isMaximized; }
             set
             {
-                _isMaximized = value;
-                OnPropertyChanged();
+                if (value != _isMaximized)
+                {
+                    _isMaximized = value;
+                    OnPropertyChanged();
+                }
             }
         }
     }

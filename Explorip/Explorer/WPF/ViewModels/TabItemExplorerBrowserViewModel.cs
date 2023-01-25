@@ -2,12 +2,20 @@
 
 using System.Collections.Generic;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace Explorip.Explorer.WPF.ViewModels
 {
     public class TabItemExplorerBrowserViewModel : ViewModelBase
     {
+        private readonly Brush _accentColor;
+
+        public TabItemExplorerBrowserViewModel()
+        {
+            System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
+            Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
+            _accentColor = new SolidColorBrush(mColor);
+        }
+
         private string _path;
         public string TabTitle
         {
@@ -38,7 +46,6 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _previous = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(ButtonPreviousImage));
             }
         }
         public bool AllowNavigateNext
@@ -48,29 +55,6 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _next = value;
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(ButtonNextImage));
-            }
-        }
-
-        public ImageSource ButtonPreviousImage
-        {
-            get
-            {
-                if (AllowNavigatePrevious)
-                    return Themes.AutoTheme.PreviousButtonEnabled;
-                else
-                    return Themes.AutoTheme.PreviousButtonDisabled;
-            }
-        }
-
-        public ImageSource ButtonNextImage
-        {
-            get
-            {
-                if (AllowNavigateNext)
-                    return Themes.AutoTheme.NextButtonEnabled;
-                else
-                    return Themes.AutoTheme.NextButtonDisabled;
             }
         }
 
@@ -78,9 +62,15 @@ namespace Explorip.Explorer.WPF.ViewModels
         {
             get
             {
-                System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
-                Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
-                return new SolidColorBrush(mColor);
+                return _accentColor;
+            }
+        }
+
+        public Brush DisabledButtonColor
+        {
+            get
+            {
+                return new SolidColorBrush(Color.FromArgb(255, 60, 60, 60));
             }
         }
 

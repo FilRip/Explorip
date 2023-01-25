@@ -22,6 +22,7 @@ namespace Explorip.Explorer.WPF.Controls
         {
             InitializeComponent();
             ExplorerBrowser.ExplorerBrowserControl.NavigationComplete += ExplorerBrowserControl_NavigationComplete;
+            ExplorerBrowser.ExplorerBrowserControl.NavigationFailed += ExplorerBrowserControl_NavigationFailed;
 
             // Support close button in header
             HeaderWithCloseButton closableTabHeader = new();
@@ -32,6 +33,11 @@ namespace Explorip.Explorer.WPF.Controls
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
 
             CurrentPath.MouseDown += CurrentPath_MouseDown;
+        }
+
+        private void ExplorerBrowserControl_NavigationFailed(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationFailedEventArgs e)
+        {
+            ExplorerBrowser.ExplorerBrowserControl.Focus();
         }
 
         public HeaderWithCloseButton MyHeader
@@ -104,11 +110,13 @@ namespace Explorip.Explorer.WPF.Controls
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(Microsoft.WindowsAPICodePack.Controls.NavigationLogDirection.Forward);
+            ExplorerBrowser.ExplorerBrowserControl.Focus();
         }
 
         private void PreviousButton_Click(object sender, RoutedEventArgs e)
         {
             ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(Microsoft.WindowsAPICodePack.Controls.NavigationLogDirection.Backward);
+            ExplorerBrowser.ExplorerBrowserControl.Focus();
         }
 
         #endregion

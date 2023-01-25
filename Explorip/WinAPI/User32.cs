@@ -179,5 +179,8 @@ namespace Explorip.WinAPI
         internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SWP uFlags);
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern bool SetWindowPos(IntPtr hWnd, int X, int Y, int cx, int cy, SWP uFlags);
+
+        [DllImport("user32.dll")]
+        internal static extern IntPtr SetFocus(IntPtr hWnd);
     }
 }
