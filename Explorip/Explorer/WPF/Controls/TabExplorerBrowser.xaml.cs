@@ -23,14 +23,6 @@ namespace Explorip.Explorer.WPF.Controls
 
         public bool AutoriseFermerDernierOnglet { get; set; }
 
-        private void NewTab_Click(object sender, RoutedEventArgs e)
-        {
-            TabItemExplorerBrowser item = new();
-            item.Navigation(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
-            MyTabControl.Items.Add(item);
-            MyTabControl.SelectedItem = item;
-        }
-
         private TabItemExplorerBrowser CurrentTab
         {
             get
@@ -39,6 +31,16 @@ namespace Explorip.Explorer.WPF.Controls
                     return null;
                 return (TabItemExplorerBrowser)MyTabControl.SelectedItem;
             }
+        }
+
+        #region Context menu
+
+        private void NewTab_Click(object sender, RoutedEventArgs e)
+        {
+            TabItemExplorerBrowser item = new();
+            item.Navigation(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
+            MyTabControl.Items.Add(item);
+            MyTabControl.SelectedItem = item;
         }
 
         private void CloseTab_Click(object sender, RoutedEventArgs e)
@@ -57,6 +59,17 @@ namespace Explorip.Explorer.WPF.Controls
             HideTab();
         }
 
+        private void NewTabOther_Click(object sender, RoutedEventArgs e)
+        {
+            WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
+            if (fenetre.LeftTab == MyTabControl)
+                fenetre.RightTab.AddNewTab(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
+            else
+                fenetre.LeftTab.AddNewTab(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
+        }
+
+        #endregion
+
         public void HideTab()
         {
             if (MyTabControl.Items.Count == 0)
@@ -65,15 +78,6 @@ namespace Explorip.Explorer.WPF.Controls
                 WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
                 fenetre.HideRightTab();
             }
-        }
-
-        private void NewTabOther_Click(object sender, RoutedEventArgs e)
-        {
-            WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
-            if (fenetre.LeftTab == MyTabControl)
-                fenetre.RightTab.AddNewTab(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
-            else
-                fenetre.LeftTab.AddNewTab(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
         }
 
         public void AddNewTab(ShellObject location)

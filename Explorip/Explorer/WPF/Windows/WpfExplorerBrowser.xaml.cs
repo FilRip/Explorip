@@ -94,6 +94,19 @@ namespace Explorip.Explorer.WPF.Windows
                         }
                     }
                 }
+                else if (e.ChangedButton == System.Windows.Input.MouseButton.Right && e.GetPosition(this).Y <= 32)
+                {
+                    HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
+                    if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
+                    {
+                        IntPtr hWnd = new WindowInteropHelper(this).Handle;
+                        User32.GetWindowRect(hWnd, out WinAPI.Modeles.RECT pos);
+                        IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
+                        int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)e.GetPosition(this).X, (int)e.GetPosition(this).Y, 0, hWnd, IntPtr.Zero);
+                        if (cmd > 0)
+                            User32.SendMessage(hWnd, 0x112, (uint)cmd, 0);
+                    }
+                }
             }
             catch (Exception) { /* No need to catch error */ }
         }
