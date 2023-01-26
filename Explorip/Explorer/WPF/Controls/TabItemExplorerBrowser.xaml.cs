@@ -239,6 +239,8 @@ namespace Explorip.Explorer.WPF.Controls
 
         #endregion
 
+        #region drag's drop tabitem in tabcontrol
+
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (e.Source is not TabItem tabItem)
@@ -254,17 +256,44 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void TabItem_Drop(object sender, DragEventArgs e)
         {
-            if (e.Source is TabItem tabItemTarget &&
+            TabItemExplorerBrowser tabItemTarget = null;
+            if (e.Source is TabItemExplorerBrowser browser)
+                tabItemTarget = browser;
+            else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorerBrowser)
+                tabItemTarget = (TabItemExplorerBrowser)entete.Parent;
+
+            if (tabItemTarget != null &&
                 e.Data.GetData(typeof(TabItemExplorerBrowser)) is TabItemExplorerBrowser tabItemSource &&
                 !tabItemTarget.Equals(tabItemSource) &&
-                tabItemTarget.Parent is TabControl tabControl)
+                tabItemTarget.Parent is TabExplorerBrowser tabControlTarget)
             {
-                int targetIndex = tabControl.Items.IndexOf(tabItemTarget);
+                TabExplorerBrowser tabControlSource = (TabExplorerBrowser)tabItemSource.Parent;
+                int targetIndex = tabControlTarget.Items.IndexOf(tabItemTarget);
 
-                tabControl.Items.Remove(tabItemSource);
-                tabControl.Items.Insert(targetIndex, tabItemSource);
-                tabItemSource.IsSelected = true;
+                if (tabControlTarget == tabControlSource)
+                {
+                    tabControlTarget.Items.Remove(tabItemSource);
+                    tabControlTarget.Items.Insert(targetIndex, tabItemSource);
+                    tabItemSource.IsSelected = true;
+                }
+                else
+                {
+                    if (tabControlSource.Items.Count > 1 || tabControlSource.AutoriseFermerDernierOnglet)
+                        tabControlSource.Items.Remove(tabItemSource);
+                    else
+                    {
+                        ShellObject repertoire = tabItemSource.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation;
+                        tabItemSource = new TabItemExplorerBrowser();
+                        tabItemSource.Navigation(repertoire);
+                    }
+                    tabControlTarget.Items.Insert(targetIndex, tabItemSource);
+                    tabItemSource.IsSelected = true;
+                    tabControlTarget.HideTab();
+                    tabControlSource.HideTab();
+                }
             }
         }
+
+        #endregion
     }
 }
