@@ -56,7 +56,10 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             ExplorerBrowserControl.NavigationLog.NavigationLogChanged += new EventHandler<NavigationLogEventArgs>(NavigationLogChanged);
 
             // host the control           
-            WindowsFormsHost host = new();
+            WindowsFormsHost host = new()
+            {
+                Focusable = true,
+            };
             try
             {
                 host.Child = ExplorerBrowserControl;

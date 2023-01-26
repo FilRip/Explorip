@@ -9,7 +9,7 @@
          xmlns:converters="clr-namespace:Explorip.Explorer.WPF.Converters"
          mc:Ignorable="d" Style="{DynamicResource CustomTabItem}"
          AllowDrop="True" PreviewMouseMove="TabItem_PreviewMouseMove"
-         Drop="TabItem_Drop"
+         Drop="TabItem_Drop" IsTabStop="False"
          d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
     <TabItem.DataContext>
         <viewmodels:TabItemExplorerBrowserViewModel/>
@@ -27,7 +27,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Name="PreviousButton" Click="PreviousButton_Click" IsEnabled="{Binding AllowNavigatePrevious}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundPrevious}">
+            <Button Grid.Column="0" Name="PreviousButton" Click="PreviousButton_Click" IsEnabled="{Binding AllowNavigatePrevious}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundPrevious}" IsTabStop="False">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="Transparent"/>
@@ -54,7 +54,7 @@
                 </Button.Style>
             </Button>
 
-            <Button Grid.Column="1" Name="NextButton" Click="NextButton_Click" IsEnabled="{Binding AllowNavigateNext}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE761;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundNext}">
+            <Button Grid.Column="1" Name="NextButton" Click="NextButton_Click" IsEnabled="{Binding AllowNavigateNext}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE761;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundNext}" IsTabStop="False">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="Transparent"/>
@@ -82,10 +82,10 @@
             </Button>
 
             <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-            <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}" Background="Transparent" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" KeyDown="EditPath_KeyDown" LostFocus="EditPath_LostFocus"/>
+            <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}" Background="Transparent" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" KeyDown="EditPath_KeyDown" LostFocus="EditPath_LostFocus" Focusable="True" IsTabStop="False"/>
 
         </Grid>
 
-        <explorer:ExplorerBrowser Grid.Row="1" Name="ExplorerBrowser" NavigationPane="Show" CommandsPane="Hide" IsTabStop="False"/>
+        <explorer:ExplorerBrowser Grid.Row="1" Name="ExplorerBrowser" NavigationPane="Show" CommandsPane="Hide" IsTabStop="False" AllowDrop="True" Focusable="True"/>
     </Grid>
 </TabItem>

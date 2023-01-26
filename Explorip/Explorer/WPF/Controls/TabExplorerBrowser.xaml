@@ -6,7 +6,7 @@
             xmlns:local="clr-namespace:Explorip.Explorer.WPF.Controls"
             mc:Ignorable="d" AllowDrop="True" Background="Transparent"
             d:DesignHeight="450" d:DesignWidth="800" BorderThickness="0" Padding="0"
-            Name="MyTabControl">
+            Name="MyTabControl" IsTabStop="False">
     <local:TabItemExplorerBrowser x:Name="FirstTab"/>
     <TabControl.Resources>
         <Style TargetType="TabItem">

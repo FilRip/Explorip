@@ -11,6 +11,7 @@ using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
+using Explorip.Explorer.WPF.Controls;
 
 namespace Explorip.Explorer.WPF.Windows
 {
@@ -28,6 +29,7 @@ namespace Explorip.Explorer.WPF.Windows
             Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
             // TODO : https://stackoverflow.com/questions/59366391/is-there-any-way-to-make-a-wpf-app-respect-the-system-choice-of-dark-light-theme
+            //        https://stackoverflow.com/questions/69097246/how-to-support-for-windows-11-snap-layout-to-the-custom-maximize-restore-butto
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);
@@ -124,6 +126,11 @@ namespace Explorip.Explorer.WPF.Windows
             RightGrid.Width = new GridLength(1, GridUnitType.Star);
             RightTab.Visibility = Visibility.Visible;
             LeftTab.SetValue(Grid.ColumnSpanProperty, 1);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((TabItemExplorerBrowser)LeftTab.SelectedItem).ExplorerBrowser.Focus();
         }
     }
 }

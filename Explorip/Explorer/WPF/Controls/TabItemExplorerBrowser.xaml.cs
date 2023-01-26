@@ -33,6 +33,7 @@ namespace Explorip.Explorer.WPF.Controls
             closableTabHeader.ButtonClose.MouseLeave += ButtonClose_MouseLeave;
             closableTabHeader.ButtonClose.Click += ButtonClose_Click;
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
+            closableTabHeader.BorderBrush = MyDataContext.AccentColor;
 
             CurrentPath.MouseDown += CurrentPath_MouseDown;
         }
@@ -40,10 +41,10 @@ namespace Explorip.Explorer.WPF.Controls
         private void MyHeader_DragOver(object sender, DragEventArgs e)
         {
             TabItemExplorerBrowser tab = (TabItemExplorerBrowser)((HeaderWithCloseButton)e.Source).Parent;
-            if (MyTabControl.SelectedItem != tab)
+            if (MyTabControl.SelectedItem != tab &&
+                e.Data.GetData("FileDrop") != null)
             {
-                if (e.Data.GetData("FileDrop") != null)
-                    MyTabControl.SelectedItem = tab;
+                MyTabControl.SelectedItem = tab;
             }
         }
 
@@ -215,7 +216,6 @@ namespace Explorip.Explorer.WPF.Controls
                         ExplorerBrowser.ExplorerBrowserControl.Navigate(previousLocation);
                     }
                 });
-                ExplorerBrowser.ExplorerBrowserControl.Focus();
             }
         }
 
@@ -223,9 +223,13 @@ namespace Explorip.Explorer.WPF.Controls
         {
             MyDataContext.ModeEdit = true;
             EditPath.ApplyTemplate();
-            TextBox comboTextBoxChild = EditPath.Template.FindName("PART_EditableTextBox", EditPath) as TextBox;
-            comboTextBoxChild.SelectAll();
-            comboTextBoxChild.Focus();
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                TextBox comboTextBoxChild = EditPath.Template.FindName("PART_EditableTextBox", EditPath) as TextBox;
+                comboTextBoxChild.Focus();
+                comboTextBoxChild.CaretIndex = comboTextBoxChild.Text.Length;
+                comboTextBoxChild.SelectAll();
+            }), System.Windows.Threading.DispatcherPriority.Background);
         }
 
         private void EditPath_LostFocus(object sender, RoutedEventArgs e)
