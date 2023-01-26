@@ -27,12 +27,21 @@ namespace Explorip.Explorer.WPF.Controls
             // Support close button in header
             HeaderWithCloseButton closableTabHeader = new();
             Header = closableTabHeader;
+            MyHeader.DragOver += MyHeader_DragOver;
+
             closableTabHeader.ButtonClose.MouseEnter += ButtonClose_MouseEnter;
             closableTabHeader.ButtonClose.MouseLeave += ButtonClose_MouseLeave;
             closableTabHeader.ButtonClose.Click += ButtonClose_Click;
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
 
             CurrentPath.MouseDown += CurrentPath_MouseDown;
+        }
+
+        private void MyHeader_DragOver(object sender, DragEventArgs e)
+        {
+            TabItemExplorerBrowser tab = (TabItemExplorerBrowser)((HeaderWithCloseButton)e.Source).Parent;
+            if (e.Data.GetData("FileDrop") != null && MyTabControl.SelectedItem != tab)
+                MyTabControl.SelectedItem = tab;
         }
 
         private void ExplorerBrowserControl_NavigationFailed(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationFailedEventArgs e)

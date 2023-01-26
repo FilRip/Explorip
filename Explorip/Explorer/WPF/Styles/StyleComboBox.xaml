@@ -14,7 +14,7 @@
                         <Storyboard>
                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="Border">
                                 <EasingColorKeyFrame KeyTime="0"
-                                   Value="{StaticResource ControlMouseOverColor}" />
+                                   Value="{Binding Path=DataContext.AccentColor, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBox}}" />
                             </ColorAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState>
@@ -128,7 +128,7 @@
                                     <Storyboard>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="PART_EditableTextBox" Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)">
                                             <EasingColorKeyFrame KeyTime="0"
-                                         Value="{StaticResource DisabledForegroundColor}" />
+                                                Value="{StaticResource DisabledForegroundColor}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -148,7 +148,7 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <ToggleButton x:Name="ToggleButton"
-                        Template="{StaticResource ComboBoxToggleButton}"
+                            Template="{StaticResource ComboBoxToggleButton}"
                             Grid.Column="2"
                             Focusable="false"
                             ClickMode="Press"
@@ -189,7 +189,7 @@
                                         <SolidColorBrush Color="{DynamicResource BorderMediumColor}" />
                                     </Border.BorderBrush>
                                     <Border.Background>
-                                        <SolidColorBrush Color="{DynamicResource ControlLightColor}" />
+                                        <SolidColorBrush Color="Black" />
                                     </Border.Background>
                                 </Border>
                                 <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">

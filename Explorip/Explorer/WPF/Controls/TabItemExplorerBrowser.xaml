@@ -7,7 +7,7 @@
          xmlns:local="clr-namespace:Explorip.Explorer.WPF.Controls"
          xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
          xmlns:converters="clr-namespace:Explorip.Explorer.WPF.Converters"
-         mc:Ignorable="d" Style="{DynamicResource CustomTabItem}"
+         mc:Ignorable="d" Style="{DynamicResource CustomTabItem}" AllowDrop="True"
          d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
     <TabItem.DataContext>
         <viewmodels:TabItemExplorerBrowserViewModel/>

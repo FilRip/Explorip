@@ -71,8 +71,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Explorer\WPF\Controls\CloseableHeader.xaml.cs">
-      <DependentUpon>CloseableHeader.xaml</DependentUpon>
+    <Compile Include="Explorer\WPF\Controls\HeaderWithCloseButton.xaml.cs">
+      <DependentUpon>HeaderWithCloseButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Explorer\WinForm\CS\FilRipListView\FilRipColumnHeaderCollection.cs" />
     <Compile Include="Explorer\WinForm\CS\FilRipListView\FilRipColumnsCollectionEditor.cs" />
@@ -325,7 +325,7 @@
     <Compile Include="Helpers\ShellContextMenu.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Explorer\WPF\Controls\CloseableHeader.xaml">
+    <Page Include="Explorer\WPF\Controls\HeaderWithCloseButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
