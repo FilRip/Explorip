@@ -8,14 +8,6 @@
             d:DesignHeight="450" d:DesignWidth="800" BorderThickness="0" Padding="0"
             Name="MyTabControl">
     <local:TabItemExplorerBrowser x:Name="FirstTab"/>
-    <TabControl.ContextMenu>
-        <ContextMenu Name="TabControlContextualMenu">
-            <MenuItem Header="Ouvrir un nouvel onglet" Name="NewTab" Click="NewTab_Click"/>
-            <MenuItem Header="Fermer cet onglet" Name="CloseTab" Click="CloseTab_Click"/>
-            <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Click="NewTabOther_Click"/>
-            <MenuItem Header="Fermer tous les onglets" Name="CloseAllTab" Click="CloseAllTab_Click"/>
-        </ContextMenu>
-    </TabControl.ContextMenu>
     <TabControl.Resources>
         <Style TargetType="TabItem">
             <Setter Property="AllowDrop" Value="True"/>

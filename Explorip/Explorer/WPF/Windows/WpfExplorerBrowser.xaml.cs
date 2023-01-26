@@ -10,6 +10,7 @@ using Explorip.Explorer.WPF.ViewModels;
 using System;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Input;
 
 namespace Explorip.Explorer.WPF.Windows
 {
@@ -74,11 +75,11 @@ namespace Explorip.Explorer.WPF.Windows
             }
         }
 
-        private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
-                if (e.ChangedButton == System.Windows.Input.MouseButton.Left && e.GetPosition(this).Y <= 32)
+                if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).Y <= 32)
                 {
                     if (e.ClickCount == 2 && WindowState == WindowState.Normal)
                     {
@@ -94,7 +95,7 @@ namespace Explorip.Explorer.WPF.Windows
                         }
                     }
                 }
-                else if (e.ChangedButton == System.Windows.Input.MouseButton.Right && e.GetPosition(this).Y <= 32)
+                else if (e.ChangedButton == MouseButton.Right && e.GetPosition(this).Y <= 32)
                 {
                     HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
                     if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
@@ -102,7 +103,8 @@ namespace Explorip.Explorer.WPF.Windows
                         IntPtr hWnd = new WindowInteropHelper(this).Handle;
                         User32.GetWindowRect(hWnd, out WinAPI.Modeles.RECT pos);
                         IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
-                        int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)e.GetPosition(this).X, (int)e.GetPosition(this).Y, 0, hWnd, IntPtr.Zero);
+                        Point posMouse = PointToScreen(Mouse.GetPosition(this));
+                        int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y , 0, hWnd, IntPtr.Zero);
                         if (cmd > 0)
                             User32.SendMessage(hWnd, 0x112, (uint)cmd, 0);
                     }

@@ -5,6 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" AllowDrop="True"
              d:DesignHeight="23" d:DesignWidth="81" Margin="0">
+    <UserControl.ContextMenu>
+        <ContextMenu Name="TabControlContextualMenu">
+            <MenuItem Header="Ouvrir un nouvel onglet" Name="NewTab" Click="NewTab_Click"/>
+            <MenuItem Header="Fermer cet onglet" Name="CloseTab" Click="CloseTab_Click"/>
+            <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Click="NewTabOther_Click"/>
+            <MenuItem Header="Fermer tous les onglets" Name="CloseAllTab" Click="CloseAllTab_Click"/>
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <Grid>
         <Button Content="x"  Height="19" HorizontalAlignment="Right" Margin="0,3,4,0" Name="ButtonClose" VerticalAlignment="Top" Width="20" FontFamily="Courier" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" Visibility="Visible" FontSize="14" Padding="0" ToolTip="Close"/>
         <Label Content=" "  Height="23" HorizontalAlignment="Left" Margin="4,1,0,0" Name="Label_TabTitle" VerticalAlignment="Top" FontFamily="Courier" FontSize="12" />
