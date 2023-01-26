@@ -40,8 +40,11 @@ namespace Explorip.Explorer.WPF.Controls
         private void MyHeader_DragOver(object sender, DragEventArgs e)
         {
             TabItemExplorerBrowser tab = (TabItemExplorerBrowser)((HeaderWithCloseButton)e.Source).Parent;
-            if (e.Data.GetData("FileDrop") != null && MyTabControl.SelectedItem != tab)
-                MyTabControl.SelectedItem = tab;
+            if (MyTabControl.SelectedItem != tab)
+            {
+                if (e.Data.GetData("FileDrop") != null)
+                    MyTabControl.SelectedItem = tab;
+            }
         }
 
         private void ExplorerBrowserControl_NavigationFailed(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationFailedEventArgs e)
@@ -231,5 +234,33 @@ namespace Explorip.Explorer.WPF.Controls
         }
 
         #endregion
+
+        private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Source is not TabItem tabItem)
+            {
+                return;
+            }
+
+            if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
+            {
+                DragDrop.DoDragDrop(tabItem, tabItem, DragDropEffects.All);
+            }
+        }
+
+        private void TabItem_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Source is TabItem tabItemTarget &&
+                e.Data.GetData(typeof(TabItemExplorerBrowser)) is TabItemExplorerBrowser tabItemSource &&
+                !tabItemTarget.Equals(tabItemSource) &&
+                tabItemTarget.Parent is TabControl tabControl)
+            {
+                int targetIndex = tabControl.Items.IndexOf(tabItemTarget);
+
+                tabControl.Items.Remove(tabItemSource);
+                tabControl.Items.Insert(targetIndex, tabItemSource);
+                tabItemSource.IsSelected = true;
+            }
+        }
     }
 }

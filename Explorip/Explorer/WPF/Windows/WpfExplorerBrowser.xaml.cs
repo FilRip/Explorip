@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using Explorip.Explorer.WPF.ViewModels;
 using System;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Explorip.Explorer.WPF.Windows
 {
@@ -85,8 +86,12 @@ namespace Explorip.Explorer.WPF.Windows
                     }
                     else
                     {
-                        SetWindowNormal();
-                        DragMove();
+                        HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
+                        if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
+                        {
+                            SetWindowNormal();
+                            DragMove();
+                        }
                     }
                 }
             }
