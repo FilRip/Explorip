@@ -3,15 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Explorip.Explorer.WPF"
              StartupUri="Windows/WpfExplorerBrowser.xaml"
              mc:Ignorable="d">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/StyleCommun.xaml"/>
+                <ResourceDictionary Source="Styles/StyleWindow.xaml"/>
                 <ResourceDictionary Source="Styles/StyleBrush.xaml"/>
+                <ResourceDictionary Source="Styles/StyleTabItem.xaml"/>
                 <ResourceDictionary Source="Styles/StyleComboBox.xaml"/>
+                <!--<ResourceDictionary Source="Styles/StyleTabControl.xaml"/>-->
+                <!--<ResourceDictionary Source="Styles/StyleContextMenuItem.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
