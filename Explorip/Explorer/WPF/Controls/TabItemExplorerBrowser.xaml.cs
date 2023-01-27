@@ -33,7 +33,6 @@ namespace Explorip.Explorer.WPF.Controls
             closableTabHeader.ButtonClose.MouseLeave += ButtonClose_MouseLeave;
             closableTabHeader.ButtonClose.Click += ButtonClose_Click;
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
-            closableTabHeader.BorderBrush = MyDataContext.AccentColor;
 
             CurrentPath.MouseDown += CurrentPath_MouseDown;
         }
@@ -184,7 +183,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            MyHeader.ButtonClose.Margin = new Thickness(MyHeader.Label_TabTitle.ActualWidth + 5, 3, 4, 0);
+            MyHeader.ButtonClose.Margin = new Thickness(MyHeader.Label_TabTitle.ActualWidth + 5, 3, 0, 0);
         }
 
         #endregion

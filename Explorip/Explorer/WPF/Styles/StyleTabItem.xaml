@@ -5,22 +5,22 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TabItem">
-                    <Border BorderThickness="1" BorderBrush="Black">
+                    <Border BorderThickness="1" BorderBrush="Transparent" x:Name="TabBorder" CornerRadius="5 5 0 0">
                         <Grid Name="TabPanel">
                             <ContentPresenter x:Name="ContentSite"
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
                                         ContentSource="Header"
-                                        Margin="10,2"/>
+                                        Margin="0"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="TabPanel" Property="Background" Value="{Binding Path=DataContext.AccentColor,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}}}" />
+                            <Setter TargetName="TabBorder" Property="Background" Value="{Binding Path=DataContext.AccentColor,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type TabItem}}}" />
                             <Setter Property="FontWeight" Value="Bold" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">
-                            <Setter TargetName="TabPanel" Property="Background" Value="#FF303030" />
+                            <Setter TargetName="TabBorder" Property="Background" Value="#FF606060" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

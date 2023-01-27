@@ -15,12 +15,18 @@ namespace Explorip.Explorer.WPF.Controls
             InitializeComponent();
         }
 
-        #region Context menu
-
         private TabExplorerBrowser MyTabControl
         {
-            get { return (TabExplorerBrowser)((TabItemExplorerBrowser)Parent).Parent; }
+            get { return (TabExplorerBrowser)MyTabItem.Parent; }
         }
+
+        private TabItemExplorerBrowser MyTabItem
+        {
+            get { return (TabItemExplorerBrowser)Parent; }
+        }
+
+        #region Context menu
+
         private TabItemExplorerBrowser CurrentTab
         {
             get
