@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace Explorip.Explorer.WPF.ViewModels
@@ -153,8 +154,11 @@ namespace Explorip.Explorer.WPF.ViewModels
                 if (currentPath != _lastFolder)
                 {
                     _lastFolder = currentPath;
-                    ComboBoxEditPath = Directory.GetDirectories(currentPath);
-                    ShowSuggestions = true;
+                    Task.Run(() =>
+                    {
+                        ComboBoxEditPath = Directory.GetDirectories(currentPath);
+                        ShowSuggestions = true;
+                    });
                 }
             }
             catch (Exception) { /* Ignoring errors */ }
