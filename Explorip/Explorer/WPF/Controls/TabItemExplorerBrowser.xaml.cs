@@ -239,7 +239,7 @@ namespace Explorip.Explorer.WPF.Controls
         private void EditPath_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             HitTestResult result = VisualTreeHelper.HitTest(EditPath, e.GetPosition(EditPath));
-            if (result.VisualHit is Border)
+            if (result?.VisualHit is Border)
             {
                 TextBox comboTextBoxChild = EditPath.Template.FindName("PART_EditableTextBox", EditPath) as TextBox;
                 comboTextBoxChild.CaretIndex = comboTextBoxChild.Text.Length;
@@ -249,11 +249,17 @@ namespace Explorip.Explorer.WPF.Controls
                         comboTextBoxChild.SelectionStart = EditPath.Text.LastIndexOf(@"\") + 1;
                         comboTextBoxChild.SelectionLength = EditPath.Text.Length - comboTextBoxChild.SelectionStart;
                     }
-                    catch (Exception) { /* On ignore les erreurs eventuelles */ }
+                    catch (Exception) { /* Ignoring errors */ }
                 else if (e.ClickCount == 3)
                     comboTextBoxChild.SelectAll();
                 e.Handled = true;
             }
+        }
+
+        private void EditPath_DropDownClosed(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(EditPath.Text))
+                Navigation(EditPath.Text);
         }
 
         #endregion
@@ -278,8 +284,8 @@ namespace Explorip.Explorer.WPF.Controls
             TabItemExplorerBrowser tabItemTarget = null;
             if (e.Source is TabItemExplorerBrowser browser)
                 tabItemTarget = browser;
-            else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorerBrowser)
-                tabItemTarget = (TabItemExplorerBrowser)entete.Parent;
+            else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorerBrowser browser2)
+                tabItemTarget = browser2;
 
             if (tabItemTarget != null &&
                 e.Data.GetData(typeof(TabItemExplorerBrowser)) is TabItemExplorerBrowser tabItemSource &&

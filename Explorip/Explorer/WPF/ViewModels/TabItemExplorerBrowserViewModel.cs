@@ -1,6 +1,7 @@
 ﻿using Explorip.Helpers;
 
-using System.Collections.Generic;
+using System;
+using System.IO;
 using System.Windows.Media;
 
 namespace Explorip.Explorer.WPF.ViewModels
@@ -15,6 +16,7 @@ namespace Explorip.Explorer.WPF.ViewModels
             Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
             _accentColor = new SolidColorBrush(mColor);
             _disabledColor = new SolidColorBrush(Color.FromArgb(255, 80, 80, 80));
+            _lastFolder = "";
         }
 
         private string _path;
@@ -34,6 +36,7 @@ namespace Explorip.Explorer.WPF.ViewModels
             get { return _modeEdit; }
             set
             {
+                _lastFolder = "";
                 _modeEdit = value;
                 OnPropertyChanged();
             }
@@ -87,11 +90,12 @@ namespace Explorip.Explorer.WPF.ViewModels
             {
                 _editPath = value;
                 OnPropertyChanged();
+                SearchSubFolder();
             }
         }
 
-        private List<string> _listEditPath;
-        public List<string> ComboBoxEditPath
+        private string[] _listEditPath;
+        public string[] ComboBoxEditPath
         {
             get { return _listEditPath; }
             set
@@ -121,6 +125,39 @@ namespace Explorip.Explorer.WPF.ViewModels
                 else
                     return _disabledColor;
             }
+        }
+
+        private bool _showSuggestions;
+        public bool ShowSuggestions
+        {
+            get { return _showSuggestions && ModeEdit; }
+            set
+            {
+                _showSuggestions = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _lastFolder;
+        private void SearchSubFolder()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(EditPath))
+                    return;
+                string currentPath;
+                if (EditPath.LastIndexOf(@"\") >= 0)
+                    currentPath = EditPath.Substring(0, EditPath.LastIndexOf(@"\"));
+                else
+                    currentPath = EditPath;
+                if (currentPath != _lastFolder)
+                {
+                    _lastFolder = currentPath;
+                    ComboBoxEditPath = Directory.GetDirectories(currentPath);
+                    ShowSuggestions = true;
+                }
+            }
+            catch (Exception) { /* Ignoring errors */ }
         }
     }
 }
