@@ -82,7 +82,9 @@
             </Button>
 
             <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={converters:InverseBoolToVisibilityConverter}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-            <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}" Background="Transparent" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" KeyDown="EditPath_KeyDown" LostFocus="EditPath_LostFocus" Focusable="True" IsTabStop="False"/>
+            <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={converters:BoolToVisibilityConverter}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" KeyDown="EditPath_KeyDown" LostFocus="EditPath_LostFocus" Focusable="True" IsTabStop="False"
+                      Style="{DynamicResource MyComboBox}"
+                      PreviewMouseDown="EditPath_PreviewMouseDown"/>
 
         </Grid>
 

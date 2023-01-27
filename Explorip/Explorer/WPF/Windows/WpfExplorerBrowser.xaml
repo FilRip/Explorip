@@ -33,7 +33,6 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-
         <controls:TabExplorerBrowser Grid.Column="0" AutoriseFermerDernierOnglet="False" x:Name="LeftTab"/>
 
         <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Black" Width="5" IsTabStop="False"/>

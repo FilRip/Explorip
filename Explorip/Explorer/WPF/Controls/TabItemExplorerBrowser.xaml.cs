@@ -228,12 +228,32 @@ namespace Explorip.Explorer.WPF.Controls
                 comboTextBoxChild.Focus();
                 comboTextBoxChild.CaretIndex = comboTextBoxChild.Text.Length;
                 comboTextBoxChild.SelectAll();
-            }), System.Windows.Threading.DispatcherPriority.Background);
+            }), System.Windows.Threading.DispatcherPriority.Render);
         }
 
         private void EditPath_LostFocus(object sender, RoutedEventArgs e)
         {
             MyDataContext.ModeEdit = false;
+        }
+
+        private void EditPath_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            HitTestResult result = VisualTreeHelper.HitTest(EditPath, e.GetPosition(EditPath));
+            if (result.VisualHit is Border)
+            {
+                TextBox comboTextBoxChild = EditPath.Template.FindName("PART_EditableTextBox", EditPath) as TextBox;
+                comboTextBoxChild.CaretIndex = comboTextBoxChild.Text.Length;
+                if (e.ClickCount == 2)
+                    try
+                    {
+                        comboTextBoxChild.SelectionStart = EditPath.Text.LastIndexOf(@"\") + 1;
+                        comboTextBoxChild.SelectionLength = EditPath.Text.Length - comboTextBoxChild.SelectionStart;
+                    }
+                    catch (Exception) { /* On ignore les erreurs eventuelles */ }
+                else if (e.ClickCount == 3)
+                    comboTextBoxChild.SelectAll();
+                e.Handled = true;
+            }
         }
 
         #endregion

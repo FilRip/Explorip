@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:Explorip.Explorer.WPF.Controls">
+
     <ControlTemplate x:Key="ComboBoxToggleButton"
                  TargetType="{x:Type ToggleButton}">
         <Grid>
@@ -10,12 +11,12 @@
             </Grid.ColumnDefinitions>
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Normal"/>
                     <VisualState x:Name="MouseOver">
                         <Storyboard>
                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="Border">
                                 <EasingColorKeyFrame KeyTime="0"
-                                   Value="{Binding Path=AccentColor, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TabItemExplorerBrowser}}}" />
+                                   Value="{StaticResource ControlMouseOverColor}" />
                             </ColorAnimationUsingKeyFrames>
                         </Storyboard>
                     </VisualState>
@@ -57,26 +58,25 @@
                 <Border.BorderBrush>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                         <GradientStop Color="{DynamicResource BorderLightColor}"
-                        Offset="0" />
+                            Offset="0" />
                         <GradientStop Color="{DynamicResource BorderDarkColor}"
-                        Offset="1" />
+                            Offset="1" />
                     </LinearGradientBrush>
                 </Border.BorderBrush>
                 <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0"
-                             EndPoint="0,1">
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <LinearGradientBrush.GradientStops>
                             <GradientStopCollection>
                                 <GradientStop Color="{DynamicResource ControlLightColor}" />
                                 <GradientStop Color="{DynamicResource ControlMediumColor}"
-                            Offset="1.0" />
+                                    Offset="1.0" />
                             </GradientStopCollection>
                         </LinearGradientBrush.GradientStops>
                     </LinearGradientBrush>
                 </Border.Background>
             </Border>
             <Border Grid.Column="0"
-                CornerRadius="2,0,0,2"
+                CornerRadius="2,2,0,0"
                 Margin="1" >
                 <Border.Background>
                     <SolidColorBrush Color="#FF303030"/>
@@ -101,22 +101,22 @@
           Background="{TemplateBinding Background}" />
     </ControlTemplate>
 
-    <Style x:Key="{x:Type ComboBox}"
-       TargetType="{x:Type ComboBox}">
+    <Style x:Key="MyComboBox"
+        TargetType="{x:Type ComboBox}">
         <Setter Property="SnapsToDevicePixels"
-          Value="true" />
+            Value="true" />
         <Setter Property="OverridesDefaultStyle"
-          Value="true" />
+            Value="true" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
-          Value="Auto" />
+            Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
-          Value="Auto" />
+            Value="Auto" />
         <Setter Property="ScrollViewer.CanContentScroll"
-          Value="true" />
+            Value="true" />
         <Setter Property="MinWidth"
-          Value="120" />
+            Value="120" />
         <Setter Property="MinHeight"
-          Value="20" />
+            Value="20" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
@@ -227,9 +227,9 @@
     <Style x:Key="{x:Type ComboBoxItem}"
        TargetType="{x:Type ComboBoxItem}">
         <Setter Property="SnapsToDevicePixels"
-          Value="true" />
+            Value="true" />
         <Setter Property="OverridesDefaultStyle"
-          Value="true" />
+            Value="true" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBoxItem}">
@@ -264,4 +264,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
 </ResourceDictionary>
