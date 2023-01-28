@@ -29,7 +29,14 @@ namespace Explorip.Helpers
 
         public static bool IsWindows10OrGreater(int build = 0)
         {
-            return (Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build);
+            return Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
+        }
+
+        public static bool IsWindows11OrGreater(int build = 22000)
+        {
+            if (build < 22000)
+                return false;
+            return IsWindows10OrGreater(build);
         }
 
         public static bool UseImmersiveDarkMode(IntPtr pointeurFenetre, bool activerDarkMode)

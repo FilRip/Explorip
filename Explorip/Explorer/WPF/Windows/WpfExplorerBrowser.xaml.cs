@@ -106,7 +106,7 @@ namespace Explorip.Explorer.WPF.Windows
                         User32.GetWindowRect(hWnd, out WinAPI.Modeles.RECT pos);
                         IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
                         Point posMouse = PointToScreen(Mouse.GetPosition(this));
-                        int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y , 0, hWnd, IntPtr.Zero);
+                        int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
                         if (cmd > 0)
                             User32.SendMessage(hWnd, 0x112, (uint)cmd, 0);
                     }

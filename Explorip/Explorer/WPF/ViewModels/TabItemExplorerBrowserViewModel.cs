@@ -16,7 +16,7 @@ namespace Explorip.Explorer.WPF.ViewModels
             System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
             Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
             _accentColor = new SolidColorBrush(mColor);
-            _disabledColor = new SolidColorBrush(Color.FromArgb(255, 80, 80, 80));
+            _disabledColor = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
             _lastFolder = "";
         }
 
