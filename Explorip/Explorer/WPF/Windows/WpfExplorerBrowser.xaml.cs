@@ -27,7 +27,9 @@ namespace Explorip.Explorer.WPF.Windows
         public WpfExplorerBrowser()
         {
             InitializeComponent();
+
             _fileOperation = new FilesOperations.FileOperation();
+
             LeftTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
             RightTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
 

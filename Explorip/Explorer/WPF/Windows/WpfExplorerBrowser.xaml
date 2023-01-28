@@ -54,10 +54,10 @@
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="1" Content="&gt;" Background="Transparent" Foreground="White" Name="CopyLeft" Click="CopyLeft_Click" Margin="5 0 5 0"/>
-                <Button Grid.Row="3" Content="&lt;" Background="Transparent" Foreground="White" Name="CopyRight" Click="CopyRight_Click" Margin="5 0 5 0"/>
-                <Button Grid.Row="5" Content="&gt;&gt;" Background="Transparent" Foreground="White" Name="MoveLeft" Click="MoveLeft_Click" Margin="5 0 5 0"/>
-                <Button Grid.Row="7" Content="&lt;&lt;" Background="Transparent" Foreground="White" Name="MoveRight" Click="MoveRight_Click" Margin="5 0 5 0"/>
+                <Button Grid.Row="1" Content="&gt;" Background="Transparent" Name="CopyLeft" Click="CopyLeft_Click" Margin="5 0 5 0" Foreground="{Binding AccentColor}" BorderBrush="{Binding AccentColor}" ToolTip="Copier vers la droite"/>
+                <Button Grid.Row="3" Content="&lt;" Background="Transparent" Name="CopyRight" Click="CopyRight_Click" Margin="5 0 5 0" Foreground="{Binding AccentColor}" BorderBrush="{Binding AccentColor}" ToolTip="Copier vers la gauche"/>
+                <Button Grid.Row="5" Content="&gt;&gt;" Background="Transparent" Name="MoveLeft" Click="MoveLeft_Click" Margin="5 0 5 0" Foreground="{Binding AccentColor}" BorderBrush="{Binding AccentColor}" ToolTip="Déplacer vers la droite"/>
+                <Button Grid.Row="7" Content="&lt;&lt;" Background="Transparent" Name="MoveRight" Click="MoveRight_Click" Margin="5 0 5 0" Foreground="{Binding AccentColor}" BorderBrush="{Binding AccentColor}" ToolTip="Déplacer vers la gauche"/>
             </Grid>
         </Grid>
         
