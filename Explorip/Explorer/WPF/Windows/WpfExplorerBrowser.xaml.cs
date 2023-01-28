@@ -22,7 +22,7 @@ namespace Explorip.Explorer.WPF.Windows
     /// </summary>
     public partial class WpfExplorerBrowser : Window
     {
-        private FilesOperations.FileOperation _fileOperation;
+        private readonly FilesOperations.FileOperation _fileOperation;
 
         public WpfExplorerBrowser()
         {
