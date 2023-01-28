@@ -12,6 +12,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Input;
 using Explorip.Explorer.WPF.Controls;
+using System.Linq;
+using System.IO;
 
 namespace Explorip.Explorer.WPF.Windows
 {
@@ -20,9 +22,12 @@ namespace Explorip.Explorer.WPF.Windows
     /// </summary>
     public partial class WpfExplorerBrowser : Window
     {
+        private FilesOperations.FileOperation _fileOperation;
+
         public WpfExplorerBrowser()
         {
             InitializeComponent();
+            _fileOperation = new FilesOperations.FileOperation();
             LeftTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
             RightTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
 
@@ -131,6 +136,45 @@ namespace Explorip.Explorer.WPF.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ((TabItemExplorerBrowser)LeftTab.SelectedItem).ExplorerBrowser.Focus();
+        }
+
+        private void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
+        {
+            ShellObject[] listeItems = tabSource.CurrentTab.ExplorerBrowser.SelectedItems.ToArray();
+            if (listeItems?.Length > 0)
+            {
+                string fichier, destination;
+                destination = tabDestination.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                foreach (ShellObject item in listeItems)
+                {
+                    fichier = item.GetDisplayName(DisplayNameType.FileSystemPath);
+                    if (move)
+                        _fileOperation.MoveItem(fichier, destination, Path.GetFileName(fichier));
+                    else
+                        _fileOperation.CopyItem(fichier, destination, Path.GetFileName(fichier));
+                }
+                _fileOperation.PerformOperations();
+            }
+        }
+
+        private void CopyLeft_Click(object sender, RoutedEventArgs e)
+        {
+            CopyBetweenTab(LeftTab, RightTab);
+        }
+
+        private void CopyRight_Click(object sender, RoutedEventArgs e)
+        {
+            CopyBetweenTab(RightTab, LeftTab);
+        }
+
+        private void MoveLeft_Click(object sender, RoutedEventArgs e)
+        {
+            CopyBetweenTab(LeftTab, RightTab, true);
+        }
+
+        private void MoveRight_Click(object sender, RoutedEventArgs e)
+        {
+            CopyBetweenTab(RightTab, LeftTab, true);
         }
     }
 }

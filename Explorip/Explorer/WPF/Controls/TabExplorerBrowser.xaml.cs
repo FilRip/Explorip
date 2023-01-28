@@ -49,6 +49,13 @@ namespace Explorip.Explorer.WPF.Controls
             get { return WindowsSettings.GetWindowsAccentColor(); }
         }
 
+        public TabItemExplorerBrowser CurrentTab
+        {
+            get { return (TabItemExplorerBrowser)SelectedItem; }
+        }
+
+        #region Drag'n Drop tab item in tab control
+
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (e.Source is not TabItem tabItem)
@@ -76,5 +83,7 @@ namespace Explorip.Explorer.WPF.Controls
                 tabItemSource.IsSelected = true;
             }
         }
+
+        #endregion
     }
 }
