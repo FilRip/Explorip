@@ -33,5 +33,27 @@ namespace Explorip.Explorer.WPF.ViewModels
         {
             get { return _accentColor; }
         }
+
+        private bool _selectionLeft;
+        public bool SelectionLeft
+        {
+            get { return _selectionLeft; }
+            set
+            {
+                _selectionLeft = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _selectionRight;
+        public bool SelectionRight
+        {
+            get { return _selectionRight; }
+            set
+            {
+                _selectionRight = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }

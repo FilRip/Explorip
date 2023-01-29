@@ -1,4 +1,5 @@
 ﻿using Explorip.Explorer.WPF.ViewModels;
+using Explorip.Explorer.WPF.Windows;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
@@ -23,6 +24,7 @@ namespace Explorip.Explorer.WPF.Controls
             InitializeComponent();
             ExplorerBrowser.ExplorerBrowserControl.NavigationComplete += ExplorerBrowserControl_NavigationComplete;
             ExplorerBrowser.ExplorerBrowserControl.NavigationFailed += ExplorerBrowserControl_NavigationFailed;
+            ExplorerBrowser.ExplorerBrowserControl.SelectionChanged += ExplorerBrowserControl_SelectionChanged;
 
             // Support close button in header
             HeaderWithCloseButton closableTabHeader = new();
@@ -35,6 +37,14 @@ namespace Explorip.Explorer.WPF.Controls
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
 
             CurrentPath.MouseDown += CurrentPath_MouseDown;
+        }
+
+        private void ExplorerBrowserControl_SelectionChanged(object sender, EventArgs e)
+        {
+            if (MyTabControl == ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).LeftTab)
+                ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).MyDataContext.SelectionLeft = ExplorerBrowser.SelectedItems?.Count > 0;
+            else
+                ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).MyDataContext.SelectionRight = ExplorerBrowser.SelectedItems?.Count > 0;
         }
 
         private void MyHeader_DragOver(object sender, DragEventArgs e)

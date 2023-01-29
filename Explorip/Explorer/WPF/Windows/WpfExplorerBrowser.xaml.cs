@@ -14,6 +14,7 @@ using System.Windows.Input;
 using Explorip.Explorer.WPF.Controls;
 using System.Linq;
 using System.IO;
+using System.Windows.Threading;
 
 namespace Explorip.Explorer.WPF.Windows
 {
@@ -44,7 +45,7 @@ namespace Explorip.Explorer.WPF.Windows
             }
         }
 
-        private WpfExplorerBrowserViewModel MyDataContext
+        public WpfExplorerBrowserViewModel MyDataContext
         {
             get { return (WpfExplorerBrowserViewModel)DataContext; }
         }
@@ -56,7 +57,10 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState.Minimized;
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                this.WindowState = WindowState.Minimized;
+            }));
         }
 
         private void RestoreWindow_Click(object sender, RoutedEventArgs e)
@@ -66,7 +70,11 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState.Maximized;
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            {
+                this.WindowState = WindowState.Maximized;
+                this.Activate();
+            }));
             MyDataContext.WindowMaximized = true;
         }
 
@@ -79,7 +87,11 @@ namespace Explorip.Explorer.WPF.Windows
         {
             if (WindowState == WindowState.Maximized)
             {
-                WindowState = WindowState.Normal;
+                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+                {
+                    this.WindowState = WindowState.Normal;
+                    this.Activate();
+                }));
                 MyDataContext.WindowMaximized = false;
             }
         }
@@ -88,6 +100,9 @@ namespace Explorip.Explorer.WPF.Windows
         {
             try
             {
+                if (WindowState == WindowState.Minimized)
+                    return;
+
                 if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).Y <= 32)
                 {
                     if (e.ClickCount == 2 && WindowState == WindowState.Normal)
@@ -138,6 +153,8 @@ namespace Explorip.Explorer.WPF.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ((TabItemExplorerBrowser)LeftTab.SelectedItem).ExplorerBrowser.Focus();
+            MyDataContext.SelectionLeft = false;
+            MyDataContext.SelectionRight = false;
         }
 
         private void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
