@@ -42,9 +42,9 @@ namespace Explorip.Explorer.WPF.Controls
         private void ExplorerBrowserControl_SelectionChanged(object sender, EventArgs e)
         {
             if (MyTabControl == ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).LeftTab)
-                ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).MyDataContext.SelectionLeft = ExplorerBrowser.SelectedItems?.Count > 0;
+                ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).MyDataContext.SelectionLeft = ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0;
             else
-                ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).MyDataContext.SelectionRight = ExplorerBrowser.SelectedItems?.Count > 0;
+                ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).MyDataContext.SelectionRight = ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0;
         }
 
         private void MyHeader_DragOver(object sender, DragEventArgs e)
