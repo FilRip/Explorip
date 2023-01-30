@@ -10,7 +10,7 @@
         mc:Ignorable="d" IsTabStop="False"
         d:DesignHeight="450" d:DesignWidth="800"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
-        LocationChanged="Window_LocationChanged" MouseDown="Window_MouseDown" UseLayoutRounding="True" Activated="Window_Activated" Focusable="True" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
+        MouseDown="Window_MouseDown" UseLayoutRounding="True" Activated="Window_Activated" Focusable="True" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
         ResizeMode="CanResize"
         Loaded="Window_Loaded">
     

@@ -71,11 +71,6 @@ namespace Explorip.Explorer.WPF.Windows
             MyDataContext.WindowMaximized = true;
         }
 
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            SetWindowNormal();
-        }
-
         private void SetWindowNormal()
         {
             if (WindowState == WindowState.Maximized)
