@@ -54,6 +54,17 @@ namespace Explorip.Explorer.WPF.Controls
             get { return (TabItemExplorerBrowser)SelectedItem; }
         }
 
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (e.Key == Key.F4 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+            {
+                if (Items.Count > 1 || AutoriseFermerDernierOnglet)
+                    Items.Remove(SelectedItem);
+            }
+            base.OnKeyUp(e);
+            HideTab();
+        }
+
         #region Drag'n Drop tab item in tab control
 
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
