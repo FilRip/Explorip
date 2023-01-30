@@ -86,41 +86,44 @@ namespace Explorip.Explorer.WPF.Windows
             }
         }
 
+        private bool _startDrag;
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
-                if (WindowState == WindowState.Minimized)
+                if (WindowState == WindowState.Minimized || !IsVisible)
                     return;
 
-                if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).Y <= 32 && e.GetPosition(this).Y > 0)
+                if (e.GetPosition(this).Y <= 32 && e.GetPosition(this).Y > 0)
                 {
-                    if (e.ClickCount == 2 && WindowState == WindowState.Normal)
+                    if (e.ChangedButton == MouseButton.Left)
                     {
-                        MaximizeWindow_Click(this, new RoutedEventArgs());
+                        if (e.ClickCount == 2 && WindowState == WindowState.Normal)
+                        {
+                            MaximizeWindow_Click(this, new RoutedEventArgs());
+                        }
+                        else
+                        {
+                            HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
+                            if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
+                            {
+                                _startDrag = true;
+                            }
+                        }
                     }
-                    else
+                    else if (e.ChangedButton == MouseButton.Right)
                     {
                         HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
                         if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
                         {
-                            SetWindowNormal();
-                            DragMove();
+                            IntPtr hWnd = new WindowInteropHelper(this).Handle;
+                            User32.GetWindowRect(hWnd, out WinAPI.Modeles.RECT pos);
+                            IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
+                            Point posMouse = PointToScreen(Mouse.GetPosition(this));
+                            int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
+                            if (cmd > 0)
+                                User32.SendMessage(hWnd, 0x112, (uint)cmd, 0);
                         }
-                    }
-                }
-                else if (e.ChangedButton == MouseButton.Right && e.GetPosition(this).Y <= 32)
-                {
-                    HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
-                    if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
-                    {
-                        IntPtr hWnd = new WindowInteropHelper(this).Handle;
-                        User32.GetWindowRect(hWnd, out WinAPI.Modeles.RECT pos);
-                        IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
-                        Point posMouse = PointToScreen(Mouse.GetPosition(this));
-                        int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
-                        if (cmd > 0)
-                            User32.SendMessage(hWnd, 0x112, (uint)cmd, 0);
                     }
                 }
             }
@@ -196,6 +199,21 @@ namespace Explorip.Explorer.WPF.Windows
             Topmost = true;
             Topmost = false;
             Focus();
+        }
+
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_startDrag)
+            {
+                _startDrag = false;
+                SetWindowNormal();
+                DragMove();
+            }
+        }
+
+        private void Window_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            _startDrag = false;
         }
     }
 }
