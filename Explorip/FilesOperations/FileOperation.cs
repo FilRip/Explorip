@@ -38,7 +38,6 @@ namespace Explorip.FilesOperations
             ThrowIfDisposed();
             using ComReleaser<IShellItem> sourceItem = CreateShellItem(source);
             using ComReleaser<IShellItem> destinationItem = CreateShellItem(destination);
-            _fileOperation.SetOperationFlags(Interfaces.FileOperation.FOF_RENAMEONCOLLISION);
             _fileOperation.CopyItem(sourceItem.Item, destinationItem.Item, newName, null);
         }
 
