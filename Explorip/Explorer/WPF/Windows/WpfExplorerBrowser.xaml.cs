@@ -1,20 +1,19 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
+using Explorip.Explorer.WPF.Controls;
+using Explorip.Explorer.WPF.ViewModels;
 using Explorip.Helpers;
 using Explorip.WinAPI;
 
 using Microsoft.WindowsAPICodePack.Shell;
-using System.Windows.Media.Imaging;
-using Explorip.Explorer.WPF.ViewModels;
-using System;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Input;
-using Explorip.Explorer.WPF.Controls;
-using System.Linq;
-using System.IO;
-using System.Windows.Threading;
 
 namespace Explorip.Explorer.WPF.Windows
 {
@@ -57,10 +56,7 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-            {
-                this.WindowState = WindowState.Minimized;
-            }));
+            WindowState = WindowState.Minimized;
         }
 
         private void RestoreWindow_Click(object sender, RoutedEventArgs e)
@@ -70,11 +66,8 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-            {
-                this.WindowState = WindowState.Maximized;
-                this.Activate();
-            }));
+            WindowState = WindowState.Maximized;
+            Activate();
             MyDataContext.WindowMaximized = true;
         }
 
@@ -87,11 +80,8 @@ namespace Explorip.Explorer.WPF.Windows
         {
             if (WindowState == WindowState.Maximized)
             {
-                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
-                {
-                    this.WindowState = WindowState.Normal;
-                    this.Activate();
-                }));
+                WindowState = WindowState.Normal;
+                Activate();
                 MyDataContext.WindowMaximized = false;
             }
         }
@@ -103,7 +93,7 @@ namespace Explorip.Explorer.WPF.Windows
                 if (WindowState == WindowState.Minimized)
                     return;
 
-                if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).Y <= 32)
+                if (e.ChangedButton == MouseButton.Left && e.GetPosition(this).Y <= 32 && e.GetPosition(this).Y > 0)
                 {
                     if (e.ClickCount == 2 && WindowState == WindowState.Normal)
                     {
@@ -194,6 +184,18 @@ namespace Explorip.Explorer.WPF.Windows
         private void MoveRight_Click(object sender, RoutedEventArgs e)
         {
             CopyBetweenTab(RightTab, LeftTab, true);
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            Show();
+            if (MyDataContext.WindowMaximized)
+                WindowState = WindowState.Maximized;
+            else
+                WindowState = WindowState.Normal;
+            Topmost = true;
+            Topmost = false;
+            Focus();
         }
     }
 }
