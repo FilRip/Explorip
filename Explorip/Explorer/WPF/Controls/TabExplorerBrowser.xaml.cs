@@ -54,15 +54,36 @@ namespace Explorip.Explorer.WPF.Controls
             get { return (TabItemExplorerBrowser)SelectedItem; }
         }
 
+        public WpfExplorerBrowser MyWindow
+        {
+            get { return (WpfExplorerBrowser)Window.GetWindow(this); }
+        }
+
         protected override void OnKeyUp(KeyEventArgs e)
         {
             if (e.Key == Key.F4 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
             {
                 if (Items.Count > 1 || AutoriseFermerDernierOnglet)
+                {
                     Items.Remove(SelectedItem);
+                    HideTab();
+                }
+            }
+            else if (e.Key == Key.N && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+            {
+                AddNewTab(CurrentTab.CurrentDirectory);
+            }
+            else if (e.Key == Key.Right && e.KeyboardDevice.Modifiers == ModifierKeys.Control &&
+                MyWindow.MyDataContext.SelectionLeft)
+            {
+                MyWindow.CopyLeft.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+            }
+            else if (e.Key == Key.Left && e.KeyboardDevice.Modifiers == ModifierKeys.Control &&
+                MyWindow.MyDataContext.SelectionRight)
+            {
+                MyWindow.CopyRight.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
             }
             base.OnKeyUp(e);
-            HideTab();
         }
 
         #region Drag'n Drop tab item in tab control

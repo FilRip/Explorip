@@ -85,6 +85,11 @@ namespace Explorip.Explorer.WPF.Controls
             get { return (TabItemExplorerBrowserViewModel)DataContext; }
         }
 
+        public ShellObject CurrentDirectory
+        {
+            get { return ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation; }
+        }
+
         #region Navigation file explorer
 
         private void ExplorerBrowserControl_NavigationComplete(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationCompleteEventArgs e)
