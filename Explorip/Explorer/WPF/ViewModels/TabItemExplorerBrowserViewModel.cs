@@ -146,7 +146,7 @@ namespace Explorip.Explorer.WPF.ViewModels
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(EditPath) || EditPath == ((ShellObject)KnownFolders.Computer).Name)
+                if (string.IsNullOrWhiteSpace(EditPath))
                     return;
                 string currentPath;
                 if (EditPath.LastIndexOf(@"\") >= 0)

@@ -98,9 +98,20 @@ namespace Explorip.Explorer.WPF.Controls
             SetTitle(e.NewLocation.Name);
             CurrentPath.Inlines?.Clear();
 
-            if (e.NewLocation != (ShellObject)KnownFolders.Computer)
+            string pathLink;
+            bool splitPath = true;
+            try
             {
-                string pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+            }
+            catch (Exception)
+            {
+                pathLink = e.NewLocation.Name;
+                splitPath = false;
+            }
+
+            if (splitPath)
+            {
                 MyDataContext.EditPath = pathLink;
                 StringBuilder partialPath = new();
                 foreach (string path in pathLink.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries))
@@ -116,6 +127,10 @@ namespace Explorip.Explorer.WPF.Controls
                     CurrentPath.Inlines.Add(lb);
                     CurrentPath.Inlines.Add(" \\ ");
                 }
+            }
+            else
+            {
+                CurrentPath.Inlines.Add(e.NewLocation.Name);
             }
 
             MyDataContext.AllowNavigatePrevious = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CanNavigateBackward;
