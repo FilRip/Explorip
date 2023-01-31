@@ -186,19 +186,14 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            Show();
-            if (MyDataContext.WindowMaximized)
-                WindowState = WindowState.Maximized;
-            else
-                WindowState = WindowState.Normal;
-            Topmost = true;
+            Topmost = true; // HACK : To pass known bugs of Net 4.8 (and 5.0, https://github.com/dotnet/wpf/issues/4124)
             Topmost = false;
             Focus();
         }
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_startDrag)
+            if (_startDrag && WindowState != WindowState.Minimized && IsVisible)
             {
                 _startDrag = false;
                 SetWindowNormal();

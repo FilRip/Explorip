@@ -98,21 +98,24 @@ namespace Explorip.Explorer.WPF.Controls
             SetTitle(e.NewLocation.Name);
             CurrentPath.Inlines?.Clear();
 
-            string pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
-            MyDataContext.EditPath = pathLink;
-            StringBuilder partialPath = new();
-            foreach (string path in pathLink.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries))
+            if (e.NewLocation != (ShellObject)KnownFolders.Computer)
             {
-                partialPath.Append(path + @"\");
-                Hyperlink lb = new()
+                string pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                MyDataContext.EditPath = pathLink;
+                StringBuilder partialPath = new();
+                foreach (string path in pathLink.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    Foreground = Brushes.Yellow,
-                    NavigateUri = new Uri(partialPath.ToString()),
-                };
-                lb.RequestNavigate += Lb_RequestNavigate;
-                lb.Inlines.Add(path);
-                CurrentPath.Inlines.Add(lb);
-                CurrentPath.Inlines.Add(" \\ ");
+                    partialPath.Append(path + @"\");
+                    Hyperlink lb = new()
+                    {
+                        Foreground = Brushes.Yellow,
+                        NavigateUri = new Uri(partialPath.ToString()),
+                    };
+                    lb.RequestNavigate += Lb_RequestNavigate;
+                    lb.Inlines.Add(path);
+                    CurrentPath.Inlines.Add(lb);
+                    CurrentPath.Inlines.Add(" \\ ");
+                }
             }
 
             MyDataContext.AllowNavigatePrevious = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CanNavigateBackward;

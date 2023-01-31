@@ -1,5 +1,7 @@
 ﻿using Explorip.Helpers;
 
+using Microsoft.WindowsAPICodePack.Shell;
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -144,7 +146,7 @@ namespace Explorip.Explorer.WPF.ViewModels
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(EditPath))
+                if (string.IsNullOrWhiteSpace(EditPath) || EditPath == ((ShellObject)KnownFolders.Computer).Name)
                     return;
                 string currentPath;
                 if (EditPath.LastIndexOf(@"\") >= 0)
