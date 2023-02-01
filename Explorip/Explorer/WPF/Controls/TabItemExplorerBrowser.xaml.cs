@@ -297,12 +297,6 @@ namespace Explorip.Explorer.WPF.Controls
             }
         }
 
-        private void EditPath_DropDownClosed(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(EditPath.Text))
-                Navigation(EditPath.Text);
-        }
-
         #endregion
 
         #region drag's drop tabitem in tabcontrol

@@ -10,15 +10,15 @@
     <Color x:Key="DisabledControlDarkColor">#FFC5CBF9</Color>
     <Color x:Key="DisabledForegroundColor">#FF888888</Color>
 
-    <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
+    <Color x:Key="SelectedBackgroundColor">#FF404040</Color>
     <Color x:Key="SelectedUnfocusedColor">#FFDDDDDD</Color>
 
-    <Color x:Key="ControlLightColor">White</Color>
-    <Color x:Key="ControlMediumColor">#FF7381F9</Color>
-    <Color x:Key="ControlDarkColor">#FF211AA9</Color>
+    <Color x:Key="ControlLightColor">#FF0000FF</Color>
+    <Color x:Key="ControlMediumColor">#FF404040</Color>
+    <Color x:Key="ControlDarkColor">#FF404040</Color>
 
-    <Color x:Key="ControlMouseOverColor">#FF3843C4</Color>
-    <Color x:Key="ControlPressedColor">#FF211AA9</Color>
+    <Color x:Key="ControlMouseOverColor">#FF0000FF</Color>
+    <Color x:Key="ControlPressedColor">#FF404040</Color>
 
 
     <Color x:Key="GlyphColor">#FF444444</Color>

@@ -86,8 +86,7 @@
                       Foreground="Yellow"
                       Style="{DynamicResource MyComboBox}"
                       PreviewMouseDown="EditPath_PreviewMouseDown"
-                      IsDropDownOpen="{Binding ShowSuggestions}"
-                      DropDownClosed="EditPath_DropDownClosed"/>
+                      IsDropDownOpen="{Binding ShowSuggestions}"/>
 
         </Grid>
 

@@ -13,6 +13,10 @@
                     <VisualState x:Name="Normal"/>
                     <VisualState x:Name="MouseOver">
                         <Storyboard>
+                            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[0].(GradientStop.Color)" Storyboard.TargetName="Border">
+                                <EasingColorKeyFrame KeyTime="0"
+                                   Value="{StaticResource ControlMouseOverColor}" />
+                            </ColorAnimationUsingKeyFrames>
                             <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="Border">
                                 <EasingColorKeyFrame KeyTime="0"
                                    Value="{StaticResource ControlMouseOverColor}" />
@@ -66,7 +70,7 @@
                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                         <LinearGradientBrush.GradientStops>
                             <GradientStopCollection>
-                                <GradientStop Color="{DynamicResource ControlLightColor}" />
+                                <GradientStop Color="{DynamicResource ControlMediumColor}" />
                                 <GradientStop Color="{DynamicResource ControlMediumColor}"
                                     Offset="1.0" />
                             </GradientStopCollection>
@@ -87,7 +91,7 @@
                 VerticalAlignment="Center"
                 Data="M 0 0 L 4 4 L 8 0 Z" >
                 <Path.Fill>
-                    <SolidColorBrush Color="{DynamicResource GlyphColor}"/>
+                    <SolidColorBrush Color="White"/>
                 </Path.Fill>
             </Path>
         </Grid>
