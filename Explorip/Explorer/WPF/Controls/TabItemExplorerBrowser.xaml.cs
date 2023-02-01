@@ -227,9 +227,16 @@ namespace Explorip.Explorer.WPF.Controls
         {
             if (e.Key == Key.Escape)
             {
-                MyDataContext.ModeEdit = false;
-                MyDataContext.EditPath = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
-                ExplorerBrowser.ExplorerBrowserControl.Focus();
+                if (MyDataContext.ShowSuggestions)
+                {
+                    MyDataContext.ShowSuggestions = false;
+                }
+                else
+                {
+                    MyDataContext.ModeEdit = false;
+                    MyDataContext.EditPath = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                    ExplorerBrowser.ExplorerBrowserControl.Focus();
+                }
             }
             else if (e.Key is Key.Enter or Key.Return)
             {
@@ -254,6 +261,7 @@ namespace Explorip.Explorer.WPF.Controls
         private void CurrentPath_MouseDown(object sender, MouseButtonEventArgs e)
         {
             MyDataContext.ModeEdit = true;
+            MyDataContext.ShowSuggestions = false;
             EditPath.ApplyTemplate();
             Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
