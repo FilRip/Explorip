@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -184,11 +185,21 @@ namespace Explorip.Explorer.WPF.Windows
             CopyBetweenTab(RightTab, LeftTab, true);
         }
 
-        private void Window_Activated(object sender, EventArgs e)
+        private void MethodeInvokee()
         {
+            System.Threading.Thread.Sleep(100);
+            if (MyDataContext.WindowMaximized)
+                WindowState = WindowState.Maximized;
+            else
+                WindowState = WindowState.Normal;
             Topmost = true; // HACK : To pass known bugs of Net 4.8 (and 5.0, https://github.com/dotnet/wpf/issues/4124)
             Topmost = false;
             Focus();
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() => MethodeInvokee()));
         }
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
