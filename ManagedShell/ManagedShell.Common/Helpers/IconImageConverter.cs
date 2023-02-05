@@ -11,7 +11,7 @@ namespace ManagedShell.Common.Helpers
     /// <summary>
     /// Provides static conversion methods to change Win32 Icons into ImageSources.
     /// </summary>
-    public class IconImageConverter
+    public static class IconImageConverter
     {
         /// <summary>
         /// Retrieves the Icon for the file name as an ImageSource
@@ -140,7 +140,9 @@ namespace ManagedShell.Common.Helpers
             {
                 BitmapImage img = new();
                 img.BeginInit();
+#pragma warning disable S1075
                 img.UriSource = new Uri("pack://application:,,,/ManagedShell.Common;component/Resources/nullIcon.png", UriKind.RelativeOrAbsolute);
+#pragma warning restore S1075
                 img.EndInit();
                 img.Freeze();
 

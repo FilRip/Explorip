@@ -202,8 +202,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             {
                 if (_internalName == null && NativeShellItem != null)
                 {
-                    IntPtr pszString = IntPtr.Zero;
-                    HResult hr = NativeShellItem.GetDisplayName(ShellNativeMethods.ShellItemDesignNameOptions.Normal, out pszString);
+                    HResult hr = NativeShellItem.GetDisplayName(ShellNativeMethods.ShellItemDesignNameOptions.Normal, out IntPtr pszString);
                     if (hr == HResult.Ok && pszString != IntPtr.Zero)
                     {
                         _internalName = Marshal.PtrToStringAuto(pszString);

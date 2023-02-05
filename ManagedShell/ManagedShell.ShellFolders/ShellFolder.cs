@@ -306,6 +306,8 @@ namespace ManagedShell.ShellFolders
         }
 
         #region Helpers
+
+#pragma warning disable S3241
         private bool AddFile(string parsingName, int position = -1)
         {
             ShellFile file = new(this, parsingName);
@@ -319,6 +321,7 @@ namespace ManagedShell.ShellFolders
 
             return AddFile(file, position);
         }
+#pragma warning restore S3241
 
         private bool AddFile(ShellFile file, int position = -1)
         {

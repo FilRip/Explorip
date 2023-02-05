@@ -130,8 +130,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                     propertyName = null;
                 }
 
-                HResult hr = HResult.Fail;
-
+                HResult hr;
                 hr = nativeConditionFactory.MakeLeaf(propertyName, operation, valueType,
                     propVar, null, null, null, false, out ICondition nativeCondition);
 

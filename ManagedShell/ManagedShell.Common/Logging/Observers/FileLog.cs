@@ -80,6 +80,7 @@ namespace ManagedShell.Common.Logging.Observers
             }
             catch (Exception)
             {
+                /* Ignore errors */
             }
         }
 

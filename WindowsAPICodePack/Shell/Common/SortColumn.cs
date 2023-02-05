@@ -70,8 +70,8 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns>Returns true if the objects are equal; false otherwise.</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != typeof(SortColumn)) { return false; }
-            return (this == (SortColumn)obj);
+            if (obj is not SortColumn result) { return false; }
+            return (this == result);
         }
 
         /// <summary>
@@ -84,7 +84,5 @@ namespace Microsoft.WindowsAPICodePack.Shell
             hash = hash * 31 + propertyKey.GetHashCode();
             return hash;
         }
-
     }
-
 }

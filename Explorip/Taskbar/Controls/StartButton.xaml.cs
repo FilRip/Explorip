@@ -60,7 +60,7 @@ namespace Explorip.TaskBar.Controls
                 {
                     ShellHelper.ShowStartMenu();
                 }
-                catch (Exception) { }
+                catch (Exception) { /* Ignore errors */ }
                 /*IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Accueil");
                 if (pointeurMenuDemarrer != IntPtr.Zero)
                 {

@@ -94,6 +94,7 @@
     <Compile Include="ExplorerBrowser\NavigationLogEnums.cs" />
     <Compile Include="ExplorerBrowser\NavigationLogEvents.cs" />
     <Compile Include="ExplorerBrowser\NavigationOptions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interop\Common\IntPtrExtensions.cs" />
     <Compile Include="Interop\Common\ShellNativeStructs.cs" />
     <Compile Include="Interop\ShellObjectWatcher\ShellObjectWatcherNativeMethods.cs" />

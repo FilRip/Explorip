@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct SHFILEINFO
+    public struct ShFileInfo
     {
         public IntPtr hIcon;
         public int iIcon;

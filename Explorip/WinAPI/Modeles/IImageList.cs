@@ -88,7 +88,7 @@ namespace Explorip.WinAPI.Modeles
         [PreserveSig()]
         int GetImageRect(
             int i,
-            ref RECT prc);
+            ref Rect prc);
 
         [PreserveSig()]
         int GetIconSize(

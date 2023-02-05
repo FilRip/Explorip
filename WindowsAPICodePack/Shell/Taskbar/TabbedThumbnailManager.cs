@@ -159,7 +159,6 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 if (TaskbarWindowManager._taskbarWindowList.Contains(taskbarWindow))
                     TaskbarWindowManager._taskbarWindowList.Remove(taskbarWindow);
                 taskbarWindow.Dispose();
-                taskbarWindow = null;
             }
         }
 
@@ -207,7 +206,6 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                     TaskbarWindowManager._taskbarWindowList.Remove(taskbarWindow);
                 }
                 taskbarWindow.Dispose();
-                taskbarWindow = null;
             }
         }
 

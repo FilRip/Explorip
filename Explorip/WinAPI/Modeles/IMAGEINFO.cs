@@ -10,6 +10,6 @@ namespace Explorip.WinAPI.Modeles
         public IntPtr hbmMask;
         public int Unused1;
         public int Unused2;
-        public RECT rcImage;
+        public Rect rcImage;
     }
 }

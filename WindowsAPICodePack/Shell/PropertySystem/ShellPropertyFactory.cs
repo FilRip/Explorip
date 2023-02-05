@@ -116,8 +116,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             int typeHash = GetTypeHash(argTypes);
 
             // Finds the correct constructor by matching the hash of the types.
+#pragma warning disable S3011
             ConstructorInfo ctorInfo = type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
                 .FirstOrDefault(x => typeHash == GetTypeHash(x.GetParameters().Select(a => a.ParameterType)));
+#pragma warning restore S3011
 
             if (ctorInfo == null)
             {

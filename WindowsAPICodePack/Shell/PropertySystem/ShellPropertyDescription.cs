@@ -76,9 +76,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 if (NativePropertyDescription != null && displayName == null)
                 {
-                    IntPtr dispNameptr = IntPtr.Zero;
-
-                    HResult hr = NativePropertyDescription.GetDisplayName(out dispNameptr);
+                    HResult hr = NativePropertyDescription.GetDisplayName(out IntPtr dispNameptr);
 
                     if (CoreErrorHelper.Succeeded(hr) && dispNameptr != IntPtr.Zero)
                     {
@@ -103,9 +101,8 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 if (NativePropertyDescription != null && editInvitation == null)
                 {
                     // EditInvitation can be empty, so ignore the HR value, but don't throw an exception
-                    IntPtr ptr = IntPtr.Zero;
 
-                    HResult hr = NativePropertyDescription.GetEditInvitation(out ptr);
+                    HResult hr = NativePropertyDescription.GetEditInvitation(out IntPtr ptr);
 
                     if (CoreErrorHelper.Succeeded(hr) && ptr != IntPtr.Zero)
                     {
@@ -406,12 +403,11 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <c>sortDescription</c> attribute of the <c>labelInfo</c> element in the property's .propdesc file.</remarks>
         public string GetSortDescriptionLabel(bool descending)
         {
-            IntPtr ptr = IntPtr.Zero;
             string label = string.Empty;
 
             if (NativePropertyDescription != null)
             {
-                HResult hr = NativePropertyDescription.GetSortDescriptionLabel(descending, out ptr);
+                HResult hr = NativePropertyDescription.GetSortDescriptionLabel(descending, out IntPtr ptr);
 
                 if (CoreErrorHelper.Succeeded(hr) && ptr != IntPtr.Zero)
                 {

@@ -151,7 +151,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 HResult hr = customDestinationList.BeginList(
                     out uint maxSlotsInList,
                     ref TaskbarNativeMethods.TaskbarGuids.IObjectArray,
-                    out object removedItems);
+                    out _);
 
                 if (CoreErrorHelper.Succeeded(hr))
                 {

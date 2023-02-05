@@ -77,7 +77,7 @@ namespace Explorip.FilesOperations
             {
                 _fileOperation.PerformOperations();
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
         }
 
         private void ThrowIfDisposed()

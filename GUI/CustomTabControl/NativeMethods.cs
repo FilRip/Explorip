@@ -64,12 +64,14 @@ namespace System.Windows.Forms
             message.WParam = wParam;
             message.Msg = msg;
 
+#pragma warning disable S3011
             MethodInfo wproc = control.GetType().GetMethod("WndProc"
                                                            , BindingFlags.NonPublic
                                                             | BindingFlags.InvokeMethod
                                                             | BindingFlags.FlattenHierarchy
                                                             | BindingFlags.IgnoreCase
                                                             | BindingFlags.Instance);
+#pragma warning restore S3011
 
             object[] args = new object[] { message };
             wproc.Invoke(control, args);

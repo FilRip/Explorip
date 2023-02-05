@@ -12,7 +12,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// Represents the base class for all types of Shell "containers". Any class deriving from this class
     /// can contain other ShellObjects (e.g. ShellFolder, FileSystemKnownFolder, ShellLibrary, etc)
     /// </summary>
-    public abstract class ShellContainer : ShellObject, IEnumerable<ShellObject>, IDisposable
+    public abstract class ShellContainer : ShellObject, IEnumerable<ShellObject>
     {
 
         #region Private Fields

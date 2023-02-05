@@ -52,10 +52,10 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-        internal static extern IntPtr SHGetFileInfo(string pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
+        internal static extern IntPtr SHGetFileInfo(string pszPath, FILE_ATTRIBUTE dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, SHGFI uFlags);
 
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode)]
-        internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref SHFILEINFO psfi, uint cbFileInfo, SHGFI uFlags);
+        internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, SHGFI uFlags);
 
         [DllImport("shell32.dll")]
         internal static extern int SHGetDesktopFolder(out IntPtr ppshf);

@@ -143,7 +143,7 @@ namespace ManagedShell.WindowsTasks
 
                 title = stringBuilder.ToString();
             }
-            catch { }
+            catch { /* Ignore errors */ }
 
             if (_title != title)
             {
@@ -173,7 +173,7 @@ namespace ManagedShell.WindowsTasks
 
                 className = stringBuilder.ToString();
             }
-            catch { }
+            catch { /* Ignore errors */ }
 
             if (_className != className)
             {

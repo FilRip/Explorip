@@ -59,7 +59,7 @@ namespace ManagedShell.Common.Common
         {
             if (_dispatcher.CheckAccess())
             {
-                if (oldIndex >= this.Count | newIndex >= this.Count | oldIndex == newIndex)
+                if (oldIndex >= this.Count || newIndex >= this.Count || oldIndex == newIndex)
                     return;
                 LockCookie c = _lock.UpgradeToWriterLock(-1);
                 base.MoveItem(oldIndex, newIndex);

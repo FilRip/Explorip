@@ -60,7 +60,7 @@ namespace Explorip.TaskBar.Controls
             {
                 Folder?.Dispose();
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
             Folder = null;
         }
 

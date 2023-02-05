@@ -47,7 +47,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             bool isFolder = (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.Folder) != 0;
 
             // Shell Library
-            ShellLibrary shellLibrary = null;
+            ShellLibrary shellLibrary;
 
             // Create the right type of ShellObject based on the above information 
 

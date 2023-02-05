@@ -76,7 +76,7 @@ namespace Explorip.Helpers
                 retour.Nodes.Add("");
                 return retour;
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
             return null;
         }
     }

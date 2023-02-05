@@ -61,7 +61,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 if (nativePropertyStore != null)
                 {
                     Marshal.ReleaseComObject(nativePropertyStore);
-                    nativePropertyStore = null;
                 }
             }
         }

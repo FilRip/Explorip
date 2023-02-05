@@ -53,9 +53,10 @@ namespace ManagedShell.Common.SupportingClasses
                 Scope = StartupEntryScope.User },
         };
 
-        public async void Run()
+        public void Run()
         {
-            await Task.Run(RunStartupApps);
+            Task task = new(RunStartupApps);
+            task.RunSynchronously();
         }
 
         #region Startup methods

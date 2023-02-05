@@ -171,7 +171,6 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             finally
             {
                 originalBitmap.Dispose();
-                originalBitmap = null;
             }
         }
     }

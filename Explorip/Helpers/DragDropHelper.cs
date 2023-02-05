@@ -117,7 +117,7 @@ namespace Explorip.Helpers
                 _dragDropEnCours = true;
                 return true;
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
             return false;
         }
 

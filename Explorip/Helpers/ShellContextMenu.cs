@@ -250,9 +250,9 @@ namespace Explorip.Helpers
                     IntPtr winHandle = IntPtr.Zero;
 
                     IntPtr tempPidl;
-                    SHFILEINFO info;
+                    ShFileInfo info;
 
-                    info = new SHFILEINFO();
+                    info = new ShFileInfo();
                     tempPidl = IntPtr.Zero;
                     Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref tempPidl);
 

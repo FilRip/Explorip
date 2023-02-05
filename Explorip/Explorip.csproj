@@ -143,6 +143,7 @@
     <Compile Include="Explorer\WinForm\Forms\FormExplorerBrowser.Designer.cs">
       <DependentUpon>FormExplorerBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionIEnumerable.cs" />
     <Compile Include="Helpers\ExtensionsArray.cs" />
@@ -262,11 +263,11 @@
     <Compile Include="WinAPI\Modeles\NETRESOURCE.cs" />
     <Compile Include="WinAPI\Modeles\POINT.cs" />
     <Compile Include="WinAPI\Modeles\PROCESS_BASIC_INFORMATION.cs" />
-    <Compile Include="WinAPI\Modeles\RECT.cs" />
-    <Compile Include="WinAPI\Modeles\SHFILEINFO.cs" />
+    <Compile Include="WinAPI\Modeles\Rect.cs" />
+    <Compile Include="WinAPI\Modeles\ShFileInfo.cs" />
     <Compile Include="WinAPI\Modeles\SHITEMID.cs" />
     <Compile Include="WinAPI\Modeles\UNIVERSAL_NAME_INFO.cs" />
-    <Compile Include="WinAPI\Modeles\WINDOWPLACEMENT.cs" />
+    <Compile Include="WinAPI\Modeles\WindowPlacement.cs" />
     <Compile Include="WinAPI\Mpr.cs" />
     <Compile Include="WinAPI\Ntdll.cs" />
     <Compile Include="WinAPI\Shlwapi.cs" />

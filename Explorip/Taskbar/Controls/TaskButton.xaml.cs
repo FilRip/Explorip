@@ -237,7 +237,7 @@ namespace Explorip.TaskBar.Controls
                 if (_thumb != null)
                     _thumb.Close();
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
             _thumb = new TaskThumbButton(this);
             _thumb.Show();
         }
@@ -249,7 +249,7 @@ namespace Explorip.TaskBar.Controls
                 if (_thumb != null)
                     _thumb.Close();
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
         }
 
         public Taskbar TaskbarParent { get; set; }

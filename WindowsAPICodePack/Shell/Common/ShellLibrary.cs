@@ -718,7 +718,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
             if (itemArray != null)
             {
                 Marshal.ReleaseComObject(itemArray);
-                itemArray = null;
             }
 
             return list;

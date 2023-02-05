@@ -67,7 +67,9 @@ namespace ManagedShell.AppBar
                 BitsPerPixel = screen.BitsPerPixel,
                 NumScreen = numScreen,
             };
+#pragma warning disable S3011
             appBarScreen.Handle = (IntPtr)typeof(Screen).GetField("hmonitor", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(screen);
+#pragma warning restore S3011
             appBarScreen.ChangeDpi();
             return appBarScreen;
         }

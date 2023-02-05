@@ -12,7 +12,7 @@ using ManagedShell.Common.Logging;
 
 namespace ManagedShell.UWPInterop
 {
-    public class StoreAppHelper
+    public static class StoreAppHelper
     {
         const string defaultColor = "#00111111";
 
@@ -126,12 +126,14 @@ namespace ManagedShell.UWPInterop
         private static XmlNamespaceManager GetNamespaceManager(XmlDocument manifest)
         {
             XmlNamespaceManager xmlnsManager = new(manifest.NameTable);
+#pragma warning disable S1075
             xmlnsManager.AddNamespace("ns", "http://schemas.microsoft.com/appx/manifest/foundation/windows10");
             xmlnsManager.AddNamespace("uap", "http://schemas.microsoft.com/appx/manifest/uap/windows10");
             xmlnsManager.AddNamespace("uap2", "http://schemas.microsoft.com/appx/manifest/uap/windows10/2");
             xmlnsManager.AddNamespace("uap3", "http://schemas.microsoft.com/appx/manifest/uap/windows10/3");
             xmlnsManager.AddNamespace("uap4", "http://schemas.microsoft.com/appx/manifest/uap/windows10/4");
             xmlnsManager.AddNamespace("uap5", "http://schemas.microsoft.com/appx/manifest/uap/windows10/5");
+#pragma warning restore S1075
 
             return xmlnsManager;
         }
@@ -201,7 +203,7 @@ namespace ManagedShell.UWPInterop
             if (iconNode == null)
                 return icons;
 
-            string iconPath = path + "\\" + (iconNode.Value).Replace(".png", "");
+            string iconPath = path + Path.DirectorySeparatorChar + (iconNode.Value).Replace(".png", "");
 
             // get all resources, then use the first match
             string[] files = Directory.GetFiles(path, "*.png", SearchOption.AllDirectories);
@@ -328,7 +330,7 @@ namespace ManagedShell.UWPInterop
             {
                 path = package.InstalledLocation.Path;
             }
-            catch { }
+            catch { /* Ignore errors */ }
 
             return path;
         }

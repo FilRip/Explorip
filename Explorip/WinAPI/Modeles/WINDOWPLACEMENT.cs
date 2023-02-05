@@ -40,7 +40,7 @@ namespace Explorip.WinAPI.Modeles
 
     [Serializable()]
     [StructLayout(LayoutKind.Sequential)]
-    public struct WINDOWPLACEMENT
+    public struct WindowPlacement
     {
         public int length;
         public int flags;

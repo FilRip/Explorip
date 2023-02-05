@@ -368,7 +368,7 @@ namespace Explorip.ComposantsWinForm
                     // TODO : Verifier que cela ne coupe pas les opérations déjà en cours
                     _fileOperation.Dispose();
                 }
-                catch (Exception) { }
+                catch (Exception) { /* Ignore errors */ }
             }
             if ((MenuContextuel != null) && (!MenuContextuel.IsDisposed))
             {

@@ -299,7 +299,7 @@ namespace ManagedShell.AppBar
                 Width = (rect.Right - rect.Left) / DpiScale;
                 Height = (rect.Bottom - rect.Top) / DpiScale;
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
             finally { _positionAlreadyUnderChanged = false; }
         }
 

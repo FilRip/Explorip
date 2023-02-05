@@ -7,7 +7,7 @@ using Microsoft.Win32;
 
 namespace ManagedShell.Common.Helpers
 {
-    public class SoundHelper
+    public static class SoundHelper
     {
         private const string SYSTEM_SOUND_ROOT_KEY = @"AppEvents\Schemes\Apps";
         private const int SND_FILENAME = 0x00020000;

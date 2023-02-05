@@ -113,7 +113,7 @@ namespace Explorip.ComposantsWinForm
                         driveNode.Nodes.Add("");
                         _noeudMyComputer.Nodes.Add(driveNode);
                     }
-                    catch (Exception) { }
+                    catch (Exception) { /* Ignore errors */ }
                 }
                 SelectedNode = Nodes[0];
             }
@@ -250,7 +250,7 @@ namespace Explorip.ComposantsWinForm
                     if (dirI.GetDirectories().Length > 0)
                         node.Nodes.Add("");
                 }
-                catch (Exception) { }
+                catch (Exception) { /* Ignore errors */ }
                 parentNode.Nodes.Add(node);
             }
         }

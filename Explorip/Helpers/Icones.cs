@@ -36,7 +36,7 @@ namespace Explorip.Helpers
             pidl = IntPtr.Zero;
             try
             {
-                SHFILEINFO shfi = new();
+                ShFileInfo shfi = new();
                 Shell32.SHGFI flags = Shell32.SHGFI.SYSICONINDEX | Shell32.SHGFI.ICON;
 
                 if ((linkOverlay) || (othersOverlay))
@@ -53,7 +53,7 @@ namespace Explorip.Helpers
 
                 return shfi.iIcon;
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
             return 0;
         }
 
@@ -68,7 +68,6 @@ namespace Explorip.Helpers
                 if (pidl != IntPtr.Zero)
                 {
                     int erreur = 0;
-                    Guid Id = typeof(IImageList).GUID;
                     IntPtr hIcon = IntPtr.Zero;
                     IImageList ppv = _listeInterfaceIcones[taille];
                     if (ppv != null)
@@ -138,7 +137,7 @@ namespace Explorip.Helpers
 
         private static Icon GetFileIcon(IntPtr pidl, bool petiteIcone)
         {
-            SHFILEINFO shfi = new();
+            ShFileInfo shfi = new();
 
             Shell32.SHGFI flag = Shell32.SHGFI.PIDL | Shell32.SHGFI.DISPLAYNAME | Shell32.SHGFI.ICON;
 

@@ -603,7 +603,7 @@ namespace ManagedShell.ShellFolders
         #region Modify item
         public void Rename(string newName)
         {
-            string newFilePathName = System.IO.Path.GetDirectoryName(Path) + "\\" + newName;
+            string newFilePathName = System.IO.Path.GetDirectoryName(Path) + System.IO.Path.DirectorySeparatorChar + newName;
 
             if (newFilePathName != Path)
             {

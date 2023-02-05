@@ -287,8 +287,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         private IntPtr GetHBitmap(System.Windows.Size size)
         {
-            IntPtr hbitmap = IntPtr.Zero;
-
             // Create a size structure to pass to the native method
             CoreNativeMethods.Size nativeSIZE = new();
             nativeSIZE.Width = Convert.ToInt32(size.Width);
@@ -296,7 +294,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
             // Use IShellItemImageFactory to get an icon
             // Options passed in: Resize to fit
-            HResult hr = ((IShellItemImageFactory)shellItemNative).GetImage(nativeSIZE, CalculateFlags(), out hbitmap);
+            HResult hr = ((IShellItemImageFactory)shellItemNative).GetImage(nativeSIZE, CalculateFlags(), out IntPtr hbitmap);
 
             if (hr == HResult.Ok) { return hbitmap; }
             else if ((uint)hr == 0x8004B200 && FormatOption == ShellThumbnailFormatOption.ThumbnailOnly)

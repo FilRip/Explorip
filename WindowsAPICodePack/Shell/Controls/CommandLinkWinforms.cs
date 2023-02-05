@@ -105,7 +105,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
             return style;
         }
 
-        private static string GetNote(System.Windows.Forms.Button Button)
+        private static string GetNote(Button Button)
         {
             IntPtr retVal = CoreNativeMethods.SendMessage(
                 Button.Handle,
@@ -117,17 +117,17 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
             int len = ((int)retVal) + 1;
             StringBuilder strBld = new(len);
 
-            retVal = CoreNativeMethods.SendMessage(Button.Handle, ShellNativeMethods.GetNote, ref len, strBld);
+            CoreNativeMethods.SendMessage(Button.Handle, ShellNativeMethods.GetNote, ref len, strBld);
             return strBld.ToString();
         }
 
-        private static void SetNote(System.Windows.Forms.Button button, string text)
+        private static void SetNote(Button button, string text)
         {
             // This call will be ignored on versions earlier than Windows Vista.
             CoreNativeMethods.SendMessage(button.Handle, ShellNativeMethods.SetNote, 0, text);
         }
 
-        static internal void SetShieldIcon(System.Windows.Forms.Button Button, bool Show)
+        static internal void SetShieldIcon(Button Button, bool Show)
         {
             IntPtr fRequired = new(Show ? 1 : 0);
             CoreNativeMethods.SendMessage(

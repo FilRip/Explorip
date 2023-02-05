@@ -195,7 +195,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         internal bool NavigateLog(NavigationLogDirection direction)
         {
             // determine proper index to navigate to
-            int locationIndex = 0;
+            int locationIndex;
             if (direction == NavigationLogDirection.Backward && CanNavigateBackward)
             {
                 locationIndex = (currentLocationIndex - 1);

@@ -54,7 +54,7 @@ namespace Explorip.Localization
                 {
                     IntPtr Pidl = IntPtr.Zero;
                     Shell32.SHGetSpecialFolderLocation(IntPtr.Zero, Shell32.CSIDL.DRIVES, ref Pidl);
-                    SHFILEINFO info = new();
+                    ShFileInfo info = new();
                     if (Shell32.SHGetFileInfo(Pidl, Shell32.FILE_ATTRIBUTE.NULL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), Shell32.SHGFI.TYPENAME | Shell32.SHGFI.PIDL | Shell32.SHGFI.DISPLAYNAME) != IntPtr.Zero)
                     {
                         return info.szDisplayName;
@@ -64,7 +64,7 @@ namespace Explorip.Localization
                 }
                 else
                 {
-                    SHFILEINFO info = new();
+                    ShFileInfo info = new();
                     if (Shell32.SHGetFileInfo(chemin, Shell32.FILE_ATTRIBUTE.NORMAL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), Shell32.SHGFI.DISPLAYNAME) != IntPtr.Zero)
                     {
                         return info.szDisplayName;

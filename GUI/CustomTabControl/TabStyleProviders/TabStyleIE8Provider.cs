@@ -164,7 +164,8 @@ namespace System.Windows.Forms
             }
 
             //	Add the blend
-            fillBrush.Blend = GetBackgroundBlend(index);
+            if (fillBrush != null)
+                fillBrush.Blend = GetBackgroundBlend(index);
 
             return fillBrush;
         }

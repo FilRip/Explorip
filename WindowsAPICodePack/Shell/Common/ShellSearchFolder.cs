@@ -95,7 +95,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 List<IShellItem> shellItems = new(searchScopePaths.Length);
 
                 Guid shellItemGuid = new(ShellIIDGuid.IShellItem);
-                Guid shellItemArrayGuid = new(ShellIIDGuid.IShellItemArray);
 
                 // Create IShellItem for all the scopes we were given
                 foreach (string path in searchScopePaths)

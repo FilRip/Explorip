@@ -9,7 +9,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// <summary>
     /// Represents a registered non file system Known Folder
     /// </summary>
-    public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder, IDisposable
+    public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     {
         #region Private Fields
 

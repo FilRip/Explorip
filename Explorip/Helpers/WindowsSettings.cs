@@ -23,7 +23,7 @@ namespace Explorip.Helpers
                     return (lightMode == 0);
                 }
             }
-            catch (Exception) { }
+            catch (Exception) { /* Ignore errors */ }
             return false;
         }
 

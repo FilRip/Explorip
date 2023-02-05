@@ -277,8 +277,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         ///<summary>
         /// Gets or sets a value that controls whether to show hidden items.
         /// </summary>
-        /// <value>A <see cref="System.Boolean"/> value.<b>true</b> to show the items; otherwise <b>false</b>.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        /// <value>A <see cref="bool"/> value.<b>true</b> to show the items; otherwise <b>false</b>.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         public bool ShowHiddenItems
         {
             get { return showHiddenItems; }
@@ -288,24 +288,20 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 showHiddenItems = value;
             }
         }
-        private bool allowPropertyEditing;
+
         /// <summary>
         /// Gets or sets a value that controls whether 
         /// properties can be edited.
         /// </summary>
-        /// <value>A <see cref="System.Boolean"/> value. </value>
-        public bool AllowPropertyEditing
-        {
-            get { return allowPropertyEditing; }
-            set { allowPropertyEditing = value; }
-        }
+        /// <value>A <see cref="bool"/> value. </value>
+        public bool AllowPropertyEditing { get; set; }
 
         private bool navigateToShortcut = true;
         ///<summary>
         /// Gets or sets a value that controls whether shortcuts should be treated as their target items, allowing an application to open a .lnk file.
         /// </summary>
-        /// <value>A <see cref="System.Boolean"/> value. <b>true</b> indicates that shortcuts should be treated as their targets. </value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        /// <value>A <see cref="bool"/> value. <b>true</b> indicates that shortcuts should be treated as their targets. </value>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         public bool NavigateToShortcut
         {
             get { return navigateToShortcut; }
@@ -358,7 +354,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 return;
             }
 
-            CommonFileDialogFilter filter = null;
+            CommonFileDialogFilter filter;
 
             for (uint filtersCounter = 0; filtersCounter < filters.Count; filtersCounter++)
             {
@@ -497,63 +493,36 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
         }
 
-        // Null = use default directory.
-        private string initialDirectory;
         /// <summary>
         /// Gets or sets the initial directory displayed when the dialog is shown. 
         /// A null or empty string indicates that the dialog is using the default directory.
         /// </summary>
-        /// <value>A <see cref="System.String"/> object.</value>
-        public string InitialDirectory
-        {
-            get { return initialDirectory; }
-            set { initialDirectory = value; }
-        }
+        /// <value>A <see cref="string"/> object.</value>
+        public string InitialDirectory { get; set; }
 
-        private ShellContainer initialDirectoryShellContainer;
         /// <summary>
         /// Gets or sets a location that is always selected when the dialog is opened, 
         /// regardless of previous user action. A null value implies that the dialog is using 
         /// the default location.
         /// </summary>
-        public ShellContainer InitialDirectoryShellContainer
-        {
-            get { return initialDirectoryShellContainer; }
-            set { initialDirectoryShellContainer = value; }
-        }
+        public ShellContainer InitialDirectoryShellContainer { get; set; }
 
-        private string defaultDirectory;
         /// <summary>
         /// Sets the folder and path used as a default if there is not a recently used folder value available.
         /// </summary>
-        public string DefaultDirectory
-        {
-            get { return defaultDirectory; }
-            set { defaultDirectory = value; }
-        }
+        public string DefaultDirectory { get; set; }
 
-        private ShellContainer defaultDirectoryShellContainer;
         /// <summary>
-        /// Sets the location (<see cref="Microsoft.WindowsAPICodePack.Shell.ShellContainer">ShellContainer</see> 
+        /// Sets the location (<see cref="ShellContainer">ShellContainer</see> 
         /// used as a default if there is not a recently used folder value available.
         /// </summary>
-        public ShellContainer DefaultDirectoryShellContainer
-        {
-            get { return defaultDirectoryShellContainer; }
-            set { defaultDirectoryShellContainer = value; }
-        }
+        public ShellContainer DefaultDirectoryShellContainer { get; set; }
 
-        // Null = use default identifier.
-        private Guid cookieIdentifier;
         /// <summary>
         /// Gets or sets a value that enables a calling application 
         /// to associate a GUID with a dialog's persisted state.
         /// </summary>
-        public Guid CookieIdentifier
-        {
-            get { return cookieIdentifier; }
-            set { cookieIdentifier = value; }
-        }
+        public Guid CookieIdentifier { get; set; }
 
         /// <summary>
         /// Displays the dialog.
@@ -682,9 +651,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
             if (parentWindow == IntPtr.Zero)
             {
-                if (System.Windows.Application.Current != null && System.Windows.Application.Current.MainWindow != null)
+                if (Application.Current != null && Application.Current.MainWindow != null)
                 {
-                    parentWindow = (new WindowInteropHelper(System.Windows.Application.Current.MainWindow)).Handle;
+                    parentWindow = (new WindowInteropHelper(Application.Current.MainWindow)).Handle;
                 }
                 else if (System.Windows.Forms.Application.OpenForms.Count > 0)
                 {
@@ -700,20 +669,20 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             // Other property sets.
             if (title != null) { dialog.SetTitle(title); }
 
-            if (initialDirectoryShellContainer != null)
+            if (InitialDirectoryShellContainer != null)
             {
-                dialog.SetFolder(initialDirectoryShellContainer.NativeShellItem);
+                dialog.SetFolder(InitialDirectoryShellContainer.NativeShellItem);
             }
 
-            if (defaultDirectoryShellContainer != null)
+            if (DefaultDirectoryShellContainer != null)
             {
-                dialog.SetDefaultFolder(defaultDirectoryShellContainer.NativeShellItem);
+                dialog.SetDefaultFolder(DefaultDirectoryShellContainer.NativeShellItem);
             }
 
-            if (!string.IsNullOrEmpty(initialDirectory))
+            if (!string.IsNullOrEmpty(InitialDirectory))
             {
                 // Create a native shellitem from our path
-                ShellNativeMethods.SHCreateItemFromParsingName(initialDirectory, IntPtr.Zero, ref guid, out IShellItem2 initialDirectoryShellItem);
+                ShellNativeMethods.SHCreateItemFromParsingName(InitialDirectory, IntPtr.Zero, ref guid, out IShellItem2 initialDirectoryShellItem);
 
                 // If we get a real shell item back, 
                 // then use that as the initial folder - otherwise,
@@ -723,10 +692,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                     dialog.SetFolder(initialDirectoryShellItem);
             }
 
-            if (!string.IsNullOrEmpty(defaultDirectory))
+            if (!string.IsNullOrEmpty(DefaultDirectory))
             {
                 // Create a native shellitem from our path
-                ShellNativeMethods.SHCreateItemFromParsingName(defaultDirectory, IntPtr.Zero, ref guid, out IShellItem2 defaultDirectoryShellItem);
+                ShellNativeMethods.SHCreateItemFromParsingName(DefaultDirectory, IntPtr.Zero, ref guid, out IShellItem2 defaultDirectoryShellItem);
 
                 // If we get a real shell item back, 
                 // then use that as the initial folder - otherwise,
@@ -750,9 +719,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 SyncFileTypeComboToDefaultExtension(dialog);
             }
 
-            if (cookieIdentifier != Guid.Empty)
+            if (CookieIdentifier != Guid.Empty)
             {
-                dialog.SetClientGuid(ref cookieIdentifier);
+                Guid ci = CookieIdentifier;
+                dialog.SetClientGuid(ref ci);
             }
 
             // Set the default extension
@@ -1000,8 +970,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         internal static string GetFileNameFromShellItem(IShellItem item)
         {
             string filename = null;
-            IntPtr pszString = IntPtr.Zero;
-            HResult hr = item.GetDisplayName(ShellNativeMethods.ShellItemDesignNameOptions.DesktopAbsoluteParsing, out pszString);
+            HResult hr = item.GetDisplayName(ShellNativeMethods.ShellItemDesignNameOptions.DesktopAbsoluteParsing, out IntPtr pszString);
             if (hr == HResult.Ok && pszString != IntPtr.Zero)
             {
                 filename = Marshal.PtrToStringAuto(pszString);

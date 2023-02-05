@@ -57,7 +57,7 @@ namespace Explorip.TaskBar.Controls
                     dwFlags = WinAPI.Modeles.DWM_TNP.VISIBLE | WinAPI.Modeles.DWM_TNP.RECTDESTINATION | WinAPI.Modeles.DWM_TNP.OPACITY,
                     fVisible = true,
                     opacity = 255,
-                    rcDestination = new WinAPI.Modeles.RECT() { left = 0, top = 0, right = (int)Width, bottom = (int)Height }
+                    rcDestination = new WinAPI.Modeles.Rect() { left = 0, top = 0, right = (int)Width, bottom = (int)Height }
                 };
                 Dwmapi.DwmUpdateThumbnailProperties(_thumbPtr, ref _thumb);
             }

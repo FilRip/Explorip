@@ -51,8 +51,6 @@ namespace System.Drawing
 
             if (VisualStyleInformation.IsSupportedByOS && VisualStyleInformation.IsEnabledByUser && Application.RenderWithVisualStyles)
             {
-
-
                 theme = VisualStyleInformation.ColorScheme switch
                 {
                     NormalColor => ColorScheme.NormalColor,
@@ -72,6 +70,5 @@ namespace System.Drawing
             Metallic = 2,
             NoTheme = 3
         }
-
     }
 }

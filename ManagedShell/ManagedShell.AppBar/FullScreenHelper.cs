@@ -144,7 +144,9 @@ namespace ManagedShell.AppBar
         private void ResetScreenCache()
         {
             // use reflection to empty screens cache
+#pragma warning disable S3011
             typeof(Screen).GetField("screens", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).SetValue(null, null);
+#pragma warning restore S3011
         }
 
         public void NotifyScreensChanged()

@@ -131,7 +131,7 @@ namespace Explorip.Helpers
                                         }
                                         ((ToolStripMenuItem)menuAAjouter).ShortcutKeys = touche;
                                     }
-                                    catch (Exception) { }
+                                    catch (Exception) { /* Ignore errors */ }
                                 }
                                 menuAAjouter.Click += ClickMenu;
                                 if ((background) && (libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER.Trim().ToLower() ||

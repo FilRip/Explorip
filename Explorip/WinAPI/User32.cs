@@ -94,7 +94,7 @@ namespace Explorip.WinAPI
         internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
 
         [DllImport("user32.dll", SetLastError = true)]
-        internal static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+        internal static extern bool GetWindowPlacement(IntPtr hWnd, ref WindowPlacement lpwndpl);
 
         public enum GWL
         {
@@ -190,6 +190,6 @@ namespace Explorip.WinAPI
         internal static extern int TrackPopupMenu(IntPtr hMenu, uint uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
 
         [DllImport("user32.dll")]
-        internal static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
+        internal static extern bool GetWindowRect(IntPtr hWnd, out Rect rect);
     }
 }

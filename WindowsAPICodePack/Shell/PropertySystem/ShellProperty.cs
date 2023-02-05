@@ -44,7 +44,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             store.GetValue(ref propertyKey, propVar);
 
             Marshal.ReleaseComObject(store);
-            store = null;
 
             ((IPropertyDescription2)Description.NativePropertyDescription).GetImageReferenceForValue(
                 propVar, out string refPath);
@@ -104,7 +103,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 if (writablePropStore != null)
                 {
                     Marshal.ReleaseComObject(writablePropStore);
-                    writablePropStore = null;
                 }
             }
         }
@@ -273,7 +271,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
             // Release the Propertystore
             Marshal.ReleaseComObject(store);
-            store = null;
 
             HResult hr = Description.NativePropertyDescription.FormatForDisplay(propVar, ref format, out formattedString);
 
@@ -310,7 +307,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
             // Release the Propertystore
             Marshal.ReleaseComObject(store);
-            store = null;
 
             HResult hr = Description.NativePropertyDescription.FormatForDisplay(propVar, ref format, out string formattedString);
 
@@ -373,7 +369,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     store.GetValue(ref propertyKey, propVar);
 
                     Marshal.ReleaseComObject(store);
-                    store = null;
                 }
                 else if (NativePropertyStore != null)
                 {

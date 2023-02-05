@@ -15,7 +15,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 {
     internal static class TaskbarWindowManager
     {
-        internal static List<TaskbarWindow> _taskbarWindowList = new();
+        internal static readonly List<TaskbarWindow> _taskbarWindowList = new();
 
         private static bool _buttonsAdded;
 
@@ -26,10 +26,12 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             TaskbarWindow temp = null;
             try
             {
+#pragma warning disable S1121
                 AddThumbnailButtons(
                     taskbarWindow ?? (temp = new TaskbarWindow(userWindowHandle, buttons)),
                     taskbarWindow == null,
                     buttons);
+#pragma warning restore S1121
             }
             catch
             {
@@ -45,10 +47,12 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             TaskbarWindow temp = null;
             try
             {
+#pragma warning disable S1121
                 AddThumbnailButtons(
                     taskbarWindow ?? (temp = new TaskbarWindow(control, buttons)),
                     taskbarWindow == null,
                     buttons);
+#pragma warning restore S1121
             }
             catch
             {
@@ -453,7 +457,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                         {
                             TabbedThumbnailNativeMethods.SetPeekBitmap(
                                 taskbarWindow.WindowToTellTaskbarAbout,
-                                hBitmap, new System.Drawing.Point((int)offset.X, (int)offset.Y),
+                                hBitmap, new Point((int)offset.X, (int)offset.Y),
                                 taskbarWindow.TabbedThumbnail.DisplayFrameAroundBitmap);
                         }
                         else
@@ -549,7 +553,6 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                         }
 
                         taskbarWindow.Dispose();
-                        taskbarWindow = null;
                     }
                 }
                 else if (((int)m.WParam) == TabbedThumbnailNativeMethods.ScMaximize)
@@ -635,7 +638,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// <param name="taskbarWindow">The proxy window for which a bitmap needs to be created</param>
         /// <param name="requestedSize">Size for the requested bitmap image</param>
         /// <returns>Bitmap captured from the window handle or UIElement. Null if the window is hidden or it's size is zero.</returns>
-        private static IntPtr GrabBitmap(TaskbarWindow taskbarWindow, System.Drawing.Size requestedSize)
+        private static IntPtr GrabBitmap(TaskbarWindow taskbarWindow, Size requestedSize)
         {
             IntPtr hBitmap = IntPtr.Zero;
 

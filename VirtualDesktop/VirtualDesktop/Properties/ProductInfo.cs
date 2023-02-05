@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace WindowsDesktop.Properties
 {
-    public class ProductInfo
+    public static class ProductInfo
     {
         private static readonly Assembly _assembly = Assembly.GetExecutingAssembly();
         private static readonly Lazy<string> _titleLazy = new(() => ((AssemblyTitleAttribute)Attribute.GetCustomAttribute(_assembly, typeof(AssemblyTitleAttribute))).Title);

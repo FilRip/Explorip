@@ -1,7 +1,6 @@
 ﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using Microsoft.WindowsAPICodePack.Shell.Resources;
@@ -51,8 +50,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public static class System
         {
-
-
             #region Properties
 
             /// <summary>
@@ -2293,7 +2290,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-classes
 
             /// <summary>
@@ -2301,8 +2297,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class AppUserModel
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -2417,7 +2411,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
             }
 
             /// <summary>
@@ -2425,8 +2418,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Audio
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -2597,9 +2588,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -2607,8 +2595,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Calendar
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -2859,9 +2845,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -2869,8 +2852,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Communication
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -3025,9 +3006,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -3035,8 +3013,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Computer
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -3056,9 +3032,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -3066,8 +3039,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Contact
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -4224,7 +4195,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 }
                 #endregion
 
-
                 #region sub-classes
 
                 /// <summary>
@@ -4297,8 +4267,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class JA
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -4352,9 +4320,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -4362,8 +4327,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Device
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -4383,9 +4346,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -4393,8 +4353,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class DeviceInterface
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -4465,9 +4423,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -4475,8 +4430,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Devices
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -5262,7 +5215,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 }
                 #endregion
 
-
                 #region sub-classes
 
                 /// <summary>
@@ -5388,8 +5340,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Notifications
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -5494,9 +5444,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -5504,8 +5451,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Document
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -5928,9 +5873,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -5938,8 +5880,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class DRM
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -6027,9 +5967,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -6037,8 +5974,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class GPS
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -6939,9 +6874,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -6949,8 +6881,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Identity
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -7072,9 +7002,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -7082,8 +7009,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class IdentityProvider
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -7120,9 +7045,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -7130,8 +7052,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Image
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -7371,9 +7291,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -7381,8 +7298,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Journal
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -7417,9 +7332,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -7427,8 +7339,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class LayoutPattern
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -7467,9 +7377,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -7477,8 +7384,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Link
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -7653,9 +7558,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -7663,8 +7565,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Media
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -8208,9 +8108,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -8218,8 +8115,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Message
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -8624,9 +8519,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -8634,8 +8526,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Music
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -8945,9 +8835,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -8955,8 +8842,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Note
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -8993,9 +8878,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -9003,8 +8885,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Photo
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -10468,9 +10348,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -10478,8 +10355,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class PropGroup
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -10786,9 +10661,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -10796,8 +10668,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class PropList
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -11033,9 +10903,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -11043,8 +10910,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class RecordedTV
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -11307,9 +11172,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -11317,8 +11179,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Search
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -11578,9 +11438,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -11588,8 +11445,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Shell
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -11626,9 +11481,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -11636,8 +11488,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Software
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -11674,9 +11524,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -11684,8 +11531,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Sync
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -11916,9 +11761,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -11926,8 +11768,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Task
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -11978,9 +11818,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -11988,8 +11825,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Video
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -12231,9 +12066,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
 
             /// <summary>
@@ -12241,8 +12073,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// </summary>
             public static class Volume
             {
-
-
                 #region Properties
 
                 /// <summary>
@@ -12295,10 +12125,8 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     }
                 }
                 #endregion
-
-
-
             }
+
             #endregion
         }
     }

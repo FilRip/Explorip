@@ -23,8 +23,8 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// </summary>
         /// <param name="windowHandle">Window handle for which the thumbnail toolbar buttons need to be added</param>
         /// <param name="buttons">Thumbnail buttons for the window's thumbnail toolbar</param>
-        /// <exception cref="System.ArgumentException">If the number of buttons exceed the maximum allowed capacity (7).</exception>
-        /// <exception cref="System.ArgumentException">If the Window Handle passed in invalid</exception>
+        /// <exception cref="ArgumentException">If the number of buttons exceed the maximum allowed capacity (7).</exception>
+        /// <exception cref="ArgumentException">If the Window Handle passed in invalid</exception>
         /// <remarks>After a toolbar has been added to a thumbnail, buttons can be altered only through various 
         /// properties on the <see cref="T:Microsoft.WindowsAPICodePack.Taskbar.ThumbnailToolBarButton"/>. While individual buttons cannot be added or removed, 
         /// they can be shown and hidden through <see cref="P:Microsoft.WindowsAPICodePack.Taskbar.ThumbnailToolBarButton.Visible"/> as needed. 
@@ -47,8 +47,8 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// </summary>
         /// <param name="control">WPF Control for which the thumbnail toolbar buttons need to be added</param>
         /// <param name="buttons">Thumbnail buttons for the window's thumbnail toolbar</param>
-        /// <exception cref="System.ArgumentException">If the number of buttons exceed the maximum allowed capacity (7).</exception>
-        /// <exception cref="System.ArgumentNullException">If the control passed in null</exception>
+        /// <exception cref="ArgumentException">If the number of buttons exceed the maximum allowed capacity (7).</exception>
+        /// <exception cref="ArgumentNullException">If the control passed in null</exception>
         /// <remarks>After a toolbar has been added to a thumbnail, buttons can be altered only through various 
         /// properties on the ThumbnailToolBarButton. While individual buttons cannot be added or removed, 
         /// they can be shown and hidden through ThumbnailToolBarButton.Visible as needed. 
@@ -69,7 +69,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             {
                 throw new ArgumentException(LocalizedMessages.ThumbnailToolbarManagerNullEmptyArray, "buttons");
             }
-            if (buttons.Length > 7)
+            if (buttons?.Length > 7)
             {
                 throw new ArgumentException(LocalizedMessages.ThumbnailToolbarManagerMaxButtons, "buttons");
             }

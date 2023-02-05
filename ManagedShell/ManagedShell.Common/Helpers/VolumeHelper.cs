@@ -13,25 +13,24 @@ namespace ManagedShell.Common.Helpers
 
             // get the speakers (1st render + multimedia) device
             IMMDeviceEnumerator deviceEnumerator = (IMMDeviceEnumerator)(new MMDeviceEnumerator());
-            if (deviceEnumerator != null)
+
+            const int eRender = 0;
+            const int eMultimedia = 1;
+            deviceEnumerator.GetDefaultAudioEndpoint(eRender, eMultimedia, out IMMDevice speakers);
+
+            if (speakers != null)
             {
-                const int eRender = 0;
-                const int eMultimedia = 1;
-                deviceEnumerator.GetDefaultAudioEndpoint(eRender, eMultimedia, out IMMDevice speakers);
+                speakers.Activate(typeof(IAudioEndpointVolume).GUID, 0, IntPtr.Zero, out object o);
 
-                if (speakers != null)
+                if (o is IAudioEndpointVolume aepv)
                 {
-                    speakers.Activate(typeof(IAudioEndpointVolume).GUID, 0, IntPtr.Zero, out object o);
-
-                    if (o is IAudioEndpointVolume aepv)
-                    {
-                        volume = aepv.GetMasterVolumeLevelScalar();
-                        Marshal.ReleaseComObject(aepv);
-                    }
-                    Marshal.ReleaseComObject(speakers);
+                    volume = aepv.GetMasterVolumeLevelScalar();
+                    Marshal.ReleaseComObject(aepv);
                 }
-                Marshal.ReleaseComObject(deviceEnumerator);
+                Marshal.ReleaseComObject(speakers);
             }
+            Marshal.ReleaseComObject(deviceEnumerator);
+
             return volume;
         }
 
@@ -41,25 +40,23 @@ namespace ManagedShell.Common.Helpers
 
             // get the speakers (1st render + multimedia) device
             IMMDeviceEnumerator deviceEnumerator = (IMMDeviceEnumerator)(new MMDeviceEnumerator());
-            if (deviceEnumerator != null)
+
+            const int eRender = 0;
+            const int eMultimedia = 1;
+            deviceEnumerator.GetDefaultAudioEndpoint(eRender, eMultimedia, out IMMDevice speakers);
+
+            if (speakers != null)
             {
-                const int eRender = 0;
-                const int eMultimedia = 1;
-                deviceEnumerator.GetDefaultAudioEndpoint(eRender, eMultimedia, out IMMDevice speakers);
+                speakers.Activate(typeof(IAudioEndpointVolume).GUID, 0, IntPtr.Zero, out object o);
 
-                if (speakers != null)
+                if (o is IAudioEndpointVolume aepv)
                 {
-                    speakers.Activate(typeof(IAudioEndpointVolume).GUID, 0, IntPtr.Zero, out object o);
-
-                    if (o is IAudioEndpointVolume aepv)
-                    {
-                        isMuted = aepv.GetMute();
-                        Marshal.ReleaseComObject(aepv);
-                    }
-                    Marshal.ReleaseComObject(speakers);
+                    isMuted = aepv.GetMute();
+                    Marshal.ReleaseComObject(aepv);
                 }
-                Marshal.ReleaseComObject(deviceEnumerator);
+                Marshal.ReleaseComObject(speakers);
             }
+            Marshal.ReleaseComObject(deviceEnumerator);
 
             if (isMuted == 1)
                 return true;

@@ -133,7 +133,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
             ChangeNotifyLock notifyLock = new(e.Message);
 
-            ShellObjectNotificationEventArgs args = null;
+            ShellObjectNotificationEventArgs args;
             args = notifyLock.ChangeType switch
             {
                 ShellObjectChangeTypes.DirectoryRename or ShellObjectChangeTypes.ItemRename => new ShellObjectRenamedEventArgs(notifyLock),

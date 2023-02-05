@@ -22,8 +22,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
             string path = null;
 
-            IntPtr pszPath = IntPtr.Zero;
-            HResult hr = shellItem.GetDisplayName(ShellNativeMethods.ShellItemDesignNameOptions.DesktopAbsoluteParsing, out pszPath);
+            HResult hr = shellItem.GetDisplayName(ShellNativeMethods.ShellItemDesignNameOptions.DesktopAbsoluteParsing, out IntPtr pszPath);
 
             if (hr != HResult.Ok && hr != HResult.InvalidArguments)
             {
@@ -34,7 +33,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
             {
                 path = Marshal.PtrToStringAuto(pszPath);
                 Marshal.FreeCoTaskMem(pszPath);
-                pszPath = IntPtr.Zero;
             }
 
             return path;
@@ -67,8 +65,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
 
             int retCode = ShellNativeMethods.SHParseDisplayName(
-                name, IntPtr.Zero, out IntPtr pidl, 0,
-                out ShellNativeMethods.ShellFileGetAttributesOptions sfgao);
+                name, IntPtr.Zero, out IntPtr pidl, 0, out _);
 
             return (CoreErrorHelper.Succeeded(retCode) ? pidl : IntPtr.Zero);
         }

@@ -17,8 +17,8 @@ namespace Explorip.WinAPI.Modeles
     public struct DWM_THUMBNAIL_PROPERTIES
     {
         public DWM_TNP dwFlags;
-        public RECT rcDestination;
-        public RECT rcSource;
+        public Rect rcDestination;
+        public Rect rcSource;
         public byte opacity;
         public bool fVisible;
         public bool fSourceClientAreaOnly;

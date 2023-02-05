@@ -13,7 +13,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// <summary>
     /// An ennumerable list of ShellObjects
     /// </summary>
-    public class ShellObjectCollection : IEnumerable, IDisposable, IList<ShellObject>
+    public class ShellObjectCollection : IDisposable, IList<ShellObject>
     {
         private readonly List<ShellObject> content = new();
         readonly bool readOnly;

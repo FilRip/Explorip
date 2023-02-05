@@ -659,7 +659,6 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 finally
                 {
                     Marshal.ReleaseComObject(ifv2);
-                    ifv2 = null;
                 }
             }
             return (FolderViewMode)viewMode;
@@ -721,7 +720,6 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 finally
                 {
                     Marshal.ReleaseComObject(iFV2);
-                    iFV2 = null;
                 }
             }
 
@@ -749,7 +747,6 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 finally
                 {
                     Marshal.ReleaseComObject(iFV2);
-                    iFV2 = null;
                 }
             }
 
@@ -777,7 +774,6 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 finally
                 {
                     Marshal.ReleaseComObject(iFV2);
-                    iFV2 = null;
                 }
             }
 
@@ -811,7 +807,6 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 finally
                 {
                     Marshal.ReleaseComObject(iFV2);
-                    iFV2 = null;
                 }
             }
             return iArray;

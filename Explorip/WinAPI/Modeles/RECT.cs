@@ -3,7 +3,7 @@
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct RECT
+    public struct Rect
     {
         public int left, top, right, bottom;
     }
