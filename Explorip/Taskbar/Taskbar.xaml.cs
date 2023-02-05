@@ -44,7 +44,8 @@ namespace Explorip.TaskBar
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
 
             // Layout rounding causes incorrect sizing on non-integer scales
-            if (DpiHelper.DpiScale % 1 != 0) UseLayoutRounding = false;
+            if (DpiHelper.DpiScale % 1 != 0)
+                UseLayoutRounding = false;
 
             if (Settings.Instance.ShowQuickLaunch)
             {
@@ -70,7 +71,7 @@ namespace Explorip.TaskBar
             base.WndProc(hwnd, msg, wParam, lParam, ref handled);
 
             if ((msg == (int)NativeMethods.WM.SYSCOLORCHANGE ||
-                    msg == (int)NativeMethods.WM.SETTINGCHANGE) &&
+                msg == (int)NativeMethods.WM.SETTINGCHANGE) &&
                 Settings.Instance.Theme == DictionaryManager.THEME_DEFAULT)
             {
                 handled = true;
@@ -86,7 +87,7 @@ namespace Explorip.TaskBar
         {
             base.SetPosition();
 
-            MyDesktopApp.MonShellManager.NotificationArea.SetTrayHostSizeData(new TrayHostSizeData
+            MyDesktopApp.MonShellManager.NotificationArea.SetTrayHostSizeData(new TrayHostSizeData()
             {
                 edge = (NativeMethods.ABEdge)AppBarEdge,
                 rc = new NativeMethods.Rect
@@ -94,7 +95,7 @@ namespace Explorip.TaskBar
                     Top = (int)(Top * DpiScale),
                     Left = (int)(Left * DpiScale),
                     Bottom = (int)((Top + Height) * DpiScale),
-                    Right = (int)((Left + Width) * DpiScale)
+                    Right = (int)((Left + Width) * DpiScale),
                 }
             });
         }
@@ -172,7 +173,8 @@ namespace Explorip.TaskBar
                     desiredLeft = Screen.Bounds.Right / DpiScale - Width;
                 }
 
-                if (Left != desiredLeft) Left = desiredLeft;
+                if (Left != desiredLeft)
+                    Left = desiredLeft;
             }
             else
             {
@@ -183,7 +185,8 @@ namespace Explorip.TaskBar
                     desiredTop = Screen.Bounds.Bottom / DpiScale - Height;
                 }
 
-                if (Top != desiredTop) Top = desiredTop;
+                if (Top != desiredTop)
+                    Top = desiredTop;
             }
         }
 
@@ -201,7 +204,8 @@ namespace Explorip.TaskBar
         {
             if (AllowClose)
             {
-                if (!_isReopening) _explorerHelper.HideExplorerTaskbar = false;
+                if (!_isReopening)
+                    _explorerHelper.HideExplorerTaskbar = false;
                 QuickLaunchToolbar.Visibility = Visibility.Collapsed;
 
                 Settings.Instance.PropertyChanged -= Settings_PropertyChanged;

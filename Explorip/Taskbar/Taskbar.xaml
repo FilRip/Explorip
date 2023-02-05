@@ -5,7 +5,7 @@
         xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
         xmlns:utilities="clr-namespace:Explorip.TaskBar.Utilities"
         xmlns:appbar="clr-namespace:ManagedShell.AppBar;assembly=ManagedShell.AppBar"
-        Title="{DynamicResource retrobar_title}"
+        Title="FilRip's taskbar"
         Loaded="AppBarWindow_Loaded"
         Left="0"
         LocationChanged="Taskbar_OnLocationChanged"

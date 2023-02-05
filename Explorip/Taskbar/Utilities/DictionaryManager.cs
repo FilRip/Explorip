@@ -67,8 +67,7 @@ namespace Explorip.TaskBar.Utilities
                 var currentUICulture = System.Globalization.CultureInfo.CurrentUICulture;
                 string systemLanguageParent = currentUICulture.Parent.NativeName;
                 string systemLanguage = currentUICulture.NativeName;
-                ManagedShell.Common.Logging.ShellLogger.Info
-                    ($"Loading system language (if available): {systemLanguageParent}, {systemLanguage}");
+                ManagedShell.Common.Logging.ShellLogger.Info($"Loading system language (if available): {systemLanguageParent}, {systemLanguage}");
                 SetLanguage(systemLanguageParent);
                 SetLanguage(systemLanguage);
             }
@@ -97,14 +96,11 @@ namespace Explorip.TaskBar.Utilities
             }
             else
             {
-                dictFilePath = Path.ChangeExtension(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dictFolder, dictionary),
-                                                    dictExtension);
+                dictFilePath = Path.ChangeExtension(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dictFolder, dictionary),dictExtension);
 
                 if (!File.Exists(dictFilePath))
                 {
-                    dictFilePath = // Custom dictionary in app directory
-                        Path.ChangeExtension(Path.Combine(Path.GetDirectoryName(ExePath.GetExecutablePath()), dictFolder, dictionary),
-                                             dictExtension);
+                    dictFilePath = Path.ChangeExtension(Path.Combine(Path.GetDirectoryName(ExePath.GetExecutablePath()), dictFolder, dictionary),dictExtension);
 
                     if (!File.Exists(dictFilePath))
                     {
@@ -126,7 +122,10 @@ namespace Explorip.TaskBar.Utilities
 
         public List<string> GetLanguages()
         {
-            List<string> languages = new() { LANG_DEFAULT };
+            List<string> languages = new()
+            {
+                LANG_DEFAULT
+            };
             languages.AddRange(GetDictionaries(LANG_FALLBACK, LANG_FOLDER, LANG_EXT));
             return languages;
         }
