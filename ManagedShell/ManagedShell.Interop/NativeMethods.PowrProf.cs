@@ -6,11 +6,13 @@ namespace ManagedShell.Interop
     {
         const string PowrProf_DllName = "powrprof.dll";
 
+#pragma warning disable S1104 // Fields should not have public accessibility
         public struct BATTERY_REPORTING_SCALE
         {
             public uint Granularity;
             public uint Capacity;
         }
+#pragma warning restore S1104 // Fields should not have public accessibility
 
         public enum SYSTEM_POWER_STATE
         {
@@ -24,6 +26,7 @@ namespace ManagedShell.Interop
             PowerSystemMaximum = 7
         }
 
+#pragma warning disable S1104 // Fields should not have public accessibility
         public struct SYSTEM_POWER_CAPABILITIES
         {
             [MarshalAs(UnmanagedType.U1)]
@@ -85,6 +88,7 @@ namespace ManagedShell.Interop
             public SYSTEM_POWER_STATE MinDeviceWakeState;
             public SYSTEM_POWER_STATE DefaultLowLatencyWake;
         }
+#pragma warning restore S1104 // Fields should not have public accessibility
 
         // There is a method for this in System.Windows.Forms, however it calls the same p/invoke and I would prefer not to reference that lib
         [DllImport(PowrProf_DllName)]

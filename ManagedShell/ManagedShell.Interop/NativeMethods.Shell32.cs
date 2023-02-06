@@ -471,6 +471,7 @@ namespace ManagedShell.Interop
             string lpszDialogTextBody,
             RunFileDialogFlags uflags);
 
+#pragma warning disable S1104 // Fields should not have public accessibility
         public struct IMAGELISTDRAWPARAMS
         {
             public int cbSize;
@@ -491,6 +492,7 @@ namespace ManagedShell.Interop
             public int Frame;
             public int crEffect;
         }
+#pragma warning restore S1104 // Fields should not have public accessibility
 
         [StructLayout(LayoutKind.Sequential)]
         public struct IMAGEINFO

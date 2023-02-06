@@ -25,6 +25,7 @@ namespace WindowsDesktop.Interop
             }
             catch (COMException ex) when (ex.Match(HResult.RPC_S_SERVER_UNAVAILABLE))
             {
+                /* Ignore errors */
             }
         }
     }

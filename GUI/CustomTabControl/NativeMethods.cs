@@ -147,7 +147,7 @@ namespace System.Windows.Forms
         {
             public IntPtr hdc;
             public int fErase;
-            public RECT rcPaint;
+            public Rect rcPaint;
             public int fRestore;
             public int fIncUpdate;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
@@ -155,14 +155,14 @@ namespace System.Windows.Forms
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct RECT
+        public struct Rect
         {
             public int left;
             public int top;
             public int right;
             public int bottom;
 
-            public RECT(int left, int top, int right, int bottom)
+            public Rect(int left, int top, int right, int bottom)
             {
                 this.left = left;
                 this.top = top;
@@ -170,7 +170,7 @@ namespace System.Windows.Forms
                 this.bottom = bottom;
             }
 
-            public RECT(Rectangle r)
+            public Rect(Rectangle r)
             {
                 left = r.Left;
                 top = r.Top;
@@ -178,14 +178,14 @@ namespace System.Windows.Forms
                 bottom = r.Bottom;
             }
 
-            public static RECT FromXYWH(int x, int y, int width, int height)
+            public static Rect FromXYWH(int x, int y, int width, int height)
             {
-                return new RECT(x, y, x + width, y + height);
+                return new Rect(x, y, x + width, y + height);
             }
 
-            public static RECT FromIntPtr(IntPtr ptr)
+            public static Rect FromIntPtr(IntPtr ptr)
             {
-                RECT rect = (RECT)Marshal.PtrToStructure(ptr, typeof(RECT));
+                Rect rect = (Rect)Marshal.PtrToStructure(ptr, typeof(Rect));
                 return rect;
             }
 

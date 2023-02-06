@@ -6,6 +6,7 @@ using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray
 {
+#pragma warning disable S1104 // Fields should not have public accessibility
     public class SafeNotifyIconData
     {
         public int cbSize;
@@ -54,4 +55,5 @@ namespace ManagedShell.WindowsTray
             hBalloonIcon = nid.hBalloonIcon;
         }
     }
+#pragma warning restore S1104 // Fields should not have public accessibility
 }
