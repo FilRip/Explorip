@@ -90,7 +90,7 @@ namespace Explorip.TaskBar
             MyDesktopApp.MonShellManager.NotificationArea.SetTrayHostSizeData(new TrayHostSizeData()
             {
                 edge = (NativeMethods.ABEdge)AppBarEdge,
-                rc = new NativeMethods.Rect
+                rc = new NativeMethods.Rect()
                 {
                     Top = (int)(Top * DpiScale),
                     Left = (int)(Left * DpiScale),

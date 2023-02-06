@@ -106,10 +106,11 @@
                 <MenuItem Header="{DynamicResource new_toolbar}" Name="NewToolbarMenuItem" />
             </MenuItem>
             <Separator /-->
-            <MenuItem Style="{DynamicResource TaskManMenuItem}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick" />
+            <MenuItem Style="{DynamicResource TaskManMenuItem}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick"/>
             <Separator />
-            <MenuItem Header="{DynamicResource tray_properties}" Name="PropertiesMenuItem" Click="PropertiesMenuItem_OnClick" />
-            <MenuItem Header="{DynamicResource exit_retrobar}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick" />
+            <MenuItem Header="{DynamicResource tray_properties}" Name="PropertiesMenuItem" Click="PropertiesMenuItem_OnClick"/>
+            <MenuItem Header="Unlock" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
+            <MenuItem Header="{DynamicResource exit_retrobar}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>
     </appbar:AppBarWindow.ContextMenu>
 </appbar:AppBarWindow>

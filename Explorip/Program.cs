@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
-using Explorip.Forms;
 using Explorip.Helpers;
 
 namespace Explorip
@@ -22,7 +21,6 @@ namespace Explorip
         {
             ModeShell = true;
 
-            _mutexTaskbar = new Mutex(true, "ExploripTaskbar", out bool taskBarNotLaunched);
             Process[] process = Process.GetProcessesByName("explorer");
             if (process != null && process.Length > 0)
             {
@@ -40,19 +38,18 @@ namespace Explorip
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ApplicationExit += Application_ApplicationExit;
 
-            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") && taskBarNotLaunched)
+            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
             {
+                _mutexTaskbar = new Mutex(true, "ExploripTaskbar", out bool taskBarNotLaunched);
+                if (taskBarNotLaunched)
+                {
+                    _WpfHost = new TaskBar.MyDesktopApp();
+                    _WpfHost.Run();
+                }
                 _mutexTaskbar.Dispose();
-                _WpfHost = new TaskBar.MyDesktopApp();
-                _WpfHost.Run();
             }
             else
             {
-                // WinForm
-                //Themes.AutoTheme.InitButtons();
-                //Application.Run(new FormExplorerBrowser(args));
-
-                // WPF
                 _WpfHost = new Explorer.WPF.MyExplorerApp();
                 _WpfHost.Run();
             }
