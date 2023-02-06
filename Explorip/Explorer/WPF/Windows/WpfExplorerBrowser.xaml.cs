@@ -31,14 +31,23 @@ namespace Explorip.Explorer.WPF.Windows
 
             _fileOperation = new FilesOperations.FileOperation();
 
+            string dir = null;
             if (Environment.GetCommandLineArgs().Length > 1)
             {
-                string dir = Environment.GetCommandLineArgs()[1].Trim().ToLower() == "explorer" && Environment.GetCommandLineArgs().Length > 2
+                dir = Environment.GetCommandLineArgs()[1].Trim().ToLower() == "explorer" && Environment.GetCommandLineArgs().Length > 2
                     ? Environment.GetCommandLineArgs()[2]
                     : Environment.GetCommandLineArgs()[1];
-                LeftTab.FirstTab.Navigation(dir);
+                try
+                {
+                    LeftTab.FirstTab.Navigation(dir);
+                }
+                catch (Exception)
+                {
+                    dir = null;
+                }
             }
-            else
+            
+            if (string.IsNullOrWhiteSpace(dir))
                 LeftTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
 
             RightTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
