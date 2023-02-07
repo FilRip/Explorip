@@ -14,7 +14,7 @@ namespace ManagedShell.Interop
         const string Kernel32_DllName = "kernel32.dll";
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct BY_HANDLE_FILE_INFORMATION
+        public struct ByHandleFileInformation
         {
             [FieldOffset(0)]
             public uint FileAttributes;
@@ -49,7 +49,7 @@ namespace ManagedShell.Interop
 
         [DllImport(Kernel32_DllName, SetLastError = true)]
         internal static extern bool GetFileInformationByHandle(SafeFileHandle hFile,
-            out BY_HANDLE_FILE_INFORMATION lpFileInformation);
+            out ByHandleFileInformation lpFileInformation);
 
         [DllImport(Kernel32_DllName, CharSet = CharSet.Auto, SetLastError = true)]
         internal static extern SafeFileHandle CreateFile([MarshalAs(UnmanagedType.LPTStr)] string filename,

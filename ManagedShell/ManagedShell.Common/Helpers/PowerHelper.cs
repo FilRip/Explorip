@@ -25,17 +25,17 @@ namespace ManagedShell.Common.Helpers
                 throw new ManagedShellException("Error attempting to open process token to raise level for shutdown.\nWin32 Error Code: " + Marshal.GetLastWin32Error());
             }
 
-            NativeMethods.LUID luid = new();
+            NativeMethods.Luid luid = new();
             bool privLookupResult = NativeMethods.LookupPrivilegeValue(null, "SeShutdownPrivilege", ref luid);
             if (!privLookupResult)
             {
                 throw new ManagedShellException("Error attempting to lookup value for shutdown privilege.\n Win32 Error Code: " + Marshal.GetLastWin32Error());
             }
 
-            NativeMethods.TOKEN_PRIVILEGES newPriv = new()
+            NativeMethods.TokenPriviles newPriv = new()
             {
                 PrivilegeCount = 1,
-                Privileges = new NativeMethods.LUID_AND_ATTRIBUTES[1]
+                Privileges = new NativeMethods.LuidAndAttributes[1]
             };
             newPriv.Privileges[0].Luid = luid;
             newPriv.Privileges[0].Attributes = 0x00000002;

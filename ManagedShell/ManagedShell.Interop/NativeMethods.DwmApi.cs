@@ -18,10 +18,10 @@ namespace ManagedShell.Interop
         internal static extern int DwmUnregisterThumbnail(IntPtr thumb);
 
         [DllImport(DwmApi_DllName)]
-        internal static extern int DwmQueryThumbnailSourceSize(IntPtr thumb, out PSIZE size);
+        internal static extern int DwmQueryThumbnailSourceSize(IntPtr thumb, out Psize size);
 
         [DllImport(DwmApi_DllName)]
-        internal static extern int DwmUpdateThumbnailProperties(IntPtr hThumb, ref DWM_THUMBNAIL_PROPERTIES props);
+        internal static extern int DwmUpdateThumbnailProperties(IntPtr hThumb, ref DwmThumbnailProperties props);
 
         [DllImport(DwmApi_DllName, EntryPoint = "#113", SetLastError = true)]
         internal static extern uint DwmActivateLivePreview(uint enable, IntPtr targetHwnd, IntPtr callingHwnd, AeroPeekType type);
@@ -40,13 +40,13 @@ namespace ManagedShell.Interop
         internal static extern bool DwmIsCompositionEnabled();
 
         [DllImport(DwmApi_DllName)]
-        internal static extern int DwmExtendFrameIntoClientArea(IntPtr hdc, ref MARGINS marInset);
+        internal static extern int DwmExtendFrameIntoClientArea(IntPtr hdc, ref Margins marInset);
 
         [DllImport(DwmApi_DllName)]
         internal static extern int DwmDefWindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, out IntPtr result);
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct PAINTSTRUCT
+        internal struct PaintStruct
         {
             internal IntPtr hdc;
             internal int fErase;
@@ -64,13 +64,13 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MARGINS
+        public struct Margins
         {
             public int cxLeftWidth;
             public int cxRightWidth;
             public int cyTopHeight;
             public int cyBottomHeight;
-            public MARGINS(int Left, int Right, int Top, int Bottom)
+            public Margins(int Left, int Right, int Top, int Bottom)
             {
                 this.cxLeftWidth = Left;
                 this.cxRightWidth = Right;
@@ -80,7 +80,7 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct DWM_THUMBNAIL_PROPERTIES
+        public struct DwmThumbnailProperties
         {
             public int dwFlags;
             public Rect rcDestination;
@@ -126,7 +126,7 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct PSIZE
+        public struct Psize
         {
             public int x;
             public int y;

@@ -17,7 +17,7 @@ namespace System.Windows.Forms
         private bool _removeNoClientArea;
         private bool _margingSet;
         //private bool _isPainting;
-        private NativeMethods.MARGINS _dwmMargins;
+        private NativeMethods.Margins _dwmMargins;
         private int _iStoreHeight;
 
         public CustomForm() : base()

@@ -166,7 +166,7 @@ namespace ManagedShell.ShellFolders
                 fMask = CMIC.ASYNCOK | CMIC.FLAG_LOG_USAGE | CMIC.UNICODE | CMIC.PTINVOKE |
                 ((Control.ModifierKeys & Keys.Control) != 0 ? CMIC.CONTROL_DOWN : 0) |
                 ((Control.ModifierKeys & Keys.Shift) != 0 ? CMIC.SHIFT_DOWN : 0),
-                ptInvoke = new NativeMethods.POINT(ptInvoke.X, ptInvoke.Y),
+                ptInvoke = new NativeMethods.Point(ptInvoke.X, ptInvoke.Y),
                 nShow = NativeMethods.WindowShowStyle.ShowNormal
             };
 

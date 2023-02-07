@@ -648,8 +648,8 @@ namespace ManagedShell.Interop
 
             [PreserveSig()]
             int GetDragImage(
-                ref POINT ppt,
-                ref POINT pptHotspot,
+                ref Point ppt,
+                ref Point pptHotspot,
                 ref Guid riid,
                 ref IntPtr ppv);
 

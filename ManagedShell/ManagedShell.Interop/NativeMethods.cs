@@ -30,9 +30,9 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
+        public struct Point
         {
-            public POINT(long x, long y)
+            public Point(long x, long y)
             {
                 this.x = x;
                 this.y = y;

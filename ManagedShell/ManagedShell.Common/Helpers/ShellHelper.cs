@@ -561,11 +561,11 @@ namespace ManagedShell.Common.Helpers
             if (sfh2.IsInvalid)
                 ShellLogger.Error($"Win32 error occured when trying to open file {path2}", Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
 
-            var result1 = GetFileInformationByHandle(sfh1, out BY_HANDLE_FILE_INFORMATION fileInfo1);
+            var result1 = GetFileInformationByHandle(sfh1, out ByHandleFileInformation fileInfo1);
             if (!result1)
                 ShellLogger.Error($"GetFileInformationByHandle has failed on {path1}");
 
-            var result2 = GetFileInformationByHandle(sfh2, out BY_HANDLE_FILE_INFORMATION fileInfo2);
+            var result2 = GetFileInformationByHandle(sfh2, out ByHandleFileInformation fileInfo2);
             if (!result2)
                 ShellLogger.Error($"GetFileInformationByHandle has failed on {path2}");
 

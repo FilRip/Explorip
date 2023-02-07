@@ -223,5 +223,13 @@ namespace Explorip.TaskBar
                 WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
             MyDesktopApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
         }
+
+        private void UnlockTaskbar_Click(object sender, RoutedEventArgs e)
+        {
+            if (ResizeMode == ResizeMode.NoResize)
+                ResizeMode = ResizeMode.CanResizeWithGrip;
+            else
+                ResizeMode = ResizeMode.NoResize;
+        }
     }
 }

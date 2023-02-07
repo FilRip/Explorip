@@ -30,6 +30,6 @@ namespace ManagedShell.ShellFolders.Structs
         public string lpDirectoryW;
         [MarshalAs(UnmanagedType.LPWStr)]
         public string lpTitleW;
-        public NativeMethods.POINT ptInvoke;
+        public NativeMethods.Point ptInvoke;
     }
 }

@@ -37,22 +37,22 @@ namespace ManagedShell.Interop
         internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
         [DllImport(User32_DllName)]
-        internal static extern IntPtr BeginPaint(IntPtr hWnd, ref PAINTSTRUCT ps);
+        internal static extern IntPtr BeginPaint(IntPtr hWnd, ref PaintStruct ps);
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool EndPaint(IntPtr hWnd, ref PAINTSTRUCT ps);
+        internal static extern bool EndPaint(IntPtr hWnd, ref PaintStruct ps);
 
         [DllImport(User32_DllName)]
         internal static extern int FillRect(IntPtr hDC, [In] ref Rect lprc, IntPtr hbr);
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetCursorPos(ref Point lpPoint);
+        internal static extern bool GetCursorPos(ref System.Drawing.Point lpPoint);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool PtInRect([In] ref Rect lprc, Point pt);
+        internal static extern bool PtInRect([In] ref Rect lprc, System.Drawing.Point pt);
 
         public enum WindowZOrder
         {
@@ -351,8 +351,8 @@ namespace ManagedShell.Interop
             public int length;
             public int flags;
             public WindowShowStyle showCmd;
-            public Point ptMinPosition;
-            public Point ptMaxPosition;
+            public System.Drawing.Point ptMinPosition;
+            public System.Drawing.Point ptMaxPosition;
             public Rectangle rcNormalPosition;
         }
 #pragma warning restore S1104 // Fields should not have public accessibility
@@ -3032,7 +3032,7 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(User32_DllName)]
-        internal static extern IntPtr MonitorFromPoint(Point pt, MonitorOptions dwFlags);
+        internal static extern IntPtr MonitorFromPoint(System.Drawing.Point pt, MonitorOptions dwFlags);
 
         public delegate bool MonitorEnumProc(IntPtr hDesktop, IntPtr hdc, ref Rect pRect, int dwData);
         [DllImport(User32_DllName)]
