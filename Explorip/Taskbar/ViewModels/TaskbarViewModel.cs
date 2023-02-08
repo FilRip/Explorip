@@ -1,18 +1,22 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-using ManagedShell;
+﻿using Explorip.Helpers;
 
 namespace Explorip.TaskBar.ViewModels
 {
-    public class TaskbarViewModel : ShellManager, INotifyPropertyChanged
+    public class TaskbarViewModel : ViewModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        private static TaskbarViewModel _instance;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public static TaskbarViewModel Instance
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get
+            {
+                if (_instance == null)
+                    _instance = new();
+                return _instance;
+            }
         }
+
+        private TaskbarViewModel() : base() { }
 
         private bool _resizeMode;
         public bool ResizeOn

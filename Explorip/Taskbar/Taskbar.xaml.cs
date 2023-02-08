@@ -6,6 +6,7 @@ using System.Windows.Media;
 
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
+using Explorip.TaskBar.ViewModels;
 
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -27,6 +28,7 @@ namespace Explorip.TaskBar
         public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
             : base(MyDesktopApp.MonShellManager.AppBarManager, MyDesktopApp.MonShellManager.ExplorerHelper, MyDesktopApp.MonShellManager.FullScreenHelper, screen, edge, 0)
         {
+            _ = TaskbarViewModel.Instance;
             InitializeComponent();
 
             _mainScreen = screen.Primary;
@@ -227,9 +229,15 @@ namespace Explorip.TaskBar
         private void UnlockTaskbar_Click(object sender, RoutedEventArgs e)
         {
             if (ResizeMode == ResizeMode.NoResize)
+            {
                 ResizeMode = ResizeMode.CanResizeWithGrip;
+                TaskbarViewModel.Instance.ResizeOn = true;
+            }
             else
+            {
                 ResizeMode = ResizeMode.NoResize;
+                TaskbarViewModel.Instance.ResizeOn = false;
+            }
         }
     }
 }

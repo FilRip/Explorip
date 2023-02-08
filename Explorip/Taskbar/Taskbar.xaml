@@ -4,6 +4,7 @@
         xmlns:controls="clr-namespace:Explorip.TaskBar.Controls"
         xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
         xmlns:utilities="clr-namespace:Explorip.TaskBar.Utilities"
+        xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
         xmlns:appbar="clr-namespace:ManagedShell.AppBar;assembly=ManagedShell.AppBar"
         Title="FilRip's taskbar"
         Loaded="AppBarWindow_Loaded"
@@ -109,7 +110,7 @@
             <MenuItem Style="{DynamicResource TaskManMenuItem}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick"/>
             <Separator />
             <MenuItem Header="{DynamicResource tray_properties}" Name="PropertiesMenuItem" Click="PropertiesMenuItem_OnClick"/>
-            <MenuItem Header="Unlock" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
+            <MenuItem Header="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=LabelUnlock}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="{DynamicResource exit_retrobar}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>
     </appbar:AppBarWindow.ContextMenu>
