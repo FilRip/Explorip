@@ -29,7 +29,7 @@ namespace ManagedShell.Common.Helpers
                     GetOSVersion();
                 }
 
-                return (osVersionMajor >= 5);
+                return osVersionMajor >= 5;
             }
         }
 
@@ -42,7 +42,7 @@ namespace ManagedShell.Common.Helpers
                     GetOSVersion();
                 }
 
-                return (osVersionMajor >= 6);
+                return osVersionMajor >= 6;
             }
         }
 
@@ -55,7 +55,7 @@ namespace ManagedShell.Common.Helpers
                     GetOSVersion();
                 }
 
-                return (osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2));
+                return osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2);
             }
         }
 
@@ -68,7 +68,7 @@ namespace ManagedShell.Common.Helpers
                     GetOSVersion();
                 }
 
-                return (osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2 && osVersionBuild >= 9600));
+                return osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2 && osVersionBuild >= 9600);
             }
         }
 
@@ -81,7 +81,7 @@ namespace ManagedShell.Common.Helpers
                     GetOSVersion();
                 }
 
-                return (osVersionMajor >= 10);
+                return osVersionMajor >= 10;
             }
         }
 
@@ -94,7 +94,7 @@ namespace ManagedShell.Common.Helpers
                     GetOSVersion();
                 }
 
-                return (osVersionMajor >= 10 && osVersionBuild >= 16353);
+                return osVersionMajor >= 10 && osVersionBuild >= 16353;
             }
         }
 
@@ -107,7 +107,7 @@ namespace ManagedShell.Common.Helpers
                     GetOSVersion();
                 }
 
-                return (osVersionMajor >= 10 && osVersionBuild >= 22000);
+                return osVersionMajor >= 10 && osVersionBuild >= 22000;
             }
         }
 
@@ -126,7 +126,7 @@ namespace ManagedShell.Common.Helpers
                 }
 
                 // This has an upper-bound due to the volatility of the undocumented dark mode API
-                return (osVersionMajor >= 10 && osVersionBuild >= 18362 && osVersionBuild <= 22000);
+                return osVersionMajor >= 10 && osVersionBuild >= 18362 && osVersionBuild <= 22000;
             }
         }
 
@@ -191,7 +191,7 @@ namespace ManagedShell.Common.Helpers
             }
         }
 
-        public static bool IsAppRunningAsShell;
+        public static bool IsAppRunningAsShell { get; set; }
 
         private static bool? isServerCore;
 
