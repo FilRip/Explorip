@@ -11,7 +11,7 @@
         d:DesignHeight="450" d:DesignWidth="800"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
         MouseDown="Window_MouseDown" UseLayoutRounding="True" Activated="Window_Activated" Focusable="True" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
-        ResizeMode="CanResize"
+        ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged" Deactivated="Window_Deactivated"
         Loaded="Window_Loaded">
     
     <Window.DataContext>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,6 +24,8 @@ namespace Explorip.Explorer.WPF.Windows
     public partial class WpfExplorerBrowser : Window
     {
         private readonly FilesOperations.FileOperation _fileOperation;
+        //private readonly Timer timer;
+        private DateTime _lastChangeActivation;
 
         public WpfExplorerBrowser()
         {
@@ -61,12 +63,18 @@ namespace Explorip.Explorer.WPF.Windows
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
+
+            //timer = new Timer(CheckState, null, 500, 500);
+
+            _lastChangeActivation = DateTime.Now;
         }
 
         public WpfExplorerBrowserViewModel MyDataContext
         {
             get { return (WpfExplorerBrowserViewModel)DataContext; }
         }
+
+        #region Window icon
 
         private void CloseWindow_Click(object sender, RoutedEventArgs e)
         {
@@ -99,6 +107,8 @@ namespace Explorip.Explorer.WPF.Windows
                 MyDataContext.WindowMaximized = false;
             }
         }
+
+        #endregion
 
         private bool _startDrag;
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -164,6 +174,8 @@ namespace Explorip.Explorer.WPF.Windows
             MyDataContext.SelectionRight = false;
         }
 
+        #region Files operations
+
         private void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
         {
             ShellObject[] listeItems = tabSource.CurrentTab.ExplorerBrowser.SelectedItems.ToArray();
@@ -203,24 +215,87 @@ namespace Explorip.Explorer.WPF.Windows
             CopyBetweenTab(RightTab, LeftTab, true);
         }
 
-        private void MethodeInvokee()
+        #endregion
+
+        private void Window_Activated(object sender, EventArgs e)
         {
+            if (DateTime.Now.Subtract(_lastChangeActivation).TotalMilliseconds > 250)
+            {
+                _lastChangeActivation = DateTime.Now;
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (IsActive && WindowState == WindowState.Minimized)
+                    {
+                        //SystemCommands.RestoreWindow(this);
+                        if (MyDataContext.WindowMaximized)
+                        {
+                            WindowState = WindowState.Maximized;
+                            Topmost = true;
+                            Topmost = false;
+                            Focus();
+                        }
+                        else
+                        {
+                            WindowState = WindowState.Normal;
+                        }
+                    }
+                    else
+                    {
+                        WindowState = WindowState.Minimized;
+                    }
+                }, System.Windows.Threading.DispatcherPriority.Render);
+            }
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            _lastChangeActivation = DateTime.Now;
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            /*if (WindowState == WindowState.Minimized)
+                _lastChangeActivation = DateTime.Now;
+            Console.WriteLine("State Changed = " + WindowState.ToString("G"));*/
+        }
+
+        /*private void MethodeInvokee()
+        {
+            Console.WriteLine("MethodeInvokee");
             System.Threading.Thread.Sleep(100);
-            if (!IsFocused)
+            if (!IsActive || WindowState == WindowState.Minimized)
+            {
+                Console.WriteLine($"Methode cancel = IsActive={IsActive}, WindowState={WindowState:G}");
                 return;
+            }
+            Console.WriteLine("Est ative");
             if (MyDataContext.WindowMaximized)
                 WindowState = WindowState.Maximized;
             else
                 WindowState = WindowState.Normal;
+            Console.WriteLine("Etat changé");
             Topmost = true; // HACK : To pass known bugs of Net 4.8 (and 5.0, https://github.com/dotnet/wpf/issues/4124)
             Topmost = false;
-            Focus();
-        }
+            Console.WriteLine("MethodeInvokee Topmost changé");
+        }*/
 
-        private void Window_Activated(object sender, EventArgs e)
+        /*private void CheckState(object state)
         {
-            Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, new Action(() => MethodeInvokee()));
-        }
+            try
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if ((IsActive || IsFocused) && WindowState == WindowState.Minimized && DateTime.Now.Subtract(_lastChangeActivation).TotalSeconds > 1)
+                        if (MyDataContext.WindowMaximized)
+                            WindowState = WindowState.Maximized;
+                        else
+                            WindowState = WindowState.Normal;
+                });
+            }
+            catch (Exception) { /* Ignore errors */ /*}
+        }*/
+
+        #region Window move
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
@@ -236,5 +311,7 @@ namespace Explorip.Explorer.WPF.Windows
         {
             _startDrag = false;
         }
+
+        #endregion
     }
 }
