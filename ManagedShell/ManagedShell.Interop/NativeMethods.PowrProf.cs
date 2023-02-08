@@ -7,7 +7,7 @@ namespace ManagedShell.Interop
         const string PowrProf_DllName = "powrprof.dll";
 
 #pragma warning disable S1104 // Fields should not have public accessibility
-        public struct BATTERY_REPORTING_SCALE
+        public struct BatteryReportingScale
         {
             public uint Granularity;
             public uint Capacity;
@@ -27,7 +27,7 @@ namespace ManagedShell.Interop
         }
 
 #pragma warning disable S1104 // Fields should not have public accessibility
-        public struct SYSTEM_POWER_CAPABILITIES
+        public struct SystemPowerCapabilities
         {
             [MarshalAs(UnmanagedType.U1)]
             public bool PowerButtonPresent;
@@ -81,7 +81,7 @@ namespace ManagedShell.Interop
             [MarshalAs(UnmanagedType.U1)]
             public bool BatteriesAreShortTerm;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
-            public BATTERY_REPORTING_SCALE[] BatteryScale;
+            public BatteryReportingScale[] BatteryScale;
             public SYSTEM_POWER_STATE AcOnLineWake;
             public SYSTEM_POWER_STATE SoftLidWake;
             public SYSTEM_POWER_STATE RtcWake;
@@ -96,6 +96,6 @@ namespace ManagedShell.Interop
 
         [DllImport(PowrProf_DllName, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.U1)]
-        internal static extern bool GetPwrCapabilities(out SYSTEM_POWER_CAPABILITIES systemPowerCapabilites);
+        internal static extern bool GetPwrCapabilities(out SystemPowerCapabilities systemPowerCapabilites);
     }
 }

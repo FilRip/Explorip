@@ -169,12 +169,12 @@ namespace ManagedShell.WindowsTray
                     {
                         case 0:
                             // AppBar message
-                            if (Marshal.SizeOf(typeof(APPBARMSGDATAV3)) == copyData.cbData)
+                            if (Marshal.SizeOf(typeof(AppBarMsgDataV3)) == copyData.cbData)
                             {
-                                APPBARMSGDATAV3 amd = (APPBARMSGDATAV3)Marshal.PtrToStructure(copyData.lpData,
-                                    typeof(APPBARMSGDATAV3));
+                                AppBarMsgDataV3 amd = (AppBarMsgDataV3)Marshal.PtrToStructure(copyData.lpData,
+                                    typeof(AppBarMsgDataV3));
 
-                                if (Marshal.SizeOf(typeof(APPBARDATAV2)) != amd.abd.cbSize)
+                                if (Marshal.SizeOf(typeof(AppBarDataV2)) != amd.abd.cbSize)
                                 {
                                     ShellLogger.Debug("TrayService: Size incorrect for APPBARMSGDATAV3");
                                     break;
@@ -195,9 +195,9 @@ namespace ManagedShell.WindowsTray
                             }
                             break;
                         case 1:
-                            SHELLTRAYDATA trayData =
-                                (SHELLTRAYDATA)Marshal.PtrToStructure(copyData.lpData,
-                                    typeof(SHELLTRAYDATA));
+                            ShellTrayData trayData =
+                                (ShellTrayData)Marshal.PtrToStructure(copyData.lpData,
+                                    typeof(ShellTrayData));
                             if (trayDelegate != null)
                             {
                                 if (trayDelegate(trayData.dwMessage, new SafeNotifyIconData(trayData.nid)))
@@ -213,9 +213,9 @@ namespace ManagedShell.WindowsTray
                             }
                             break;
                         case 3:
-                            WINNOTIFYICONIDENTIFIER iconData =
-                                (WINNOTIFYICONIDENTIFIER)Marshal.PtrToStructure(copyData.lpData,
-                                    typeof(WINNOTIFYICONIDENTIFIER));
+                            WinNotifyIconIdentifier iconData =
+                                (WinNotifyIconIdentifier)Marshal.PtrToStructure(copyData.lpData,
+                                    typeof(WinNotifyIconIdentifier));
 
                             if (iconDataDelegate != null)
                             {
@@ -254,14 +254,14 @@ namespace ManagedShell.WindowsTray
         }
 
         #region Event handling
-        private IntPtr AppBarMessageAction(APPBARMSGDATAV3 amd)
+        private IntPtr AppBarMessageAction(AppBarMsgDataV3 amd)
         {
             // only handle ABM_GETTASKBARPOS, send other AppBar messages to default handler
             switch ((ABMsg)amd.dwMessage)
             {
                 case ABMsg.ABM_GETTASKBARPOS:
                     IntPtr hShared = SHLockShared((IntPtr)amd.hSharedMemory, (uint)amd.dwSourceProcessId);
-                    APPBARDATAV2 abd = (APPBARDATAV2)Marshal.PtrToStructure(hShared, typeof(APPBARDATAV2));
+                    AppBarDataV2 abd = (AppBarDataV2)Marshal.PtrToStructure(hShared, typeof(AppBarDataV2));
                     FillTrayHostSizeData(ref abd);
                     Marshal.StructureToPtr(abd, hShared, false);
                     SHUnlockShared(hShared);
@@ -271,7 +271,7 @@ namespace ManagedShell.WindowsTray
             return IntPtr.Zero;
         }
 
-        private void FillTrayHostSizeData(ref APPBARDATAV2 abd)
+        private void FillTrayHostSizeData(ref AppBarDataV2 abd)
         {
             if (trayHostSizeDelegate != null)
             {

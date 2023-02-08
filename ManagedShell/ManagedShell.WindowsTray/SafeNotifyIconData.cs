@@ -27,7 +27,7 @@ namespace ManagedShell.WindowsTray
 
         public SafeNotifyIconData() { }
 
-        public SafeNotifyIconData(NOTIFYICONDATA nid)
+        public SafeNotifyIconData(NotifyIconData nid)
         {
             cbSize = nid.cbSize;
             hWnd = (IntPtr)nid.hWnd;

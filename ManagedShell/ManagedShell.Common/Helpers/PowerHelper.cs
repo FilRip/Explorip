@@ -8,7 +8,7 @@ namespace ManagedShell.Common.Helpers
 {
     public static class PowerHelper
     {
-        static NativeMethods.SYSTEM_POWER_CAPABILITIES spc;
+        static NativeMethods.SystemPowerCapabilities spc;
         static bool hasFetchedCapabilities = false;
 
         /// <summary>

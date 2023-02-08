@@ -10,9 +10,9 @@
         mc:Ignorable="d" IsTabStop="False"
         d:DesignHeight="450" d:DesignWidth="800"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
-        MouseDown="Window_MouseDown" UseLayoutRounding="True" Activated="Window_Activated" Focusable="True" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
-        ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged" Deactivated="Window_Deactivated"
-        Loaded="Window_Loaded">
+        MouseDown="Window_MouseDown" UseLayoutRounding="True" Focusable="True" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
+        ResizeMode="CanResizeWithGrip"
+        Loaded="Window_Loaded" Activated="Window_Activated" Deactivated="Window_Deactivated">
     
     <Window.DataContext>
         <viewmodels:WpfExplorerBrowserViewModel/>
@@ -53,12 +53,19 @@
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="20"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Button Grid.Row="1" Content="&gt;" Name="CopyLeft" Click="CopyLeft_Click" Margin="5 0 5 0" ToolTip="Copier vers la droite" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionLeft}"/>
                 <Button Grid.Row="3" Content="&lt;" Name="CopyRight" Click="CopyRight_Click" Margin="5 0 5 0" ToolTip="Copier vers la gauche" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionRight}"/>
                 <Button Grid.Row="5" Content="&gt;&gt;" Name="MoveLeft" Click="MoveLeft_Click" Margin="5 0 5 0" ToolTip="Déplacer vers la droite" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionLeft}"/>
                 <Button Grid.Row="7" Content="&lt;&lt;" Name="MoveRight" Click="MoveRight_Click" Margin="5 0 5 0" ToolTip="Déplacer vers la gauche" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionRight}"/>
+                <Button Grid.Row="10" Content="&lt;X" Name="DeleteLeft" Click="DeleteLeft_Click" Margin="5 0 5 0" ToolTip="Supprimer la sélection de gauche" Style="{DynamicResource ButtonRedWithDarkBackground}" IsEnabled="{Binding SelectionLeft}"/>
+                <Button Grid.Row="12" Content="X&gt;" Name="DeleteRight" Click="DeleteRight_Click" Margin="5 0 5 0" ToolTip="Supprimer la sélection de droite" Style="{DynamicResource ButtonRedWithDarkBackground}" IsEnabled="{Binding SelectionRight}"/>
             </Grid>
         </Grid>
         

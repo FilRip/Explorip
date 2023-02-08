@@ -36,7 +36,7 @@ namespace ManagedShell.Interop
         /// <returns>The default path of the known folder, or an empty string if the path couldn't be retrieved.</returns>
         public static string GetPath(KnownFolder knownFolder)
         {
-            return GetPath(knownFolder, NativeMethods.KnownFolderFlags.DontVerify);
+            return GetPath(knownFolder, NativeMethods.KnownFolder.DontVerify);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace ManagedShell.Interop
         /// <param name="knownFolder">The known folder which current path will be returned.</param>
         /// <param name="flags">The known folder flags to use.</param>
         /// <returns>The default path of the known folder, or an empty string if the path couldn't be retrieved.</returns>
-        public static string GetPath(KnownFolder knownFolder, NativeMethods.KnownFolderFlags flags)
+        public static string GetPath(KnownFolder knownFolder, NativeMethods.KnownFolder flags)
         {
             return GetPath(knownFolder, flags, false);
         }
@@ -58,7 +58,7 @@ namespace ManagedShell.Interop
         /// <param name="defaultUser">Specifies if the paths of the default user (user profile
         ///     template) will be used. This requires administrative rights.</param>
         /// <returns>The default path of the known folder, or an empty string if the path couldn't be retrieved.</returns>
-        public static string GetPath(KnownFolder knownFolder, NativeMethods.KnownFolderFlags flags,
+        public static string GetPath(KnownFolder knownFolder, NativeMethods.KnownFolder flags,
             bool defaultUser)
         {
             int result = NativeMethods.SHGetKnownFolderPath(new Guid(_knownFolderGuids[(int)knownFolder]),

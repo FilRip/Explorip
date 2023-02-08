@@ -28,9 +28,21 @@ namespace Explorip.FilesOperations
             _callbackSink = callbackSink;
             _fileOperation = (IFileOperation)Activator.CreateInstance(_fileOperationType);
 
-            _fileOperation.SetOperationFlags(Interfaces.FileOperation.FOF_NOCONFIRMMKDIR | Interfaces.FileOperation.FOFX_ADDUNDORECORD);
-            if (_callbackSink != null) _sinkCookie = _fileOperation.Advise(_callbackSink);
-            if (owner != null) _fileOperation.SetOwnerWindow((uint)owner.Handle);
+            _fileOperation.SetOperationFlags(Interfaces.FileOperation.FOF_NOCONFIRMMKDIR | Interfaces.FileOperation.FOFX_ADDUNDORECORD | Interfaces.FileOperation.FOFX_RECYCLEONDELETE);
+            if (_callbackSink != null)
+                _sinkCookie = _fileOperation.Advise(_callbackSink);
+            if (owner != null)
+                _fileOperation.SetOwnerWindow((uint)owner.Handle);
+        }
+
+        public void ChangeOperationFlags(Interfaces.FileOperation flags)
+        {
+            _fileOperation.SetOperationFlags(flags);
+        }
+
+        public void ChangeLinkedWindow(IntPtr windowHandle)
+        {
+            _fileOperation.SetOwnerWindow((uint)windowHandle);
         }
 
         public void CopyItem(string source, string destination, string newName)

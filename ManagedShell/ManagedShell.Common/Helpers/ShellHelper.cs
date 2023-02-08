@@ -19,7 +19,7 @@ namespace ManagedShell.Common.Helpers
 
         public static string GetDisplayName(string filename)
         {
-            SHFILEINFO shinfo = new()
+            ShFileInfo shinfo = new()
             {
                 szDisplayName = string.Empty,
                 szTypeName = string.Empty
@@ -211,7 +211,7 @@ namespace ManagedShell.Common.Helpers
 
         public static bool ShowFileProperties(string Filename)
         {
-            SHELLEXECUTEINFO info = new();
+            ShellExecuteInfo info = new();
             info.cbSize = Marshal.SizeOf(info);
             info.lpVerb = "properties";
             info.lpFile = Filename;
@@ -241,7 +241,7 @@ namespace ManagedShell.Common.Helpers
 
         public static void ShowRunDialog(string title, string info)
         {
-            SHRunFileDialog(IntPtr.Zero, IntPtr.Zero, null, title, info, RunFileDialogFlags.None);
+            SHRunFileDialog(IntPtr.Zero, IntPtr.Zero, null, title, info, RunFileDialog.None);
         }
 
         public static void ShowWindowSwitcher()
@@ -279,15 +279,15 @@ namespace ManagedShell.Common.Helpers
         /// </summary>
         /// <param name="path">Location of directory or file to recycle</param>
         /// <param name="flags">FileOperationFlags to add in addition to FOF_ALLOWUNDO</param>
-        public static bool SendToRecycleBin(string path, FileOperationFlags flags)
+        public static bool SendToRecycleBin(string path, FileOperation flags)
         {
             try
             {
-                var fs = new SHFILEOPSTRUCT
+                var fs = new ShFileOpStruct
                 {
                     wFunc = FileOperationType.FO_DELETE,
                     pFrom = path + '\0' + '\0',
-                    fFlags = FileOperationFlags.FOF_ALLOWUNDO | flags
+                    fFlags = FileOperation.FOF_ALLOWUNDO | flags
                 };
                 SHFileOperation(ref fs);
                 return true;
@@ -304,7 +304,7 @@ namespace ManagedShell.Common.Helpers
         /// <param name="path">Location of directory or file to recycle</param>
         public static bool SendToRecycleBin(string path)
         {
-            return SendToRecycleBin(path, FileOperationFlags.FOF_NOCONFIRMATION | FileOperationFlags.FOF_WANTNUKEWARNING);
+            return SendToRecycleBin(path, FileOperation.FOF_NOCONFIRMATION | FileOperation.FOF_WANTNUKEWARNING);
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace ManagedShell.Common.Helpers
         /// <param name="path">Location of directory or file to recycle</param>
         public static bool MoveToRecycleBin(string path)
         {
-            return SendToRecycleBin(path, FileOperationFlags.FOF_NOCONFIRMATION | FileOperationFlags.FOF_NOERRORUI | FileOperationFlags.FOF_SILENT);
+            return SendToRecycleBin(path, FileOperation.FOF_NOCONFIRMATION | FileOperation.FOF_NOERRORUI | FileOperation.FOF_SILENT);
 
         }
 
@@ -389,7 +389,7 @@ namespace ManagedShell.Common.Helpers
             Guid g = new("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99");
             SHGetPropertyStoreForWindow(hWnd, ref g, out IPropertyStore propStore);
 
-            PROPERTYKEY PKEY_AppUserModel_ID = new()
+            PropertyKey PKEY_AppUserModel_ID = new()
             {
                 fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
                 pid = 5

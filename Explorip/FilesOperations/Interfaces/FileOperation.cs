@@ -3,7 +3,7 @@
 namespace Explorip.FilesOperations.Interfaces
 {
     [Flags()]
-    internal enum FileOperation : uint
+    public enum FileOperation : uint
     {
         FOF_MULTIDESTFILES = 0x0001,
         FOF_CONFIRMMOUSE = 0x0002,
@@ -34,6 +34,7 @@ namespace Explorip.FilesOperations.Interfaces
         FOFX_MOVEACLSACROSSVOLUMES = 0x02000000,  // Copy security information when performing a cross-volume move operation
         FOFX_DONTDISPLAYSOURCEPATH = 0x04000000,  // Don't display the path of source file in progress dialog
         FOFX_DONTDISPLAYDESTPATH = 0x08000000,  // Don't display the path of destination file in progress dialog
+        FOFX_RECYCLEONDELETE = 0x00080000,
         FOFX_REQUIREELEVATION = 0x10000000,
         FOFX_ADDUNDORECORD = 0x20000000,
         FOFX_COPYASDOWNLOAD = 0x40000000,

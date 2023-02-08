@@ -215,6 +215,29 @@ namespace Explorip.Explorer.WPF.Windows
             CopyBetweenTab(RightTab, LeftTab, true);
         }
 
+        private void DeleteSelectTab(TabExplorerBrowser tab)
+        {
+            ShellObject[] listeItems = tab.CurrentTab.ExplorerBrowser.SelectedItems.ToArray();
+            if (listeItems?.Length > 0)
+            {
+                foreach (ShellObject file in listeItems)
+                {
+                    _fileOperation.DeleteItem(file.GetDisplayName(DisplayNameType.FileSystemPath));
+                }
+                _fileOperation.PerformOperations();
+            }
+        }
+
+        private void DeleteLeft_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteSelectTab(LeftTab);
+        }
+
+        private void DeleteRight_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteSelectTab(RightTab);
+        }
+
         #endregion
 
         private void Window_Activated(object sender, EventArgs e)
@@ -224,9 +247,9 @@ namespace Explorip.Explorer.WPF.Windows
                 _lastChangeActivation = DateTime.Now;
                 Application.Current.Dispatcher.Invoke(() =>
                 {
+                    Console.WriteLine($"Active={IsActive}, WindowState={WindowState:G}");
                     if (IsActive && WindowState == WindowState.Minimized)
                     {
-                        //SystemCommands.RestoreWindow(this);
                         if (MyDataContext.WindowMaximized)
                         {
                             WindowState = WindowState.Maximized;
@@ -239,6 +262,8 @@ namespace Explorip.Explorer.WPF.Windows
                             WindowState = WindowState.Normal;
                         }
                     }
+                    else if (!IsActive && WindowState != WindowState.Minimized)
+                        WindowState = WindowState.Minimized;
                 }, System.Windows.Threading.DispatcherPriority.Render);
             }
         }
@@ -247,49 +272,6 @@ namespace Explorip.Explorer.WPF.Windows
         {
             _lastChangeActivation = DateTime.Now;
         }
-
-        private void Window_StateChanged(object sender, EventArgs e)
-        {
-            /*if (WindowState == WindowState.Minimized)
-                _lastChangeActivation = DateTime.Now;
-            Console.WriteLine("State Changed = " + WindowState.ToString("G"));*/
-        }
-
-        /*private void MethodeInvokee()
-        {
-            Console.WriteLine("MethodeInvokee");
-            System.Threading.Thread.Sleep(100);
-            if (!IsActive || WindowState == WindowState.Minimized)
-            {
-                Console.WriteLine($"Methode cancel = IsActive={IsActive}, WindowState={WindowState:G}");
-                return;
-            }
-            Console.WriteLine("Est ative");
-            if (MyDataContext.WindowMaximized)
-                WindowState = WindowState.Maximized;
-            else
-                WindowState = WindowState.Normal;
-            Console.WriteLine("Etat changé");
-            Topmost = true; // HACK : To pass known bugs of Net 4.8 (and 5.0, https://github.com/dotnet/wpf/issues/4124)
-            Topmost = false;
-            Console.WriteLine("MethodeInvokee Topmost changé");
-        }*/
-
-        /*private void CheckState(object state)
-        {
-            try
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if ((IsActive || IsFocused) && WindowState == WindowState.Minimized && DateTime.Now.Subtract(_lastChangeActivation).TotalSeconds > 1)
-                        if (MyDataContext.WindowMaximized)
-                            WindowState = WindowState.Maximized;
-                        else
-                            WindowState = WindowState.Normal;
-                });
-            }
-            catch (Exception) { /* Ignore errors */ /*}
-        }*/
 
         #region Window move
 

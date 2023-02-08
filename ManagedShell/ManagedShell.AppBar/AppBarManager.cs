@@ -44,9 +44,9 @@ namespace ManagedShell.AppBar
         {
             lock (appBarLock)
             {
-                APPBARDATA abd = new()
+                AppBarData abd = new()
                 {
-                    cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
+                    cbSize = Marshal.SizeOf(typeof(AppBarData)),
                     hWnd = abWindow.Handle
                 };
 
@@ -97,9 +97,9 @@ namespace ManagedShell.AppBar
 
         public void AppBarActivate(IntPtr hwnd)
         {
-            APPBARDATA abd = new()
+            AppBarData abd = new()
             {
-                cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
+                cbSize = Marshal.SizeOf(typeof(AppBarData)),
                 hWnd = hwnd,
                 lParam = (IntPtr)Convert.ToInt32(true)
             };
@@ -115,9 +115,9 @@ namespace ManagedShell.AppBar
 
         public void AppBarWindowPosChanged(IntPtr hwnd)
         {
-            APPBARDATA abd = new()
+            AppBarData abd = new()
             {
-                cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
+                cbSize = Marshal.SizeOf(typeof(AppBarData)),
                 hWnd = hwnd
             };
 
@@ -134,9 +134,9 @@ namespace ManagedShell.AppBar
         {
             lock (appBarLock)
             {
-                APPBARDATA abd = new()
+                AppBarData abd = new()
                 {
-                    cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
+                    cbSize = Marshal.SizeOf(typeof(AppBarData)),
                     hWnd = abWindow.Handle,
                     uEdge = (int)edge
                 };

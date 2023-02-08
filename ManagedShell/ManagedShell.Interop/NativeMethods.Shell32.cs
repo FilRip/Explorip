@@ -10,7 +10,7 @@ namespace ManagedShell.Interop
         public const int S_OK = 0;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct APPBARDATA
+        public struct AppBarData
         {
             public int cbSize;
             public IntPtr hWnd;
@@ -66,14 +66,14 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(Shell32_DllName, CallingConvention = CallingConvention.StdCall)]
-        internal static extern uint SHAppBarMessage(int dwMessage, ref APPBARDATA pData);
+        internal static extern uint SHAppBarMessage(int dwMessage, ref AppBarData pData);
 
         public const uint FILE_ATTRIBUTE_NORMAL = 0x80;
         public const uint FILE_ATTRIBUTE_DIRECTORY = 0x10;
 
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct SHFILEINFO
+        public struct ShFileInfo
         {
             public IntPtr hIcon;
             public int iIcon;
@@ -126,16 +126,16 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+        internal static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref ShFileInfo psfi, uint cbSizeFileInfo, uint uFlags);
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, uint dwFileAttributes, ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+        internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, uint dwFileAttributes, ref ShFileInfo psfi, uint cbSizeFileInfo, uint uFlags);
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
-        internal static extern bool ShellExecuteEx(ref SHELLEXECUTEINFO lpExecInfo);
+        internal static extern bool ShellExecuteEx(ref ShellExecuteInfo lpExecInfo);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public struct SHELLEXECUTEINFO
+        public struct ShellExecuteInfo
         {
             public int cbSize;
             public uint fMask;
@@ -165,7 +165,7 @@ namespace ManagedShell.Interop
         /// Possible flags for the SHFileOperation method.
         /// </summary>
         [Flags()]
-        public enum FileOperationFlags : ushort
+        public enum FileOperation : ushort
         {
             /// <summary>
             /// Do not show a dialog during the process
@@ -221,7 +221,7 @@ namespace ManagedShell.Interop
         /// SHFILEOPSTRUCT for SHFileOperation from COM
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public struct SHFILEOPSTRUCT
+        public struct ShFileOpStruct
         {
 
             public IntPtr hwnd;
@@ -229,7 +229,7 @@ namespace ManagedShell.Interop
             public FileOperationType wFunc;
             public string pFrom;
             public string pTo;
-            public FileOperationFlags fFlags;
+            public FileOperation fFlags;
             [MarshalAs(UnmanagedType.Bool)]
             public bool fAnyOperationsAborted;
             public IntPtr hNameMappings;
@@ -237,7 +237,7 @@ namespace ManagedShell.Interop
         }
 
         [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
-        internal static extern int SHFileOperation(ref SHFILEOPSTRUCT FileOp);
+        internal static extern int SHFileOperation(ref ShFileOpStruct FileOp);
 
         public enum NIN : uint
         {
@@ -333,7 +333,7 @@ namespace ManagedShell.Interop
         /// Notify icon data structure type
         /// </summary>
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct NOTIFYICONDATA
+        public struct NotifyIconData
         {
             public int cbSize;
             public uint hWnd;
@@ -356,15 +356,15 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct SHELLTRAYDATA
+        public struct ShellTrayData
         {
             public int dwUnknown;
             public uint dwMessage;
-            public NOTIFYICONDATA nid;
+            public NotifyIconData nid;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct WINNOTIFYICONIDENTIFIER
+        public struct WinNotifyIconIdentifier
         {
             public int dwMagic;
             public int dwMessage;
@@ -376,7 +376,7 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct APPBARDATAV2
+        public struct AppBarDataV2
         {
             public int cbSize;
             public uint hWnd;
@@ -388,9 +388,9 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct APPBARMSGDATAV3
+        public struct AppBarMsgDataV3
         {
-            public APPBARDATAV2 abd;
+            public AppBarDataV2 abd;
             public int dwMessage;
             public int dwPadding1;
             public uint hSharedMemory;
@@ -400,7 +400,7 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct PROPERTYKEY
+        public struct PropertyKey
         {
             public Guid fmtid;
             public uint pid;
@@ -413,13 +413,13 @@ namespace ManagedShell.Interop
             void GetCount([Out] out uint cProps);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-            void GetAt([In] uint iProp, out PROPERTYKEY pkey);
+            void GetAt([In] uint iProp, out PropertyKey pkey);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-            void GetValue([In] ref PROPERTYKEY key, out PropVariant pv);
+            void GetValue([In] ref PropertyKey key, out PropVariant pv);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-            void SetValue([In] ref PROPERTYKEY key, [In] ref PropVariant pv);
+            void SetValue([In] ref PropertyKey key, [In] ref PropVariant pv);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
             void Commit();
@@ -429,7 +429,7 @@ namespace ManagedShell.Interop
         internal static extern int SHGetPropertyStoreForWindow(IntPtr handle, ref Guid riid, out IPropertyStore propertyStore);
 
         [Flags()]
-        public enum RunFileDialogFlags : uint
+        public enum RunFileDialog : uint
         {
 
             /// <summary>
@@ -469,10 +469,10 @@ namespace ManagedShell.Interop
             string lpszPath,
             string lpszDialogTitle,
             string lpszDialogTextBody,
-            RunFileDialogFlags uflags);
+            RunFileDialog uflags);
 
 #pragma warning disable S1104 // Fields should not have public accessibility
-        public struct IMAGELISTDRAWPARAMS
+        public struct ImageListDrawParams
         {
             public int cbSize;
             public IntPtr himl;
@@ -495,7 +495,7 @@ namespace ManagedShell.Interop
 #pragma warning restore S1104 // Fields should not have public accessibility
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct IMAGEINFO
+        public struct ImageInfo
         {
             public IntPtr hbmImage;
             public IntPtr hbmMask;
@@ -540,7 +540,7 @@ namespace ManagedShell.Interop
 
             [PreserveSig()]
             int Draw(
-                ref IMAGELISTDRAWPARAMS pimldp);
+                ref ImageListDrawParams pimldp);
 
             [PreserveSig()]
             int Remove(
@@ -555,7 +555,7 @@ namespace ManagedShell.Interop
             [PreserveSig()]
             int GetImageInfo(
                 int i,
-                ref IMAGEINFO pImageInfo);
+                ref ImageInfo pImageInfo);
 
             [PreserveSig()]
             int Copy(
@@ -677,7 +677,7 @@ namespace ManagedShell.Interop
             out IntPtr ppszPath);
 
         [Flags()]
-        public enum KnownFolderFlags : uint
+        public enum KnownFolder : uint
         {
             None = 0,
             SimpleIDList = 0x00000100,

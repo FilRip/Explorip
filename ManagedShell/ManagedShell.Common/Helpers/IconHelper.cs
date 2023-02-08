@@ -96,7 +96,7 @@ namespace ManagedShell.Common.Helpers
                 {
                     filename = TranslateIconExceptions(filename);
 
-                    SHFILEINFO shinfo = new()
+                    ShFileInfo shinfo = new()
                     {
                         szDisplayName = string.Empty,
                         szTypeName = string.Empty
@@ -126,7 +126,7 @@ namespace ManagedShell.Common.Helpers
             {
                 try
                 {
-                    SHFILEINFO shinfo = new()
+                    ShFileInfo shinfo = new()
                     {
                         szDisplayName = string.Empty,
                         szTypeName = string.Empty

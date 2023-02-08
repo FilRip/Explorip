@@ -109,9 +109,9 @@ namespace ManagedShell.AppBar
         {
             Task.Run(() =>
             {
-                APPBARDATA abd = new()
+                AppBarData abd = new()
                 {
-                    cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
+                    cbSize = Marshal.SizeOf(typeof(AppBarData)),
                     hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle),
                     lParam = (IntPtr)state
                 };
@@ -122,9 +122,9 @@ namespace ManagedShell.AppBar
 
         public TaskbarState GetTaskbarState()
         {
-            APPBARDATA abd = new()
+            AppBarData abd = new()
             {
-                cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
+                cbSize = Marshal.SizeOf(typeof(AppBarData)),
                 hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle)
             };
 
