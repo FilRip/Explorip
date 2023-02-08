@@ -239,10 +239,6 @@ namespace Explorip.Explorer.WPF.Windows
                             WindowState = WindowState.Normal;
                         }
                     }
-                    else
-                    {
-                        WindowState = WindowState.Minimized;
-                    }
                 }, System.Windows.Threading.DispatcherPriority.Render);
             }
         }
