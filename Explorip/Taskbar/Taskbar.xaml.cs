@@ -54,6 +54,8 @@ namespace Explorip.TaskBar
                 QuickLaunchToolbar.Visibility = Visibility.Visible;
                 DesiredHeight += 16;
             }
+
+            MinHeight = DesiredHeight;
         }
 
         public bool MainScreen
@@ -237,6 +239,8 @@ namespace Explorip.TaskBar
             {
                 ResizeMode = ResizeMode.NoResize;
                 TaskbarViewModel.Instance.ResizeOn = false;
+                DesiredHeight = Height;
+                _appBarManager.SetWorkArea(Screen);
             }
         }
     }
