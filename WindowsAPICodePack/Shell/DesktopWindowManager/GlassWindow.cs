@@ -51,7 +51,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         public void SetAeroGlassTransparency()
         {
             // Set the Background to transparent from Win32 perpective 
-            HwndSource.FromHwnd(windowHandle).CompositionTarget.BackgroundColor = System.Windows.Media.Colors.Transparent;
+            HwndSource.FromHwnd(windowHandle).CompositionTarget.BackgroundColor = Colors.Transparent;
 
             // Set the Background to transparent from WPF perpective 
             Background = Brushes.Transparent;

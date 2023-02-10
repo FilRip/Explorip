@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,8 +23,6 @@ namespace Explorip.Explorer.WPF.Windows
     public partial class WpfExplorerBrowser : Window
     {
         private readonly FilesOperations.FileOperation _fileOperation;
-        //private readonly Timer timer;
-        private DateTime _lastChangeActivation;
 
         public WpfExplorerBrowser()
         {
@@ -63,15 +60,18 @@ namespace Explorip.Explorer.WPF.Windows
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
-
-            //timer = new Timer(CheckState, null, 500, 500);
-
-            _lastChangeActivation = DateTime.Now;
         }
 
         public WpfExplorerBrowserViewModel MyDataContext
         {
             get { return (WpfExplorerBrowserViewModel)DataContext; }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((TabItemExplorerBrowser)LeftTab.SelectedItem).ExplorerBrowser.Focus();
+            MyDataContext.SelectionLeft = false;
+            MyDataContext.SelectionRight = false;
         }
 
         #region Window icon
@@ -94,7 +94,6 @@ namespace Explorip.Explorer.WPF.Windows
         private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Maximized;
-            Activate();
             MyDataContext.WindowMaximized = true;
         }
 
@@ -110,21 +109,26 @@ namespace Explorip.Explorer.WPF.Windows
 
         #endregion
 
+        #region Title bar
+
         private bool _startDrag;
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             try
             {
-                if (WindowState == WindowState.Minimized || !IsVisible)
+                if (WindowState == WindowState.Minimized || !IsVisible || !IsActive)
                     return;
 
                 if (e.GetPosition(this).Y <= 32 && e.GetPosition(this).Y > 0)
                 {
                     if (e.ChangedButton == MouseButton.Left)
                     {
-                        if (e.ClickCount == 2 && WindowState == WindowState.Normal)
+                        if (e.ClickCount == 2)
                         {
-                            MaximizeWindow_Click(this, new RoutedEventArgs());
+                            if (WindowState == WindowState.Normal)
+                                MaximizeWindow_Click(this, new RoutedEventArgs());
+                            else
+                                RestoreWindow_Click(this, new RoutedEventArgs());
                         }
                         else
                         {
@@ -154,6 +158,10 @@ namespace Explorip.Explorer.WPF.Windows
             catch (Exception) { /* No need to catch error */ }
         }
 
+        #endregion
+
+        #region Manage TabControl
+
         public void HideRightTab()
         {
             RightGrid.Width = new GridLength(0);
@@ -167,12 +175,7 @@ namespace Explorip.Explorer.WPF.Windows
             LeftTab.SetValue(Grid.ColumnSpanProperty, 1);
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            ((TabItemExplorerBrowser)LeftTab.SelectedItem).ExplorerBrowser.Focus();
-            MyDataContext.SelectionLeft = false;
-            MyDataContext.SelectionRight = false;
-        }
+        #endregion
 
         #region Files operations
 
@@ -240,44 +243,11 @@ namespace Explorip.Explorer.WPF.Windows
 
         #endregion
 
-        private void Window_Activated(object sender, EventArgs e)
-        {
-            if (DateTime.Now.Subtract(_lastChangeActivation).TotalMilliseconds > 250)
-            {
-                _lastChangeActivation = DateTime.Now;
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    Console.WriteLine($"Active={IsActive}, WindowState={WindowState:G}");
-                    if (IsActive && WindowState == WindowState.Minimized)
-                    {
-                        if (MyDataContext.WindowMaximized)
-                        {
-                            WindowState = WindowState.Maximized;
-                            Topmost = true;
-                            Topmost = false;
-                            Focus();
-                        }
-                        else
-                        {
-                            WindowState = WindowState.Normal;
-                        }
-                    }
-                    else if (!IsActive && WindowState != WindowState.Minimized)
-                        WindowState = WindowState.Minimized;
-                }, System.Windows.Threading.DispatcherPriority.Render);
-            }
-        }
-
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            _lastChangeActivation = DateTime.Now;
-        }
-
         #region Window move
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_startDrag && WindowState != WindowState.Minimized && IsVisible)
+            if (_startDrag && WindowState != WindowState.Minimized && IsVisible && IsActive)
             {
                 _startDrag = false;
                 SetWindowNormal();

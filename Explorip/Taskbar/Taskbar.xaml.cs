@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using Explorip.TaskBar.Controls;
@@ -242,6 +243,31 @@ namespace Explorip.TaskBar
                 DesiredHeight = Height;
                 _appBarManager.SetWorkArea(Screen);
             }
+        }
+
+        private double _startX, _startY;
+        private bool _isMoving;
+
+        private void QuickLaunchToolbar_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (!_isMoving) return;
+
+            TranslateTransform transform = new();
+            transform.X = Mouse.GetPosition(QuickLaunchGrid).X - _startX;
+            transform.Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
+            QuickLaunchToolbar.RenderTransform = transform;
+        }
+
+        private void QuickLaunchToolbar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            _isMoving = false;
+        }
+
+        private void QuickLaunchToolbar_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _startX = Mouse.GetPosition(QuickLaunchGrid).X;
+            _startY = Mouse.GetPosition(QuickLaunchGrid).Y;
+            _isMoving = true;
         }
     }
 }

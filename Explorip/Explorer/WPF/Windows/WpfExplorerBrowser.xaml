@@ -7,12 +7,12 @@
         xmlns:controls="clr-namespace:Explorip.Explorer.WPF.Controls"
         xmlns:converters="clr-namespace:Explorip.Explorer.WPF.Converters"
         xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
-        mc:Ignorable="d" IsTabStop="False"
+        mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
-        MouseDown="Window_MouseDown" UseLayoutRounding="True" Focusable="True" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
+        UseLayoutRounding="True" Focusable="True" MouseDown="Window_MouseDown" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
         ResizeMode="CanResizeWithGrip"
-        Loaded="Window_Loaded" Activated="Window_Activated" Deactivated="Window_Deactivated">
+        Loaded="Window_Loaded">
     
     <Window.DataContext>
         <viewmodels:WpfExplorerBrowserViewModel/>
