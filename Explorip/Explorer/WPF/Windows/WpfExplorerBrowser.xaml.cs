@@ -102,7 +102,6 @@ namespace Explorip.Explorer.WPF.Windows
             if (WindowState == WindowState.Maximized)
             {
                 WindowState = WindowState.Normal;
-                Activate();
                 MyDataContext.WindowMaximized = false;
             }
         }
