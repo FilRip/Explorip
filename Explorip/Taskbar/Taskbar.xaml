@@ -13,7 +13,8 @@
                      AllowDrop="True"
                      Style="{DynamicResource TaskbarWindow}">
     <WindowChrome.WindowChrome>
-        <WindowChrome ResizeBorderThickness="0,5,0,0"/>
+        <WindowChrome ResizeBorderThickness="0,5,0,0"
+                      CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
     <Window.Resources>
         <ResourceDictionary>

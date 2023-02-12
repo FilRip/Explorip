@@ -250,12 +250,11 @@ namespace Explorip.TaskBar
 
         private void QuickLaunchToolbar_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (!_isMoving) return;
+            if (!_isMoving)
+                return;
 
-            TranslateTransform transform = new();
-            transform.X = Mouse.GetPosition(QuickLaunchGrid).X - _startX;
-            transform.Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
-            QuickLaunchToolbar.RenderTransform = transform;
+            ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X = Mouse.GetPosition(QuickLaunchGrid).X - _startX;
+            ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
         }
 
         private void QuickLaunchToolbar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -265,6 +264,12 @@ namespace Explorip.TaskBar
 
         private void QuickLaunchToolbar_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!TaskbarViewModel.Instance.ResizeOn)
+                return;
+
+            if (QuickLaunchToolbar.RenderTransform is not TranslateTransform)
+                QuickLaunchToolbar.RenderTransform = new TranslateTransform();
+
             _startX = Mouse.GetPosition(QuickLaunchGrid).X;
             _startY = Mouse.GetPosition(QuickLaunchGrid).Y;
             _isMoving = true;
