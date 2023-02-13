@@ -56,6 +56,8 @@ namespace Explorip.TaskBar
                 DesiredHeight += 16;
             }
 
+            QuickLaunchToolbar.RenderTransform = new TranslateTransform();
+
             MinHeight = DesiredHeight;
         }
 
@@ -255,11 +257,13 @@ namespace Explorip.TaskBar
 
             ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X = Mouse.GetPosition(QuickLaunchGrid).X - _startX;
             ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
+
         }
 
         private void QuickLaunchToolbar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             _isMoving = false;
+            Mouse.OverrideCursor = null;
         }
 
         private void QuickLaunchToolbar_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -267,11 +271,10 @@ namespace Explorip.TaskBar
             if (!TaskbarViewModel.Instance.ResizeOn)
                 return;
 
-            if (QuickLaunchToolbar.RenderTransform is not TranslateTransform)
-                QuickLaunchToolbar.RenderTransform = new TranslateTransform();
+            _startX = Mouse.GetPosition(QuickLaunchGrid).X - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X;
+            _startY = Mouse.GetPosition(QuickLaunchGrid).Y - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y;
 
-            _startX = Mouse.GetPosition(QuickLaunchGrid).X;
-            _startY = Mouse.GetPosition(QuickLaunchGrid).Y;
+            Mouse.OverrideCursor = Cursors.Cross;
             _isMoving = true;
         }
     }
