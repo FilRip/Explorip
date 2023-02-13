@@ -12,7 +12,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     // To successfully import a COM interface, all inherited methods need to be declared again with 
     // the exception of those already declared in "IUnknown"
     [ComImport,
-    Guid(KnownFoldersIIDGuid.IKnownFolder),
+    Guid(KnownFoldersIidGuid.IKnownFolder),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IKnownFolderNative
     {
@@ -61,7 +61,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(KnownFoldersIIDGuid.IKnownFolderManager),
+    Guid(KnownFoldersIidGuid.IKnownFolderManager),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IKnownFolderManager
     {

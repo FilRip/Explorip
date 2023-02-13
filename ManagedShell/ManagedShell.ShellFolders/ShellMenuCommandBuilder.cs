@@ -6,8 +6,8 @@ namespace ManagedShell.ShellFolders
 {
     public class ShellMenuCommandBuilder
     {
-        public List<ShellMenuCommand> Commands = new();
-        public uint DefaultItemUID;
+        internal readonly List<ShellMenuCommand> Commands = new();
+        public uint DefaultItemUID { get; set; }
 
         public void AddCommand(ShellMenuCommand command)
         {

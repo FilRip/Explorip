@@ -134,7 +134,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     [ComImport,
      TypeLibType(TypeLibTypeFlags.FCanCreate),
      ClassInterface(ClassInterfaceType.None),
-     Guid(ExplorerBrowserCLSIDGuid.ExplorerBrowser)]
+     Guid(ExplorerBrowserClSidGuid.ExplorerBrowser)]
     internal class ExplorerBrowserClass : IExplorerBrowser
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -191,7 +191,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
 
     [ComImport,
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown),
-     Guid(ExplorerBrowserIIDGuid.IExplorerBrowser)]
+     Guid(ExplorerBrowserIidGuid.IExplorerBrowser)]
     internal interface IExplorerBrowser
     {
         /// <summary>
@@ -344,7 +344,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     }
 
     [ComImport,
-     Guid(ExplorerBrowserIIDGuid.IServiceProvider),
+     Guid(ExplorerBrowserIidGuid.IServiceProvider),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IServiceProvider
     {
@@ -354,7 +354,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     };
 
     [ComImport,
-     Guid(ExplorerBrowserIIDGuid.IFolderView),
+     Guid(ExplorerBrowserIidGuid.IFolderView),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFolderView
     {
@@ -402,7 +402,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     }
 
     [ComImport,
-     Guid(ExplorerBrowserIIDGuid.IFolderView2),
+     Guid(ExplorerBrowserIidGuid.IFolderView2),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFolderView2 : IFolderView
     {
@@ -532,7 +532,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     }
 
     [ComImport,
-     Guid(ExplorerBrowserIIDGuid.IExplorerPaneVisibility),
+     Guid(ExplorerBrowserIidGuid.IExplorerPaneVisibility),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IExplorerPaneVisibility
     {
@@ -542,7 +542,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     };
 
     [ComImport,
-     Guid(ExplorerBrowserIIDGuid.IExplorerBrowserEvents),
+     Guid(ExplorerBrowserIidGuid.IExplorerBrowserEvents),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IExplorerBrowserEvents
     {
@@ -634,7 +634,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     #endregion
 
     [ComImport,
-     Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser3),
+     Guid(ExplorerBrowserIidGuid.ICommDlgBrowser3),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface ICommDlgBrowser3
     {
@@ -693,7 +693,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     }
 
     [ComImport,
-   Guid(ExplorerBrowserIIDGuid.IInputObject),
+   Guid(ExplorerBrowserIidGuid.IInputObject),
    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IInputObject
     {
@@ -712,7 +712,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     };
 
     [ComImport,
-     Guid(ExplorerBrowserIIDGuid.IShellView),
+     Guid(ExplorerBrowserIidGuid.IShellView),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IShellView
     {

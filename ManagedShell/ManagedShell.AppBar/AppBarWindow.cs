@@ -19,12 +19,12 @@ namespace ManagedShell.AppBar
         protected readonly AppBarManager _appBarManager;
         protected readonly ExplorerHelper _explorerHelper;
         protected readonly FullScreenHelper _fullScreenHelper;
-        public AppBarScreen Screen;
-        public double DpiScale = 1.0;
+        public AppBarScreen Screen { get; set; }
+        public double DpiScale { get; set; } = 1.0;
         protected bool ProcessScreenChanges = true;
 
         // Window properties
-        private WindowInteropHelper helper;
+        protected WindowInteropHelper windowInteropHelper;
         private bool IsRaising;
         public IntPtr Handle;
         public bool AllowClose;
@@ -91,8 +91,8 @@ namespace ManagedShell.AppBar
         protected virtual void OnSourceInitialized(object sender, EventArgs e)
         {
             // set up helper and get handle
-            helper = new WindowInteropHelper(this);
-            Handle = helper.Handle;
+            windowInteropHelper = new WindowInteropHelper(this);
+            Handle = windowInteropHelper.Handle;
 
             // set up window procedure
             HwndSource source = HwndSource.FromHwnd(Handle);
@@ -206,11 +206,11 @@ namespace ManagedShell.AppBar
             else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
             {
                 // Extract the WINDOWPOS structure corresponding to this message
-                NativeMethods.WINDOWPOS wndPos = NativeMethods.WINDOWPOS.FromMessage(lParam);
+                NativeMethods.WindowPos wndPos = NativeMethods.WindowPos.FromMessage(lParam);
 
                 // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
                 // If we are intentionally trying to become topmost, make it so
-                if (IsRaising && (wndPos.flags & NativeMethods.SetWindowPosFlags.SWP_NOZORDER) == 0)
+                if (IsRaising && (wndPos.flags & NativeMethods.SWP.SWP_NOZORDER) == 0)
                 {
                     // Sometimes Windows thinks we shouldn't go topmost, so poke here to make it happen.
                     wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_TOPMOST;

@@ -63,14 +63,14 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct NCCALCSIZE_PARAMS
+        public struct NcCalcSizeParams
         {
             public Rect rect0, rect1, rect2;
             public IntPtr lppos;
         }
 
         [Flags()]
-        public enum SetWindowPosFlags
+        public enum SWP
         {
             SWP_NOSIZE = 0x1,
             SWP_NOMOVE = 0x2,
@@ -90,7 +90,7 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct WINDOWPOS
+        public struct WindowPos
         {
             public IntPtr hWnd;
             public IntPtr hwndInsertAfter;
@@ -98,15 +98,15 @@ namespace ManagedShell.Interop
             public int y;
             public int cx;
             public int cy;
-            public SetWindowPosFlags flags;
+            public SWP flags;
 
             // Returns the WINDOWPOS structure pointed to by the lParam parameter
             // of a WM_WINDOWPOSCHANGING or WM_WINDOWPOSCHANGED message.
-            public static WINDOWPOS FromMessage(IntPtr lParam)
+            public static WindowPos FromMessage(IntPtr lParam)
             {
                 // Marshal the lParam parameter to an WINDOWPOS structure,
                 // and return the new structure
-                return (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
+                return (WindowPos)Marshal.PtrToStructure(lParam, typeof(WindowPos));
             }
 
             // Replaces the original WINDOWPOS structure pointed to by the lParam
@@ -251,7 +251,7 @@ namespace ManagedShell.Interop
         public const int SC_CLOSE = 0xF060;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct COPYDATASTRUCT
+        public struct CopyDataStruct
         {
             public IntPtr dwData;    // Any value the sender chooses.  Perhaps its main window handle?
             public int cbData;       // The count of bytes in the message.
@@ -259,7 +259,7 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct SHELLHOOKINFO
+        public struct ShellHookInfo
         {
             public IntPtr hwnd;
             public Rect rc;
@@ -296,7 +296,7 @@ namespace ManagedShell.Interop
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport(User32_DllName, SetLastError = true)]
-        internal static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
+        internal static extern bool GetWindowInfo(IntPtr hwnd, ref WindowInfo pwi);
 
         [DllImport(User32_DllName)]
         internal static extern uint SendMessageTimeout(IntPtr hWnd, uint messageId, IntPtr wparam, IntPtr lparam, uint timeoutFlags, uint timeout, ref IntPtr retval);
@@ -309,7 +309,7 @@ namespace ManagedShell.Interop
 
 #pragma warning disable IDE0060, IDE0079
         [StructLayout(LayoutKind.Sequential)]
-        public struct WINDOWINFO
+        public struct WindowInfo
         {
             public uint cbSize;
             public Rect rcWindow;
@@ -322,10 +322,10 @@ namespace ManagedShell.Interop
             public ushort atomWindowType;
             public ushort wCreatorVersion;
 
-            public WINDOWINFO(bool? filler)
+            public WindowInfo(bool? filler)
                 : this()   // Allows automatic initialization of "cbSize" with "new WINDOWINFO(null/true/false)".
             {
-                cbSize = (uint)(Marshal.SizeOf(typeof(WINDOWINFO)));
+                cbSize = (uint)(Marshal.SizeOf(typeof(WindowInfo)));
             }
         }
 #pragma warning restore IDE0060, IDE0079
@@ -346,7 +346,7 @@ namespace ManagedShell.Interop
         internal static extern IntPtr GetParent(IntPtr handle);
 
 #pragma warning disable S1104 // Fields should not have public accessibility
-        public struct WINDOWPLACEMENT
+        public struct WindowPlacement
         {
             public int length;
             public int flags;
@@ -359,7 +359,7 @@ namespace ManagedShell.Interop
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+        internal static extern bool GetWindowPlacement(IntPtr hWnd, ref WindowPlacement lpwndpl);
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -370,6 +370,9 @@ namespace ManagedShell.Interop
 
         [DllImport(User32_DllName, SetLastError = true)]
         internal static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, string pvParam, SPIF fWinIni);
+
+        [DllImport(User32_DllName)]
+        internal static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, IntPtr pvParam, SPIF fWinIni);
 
         /// <summary>
         /// SPI System-wide parameter - Used in SystemParametersInfo function
@@ -577,7 +580,6 @@ namespace ManagedShell.Interop
             /// </summary>
             SETFASTTASKSWITCH = 0x0024,
 
-            //#if(WINVER >= 0x0400)
             /// <summary>
             /// Sets dragging of full windows either on or off. The uiParam parameter specifies TRUE for on, or FALSE for off.
             /// Windows 95:  This flag is supported only if Windows Plus! is installed. See GETWINDOWSEXTENSION.
@@ -876,7 +878,6 @@ namespace ManagedShell.Interop
             /// Same as SETSCREENSAVERRUNNING.
             /// </summary>
             SCREENSAVERRUNNING = SETSCREENSAVERRUNNING,
-            //#endif /* WINVER >= 0x0400 */
 
             /// <summary>
             /// Retrieves information about the FilterKeys accessibility feature. The pvParam parameter must point to a FILTERKEYS structure
@@ -953,7 +954,6 @@ namespace ManagedShell.Interop
             /// </summary>
             SETACCESSTIMEOUT = 0x003D,
 
-            //#if(WINVER >= 0x0400)
             /// <summary>
             /// Windows Me/98/95:  Retrieves information about the SerialKeys accessibility feature. The pvParam parameter must point
             /// to a SERIALKEYS structure that receives the information. Set the cbSize member of this structure and the uiParam parameter
@@ -969,7 +969,6 @@ namespace ManagedShell.Interop
             /// Windows Server 2003, Windows XP/2000/NT:  Not supported. The user controls this feature through the control panel.
             /// </summary>
             SETSERIALKEYS = 0x003F,
-            //#endif /* WINVER >= 0x0400 */
 
             /// <summary>
             /// Retrieves information about the SoundSentry accessibility feature. The pvParam parameter must point to a SOUNDSENTRY structure
@@ -983,7 +982,6 @@ namespace ManagedShell.Interop
             /// </summary>
             SETSOUNDSENTRY = 0x0041,
 
-            //#if(_WIN32_WINNT >= 0x0400)
             /// <summary>
             /// Determines whether the snap-to-default-button feature is enabled. If enabled, the mouse cursor automatically moves
             /// to the default button, such as OK or Apply, of a dialog box. The pvParam parameter must point to a BOOL variable
@@ -999,9 +997,7 @@ namespace ManagedShell.Interop
             /// Windows 95:  Not supported.
             /// </summary>
             SETSNAPTODEFBUTTON = 0x0060,
-            //#endif /* _WIN32_WINNT >= 0x0400 */
 
-            //#if (_WIN32_WINNT >= 0x0400) || (_WIN32_WINDOWS > 0x0400)
             /// <summary>
             /// Retrieves the width, in pixels, of the rectangle within which the mouse pointer has to stay for TrackMouseEvent
             /// to generate a WM_MOUSEHOVER message. The pvParam parameter must point to a UINT variable that receives the width.
@@ -1087,9 +1083,7 @@ namespace ManagedShell.Interop
             /// Windows NT, Windows 95:  This value is not supported.
             /// </summary>
             SETSHOWIMEUI = 0x006F,
-            //#endif
 
-            //#if(WINVER >= 0x0500)
             /// <summary>
             /// Retrieves the current mouse speed. The mouse speed determines how far the pointer will move based on the distance the mouse moves.
             /// The pvParam parameter must point to an integer that receives a value which ranges between 1 (slowest) and 20 (fastest).
@@ -1120,9 +1114,7 @@ namespace ManagedShell.Interop
             /// Windows NT, Windows Me/98/95:  This value is not supported.
             /// </summary>
             GETDESKWALLPAPER = 0x0073,
-            //#endif /* WINVER >= 0x0500 */
 
-            //#if(WINVER >= 0x0500)
             /// <summary>
             /// Determines whether active window tracking (activating the window the mouse is on) is on or off. The pvParam parameter must point
             /// to a BOOL variable that receives TRUE for on, or FALSE for off.
@@ -1330,7 +1322,6 @@ namespace ManagedShell.Interop
             /// </summary>
             SETCURSORSHADOW = 0x101B,
 
-            //#if(_WIN32_WINNT >= 0x0501)
             /// <summary>
             /// Retrieves the state of the Mouse Sonar feature. The pvParam parameter must point to a BOOL variable that receives TRUE
             /// if enabled or FALSE otherwise. For more information, see About Mouse Input on MSDN.
@@ -1421,7 +1412,6 @@ namespace ManagedShell.Interop
             /// or FALSE if the screensaver will be deactivated by simulated input.
             /// </summary>
             SETBLOCKSENDINPUTRESETS = 0x1027,
-            //#endif /* _WIN32_WINNT >= 0x0501 */
 
             /// <summary>
             /// Determines whether UI effects are enabled or disabled. The pvParam parameter must point to a BOOL variable that receives TRUE
@@ -1491,7 +1481,6 @@ namespace ManagedShell.Interop
             /// </summary>
             SETCARETWIDTH = 0x2007,
 
-            //#if(_WIN32_WINNT >= 0x0501)
             /// <summary>
             /// Retrieves the time delay before the primary mouse button is locked. The pvParam parameter must point to DWORD that receives
             /// the time delay. This is only enabled if SETMOUSECLICKLOCK is set to TRUE. For more information, see About Mouse Input on MSDN.
@@ -1708,9 +1697,6 @@ namespace ManagedShell.Interop
         [DllImport(User32_DllName, ExactSpelling = true, SetLastError = true)]
         internal static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Rect rect, [MarshalAs(UnmanagedType.U4)] int cPoints);
 
-        [DllImport(User32_DllName)]
-        internal static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, IntPtr pvParam, SPIF fWinIni);
-
         [DllImport(User32_DllName, SetLastError = true)]
         internal static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
@@ -1785,7 +1771,7 @@ namespace ManagedShell.Interop
         // End Windows 10 blur
 
         [DllImport(User32_DllName)]
-        internal static extern uint SendInput(uint numberOfInputs, INPUT[] input, int structSize);
+        internal static extern uint SendInput(uint numberOfInputs, Input[] input, int structSize);
 
         [DllImport(User32_DllName, SetLastError = false)]
         internal static extern IntPtr GetMessageExtraInfo();
@@ -1801,7 +1787,7 @@ namespace ManagedShell.Interop
 
 #pragma warning disable IDE0044, S1144
         [StructLayout(LayoutKind.Sequential)]
-        public struct MOUSEINPUT
+        public struct MouseInput
         {
             int dx;
             int dy;
@@ -1813,7 +1799,7 @@ namespace ManagedShell.Interop
 #pragma warning restore IDE0044, S1144
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct KEYBDINPUT
+        public struct KeyBDInput
         {
             public ushort wVk;
             public ushort wScan;
@@ -1824,7 +1810,7 @@ namespace ManagedShell.Interop
 
 #pragma warning disable IDE0044, S1144
         [StructLayout(LayoutKind.Sequential)]
-        public struct HARDWAREINPUT
+        public struct HardwareInput
         {
             uint uMsg;
             ushort wParamL;
@@ -1836,17 +1822,17 @@ namespace ManagedShell.Interop
         public struct MouseKeybdHardwareInputUnion
         {
             [FieldOffset(0)]
-            public MOUSEINPUT mi;
+            public MouseInput mi;
 
             [FieldOffset(0)]
-            public KEYBDINPUT ki;
+            public KeyBDInput ki;
 
             [FieldOffset(0)]
-            public HARDWAREINPUT hi;
+            public HardwareInput hi;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct INPUT
+        public struct Input
         {
             public int type;
             public MouseKeybdHardwareInputUnion mkhi;
@@ -1856,7 +1842,7 @@ namespace ManagedShell.Interop
         internal static extern IntPtr DefWindowProc(IntPtr hWnd, int uMsg, IntPtr wParam, IntPtr lParam);
 
         [DllImport(User32_DllName)]
-        public extern static short GetAsyncKeyState(int key);
+        internal extern static short GetAsyncKeyState(int key);
 
         /// <summary>
         /// Sets the windows hook, do the desired event, one of hInstance or threadId must be non-null
@@ -1874,7 +1860,6 @@ namespace ManagedShell.Interop
         /// </summary>
         public delegate int keyboardHookProc(int code, int wParam, ref KeyboardHookStruct lParam);
 
-#pragma warning disable S1104 // Fields should not have public accessibility
         public struct KeyboardHookStruct
         {
             public int vkCode;
@@ -1883,7 +1868,6 @@ namespace ManagedShell.Interop
             public int time;
             public int dwExtraInfo;
         }
-#pragma warning restore S1104 // Fields should not have public accessibility
 
         /// <summary>
         /// Unhooks the windows hook.
@@ -1934,10 +1918,10 @@ namespace ManagedShell.Interop
         [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
         internal static extern bool SendNotifyMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
 
-        public static IntPtr HWND_BROADCAST = new(0xffff);
-        public static int WINEVENT_OUTOFCONTEXT = 0;
-        public static int WINEVENT_SKIPOWNPROCESS = 2;
-        public static int EVENT_OBJECT_UNCLOAKED = 0x8018;
+        public readonly static IntPtr HWND_BROADCAST = new(0xffff);
+        public readonly static int WINEVENT_OUTOFCONTEXT = 0;
+        public readonly static int WINEVENT_SKIPOWNPROCESS = 2;
+        public readonly static int EVENT_OBJECT_UNCLOAKED = 0x8018;
 
         public delegate void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 
@@ -2166,7 +2150,7 @@ namespace ManagedShell.Interop
             /// <summary>
             /// WM_COMMNOTIFY is Obsolete for Win32-Based Applications
             /// </summary>
-            [Obsolete]
+            [Obsolete("Obsolete for Win32 Based Applications")]
             COMMNOTIFY = 0x0044,
             /// <summary>
             /// The WM_WINDOWPOSCHANGING message is sent to a window whose size, position, or place in the Z order is about to change as a result of a call to the SetWindowPos function or another window-management function.
@@ -2180,7 +2164,7 @@ namespace ManagedShell.Interop
             /// Notifies applications that the system, typically a battery-powered personal computer, is about to enter a suspended mode.
             /// Use: POWERBROADCAST
             /// </summary>
-            [Obsolete]
+            [Obsolete("Provided only for compatibility with 16-bit Windows-based applications")]
             POWER = 0x0048,
             /// <summary>
             /// An application sends the WM_COPYDATA message to pass data to another application. 
@@ -2938,7 +2922,7 @@ namespace ManagedShell.Interop
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct WNDCLASS
+        public struct WndClass
         {
             [MarshalAs(UnmanagedType.U4)]
             public int style;   // Class style
@@ -2955,7 +2939,7 @@ namespace ManagedShell.Interop
 
         [DllImport(User32_DllName, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.U2)]
-        internal static extern ushort RegisterClass([In] ref WNDCLASS lpwcx);
+        internal static extern ushort RegisterClass([In] ref WndClass lpwcx);
 
         /// <summary>
         /// Unregisters a window class, freeing the memory required for the class.

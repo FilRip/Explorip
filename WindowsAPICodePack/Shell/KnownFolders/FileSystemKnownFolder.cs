@@ -29,7 +29,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
             // Set the native shell item
             // and set it on the base class (ShellObject)
-            Guid guid = new(ShellIIDGuid.IShellItem2);
+            Guid guid = new(ShellIidGuid.IShellItem2);
             knownFolderNative.GetShellItem(0, ref guid, out nativeShellItem);
         }
 

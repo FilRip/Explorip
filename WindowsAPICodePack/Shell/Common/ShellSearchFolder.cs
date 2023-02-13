@@ -94,7 +94,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 searchScopePaths = value.ToArray();
                 List<IShellItem> shellItems = new(searchScopePaths.Length);
 
-                Guid shellItemGuid = new(ShellIIDGuid.IShellItem);
+                Guid shellItemGuid = new(ShellIidGuid.IShellItem);
 
                 // Create IShellItem for all the scopes we were given
                 foreach (string path in searchScopePaths)
@@ -119,7 +119,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             get
             {
-                Guid guid = new(ShellIIDGuid.IShellItem);
+                Guid guid = new(ShellIidGuid.IShellItem);
 
                 if (NativeSearchFolderItemFactory == null) { return null; }
 

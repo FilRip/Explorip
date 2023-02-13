@@ -148,8 +148,8 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns>Returns true if the objects are equal; false otherwise.</returns>
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is IconReference)) { return false; }
-            return (this == (IconReference)obj);
+            if (!(obj is IconReference)) { return false; }
+            return this == (IconReference)obj;
         }
 
         /// <summary>

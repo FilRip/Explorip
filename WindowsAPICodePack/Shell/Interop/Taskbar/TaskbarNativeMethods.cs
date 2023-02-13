@@ -173,7 +173,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 
         internal static IPropertyStore GetWindowPropertyStore(IntPtr hwnd)
         {
-            Guid guid = new(ShellIIDGuid.IPropertyStore);
+            Guid guid = new(ShellIidGuid.IPropertyStore);
             int rc = SHGetPropertyStoreForWindow(
                 hwnd,
                 ref guid,

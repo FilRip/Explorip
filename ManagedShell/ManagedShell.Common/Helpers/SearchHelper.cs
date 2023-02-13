@@ -23,11 +23,6 @@ namespace ManagedShell.Common.Helpers
         const string CONNECTION_STRING =
             "provider=Search.CollatorDSO.1;EXTENDED PROPERTIES=\"Application=Windows\"";
 
-        static SearchHelper()
-        {
-            m_results = new ThreadSafeObservableCollection<SearchResult>();
-        }
-
         public static readonly DependencyProperty SearchTextProperty = DependencyProperty.Register("SearchText",
             typeof(string), typeof(SearchHelper), new UIPropertyMetadata(default(string),
                 new PropertyChangedCallback(OnSearchTextChanged)));
@@ -189,7 +184,7 @@ namespace ManagedShell.Common.Helpers
             set { SetValue(SearchTextProperty, value); }
         }
 
-        static readonly ThreadSafeObservableCollection<SearchResult> m_results;
+        static readonly ThreadSafeObservableCollection<SearchResult> m_results = new();
 
         public ReadOnlyObservableCollection<SearchResult> Results
         {

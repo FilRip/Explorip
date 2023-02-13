@@ -76,7 +76,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns>True if this NativeRect is equal to the one provided; false otherwise.</returns>
         public override bool Equals(object obj)
         {
-            return (obj != null && obj is NativeRect rect) && this == rect;
+            return (obj is NativeRect rect) && this == rect;
         }
 
         /// <summary>

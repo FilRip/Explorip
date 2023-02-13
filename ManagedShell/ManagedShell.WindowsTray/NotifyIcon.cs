@@ -190,8 +190,10 @@ namespace ManagedShell.WindowsTray
         {
             get
             {
-                if (GUID != default) return GUID.ToString();
-                else return Path + ":" + UID.ToString();
+                if (GUID != Guid.Empty)
+                    return GUID.ToString();
+                else
+                    return Path + ":" + UID.ToString();
             }
         }
 
@@ -277,7 +279,7 @@ namespace ManagedShell.WindowsTray
             for (int i = 0; i < _notificationArea.PinnedNotifyIcons.Length; i++)
             {
                 string item = _notificationArea.PinnedNotifyIcons[i].ToLower();
-                if (item == GUID.ToString().ToLower() || (GUID == default && item == (Path.ToLower() + ":" + UID.ToString())))
+                if (item == GUID.ToString().ToLower() || (GUID == Guid.Empty && item == (Path.ToLower() + ":" + UID.ToString())))
                 {
                     IsPinned = true;
                     PinOrder = i;

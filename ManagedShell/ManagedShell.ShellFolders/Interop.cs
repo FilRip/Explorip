@@ -12,9 +12,9 @@ namespace ManagedShell.ShellFolders
     {
         public const uint CMD_FIRST = 1;
         public const uint CMD_LAST = 30000;
-        public static Guid CLSID_NewMenu = new("{D969A300-E7FF-11d0-A93B-00A0C90F2719}");
-        public static int cbInvokeCommand = Marshal.SizeOf(typeof(CMINVOKECOMMANDINFOEX));
-        public static ComTaskScheduler ShellItemScheduler = new();
+        private static readonly Guid CLSIDNewMenu = new("{D969A300-E7FF-11d0-A93B-00A0C90F2719}");
+        public static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CmInvokeCommandInfoEx));
+        public static readonly ComTaskScheduler ShellItemScheduler = new();
 
         /// <summary>
         /// Retrieves the High Word of a WParam of a WindowMessage
@@ -27,6 +27,11 @@ namespace ManagedShell.ShellFolders
                 return ((ulong)ptr >> 16);
             else
                 return ((ulong)ptr >> 16) & 0xffff;
+        }
+
+        public static Guid CLSID_NewMenu
+        {
+            get { return CLSIDNewMenu; }
         }
 
         /// <summary>

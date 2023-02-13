@@ -478,7 +478,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
 
             // Create a native shellitem from our path
-            Guid guid = new(ShellIIDGuid.IShellItem2);
+            Guid guid = new(ShellIidGuid.IShellItem2);
             int retCode = ShellNativeMethods.SHCreateItemFromParsingName(path, IntPtr.Zero, ref guid, out IShellItem2 nativeShellItem);
 
             if (!CoreErrorHelper.Succeeded(retCode))
@@ -661,7 +661,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 }
             }
 
-            Guid guid = new(ShellIIDGuid.IShellItem2);
+            Guid guid = new(ShellIidGuid.IShellItem2);
 
             // Apply option bitflags.
             dialog.SetOptions(CalculateNativeDialogOptionFlags());

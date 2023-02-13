@@ -158,7 +158,7 @@ namespace ManagedShell.ShellFolders
         /// <param name="ptInvoke">the point (in screen coordinates) from which to invoke</param>
         protected void InvokeCommand(IContextMenu iContextMenu, uint cmd, Point ptInvoke)
         {
-            CMINVOKECOMMANDINFOEX invoke = new()
+            CmInvokeCommandInfoEx invoke = new()
             {
                 cbSize = Interop.cbInvokeCommand,
                 lpVerb = (IntPtr)cmd,

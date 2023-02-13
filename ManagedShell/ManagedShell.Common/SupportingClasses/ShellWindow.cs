@@ -40,7 +40,7 @@ namespace ManagedShell.Common.SupportingClasses
         {
             NativeMethods.SetWindowPos(Handle, IntPtr.Zero, SystemInformation.VirtualScreen.Left,
                 SystemInformation.VirtualScreen.Top, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height,
-                (int)NativeMethods.SetWindowPosFlags.SWP_NOZORDER | (int)NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
+                (int)NativeMethods.SWP.SWP_NOZORDER | (int)NativeMethods.SWP.SWP_NOACTIVATE);
         }
 
         public void Dispose()

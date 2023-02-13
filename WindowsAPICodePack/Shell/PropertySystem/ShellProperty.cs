@@ -60,7 +60,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
         private void StorePropVariantValue(PropVariant propVar)
         {
-            Guid guid = new(ShellIIDGuid.IPropertyStore);
+            Guid guid = new(ShellIidGuid.IPropertyStore);
             IPropertyStore writablePropStore = null;
             try
             {

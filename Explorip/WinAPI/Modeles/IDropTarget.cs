@@ -25,14 +25,14 @@ namespace Explorip.WinAPI.Modeles
         Int32 DragEnter(
             IntPtr pDataObj,
             MK grfKeyState,
-            POINT pt,
+            ManagedPoint pt,
             ref DragDropEffects pdwEffect);
 
         // Provides target feedback to the user through the DoDragDrop function
         [PreserveSig()]
         Int32 DragOver(
             MK grfKeyState,
-            POINT pt,
+            ManagedPoint pt,
             ref DragDropEffects pdwEffect);
 
         // Causes the drop target to suspend its feedback actions
@@ -44,7 +44,7 @@ namespace Explorip.WinAPI.Modeles
         Int32 DragDrop(
             IntPtr pDataObj,
             MK grfKeyState,
-            POINT pt,
+            ManagedPoint pt,
             ref DragDropEffects pdwEffect);
     }
 }

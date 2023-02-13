@@ -394,7 +394,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         {
             HResult hr;
 
-            if (guidService.CompareTo(new Guid(ExplorerBrowserIIDGuid.IExplorerPaneVisibility)) == 0)
+            if (guidService.CompareTo(new Guid(ExplorerBrowserIidGuid.IExplorerPaneVisibility)) == 0)
             {
                 // Responding to this SID allows us to control the visibility of the 
                 // explorer browser panes
@@ -402,9 +402,9 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                     Marshal.GetComInterfaceForObject(this, typeof(IExplorerPaneVisibility));
                 hr = HResult.Ok;
             }
-            else if (guidService.CompareTo(new Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser)) == 0)
+            else if (guidService.CompareTo(new Guid(ExplorerBrowserIidGuid.ICommDlgBrowser)) == 0)
             {
-                if (riid.CompareTo(new Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser)) == 0)
+                if (riid.CompareTo(new Guid(ExplorerBrowserIidGuid.ICommDlgBrowser)) == 0)
                 {
                     ppvObject = Marshal.GetComInterfaceForObject(this, typeof(ICommDlgBrowser3));
                     hr = HResult.Ok;
@@ -418,7 +418,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 //    ppvObject = Marshal.GetComInterfaceForObject(this, typeof(ICommDlgBrowser3));
                 //    hr = HResult.Ok;                    
                 //}
-                else if (riid.CompareTo(new Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser3)) == 0)
+                else if (riid.CompareTo(new Guid(ExplorerBrowserIidGuid.ICommDlgBrowser3)) == 0)
                 {
                     ppvObject = Marshal.GetComInterfaceForObject(this, typeof(ICommDlgBrowser3));
                     hr = HResult.Ok;
@@ -576,7 +576,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         // interface.  This is logged as a bug, but moved to less of a priority, as it only affects being
         // able to change the default action text for remapping the default action.
 
-        HResult ICommDlgBrowser3.GetDefaultMenuText(IShellView shellView, IntPtr text, int cchMax)
+        HResult ICommDlgBrowser3.GetDefaultMenuText(IShellView shellView, IntPtr buffer, int bufferMaxLength)
         {
             return HResult.False;
             //return HResult.Ok;
@@ -670,7 +670,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         /// <returns></returns>
         internal IFolderView2 GetFolderView2()
         {
-            Guid iid = new(ExplorerBrowserIIDGuid.IFolderView2);
+            Guid iid = new(ExplorerBrowserIidGuid.IFolderView2);
             if (explorerBrowserControl != null)
             {
                 HResult hr = explorerBrowserControl.GetCurrentView(ref iid, out IntPtr view);
@@ -707,7 +707,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
             {
                 try
                 {
-                    Guid iidShellItemArray = new(ShellIIDGuid.IShellItemArray);
+                    Guid iidShellItemArray = new(ShellIidGuid.IShellItemArray);
                     HResult hr = iFV2.Items((uint)ShellViewGetItemObject.Selection, ref iidShellItemArray, out object oArray);
                     iArray = oArray as IShellItemArray;
                     if (hr != HResult.Ok &&
@@ -792,7 +792,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
             {
                 try
                 {
-                    Guid iidShellItemArray = new(ShellIIDGuid.IShellItemArray);
+                    Guid iidShellItemArray = new(ShellIidGuid.IShellItemArray);
                     HResult hr = iFV2.Items((uint)ShellViewGetItemObject.AllView, ref iidShellItemArray, out object oArray);
                     if (hr != HResult.Ok &&
                         hr != HResult.Fail &&

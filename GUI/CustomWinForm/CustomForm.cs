@@ -129,7 +129,7 @@ namespace System.Windows.Forms
 
                     if (m.Msg == (int)NativeMethods.WM.NCCALCSIZE && (int)m.WParam == 1)
                     {
-                        NativeMethods.NCCALCSIZE_PARAMS nccsp = (NativeMethods.NCCALCSIZE_PARAMS)Marshal.PtrToStructure(m.LParam, typeof(NativeMethods.NCCALCSIZE_PARAMS));
+                        NativeMethods.NcCalcSizeParams nccsp = (NativeMethods.NcCalcSizeParams)Marshal.PtrToStructure(m.LParam, typeof(NativeMethods.NcCalcSizeParams));
 
                         // Adjust (shrink) the client rectangle to accommodate the border:
                         nccsp.rect0.Top += 0;

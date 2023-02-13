@@ -110,8 +110,8 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            if (msg == DWMMessages.WM_DWMCOMPOSITIONCHANGED
-                || msg == DWMMessages.WM_DWMNCRENDERINGCHANGED)
+            if (msg == DwmMessages.WM_DWMCOMPOSITIONCHANGED
+                || msg == DwmMessages.WM_DWMNCRENDERINGCHANGED)
             {
                 if (AeroGlassCompositionChanged != null)
                 {

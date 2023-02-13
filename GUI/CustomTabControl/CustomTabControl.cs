@@ -276,7 +276,7 @@ namespace System.Windows.Forms
         {
             get
             {
-                NativeMethods.TCHITTESTINFO hitTestInfo = new(PointToClient(Control.MousePosition));
+                NativeMethods.TchitTestInfo hitTestInfo = new(PointToClient(Control.MousePosition));
                 int index = NativeMethods.SendMessage(Handle, NativeMethods.TCM_HITTEST, IntPtr.Zero, NativeMethods.ToIntPtr(hitTestInfo)).ToInt32();
                 if (index == -1)
                 {

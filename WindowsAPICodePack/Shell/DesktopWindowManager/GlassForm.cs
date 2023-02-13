@@ -99,8 +99,8 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         protected override void WndProc(ref Message m)
         {
-            if ((m.Msg == DWMMessages.WM_DWMCOMPOSITIONCHANGED
-                || m.Msg == DWMMessages.WM_DWMNCRENDERINGCHANGED) &&
+            if ((m.Msg == DwmMessages.WM_DWMCOMPOSITIONCHANGED
+                || m.Msg == DwmMessages.WM_DWMNCRENDERINGCHANGED) &&
                 AeroGlassCompositionChanged != null)
             {
                 AeroGlassCompositionChanged.Invoke(this,

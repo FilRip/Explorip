@@ -112,17 +112,23 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
             /// a function that is not registered.</exception>
             internal void UnregisterPowerEvent(Guid eventId, EventHandler eventToUnregister)
             {
-                readerWriterLock.AcquireWriterLock(Timeout.Infinite);
-                if (eventList.Contains(eventId))
+                try
                 {
-                    ArrayList currList = (ArrayList)eventList[eventId];
-                    currList.Remove(eventToUnregister);
+                    readerWriterLock.AcquireWriterLock(Timeout.Infinite);
+                    if (eventList.Contains(eventId))
+                    {
+                        ArrayList currList = (ArrayList)eventList[eventId];
+                        currList.Remove(eventToUnregister);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(LocalizedMessages.MessageManagerHandlerNotRegistered);
+                    }
                 }
-                else
+                finally
                 {
-                    throw new InvalidOperationException(LocalizedMessages.MessageManagerHandlerNotRegistered);
+                    readerWriterLock.ReleaseWriterLock();
                 }
-                readerWriterLock.ReleaseWriterLock();
             }
 
             #endregion

@@ -108,10 +108,10 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// starting at the specified index of the target array
         /// </summary>
         /// <param name="array">Array to copy to</param>
-        /// <param name="index">Index of target array to start copy</param>
-        public void CopyTo(JumpListCustomCategory[] array, int index)
+        /// <param name="arrayIndex">Index of target array to start copy</param>
+        public void CopyTo(JumpListCustomCategory[] array, int arrayIndex)
         {
-            categories.CopyTo(array, index);
+            categories.CopyTo(array, arrayIndex);
         }
 
         /// <summary>

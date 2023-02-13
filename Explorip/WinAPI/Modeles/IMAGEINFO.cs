@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct IMAGEINFO
+    public struct ImageInfo
     {
         public IntPtr hbmImage;
         public IntPtr hbmMask;

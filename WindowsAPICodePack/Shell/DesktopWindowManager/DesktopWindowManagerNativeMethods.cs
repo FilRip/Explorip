@@ -8,7 +8,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace MS.WindowsAPICodePack.Internal
 {
-    internal static class DWMMessages
+    internal static class DwmMessages
     {
         internal const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
         internal const int WM_DWMNCRENDERINGCHANGED = 0x031F;

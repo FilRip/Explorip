@@ -29,7 +29,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     #region COM Interfaces
 
     [ComImport(),
-    Guid(ShellIIDGuid.IModalWindow),
+    Guid(ShellIidGuid.IModalWindow),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IModalWindow
     {
@@ -39,7 +39,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IShellItem),
+    Guid(ShellIidGuid.IShellItem),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IShellItem
     {
@@ -73,7 +73,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IShellItem2),
+    Guid(ShellIidGuid.IShellItem2),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IShellItem2 : IShellItem
     {
@@ -150,7 +150,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IShellItemArray),
+    Guid(ShellIidGuid.IShellItemArray),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IShellItemArray
     {
@@ -201,7 +201,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IShellLibrary),
+    Guid(ShellIidGuid.IShellLibrary),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IShellLibrary
     {
@@ -299,7 +299,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IThumbnailCache),
+    Guid(ShellIidGuid.IThumbnailCache),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface IThumbnailCache
     {
@@ -317,7 +317,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.ISharedBitmap),
+    Guid(ShellIidGuid.ISharedBitmap),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface ISharedBitmap
     {
@@ -328,7 +328,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         void Detach([Out] out IntPtr phbm);
     }
     [ComImport,
-    Guid(ShellIIDGuid.IShellFolder),
+    Guid(ShellIidGuid.IShellFolder),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown),
     ComConversionLoss]
     internal interface IShellFolder
@@ -367,7 +367,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IShellFolder2),
+    Guid(ShellIidGuid.IShellFolder2),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown),
     ComConversionLoss]
     internal interface IShellFolder2 : IShellFolder
@@ -425,7 +425,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IEnumIDList),
+    Guid(ShellIidGuid.IEnumIDList),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IEnumIDList
     {
@@ -447,7 +447,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IShellLinkW),
+    Guid(ShellIidGuid.IShellLinkW),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IShellLinkW
     {
@@ -495,7 +495,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.CShellLink),
+    Guid(ShellIidGuid.CShellLink),
     ClassInterface(ClassInterfaceType.None)]
     internal class CShellLink { }
 
@@ -537,7 +537,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport(),
-    Guid(ShellIIDGuid.ICondition),
+    Guid(ShellIidGuid.ICondition),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface ICondition : IPersistStream
     {
@@ -616,7 +616,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     };
 
     [ComImport,
-    Guid(ShellIIDGuid.IRichChunk),
+    Guid(ShellIidGuid.IRichChunk),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IRichChunk
     {
@@ -628,7 +628,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
     [ComImport]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    [Guid(ShellIIDGuid.IEnumUnknown)]
+    [Guid(ShellIidGuid.IEnumUnknown)]
     internal interface IEnumUnknown
     {
         [PreserveSig]
@@ -643,7 +643,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
 
     [ComImport,
-    Guid(ShellIIDGuid.IConditionFactory),
+    Guid(ShellIidGuid.IConditionFactory),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IConditionFactory
     {
@@ -671,7 +671,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     };
 
     [ComImport,
-    Guid(ShellIIDGuid.IConditionFactory),
+    Guid(ShellIidGuid.IConditionFactory),
     CoClass(typeof(ConditionFactoryCoClass))]
     internal interface INativeConditionFactory : IConditionFactory
     {
@@ -680,7 +680,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     [ComImport,
     ClassInterface(ClassInterfaceType.None),
     TypeLibType(TypeLibTypeFlags.FCanCreate),
-    Guid(ShellCLSIDGuid.ConditionFactory)]
+    Guid(ShellClSidGuid.ConditionFactory)]
     internal class ConditionFactoryCoClass
     {
     }
@@ -688,7 +688,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
 
     [ComImport,
-    Guid(ShellIIDGuid.ISearchFolderItemFactory),
+    Guid(ShellIidGuid.ISearchFolderItemFactory),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface ISearchFolderItemFactory
     {
@@ -730,7 +730,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     };
 
     [ComImport,
-    Guid(ShellIIDGuid.ISearchFolderItemFactory),
+    Guid(ShellIidGuid.ISearchFolderItemFactory),
     CoClass(typeof(SearchFolderItemFactoryCoClass))]
     internal interface INativeSearchFolderItemFactory : ISearchFolderItemFactory
     {
@@ -739,13 +739,13 @@ namespace Microsoft.WindowsAPICodePack.Shell
     [ComImport,
     ClassInterface(ClassInterfaceType.None),
     TypeLibType(TypeLibTypeFlags.FCanCreate),
-    Guid(ShellCLSIDGuid.SearchFolderItemFactory)]
+    Guid(ShellClSidGuid.SearchFolderItemFactory)]
     internal class SearchFolderItemFactoryCoClass
     {
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IQuerySolution),
+    Guid(ShellIidGuid.IQuerySolution),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface IQuerySolution : IConditionFactory
     {
@@ -790,7 +790,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IQueryParser),
+    Guid(ShellIidGuid.IQueryParser),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IQueryParser
     {
@@ -833,7 +833,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IQueryParserManager),
+    Guid(ShellIidGuid.IQueryParserManager),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IQueryParserManager
     {
@@ -855,7 +855,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     };
 
     [ComImport,
-    Guid(ShellIIDGuid.IQueryParserManager),
+    Guid(ShellIidGuid.IQueryParserManager),
     CoClass(typeof(QueryParserManagerCoClass))]
     internal interface INativeQueryParserManager : IQueryParserManager
     {
@@ -864,7 +864,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     [ComImport,
     ClassInterface(ClassInterfaceType.None),
     TypeLibType(TypeLibTypeFlags.FCanCreate),
-    Guid(ShellCLSIDGuid.QueryParserManager)]
+    Guid(ShellClSidGuid.QueryParserManager)]
     internal class QueryParserManagerCoClass
     {
     }

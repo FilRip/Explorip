@@ -18,7 +18,7 @@ namespace ManagedShell.Common.Helpers
                 0,
                 0,
                 0,
-                (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+                (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
         }
 
         public static void ShowWindowTopMost(IntPtr handle)
@@ -30,7 +30,7 @@ namespace ManagedShell.Common.Helpers
                 0,
                 0,
                 0,
-                (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_SHOWWINDOW/* | (int)SetWindowPosFlags.SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+                (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_SHOWWINDOW/* | (int)SetWindowPosFlags.SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
         }
 
         public static void ShowWindowDesktop(IntPtr hwnd)
@@ -47,7 +47,7 @@ namespace ManagedShell.Common.Helpers
                     0,
                     0,
                     0,
-                    (int)SetWindowPosFlags.SWP_NOSIZE | (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                    (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOACTIVATE);
             }
             else
             {

@@ -3,16 +3,16 @@
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct SHITEMID
+    public struct ShItemId
     {
         public ushort cb;
         [MarshalAs(UnmanagedType.LPArray)]
         public byte[] abID;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct ITEMIDLIST
+        public struct ItemIdList
         {
-            public SHITEMID mkid;
+            public ShItemId mkid;
         }
     }
 }

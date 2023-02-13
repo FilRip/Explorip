@@ -83,19 +83,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             return other.Equals((object)this);
         }
 
-        #endregion
-
-        #region equality and hashing
-
-        /// <summary>
-        /// Returns the hash code of the object. This is vital for performance of value types.
-        /// </summary>
-        /// <returns></returns>
-        public override int GetHashCode()
-        {
-            return formatId.GetHashCode() ^ propertyId;
-        }
-
         /// <summary>
         /// Returns whether this object is equal to another. This is vital for performance of value types.
         /// </summary>
@@ -111,6 +98,19 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
             PropertyKey other = (PropertyKey)obj;
             return other.formatId.Equals(formatId) && (other.propertyId == propertyId);
+        }
+
+        #endregion
+
+        #region equality and hashing
+
+        /// <summary>
+        /// Returns the hash code of the object. This is vital for performance of value types.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return formatId.GetHashCode() ^ propertyId;
         }
 
         /// <summary>

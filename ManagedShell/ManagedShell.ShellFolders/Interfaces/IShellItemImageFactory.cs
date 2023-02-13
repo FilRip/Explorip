@@ -11,18 +11,18 @@ namespace ManagedShell.ShellFolders.Interfaces
     public interface IShellItemImageFactory
     {
         int GetImage(
-            [In, MarshalAs(UnmanagedType.Struct)] SIZE size,
+            [In, MarshalAs(UnmanagedType.Struct)] Size size,
             [In] SIIGBF flags,
             [Out] out IntPtr phbm);
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct SIZE
+    public struct Size
     {
         public int cx;
         public int cy;
 
-        public SIZE(int cx, int cy)
+        public Size(int cx, int cy)
         {
             this.cx = cx;
             this.cy = cy;

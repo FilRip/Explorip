@@ -68,8 +68,9 @@ namespace ManagedShell.ShellFolders
         private bool GetNewContextMenu(ShellFolder folder)
         {
             Guid guid = typeof(IContextMenu).GUID;
+            Guid newMenuGuid = Interop.CLSID_NewMenu;
             if (Interop.CoCreateInstance(
-                ref Interop.CLSID_NewMenu,
+                ref newMenuGuid,
                 IntPtr.Zero,
                 CLSCTX.INPROC_SERVER,
                 ref guid,

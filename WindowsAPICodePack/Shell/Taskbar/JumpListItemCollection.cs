@@ -99,10 +99,10 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// starting at the specified index of the target array.
         /// </summary>
         /// <param name="array">The array name.</param>
-        /// <param name="index">The index of the starting element.</param>
-        public void CopyTo(T[] array, int index)
+        /// <param name="arrayIndex">The index of the starting element.</param>
+        public void CopyTo(T[] array, int arrayIndex)
         {
-            items.CopyTo(array, index);
+            items.CopyTo(array, arrayIndex);
         }
 
         /// <summary>

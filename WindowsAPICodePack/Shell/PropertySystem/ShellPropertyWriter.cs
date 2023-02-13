@@ -25,7 +25,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             ParentShellObject = parent;
 
             // Open the property store for this shell object...
-            Guid guid = new(ShellIIDGuid.IPropertyStore);
+            Guid guid = new(ShellIidGuid.IPropertyStore);
 
             try
             {

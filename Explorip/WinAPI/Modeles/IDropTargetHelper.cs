@@ -14,7 +14,7 @@ namespace Explorip.WinAPI.Modeles
         Int32 DragEnter(
             IntPtr hwndTarget,
             IntPtr pDataObject,
-            ref POINT ppt,
+            ref ManagedPoint ppt,
             DragDropEffects dwEffect);
 
         // Notifies the drag-image manager that the drop target's IDropTarget::DragLeave method has been called
@@ -24,14 +24,14 @@ namespace Explorip.WinAPI.Modeles
         // Notifies the drag-image manager that the drop target's IDropTarget::DragOver method has been called
         [PreserveSig]
         Int32 DragOver(
-            ref POINT ppt,
+            ref ManagedPoint ppt,
             DragDropEffects dwEffect);
 
         // Notifies the drag-image manager that the drop target's IDropTarget::Drop method has been called
         [PreserveSig]
         Int32 Drop(
             IntPtr pDataObject,
-            ref POINT ppt,
+            ref ManagedPoint ppt,
             DragDropEffects dwEffect);
 
         // Notifies the drag-image manager to show or hide the drag image

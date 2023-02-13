@@ -19,14 +19,14 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     // morphs all 'new CoClass()' calls to 'new CoClassWrapper()'.
 
     [ComImport,
-    Guid(ShellIIDGuid.IFileOpenDialog),
+    Guid(ShellIidGuid.IFileOpenDialog),
     CoClass(typeof(FileOpenDialogRCW))]
     internal interface INativeFileOpenDialog : IFileOpenDialog
     {
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IFileSaveDialog),
+    Guid(ShellIidGuid.IFileSaveDialog),
     CoClass(typeof(FileSaveDialogRCW))]
     internal interface INativeFileSaveDialog : IFileSaveDialog
     {
@@ -36,7 +36,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     [ComImport,
     ClassInterface(ClassInterfaceType.None),
     TypeLibType(TypeLibTypeFlags.FCanCreate),
-    Guid(ShellCLSIDGuid.FileOpenDialog)]
+    Guid(ShellClSidGuid.FileOpenDialog)]
     internal class FileOpenDialogRCW
     {
     }
@@ -44,7 +44,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     [ComImport,
     ClassInterface(ClassInterfaceType.None),
     TypeLibType(TypeLibTypeFlags.FCanCreate),
-    Guid(ShellCLSIDGuid.FileSaveDialog)]
+    Guid(ShellClSidGuid.FileSaveDialog)]
     internal class FileSaveDialogRCW
     {
     }

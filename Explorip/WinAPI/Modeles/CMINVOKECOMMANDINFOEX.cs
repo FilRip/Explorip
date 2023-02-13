@@ -38,7 +38,7 @@ namespace Explorip.WinAPI.Modeles
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct CMINVOKECOMMANDINFOEX
+    public struct CmInvokeCommandInfoEx
     {
         public int cbSize;
         public CMIC fMask;
@@ -60,6 +60,6 @@ namespace Explorip.WinAPI.Modeles
         public string lpDirectoryW;
         [MarshalAs(UnmanagedType.LPWStr)]
         public string lpTitleW;
-        public POINT ptInvoke;
+        public ManagedPoint ptInvoke;
     }
 }

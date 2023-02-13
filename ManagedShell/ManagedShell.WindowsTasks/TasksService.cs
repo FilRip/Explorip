@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -25,13 +24,15 @@ namespace ManagedShell.WindowsTasks
         private NativeWindowEx _HookWin;
         private readonly object _windowsLock = new();
         internal bool IsInitialized;
-        public IconSize TaskIconSize;
+        public IconSize TaskIconSize { get; set; }
 
         private static int WM_SHELLHOOKMESSAGE = -1;
         private static int WM_TASKBARCREATEDMESSAGE = -1;
         private static int TASKBARBUTTONCREATEDMESSAGE = -1;
         private static IntPtr uncloakEventHook = IntPtr.Zero;
+#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
         private WinEventProc uncloakEventProc;
+#pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
 
         internal ITaskCategoryProvider TaskCategoryProvider;
         private TaskCategoryChangeDelegate CategoryChangeDelegate;
@@ -43,6 +44,13 @@ namespace ManagedShell.WindowsTasks
         public TasksService(IconSize iconSize)
         {
             TaskIconSize = iconSize;
+        }
+
+        private static void RegisterWindowsMessages()
+        {
+            WM_SHELLHOOKMESSAGE = RegisterWindowMessage("SHELLHOOK");
+            WM_TASKBARCREATEDMESSAGE = RegisterWindowMessage("TaskbarCreated");
+            TASKBARBUTTONCREATEDMESSAGE = RegisterWindowMessage("TaskbarButtonCreated");
         }
 
         internal void Initialize()
@@ -65,9 +73,7 @@ namespace ManagedShell.WindowsTasks
 
                 // register to receive task events
                 RegisterShellHookWindow(_HookWin.Handle);
-                WM_SHELLHOOKMESSAGE = RegisterWindowMessage("SHELLHOOK");
-                WM_TASKBARCREATEDMESSAGE = RegisterWindowMessage("TaskbarCreated");
-                TASKBARBUTTONCREATEDMESSAGE = RegisterWindowMessage("TaskbarButtonCreated");
+                RegisterWindowsMessages();
                 _HookWin.MessageReceived += ShellWinProc;
 
                 if (EnvironmentHelper.IsWindows8OrBetter)
@@ -77,6 +83,7 @@ namespace ManagedShell.WindowsTasks
 
                     if (uncloakEventHook == IntPtr.Zero)
                     {
+#pragma warning disable S2696 // Instance members should not write to "static" fields
                         uncloakEventHook = SetWinEventHook(
                             EVENT_OBJECT_UNCLOAKED,
                             EVENT_OBJECT_UNCLOAKED,
@@ -85,6 +92,7 @@ namespace ManagedShell.WindowsTasks
                             0,
                             0,
                             WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+#pragma warning restore S2696 // Instance members should not write to "static" fields
                     }
                 }
 
@@ -148,7 +156,8 @@ namespace ManagedShell.WindowsTasks
             {
                 ShellLogger.Debug("TasksService: Deregistering hooks");
                 DeregisterShellHookWindow(_HookWin.Handle);
-                if (uncloakEventHook != IntPtr.Zero) UnhookWinEvent(uncloakEventHook);
+                if (uncloakEventHook != IntPtr.Zero)
+                    UnhookWinEvent(uncloakEventHook);
                 _HookWin.DestroyHandle();
                 SetTaskbarListHwnd(IntPtr.Zero);
             }
@@ -364,7 +373,7 @@ namespace ManagedShell.WindowsTasks
 
                             case HSHELL.GETMINRECT:
                                 ShellLogger.Debug("TasksService: GetMinRect called: " + msg.LParam);
-                                SHELLHOOKINFO winHandle = (SHELLHOOKINFO)Marshal.PtrToStructure(msg.LParam, typeof(SHELLHOOKINFO));
+                                ShellHookInfo winHandle = (ShellHookInfo)Marshal.PtrToStructure(msg.LParam, typeof(ShellHookInfo));
                                 winHandle.rc = new NativeMethods.Rect { Bottom = 100, Left = 0, Right = 100, Top = 0 };
                                 Marshal.StructureToPtr(winHandle, msg.LParam, true);
                                 msg.Result = winHandle.hwnd;

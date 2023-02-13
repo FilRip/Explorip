@@ -79,7 +79,7 @@ namespace ManagedShell.WindowsTray
 
             GetWindowThreadProcessId(toolbarHwnd, out var processId);
             IntPtr hProcess = OpenProcess(ProcessAccess.All, false, (int)processId);
-            IntPtr hBuffer = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)Marshal.SizeOf(new TBBUTTON()), AllocationType.Commit,
+            IntPtr hBuffer = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)Marshal.SizeOf(new TbButton()), AllocationType.Commit,
                 MemoryProtection.ReadWrite);
 
             for (int i = 0; i < count; i++)
@@ -143,7 +143,7 @@ namespace ManagedShell.WindowsTray
 
         private TrayItem GetTrayItem(int i, IntPtr hBuffer, IntPtr hProcess, IntPtr toolbarHwnd)
         {
-            TBBUTTON tbButton = new();
+            TbButton tbButton = new();
             TrayItem trayItem = new();
             IntPtr hTBButton = Marshal.AllocHGlobal(Marshal.SizeOf(tbButton));
             IntPtr hTrayItem = Marshal.AllocHGlobal(Marshal.SizeOf(trayItem));
@@ -151,7 +151,7 @@ namespace ManagedShell.WindowsTray
             _ = SendMessage(toolbarHwnd, (int)TB.GETBUTTON, (IntPtr)i, hBuffer);
             if (ReadProcessMemory(hProcess, hBuffer, hTBButton, Marshal.SizeOf(tbButton), out _))
             {
-                tbButton = (TBBUTTON)Marshal.PtrToStructure(hTBButton, typeof(TBBUTTON));
+                tbButton = (TbButton)Marshal.PtrToStructure(hTBButton, typeof(TbButton));
 
                 if (tbButton.dwData != UIntPtr.Zero &&
                     ReadProcessMemory(hProcess, tbButton.dwData, hTrayItem, Marshal.SizeOf(trayItem), out _))
@@ -277,20 +277,20 @@ namespace ManagedShell.WindowsTray
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct TBBUTTON
+        public struct TbButton
         {
             public int iBitmap;
             public int idCommand;
 #pragma warning disable IDE0044
             [StructLayout(LayoutKind.Explicit)]
-            private struct TBBUTTON_U
+            private struct TbButtonU
             {
                 [FieldOffset(0)] public byte fsState;
                 [FieldOffset(1)] public byte fsStyle;
                 [FieldOffset(0)] private IntPtr bReserved;
             }
 #pragma warning restore IDE0044
-            private TBBUTTON_U union;
+            private TbButtonU union;
             public byte FsState { get { return union.fsState; } set { union.fsState = value; } }
             public byte FsStyle { get { return union.fsStyle; } set { union.fsStyle = value; } }
             public UIntPtr dwData;

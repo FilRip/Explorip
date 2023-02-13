@@ -109,7 +109,7 @@ namespace ManagedShell.AppBar
             // apparently the TaskBars like to pop up when AppBars change
             if (_explorerHelper.HideExplorerTaskbar)
             {
-                _explorerHelper.SetSecondaryTaskbarVisibility((int)SetWindowPosFlags.SWP_HIDEWINDOW);
+                _explorerHelper.SetSecondaryTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
             }
         }
 
@@ -126,7 +126,7 @@ namespace ManagedShell.AppBar
             // apparently the TaskBars like to pop up when AppBars change
             if (_explorerHelper.HideExplorerTaskbar)
             {
-                _explorerHelper.SetSecondaryTaskbarVisibility((int)SetWindowPosFlags.SWP_HIDEWINDOW);
+                _explorerHelper.SetSecondaryTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
             }
         }
 

@@ -14,7 +14,7 @@ namespace Explorip.TaskBar.Controls
         private readonly TaskButton _parent;
         private IntPtr _handle;
         private IntPtr _thumbPtr;
-        private WinAPI.Modeles.DWM_THUMBNAIL_PROPERTIES _thumb;
+        private WinAPI.Modeles.DwmThumbnailProperties _thumb;
 
         public TaskThumbButton(TaskButton parent)
         {
@@ -52,7 +52,7 @@ namespace Explorip.TaskBar.Controls
             int result = Dwmapi.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.Handle, out _thumbPtr);
             if (result == (int)Commun.HRESULT.S_OK)
             {
-                _thumb = new WinAPI.Modeles.DWM_THUMBNAIL_PROPERTIES()
+                _thumb = new WinAPI.Modeles.DwmThumbnailProperties()
                 {
                     dwFlags = WinAPI.Modeles.DWM_TNP.VISIBLE | WinAPI.Modeles.DWM_TNP.RECTDESTINATION | WinAPI.Modeles.DWM_TNP.OPACITY,
                     fVisible = true,

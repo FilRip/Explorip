@@ -18,9 +18,9 @@ namespace Explorip.Helpers
             etat = MFS.ENABLED;
             try
             {
-                MENUITEMINFO sortie = new()
+                MenuItemInfo sortie = new()
                 {
-                    cbSize = (uint)Marshal.SizeOf(typeof(MENUITEMINFO)),
+                    cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
                     dwTypeData = new string('\0', 256),
                     fMask = MIIM.STRING | MIIM.STATE | MIIM.ID | MIIM.BITMAP,
                     fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED

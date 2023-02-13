@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct PROCESS_BASIC_INFORMATION
+    public struct ProcessBasicInformation
     {
         public IntPtr Reserved1;
         public IntPtr PebAddress;

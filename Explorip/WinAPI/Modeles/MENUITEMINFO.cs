@@ -52,7 +52,7 @@ namespace Explorip.WinAPI.Modeles
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct MENUITEMINFO
+    public struct MenuItemInfo
     {
         public uint cbSize;
         public MIIM fMask;

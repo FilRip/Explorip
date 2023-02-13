@@ -16,7 +16,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// <summary>
     /// The base class for all Shell objects in Shell Namespace.
     /// </summary>
-    abstract public class ShellObject : IDisposable, IEquatable<ShellObject>
+    public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
     {
 
         #region Public Static Methods
@@ -101,7 +101,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             {
                 if (nativeShellItem == null && ParsingName != null)
                 {
-                    Guid guid = new(ShellIIDGuid.IShellItem2);
+                    Guid guid = new(ShellIidGuid.IShellItem2);
                     int retCode = ShellNativeMethods.SHCreateItemFromParsingName(ParsingName, IntPtr.Zero, ref guid, out nativeShellItem);
 
                     if (nativeShellItem == null || !CoreErrorHelper.Succeeded(retCode))

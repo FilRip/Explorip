@@ -37,7 +37,7 @@ namespace Explorip.Helpers
         private const uint CMD_FIRST = 0;
         private const uint CMD_LAST = (uint)short.MaxValue;
 
-        private static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CMINVOKECOMMANDINFOEX));
+        private static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CmInvokeCommandInfoEx));
 
         private Point _positionSouris;
 
@@ -119,7 +119,7 @@ namespace Explorip.Helpers
         #region InvokeCommand
         private void InvokeCommand(IContextMenu oContextMenu, uint nCmd, string strFolder, Point pointInvoke)
         {
-            CMINVOKECOMMANDINFOEX invoke = new()
+            CmInvokeCommandInfoEx invoke = new()
             {
                 cbSize = cbInvokeCommand,
                 lpVerb = (IntPtr)(nCmd - CMD_FIRST),
@@ -129,7 +129,7 @@ namespace Explorip.Helpers
                 fMask = CMIC.UNICODE | CMIC.PTINVOKE |
                 ((Control.ModifierKeys & Keys.Control) != 0 ? CMIC.CONTROL_DOWN : 0) |
                 ((Control.ModifierKeys & Keys.Shift) != 0 ? CMIC.SHIFT_DOWN : 0),
-                ptInvoke = new POINT(pointInvoke.X, pointInvoke.Y),
+                ptInvoke = new ManagedPoint(pointInvoke.X, pointInvoke.Y),
                 nShow = SW.SHOWNORMAL
             };
             oContextMenu.InvokeCommand(ref invoke);

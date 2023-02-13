@@ -479,7 +479,7 @@ namespace ManagedShell.Common.Helpers
                 }, 0);
             }
 
-            WINDOWINFO info = new();
+            WindowInfo info = new();
             info.cbSize = (uint)Marshal.SizeOf(info);
             GetWindowInfo(hWnd, ref info);
             return (info.dwStyle & 0x10000000) == 0x10000000;
@@ -487,7 +487,7 @@ namespace ManagedShell.Common.Helpers
 
         public static void ShellKeyCombo(VK wVk_1, VK wVk_2, VK wVk_3 = VK.NONE)
         {
-            INPUT[] inputs = new INPUT[(wVk_3 == VK.NONE ? 4 : 6)];
+            Input[] inputs = new Input[(wVk_3 == VK.NONE ? 4 : 6)];
 
             inputs[0].type = INPUT_KEYBOARD;
             inputs[0].mkhi.ki.time = 0;
@@ -533,7 +533,7 @@ namespace ManagedShell.Common.Helpers
             inputs[position].mkhi.ki.wVk = (ushort)wVk_1;
             inputs[position].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
 
-            SendInput((uint)(wVk_3 == VK.NONE ? 4 : 6), inputs, Marshal.SizeOf(typeof(INPUT)));
+            SendInput((uint)(wVk_3 == VK.NONE ? 4 : 6), inputs, Marshal.SizeOf(typeof(Input)));
         }
 
         public static void SetShellReadyEvent()

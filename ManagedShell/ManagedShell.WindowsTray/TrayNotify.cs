@@ -5,11 +5,11 @@ namespace ManagedShell.WindowsTray
 {
     [ComImport()]
     [Guid("25DEAD04-1EAC-4911-9E3A-AD0A4AB560FD")]
-    class TrayNotify
+    internal class TrayNotify
     {
     }
 
-    enum NOTIFYITEM_PREFERENCE
+    internal enum NOTIFYITEM_PREFERENCE
     {
         PREFERENCE_SHOW_WHEN_ACTIVE = 0,
         PREFERENCE_SHOW_NEVER = 1,
@@ -17,7 +17,7 @@ namespace ManagedShell.WindowsTray
     };
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    struct NOTIFYITEM
+    internal struct NotifyItem
     {
         [MarshalAs(UnmanagedType.LPWStr)]
         public string pszExeName;
@@ -33,29 +33,29 @@ namespace ManagedShell.WindowsTray
     [ComImport()]
     [Guid("D782CCBA-AFB0-43F1-94DB-FDA3779EACCB")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    interface INotificationCB
+    internal interface INotificationCB
     {
-        void Notify([In] uint nEvent, [In] ref NOTIFYITEM notifyItem);
+        void Notify([In] uint nEvent, [In] ref NotifyItem notifyItem);
     }
 
     [ComImport()]
     [Guid("FB852B2C-6BAD-4605-9551-F15F87830935")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    interface ITrayNotifyLegacy
+    internal interface ITrayNotifyLegacy
     {
         void RegisterCallback([MarshalAs(UnmanagedType.Interface)] INotificationCB callback);
-        void SetPreference([In] ref NOTIFYITEM notifyItem);
+        void SetPreference([In] ref NotifyItem notifyItem);
         void EnableAutoTray([In] bool enabled);
     }
 
     [ComImport()]
     [Guid("D133CE13-3537-48BA-93A7-AFCD5D2053B4")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    interface ITrayNotify
+    internal interface ITrayNotify
     {
         void RegisterCallback([MarshalAs(UnmanagedType.Interface)] INotificationCB callback, [Out] out ulong handle);
         void UnregisterCallback([In] ulong handle);
-        void SetPreference([In] ref NOTIFYITEM notifyItem);
+        void SetPreference([In] ref NotifyItem notifyItem);
         void EnableAutoTray([In] bool enabled);
         void DoAction([In] bool enabled);
     }

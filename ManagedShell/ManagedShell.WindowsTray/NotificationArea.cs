@@ -51,8 +51,10 @@ namespace ManagedShell.WindowsTray
         public event EventHandler<NotificationBalloonEventArgs> NotificationBalloonShown;
 
         private SystrayDelegate trayDelegate;
+#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
         private IconDataDelegate iconDataDelegate;
         private TrayHostSizeDelegate trayHostSizeDelegate;
+#pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
         private readonly object _lockObject = new();
         private ShellServiceObject shellServiceObject;
         private TrayHostSizeData trayHostSizeData = new()

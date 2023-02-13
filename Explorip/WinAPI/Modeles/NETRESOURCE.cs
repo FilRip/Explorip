@@ -36,7 +36,7 @@ namespace Explorip.WinAPI.Modeles
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct NETRESOURCE
+    public struct NetreSource
     {
         public ResourceScope Scope;
         public ResourceType ResourceType;

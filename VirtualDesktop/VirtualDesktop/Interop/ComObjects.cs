@@ -40,7 +40,7 @@ namespace WindowsDesktop.Interop
             IsAvailable = false;
             VirtualDesktopCache.Initialize(_assembly);
 
-            VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(CLSID.VirtualDesktopManager));
+            VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(ClSid.VirtualDesktopManager));
             if (ProductInfo.OSBuild >= 22449)
             {
                 VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal22449(_assembly);

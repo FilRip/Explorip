@@ -4,7 +4,7 @@
     internal class VirtualDesktopPinnedApps : ComInterfaceWrapperBase
     {
         public VirtualDesktopPinnedApps(ComInterfaceAssembly assembly)
-            : base(assembly, service: CLSID.VirtualDesktopPinnedApps) { }
+            : base(assembly, service: ClSid.VirtualDesktopPinnedApps) { }
 
         public bool IsViewPinned(ApplicationView applicationView)
         {

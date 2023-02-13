@@ -46,7 +46,7 @@ namespace Explorip.WinAPI.Modeles
 
         [PreserveSig()]
         int Draw(
-            ref IMAGELISTDRAWPARAMS pimldp);
+            ref ImageListDrawParams pimldp);
 
         [PreserveSig()]
         int Remove(
@@ -61,7 +61,7 @@ namespace Explorip.WinAPI.Modeles
         [PreserveSig()]
         int GetImageInfo(
             int i,
-            ref IMAGEINFO pImageInfo);
+            ref ImageInfo pImageInfo);
 
         [PreserveSig()]
         int Copy(
@@ -154,8 +154,8 @@ namespace Explorip.WinAPI.Modeles
 
         [PreserveSig()]
         int GetDragImage(
-            ref POINT ppt,
-            ref POINT pptHotspot,
+            ref ManagedPoint ppt,
+            ref ManagedPoint pptHotspot,
             ref Guid riid,
             ref IntPtr ppv);
 

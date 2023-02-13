@@ -163,7 +163,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                     if (!string.IsNullOrEmpty(canonicalName)) { sb.AppendFormat("{0};", canonicalName); }
                 }
 
-                Guid guid = new(ShellIIDGuid.IPropertyDescriptionList);
+                Guid guid = new(ShellIidGuid.IPropertyDescriptionList);
                 IPropertyDescriptionList propertyDescriptionList = null;
 
                 try

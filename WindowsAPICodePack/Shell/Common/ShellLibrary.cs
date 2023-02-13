@@ -22,15 +22,17 @@ namespace Microsoft.WindowsAPICodePack.Shell
         #region Private Fields
 
         private INativeShellLibrary nativeShellLibrary;
+#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
         private readonly IKnownFolder knownFolder;
+#pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
 
         private static readonly Guid[] FolderTypesGuids =
         {
-            new Guid(ShellKFIDGuid.GenericLibrary),
-            new Guid(ShellKFIDGuid.DocumentsLibrary),
-            new Guid(ShellKFIDGuid.MusicLibrary),
-            new Guid(ShellKFIDGuid.PicturesLibrary),
-            new Guid(ShellKFIDGuid.VideosLibrary)
+            new Guid(ShellKfidGuid.GenericLibrary),
+            new Guid(ShellKfidGuid.DocumentsLibrary),
+            new Guid(ShellKfidGuid.MusicLibrary),
+            new Guid(ShellKfidGuid.PicturesLibrary),
+            new Guid(ShellKfidGuid.VideosLibrary)
         };
 
         #endregion
@@ -108,7 +110,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             }
 
             Name = libraryName;
-            Guid guid = new(ShellKFIDGuid.Libraries);
+            Guid guid = new(ShellKfidGuid.Libraries);
 
             ShellNativeMethods.LibrarySaveOptions flags = overwrite ?
                     ShellNativeMethods.LibrarySaveOptions.OverrideExisting :
@@ -172,7 +174,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                     ShellNativeMethods.LibrarySaveOptions.OverrideExisting :
                     ShellNativeMethods.LibrarySaveOptions.FailIfThere;
 
-            Guid guid = new(ShellIIDGuid.IShellItem);
+            Guid guid = new(ShellIidGuid.IShellItem);
 
             ShellNativeMethods.SHCreateItemFromParsingName(folderPath, IntPtr.Zero, ref guid, out IShellItem shellItemIn);
 
@@ -278,7 +280,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             get
             {
-                Guid guid = new(ShellIIDGuid.IShellItem);
+                Guid guid = new(ShellIidGuid.IShellItem);
 
 
                 nativeShellLibrary.GetDefaultSaveFolder(
@@ -302,7 +304,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
                 string fullPath = new DirectoryInfo(value).FullName;
 
-                Guid guid = new(ShellIIDGuid.IShellItem);
+                Guid guid = new(ShellIidGuid.IShellItem);
 
                 ShellNativeMethods.SHCreateItemFromParsingName(fullPath, IntPtr.Zero, ref guid, out IShellItem saveFolderItem);
 
@@ -385,7 +387,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             get
             {
                 CoreHelpers.ThrowIfNotWin7();
-                return KnownFolderHelper.FromKnownFolderId(new Guid(ShellKFIDGuid.Libraries));
+                return KnownFolderHelper.FromKnownFolderId(new Guid(ShellKfidGuid.Libraries));
             }
         }
 
@@ -402,7 +404,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             IKnownFolder kf = KnownFolders.Libraries;
             string librariesFolderPath = (kf != null) ? kf.Path : string.Empty;
 
-            Guid guid = new(ShellIIDGuid.IShellItem);
+            Guid guid = new(ShellIidGuid.IShellItem);
             string shellItemPath = System.IO.Path.Combine(librariesFolderPath, libraryName + FileExtension);
             int hr = ShellNativeMethods.SHCreateItemFromParsingName(shellItemPath, IntPtr.Zero, ref guid, out IShellItem nativeShellItem);
 
@@ -701,7 +703,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             List<ShellFileSystemFolder> list = new();
 
-            Guid shellItemArrayGuid = new(ShellIIDGuid.IShellItemArray);
+            Guid shellItemArrayGuid = new(ShellIidGuid.IShellItemArray);
 
             HResult hr = nativeShellLibrary.GetFolders(ShellNativeMethods.LibraryFolderFilter.AllItems, ref shellItemArrayGuid, out IShellItemArray itemArray);
 

@@ -11,7 +11,7 @@ namespace Explorip.WinAPI
         public enum InfoLevel
         {
             /// <summary>
-            /// The function stores a <see cref="UNIVERSAL_NAME_INFO"/> structure in the
+            /// The function stores a <see cref="UniversalNameInfo"/> structure in the
             /// buffer.
             /// </summary>
             UniversalName = 1,
@@ -29,7 +29,7 @@ namespace Explorip.WinAPI
         internal static extern int WNetGetUniversalName(
             string lpLocalPath,
             InfoLevel dwInfoLevel,
-            ref UNIVERSAL_NAME_INFO lpBuffer,
+            ref UniversalNameInfo lpBuffer,
             ref int lpBufferSize);
 
         [DllImport("mpr.dll", CharSet = CharSet.Auto)]
@@ -43,6 +43,6 @@ namespace Explorip.WinAPI
         internal static extern uint WNetGetConnection(string lpLocalName, StringBuilder lpRemoteName, ref int lpnLength);
 
         [DllImport("mpr.dll")]
-        internal static extern int WNetAddConnection2(NETRESOURCE netResource, string password, string username, uint flags);
+        internal static extern int WNetAddConnection2(NetreSource netResource, string password, string username, uint flags);
     }
 }

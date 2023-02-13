@@ -16,7 +16,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     #region Property System COM Interfaces
 
     [ComImport]
-    [Guid(ShellIIDGuid.IPropertyStoreCapabilities)]
+    [Guid(ShellIidGuid.IPropertyStoreCapabilities)]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface IPropertyStoreCapabilities
     {
@@ -27,7 +27,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     /// An in-memory property store cache
     /// </summary>
     [ComImport]
-    [Guid(ShellIIDGuid.IPropertyStoreCache)]
+    [Guid(ShellIidGuid.IPropertyStoreCache)]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface IPropertyStoreCache
     {
@@ -74,7 +74,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     /// A property store
     /// </summary>
     [ComImport]
-    [Guid(ShellIIDGuid.IPropertyStore)]
+    [Guid(ShellIidGuid.IPropertyStore)]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface IPropertyStore
     {
@@ -123,7 +123,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IPropertyDescriptionList),
+    Guid(ShellIidGuid.IPropertyDescriptionList),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyDescriptionList
     {
@@ -134,7 +134,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IPropertyDescription),
+    Guid(ShellIidGuid.IPropertyDescription),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyDescription
     {
@@ -198,7 +198,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IPropertyDescription2),
+    Guid(ShellIidGuid.IPropertyDescription2),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyDescription2 : IPropertyDescription
     {
@@ -268,7 +268,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IPropertyEnumType),
+    Guid(ShellIidGuid.IPropertyEnumType),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyEnumType
     {
@@ -289,7 +289,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IPropertyEnumType2),
+    Guid(ShellIidGuid.IPropertyEnumType2),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyEnumType2 : IPropertyEnumType
     {
@@ -314,7 +314,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
 
     [ComImport,
-    Guid(ShellIIDGuid.IPropertyEnumTypeList),
+    Guid(ShellIidGuid.IPropertyEnumTypeList),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyEnumTypeList
     {

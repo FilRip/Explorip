@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct IMAGELISTDRAWPARAMS
+    public struct ImageListDrawParams
     {
         public int cbSize;
         public IntPtr himl;

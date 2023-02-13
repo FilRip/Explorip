@@ -183,8 +183,8 @@ namespace Explorip.Helpers
             {
                 Console.WriteLine("Menu Start");
                 if (_dropTarget != null)
-                    _dropTarget.DragDrop(_pointeurData, touches, new POINT(e.X, e.Y), ref effets);
-                _dropTargetHelper.Drop(_pointeurData, new POINT(e.X, e.Y), effets);
+                    _dropTarget.DragDrop(_pointeurData, touches, new ManagedPoint(e.X, e.Y), ref effets);
+                _dropTargetHelper.Drop(_pointeurData, new ManagedPoint(e.X, e.Y), effets);
                 Console.WriteLine("Menu end");
             }
             _dragDropEnCours = false;
@@ -256,8 +256,8 @@ namespace Explorip.Helpers
                 touches |= MK.ALT;
             DragDropEffects effets = effetDragDrop;
             if (_dropTarget != null)
-                _dropTarget.DragEnter(_pointeurData, touches, new POINT(e.X, e.Y), ref effets);
-            _dropTargetHelper.DragEnter(((Control)sender).Handle, _pointeurData, new POINT(e.X, e.Y), effetDragDrop);
+                _dropTarget.DragEnter(_pointeurData, touches, new ManagedPoint(e.X, e.Y), ref effets);
+            _dropTargetHelper.DragEnter(((Control)sender).Handle, _pointeurData, new ManagedPoint(e.X, e.Y), effetDragDrop);
         }
 
         public void DragOver(object sender, DragEventArgs e)
@@ -269,8 +269,8 @@ namespace Explorip.Helpers
                 touches |= MK.ALT;
             DragDropEffects effets = effetDragDrop;
             if (_dropTarget != null)
-                _dropTarget.DragOver(touches, new POINT(e.X, e.Y), ref effets);
-            _dropTargetHelper.DragOver(new POINT(e.X, e.Y), effetDragDrop);
+                _dropTarget.DragOver(touches, new ManagedPoint(e.X, e.Y), ref effets);
+            _dropTargetHelper.DragOver(new ManagedPoint(e.X, e.Y), effetDragDrop);
         }
 
         public void DragLeave(object sender, EventArgs e)

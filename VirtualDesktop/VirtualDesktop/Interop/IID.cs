@@ -12,7 +12,7 @@ using WindowsDesktop.Properties;
 
 namespace WindowsDesktop.Interop
 {
-    public static class IID
+    public static class IiD
     {
         private static readonly Regex _osBuildRegex = new(@"v_(?<build>\d{5}?)");
 

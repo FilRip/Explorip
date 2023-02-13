@@ -17,7 +17,7 @@ namespace System.Drawing
         private const string Metallic = "Metallic";
         private const string NoTheme = "NoTheme";
 
-        private static readonly Color[] _toolBorder;
+        private static readonly Color[] _toolBorder = new Color[] { Color.FromArgb(127, 157, 185), Color.FromArgb(164, 185, 127), Color.FromArgb(165, 172, 178), Color.FromArgb(132, 130, 132) };
         #endregion
 
         #region Properties
@@ -35,11 +35,6 @@ namespace System.Drawing
         #endregion
 
         #region Constructors
-
-        static ThemedColors()
-        {
-            ThemedColors._toolBorder = new Color[] { Color.FromArgb(127, 157, 185), Color.FromArgb(164, 185, 127), Color.FromArgb(165, 172, 178), Color.FromArgb(132, 130, 132) };
-        }
 
         private ThemedColors() { }
 

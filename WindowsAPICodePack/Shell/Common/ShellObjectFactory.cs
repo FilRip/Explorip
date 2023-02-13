@@ -102,6 +102,66 @@ namespace Microsoft.WindowsAPICodePack.Shell
             return new ShellNonFileSystemItem(nativeShellItem2);
         }
 
+        /// <summary>
+        /// Creates a ShellObject given a parsing name
+        /// </summary>
+        /// <param name="parsingName"></param>
+        /// <returns>A newly constructed ShellObject object</returns>
+        internal static ShellObject Create(string parsingName)
+        {
+            if (string.IsNullOrEmpty(parsingName))
+            {
+                throw new ArgumentNullException("parsingName");
+            }
+
+            // Create a native shellitem from our path
+            Guid guid = new(ShellIidGuid.IShellItem2);
+            int retCode = ShellNativeMethods.SHCreateItemFromParsingName(parsingName, IntPtr.Zero, ref guid, out IShellItem2 nativeShellItem);
+
+            if (!CoreErrorHelper.Succeeded(retCode))
+            {
+                throw new ShellException(LocalizedMessages.ShellObjectFactoryUnableToCreateItem, Marshal.GetExceptionForHR(retCode));
+            }
+            return Create(nativeShellItem);
+        }
+
+        /// <summary>
+        /// Constructs a new Shell object from IDList pointer
+        /// </summary>
+        /// <param name="idListPtr"></param>
+        /// <returns></returns>
+        internal static ShellObject Create(IntPtr idListPtr)
+        {
+            // Throw exception if not running on Win7 or newer.
+            CoreHelpers.ThrowIfNotVista();
+
+            Guid guid = new(ShellIidGuid.IShellItem2);
+
+            int retCode = ShellNativeMethods.SHCreateItemFromIDList(idListPtr, ref guid, out IShellItem2 nativeShellItem);
+
+            if (!CoreErrorHelper.Succeeded(retCode)) { return null; }
+            return Create(nativeShellItem);
+        }
+
+        /// <summary>
+        /// Constructs a new Shell object from IDList pointer
+        /// </summary>
+        /// <param name="idListPtr"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        internal static ShellObject Create(IntPtr idListPtr, ShellContainer parent)
+        {
+
+            int retCode = ShellNativeMethods.SHCreateShellItem(
+                IntPtr.Zero,
+                parent.NativeShellFolder,
+                idListPtr, out IShellItem nativeShellItem);
+
+            if (!CoreErrorHelper.Succeeded(retCode)) { return null; }
+
+            return Create(nativeShellItem);
+        }
+
         // This is a work around for the STA thread bug.  This will execute the call on a non-sta thread, then return the result
         private static bool IsVirtualKnownFolder(IShellItem2 nativeShellItem2)
         {
@@ -152,66 +212,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
             {
                 ShellNativeMethods.ILFree(pidl);
             }
-        }
-
-        /// <summary>
-        /// Creates a ShellObject given a parsing name
-        /// </summary>
-        /// <param name="parsingName"></param>
-        /// <returns>A newly constructed ShellObject object</returns>
-        internal static ShellObject Create(string parsingName)
-        {
-            if (string.IsNullOrEmpty(parsingName))
-            {
-                throw new ArgumentNullException("parsingName");
-            }
-
-            // Create a native shellitem from our path
-            Guid guid = new(ShellIIDGuid.IShellItem2);
-            int retCode = ShellNativeMethods.SHCreateItemFromParsingName(parsingName, IntPtr.Zero, ref guid, out IShellItem2 nativeShellItem);
-
-            if (!CoreErrorHelper.Succeeded(retCode))
-            {
-                throw new ShellException(LocalizedMessages.ShellObjectFactoryUnableToCreateItem, Marshal.GetExceptionForHR(retCode));
-            }
-            return ShellObjectFactory.Create(nativeShellItem);
-        }
-
-        /// <summary>
-        /// Constructs a new Shell object from IDList pointer
-        /// </summary>
-        /// <param name="idListPtr"></param>
-        /// <returns></returns>
-        internal static ShellObject Create(IntPtr idListPtr)
-        {
-            // Throw exception if not running on Win7 or newer.
-            CoreHelpers.ThrowIfNotVista();
-
-            Guid guid = new(ShellIIDGuid.IShellItem2);
-
-            int retCode = ShellNativeMethods.SHCreateItemFromIDList(idListPtr, ref guid, out IShellItem2 nativeShellItem);
-
-            if (!CoreErrorHelper.Succeeded(retCode)) { return null; }
-            return ShellObjectFactory.Create(nativeShellItem);
-        }
-
-        /// <summary>
-        /// Constructs a new Shell object from IDList pointer
-        /// </summary>
-        /// <param name="idListPtr"></param>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        internal static ShellObject Create(IntPtr idListPtr, ShellContainer parent)
-        {
-
-            int retCode = ShellNativeMethods.SHCreateShellItem(
-                IntPtr.Zero,
-                parent.NativeShellFolder,
-                idListPtr, out IShellItem nativeShellItem);
-
-            if (!CoreErrorHelper.Succeeded(retCode)) { return null; }
-
-            return ShellObjectFactory.Create(nativeShellItem);
         }
     }
 }

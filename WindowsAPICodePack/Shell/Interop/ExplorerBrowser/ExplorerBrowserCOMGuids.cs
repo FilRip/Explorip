@@ -2,7 +2,7 @@
 
 namespace Microsoft.WindowsAPICodePack.Controls
 {
-    internal static class ExplorerBrowserIIDGuid
+    internal static class ExplorerBrowserIidGuid
     {
         // IID GUID strings for relevant Shell COM interfaces.
         internal const string IExplorerBrowser = "DFD3B6B5-C10C-4BE9-85F6-A66969F402F6";
@@ -35,7 +35,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         internal const string AdvancedQuery = "b4e9db8b-34ba-4c39-b5cc-16a1bd2c411c";
     }
 
-    internal static class ExplorerBrowserCLSIDGuid
+    internal static class ExplorerBrowserClSidGuid
     {
         // CLSID GUID strings for relevant coclasses.
         internal const string ExplorerBrowser = "71F96385-DDD6-48D3-A0C1-AE06E8B055FB";

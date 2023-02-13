@@ -6,7 +6,7 @@ namespace WindowsDesktop.Interop
     internal abstract class VirtualDesktopManagerInternal : ComInterfaceWrapperBase
     {
         public VirtualDesktopManagerInternal(ComInterfaceAssembly assembly, uint latestVersion = 1)
-            : base(assembly, "IVirtualDesktopManagerInternal", latestVersion, service: CLSID.VirtualDesktopAPIUnknown)
+            : base(assembly, "IVirtualDesktopManagerInternal", latestVersion, service: ClSid.VirtualDesktopAPIUnknown)
         {
         }
 

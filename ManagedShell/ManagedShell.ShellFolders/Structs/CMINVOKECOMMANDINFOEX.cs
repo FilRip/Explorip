@@ -8,7 +8,7 @@ namespace ManagedShell.ShellFolders.Structs
 {
     // Contains extended information about a shortcut menu command
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct CMINVOKECOMMANDINFOEX
+    public struct CmInvokeCommandInfoEx
     {
         public int cbSize;
         public CMIC fMask;

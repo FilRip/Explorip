@@ -650,7 +650,7 @@ namespace ManagedShell.WindowsTasks
         /// <param name="hWnd">The handle of the window.</param>
         private NativeMethods.WindowShowStyle GetWindowShowStyle(IntPtr hWnd)
         {
-            NativeMethods.WINDOWPLACEMENT placement = new();
+            NativeMethods.WindowPlacement placement = new();
             NativeMethods.GetWindowPlacement(hWnd, ref placement);
             return placement.showCmd;
         }

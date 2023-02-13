@@ -2,7 +2,7 @@
 
 namespace Microsoft.WindowsAPICodePack.Shell
 {
-    internal static class ShellIIDGuid
+    internal static class ShellIidGuid
     {
 
         // IID GUID strings for relevant Shell COM interfaces.
@@ -48,7 +48,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         internal const string IQueryParserManager = "A879E3C4-AF77-44fb-8F37-EBD1487CF920";
     }
 
-    internal static class ShellCLSIDGuid
+    internal static class ShellClSidGuid
     {
 
         // CLSID GUID strings for relevant coclasses.
@@ -61,7 +61,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         internal const string QueryParserManager = "5088B39A-29B4-4d9d-8245-4EE289222F66";
     }
 
-    internal static class ShellKFIDGuid
+    internal static class ShellKfidGuid
     {
 
         internal const string ComputerFolder = "0AC0837C-BBF8-452A-850D-79D08E667CA7";
@@ -78,7 +78,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         internal const string Libraries = "1B3EA5DC-B587-4786-B4EF-BD1DC332AEAE";
     }
 
-    internal static class ShellBHIDGuid
+    internal static class ShellBhidGuid
     {
         internal const string ShellFolderObject = "3981e224-f559-11d3-8e3a-00c04f6837d5";
     }

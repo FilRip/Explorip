@@ -471,11 +471,11 @@ namespace JetBrains.Annotations
     [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
     [AttributeUsage(AttributeTargets.All, Inherited = false)]
     [Conditional("JETBRAINS_ANNOTATIONS")]
-    internal sealed class PublicAPIAttribute : Attribute
+    internal sealed class PublicApiAttribute : Attribute
     {
-        public PublicAPIAttribute() { }
+        public PublicApiAttribute() { }
 
-        public PublicAPIAttribute([NotNull] string comment)
+        public PublicApiAttribute([NotNull] string comment)
         {
             Comment = comment;
         }

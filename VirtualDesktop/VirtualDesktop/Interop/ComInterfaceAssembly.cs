@@ -29,7 +29,7 @@ namespace WindowsDesktop.Interop
 
         internal object CreateInstance(Type type, Guid? guidService)
         {
-            Type shellType = Type.GetTypeFromCLSID(CLSID.ImmersiveShell);
+            Type shellType = Type.GetTypeFromCLSID(ClSid.ImmersiveShell);
             IServiceProvider shell = (IServiceProvider)Activator.CreateInstance(shellType);
 
             shell.QueryService(guidService ?? type.GUID, type.GUID, out var ppvObject);

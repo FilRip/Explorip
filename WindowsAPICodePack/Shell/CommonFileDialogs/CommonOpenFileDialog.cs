@@ -151,15 +151,15 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
         }
 
-        internal override void PopulateWithIShellItems(Collection<IShellItem> items)
+        internal override void PopulateWithIShellItems(Collection<IShellItem> shellItems)
         {
 
             openDialogCoClass.GetResults(out IShellItemArray resultsArray);
             resultsArray.GetCount(out uint count);
-            items.Clear();
+            shellItems.Clear();
             for (int i = 0; i < count; i++)
             {
-                items.Add(GetShellItemAt(resultsArray, i));
+                shellItems.Add(GetShellItemAt(resultsArray, i));
             }
         }
 

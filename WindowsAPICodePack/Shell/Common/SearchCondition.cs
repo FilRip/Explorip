@@ -106,7 +106,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             List<SearchCondition> subConditionsList = new();
 
             // Get the sub-conditions from the native API
-            Guid guid = new(ShellIIDGuid.IEnumUnknown);
+            Guid guid = new(ShellIidGuid.IEnumUnknown);
 
             HResult hr = NativeSearchCondition.GetSubConditions(ref guid, out object subConditionObj);
 

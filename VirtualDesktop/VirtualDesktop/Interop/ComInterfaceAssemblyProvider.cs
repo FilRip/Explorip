@@ -85,7 +85,7 @@ namespace WindowsDesktop.Interop
                 .SelectMany(x => x.GetComInterfaceNamesIfWrapper(interfaceVersion))
                 .Where(x => x != null)
                 .ToArray();
-            Dictionary<string, Guid> iids = IID.GetIIDs(interfaceNames);
+            Dictionary<string, Guid> iids = IiD.GetIIDs(interfaceNames);
             List<string> compileTargets = new();
 
             string assemblyInfo = executingAssembly.GetManifestResourceNames().Single(x => x.Contains("AssemblyInfo"));

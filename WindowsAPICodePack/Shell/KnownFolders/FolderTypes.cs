@@ -182,43 +182,38 @@ namespace Microsoft.WindowsAPICodePack.Shell
             0x0b0ba2e3, 0x405f, 0x415e, 0xa6, 0xee, 0xca, 0xd6, 0x25, 0x20, 0x78, 0x53);
 
 
-        static readonly Dictionary<Guid, string> types;
-
-        static FolderTypes()
+        static readonly Dictionary<Guid, string> types = new()
         {
-            types = new Dictionary<Guid, string>()
-            {
-                // Review: These Localized messages could probably be a reflected value of the field's name.
-                { NotSpecified, LocalizedMessages.FolderTypeNotSpecified },
-                { Invalid, LocalizedMessages.FolderTypeInvalid },
-                { Communications, LocalizedMessages.FolderTypeCommunications },
-                { CompressedFolder, LocalizedMessages.FolderTypeCompressedFolder },
-                { Contacts, LocalizedMessages.FolderTypeContacts },
-                { ControlPanelCategory, LocalizedMessages.FolderTypeCategory },
-                { ControlPanelClassic, LocalizedMessages.FolderTypeClassic },
-                { Documents, LocalizedMessages.FolderTypeDocuments },
-                { Games, LocalizedMessages.FolderTypeGames },
-                { GenericSearchResults, LocalizedMessages.FolderTypeSearchResults },
-                { GenericLibrary, LocalizedMessages.FolderTypeGenericLibrary },
-                { Library, LocalizedMessages.FolderTypeLibrary },
-                { Music, LocalizedMessages.FolderTypeMusic },
-                { MusicIcons, LocalizedMessages.FolderTypeMusicIcons },
-                { NetworkExplorer, LocalizedMessages.FolderTypeNetworkExplorer },
-                { OtherUsers, LocalizedMessages.FolderTypeOtherUsers },
-                { OpenSearch, LocalizedMessages.FolderTypeOpenSearch },
-                { Pictures, LocalizedMessages.FolderTypePictures },
-                { Printers, LocalizedMessages.FolderTypePrinters },
-                { RecycleBin, LocalizedMessages.FolderTypeRecycleBin },
-                { RecordedTV, LocalizedMessages.FolderTypeRecordedTV },
-                { SoftwareExplorer, LocalizedMessages.FolderTypeSoftwareExplorer },
-                { SavedGames, LocalizedMessages.FolderTypeSavedGames },
-                { SearchConnector, LocalizedMessages.FolderTypeSearchConnector },
-                { Searches, LocalizedMessages.FolderTypeSearches },
-                { UsersLibraries, LocalizedMessages.FolderTypeUserLibraries },
-                { UserFiles, LocalizedMessages.FolderTypeUserFiles },
-                { Videos, LocalizedMessages.FolderTypeVideos }
-            };
-        }
+            // Review: These Localized messages could probably be a reflected value of the field's name.
+            { NotSpecified, LocalizedMessages.FolderTypeNotSpecified },
+            { Invalid, LocalizedMessages.FolderTypeInvalid },
+            { Communications, LocalizedMessages.FolderTypeCommunications },
+            { CompressedFolder, LocalizedMessages.FolderTypeCompressedFolder },
+            { Contacts, LocalizedMessages.FolderTypeContacts },
+            { ControlPanelCategory, LocalizedMessages.FolderTypeCategory },
+            { ControlPanelClassic, LocalizedMessages.FolderTypeClassic },
+            { Documents, LocalizedMessages.FolderTypeDocuments },
+            { Games, LocalizedMessages.FolderTypeGames },
+            { GenericSearchResults, LocalizedMessages.FolderTypeSearchResults },
+            { GenericLibrary, LocalizedMessages.FolderTypeGenericLibrary },
+            { Library, LocalizedMessages.FolderTypeLibrary },
+            { Music, LocalizedMessages.FolderTypeMusic },
+            { MusicIcons, LocalizedMessages.FolderTypeMusicIcons },
+            { NetworkExplorer, LocalizedMessages.FolderTypeNetworkExplorer },
+            { OtherUsers, LocalizedMessages.FolderTypeOtherUsers },
+            { OpenSearch, LocalizedMessages.FolderTypeOpenSearch },
+            { Pictures, LocalizedMessages.FolderTypePictures },
+            { Printers, LocalizedMessages.FolderTypePrinters },
+            { RecycleBin, LocalizedMessages.FolderTypeRecycleBin },
+            { RecordedTV, LocalizedMessages.FolderTypeRecordedTV },
+            { SoftwareExplorer, LocalizedMessages.FolderTypeSoftwareExplorer },
+            { SavedGames, LocalizedMessages.FolderTypeSavedGames },
+            { SearchConnector, LocalizedMessages.FolderTypeSearchConnector },
+            { Searches, LocalizedMessages.FolderTypeSearches },
+            { UsersLibraries, LocalizedMessages.FolderTypeUserLibraries },
+            { UserFiles, LocalizedMessages.FolderTypeUserFiles },
+            { Videos, LocalizedMessages.FolderTypeVideos }
+        };
 
         internal static string GetFolderType(Guid typeId)
         {

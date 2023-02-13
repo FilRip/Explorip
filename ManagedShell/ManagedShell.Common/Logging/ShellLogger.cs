@@ -77,16 +77,6 @@ namespace ManagedShell.Common.Logging
         }
 
         /// <summary>
-        /// Log a message when severity level is "Debug" or higher AND condition is met.
-        /// </summary>
-        /// <param name="message">Log message</param>
-        public static void DebugIf(bool condition, string message)
-        {
-            // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
-            DebugIf(condition, message, null);
-        }
-
-        /// <summary>
         /// Log a message when severity level is "Debug" or higher.
         /// </summary>
         /// <param name="message">Log message.</param>
@@ -95,6 +85,16 @@ namespace ManagedShell.Common.Logging
         {
             // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
             DebugIf(true, message, exception);
+        }
+
+        /// <summary>
+        /// Log a message when severity level is "Debug" or higher AND condition is met.
+        /// </summary>
+        /// <param name="message">Log message</param>
+        public static void DebugIf(bool condition, string message)
+        {
+            // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
+            DebugIf(condition, message, null);
         }
 
         /// <summary>
@@ -212,6 +212,12 @@ namespace ManagedShell.Common.Logging
             Log += observer.Log;
         }
 
+        public static void Attach(ILog[] observers)
+        {
+            foreach (var observer in observers)
+                Attach(observer);
+        }
+
         /// <summary>
         /// Detach a listening observer logging device from logger.
         /// </summary>
@@ -219,12 +225,6 @@ namespace ManagedShell.Common.Logging
         public static void Detach(ILog observer)
         {
             Log -= observer.Log;
-        }
-
-        public static void Attach(ILog[] observers)
-        {
-            foreach (var observer in observers)
-                Attach(observer);
         }
 
         public static void Detach(ILog[] observers)

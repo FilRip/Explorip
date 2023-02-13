@@ -3025,33 +3025,33 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     return internalPropertySystemDocument;
                 }
             }
-            private PropertySystemDRM internalPropertySystemDRM;
+            private PropertySystemDrm internalPropertySystemDRM;
             /// <summary>
             /// System.DRM Properties
             /// </summary>
-            public PropertySystemDRM DRM
+            public PropertySystemDrm DRM
             {
                 get
                 {
                     if (internalPropertySystemDRM == null)
                     {
-                        internalPropertySystemDRM = new PropertySystemDRM(shellObjectParent);
+                        internalPropertySystemDRM = new PropertySystemDrm(shellObjectParent);
                     }
 
                     return internalPropertySystemDRM;
                 }
             }
-            private PropertySystemGPS internalPropertySystemGPS;
+            private PropertySystemGps internalPropertySystemGPS;
             /// <summary>
             /// System.GPS Properties
             /// </summary>
-            public PropertySystemGPS GPS
+            public PropertySystemGps GPS
             {
                 get
                 {
                     if (internalPropertySystemGPS == null)
                     {
-                        internalPropertySystemGPS = new PropertySystemGPS(shellObjectParent);
+                        internalPropertySystemGPS = new PropertySystemGps(shellObjectParent);
                     }
 
                     return internalPropertySystemGPS;
@@ -7989,14 +7989,14 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <summary>
         /// System.DRM Properties
         /// </summary>
-        public class PropertySystemDRM : PropertyStoreItems
+        public class PropertySystemDrm : PropertyStoreItems
         {
 
 
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
-            internal PropertySystemDRM(ShellObject parent)
+            internal PropertySystemDrm(ShellObject parent)
             {
                 shellObjectParent = parent;
             }
@@ -8014,7 +8014,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.DRM.DatePlayExpires;
+                    PropertyKey key = SystemProperties.System.Drm.DatePlayExpires;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8036,7 +8036,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.DRM.DatePlayStarts;
+                    PropertyKey key = SystemProperties.System.Drm.DatePlayStarts;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8058,7 +8058,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.DRM.Description;
+                    PropertyKey key = SystemProperties.System.Drm.Description;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8080,7 +8080,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.DRM.IsProtected;
+                    PropertyKey key = SystemProperties.System.Drm.IsProtected;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8102,7 +8102,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.DRM.PlayCount;
+                    PropertyKey key = SystemProperties.System.Drm.PlayCount;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8122,14 +8122,14 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <summary>
         /// System.GPS Properties
         /// </summary>
-        public class PropertySystemGPS : PropertyStoreItems
+        public class PropertySystemGps : PropertyStoreItems
         {
 
 
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
-            internal PropertySystemGPS(ShellObject parent)
+            internal PropertySystemGps(ShellObject parent)
             {
                 shellObjectParent = parent;
             }
@@ -8148,7 +8148,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Altitude;
+                    PropertyKey key = SystemProperties.System.Gps.Altitude;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8170,7 +8170,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.AltitudeDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.AltitudeDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8192,7 +8192,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.AltitudeNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.AltitudeNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8214,7 +8214,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.AltitudeRef;
+                    PropertyKey key = SystemProperties.System.Gps.AltitudeRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8236,7 +8236,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.AreaInformation;
+                    PropertyKey key = SystemProperties.System.Gps.AreaInformation;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8258,7 +8258,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Date;
+                    PropertyKey key = SystemProperties.System.Gps.Date;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8281,7 +8281,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationBearing;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationBearing;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8303,7 +8303,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationBearingDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationBearingDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8325,7 +8325,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationBearingNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationBearingNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8347,7 +8347,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationBearingRef;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationBearingRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8370,7 +8370,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationDistance;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationDistance;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8392,7 +8392,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationDistanceDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationDistanceDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8414,7 +8414,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationDistanceNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationDistanceNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8436,7 +8436,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationDistanceRef;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationDistanceRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8460,7 +8460,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationLatitude;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationLatitude;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8482,7 +8482,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationLatitudeDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationLatitudeDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8504,7 +8504,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationLatitudeNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationLatitudeNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8526,7 +8526,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationLatitudeRef;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationLatitudeRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8550,7 +8550,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationLongitude;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationLongitude;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8572,7 +8572,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationLongitudeDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationLongitudeDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8594,7 +8594,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationLongitudeNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationLongitudeNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8616,7 +8616,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DestinationLongitudeRef;
+                    PropertyKey key = SystemProperties.System.Gps.DestinationLongitudeRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8638,7 +8638,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Differential;
+                    PropertyKey key = SystemProperties.System.Gps.Differential;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8660,7 +8660,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DOP;
+                    PropertyKey key = SystemProperties.System.Gps.DOP;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8682,7 +8682,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DOPDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.DOPDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8704,7 +8704,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.DOPNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.DOPNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8727,7 +8727,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.ImageDirection;
+                    PropertyKey key = SystemProperties.System.Gps.ImageDirection;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8749,7 +8749,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.ImageDirectionDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.ImageDirectionDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8771,7 +8771,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.ImageDirectionNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.ImageDirectionNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8793,7 +8793,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.ImageDirectionRef;
+                    PropertyKey key = SystemProperties.System.Gps.ImageDirectionRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8816,7 +8816,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Latitude;
+                    PropertyKey key = SystemProperties.System.Gps.Latitude;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8838,7 +8838,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.LatitudeDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.LatitudeDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8860,7 +8860,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.LatitudeNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.LatitudeNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8882,7 +8882,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.LatitudeRef;
+                    PropertyKey key = SystemProperties.System.Gps.LatitudeRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8905,7 +8905,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Longitude;
+                    PropertyKey key = SystemProperties.System.Gps.Longitude;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8927,7 +8927,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.LongitudeDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.LongitudeDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8949,7 +8949,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.LongitudeNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.LongitudeNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8971,7 +8971,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.LongitudeRef;
+                    PropertyKey key = SystemProperties.System.Gps.LongitudeRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -8993,7 +8993,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.MapDatum;
+                    PropertyKey key = SystemProperties.System.Gps.MapDatum;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9015,7 +9015,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.MeasureMode;
+                    PropertyKey key = SystemProperties.System.Gps.MeasureMode;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9037,7 +9037,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.ProcessingMethod;
+                    PropertyKey key = SystemProperties.System.Gps.ProcessingMethod;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9059,7 +9059,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Satellites;
+                    PropertyKey key = SystemProperties.System.Gps.Satellites;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9082,7 +9082,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Speed;
+                    PropertyKey key = SystemProperties.System.Gps.Speed;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9104,7 +9104,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.SpeedDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.SpeedDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9126,7 +9126,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.SpeedNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.SpeedNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9149,7 +9149,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.SpeedRef;
+                    PropertyKey key = SystemProperties.System.Gps.SpeedRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9172,7 +9172,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Status;
+                    PropertyKey key = SystemProperties.System.Gps.Status;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9195,7 +9195,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.Track;
+                    PropertyKey key = SystemProperties.System.Gps.Track;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9217,7 +9217,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.TrackDenominator;
+                    PropertyKey key = SystemProperties.System.Gps.TrackDenominator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9239,7 +9239,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.TrackNumerator;
+                    PropertyKey key = SystemProperties.System.Gps.TrackNumerator;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9261,7 +9261,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.TrackRef;
+                    PropertyKey key = SystemProperties.System.Gps.TrackRef;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -9283,7 +9283,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.GPS.VersionID;
+                    PropertyKey key = SystemProperties.System.Gps.VersionID;
 
                     if (!hashtable.ContainsKey(key))
                     {

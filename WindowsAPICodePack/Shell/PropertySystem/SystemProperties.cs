@@ -1650,7 +1650,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = new(new Guid("{00000000-0000-0000-0000-000000000000}"), 0);
+                    PropertyKey key = new(Guid.Empty, 0);
 
                     return key;
                 }
@@ -5878,7 +5878,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <summary>
             /// DRM Properties
             /// </summary>
-            public static class DRM
+            public static class Drm
             {
                 #region Properties
 
@@ -5972,7 +5972,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <summary>
             /// GPS Properties
             /// </summary>
-            public static class GPS
+            public static class Gps
             {
                 #region Properties
 

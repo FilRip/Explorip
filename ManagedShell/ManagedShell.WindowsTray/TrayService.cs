@@ -84,8 +84,8 @@ namespace ManagedShell.WindowsTray
             {
                 trayMonitor.Stop();
                 SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
-                    (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE |
-                    (int)SetWindowPosFlags.SWP_NOSIZE);
+                    (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOACTIVATE |
+                    (int)SWP.SWP_NOSIZE);
             }
         }
 
@@ -104,12 +104,12 @@ namespace ManagedShell.WindowsTray
         {
             if (HwndTray != IntPtr.Zero)
             {
-                SetWindowPos(HwndTray, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOZORDER);
+                SetWindowPos(HwndTray, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, (int)SWP.SWP_NOACTIVATE | (int)SWP.SWP_NOZORDER);
             }
 
             if (HwndNotify != IntPtr.Zero)
             {
-                SetWindowPos(HwndNotify, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, (int)SetWindowPosFlags.SWP_NOACTIVATE | (int)SetWindowPosFlags.SWP_NOZORDER);
+                SetWindowPos(HwndNotify, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, (int)SWP.SWP_NOACTIVATE | (int)SWP.SWP_NOZORDER);
             }
         }
 
@@ -162,8 +162,8 @@ namespace ManagedShell.WindowsTray
                         break;
                     }
 
-                    COPYDATASTRUCT copyData =
-                        (COPYDATASTRUCT)Marshal.PtrToStructure(lParam, typeof(COPYDATASTRUCT));
+                    CopyDataStruct copyData =
+                        (CopyDataStruct)Marshal.PtrToStructure(lParam, typeof(CopyDataStruct));
 
                     switch ((int)copyData.dwData)
                     {
@@ -229,9 +229,9 @@ namespace ManagedShell.WindowsTray
 
                     break;
                 case WM.WINDOWPOSCHANGED:
-                    WINDOWPOS wndPos = WINDOWPOS.FromMessage(lParam);
+                    WindowPos wndPos = WindowPos.FromMessage(lParam);
 
-                    if ((wndPos.flags & SetWindowPosFlags.SWP_SHOWWINDOW) != 0)
+                    if ((wndPos.flags & SWP.SWP_SHOWWINDOW) != 0)
                     {
                         SetWindowLong(HwndTray, GWL_STYLE,
                             GetWindowLong(HwndTray, GWL_STYLE) &
@@ -304,7 +304,7 @@ namespace ManagedShell.WindowsTray
         #region Window helpers
         private ushort RegisterWndClass(string name)
         {
-            WNDCLASS newClass = new()
+            WndClass newClass = new()
             {
                 lpszClassName = name,
                 hInstance = hInstance,
@@ -388,8 +388,8 @@ namespace ManagedShell.WindowsTray
             if (taskbarHwnd != IntPtr.Zero)
             {
                 SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
-                    (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOSIZE |
-                    (int)SetWindowPosFlags.SWP_NOACTIVATE);
+                    (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOSIZE |
+                    (int)SWP.SWP_NOACTIVATE);
             }
         }
 
@@ -398,8 +398,8 @@ namespace ManagedShell.WindowsTray
             if (HwndTray != IntPtr.Zero)
             {
                 SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0,
-                    (int)SetWindowPosFlags.SWP_NOMOVE | (int)SetWindowPosFlags.SWP_NOACTIVATE |
-                    (int)SetWindowPosFlags.SWP_NOSIZE);
+                    (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOACTIVATE |
+                    (int)SWP.SWP_NOSIZE);
             }
         }
         #endregion

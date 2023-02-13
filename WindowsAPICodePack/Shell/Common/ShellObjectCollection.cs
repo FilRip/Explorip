@@ -55,7 +55,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns>ShellObjectCollection created from the given IDataObject</returns>
         public static ShellObjectCollection FromDataObject(System.Runtime.InteropServices.ComTypes.IDataObject dataObject)
         {
-            Guid iid = new(ShellIIDGuid.IShellItemArray);
+            Guid iid = new(ShellIidGuid.IShellItemArray);
             ShellNativeMethods.SHCreateShellItemArrayFromDataObject(dataObject, ref iid, out IShellItemArray shellItemArray);
             return new ShellObjectCollection(shellItemArray, true);
         }

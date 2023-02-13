@@ -118,7 +118,7 @@ namespace System.Windows.Forms
         #region Windows Structures and Enums
 
         [Flags()]
-        public enum TCHITTESTFLAGS
+        public enum TCHITTEST
         {
             TCHT_NOWHERE = 1,
             TCHT_ONITEMICON = 2,
@@ -129,21 +129,21 @@ namespace System.Windows.Forms
 
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct TCHITTESTINFO
+        public struct TchitTestInfo
         {
 
-            public TCHITTESTINFO(Point location)
+            public TchitTestInfo(Point location)
             {
                 pt = location;
-                flags = TCHITTESTFLAGS.TCHT_ONITEM;
+                flags = TCHITTEST.TCHT_ONITEM;
             }
 
             public Point pt;
-            public TCHITTESTFLAGS flags;
+            public TCHITTEST flags;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct PAINTSTRUCT
+        public struct PaintStruct
         {
             public IntPtr hdc;
             public int fErase;

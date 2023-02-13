@@ -14,7 +14,7 @@ namespace Explorip.WinAPI.Modeles
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct DWM_THUMBNAIL_PROPERTIES
+    public struct DwmThumbnailProperties
     {
         public DWM_TNP dwFlags;
         public Rect rcDestination;

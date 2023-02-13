@@ -9,7 +9,7 @@ namespace WindowsDesktop.Interop
     internal class VirtualDesktopNotificationService : ComInterfaceWrapperBase
     {
         public VirtualDesktopNotificationService(ComInterfaceAssembly assembly)
-            : base(assembly, service: CLSID.VirtualDesktopNotificationService) { }
+            : base(assembly, service: ClSid.VirtualDesktopNotificationService) { }
 
         public IDisposable Register(VirtualDesktopNotification pNotification)
         {

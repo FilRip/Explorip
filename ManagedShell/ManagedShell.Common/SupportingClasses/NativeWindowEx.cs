@@ -13,10 +13,5 @@ namespace ManagedShell.Common.SupportingClasses
             base.WndProc(ref m);
             MessageReceived?.Invoke(m);
         }
-
-        public override void CreateHandle(CreateParams cp)
-        {
-            base.CreateHandle(cp);
-        }
     }
 }

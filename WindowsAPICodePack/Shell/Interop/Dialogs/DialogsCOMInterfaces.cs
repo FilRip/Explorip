@@ -17,7 +17,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 #pragma warning disable 0108
 
     [ComImport(),
-    Guid(ShellIIDGuid.IFileDialog),
+    Guid(ShellIidGuid.IFileDialog),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileDialog : IModalWindow
     {
@@ -104,7 +104,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     }
 
     [ComImport(),
-    Guid(ShellIIDGuid.IFileOpenDialog),
+    Guid(ShellIidGuid.IFileOpenDialog),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileOpenDialog : IFileDialog
     {
@@ -195,7 +195,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     }
 
     [ComImport(),
-    Guid(ShellIIDGuid.IFileSaveDialog),
+    Guid(ShellIidGuid.IFileSaveDialog),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileSaveDialog : IFileDialog
     {
@@ -310,7 +310,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IFileDialogEvents),
+    Guid(ShellIidGuid.IFileDialogEvents),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileDialogEvents
     {
@@ -351,7 +351,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IFileDialogCustomize),
+    Guid(ShellIidGuid.IFileDialogCustomize),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileDialogCustomize
     {
@@ -477,7 +477,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     }
 
     [ComImport,
-    Guid(ShellIIDGuid.IFileDialogControlEvents),
+    Guid(ShellIidGuid.IFileDialogControlEvents),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileDialogControlEvents
     {

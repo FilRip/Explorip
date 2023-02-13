@@ -12,8 +12,8 @@ namespace ManagedShell.Common.Helpers
 {
     public static class IconHelper
     {
-        public static ComTaskScheduler IconScheduler = new();
-        public static object ComLock = new();
+        public static readonly ComTaskScheduler IconScheduler = new();
+        public static readonly object ComLock = new();
 
         // IImageList references
         private static Guid iidImageList = new("46EB5926-582E-4017-9FDF-E8998DAA0950");

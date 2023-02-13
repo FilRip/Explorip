@@ -46,7 +46,7 @@ namespace Explorip.WinAPI.Modeles
         // Carries out the command associated with a shortcut menu item
         [PreserveSig()]
         Int32 InvokeCommand(
-            ref CMINVOKECOMMANDINFOEX info);
+            ref CmInvokeCommandInfoEx info);
 
         // Retrieves information about a shortcut menu command, 
         // including the help string and the language-independent, 

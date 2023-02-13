@@ -13,9 +13,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// </summary>
     internal static class FolderIdentifiers
     {
-        private static readonly Dictionary<Guid, string> folders;
+        private static Dictionary<Guid, string> folders;
 
-        static FolderIdentifiers()
+        private static void InitFolders()
         {
             folders = new Dictionary<Guid, string>();
             Type folderIDs = typeof(FolderIdentifiers);
@@ -41,6 +41,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns>A <see cref="T:System.String"/> value.</returns>
         internal static string NameForGuid(Guid folderId)
         {
+            if (folders == null)
+                InitFolders();
+
             if (!folders.TryGetValue(folderId, out string folder))
             {
                 throw new ArgumentException(LocalizedMessages.FolderIdsUnknownGuid, "folderId");
@@ -54,6 +57,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns></returns>
         internal static SortedList<string, Guid> GetAllFolders()
         {
+            if (folders == null)
+                InitFolders();
+
             // Make a copy of the dictionary
             // because the Keys and Values collections
             // are mutable.

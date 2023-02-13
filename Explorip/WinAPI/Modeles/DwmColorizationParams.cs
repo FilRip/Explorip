@@ -3,7 +3,7 @@
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct DWM_COLORIZATION_PARAMS
+    public struct DwmColorizationParams
     {
         public uint clrColor;
         public uint clrAfterGlow;

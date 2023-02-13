@@ -23,6 +23,6 @@ namespace Explorip.WinAPI
         }
 
         [DllImport("NTDLL.DLL", SetLastError = true)]
-        internal static extern int NtQueryInformationProcess(IntPtr hProcess, PROCESSINFOCLASS pic, ref PROCESS_BASIC_INFORMATION pbi, int cb, out int pSize);
+        internal static extern int NtQueryInformationProcess(IntPtr hProcess, PROCESSINFOCLASS pic, ref ProcessBasicInformation pbi, int cb, out int pSize);
     }
 }

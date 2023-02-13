@@ -102,7 +102,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         internal static IPropertyStore CreateDefaultPropertyStore(ShellObject shellObj)
         {
 
-            Guid guid = new(ShellIIDGuid.IPropertyStore);
+            Guid guid = new(ShellIidGuid.IPropertyStore);
             int hr = shellObj.NativeShellItem2.GetPropertyStore(
                    ShellNativeMethods.GetPropertyStoreOptions.BestEffort,
                    ref guid,

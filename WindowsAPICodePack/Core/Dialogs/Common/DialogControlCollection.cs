@@ -25,20 +25,20 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// Inserts an dialog control at the specified index.
         /// </summary>
         /// <param name="index">The location to insert the control.</param>
-        /// <param name="control">The item to insert.</param>
-        /// <permission cref="System.InvalidOperationException">A control with 
+        /// <param name="item">The item to insert.</param>
+        /// <permission cref="InvalidOperationException">A control with 
         /// the same name already exists in this collection -or- 
         /// the control is being hosted by another dialog -or- the associated dialog is 
         /// showing and cannot be modified.</permission>
-        protected override void InsertItem(int index, T control)
+        protected override void InsertItem(int index, T item)
         {
             // Check for duplicates, lack of host, 
             // and during-show adds.
-            if (Items.Contains(control))
+            if (Items.Contains(item))
             {
                 throw new InvalidOperationException(LocalizedMessages.DialogCollectionCannotHaveDuplicateNames);
             }
-            if (control.HostingDialog != null)
+            if (item.HostingDialog != null)
             {
                 throw new InvalidOperationException(LocalizedMessages.DialogCollectionControlAlreadyHosted);
             }
@@ -48,8 +48,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
 
             // Reparent, add control.
-            control.HostingDialog = hostingDialog;
-            base.InsertItem(index, control);
+            item.HostingDialog = hostingDialog;
+            base.InsertItem(index, item);
 
             // Notify that we've added a control.
             hostingDialog.ApplyCollectionChanged();
