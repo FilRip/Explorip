@@ -16,7 +16,9 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
     /// </summary>
     public class JumpListLink : JumpListTask, IJumpListItem, IDisposable
     {
+#pragma warning disable S2223 // Non-constant static fields should not be visible
         internal static PropertyKey PKEY_Title = SystemProperties.System.Title;
+#pragma warning restore S2223 // Non-constant static fields should not be visible
 
         /// <summary>
         /// Initializes a new instance of a JumpListLink with the specified path.

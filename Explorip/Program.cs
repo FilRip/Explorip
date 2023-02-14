@@ -11,7 +11,7 @@ namespace Explorip
     {
         private static System.Windows.Application _WpfHost;
         private static Mutex _mutexTaskbar;
-        public static bool ModeShell;
+        internal static bool ModeShell;
 
         /// <summary>
         /// The main entry point for the application.

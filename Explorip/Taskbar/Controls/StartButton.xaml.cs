@@ -18,7 +18,7 @@ namespace Explorip.TaskBar.Controls
         private bool allowOpenStart;
         private readonly DispatcherTimer pendingOpenTimer;
 
-        public static DependencyProperty StartMenuMonitorProperty = DependencyProperty.Register("StartMenuMonitor", typeof(StartMenuMonitor), typeof(StartButton));
+        public readonly static DependencyProperty StartMenuMonitorProperty = DependencyProperty.Register("StartMenuMonitor", typeof(StartMenuMonitor), typeof(StartButton));
 
         public StartMenuMonitor StartMenuMonitor
         {

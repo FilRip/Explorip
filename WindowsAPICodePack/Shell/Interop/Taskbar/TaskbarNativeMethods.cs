@@ -100,8 +100,10 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
     {
         internal static class TaskbarGuids
         {
+#pragma warning disable S2223 // Non-constant static fields should not be visible
             internal static Guid IObjectArray = new("92CA9DCD-5622-4BBA-A805-5E9F541BD8C9");
             internal static Guid IUnknown = new("00000000-0000-0000-C000-000000000046");
+#pragma warning restore S2223 // Non-constant static fields should not be visible
         }
 
         internal const int WmCommand = 0x0111;

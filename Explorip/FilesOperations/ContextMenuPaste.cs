@@ -6,7 +6,9 @@ namespace Explorip.FilesOperations
 {
     public static class ContextMenuPaste
     {
+#pragma warning disable S1104, S2223 // Fields should not have public accessibility
         public static string RepDestination;
+#pragma warning restore S1104, S2223 // Fields should not have public accessibility
 
         public static void MenuColler(object sender, EventArgs e)
         {

@@ -19,7 +19,7 @@ namespace Explorip.TaskBar.Controls
             OpenParentFolder = CommonContextMenuItem.Paste + 1
         }
 
-        public static DependencyProperty PathProperty = DependencyProperty.Register("Path", typeof(string), typeof(Toolbar), new PropertyMetadata(OnPathChanged));
+        public readonly static DependencyProperty PathProperty = DependencyProperty.Register("Path", typeof(string), typeof(Toolbar), new PropertyMetadata(OnPathChanged));
 
         public string Path
         {

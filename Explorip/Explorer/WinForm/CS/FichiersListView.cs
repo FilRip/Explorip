@@ -271,13 +271,13 @@ namespace Explorip.ComposantsWinForm
             // FichiersListView
             // 
             AllowDrop = true;
-            ItemDrag += new System.Windows.Forms.ItemDragEventHandler(FichiersListView_ItemDrag);
-            DragDrop += new System.Windows.Forms.DragEventHandler(FichiersListView_DragDrop);
-            DragEnter += new System.Windows.Forms.DragEventHandler(FichiersListView_DragEnter);
-            DragOver += new System.Windows.Forms.DragEventHandler(FichiersListView_DragOver);
-            DragLeave += new System.EventHandler(FichiersListView_DragLeave);
-            KeyUp += new System.Windows.Forms.KeyEventHandler(FichiersListView_KeyUp);
-            MouseUp += new System.Windows.Forms.MouseEventHandler(FichiersListView_MouseUp);
+            ItemDrag += new ItemDragEventHandler(FichiersListView_ItemDrag);
+            DragDrop += new DragEventHandler(FichiersListView_DragDrop);
+            DragEnter += new DragEventHandler(FichiersListView_DragEnter);
+            DragOver += new DragEventHandler(FichiersListView_DragOver);
+            DragLeave += new EventHandler(FichiersListView_DragLeave);
+            KeyUp += new KeyEventHandler(FichiersListView_KeyUp);
+            MouseUp += new MouseEventHandler(FichiersListView_MouseUp);
             ResumeLayout(false);
 
         }

@@ -26,7 +26,7 @@ namespace Explorip.TaskBar.Controls
         private TaskThumbButton _thumb;
         private bool _isLoaded;
 
-        public static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(Taskbar), typeof(TaskButton), new PropertyMetadata(null));
+        public readonly static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(Taskbar), typeof(TaskButton), new PropertyMetadata(null));
 
         public TaskButton()
         {

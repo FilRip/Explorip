@@ -66,7 +66,9 @@ namespace ManagedShell.Common.Helpers
 
         [ComImport()]
         [Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
-        private sealed class MMDeviceEnumerator
+#pragma warning disable S3260 // Non-derived "private" classes and records should be "sealed"
+        private class MMDeviceEnumerator
+#pragma warning restore S3260 // Non-derived "private" classes and records should be "sealed"
         {
         }
 

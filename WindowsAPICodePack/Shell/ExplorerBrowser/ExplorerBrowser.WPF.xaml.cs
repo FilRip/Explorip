@@ -329,7 +329,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(AlignLeftProperty, value); }
         }
 
-        internal static DependencyProperty AlignLeftProperty =
+        internal readonly static DependencyProperty AlignLeftProperty =
                     DependencyProperty.Register(
                         "AlignLeft", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -352,7 +352,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(AutoArrangeProperty, value); }
         }
 
-        internal static DependencyProperty AutoArrangeProperty =
+        internal readonly static DependencyProperty AutoArrangeProperty =
                     DependencyProperty.Register(
                         "AutoArrange", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -374,7 +374,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(CheckSelectProperty, value); }
         }
 
-        internal static DependencyProperty CheckSelectProperty =
+        internal readonly static DependencyProperty CheckSelectProperty =
                     DependencyProperty.Register(
                         "CheckSelect", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -398,7 +398,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(ExtendedTilesProperty, value); }
         }
 
-        internal static DependencyProperty ExtendedTilesProperty =
+        internal readonly static DependencyProperty ExtendedTilesProperty =
                     DependencyProperty.Register(
                         "ExtendedTiles", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -420,7 +420,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(FullRowSelectProperty, value); }
         }
 
-        internal static DependencyProperty FullRowSelectProperty =
+        internal readonly static DependencyProperty FullRowSelectProperty =
                     DependencyProperty.Register(
                         "FullRowSelect", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -444,7 +444,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(HideFileNamesProperty, value); }
         }
 
-        internal static DependencyProperty HideFileNamesProperty =
+        internal readonly static DependencyProperty HideFileNamesProperty =
                     DependencyProperty.Register(
                         "HideFileNames", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -468,7 +468,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(NoBrowserViewStateProperty, value); }
         }
 
-        internal static DependencyProperty NoBrowserViewStateProperty =
+        internal readonly static DependencyProperty NoBrowserViewStateProperty =
                     DependencyProperty.Register(
                         "NoBrowserViewState", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -492,7 +492,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(NoColumnHeaderProperty, value); }
         }
 
-        internal static DependencyProperty NoColumnHeaderProperty =
+        internal readonly static DependencyProperty NoColumnHeaderProperty =
                     DependencyProperty.Register(
                         "NoColumnHeader", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -514,7 +514,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(NoHeaderInAllViewsProperty, value); }
         }
 
-        internal static DependencyProperty NoHeaderInAllViewsProperty =
+        internal readonly static DependencyProperty NoHeaderInAllViewsProperty =
                     DependencyProperty.Register(
                         "NoHeaderInAllViews", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -538,7 +538,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(NoIconsProperty, value); }
         }
 
-        internal static DependencyProperty NoIconsProperty =
+        internal readonly static DependencyProperty NoIconsProperty =
                     DependencyProperty.Register(
                         "NoIcons", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -562,7 +562,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(NoSubfoldersProperty, value); }
         }
 
-        internal static DependencyProperty NoSubfoldersProperty =
+        internal readonly static DependencyProperty NoSubfoldersProperty =
                     DependencyProperty.Register(
                         "NoSubfolders", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -586,7 +586,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(SingleClickActivateProperty, value); }
         }
 
-        internal static DependencyProperty SingleClickActivateProperty =
+        internal readonly static DependencyProperty SingleClickActivateProperty =
                     DependencyProperty.Register(
                         "SingleClickActivate", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -610,7 +610,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(SingleSelectionProperty, value); }
         }
 
-        internal static DependencyProperty SingleSelectionProperty =
+        internal readonly static DependencyProperty SingleSelectionProperty =
                     DependencyProperty.Register(
                         "SingleSelection", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -634,7 +634,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(ThumbnailSizeProperty, value); }
         }
 
-        internal static DependencyProperty ThumbnailSizeProperty =
+        internal readonly static DependencyProperty ThumbnailSizeProperty =
                     DependencyProperty.Register(
                         "ThumbnailSize", typeof(int),
                         typeof(ExplorerBrowser),
@@ -660,7 +660,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(ViewModeProperty, value); }
         }
 
-        internal static DependencyProperty ViewModeProperty =
+        internal readonly static DependencyProperty ViewModeProperty =
                     DependencyProperty.Register(
                         "ViewMode", typeof(ExplorerBrowserViewMode),
                         typeof(ExplorerBrowser),
@@ -693,7 +693,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(AlwaysNavigateProperty, value); }
         }
 
-        internal static DependencyProperty AlwaysNavigateProperty =
+        internal readonly static DependencyProperty AlwaysNavigateProperty =
                     DependencyProperty.Register(
                         "AlwaysNavigate", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -717,7 +717,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(NavigateOnceProperty, value); }
         }
 
-        internal static DependencyProperty NavigateOnceProperty =
+        internal readonly static DependencyProperty NavigateOnceProperty =
                     DependencyProperty.Register(
                         "NavigateOnce", typeof(bool),
                         typeof(ExplorerBrowser),
@@ -741,7 +741,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(AdvancedQueryPaneProperty, value); }
         }
 
-        internal static DependencyProperty AdvancedQueryPaneProperty =
+        internal readonly static DependencyProperty AdvancedQueryPaneProperty =
                     DependencyProperty.Register(
                         "AdvancedQueryPane", typeof(PaneVisibilityState),
                         typeof(ExplorerBrowser),
@@ -765,7 +765,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(CommandsPaneProperty, value); }
         }
 
-        internal static DependencyProperty CommandsPaneProperty =
+        internal readonly static DependencyProperty CommandsPaneProperty =
                     DependencyProperty.Register(
                         "CommandsPane", typeof(PaneVisibilityState),
                         typeof(ExplorerBrowser),
@@ -790,7 +790,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(CommandsOrganizePaneProperty, value); }
         }
 
-        internal static DependencyProperty CommandsOrganizePaneProperty =
+        internal readonly static DependencyProperty CommandsOrganizePaneProperty =
                     DependencyProperty.Register(
                         "CommandsOrganizePane", typeof(PaneVisibilityState),
                         typeof(ExplorerBrowser),
@@ -815,7 +815,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(CommandsViewPaneProperty, value); }
         }
 
-        internal static DependencyProperty CommandsViewPaneProperty =
+        internal readonly static DependencyProperty CommandsViewPaneProperty =
                     DependencyProperty.Register(
                         "CommandsViewPane", typeof(PaneVisibilityState),
                         typeof(ExplorerBrowser),
@@ -839,7 +839,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(DetailsPaneProperty, value); }
         }
 
-        internal static DependencyProperty DetailsPaneProperty =
+        internal readonly static DependencyProperty DetailsPaneProperty =
                     DependencyProperty.Register(
                         "DetailsPane", typeof(PaneVisibilityState),
                         typeof(ExplorerBrowser),
@@ -863,7 +863,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(NavigationPaneProperty, value); }
         }
 
-        internal static DependencyProperty NavigationPaneProperty =
+        internal readonly static DependencyProperty NavigationPaneProperty =
                     DependencyProperty.Register(
                         "NavigationPane", typeof(PaneVisibilityState),
                         typeof(ExplorerBrowser),
@@ -887,7 +887,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(PreviewPaneProperty, value); }
         }
 
-        internal static DependencyProperty PreviewPaneProperty =
+        internal readonly static DependencyProperty PreviewPaneProperty =
                     DependencyProperty.Register(
                         "PreviewPane", typeof(PaneVisibilityState),
                         typeof(ExplorerBrowser),
@@ -911,7 +911,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(QueryPaneProperty, value); }
         }
 
-        internal static DependencyProperty QueryPaneProperty =
+        internal readonly static DependencyProperty QueryPaneProperty =
                     DependencyProperty.Register(
                         "QueryPane", typeof(PaneVisibilityState),
                         typeof(ExplorerBrowser),
@@ -936,7 +936,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             set { SetValue(NavigationLogIndexProperty, value); }
         }
 
-        internal static DependencyProperty NavigationLogIndexProperty =
+        internal readonly static DependencyProperty NavigationLogIndexProperty =
                     DependencyProperty.Register(
                         "NavigationLogIndex", typeof(int),
                         typeof(ExplorerBrowser),

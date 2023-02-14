@@ -24,9 +24,9 @@ namespace Explorip.TaskBar.Controls
         private double TaskButtonRightMargin;
         private readonly object _lockChangeDesktop = new();
 
-        public static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
-        public static DependencyProperty EcranPrincipalProperty = DependencyProperty.Register(nameof(EcranPrincipal), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
-        public static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
+        public readonly static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
+        public readonly static DependencyProperty EcranPrincipalProperty = DependencyProperty.Register(nameof(EcranPrincipal), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
+        public readonly static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
 
         public TaskList()
         {

@@ -23,7 +23,7 @@ namespace Explorip.TaskBar.Controls
         private CollectionViewSource pinnedNotifyIconsSource;
         private readonly ObservableCollection<ManagedShell.WindowsTray.NotifyIcon> promotedIcons = new();
 
-        public static DependencyProperty NotificationAreaProperty = DependencyProperty.Register("NotificationArea", typeof(NotificationArea), typeof(NotifyIconList));
+        public readonly static DependencyProperty NotificationAreaProperty = DependencyProperty.Register("NotificationArea", typeof(NotificationArea), typeof(NotifyIconList));
 
         public NotificationArea NotificationArea
         {

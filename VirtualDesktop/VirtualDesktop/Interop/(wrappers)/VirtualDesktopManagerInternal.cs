@@ -5,10 +5,12 @@ namespace WindowsDesktop.Interop
 {
     internal abstract class VirtualDesktopManagerInternal : ComInterfaceWrapperBase
     {
+#pragma warning disable S3442 // "abstract" classes should not have "public" constructors
         public VirtualDesktopManagerInternal(ComInterfaceAssembly assembly, uint latestVersion = 1)
             : base(assembly, "IVirtualDesktopManagerInternal", latestVersion, service: ClSid.VirtualDesktopAPIUnknown)
         {
         }
+#pragma warning restore S3442 // "abstract" classes should not have "public" constructors
 
         public abstract void MoveViewToDesktop(ApplicationView pView, VirtualDesktop desktop);
 

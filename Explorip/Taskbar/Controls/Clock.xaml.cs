@@ -15,14 +15,14 @@ namespace Explorip.TaskBar.Controls
     /// </summary>
     public partial class Clock : UserControl
     {
-        public static DependencyProperty ClockTextProperty = DependencyProperty.Register("ClockText", typeof(string), typeof(Clock));
+        public readonly static DependencyProperty ClockTextProperty = DependencyProperty.Register("ClockText", typeof(string), typeof(Clock));
         public string ClockText
         {
             get { return (string)GetValue(ClockTextProperty); }
             set { SetValue(ClockTextProperty, value); }
         }
 
-        public static DependencyProperty ClockTipProperty = DependencyProperty.Register("ClockTip", typeof(string), typeof(Clock));
+        public readonly static DependencyProperty ClockTipProperty = DependencyProperty.Register("ClockTip", typeof(string), typeof(Clock));
         public string ClockTip
         {
             get { return (string)GetValue(ClockTipProperty); }

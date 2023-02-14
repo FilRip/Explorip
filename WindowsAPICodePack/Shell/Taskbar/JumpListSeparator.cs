@@ -16,7 +16,9 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
     /// </summary>
     public class JumpListSeparator : JumpListTask, IDisposable
     {
+#pragma warning disable S2223 // Non-constant static fields should not be visible
         internal static PropertyKey PKEY_AppUserModel_IsDestListSeparator = SystemProperties.System.AppUserModel.IsDestinationListSeparator;
+#pragma warning restore S2223 // Non-constant static fields should not be visible
 
         private IPropertyStore nativePropertyStore;
         private IShellLinkW nativeShellLink;
