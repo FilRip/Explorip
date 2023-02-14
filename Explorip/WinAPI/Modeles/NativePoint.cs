@@ -3,9 +3,9 @@
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-    public struct ManagedPoint
+    public struct NativePoint
     {
-        public ManagedPoint(int x, int y)
+        public NativePoint(int x, int y)
         {
             this.x = x;
             this.y = y;

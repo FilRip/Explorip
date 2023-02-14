@@ -48,7 +48,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             return Path.GetFullPath((path));
         }
 
-        internal static PropertyKey ItemTypePropertyKey = new(new Guid("28636AA6-953D-11D2-B5D6-00C04FD918D0"), 11);
+        private static PropertyKey ItemTypePropertyKey = new(new Guid("28636AA6-953D-11D2-B5D6-00C04FD918D0"), 11);
 
         internal static string GetItemType(IShellItem2 shellItem)
         {

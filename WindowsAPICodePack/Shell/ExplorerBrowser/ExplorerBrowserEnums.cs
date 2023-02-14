@@ -60,7 +60,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     /// Typically use one, or a bitwise combination of these
     /// flags to specify how the explorer browser navigates.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum ExplorerBrowserNavigateOptions
     {
         /// <summary>
@@ -80,8 +80,10 @@ namespace Microsoft.WindowsAPICodePack.Controls
     /// flags to specify how conent should appear in the
     /// explorer browser control
     /// </summary>
-    [Flags]
+    [Flags()]
+#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     public enum ExplorerBrowserContentSectionOptions
+#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     {
         /// <summary>
         /// No options.

@@ -10,7 +10,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// respectively, for all specified events. 
     /// This parameter can be one or more of the following values:
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum ShellObjectChangeTypes
     {
         /// <summary>

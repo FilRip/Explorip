@@ -15,7 +15,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// Specifies options for the appearance of the 
         /// stock icon.
         /// </summary>
-        [Flags]
+        [Flags()]
         internal enum StockIconOptions
         {
             /// <summary>

@@ -43,6 +43,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         UseMdiLivePreview = 0x2
     }
 
+    [Flags()]
     internal enum ThumbButtonMask
     {
         Bitmap = 0x1,
@@ -51,7 +52,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         THB_FLAGS = 0x8
     }
 
-    [Flags]
+    [Flags()]
     internal enum ThumbButtonOptions
     {
         Enabled = 0x00000000,

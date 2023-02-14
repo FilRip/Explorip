@@ -6,7 +6,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// <summary>
     /// Specifies behaviors for known folders.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum DefinitionOptions
     {
         /// <summary>

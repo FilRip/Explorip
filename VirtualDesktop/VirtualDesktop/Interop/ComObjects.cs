@@ -76,7 +76,7 @@ namespace WindowsDesktop.Interop
             _listenerWindow?.Close();
         }
 
-        private class ExplorerRestartListenerWindow : TransparentWindow
+        private sealed class ExplorerRestartListenerWindow : TransparentWindow
         {
             private uint _explorerRestartedMessage;
             private readonly Action _action;

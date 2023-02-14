@@ -154,8 +154,8 @@ namespace Explorip.WinAPI.Modeles
 
         [PreserveSig()]
         int GetDragImage(
-            ref ManagedPoint ppt,
-            ref ManagedPoint pptHotspot,
+            ref NativePoint ppt,
+            ref NativePoint pptHotspot,
             ref Guid riid,
             ref IntPtr ppv);
 

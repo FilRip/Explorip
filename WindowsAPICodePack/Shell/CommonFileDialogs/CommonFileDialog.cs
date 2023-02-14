@@ -141,7 +141,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// <summary>
         /// Gets or sets the dialog title.
         /// </summary>
-        /// <value>A <see cref="System.String"/> object.</value>
+        /// <value>A <see cref="string"/> object.</value>
         public string Title
         {
             get { return title; }
@@ -160,8 +160,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// <summary>
         /// Gets or sets a value that determines whether the file must exist beforehand.
         /// </summary>
-        /// <value>A <see cref="System.Boolean"/> value. <b>true</b> if the file must exist.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        /// <value>A <see cref="bool"/> value. <b>true</b> if the file must exist.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         public bool EnsureFileExists
         {
             get { return ensureFileExists; }
@@ -176,8 +176,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// <summary>
         /// Gets or sets a value that specifies whether the returned file must be in an existing folder.
         /// </summary>
-        /// <value>A <see cref="System.Boolean"/> value. <b>true</b> if the file must exist.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        /// <value>A <see cref="bool"/> value. <b>true</b> if the file must exist.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         public bool EnsurePathExists
         {
             get { return ensurePathExists; }
@@ -191,8 +191,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         private bool ensureValidNames;
         /// <summary>Gets or sets a value that determines whether to validate file names.
         /// </summary>
-        ///<value>A <see cref="System.Boolean"/> value. <b>true </b>to check for situations that would prevent an application from opening the selected file, such as sharing violations or access denied errors.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        ///<value>A <see cref="bool"/> value. <b>true </b>to check for situations that would prevent an application from opening the selected file, such as sharing violations or access denied errors.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         /// 
         public bool EnsureValidNames
         {
@@ -210,8 +210,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// Default value for CommonOpenFileDialog is true (allow read-only files) and 
         /// CommonSaveFileDialog is false (don't allow read-only files).
         /// </summary>
-        /// <value>A <see cref="System.Boolean"/> value. <b>true</b> includes read-only items.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        /// <value>A <see cref="bool"/> value. <b>true</b> includes read-only items.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         public bool EnsureReadOnly
         {
             get { return ensureReadOnly; }
@@ -227,7 +227,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// Gets or sets a value that determines the restore directory.
         /// </summary>
         /// <remarks></remarks>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         public bool RestoreDirectory
         {
             get { return restoreDirectory; }
@@ -244,8 +244,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// to show or hide the list of pinned places that
         /// the user can choose.
         /// </summary>
-        /// <value>A <see cref="System.Boolean"/> value. <b>true</b> if the list is visible; otherwise <b>false</b>.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        /// <value>A <see cref="bool"/> value. <b>true</b> if the list is visible; otherwise <b>false</b>.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         public bool ShowPlacesList
         {
 
@@ -261,8 +261,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// <summary>
         /// Gets or sets a value that controls whether to show or hide the list of places where the user has recently opened or saved items.
         /// </summary>
-        /// <value>A <see cref="System.Boolean"/> value.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
+        /// <value>A <see cref="bool"/> value.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be set when the dialog is visible.</exception>
         public bool AddToMostRecentlyUsedList
         {
             get { return addToMruList; }
@@ -376,8 +376,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// <summary>
         /// Gets the selected filename.
         /// </summary>
-        /// <value>A <see cref="System.String"/> object.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be used when multiple files are selected.</exception>
+        /// <value>A <see cref="string"/> object.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be used when multiple files are selected.</exception>
         public string FileName
         {
             get
@@ -410,8 +410,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// <summary>
         /// Gets the selected item as a ShellObject.
         /// </summary>
-        /// <value>A <see cref="Microsoft.WindowsAPICodePack.Shell.ShellObject"></see> object.</value>
-        /// <exception cref="System.InvalidOperationException">This property cannot be used when multiple files
+        /// <value>A <see cref="ShellObject"></see> object.</value>
+        /// <exception cref="InvalidOperationException">This property cannot be used when multiple files
         /// are selected.</exception>
         public ShellObject FileAsShellObject
         {
@@ -653,7 +653,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             {
                 if (Application.Current != null && Application.Current.MainWindow != null)
                 {
-                    parentWindow = (new WindowInteropHelper(Application.Current.MainWindow)).Handle;
+                    parentWindow = new WindowInteropHelper(Application.Current.MainWindow).Handle;
                 }
                 else if (System.Windows.Forms.Application.OpenForms.Count > 0)
                 {
@@ -832,7 +832,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         /// <returns>true if the property change is allowed.</returns>
         public virtual bool IsControlPropertyChangeAllowed(string propertyName, DialogControl control)
         {
-            CommonFileDialog.GenerateNotImplementedException();
+            GenerateNotImplementedException();
             return false;
         }
 
@@ -1072,7 +1072,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         #region NativeDialogEventSink Nested Class
 
-        private class NativeDialogEventSink : IFileDialogEvents, IFileDialogControlEvents
+        private sealed class NativeDialogEventSink : IFileDialogEvents, IFileDialogControlEvents
         {
             private readonly CommonFileDialog parent;
             private bool firstFolderChanged = true;

@@ -964,7 +964,9 @@ namespace JetBrains.Annotations
     /// how the collection method invocation affects the contents of the collection.
     /// </summary>
     [Flags()]
+#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     internal enum CollectionAccessType
+#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     {
         /// <summary>Method does not use or modify content of the collection.</summary>
         None = 0,

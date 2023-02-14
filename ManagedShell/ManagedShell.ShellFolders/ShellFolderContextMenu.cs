@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
+using ManagedShell.ShellFolders.Interfaces;
 
 namespace ManagedShell.ShellFolders
 {
@@ -100,12 +102,12 @@ namespace ManagedShell.ShellFolders
                 if (selected <= Interop.CMD_LAST)
                 {
                     // custom commands are greater than CMD_LAST, so this must be a sub menu item
-                    foreach (var subMenu in ShellNewMenus)
+                    foreach (IContextMenu subMenu in ShellNewMenus.Select(item => item.iContextMenu))
                     {
-                        if (subMenu.iContextMenu != null)
+                        if (subMenu != null)
                         {
                             InvokeCommand(
-                                subMenu.iContextMenu,
+                                subMenu,
                                 selected - Interop.CMD_FIRST,
                                 new Point(x, y));
                         }

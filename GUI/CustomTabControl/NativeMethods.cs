@@ -34,12 +34,14 @@ namespace System.Windows.Forms
 
         #region Content Alignment
 
+#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
         public static readonly ContentAlignment AnyRightAlign = ContentAlignment.BottomRight | ContentAlignment.MiddleRight | ContentAlignment.TopRight;
         public static readonly ContentAlignment AnyLeftAlign = ContentAlignment.BottomLeft | ContentAlignment.MiddleLeft | ContentAlignment.TopLeft;
         public static readonly ContentAlignment AnyTopAlign = ContentAlignment.TopRight | ContentAlignment.TopCenter | ContentAlignment.TopLeft;
         public static readonly ContentAlignment AnyBottomAlign = ContentAlignment.BottomRight | ContentAlignment.BottomCenter | ContentAlignment.BottomLeft;
         public static readonly ContentAlignment AnyMiddleAlign = ContentAlignment.MiddleRight | ContentAlignment.MiddleCenter | ContentAlignment.MiddleLeft;
         public static readonly ContentAlignment AnyCenterAlign = ContentAlignment.BottomCenter | ContentAlignment.MiddleCenter | ContentAlignment.TopCenter;
+#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
 
         #endregion
 
@@ -79,14 +81,6 @@ namespace System.Windows.Forms
             return ((Message)args[0]).Result;
         }
 
-
-        //		[DllImport("user32.dll")]
-        //		public static extern IntPtr BeginPaint(IntPtr hWnd, ref PAINTSTRUCT paintStruct);
-        //		
-        //		[DllImport("user32.dll")]
-        //		[return: MarshalAs(UnmanagedType.Bool)]
-        //		public static extern bool EndPaint(IntPtr hWnd, ref PAINTSTRUCT paintStruct);
-        //
         #endregion
 
         #region Misc Functions

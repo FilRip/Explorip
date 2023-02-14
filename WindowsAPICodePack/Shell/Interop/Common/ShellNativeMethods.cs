@@ -10,7 +10,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     {
         #region Shell Enums
 
-        [Flags]
+        [Flags()]
         internal enum FileOpenOptions
         {
             OverwritePrompt = 0x00000002,
@@ -36,6 +36,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             ForceShowHidden = 0x10000000,
             DefaultNoMiniMode = 0x20000000
         }
+        [Flags()]
         internal enum ControlState
         {
             Inactive = 0x00000000,
@@ -60,7 +61,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// that create a property store, such as IShellItem2::GetPropertyStore or 
         /// IPropertyStoreFactory::GetPropertyStore.
         /// </summary>
-        [Flags]
+        [Flags()]
         internal enum GetPropertyStoreOptions
         {
             /// <summary>
@@ -215,7 +216,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             Top = 0x00000001,
         }
 
-        [Flags]
+        [Flags()]
         internal enum SIIGBF
         {
             ResizeToFit = 0x00,
@@ -226,7 +227,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             InCacheOnly = 0x10,
         }
 
-        [Flags]
+        [Flags()]
         internal enum ThumbnailOptions
         {
             Extract = 0x00000000,
@@ -237,7 +238,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             ExtractDoNotCache = 0x00000020
         }
 
-        [Flags]
+        [Flags()]
         internal enum ThumbnailCacheOptions
         {
             Default = 0x00000000,
@@ -245,7 +246,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             Cached = 0x00000002,
         }
 
-        [Flags]
+        [Flags()]
         internal enum ShellFileGetAttributesOptions
         {
             /// <summary>
@@ -444,7 +445,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             PkeyMask = unchecked((int)0x81044000),
         }
 
-        [Flags]
+        [Flags()]
         internal enum ShellFolderEnumerationOptions : ushort
         {
             CheckingForChildren = 0x0010,
@@ -572,7 +573,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             AllItems = 3
         };
 
-        [Flags]
+        [Flags()]
         internal enum LibraryOptions
         {
             Default = 0,
@@ -672,7 +673,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern Boolean SHChangeNotifyDeregister(uint hNotify);
 
-        [Flags]
+        [Flags()]
         internal enum ShellChangeNotifyEventSource
         {
             InterruptLevel = 0x0001,

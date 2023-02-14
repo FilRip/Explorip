@@ -91,6 +91,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 (VarEnum.VT_LPWSTR) => typeof(String),
                 (VarEnum.VT_UNKNOWN) => typeof(IntPtr?),
                 (VarEnum.VT_STREAM) => typeof(IStream),
+#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
                 (VarEnum.VT_VECTOR | VarEnum.VT_UI1) => typeof(Byte[]),
                 (VarEnum.VT_VECTOR | VarEnum.VT_I2) => typeof(Int16[]),
                 (VarEnum.VT_VECTOR | VarEnum.VT_UI2) => typeof(UInt16[]),
@@ -104,6 +105,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 (VarEnum.VT_VECTOR | VarEnum.VT_CLSID) => typeof(IntPtr[]),
                 (VarEnum.VT_VECTOR | VarEnum.VT_CF) => typeof(IntPtr[]),
                 (VarEnum.VT_VECTOR | VarEnum.VT_LPWSTR) => typeof(String[]),
+#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
                 _ => typeof(Object),
             };
         }

@@ -1108,7 +1108,9 @@ namespace System.Windows.Forms
                                                    && !TabPages[index].ImageKey.Equals("(none)", StringComparison.OrdinalIgnoreCase))))
                 {
                     Rectangle imageRect = GetTabImageRect(index);
+#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
                     if ((_StyleProvider.ImageAlign & NativeMethods.AnyLeftAlign) != 0)
+#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
                     {
                         if (Alignment <= TabAlignment.Bottom)
                         {
@@ -1150,7 +1152,9 @@ namespace System.Windows.Forms
                             }
                         }
                     }
+#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
                     else if ((_StyleProvider.ImageAlign & NativeMethods.AnyCenterAlign) != 0)
+#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
                     {
                         //	If there is a closer allow for it
                         if (_StyleProvider.ShowTabCloser)
@@ -1464,6 +1468,7 @@ namespace System.Windows.Forms
             }
 
             //	Ensure image is fully visible
+#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
             if (Alignment <= TabAlignment.Bottom)
             {
                 if ((_StyleProvider.ImageAlign & NativeMethods.AnyLeftAlign) != 0)
@@ -1528,6 +1533,7 @@ namespace System.Windows.Forms
                 }
             }
             return imageRect;
+#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
         }
 
         public Rectangle GetTabCloserRect(int index)

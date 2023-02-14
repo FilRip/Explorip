@@ -21,12 +21,12 @@ namespace WindowsDesktop.Interop
         {
             Dictionary<string, Guid> known = new();
 
-            foreach (SettingsProperty prop in Settings.Default.Properties.OfType<SettingsProperty>())
+            foreach (string prop in Settings.Default.Properties.OfType<SettingsProperty>().Select(item => item.Name))
             {
-                if (int.TryParse(_osBuildRegex.Match(prop.Name).Groups["build"]?.ToString(), out int build)
+                if (int.TryParse(_osBuildRegex.Match(prop).Groups["build"]?.ToString(), out int build)
                     && build == ProductInfo.OSBuild)
                 {
-                    foreach (string str in (StringCollection)Settings.Default[prop.Name])
+                    foreach (string str in (StringCollection)Settings.Default[prop])
                     {
                         string[] pair = str.Split(',');
                         if (pair.Length != 2) continue;

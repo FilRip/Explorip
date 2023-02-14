@@ -262,7 +262,7 @@
     <Compile Include="WinAPI\Modeles\LocalWindowsHook.cs" />
     <Compile Include="WinAPI\Modeles\MenuItemInfo.cs" />
     <Compile Include="WinAPI\Modeles\NetreSource.cs" />
-    <Compile Include="WinAPI\Modeles\ManagedPoint.cs" />
+    <Compile Include="WinAPI\Modeles\NativePoint.cs" />
     <Compile Include="WinAPI\Modeles\ProcessBasicInformation.cs" />
     <Compile Include="WinAPI\Modeles\Rect.cs" />
     <Compile Include="WinAPI\Modeles\ShFileInfo.cs" />

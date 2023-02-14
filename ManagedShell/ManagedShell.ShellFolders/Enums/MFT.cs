@@ -6,8 +6,9 @@ namespace ManagedShell.ShellFolders.Enums
     [Flags()]
     public enum MFT : uint
     {
-        GRAYED = 0x00000003,
-        DISABLED = 0x00000003,
+        INSERT = 0x00000000,
+        GRAYED = 0x00000001,
+        DISABLED = 0x00000002,
         CHECKED = 0x00000008,
         SEPARATOR = 0x00000800,
         RADIOCHECK = 0x00000200,

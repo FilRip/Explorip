@@ -311,12 +311,14 @@ namespace ManagedShell.Interop
         /// Notify icon info balloon flags
         /// </summary>
         [Flags()]
+#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
         public enum NIIF : uint
+#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
         {
             NONE = 0x00000000,
             INFO = 0x00000001,
             WARNING = 0x00000002,
-            ERROR = 0x00000003,
+            ERROR = INFO | WARNING,
             /// <summary>Use app-provided icon in the balloon. XP SP2 and later.</summary>
             USER = 0x00000004,
             /// <summary>XP and later.</summary>

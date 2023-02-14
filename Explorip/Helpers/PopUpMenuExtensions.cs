@@ -10,6 +10,7 @@ namespace Explorip.Helpers
 {
     public static class PopUpMenuExtensions
     {
+#pragma warning disable S3241 // Methods should not return values that are never used
         private static bool GetMenuItem(int IdOrPositionMenu, IntPtr pointeurMenu, bool usePosition, out string libelle, out uint IdCmd, out Bitmap icone, out MFS etat)
         {
             icone = null;
@@ -45,6 +46,7 @@ namespace Explorip.Helpers
             }
             return false;
         }
+#pragma warning restore S3241 // Methods should not return values that are never used
 
         public static void CopierVersCms(ContextMenuStrip cms, ToolStripMenuItem sousMenu, IntPtr pointeurMenu, EventHandler ClickMenu, bool background)
         {

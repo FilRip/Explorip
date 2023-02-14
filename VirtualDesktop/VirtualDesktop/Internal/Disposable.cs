@@ -9,7 +9,7 @@ namespace WindowsDesktop.Internal
             return new AnonymousDisposable(dispose);
         }
 
-        private class AnonymousDisposable : IDisposable
+        private sealed class AnonymousDisposable : IDisposable
         {
             private bool _isDisposed;
             private readonly Action _dispose;

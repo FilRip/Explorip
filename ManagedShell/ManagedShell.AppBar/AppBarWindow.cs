@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -148,9 +149,9 @@ namespace ManagedShell.AppBar
         {
             bool found = false;
 
-            foreach (FullScreenApp app in _fullScreenHelper.FullScreenApps)
+            foreach (ScreenInfo app in _fullScreenHelper.FullScreenApps.Select(item => item.screen))
             {
-                if (app.screen.DeviceName == Screen.DeviceName || app.screen.IsVirtualScreen)
+                if (app.DeviceName == Screen.DeviceName || app.IsVirtualScreen)
                 {
                     // we need to not be on top now
                     found = true;

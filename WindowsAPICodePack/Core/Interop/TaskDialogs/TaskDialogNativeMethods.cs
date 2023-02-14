@@ -107,7 +107,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         }
 
         // Task Dialog - identifies common buttons.
-        [Flags]
+        [Flags()]
         internal enum TaskDialogCommonButtons
         {
             Ok = 0x0001, // selected control return value IDOK
@@ -147,7 +147,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         }
 
         // Task Dialog - flags
-        [Flags]
+        [Flags()]
         internal enum TaskDialogOptions
         {
             None = 0,

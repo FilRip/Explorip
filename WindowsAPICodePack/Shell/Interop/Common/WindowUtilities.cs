@@ -40,7 +40,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         }
     }
 
-    [Flags]
+    [Flags()]
     internal enum WindowStyles
     {
         /// <summary>

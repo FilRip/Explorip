@@ -60,6 +60,6 @@ namespace Explorip.WinAPI.Modeles
         public string lpDirectoryW;
         [MarshalAs(UnmanagedType.LPWStr)]
         public string lpTitleW;
-        public ManagedPoint ptInvoke;
+        public NativePoint ptInvoke;
     }
 }

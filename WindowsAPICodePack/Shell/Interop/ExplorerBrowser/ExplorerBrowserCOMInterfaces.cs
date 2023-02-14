@@ -22,7 +22,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         ViewOrderFlag = unchecked((int)0x80000000)
     }
 
-    [Flags]
+    [Flags()]
     internal enum FolderOptions
     {
         AutoArrange = 0x00000001,
@@ -74,6 +74,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         Last = 8
     }
 
+    [Flags()]
     internal enum ExplorerPaneState
     {
         DoNotCare = 0x00000000,
@@ -91,7 +92,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         public FolderOptions Options;
     }
 
-    [Flags]
+    [Flags()]
     internal enum ExplorerBrowserOptions
     {
         NavigateOnce = 0x00000001,

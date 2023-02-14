@@ -12,7 +12,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// of the access and sharing groups must be specified for all 
     /// functions and methods which use these constants. 
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum AccessModes
     {
         /// <summary>

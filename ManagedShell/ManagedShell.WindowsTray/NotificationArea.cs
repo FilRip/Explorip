@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
@@ -285,14 +286,10 @@ namespace ManagedShell.WindowsTray
                             (nicData.guidItem == new Guid(POWER_GUID) && GroupPolicyHelper.HideScaPower))
                             return false;
 
-                        foreach (NotifyIcon ti in TrayIcons)
+                        if (TrayIcons.Any(ti => ti.Equals(nicData)))
                         {
-                            if (ti.Equals(nicData))
-                            {
-                                exists = true;
-                                trayIcon = ti;
-                                break;
-                            }
+                            exists = true;
+                            trayIcon = TrayIcons.First(ti => ti.Equals(nicData));
                         }
 
                         if ((NIF.STATE & nicData.uFlags) != 0)
@@ -377,16 +374,13 @@ namespace ManagedShell.WindowsTray
                 {
                     try
                     {
-                        foreach (var icon in TrayIcons)
+                        if (TrayIcons.Any(icon => icon.Equals(trayIcon)))
                         {
-                            if (icon.Equals(trayIcon))
-                            {
-                                TrayIcons.Remove(trayIcon);
+                            TrayIcons.Remove(trayIcon);
 
-                                ShellLogger.Debug($"NotificationArea: Removed: {icon.Title}");
+                            ShellLogger.Debug($"NotificationArea: Removed: {TrayIcons.First(icon => icon.Equals(trayIcon)).Title}");
 
-                                return true;
-                            }
+                            return true;
                         }
 
                         return false;

@@ -6,7 +6,7 @@ namespace Microsoft.WindowsAPICodePack.Net
     /// <summary>
     /// Specifies types of network connectivity.
     /// </summary>    
-    [Flags]
+    [Flags()]
     public enum ConnectivityStates
     {
         /// <summary>
@@ -103,7 +103,7 @@ namespace Microsoft.WindowsAPICodePack.Net
     /// <see cref="NetworkListManager"/> 
     /// class.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum NetworkConnectivityLevels
     {
         /// <summary>

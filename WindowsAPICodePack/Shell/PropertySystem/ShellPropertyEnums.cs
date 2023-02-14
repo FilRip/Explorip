@@ -35,7 +35,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     /// these flags, to specify the format. Some flags are mutually exclusive, 
     /// so combinations like <c>ShortTime | LongTime | HideTime</c> are not allowed.
     /// </remarks>
-    [Flags]
+    [Flags()]
     public enum PropertyDescriptionFormatOptions
     {
         /// <summary>
@@ -250,7 +250,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     /// <summary>
     /// Describes how a property should be treated for display purposes.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum PropertyColumnStateOptions
     {
         /// <summary>
@@ -551,7 +551,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     /// <summary>
     /// Describes the attributes of the <c>typeInfo</c> element in the property's <c>.propdesc</c> file.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum PropertyTypeOptions
     {
         /// <summary>
@@ -659,7 +659,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     /// <summary>
     /// Associates property names with property description list strings.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum PropertyViewOptions
     {
         /// <summary>

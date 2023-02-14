@@ -19,7 +19,7 @@ namespace ManagedShell.UWPInterop
         private static string userSID;
         private static double scale;
 
-        public static StoreAppList AppList = new();
+        public readonly static StoreAppList AppList = new();
 
         internal static List<StoreApp> GetStoreApps()
         {

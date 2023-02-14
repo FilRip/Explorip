@@ -8,7 +8,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     /// Identifies one of the standard buttons that 
     /// can be displayed via TaskDialog.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum TaskDialogStandardButtons
     {
         /// <summary>

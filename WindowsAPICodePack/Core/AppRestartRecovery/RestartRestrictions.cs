@@ -9,7 +9,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
     /// should not restart an application that has registered
     /// for automatic restart.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum RestartRestrictions
     {
         /// <summary>
