@@ -63,6 +63,9 @@ namespace Explorip.TaskBar.Controls
 
         private void TaskList_OnLoaded(object sender, RoutedEventArgs e)
         {
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                return;
+
             if (!isLoaded && MyDesktopApp.MonShellManager.Tasks != null)
             {
                 TasksList.ItemsSource = MyDesktopApp.MonShellManager.Tasks.GroupedWindows;
@@ -126,6 +129,8 @@ namespace Explorip.TaskBar.Controls
 
         private void TaskList_OnUnloaded(object sender, RoutedEventArgs e)
         {
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                return;
             MyDesktopApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
             Console.WriteLine("Désabonnement changement VirtualDesktop");
             VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;

@@ -30,6 +30,9 @@ namespace Explorip.TaskBar.Controls
         {
             InitializeComponent();
 
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                return;
+
             pendingOpenTimer = new DispatcherTimer(DispatcherPriority.Background)
             {
                 Interval = new TimeSpan(0, 0, 0, 1)
@@ -89,11 +92,15 @@ namespace Explorip.TaskBar.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                return;
             StartMenuMonitor.StartMenuVisibilityChanged += AppVisibilityHelper_StartMenuVisibilityChanged;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                return;
             StartMenuMonitor.StartMenuVisibilityChanged -= AppVisibilityHelper_StartMenuVisibilityChanged;
         }
 

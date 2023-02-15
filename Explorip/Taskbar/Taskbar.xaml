@@ -62,18 +62,24 @@
                     </DockPanel.Dock>
                 </controls:TaskManButton>
                 <Grid Grid.Column="3" Grid.Row="0" Name="QuickLaunchGrid">
-                    <controls:Toolbar x:Name="QuickLaunchToolbar"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <controls:Toolbar x:Name="QuickLaunchToolbar" Grid.Column="0" Grid.Row="0"
                               Visibility="Collapsed"
                               Path="{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}"
                                   PreviewMouseDown="QuickLaunchToolbar_PreviewMouseDown"
                                   PreviewMouseMove="QuickLaunchToolbar_PreviewMouseMove"
                                   PreviewMouseUp="QuickLaunchToolbar_PreviewMouseUp">
-                        <DockPanel.Dock>
+                        <!--<DockPanel.Dock>
                             <Binding Converter="{StaticResource dockOrientationConverter}"
                              ConverterParameter="leading"
                              Path="Orientation"
                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
-                        </DockPanel.Dock>
+                        </DockPanel.Dock>-->
                     </controls:Toolbar>
                 </Grid>
                 <controls:TaskList VerticalAlignment="Top" Grid.Column="3" Grid.Row="1" x:Name="ListeDesTaches" EcranPrincipal="{Binding MainScreen}" TaskbarParent="{Binding .}"/>
@@ -121,6 +127,7 @@
             <MenuItem Header="{DynamicResource tray_properties}" Name="PropertiesMenuItem" Click="PropertiesMenuItem_OnClick"/>
             <MenuItem Header="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=LabelUnlock}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="{DynamicResource exit_retrobar}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
+            <MenuItem Header="Ajouter une barre d'outils" Name="MenuAjoutToolbar" Click="MenuAjoutToolbar_Click"/>
         </ContextMenu>
     </appbar:AppBarWindow.ContextMenu>
 </appbar:AppBarWindow>

@@ -37,6 +37,9 @@ namespace Explorip.TaskBar.Controls
             InitializeComponent();
             DataContext = this;
 
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                return;
+
             Initialize();
         }
 

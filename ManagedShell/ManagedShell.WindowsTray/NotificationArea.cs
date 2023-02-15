@@ -378,7 +378,7 @@ namespace ManagedShell.WindowsTray
                         {
                             TrayIcons.Remove(trayIcon);
 
-                            ShellLogger.Debug($"NotificationArea: Removed: {TrayIcons.First(icon => icon.Equals(trayIcon)).Title}");
+                            ShellLogger.Debug($"NotificationArea: Removed: {trayIcon.Title}");
 
                             return true;
                         }
@@ -397,14 +397,11 @@ namespace ManagedShell.WindowsTray
                         return false;
                     }
 
-                    foreach (NotifyIcon ti in TrayIcons)
+                    if (TrayIcons.Any(item => item.Equals(nicData)))
                     {
-                        if (ti.Equals(nicData))
-                        {
-                            ti.Version = nicData.uVersion;
-                            ShellLogger.Debug($"NotificationArea: Modified version to {ti.Version} on: {ti.Title}");
-                            break;
-                        }
+                        NotifyIcon ti = TrayIcons.First(item => item.Equals(nicData));
+                        ti.Version = nicData.uVersion;
+                        ShellLogger.Debug($"NotificationArea: Modified version to {ti.Version} on: {ti.Title}");
                     }
                 }
             }

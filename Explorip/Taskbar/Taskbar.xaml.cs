@@ -14,6 +14,8 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
 
+using Microsoft.WindowsAPICodePack.Dialogs;
+
 using Application = System.Windows.Application;
 
 namespace Explorip.TaskBar
@@ -231,6 +233,8 @@ namespace Explorip.TaskBar
             MyDesktopApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
         }
 
+        #region Move/stretch
+
         private void UnlockTaskbar_Click(object sender, RoutedEventArgs e)
         {
             if (ResizeMode == ResizeMode.NoResize)
@@ -255,9 +259,8 @@ namespace Explorip.TaskBar
             if (!_isMoving)
                 return;
 
-            ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X = Mouse.GetPosition(QuickLaunchGrid).X - _startX;
-            ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
-
+            ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X = Math.Max(0, Mouse.GetPosition(QuickLaunchGrid).X - _startX);
+            //((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
         }
 
         private void QuickLaunchToolbar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -276,6 +279,27 @@ namespace Explorip.TaskBar
 
             Mouse.OverrideCursor = Cursors.Cross;
             _isMoving = true;
+        }
+
+        #endregion
+
+        private void MenuAjoutToolbar_Click(object sender, RoutedEventArgs e)
+        {
+            CommonOpenFileDialog dialog = new()
+            {
+                IsFolderPicker = true,
+            };
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                QuickLaunchGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+                Toolbar newToolbar = new()
+                {
+                    Path = "{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}",
+                };
+                Grid.SetRow(newToolbar, QuickLaunchGrid.RowDefinitions.Count - 1);
+                Grid.SetColumn(newToolbar, 0);
+                QuickLaunchGrid.Children.Add(newToolbar);
+            }
         }
     }
 }
