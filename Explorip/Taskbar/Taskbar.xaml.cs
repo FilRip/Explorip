@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using Explorip.Helpers;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
 using Explorip.TaskBar.ViewModels;
@@ -201,7 +202,7 @@ namespace Explorip.TaskBar
 
         private void TaskManagerMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            ShellHelper.StartTaskManager();
+            ManagedShell.Common.Helpers.ShellHelper.StartTaskManager();
         }
 
         private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -221,7 +222,7 @@ namespace Explorip.TaskBar
             }
         }
 
-        private void PropertiesMenuItem_OnClick(object sender, RoutedEventArgs e)
+        private void TaskbarAllScreenMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             ((MyDesktopApp)Program.MonApp).AfficheTaskBarAutresMoniteurs();
         }
@@ -251,21 +252,35 @@ namespace Explorip.TaskBar
             }
         }
 
-        private double _startX, _startY;
-        private bool _isMoving;
+        private double _startX/*, _startY*/;
 
         private void QuickLaunchToolbar_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (!_isMoving)
+            if (!QuickLaunchToolbar.IsMouseCaptured)
                 return;
 
             ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X = Math.Max(0, Mouse.GetPosition(QuickLaunchGrid).X - _startX);
             //((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
+            HitTestResult result = VisualTreeHelper.HitTest(QuickLaunchGrid, e.GetPosition(QuickLaunchGrid));
+            if (result?.VisualHit != null)
+            {
+                Toolbar parent = result.VisualHit.FindParent<Toolbar>();
+                if (parent != null)
+                {
+                    int previousRow = Grid.GetRow(QuickLaunchToolbar);
+                    int newRow = Grid.GetRow(parent);
+                    if (previousRow != newRow)
+                    {
+                        Grid.SetRow(parent, previousRow);
+                        Grid.SetRow(QuickLaunchToolbar, newRow);
+                    }
+                }
+            }
         }
 
         private void QuickLaunchToolbar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            _isMoving = false;
+            QuickLaunchToolbar.ReleaseMouseCapture();
             Mouse.OverrideCursor = null;
         }
 
@@ -275,10 +290,10 @@ namespace Explorip.TaskBar
                 return;
 
             _startX = Mouse.GetPosition(QuickLaunchGrid).X - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X;
-            _startY = Mouse.GetPosition(QuickLaunchGrid).Y - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y;
+            //_startY = Mouse.GetPosition(QuickLaunchGrid).Y - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y;
 
             Mouse.OverrideCursor = Cursors.Cross;
-            _isMoving = true;
+            QuickLaunchToolbar.CaptureMouse();
         }
 
         #endregion
@@ -294,11 +309,14 @@ namespace Explorip.TaskBar
                 QuickLaunchGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
                 Toolbar newToolbar = new()
                 {
-                    Path = "{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}",
+                    Path = dialog.FileName,
                 };
                 Grid.SetRow(newToolbar, QuickLaunchGrid.RowDefinitions.Count - 1);
                 Grid.SetColumn(newToolbar, 0);
                 QuickLaunchGrid.Children.Add(newToolbar);
+                Height += 22;
+                DesiredHeight = Height;
+                _appBarManager.SetWorkArea(Screen);
             }
         }
     }

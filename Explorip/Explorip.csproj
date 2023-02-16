@@ -157,6 +157,7 @@
     <Compile Include="Helpers\ExtensionsString.cs" />
     <Compile Include="Helpers\ExtensionsWindows.cs" />
     <Compile Include="Helpers\ExtensionsWinForm.cs" />
+    <Compile Include="Helpers\ExtensionsWpf.cs" />
     <Compile Include="Helpers\GestionEcrans.cs" />
     <Compile Include="Helpers\GestionFenetres.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />

@@ -39,9 +39,13 @@ namespace Explorip.TaskBar.Controls
             };
             pendingOpenTimer.Tick += (sender, args) =>
             {
-                // if the start menu didn't open, flip the button back to unchecked
-                Start.IsChecked = false;
-                pendingOpenTimer.Stop();
+                try
+                {
+                    // if the start menu didn't open, flip the button back to unchecked
+                    Start.IsChecked = false;
+                    pendingOpenTimer.Stop();
+                }
+                catch (Exception) { /* Ignore errors */ }
             };
         }
 
