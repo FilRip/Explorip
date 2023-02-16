@@ -2,6 +2,10 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+
+using Explorip.Helpers;
+using Explorip.TaskBar.ViewModels;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
@@ -173,12 +177,61 @@ namespace Explorip.TaskBar.Controls
         {
             if (action == ((uint)MenuItem.OpenParentFolder).ToString())
             {
-                _ = ShellHelper.StartProcess(Folder.Path);
+                ManagedShell.Common.Helpers.ShellHelper.StartProcess(Folder.Path);
                 return true;
             }
 
             return false;
         }
+        #endregion
+
+        #region Move toolbar in taskbar by drag'n drop
+
+        private double _startX/*, _startY*/;
+        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!TaskbarViewModel.Instance.ResizeOn)
+                return;
+
+            Grid myGrid = this.FindParent<Grid>();
+            _startX = Mouse.GetPosition(myGrid).X - ((TranslateTransform)RenderTransform).X;
+            //_startY = Mouse.GetPosition(QuickLaunchGrid).Y - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y;
+
+            Mouse.OverrideCursor = Cursors.Cross;
+            CaptureMouse();
+        }
+
+        private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ReleaseMouseCapture();
+            Mouse.OverrideCursor = null;
+        }
+
+        private void UserControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!IsMouseCaptured)
+                return;
+
+            Grid myGrid = this.FindParent<Grid>();
+            ((TranslateTransform)RenderTransform).X = Math.Max(0, Mouse.GetPosition(myGrid).X - _startX);
+            //((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
+            HitTestResult result = VisualTreeHelper.HitTest(myGrid, e.GetPosition(myGrid));
+            if (result?.VisualHit != null)
+            {
+                Toolbar parent = result.VisualHit.FindParent<Toolbar>();
+                if (parent != null)
+                {
+                    int previousRow = Grid.GetRow(this);
+                    int newRow = Grid.GetRow(parent);
+                    if (previousRow != newRow)
+                    {
+                        Grid.SetRow(parent, previousRow);
+                        Grid.SetRow(this, newRow);
+                    }
+                }
+            }
+        }
+
         #endregion
     }
 }

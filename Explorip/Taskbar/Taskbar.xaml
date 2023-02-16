@@ -61,7 +61,7 @@
                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:TaskManButton>
-                <Grid Grid.Column="3" Grid.Row="0" Name="QuickLaunchGrid">
+                <Grid Grid.Column="3" Grid.Row="0" Name="ToolsBars">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
@@ -70,10 +70,7 @@
                     </Grid.RowDefinitions>
                     <controls:Toolbar x:Name="QuickLaunchToolbar" Grid.Column="0" Grid.Row="0"
                               Visibility="Collapsed"
-                              Path="{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}"
-                                  MouseDown="QuickLaunchToolbar_PreviewMouseDown"
-                                  MouseMove="QuickLaunchToolbar_PreviewMouseMove"
-                                  MouseUp="QuickLaunchToolbar_PreviewMouseUp">
+                              Path="{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}">
                     </controls:Toolbar>
                 </Grid>
                 <controls:TaskList VerticalAlignment="Top" Grid.Column="3" Grid.Row="1" x:Name="ListeDesTaches" EcranPrincipal="{Binding MainScreen}" TaskbarParent="{Binding .}"/>

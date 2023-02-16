@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-using Explorip.Helpers;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
 using Explorip.TaskBar.ViewModels;
@@ -252,50 +251,6 @@ namespace Explorip.TaskBar
             }
         }
 
-        private double _startX/*, _startY*/;
-
-        private void QuickLaunchToolbar_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (!QuickLaunchToolbar.IsMouseCaptured)
-                return;
-
-            ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X = Math.Max(0, Mouse.GetPosition(QuickLaunchGrid).X - _startX);
-            //((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
-            HitTestResult result = VisualTreeHelper.HitTest(QuickLaunchGrid, e.GetPosition(QuickLaunchGrid));
-            if (result?.VisualHit != null)
-            {
-                Toolbar parent = result.VisualHit.FindParent<Toolbar>();
-                if (parent != null)
-                {
-                    int previousRow = Grid.GetRow(QuickLaunchToolbar);
-                    int newRow = Grid.GetRow(parent);
-                    if (previousRow != newRow)
-                    {
-                        Grid.SetRow(parent, previousRow);
-                        Grid.SetRow(QuickLaunchToolbar, newRow);
-                    }
-                }
-            }
-        }
-
-        private void QuickLaunchToolbar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            QuickLaunchToolbar.ReleaseMouseCapture();
-            Mouse.OverrideCursor = null;
-        }
-
-        private void QuickLaunchToolbar_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (!TaskbarViewModel.Instance.ResizeOn)
-                return;
-
-            _startX = Mouse.GetPosition(QuickLaunchGrid).X - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).X;
-            //_startY = Mouse.GetPosition(QuickLaunchGrid).Y - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y;
-
-            Mouse.OverrideCursor = Cursors.Cross;
-            QuickLaunchToolbar.CaptureMouse();
-        }
-
         #endregion
 
         private void MenuAjoutToolbar_Click(object sender, RoutedEventArgs e)
@@ -306,14 +261,14 @@ namespace Explorip.TaskBar
             };
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                QuickLaunchGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+                ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
                 Toolbar newToolbar = new()
                 {
                     Path = dialog.FileName,
                 };
-                Grid.SetRow(newToolbar, QuickLaunchGrid.RowDefinitions.Count - 1);
+                Grid.SetRow(newToolbar, ToolsBars.RowDefinitions.Count - 1);
                 Grid.SetColumn(newToolbar, 0);
-                QuickLaunchGrid.Children.Add(newToolbar);
+                ToolsBars.Children.Add(newToolbar);
                 Height += 22;
                 DesiredHeight = Height;
                 _appBarManager.SetWorkArea(Screen);
