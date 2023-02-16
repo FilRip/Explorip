@@ -15,7 +15,6 @@ namespace Explorip.WinAPI.Modeles
         NODEFAULT = 0x00000020,
         INCLUDESTATIC = 0x00000040,
         EXTENDEDVERBS = 0x00000100,
-        RESERVED = 0xffff0000
     }
 
     [Flags()]

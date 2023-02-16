@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Explorip.ComposantsWinForm.FilRipTabControl
@@ -1028,13 +1029,11 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
         /// <returns></returns>
         protected override bool ProcessMnemonic(char charCode)
         {
-            foreach (TabPage page in TabPages)
+            TabPage page = TabPages.OfType<TabPage>().FirstOrDefault(p => IsMnemonic(charCode, p.Text));
+            if (page != null)
             {
-                if (IsMnemonic(charCode, page.Text))
-                {
-                    SelectedTab = page;
-                    return true;
-                }
+                SelectedTab = page;
+                return true;
             }
             return base.ProcessMnemonic(charCode);
         }

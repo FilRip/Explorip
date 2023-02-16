@@ -153,9 +153,7 @@ namespace MS.WindowsAPICodePack.Internal
         /// <returns>Inticates that the Win32 error code corresponds to the COM error code.</returns>
         public static bool Matches(int result, int win32ErrorCode)
         {
-            return (result == HResultFromWin32(win32ErrorCode));
+            return result == HResultFromWin32(win32ErrorCode);
         }
-
-
     }
 }

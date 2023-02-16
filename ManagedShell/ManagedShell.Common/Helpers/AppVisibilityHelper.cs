@@ -109,20 +109,39 @@ namespace ManagedShell.Common.Helpers
 
         public void Dispose()
         {
-            if (!EnvironmentHelper.IsWindows8OrBetter)
-            {
-                return;
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            if (_appVis == null)
-            {
-                return;
-            }
+        public bool IsDisposed
+        {
+            get { return _disposed; }
+        }
 
-            if (_useEvents && _eventCookie > 0 && _appVis.Unadvise(_eventCookie) == 0)
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
             {
-                // unregister from events
-                ShellLogger.Debug("AppVisibilityHelper: Unsubscribed from change events");
+                if (disposing)
+                {
+                    if (!EnvironmentHelper.IsWindows8OrBetter)
+                    {
+                        return;
+                    }
+
+                    if (_appVis == null)
+                    {
+                        return;
+                    }
+
+                    if (_useEvents && _eventCookie > 0 && _appVis.Unadvise(_eventCookie) == 0)
+                    {
+                        // unregister from events
+                        ShellLogger.Debug("AppVisibilityHelper: Unsubscribed from change events");
+                    }
+                }
+                _disposed = true;
             }
         }
     }

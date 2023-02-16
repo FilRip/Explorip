@@ -7,8 +7,8 @@ namespace ManagedShell.Common
     /// <summary>
     /// Defines a class that is disposable.
     /// </summary>
-    [DebuggerStepThrough]
-    [Serializable]
+    [DebuggerStepThrough()]
+    [Serializable()]
     public abstract class DisposableObject : IDisposable
     {
         private readonly object _syncRoot = new();
@@ -60,7 +60,7 @@ namespace ManagedShell.Common
         /// Internal disposal function to manage this object's disposed state
         /// </summary>
         /// <param name="disposing"></param>
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             lock (SyncRoot)
             {

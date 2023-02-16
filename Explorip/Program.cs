@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -10,7 +11,7 @@ namespace Explorip
     public static class Program
     {
         private static System.Windows.Application _WpfHost;
-        private static Mutex _mutexTaskbar;
+        internal static Mutex _mutexTaskbar;
         internal static bool ModeShell;
 
         /// <summary>
@@ -24,14 +25,7 @@ namespace Explorip
             Process[] process = Process.GetProcessesByName("explorer");
             if (process != null && process.Length > 0)
             {
-                foreach (Process proc in process)
-                {
-                    if (StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.Repertoire() + "\\explorer.exe"))
-                    {
-                        ModeShell = false;
-                        break;
-                    }
-                }
+                ModeShell = process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.Repertoire() + "\\explorer.exe"));
             }
 
             Application.EnableVisualStyles();

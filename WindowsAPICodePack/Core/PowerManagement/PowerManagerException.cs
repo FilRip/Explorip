@@ -5,7 +5,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
     /// <summary>
     /// This exception is thrown when there are problems with getting piece of data within PowerManager.
     /// </summary>
-    [Serializable]
+    [Serializable()]
     public class PowerManagerException : Exception
     {
         /// <summary>

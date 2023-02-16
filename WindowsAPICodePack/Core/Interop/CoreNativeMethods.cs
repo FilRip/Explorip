@@ -225,6 +225,7 @@ namespace MS.WindowsAPICodePack.Internal
         /// <summary>
         /// A Wrapper for a SIZE struct
         /// </summary>
+#pragma warning disable S2292 // Trivial properties should be auto-implemented
         [StructLayout(LayoutKind.Sequential)]
         public struct Size
         {
@@ -241,6 +242,7 @@ namespace MS.WindowsAPICodePack.Internal
             /// </summary>
             public int Height { get { return height; } set { height = value; } }
         };
+#pragma warning restore S2292 // Trivial properties should be auto-implemented
 
         // Enable/disable non-client rendering based on window style.
         internal const int DWMNCRP_USEWINDOWSTYLE = 0;

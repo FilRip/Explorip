@@ -13,7 +13,7 @@ using ManagedShell.ShellFolders.Interfaces;
 
 namespace ManagedShell.ShellFolders
 {
-    public class ShellFolder : ShellItem, IDisposable
+    public class ShellFolder : ShellItem
     {
         private static string _userDesktopPath;
 
@@ -21,7 +21,6 @@ namespace ManagedShell.ShellFolders
         private readonly bool _loadAsync;
         private readonly ChangeWatcher _changeWatcher;
 
-        private bool _isDisposed;
         private IntPtr _shellFolderPtr;
 
         public bool IsDesktop { get; private set; }
@@ -136,9 +135,13 @@ namespace ManagedShell.ShellFolders
             }
         }
 
+        private static void SetUserDesktopPath(string newPath)
+        {
+            _userDesktopPath = newPath;
+        }
         private void SetUserDesktopPath()
         {
-            _userDesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop, Environment.SpecialFolderOption.DoNotVerify).ToLower();
+            SetUserDesktopPath(Environment.GetFolderPath(Environment.SpecialFolder.Desktop, Environment.SpecialFolderOption.DoNotVerify).ToLower());
         }
 
         private void Initialize()
@@ -386,41 +389,45 @@ namespace ManagedShell.ShellFolders
         }
         #endregion
 
-        public new void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _isDisposed = true;
-            _changeWatcher?.Dispose();
-
-            try
+            if (!_isDisposed)
             {
-                if (_files != null)
+                if (disposing)
                 {
-                    foreach (var file in Files)
+                    _changeWatcher?.Dispose();
+
+                    try
                     {
-                        file.Dispose();
+                        if (_files != null)
+                        {
+                            foreach (ShellFile file in Files)
+                            {
+                                file.Dispose();
+                            }
+
+                            Files.Clear();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ShellLogger.Warning($"ShellFolder: Unable to dispose files: {e.Message}");
                     }
 
-                    Files.Clear();
+                    if (_shellFolder != null)
+                    {
+                        Marshal.ReleaseComObject(_shellFolder);
+                        _shellFolder = null;
+                    }
+
+                    if (_shellFolderPtr != IntPtr.Zero)
+                    {
+                        Marshal.Release(_shellFolderPtr);
+                        _shellFolderPtr = IntPtr.Zero;
+                    }
                 }
+                base.Dispose(disposing);
             }
-            catch (Exception e)
-            {
-                ShellLogger.Warning($"ShellFolder: Unable to dispose files: {e.Message}");
-            }
-
-            if (_shellFolder != null)
-            {
-                Marshal.ReleaseComObject(_shellFolder);
-                _shellFolder = null;
-            }
-
-            if (_shellFolderPtr != IntPtr.Zero)
-            {
-                Marshal.Release(_shellFolderPtr);
-                _shellFolderPtr = IntPtr.Zero;
-            }
-
-            base.Dispose();
         }
     }
 }

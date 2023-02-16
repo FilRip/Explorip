@@ -7,7 +7,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     /// <summary>
     /// An exception thrown when an error occurs while dealing with the Property System API.
     /// </summary>
-    [Serializable]
+    [Serializable()]
     public class PropertySystemException : ExternalException
     {
         /// <summary>

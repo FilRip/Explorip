@@ -71,7 +71,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         {
             get
             {
-                if (showExtensions)
+                if (ShowExtensions)
                 {
                     return string.Format(System.Globalization.CultureInfo.InvariantCulture,
                         "{0} ({1})",
@@ -101,15 +101,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             get { return extensions; }
         }
 
-        private bool showExtensions = true;
         /// <summary>
         /// Gets or sets a value that controls whether the extensions are displayed.
         /// </summary>
-        public bool ShowExtensions
-        {
-            get { return showExtensions; }
-            set { showExtensions = value; }
-        }
+        public bool ShowExtensions { get; set; }
 
         private static string NormalizeExtension(string rawExtension)
         {

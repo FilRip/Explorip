@@ -17,7 +17,7 @@ namespace ManagedShell.AppBar
     {
         private readonly DispatcherTimer fullscreenCheck;
 
-        public ObservableCollection<FullScreenApp> FullScreenApps = new();
+        public ObservableCollection<FullScreenApp> FullScreenApps { get; set; } = new();
 
         public FullScreenHelper()
         {
@@ -40,16 +40,16 @@ namespace ManagedShell.AppBar
             // first check if this window is already in our list. if so, remove it if necessary
             foreach (FullScreenApp app in FullScreenApps)
             {
-                FullScreenApp appCurrentState = GetFullScreenApp(app.hWnd);
+                FullScreenApp appCurrentState = GetFullScreenApp(app.HWnd);
 
-                if (app.hWnd == hWnd && appCurrentState != null && app.screen.DeviceName == appCurrentState.screen.DeviceName)
+                if (app.HWnd == hWnd && appCurrentState != null && app.Screen.DeviceName == appCurrentState.Screen.DeviceName)
                 {
                     // this window, still same screen, do nothing
                     skipAdd = true;
                     continue;
                 }
 
-                if (appCurrentState == null || app.screen.DeviceName != appCurrentState.screen.DeviceName)
+                if (appCurrentState == null || app.Screen.DeviceName != appCurrentState.Screen.DeviceName)
                 {
                     removeApps.Add(app);
                 }
@@ -134,7 +134,7 @@ namespace ManagedShell.AppBar
                     }
 
                     // this is a full screen app on this screen
-                    return new FullScreenApp { hWnd = hWnd, screen = screen, rect = rect };
+                    return new FullScreenApp { HWnd = hWnd, Screen = screen, Rect = rect };
                 }
             }
 

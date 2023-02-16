@@ -129,9 +129,13 @@ namespace Explorip.TaskBar
             }
         }
 
-        private void PropertiesWindow_OnClosing(object sender, CancelEventArgs e)
+        private static void RecycleInstance()
         {
             _instance = null;
+        }
+        private void PropertiesWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            RecycleInstance();
         }
 
         private void PropertiesWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -151,7 +155,7 @@ namespace Explorip.TaskBar
             try
             {
                 RegistryKey rKey = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-                var chkBox = (System.Windows.Controls.CheckBox)sender;
+                System.Windows.Controls.CheckBox chkBox = (System.Windows.Controls.CheckBox)sender;
 
                 if (chkBox.IsChecked.Equals(false))
                 {

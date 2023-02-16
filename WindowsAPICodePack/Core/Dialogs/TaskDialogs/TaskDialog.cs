@@ -1205,13 +1205,15 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 if (staticDialog != null)
                 {
                     staticDialog.Dispose();
-                    staticDialog = null;
+                    RecycleDialog();
                 }
-
-
             }
         }
 
+        private static void RecycleDialog()
+        {
+            staticDialog = null;
+        }
         #endregion
 
         /// <summary>

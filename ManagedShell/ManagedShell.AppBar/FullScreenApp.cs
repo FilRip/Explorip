@@ -6,8 +6,8 @@ namespace ManagedShell.AppBar
 {
     public class FullScreenApp
     {
-        public IntPtr hWnd;
-        public ScreenInfo screen;
-        public NativeMethods.Rect rect;
+        public IntPtr HWnd { get; set; }
+        public ScreenInfo Screen { get; set; }
+        public NativeMethods.Rect Rect { get; set; }
     }
 }

@@ -133,13 +133,18 @@ namespace ManagedShell.AppBar
             return (TaskbarState)uState;
         }
 
+        private static void SetStartupTaskbarState(TaskbarState? newState)
+        {
+            startupTaskbarState = newState;
+        }
+
         private void HideTaskbar()
         {
             if (!EnvironmentHelper.IsAppRunningAsShell)
             {
                 if (startupTaskbarState == null)
                 {
-                    startupTaskbarState = GetTaskbarState();
+                    SetStartupTaskbarState(GetTaskbarState());
                 }
 
                 if (HideExplorerTaskbar)

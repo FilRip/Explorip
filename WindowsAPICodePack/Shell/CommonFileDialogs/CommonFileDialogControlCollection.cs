@@ -83,7 +83,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
         /// <para>Control names are case sensitive.</para>
         /// <para>This indexer is useful when the dialog is created in XAML
         /// rather than constructed in code.</para></remarks>
-        ///<exception cref="System.ArgumentException">
+        ///<exception cref="ArgumentException">
         /// The name cannot be null or a zero-length string.</exception>
         /// <remarks>If there is more than one control with the same name, only the <B>first control</B> will be returned.</remarks>
         public T this[string name]
@@ -105,7 +105,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
                     }
                     else if (control is CommonFileDialogGroupBox groupBox)
                     {
-                        foreach (T subControl in groupBox.Items)
+                        foreach (T subControl in groupBox.Items.OfType<T>())
                         {
                             if (subControl.Name == name) { return subControl; }
                         }

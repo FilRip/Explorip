@@ -6,8 +6,8 @@ namespace ManagedShell.Common.SupportingClasses
 {
     public class AppVisibilityEventArgs : EventArgs
     {
-        public IntPtr MonitorHandle;
-        public MONITOR_APP_VISIBILITY PreviousMode;
-        public MONITOR_APP_VISIBILITY CurrentMode;
+        public IntPtr MonitorHandle { get; set; }
+        public MONITOR_APP_VISIBILITY PreviousMode { get; set; }
+        public MONITOR_APP_VISIBILITY CurrentMode { get; set; }
     }
 }

@@ -50,7 +50,12 @@ namespace ManagedShell.Common.Logging.Observers
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        public bool IsDisposed
+        {
+            get { return _disposed; }
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             lock (_syncRoot)
             {

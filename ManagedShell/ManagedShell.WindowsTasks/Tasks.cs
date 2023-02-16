@@ -8,20 +8,19 @@ namespace ManagedShell.WindowsTasks
     public class Tasks : IDisposable
     {
         private readonly TasksService _tasksService;
-        public ICollectionView groupedWindows;
 
-        public ICollectionView GroupedWindows => groupedWindows;
+        public ICollectionView GroupedWindows { get; set; }
 
         public Tasks(TasksService tasksService)
         {
             _tasksService = tasksService;
             // prepare collections
-            groupedWindows = CollectionViewSource.GetDefaultView(_tasksService.Windows);
-            groupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
-            groupedWindows.CollectionChanged += GroupedWindows_Changed;
-            groupedWindows.Filter = GroupedWindows_Filter;
+            GroupedWindows = CollectionViewSource.GetDefaultView(_tasksService.Windows);
+            GroupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+            GroupedWindows.CollectionChanged += GroupedWindows_Changed;
+            GroupedWindows.Filter = GroupedWindows_Filter;
 
-            if (groupedWindows is ICollectionViewLiveShaping taskbarItemsView)
+            if (GroupedWindows is ICollectionViewLiveShaping taskbarItemsView)
             {
                 taskbarItemsView.IsLiveFiltering = true;
                 taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");

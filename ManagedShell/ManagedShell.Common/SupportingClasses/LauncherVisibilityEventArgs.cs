@@ -4,6 +4,6 @@ namespace ManagedShell.Common.SupportingClasses
 {
     public class LauncherVisibilityEventArgs : EventArgs
     {
-        public bool Visible;
+        public bool Visible { get; set; }
     }
 }

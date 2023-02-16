@@ -23,9 +23,9 @@ namespace Explorip.WinAPI.Modeles
 
     public class HookEventArgs : EventArgs
     {
-        public int HookCode;	// Hook code
-        public IntPtr wParam;	// WPARAM argument
-        public IntPtr lParam;	// LPARAM argument
+        public int HookCode { get; set; }	// Hook code
+        public IntPtr WParam { get; set; }	// WPARAM argument
+        public IntPtr LParam { get; set; }	// LPARAM argument
     }
 
     public class LocalWindowsHook
@@ -81,8 +81,8 @@ namespace Explorip.WinAPI.Modeles
             HookEventArgs e = new()
             {
                 HookCode = code,
-                wParam = wParam,
-                lParam = lParam
+                WParam = wParam,
+                LParam = lParam
             };
             OnHookInvoked(e);
 

@@ -27,9 +27,9 @@ namespace ManagedShell.AppBar
         // Window properties
         protected WindowInteropHelper windowInteropHelper;
         private bool IsRaising;
-        public IntPtr Handle;
-        public bool AllowClose;
-        public bool IsClosing;
+        public IntPtr Handle { get; set; }
+        public bool AllowClose { get; set; }
+        public bool IsClosing { get; set; }
         protected double DesiredHeight;
         protected double DesiredWidth;
         private bool EnableBlur;
@@ -149,7 +149,7 @@ namespace ManagedShell.AppBar
         {
             bool found = false;
 
-            foreach (ScreenInfo app in _fullScreenHelper.FullScreenApps.Select(item => item.screen))
+            foreach (ScreenInfo app in _fullScreenHelper.FullScreenApps.Select(item => item.Screen))
             {
                 if (app.DeviceName == Screen.DeviceName || app.IsVirtualScreen)
                 {
@@ -275,7 +275,7 @@ namespace ManagedShell.AppBar
             {
                 DelaySetPosition();
             }
-            else if (EnableAppBar)
+            else
             {
                 if (Orientation == Orientation.Vertical)
                 {

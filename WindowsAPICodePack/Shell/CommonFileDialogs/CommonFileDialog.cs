@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -1102,19 +1103,16 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                         // Also check subcontrols
                         else if (control is CommonFileDialogGroupBox groupBox)
                         {
-                            foreach (CommonFileDialogControl subcontrol in groupBox.Items)
+                            foreach (CommonFileDialogTextBox textbox in groupBox.Items.OfType<CommonFileDialogTextBox>())
                             {
-                                if (subcontrol is CommonFileDialogTextBox textbox)
-                                {
-                                    textbox.SyncValue();
-                                    textbox.Closed = true;
-                                }
+                                textbox.SyncValue();
+                                textbox.Closed = true;
                             }
                         }
                     }
                 }
 
-                return (args.Cancel ? HResult.False : HResult.Ok);
+                return args.Cancel ? HResult.False : HResult.Ok;
             }
 
             public HResult OnFolderChanging(IFileDialog pfd, IShellItem psiFolder)

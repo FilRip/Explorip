@@ -65,15 +65,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
             }
         }
 
-        private bool isAdded;
         /// <summary>
         /// Has this control been added to the dialog
         /// </summary>
-        internal bool IsAdded
-        {
-            get { return isAdded; }
-            set { isAdded = value; }
-        }
+        internal bool IsAdded { get; set; }
 
         /// <summary>
         /// Creates a new instance of this class.

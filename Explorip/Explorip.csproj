@@ -474,10 +474,6 @@
       <Project>{08ca72ae-748c-45e3-88f1-0236d1ac679e}</Project>
       <Name>ManagedShell.ShellFolders</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ManagedShell\ManagedShell.UWPInterop\ManagedShell.UWPInterop.csproj">
-      <Project>{51215e01-faa3-4c16-9381-6f7b593a8fbe}</Project>
-      <Name>ManagedShell.UWPInterop</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ManagedShell\ManagedShell.WindowsTasks\ManagedShell.WindowsTasks.csproj">
       <Project>{ddc9d4fa-8457-4d65-a776-32f84227c2d8}</Project>
       <Name>ManagedShell.WindowsTasks</Name>

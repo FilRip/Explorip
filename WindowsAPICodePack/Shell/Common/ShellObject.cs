@@ -57,6 +57,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         #region Constructors
 
+#pragma warning disable S3442 // "abstract" classes should not have "public" constructors
         internal ShellObject()
         {
         }
@@ -65,6 +66,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             nativeShellItem = shellItem;
         }
+#pragma warning restore S3442 // "abstract" classes should not have "public" constructors
 
         #endregion
 
@@ -448,7 +450,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 {
                     byte[] pidlData = new byte[size];
                     Marshal.Copy(PIDL, pidlData, 0, (int)size);
-                    byte[] hashData = ShellObject.hashProvider.ComputeHash(pidlData);
+                    byte[] hashData = hashProvider.ComputeHash(pidlData);
                     hashValue = BitConverter.ToInt32(hashData, 0);
                 }
                 else

@@ -675,6 +675,10 @@ namespace MS.WindowsAPICodePack.Internal
             return blobData;
         }
 
+        private static void SetVectorActions(Dictionary<Type, Action<PropVariant, Array, uint>> newValue)
+        {
+            _vectorActions = newValue;
+        }
         private Array GetVector<T>()
         {
             int count = PropVariantNativeMethods.PropVariantGetElementCount(this);
@@ -684,7 +688,7 @@ namespace MS.WindowsAPICodePack.Internal
             {
                 if (_vectorActions == null)
                 {
-                    _vectorActions = GenerateVectorActions();
+                    SetVectorActions(GenerateVectorActions());
                 }
             }
 

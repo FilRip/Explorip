@@ -121,7 +121,7 @@ namespace Explorip.TaskBar.Controls
                     }
 
                     System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyDesktopApp.MonShellManager.TasksService.Windows);
-                    MyDesktopApp.MonShellManager.Tasks.groupedWindows = nouvelleListeGroupedWindows;
+                    MyDesktopApp.MonShellManager.Tasks.GroupedWindows = nouvelleListeGroupedWindows;
                     TasksList.ItemsSource = MyDesktopApp.MonShellManager.Tasks.GroupedWindows;
                 }));
             }

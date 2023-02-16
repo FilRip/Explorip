@@ -113,11 +113,15 @@ namespace Microsoft.WindowsAPICodePack.Shell
             return handle;
         }
 
+        private static void SetRunning(bool newValue)
+        {
+            _running = newValue;
+        }
         private void ThreadMethod() // Message Loop
         {
             lock (_crossThreadWindowLock)
             {
-                _running = true;
+                SetRunning(true);
                 if (_atom == 0)
                 {
                     RegisterWindowClass();

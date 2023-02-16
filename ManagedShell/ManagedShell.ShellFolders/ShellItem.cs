@@ -29,7 +29,7 @@ namespace ManagedShell.ShellFolders
 
         public bool Loaded => _shellItem != null;
 
-        public bool AllowAsync = true;
+        public bool AllowAsync { get; set; } = true;
 
 
         private bool? _isFileSystem;
@@ -40,7 +40,7 @@ namespace ManagedShell.ShellFolders
             {
                 if (_isFileSystem == null)
                 {
-                    _isFileSystem = ((Attributes & SFGAO.FILESYSTEM) != 0);
+                    _isFileSystem = (Attributes & SFGAO.FILESYSTEM) != 0;
                 }
 
                 return (bool)_isFileSystem;
@@ -616,24 +616,39 @@ namespace ManagedShell.ShellFolders
         #endregion
 
         #region IDisposable
+        protected bool _isDisposed;
+
         public void Dispose()
         {
-            if (_shellItem != null)
-            {
-                Marshal.FinalReleaseComObject(_shellItem);
-                _shellItem = null;
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            if (_absolutePidl != IntPtr.Zero)
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
             {
-                Marshal.FreeCoTaskMem(_absolutePidl);
-                _absolutePidl = IntPtr.Zero;
-            }
+                if (disposing)
+                {
+                    if (_shellItem != null)
+                    {
+                        Marshal.FinalReleaseComObject(_shellItem);
+                        _shellItem = null;
+                    }
 
-            if (_relativePidl != IntPtr.Zero)
-            {
-                Marshal.FreeCoTaskMem(_relativePidl);
-                _relativePidl = IntPtr.Zero;
+                    if (_absolutePidl != IntPtr.Zero)
+                    {
+                        Marshal.FreeCoTaskMem(_absolutePidl);
+                        _absolutePidl = IntPtr.Zero;
+                    }
+
+                    if (_relativePidl != IntPtr.Zero)
+                    {
+                        Marshal.FreeCoTaskMem(_relativePidl);
+                        _relativePidl = IntPtr.Zero;
+                    }
+                }
+                _isDisposed = true;
             }
         }
         #endregion

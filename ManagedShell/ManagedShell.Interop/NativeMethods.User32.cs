@@ -1860,6 +1860,7 @@ namespace ManagedShell.Interop
         /// </summary>
         public delegate int keyboardHookProc(int code, int wParam, ref KeyboardHookStruct lParam);
 
+#pragma warning disable S1104
         public struct KeyboardHookStruct
         {
             public int vkCode;
@@ -1868,6 +1869,7 @@ namespace ManagedShell.Interop
             public int time;
             public int dwExtraInfo;
         }
+#pragma warning restore S1104
 
         /// <summary>
         /// Unhooks the windows hook.

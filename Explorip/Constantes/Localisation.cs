@@ -4,8 +4,8 @@ namespace Explorip.Constantes
 {
     public class Localisation
     {
-        public string LIBELLE_COLLER = "";
-        public string LIBELLE_COLLER_RACCOURCI = "";
+        public string LIBELLE_COLLER { get; set; }
+        public string LIBELLE_COLLER_RACCOURCI { get; set; }
 
         private static Localisation _instance;
 

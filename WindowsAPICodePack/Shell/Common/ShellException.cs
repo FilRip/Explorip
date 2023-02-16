@@ -11,7 +11,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// <summary>
     /// An exception thrown when an error occurs while dealing with ShellObjects.
     /// </summary>
-    [Serializable]
+    [Serializable()]
     public class ShellException : ExternalException
     {
         /// <summary>

@@ -73,27 +73,46 @@ namespace ManagedShell.ShellFolders
 
         public void Dispose()
         {
-            if (_watchers == null)
-            {
-                return;
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-            foreach (var watcher in _watchers)
+        public bool IsDisposed
+        {
+            get { return _disposed; }
+        }
+
+        private bool _disposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
             {
-                if (watcher == null)
+                if (disposing)
                 {
-                    return;
+                    if (_watchers == null)
+                    {
+                        return;
+                    }
+
+                    foreach (FileSystemWatcher watcher in _watchers)
+                    {
+                        if (watcher == null)
+                        {
+                            return;
+                        }
+
+                        watcher.Changed -= _changedEventHandler;
+                        watcher.Created -= _createdEventHandler;
+                        watcher.Deleted -= _deletedEventHandler;
+                        watcher.Renamed -= _renamedEventHandler;
+
+                        watcher.Dispose();
+                    }
+
+                    _watchers = null;
                 }
-
-                watcher.Changed -= _changedEventHandler;
-                watcher.Created -= _createdEventHandler;
-                watcher.Deleted -= _deletedEventHandler;
-                watcher.Renamed -= _renamedEventHandler;
-
-                watcher.Dispose();
+                _disposed = true;
             }
-
-            _watchers = null;
         }
     }
 }

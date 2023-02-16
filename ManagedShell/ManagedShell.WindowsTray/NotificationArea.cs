@@ -441,10 +441,21 @@ namespace ManagedShell.WindowsTray
 
         public void Dispose()
         {
-            if (!IsFailed && trayDelegate != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _isDisposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
             {
-                shellServiceObject?.Dispose();
-                _trayService.Dispose();
+                if (disposing && !IsFailed && trayDelegate != null)
+                {
+                    shellServiceObject?.Dispose();
+                    _trayService.Dispose();
+                }
+                _isDisposed = true;
             }
         }
     }

@@ -21,23 +21,21 @@ namespace Microsoft.WindowsAPICodePack.Shell
         public SortColumn(PropertyKey propertyKey, SortDirection direction)
             : this()
         {
-            this.propertyKey = propertyKey;
-            this.direction = direction;
+            PropertyKey = propertyKey;
+            Direction = direction;
         }
 
         /// <summary>
         /// The ID of the column by which the user will sort. A PropertyKey structure. 
         /// For example, for the "Name" column, the property key is PKEY_ItemNameDisplay or
-        /// <see cref="Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System.ItemName"/>.
+        /// <see cref="SystemProperties.System.ItemName"/>.
         /// </summary>                
-        public PropertyKey PropertyKey { get { return propertyKey; } set { propertyKey = value; } }
-        private PropertyKey propertyKey;
+        public PropertyKey PropertyKey { get; set; }
 
         /// <summary>
         /// The direction in which the items are sorted.
         /// </summary>                        
-        public SortDirection Direction { get { return direction; } set { direction = value; } }
-        private SortDirection direction;
+        public SortDirection Direction { get; set; }
 
 
         /// <summary>
@@ -48,8 +46,8 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns>True if col1 equals col2; false otherwise.</returns>
         public static bool operator ==(SortColumn col1, SortColumn col2)
         {
-            return (col1.direction == col2.direction) &&
-                (col1.propertyKey == col2.propertyKey);
+            return (col1.Direction == col2.Direction) &&
+                (col1.PropertyKey == col2.PropertyKey);
         }
 
         /// <summary>
@@ -80,8 +78,8 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <returns>A hash code.</returns>
         public override int GetHashCode()
         {
-            int hash = direction.GetHashCode();
-            hash = hash * 31 + propertyKey.GetHashCode();
+            int hash = Direction.GetHashCode();
+            hash = hash * 31 + PropertyKey.GetHashCode();
             return hash;
         }
     }

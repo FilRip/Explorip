@@ -8,7 +8,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     /// <summary>
     /// An exception thrown when an error occurs while dealing with Control objects.
     /// </summary>
-    [Serializable]
+    [Serializable()]
     public class CommonControlException : COMException
     {
         /// <summary>

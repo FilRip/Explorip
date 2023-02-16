@@ -9,17 +9,17 @@ using ManagedShell.ShellFolders;
 
 namespace ManagedShell.UWPInterop
 {
-    public class StoreApp : IEquatable<StoreApp>
+    public sealed class StoreApp : IEquatable<StoreApp>
     {
         public readonly string AppUserModelId;
-        public string DisplayName;
-        public string IconColor;
+        public string DisplayName { get; set; }
+        public string IconColor { get; set; }
 
-        public string SmallIconPath;
-        public string MediumIconPath;
-        public string LargeIconPath;
-        public string ExtraLargeIconPath;
-        public string JumboIconPath;
+        public string SmallIconPath { get; set; }
+        public string MediumIconPath { get; set; }
+        public string LargeIconPath { get; set; }
+        public string ExtraLargeIconPath { get; set; }
+        public string JumboIconPath { get; set; }
 
         public StoreApp(string appUserModelId)
         {
@@ -102,6 +102,7 @@ namespace ManagedShell.UWPInterop
         {
             return AppUserModelId.GetHashCode();
         }
+
         #endregion
     }
 }

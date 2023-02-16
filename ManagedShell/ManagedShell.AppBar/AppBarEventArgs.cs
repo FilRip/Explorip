@@ -4,6 +4,6 @@ namespace ManagedShell.AppBar
 {
     public class AppBarEventArgs : EventArgs
     {
-        public AppBarEventReason Reason;
+        public AppBarEventReason Reason { get; set; }
     }
 }

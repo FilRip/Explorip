@@ -5995,7 +5995,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.Contact.JA.CompanyNamePhonetic;
+                    PropertyKey key = SystemProperties.System.JA.CompanyNamePhonetic;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -6017,7 +6017,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.Contact.JA.FirstNamePhonetic;
+                    PropertyKey key = SystemProperties.System.JA.FirstNamePhonetic;
 
                     if (!hashtable.ContainsKey(key))
                     {
@@ -6039,7 +6039,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 get
                 {
-                    PropertyKey key = SystemProperties.System.Contact.JA.LastNamePhonetic;
+                    PropertyKey key = SystemProperties.System.JA.LastNamePhonetic;
 
                     if (!hashtable.ContainsKey(key))
                     {

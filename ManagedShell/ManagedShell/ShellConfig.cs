@@ -11,7 +11,7 @@ namespace ManagedShell
         /// <br />
         /// By default, this is enabled.
         /// </summary>
-        public bool EnableTasksService;
+        public bool EnableTasksService { get; set; }
 
         /// <summary>
         /// Controls whether the tasks service will be initialized with ManagedShell.<br />
@@ -19,14 +19,14 @@ namespace ManagedShell
         /// <br />
         /// By default, this is enabled.
         /// </summary>
-        public bool AutoStartTasksService;
+        public bool AutoStartTasksService { get; set; }
 
         /// <summary>
         /// This is the icon size that ManagedShell will request from each task.<br />
         /// <br />
         /// By default, the small size is used.
         /// </summary>
-        public IconSize TaskIconSize;
+        public IconSize TaskIconSize { get; set; }
 
         #endregion
 
@@ -37,7 +37,7 @@ namespace ManagedShell
         /// <br />
         /// By default, this is enabled.
         /// </summary>
-        public bool EnableTrayService;
+        public bool EnableTrayService { get; set; }
 
         /// <summary>
         /// Controls whether the tray service will be initialized with ManagedShell.<br />
@@ -45,7 +45,7 @@ namespace ManagedShell
         /// <br />
         /// By default, this is enabled.
         /// </summary>
-        public bool AutoStartTrayService;
+        public bool AutoStartTrayService { get; set; }
 
         /// <summary>
         /// The NotificationArea object outputs two collections, PinnedIcons and UnpinnedIcons.<br />
@@ -57,7 +57,7 @@ namespace ManagedShell
         ///   - If the NotifyIcon has a valid GUID, use the GUID.<br />
         ///   - Otherwise, the string follows the format: "PathToExe:UID"
         /// </summary>
-        public string[] PinnedNotifyIcons;
+        public string[] PinnedNotifyIcons { get; set; }
 
         #endregion
     }

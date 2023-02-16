@@ -2,6 +2,7 @@
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Markup;
 
 namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
@@ -71,7 +72,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
             dialog.StartVisualGroup(Id, Text);
 
             // Add child controls
-            foreach (CommonFileDialogControl item in items)
+            foreach (CommonFileDialogControl item in items.OfType<CommonFileDialogControl>())
             {
                 item.HostingDialog = HostingDialog;
                 item.Attach(dialog);

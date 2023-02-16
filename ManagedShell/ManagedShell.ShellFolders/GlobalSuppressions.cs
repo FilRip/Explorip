@@ -5,6 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-#pragma warning disable IDE0077
-[assembly: SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "ManagedShell.ShellFolders")]
-#pragma warning restore IDE0077
+[assembly: SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:ManagedShell.ShellFolders")]
+[assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:ManagedShell.ShellFolders")]

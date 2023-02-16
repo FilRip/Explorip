@@ -46,6 +46,7 @@
     <Compile Include="AppRestartRecovery\RecoverySettings.cs" />
     <Compile Include="AppRestartRecovery\RestartRestrictions.cs" />
     <Compile Include="AppRestartRecovery\RestartSettings.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interop\WindowMessage.cs" />
     <Compile Include="PowerManagement\PowerManagerException.cs" />
     <Compile Include="Dialogs\Common\DialogControl.cs" />

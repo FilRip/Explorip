@@ -4,6 +4,6 @@ namespace ManagedShell.WindowsTray
 {
     public class NotificationBalloonEventArgs : HandledEventArgs
     {
-        public NotificationBalloon Balloon;
+        public NotificationBalloon Balloon { get; set; }
     }
 }

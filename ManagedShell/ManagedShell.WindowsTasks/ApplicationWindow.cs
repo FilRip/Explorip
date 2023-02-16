@@ -27,7 +27,6 @@ namespace ManagedShell.WindowsTasks
         private bool? _isUWP = null;
         private string _winFileName = "";
         private uint? _procId;
-        private int _position = 0;
         private string _category;
         private string _title;
         private string _className;
@@ -98,11 +97,7 @@ namespace ManagedShell.WindowsTasks
 
         public uint? ProcId => _procId ??= ShellHelper.GetProcIdForHandle(Handle);
 
-        public int Position
-        {
-            get { return _position; }
-            set { _position = value; }
-        }
+        public int Position { get; set; }
 
         public string Category
         {

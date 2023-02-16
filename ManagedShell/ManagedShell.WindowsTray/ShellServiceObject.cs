@@ -29,19 +29,35 @@ namespace ManagedShell.WindowsTray
             }
         }
 
+        private bool _isDisposed;
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+        }
+
         public void Dispose()
         {
-            if (sysTrayObject != null)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
             {
-                try
+                if (sysTrayObject != null)
                 {
-                    Guid sso = new(CGID_SHELLSERVICEOBJECT);
-                    sysTrayObject.Exec(ref sso, OLECMDID_SAVE, OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
+                    try
+                    {
+                        Guid sso = new(CGID_SHELLSERVICEOBJECT);
+                        sysTrayObject.Exec(ref sso, OLECMDID_SAVE, OLECMDEXECOPT_DODEFAULT, IntPtr.Zero, IntPtr.Zero);
+                    }
+                    catch
+                    {
+                        ShellLogger.Debug("ShellServiceObject: Unable to stop");
+                    }
                 }
-                catch
-                {
-                    ShellLogger.Debug("ShellServiceObject: Unable to stop");
-                }
+                _isDisposed = true;
             }
         }
     }

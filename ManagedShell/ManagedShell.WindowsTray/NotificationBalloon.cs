@@ -118,7 +118,7 @@ namespace ManagedShell.WindowsTray
             {
                 Icon = icon;
             }
-            else if (icon == null && Icon == null)
+            else if (Icon == null)
             {
                 // Use default only if we don't have a valid icon already
                 Icon = IconImageConverter.GetDefaultIcon();

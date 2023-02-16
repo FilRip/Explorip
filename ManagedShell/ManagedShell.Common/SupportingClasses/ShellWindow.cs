@@ -7,9 +7,9 @@ namespace ManagedShell.Common.SupportingClasses
 {
     public class ShellWindow : NativeWindowEx, IDisposable
     {
-        public bool IsShellWindow;
-        public EventHandler WallpaperChanged;
-        public EventHandler WorkAreaChanged;
+        public bool IsShellWindow { get; set; }
+        public EventHandler WallpaperChanged { get; set; }
+        public EventHandler WorkAreaChanged { get; set; }
 
         public ShellWindow()
         {
@@ -45,7 +45,26 @@ namespace ManagedShell.Common.SupportingClasses
 
         public void Dispose()
         {
-            NativeMethods.DestroyWindow(Handle);
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+        }
+
+        private bool _isDisposed;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    NativeMethods.DestroyWindow(Handle);
+                }
+                _isDisposed = disposing;
+            }
         }
 
         private void WndProc(Message msg)

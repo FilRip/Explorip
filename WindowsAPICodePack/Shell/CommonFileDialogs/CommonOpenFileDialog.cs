@@ -82,38 +82,22 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
         }
 
-
-        private bool multiselect;
         /// <summary>
         /// Gets or sets a value that determines whether the user can select more than one file.
         /// </summary>
-        public bool Multiselect
-        {
-            get { return multiselect; }
-            set { multiselect = value; }
-        }
+        public bool Multiselect { get; set; }
 
-        private bool isFolderPicker;
         /// <summary>
         /// Gets or sets a value that determines whether the user can select folders or files.
         /// Default value is false.
         /// </summary>
-        public bool IsFolderPicker
-        {
-            get { return isFolderPicker; }
-            set { isFolderPicker = value; }
-        }
+        public bool IsFolderPicker { get; set; }
 
-        private bool allowNonFileSystem;
         /// <summary>
         /// Gets or sets a value that determines whether the user can select non-filesystem items, 
         /// such as <b>Library</b>, <b>Search Connectors</b>, or <b>Known Folders</b>.
         /// </summary>
-        public bool AllowNonFileSystemItems
-        {
-            get { return allowNonFileSystem; }
-            set { allowNonFileSystem = value; }
-        }
+        public bool AllowNonFileSystemItems { get; set; }
         #endregion
 
         internal override IFileDialog GetNativeFileDialog()
@@ -165,16 +149,16 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         internal override ShellNativeMethods.FileOpenOptions GetDerivedOptionFlags(ShellNativeMethods.FileOpenOptions flags)
         {
-            if (multiselect)
+            if (Multiselect)
             {
                 flags |= ShellNativeMethods.FileOpenOptions.AllowMultiSelect;
             }
-            if (isFolderPicker)
+            if (IsFolderPicker)
             {
                 flags |= ShellNativeMethods.FileOpenOptions.PickFolders;
             }
 
-            if (allowNonFileSystem)
+            if (AllowNonFileSystemItems)
             {
                 flags |= ShellNativeMethods.FileOpenOptions.AllNonStorageItems;
             }

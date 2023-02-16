@@ -7,7 +7,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
     /// This exception is thrown when there are problems with registering, unregistering or updating
     /// applications using Application Restart Recovery.
     /// </summary>
-    [Serializable]
+    [Serializable()]
     public class ApplicationRecoveryException : ExternalException
     {
         /// <summary>
