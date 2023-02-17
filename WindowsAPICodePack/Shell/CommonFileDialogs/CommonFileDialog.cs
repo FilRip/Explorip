@@ -1220,6 +1220,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
             public void OnControlActivating(IFileDialogCustomize pfdc, int dwIDCtl)
             {
+                // Empty method ?!
             }
         }
 

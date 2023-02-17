@@ -77,6 +77,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
 
         void ExplorerBrowserControl_ViewSelectedItemChanged(object sender, EventArgs e)
         {
+            // Empty method ?!
         }
 
         void ExplorerBrowserControl_ViewEnumerationComplete(object sender, EventArgs e)

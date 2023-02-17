@@ -146,7 +146,9 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                     HResult result = nativePropertyStore.SetValue(ref PKEY_Title, propVariant);
                     if (!CoreErrorHelper.Succeeded(result))
                     {
+#pragma warning disable S2372 // Exceptions should not be thrown from property getters
                         throw new ShellException(result);
+#pragma warning restore S2372 // Exceptions should not be thrown from property getters
                     }
 
                     nativePropertyStore.Commit();

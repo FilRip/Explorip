@@ -219,11 +219,13 @@ namespace System.Windows.Forms
             {
                 return base.Appearance;
             }
+#pragma warning disable S3237 // "value" parameters should be used
             set
             {
                 //	Don't permit setting to other appearances as we are doing all the painting
                 base.Appearance = TabAppearance.Normal;
             }
+#pragma warning restore S3237 // "value" parameters should be used
         }
 
         public override Rectangle DisplayRectangle

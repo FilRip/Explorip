@@ -289,7 +289,9 @@ namespace Microsoft.WindowsAPICodePack.Controls
                         HResult hr = iFV2.GetViewModeAndIconSize(out int fvm, out iconSize);
                         if (hr != HResult.Ok)
                         {
+#pragma warning disable S2372 // Exceptions should not be thrown from property getters
                             throw new CommonControlException(LocalizedMessages.ExplorerBrowserIconSize, hr);
+#pragma warning restore S2372 // Exceptions should not be thrown from property getters
                         }
                     }
                     finally

@@ -110,7 +110,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
                     if (nativeShellItem == null || !CoreErrorHelper.Succeeded(retCode))
                     {
+#pragma warning disable S2372 // Exceptions should not be thrown from property getters
                         throw new ShellException(LocalizedMessages.ShellObjectCreationFailed, Marshal.GetExceptionForHR(retCode));
+#pragma warning restore S2372 // Exceptions should not be thrown from property getters
                     }
                 }
                 return nativeShellItem;
@@ -366,7 +368,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
                     }
                     else
                     {
+#pragma warning disable S2372 // Exceptions should not be thrown from property getters
                         throw new ShellException(hr);
+#pragma warning restore S2372 // Exceptions should not be thrown from property getters
                     }
                 }
 

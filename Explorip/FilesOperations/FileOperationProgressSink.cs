@@ -95,9 +95,9 @@ namespace Explorip.FilesOperations
             Debug.WriteLine("UpdateProgress: " + iWorkSoFar + "/" + iWorkTotal);
         }
 
-        public void ResetTimer() { }
-        public void PauseTimer() { }
-        public void ResumeTimer() { }
+        public void ResetTimer() { /* Empty method ?! */ }
+        public void PauseTimer() { /* Empty method ?! */ }
+        public void ResumeTimer() { /* Empty method ?! */ }
 
         [Conditional("DEBUG")]
         private static void TraceAction(

@@ -65,7 +65,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
                     int hr = PropertySystemNativeMethods.PSGetPropertyKeyFromName(PropertyCanonicalName, out propertyKey);
                     if (!CoreErrorHelper.Succeeded(hr))
                     {
+#pragma warning disable S2372 // Exceptions should not be thrown from property getters
                         throw new ShellException(hr);
+#pragma warning restore S2372 // Exceptions should not be thrown from property getters
                     }
                 }
 
