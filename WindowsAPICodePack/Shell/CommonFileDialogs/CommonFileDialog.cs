@@ -349,11 +349,13 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         {
             // make sure it's a Save dialog and that there is a default 
             // extension to sync to.
+#pragma warning disable S3060 // "is" should not be used with "this"
             if (!(this is CommonSaveFileDialog) || DefaultExtension == null ||
                 filters.Count <= 0)
             {
                 return;
             }
+#pragma warning restore S3060 // "is" should not be used with "this"
 
             CommonFileDialogFilter filter;
 

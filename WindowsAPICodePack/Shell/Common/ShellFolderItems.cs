@@ -15,6 +15,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         private IEnumIDList nativeEnumIdList;
         private ShellObject currentItem;
+        private bool disposedValue;
         readonly ShellContainer nativeShellFolder;
 
         #endregion
@@ -60,19 +61,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         #endregion
 
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            if (nativeEnumIdList != null)
-            {
-                Marshal.ReleaseComObject(nativeEnumIdList);
-                nativeEnumIdList = null;
-            }
-        }
-
-        #endregion
-
         #region IEnumerator Members
 
         object IEnumerator.Current
@@ -110,7 +98,32 @@ namespace Microsoft.WindowsAPICodePack.Shell
             }
         }
 
+        #endregion
 
+        #region Dispose
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing && nativeEnumIdList != null)
+                {
+                    Marshal.ReleaseComObject(nativeEnumIdList);
+                    nativeEnumIdList = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
         #endregion
     }
 }

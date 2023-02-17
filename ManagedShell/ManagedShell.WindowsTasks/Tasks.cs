@@ -56,9 +56,26 @@ namespace ManagedShell.WindowsTasks
             return false;
         }
 
+        private bool _isDisposed;
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+        }
         public void Dispose()
         {
-            _tasksService.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    _tasksService.Dispose();
+                }
+                _isDisposed = true;
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Explorip.TaskBar.Utilities
         private readonly AppVisibilityHelper _appVisibilityHelper;
         private DispatcherTimer _poller;
         private bool _isVisible;
+        private bool disposedValue;
 
         public event EventHandler<LauncherVisibilityEventArgs> StartMenuVisibilityChanged;
 
@@ -103,9 +104,27 @@ namespace Explorip.TaskBar.Utilities
             return hStartMenu != IntPtr.Zero && NativeMethods.IsWindowVisible(hStartMenu);
         }
 
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _poller?.Stop();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            _poller?.Stop();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -28,6 +28,10 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         // on the properties (via the constructor)
         private readonly bool internalUpdate = false;
 
+        private static void SetNextId(uint newValue)
+        {
+            nextId = newValue;
+        }
         /// <summary>
         /// Initializes an instance of this class
         /// </summary>
@@ -44,9 +48,9 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 
             // increment the ID
             if (nextId == Int32.MaxValue)
-                nextId = 101; // our starting point
+                SetNextId(101); // our starting point
             else
-                nextId++;
+                SetNextId(nextId + 1);
 
             // Set user settings
             Icon = icon;

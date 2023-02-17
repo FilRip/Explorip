@@ -6,6 +6,7 @@ namespace Explorip.Helpers
     public class ComReleaser<T> : IDisposable where T : class
     {
         private T _obj;
+        private bool disposedValue;
 
         public ComReleaser(T obj)
         {
@@ -16,13 +17,28 @@ namespace Explorip.Helpers
 
         public T Item { get { return _obj; } }
 
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing && _obj != null)
+                {
+                    Marshal.FinalReleaseComObject(_obj);
+                    _obj = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            if (_obj != null)
-            {
-                Marshal.FinalReleaseComObject(_obj);
-                _obj = null;
-            }
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

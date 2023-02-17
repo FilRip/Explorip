@@ -15,7 +15,7 @@ using ManagedShell.Interop;
 namespace ManagedShell.WindowsTasks
 {
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
-    public class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPropertyChanged, IDisposable
+    public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPropertyChanged, IDisposable
     {
         public const int MAX_STRING_SIZE = 255;
         private readonly TasksService _tasksService;
@@ -45,9 +45,26 @@ namespace ManagedShell.WindowsTasks
             State = WindowState.Inactive;
         }
 
+        private bool _isDisposed;
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+        }
         public void Dispose()
         {
-            // no longer required
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        private void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    // no longer required
+                }
+                _isDisposed = true;
+            }
         }
 
         public IntPtr Handle

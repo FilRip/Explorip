@@ -9,6 +9,7 @@ namespace CustomWinForm
     {
         private IntPtr _hClipRegion;
         private IntPtr _hDc;
+        private bool disposedValue;
 
         public ClippingRegion(IntPtr hdc, Rectangle cliprect, Rectangle canvasrect)
         {
@@ -95,9 +96,27 @@ namespace CustomWinForm
             }
         }
 
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Release();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            Release();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

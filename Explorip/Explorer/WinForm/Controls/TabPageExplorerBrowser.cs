@@ -264,6 +264,7 @@ namespace Explorip.ComposantsWinForm
         {
             if (!_stopWatch.IsRunning)
                 _stopWatch.Restart();
+            
         }
 
         private void RefreshSplitLinkLabel(string newPath)

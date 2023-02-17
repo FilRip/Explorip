@@ -14,6 +14,7 @@ namespace Explorip.TaskBar.Utilities
         private readonly LogSeverity _logSeverity = LogSeverity.Debug;
         private TimeSpan _logRetention = new(7, 0, 0);
         private FileLog _fileLog;
+        private bool disposedValue;
 
         public ManagedShellLogger()
         {
@@ -63,9 +64,27 @@ namespace Explorip.TaskBar.Utilities
             }
         }
 
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _fileLog?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            _fileLog?.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

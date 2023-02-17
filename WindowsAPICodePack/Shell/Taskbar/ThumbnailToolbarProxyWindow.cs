@@ -11,7 +11,9 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 {
     internal class ThumbnailToolbarProxyWindow : NativeWindow, IDisposable
     {
+#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
         private ThumbnailToolBarButton[] _thumbnailButtons;
+#pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
         private readonly IntPtr _internalWindowHandle;
 
         internal System.Windows.UIElement WindowsControl { get; set; }
@@ -107,16 +109,25 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             GC.SuppressFinalize(this);
         }
 
-        public void Dispose(bool disposing)
+        private bool _isDisposed;
+        public bool IsDisposed
         {
-            if (disposing)
+            get { return _isDisposed; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
             {
-                // Dispose managed resources
+                if (disposing)
+                {
+                    // Dispose managed resources
 
-                // Don't dispose the thumbnail buttons
-                // as they might be used in another window.
-                // Setting them to null will indicate we don't need use anymore.
-                _thumbnailButtons = null;
+                    // Don't dispose the thumbnail buttons
+                    // as they might be used in another window.
+                    // Setting them to null will indicate we don't need use anymore.
+                    _thumbnailButtons = null;
+                }
+                _isDisposed = true;
             }
         }
 

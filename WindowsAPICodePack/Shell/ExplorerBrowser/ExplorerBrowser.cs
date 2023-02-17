@@ -190,7 +190,9 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         /// <summary>
         /// Fires when a navigation has been initiated, but is not yet complete.
         /// </summary>
+#pragma warning disable S3264 // Events should be invoked
         public event EventHandler<NavigationPendingEventArgs> NavigationPending;
+#pragma warning restore S3264 // Events should be invoked
 
         /// <summary>
         /// Fires when a navigation has been 'completed': no NavigationPending listener 

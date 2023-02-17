@@ -528,10 +528,12 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             {
                 return base.Appearance;
             }
+#pragma warning disable S3237 // "value" parameters should be used
             set
             {
                 base.Appearance = TabAppearance.Normal;
             }
+#pragma warning restore S3237 // "value" parameters should be used
         }
 
         /// <summary>

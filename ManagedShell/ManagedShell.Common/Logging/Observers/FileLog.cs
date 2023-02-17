@@ -91,6 +91,7 @@ namespace ManagedShell.Common.Logging.Observers
 
         private void DisposeOfUnManagedResources()
         {
+            // Nothing to do here ?!
         }
 
         /// <summary>

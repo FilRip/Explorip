@@ -16,7 +16,7 @@ namespace Explorip.FilesOperations
         private static readonly Type _fileOperationType = Type.GetTypeFromCLSID(CLSID_FileOperation);
         private static Guid _shellItemGuid = typeof(IShellItem).GUID;
 
-        private bool _disposed;
+        private bool disposedValue;
         private readonly IFileOperation _fileOperation;
         private readonly FileOperationProgressSink _callbackSink;
         private readonly uint _sinkCookie;
@@ -94,22 +94,36 @@ namespace Explorip.FilesOperations
 
         private void ThrowIfDisposed()
         {
-            if (_disposed) throw new ObjectDisposedException(GetType().Name);
-        }
-
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                _disposed = true;
-                if (_callbackSink != null) _fileOperation.Unadvise(_sinkCookie);
-                Marshal.FinalReleaseComObject(_fileOperation);
-            }
+            if (disposedValue) throw new ObjectDisposedException(GetType().Name);
         }
 
         private static ComReleaser<IShellItem> CreateShellItem(string path)
         {
             return new ComReleaser<IShellItem>((IShellItem)Shell32.SHCreateItemFromParsingName(path, null, ref _shellItemGuid));
+        }
+
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    if (_callbackSink != null) _fileOperation.Unadvise(_sinkCookie);
+                    Marshal.FinalReleaseComObject(_fileOperation);
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -14,6 +14,11 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     {
         private static int nextId = DialogsDefaults.MinimumDialogControlId;
 
+        private static void SetNextId(int newValue)
+        {
+            nextId = newValue;
+        }
+
         /// <summary>
         /// Creates a new instance of a dialog control
         /// </summary>
@@ -22,10 +27,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             Id = nextId;
 
             // Support wrapping of control IDs in case you create a lot of custom controls
-            if (nextId == Int32.MaxValue) { nextId = DialogsDefaults.MinimumDialogControlId; }
-            else { nextId++; }
+            if (nextId == Int32.MaxValue) { SetNextId(DialogsDefaults.MinimumDialogControlId); }
+            else { SetNextId(nextId + 1); }
         }
-
         /// <summary>
         /// Creates a new instance of a dialog control with the specified name.
         /// </summary>

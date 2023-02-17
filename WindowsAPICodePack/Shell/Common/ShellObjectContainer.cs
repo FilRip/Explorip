@@ -41,7 +41,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
                         string str = ShellHelper.GetParsingName(NativeShellItem);
                         if (str != null && str != Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
                         {
+#pragma warning disable S2372 // Exceptions should not be thrown from property getters
                             throw new ShellException(hr);
+#pragma warning restore S2372 // Exceptions should not be thrown from property getters
                         }
                     }
                 }
@@ -54,9 +56,11 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         #region Internal Constructor
 
+#pragma warning disable S3442 // "abstract" classes should not have "public" constructors
         internal ShellContainer() { }
 
         internal ShellContainer(IShellItem2 shellItem) : base(shellItem) { }
+#pragma warning restore S3442 // "abstract" classes should not have "public" constructors
 
         #endregion
 

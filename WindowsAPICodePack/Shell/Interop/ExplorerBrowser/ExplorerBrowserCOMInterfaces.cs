@@ -56,7 +56,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         NoBrowserViewState = 0x10000000,
         SubsetGroups = 0x20000000,
         UseSearchFolders = 0x40000000,
-        AllowRightToLeftReading = unchecked((int)0x80000000)
+        //AllowRightToLeftReading = unchecked((int)0x80000000)
     }
 
     internal enum FolderViewMode

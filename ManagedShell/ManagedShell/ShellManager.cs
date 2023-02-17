@@ -19,6 +19,7 @@ namespace ManagedShell
             AutoStartTrayService = true,
             PinnedNotifyIcons = NotificationArea.DEFAULT_PINNED
         };
+        private bool disposedValue;
 
         /// <summary>
         /// Initializes ManagedShell with the default configuration.
@@ -61,16 +62,6 @@ namespace ManagedShell
             }
         }
 
-        public void Dispose()
-        {
-            IconHelper.DisposeIml();
-
-            AppBarManager.Dispose();
-            FullScreenHelper.Dispose();
-            NotificationArea?.Dispose();
-            Tasks?.Dispose();
-        }
-
         public NotificationArea NotificationArea { get; }
         public TrayService TrayService { get; }
         public ExplorerTrayService ExplorerTrayService { get; }
@@ -81,5 +72,33 @@ namespace ManagedShell
         public AppBarManager AppBarManager { get; }
         public ExplorerHelper ExplorerHelper { get; }
         public FullScreenHelper FullScreenHelper { get; }
+
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    IconHelper.DisposeIml();
+
+                    AppBarManager.Dispose();
+                    FullScreenHelper.Dispose();
+                    NotificationArea?.Dispose();
+                    Tasks?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

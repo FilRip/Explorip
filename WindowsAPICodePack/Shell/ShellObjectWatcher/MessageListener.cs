@@ -31,15 +31,25 @@ namespace Microsoft.WindowsAPICodePack.Shell
         private static readonly object _crossThreadWindowLock = new();
         private static IntPtr _tempHandle = IntPtr.Zero;
 
+#pragma warning disable S3264 // Events should be invoked
         public event EventHandler<WindowMessageEventArgs> MessageReceived;
+#pragma warning restore S3264 // Events should be invoked
 
+        private static void SetFirstWindowHandle(IntPtr newValue)
+        {
+            _firstWindowHandle = newValue;
+        }
+        private static void SetWindowThread(Thread newThread)
+        {
+            _windowThread = newThread;
+        }
         public MessageListener()
         {
             lock (_threadlock)
             {
                 if (_windowThread == null)
                 {
-                    _windowThread = new Thread(ThreadMethod);
+                    SetWindowThread(new Thread(ThreadMethod));
                     _windowThread.SetApartmentState(ApartmentState.STA);
                     _windowThread.Name = "ShellObjectWatcherMessageListenerHelperThread";
 
@@ -49,7 +59,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                         Monitor.Wait(_crossThreadWindowLock);
                     }
 
-                    _firstWindowHandle = WindowHandle;
+                    SetFirstWindowHandle(WindowHandle);
                 }
                 else
                 {
@@ -158,7 +168,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                     if (_listeners.TryGetValue(hwnd, out listener))
                     {
                         Message message = new(hwnd, msg, wparam, lparam, 0, new NativePoint());
-                        listener.MessageReceived.SafeRaise(listener, new WindowMessageEventArgs(message));
+                        listener.MessageReceived?.SafeRaise(listener, new WindowMessageEventArgs(message));
                     }
                     break;
             }

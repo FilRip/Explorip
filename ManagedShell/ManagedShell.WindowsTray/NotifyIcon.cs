@@ -17,7 +17,7 @@ namespace ManagedShell.WindowsTray
     /// <summary>
     /// NotifyIcon class representing a notification area icon.
     /// </summary>
-    public class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
+    public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     {
         private readonly NotificationArea _notificationArea;
 

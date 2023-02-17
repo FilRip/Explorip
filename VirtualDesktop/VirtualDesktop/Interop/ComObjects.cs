@@ -10,6 +10,7 @@ namespace WindowsDesktop.Interop
         private readonly ComInterfaceAssembly _assembly;
         private ExplorerRestartListenerWindow _listenerWindow;
         private IDisposable _listener;
+        private bool disposedValue;
 
         public IVirtualDesktopManager VirtualDesktopManager { get; private set; }
 
@@ -70,12 +71,6 @@ namespace WindowsDesktop.Interop
             IsAvailable = true;
         }
 
-        public void Dispose()
-        {
-            _listener?.Dispose();
-            _listenerWindow?.Close();
-        }
-
         private sealed class ExplorerRestartListenerWindow : TransparentWindow
         {
             private uint _explorerRestartedMessage;
@@ -103,6 +98,30 @@ namespace WindowsDesktop.Interop
 
                 return base.WndProc(hwnd, msg, wParam, lParam, ref handled);
             }
+        }
+
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _listener?.Dispose();
+                    _listenerWindow?.Close();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

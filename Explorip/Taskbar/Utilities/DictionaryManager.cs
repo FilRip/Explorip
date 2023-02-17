@@ -21,6 +21,7 @@ namespace Explorip.TaskBar.Utilities
         public const string THEME_DEFAULT = DICT_DEFAULT;
         private const string THEME_FOLDER = "Taskbar\\Themes";
         private const string THEME_EXT = DICT_EXT;
+        private bool disposedValue;
 
         public DictionaryManager()
         {
@@ -168,9 +169,27 @@ namespace Explorip.TaskBar.Utilities
             }
         }
 
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -6,10 +6,7 @@ namespace Explorip.TaskBar.Utilities
 {
     public class TaskCategoryProvider : ITaskCategoryProvider
     {
-        public void Dispose()
-        {
-
-        }
+        private bool disposedValue;
 
         public string GetCategory(ApplicationWindow window)
         {
@@ -19,6 +16,29 @@ namespace Explorip.TaskBar.Utilities
         public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
         {
             Console.WriteLine("SetCategoryChangeDelegate");
+        }
+
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // Nothing to do here ?!
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

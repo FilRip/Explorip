@@ -530,13 +530,21 @@ hresult),
         {
             Dispose(false);
         }
+        public bool IsDisposed
+        {
+            get { return disposed; }
+        }
 
         // Core disposing logic.
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
             {
-                disposed = true;
+                if (disposing)
+                {
+                    // Clean up managed resources - currently there are none
+                    // that are interesting.
+                }
 
                 // Single biggest resource - make sure the dialog 
                 // itself has been instructed to close.
@@ -575,12 +583,7 @@ hresult),
                     Marshal.FreeHGlobal(radioButtonArray);
                     radioButtonArray = IntPtr.Zero;
                 }
-
-                if (disposing)
-                {
-                    // Clean up managed resources - currently there are none
-                    // that are interesting.
-                }
+                disposed = true;
             }
         }
 

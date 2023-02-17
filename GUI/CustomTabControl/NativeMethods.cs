@@ -13,10 +13,8 @@ namespace System.Windows.Forms
     /// Description of NativeMethods.
     /// </summary>
     //[SecurityPermission(SecurityAction.Assert, Flags=SecurityPermissionFlag.UnmanagedCode)]
-    internal sealed class NativeMethods
+    internal static class NativeMethods
     {
-        private NativeMethods() { }
-
         #region Windows Constants
 
         public const int WM_GETTABRECT = 0x130a;

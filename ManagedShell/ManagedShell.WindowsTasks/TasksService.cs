@@ -150,19 +150,36 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
+        private bool _isDisposed;
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+        }
         public void Dispose()
         {
-            if (IsInitialized)
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
             {
-                ShellLogger.Debug("TasksService: Deregistering hooks");
-                DeregisterShellHookWindow(_HookWin.Handle);
-                if (uncloakEventHook != IntPtr.Zero)
-                    UnhookWinEvent(uncloakEventHook);
-                _HookWin.DestroyHandle();
-                SetTaskbarListHwnd(IntPtr.Zero);
-            }
+                if (disposing)
+                {
+                    if (IsInitialized)
+                    {
+                        ShellLogger.Debug("TasksService: Deregistering hooks");
+                        DeregisterShellHookWindow(_HookWin.Handle);
+                        if (uncloakEventHook != IntPtr.Zero)
+                            UnhookWinEvent(uncloakEventHook);
+                        _HookWin.DestroyHandle();
+                        SetTaskbarListHwnd(IntPtr.Zero);
+                    }
 
-            TaskCategoryProvider?.Dispose();
+                    TaskCategoryProvider?.Dispose();
+                }
+                _isDisposed = true;
+            }
         }
 
         private void CategoriesChanged()

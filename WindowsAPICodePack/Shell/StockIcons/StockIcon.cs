@@ -20,11 +20,11 @@ namespace Microsoft.WindowsAPICodePack.Shell
     {
         #region Private Members
 
-        private StockIconIdentifier identifier = StockIconIdentifier.Application;
+        private StockIconIdentifier identifier;
         private StockIconSize currentSize = StockIconSize.Large;
         private bool linkOverlay;
         private bool selected;
-        private bool invalidateIcon = true;
+        private bool invalidateIcon;
         private IntPtr hIcon = IntPtr.Zero;
 
         #endregion

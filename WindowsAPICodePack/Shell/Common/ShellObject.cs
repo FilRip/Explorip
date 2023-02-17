@@ -16,7 +16,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
     /// <summary>
     /// The base class for all Shell objects in Shell Namespace.
     /// </summary>
+#pragma warning disable S4035 // Classes implementing "IEquatable<T>" should be sealed
     public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
+#pragma warning restore S4035 // Classes implementing "IEquatable<T>" should be sealed
     {
 
         #region Public Static Methods

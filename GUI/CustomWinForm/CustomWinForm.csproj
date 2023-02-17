@@ -44,6 +44,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CustomWinFormException.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

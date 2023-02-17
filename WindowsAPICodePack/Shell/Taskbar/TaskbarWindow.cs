@@ -120,7 +120,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             WindowsControl = null;
         }
 
-        internal TaskbarWindow(System.Windows.UIElement windowsControl, params ThumbnailToolBarButton[] buttons)
+        internal TaskbarWindow(UIElement windowsControl, params ThumbnailToolBarButton[] buttons)
         {
             if (windowsControl == null)
             {
@@ -185,32 +185,41 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             GC.SuppressFinalize(this);
         }
 
-        public void Dispose(bool disposing)
+        private bool _isDisposed;
+        public bool IsDisposed
         {
-            if (disposing)
+            get { return _isDisposed; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
             {
-                // Dispose managed resources
-                if (_tabbedThumbnailPreview != null)
+                if (disposing)
                 {
-                    _tabbedThumbnailPreview.Dispose();
-                }
-                _tabbedThumbnailPreview = null;
+                    // Dispose managed resources
+                    if (_tabbedThumbnailPreview != null)
+                    {
+                        _tabbedThumbnailPreview.Dispose();
+                    }
+                    _tabbedThumbnailPreview = null;
 
-                if (ThumbnailToolbarProxyWindow != null)
-                {
-                    ThumbnailToolbarProxyWindow.Dispose();
-                }
-                ThumbnailToolbarProxyWindow = null;
+                    if (ThumbnailToolbarProxyWindow != null)
+                    {
+                        ThumbnailToolbarProxyWindow.Dispose();
+                    }
+                    ThumbnailToolbarProxyWindow = null;
 
-                if (TabbedThumbnailProxyWindow != null)
-                {
-                    TabbedThumbnailProxyWindow.Dispose();
-                }
-                TabbedThumbnailProxyWindow = null;
+                    if (TabbedThumbnailProxyWindow != null)
+                    {
+                        TabbedThumbnailProxyWindow.Dispose();
+                    }
+                    TabbedThumbnailProxyWindow = null;
 
-                // Don't dispose the thumbnail buttons as they might be used in another window.
-                // Setting them to null will indicate we don't need use anymore.
-                _thumbnailButtons = null;
+                    // Don't dispose the thumbnail buttons as they might be used in another window.
+                    // Setting them to null will indicate we don't need use anymore.
+                    _thumbnailButtons = null;
+                }
+                _isDisposed = true;
             }
         }
 

@@ -8,7 +8,7 @@ using System.Windows.Forms.VisualStyles;
 
 namespace System.Drawing
 {
-    internal sealed class ThemedColors
+    internal static class ThemedColors
     {
         #region Variables and Constants
 
@@ -31,12 +31,6 @@ namespace System.Drawing
         {
             get { return ThemedColors._toolBorder[(int)ThemedColors.CurrentThemeIndex]; }
         }
-
-        #endregion
-
-        #region Constructors
-
-        private ThemedColors() { }
 
         #endregion
 

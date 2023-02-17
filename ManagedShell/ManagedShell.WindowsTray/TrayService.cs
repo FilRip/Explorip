@@ -144,11 +144,28 @@ namespace ManagedShell.WindowsTray
 
         public void Dispose()
         {
-            trayMonitor.Stop();
-            DestroyWindows();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        private bool _isDisposed;
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    trayMonitor.Stop();
+                    DestroyWindows();
 
-            if (!EnvironmentHelper.IsAppRunningAsShell)
-                SendTaskbarCreated();
+                    if (!EnvironmentHelper.IsAppRunningAsShell)
+                        SendTaskbarCreated();
+                }
+                _isDisposed = true;
+            }
         }
 
         private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)

@@ -18,6 +18,7 @@ namespace WindowsDesktop
 
         private Task _initializationTask;
         private ComObjects _comObjects;
+        private bool disposedValue;
 
         public string ComInterfaceAssemblyPath { get; set; }
 
@@ -66,9 +67,27 @@ namespace WindowsDesktop
             }
         }
 
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    ComObjects?.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            ComObjects?.Dispose();
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 

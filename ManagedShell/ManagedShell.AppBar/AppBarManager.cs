@@ -350,7 +350,24 @@ namespace ManagedShell.AppBar
 
         public void Dispose()
         {
-            ResetWorkArea();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        private bool _isDisposed;
+        public bool IsDisposed
+        {
+            get { return _isDisposed; }
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    ResetWorkArea();
+                }
+                _isDisposed = true;
+            }
         }
     }
 }
