@@ -6,20 +6,33 @@
              MouseDown="UserControl_MouseDown"
              MouseUp="UserControl_MouseUp"
              MouseMove="UserControl_MouseMove">
-    <ItemsControl x:Name="ToolbarItems"
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Label Name="Title" Width="auto" Foreground="White">
+            <Label.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Show/Hide title" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>
+                </ContextMenu>
+            </Label.ContextMenu>
+        </Label>
+        <ItemsControl x:Name="ToolbarItems" Grid.Column="1"
                   Focusable="False"
                   Style="{DynamicResource ToolbarItems}">
-        <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-                <WrapPanel Orientation="Horizontal"></WrapPanel>
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-            <ItemContainerTemplate>
-                <local:ToolbarButton DataContext="{Binding}"
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" Name="MyWrapPanel"></WrapPanel>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <ItemContainerTemplate>
+                    <local:ToolbarButton DataContext="{Binding}"
                                      PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp"
                                      PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp"></local:ToolbarButton>
-            </ItemContainerTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+                </ItemContainerTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
 </UserControl>

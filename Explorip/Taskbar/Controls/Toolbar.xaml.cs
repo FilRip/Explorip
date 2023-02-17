@@ -7,7 +7,6 @@ using System.Windows.Media;
 using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
 
-using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 
@@ -56,6 +55,7 @@ namespace Explorip.TaskBar.Controls
         {
             Folder?.Dispose();
             Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
+            Title.Content = Folder.DisplayName;
         }
 
         private void UnloadFolder()
@@ -197,7 +197,7 @@ namespace Explorip.TaskBar.Controls
             _startX = Mouse.GetPosition(myGrid).X - ((TranslateTransform)RenderTransform).X;
             //_startY = Mouse.GetPosition(QuickLaunchGrid).Y - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y;
 
-            Mouse.OverrideCursor = Cursors.Cross;
+            Mouse.OverrideCursor = Cursors.ScrollAll;
             CaptureMouse();
         }
 
@@ -233,5 +233,13 @@ namespace Explorip.TaskBar.Controls
         }
 
         #endregion
+
+        public void ShowHideTitle_Click(object sender, RoutedEventArgs e)
+        {
+            if (Title.Visibility == Visibility.Visible)
+                Title.Visibility = Visibility.Collapsed;
+            else
+                Title.Visibility = Visibility.Visible;
+        }
     }
 }

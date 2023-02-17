@@ -74,13 +74,16 @@ namespace Explorip.TaskBar
 
         public void AfficheTaskBarAutresMoniteurs()
         {
-            Taskbar taskBar;
-            List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
-            foreach (AppBarScreen appBarScreen in appBarScreens)
+            if (_taskbarList.Count == 1 && System.Windows.Forms.Screen.AllScreens.Length > 1)
             {
-                taskBar = new Taskbar(_startMenuMonitor, appBarScreen, (AppBarEdge)Settings.Instance.Edge);
-                taskBar.Show();
-                _taskbarList.Add(taskBar);
+                Taskbar taskBar;
+                List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
+                foreach (AppBarScreen appBarScreen in appBarScreens)
+                {
+                    taskBar = new Taskbar(_startMenuMonitor, appBarScreen, (AppBarEdge)Settings.Instance.Edge);
+                    taskBar.Show();
+                    _taskbarList.Add(taskBar);
+                }
             }
         }
 

@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using Explorip.Helpers;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
 using Explorip.TaskBar.ViewModels;
@@ -272,6 +273,23 @@ namespace Explorip.TaskBar
                 DesiredHeight = Height;
                 _appBarManager.SetWorkArea(Screen);
             }
+        }
+
+        private Point _lastMousePosition;
+        private void ShowHideTitleToolbar_Click(object sender, RoutedEventArgs e)
+        {
+            HitTestResult result = VisualTreeHelper.HitTest(ToolsBars, _lastMousePosition);
+            if (result?.VisualHit != null)
+            {
+                Toolbar toolbar = result.VisualHit.FindParent<Toolbar>();
+                if (toolbar != null)
+                    toolbar.ShowHideTitle_Click(sender, e);
+            }
+        }
+
+        private void Taskbar_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _lastMousePosition = e.GetPosition(ToolsBars);
         }
     }
 }

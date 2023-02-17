@@ -11,6 +11,7 @@
                      Left="0"
                      LocationChanged="Taskbar_OnLocationChanged"
                      AllowDrop="True"
+                     PreviewMouseDown="Taskbar_MouseDown"
                      Style="{DynamicResource TaskbarWindow}">
     <WindowChrome.WindowChrome>
         <WindowChrome ResizeBorderThickness="0,3,0,0"
@@ -105,15 +106,11 @@
     </ContentControl>
     <appbar:AppBarWindow.ContextMenu>
         <ContextMenu>
-            <!-- TODO: Add when desk bands and additional taskbars are supported. -->
-            <!-- MenuItem Header="{DynamicResource toolbars}">
-                <MenuItem Header="{DynamicResource quick_launch}" IsCheckable="true"
-                          IsChecked="{Binding Source={x:Static utilities:Settings.Instance}, Path=ShowQuickLaunch, UpdateSourceTrigger=PropertyChanged}" />
-                <Separator />
-                <MenuItem Header="{DynamicResource new_toolbar}" Name="NewToolbarMenuItem" />
-            </MenuItem>
-            <Separator /-->
             <MenuItem Style="{DynamicResource TaskManMenuItem}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick"/>
+            <Separator />
+            <MenuItem Header="Toolbar">
+                <MenuItem Header="Show/Hide title" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
+            </MenuItem>
             <Separator />
             <MenuItem Header="Barre des tâches sur tous les écrans" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
             <MenuItem Header="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=LabelUnlock}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
