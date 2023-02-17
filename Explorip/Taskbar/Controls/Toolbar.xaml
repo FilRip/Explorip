@@ -6,6 +6,19 @@
              MouseDown="UserControl_MouseDown"
              MouseUp="UserControl_MouseUp"
              MouseMove="UserControl_MouseMove">
+    <UserControl.Resources>
+        <DataTemplate x:Key="SmallIconTemplate">
+            <local:ToolbarButton DataContext="{Binding}"
+                                     PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp"
+                                     PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp"/>
+        </DataTemplate>
+        <DataTemplate x:Key="LargeIconTemplate">
+            <local:ToolbarBigButton DataContext="{Binding}"
+                                     PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp"
+                                     PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp"/>
+        </DataTemplate>
+        <local:IconFileDataTemplateSelector x:Key="MyDataTemplateSelector"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -15,24 +28,18 @@
             <Label.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Show/Hide title" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>
+                    <MenuItem Header="Show small/large icon" Name="ShowLargeIcon" Click="ShowLargeIcon_Click"/>
                 </ContextMenu>
             </Label.ContextMenu>
         </Label>
         <ItemsControl x:Name="ToolbarItems" Grid.Column="1"
                   Focusable="False"
-                  Style="{DynamicResource ToolbarItems}">
+                  Style="{DynamicResource ToolbarItems}" ItemTemplateSelector="{StaticResource MyDataTemplateSelector}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal" Name="MyWrapPanel"></WrapPanel>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <ItemContainerTemplate>
-                    <local:ToolbarButton DataContext="{Binding}"
-                                     PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp"
-                                     PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp"></local:ToolbarButton>
-                </ItemContainerTemplate>
-            </ItemsControl.ItemTemplate>
         </ItemsControl>
     </Grid>
 </UserControl>

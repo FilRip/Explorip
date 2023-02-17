@@ -241,5 +241,27 @@ namespace Explorip.TaskBar.Controls
             else
                 Title.Visibility = Visibility.Visible;
         }
+
+        public bool CurrentShowLargeIcon { get; private set; }
+
+        public void ShowLargeIcon_Click(object sender, RoutedEventArgs e)
+        {
+            CurrentShowLargeIcon = !CurrentShowLargeIcon;
+            DataTemplateSelector dts = ToolbarItems.ItemTemplateSelector;
+            ToolbarItems.ItemTemplateSelector = null;
+            ToolbarItems.ItemTemplateSelector = dts;
+        }
+    }
+
+    public class IconFileDataTemplateSelector : DataTemplateSelector
+    {
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            FrameworkElement element = container as FrameworkElement;
+            if (container.FindParent<Toolbar>().CurrentShowLargeIcon)
+                return (DataTemplate)element.FindResource("LargeIconTemplate");
+            else
+                return (DataTemplate)element.FindResource("SmallIconTemplate");
+        }
     }
 }

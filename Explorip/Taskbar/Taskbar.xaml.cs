@@ -291,5 +291,16 @@ namespace Explorip.TaskBar
         {
             _lastMousePosition = e.GetPosition(ToolsBars);
         }
+
+        private void ShowSmallLargeIcon_Click(object sender, RoutedEventArgs e)
+        {
+            HitTestResult result = VisualTreeHelper.HitTest(ToolsBars, _lastMousePosition);
+            if (result?.VisualHit != null)
+            {
+                Toolbar toolbar = result.VisualHit.FindParent<Toolbar>();
+                if (toolbar != null)
+                    toolbar.ShowLargeIcon_Click(sender, e);
+            }
+        }
     }
 }

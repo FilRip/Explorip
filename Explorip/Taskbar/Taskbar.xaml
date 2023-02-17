@@ -12,6 +12,7 @@
                      LocationChanged="Taskbar_OnLocationChanged"
                      AllowDrop="True"
                      PreviewMouseDown="Taskbar_MouseDown"
+                     UseLayoutRounding="True"
                      Style="{DynamicResource TaskbarWindow}">
     <WindowChrome.WindowChrome>
         <WindowChrome ResizeBorderThickness="0,3,0,0"
@@ -110,6 +111,7 @@
             <Separator />
             <MenuItem Header="Toolbar">
                 <MenuItem Header="Show/Hide title" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
+                <MenuItem Header="Show small/large icon" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
             </MenuItem>
             <Separator />
             <MenuItem Header="Barre des tâches sur tous les écrans" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>

@@ -187,6 +187,9 @@
     <Compile Include="TaskBar\Controls\TaskThumbButton.xaml.cs">
       <DependentUpon>TaskThumbButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TaskBar\Controls\ToolbarBigButton.xaml.cs">
+      <DependentUpon>ToolbarBigButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TaskBar\MyDesktopApp.xaml.cs">
       <DependentUpon>MyDesktopApp.xaml</DependentUpon>
     </Compile>
@@ -379,6 +382,10 @@
     <Page Include="TaskBar\Controls\TaskThumbButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TaskBar\Controls\ToolbarBigButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="TaskBar\Languages\francais.xaml">
       <Generator>MSBuild:Compile</Generator>
