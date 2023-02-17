@@ -85,6 +85,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
             /// </summary>
             /// <param name="eventId">Guid for the event.</param>
             /// <param name="eventToRegister">Event handler for the event.</param>
+#pragma warning disable S3218 // Inner class members should not shadow outer class "static" or type members
             internal void RegisterPowerEvent(Guid eventId, EventHandler eventToRegister)
             {
                 readerWriterLock.AcquireWriterLock(Timeout.Infinite);
@@ -102,6 +103,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                 }
                 readerWriterLock.ReleaseWriterLock();
             }
+#pragma warning restore S3218 // Inner class members should not shadow outer class "static" or type members
 
             /// <summary>
             /// Removes an event handler.
@@ -110,6 +112,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
             /// <param name="eventToUnregister">Event handler to remove.</param>
             /// <exception cref="InvalidOperationException">Cannot unregister 
             /// a function that is not registered.</exception>
+#pragma warning disable S3218 // Inner class members should not shadow outer class "static" or type members
             internal void UnregisterPowerEvent(Guid eventId, EventHandler eventToUnregister)
             {
                 try
@@ -130,6 +133,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                     readerWriterLock.ReleaseWriterLock();
                 }
             }
+#pragma warning restore S3218 // Inner class members should not shadow outer class "static" or type members
 
             #endregion
 

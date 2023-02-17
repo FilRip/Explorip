@@ -379,23 +379,23 @@ namespace JetBrains.Annotations
     internal sealed class UsedImplicitlyAttribute : Attribute
     {
         public UsedImplicitlyAttribute()
-          : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) { }
+          : this(ImplicitUseKind.Default, ImplicitUseTarget.Default) { }
 
-        public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
-          : this(useKindFlags, ImplicitUseTargetFlags.Default) { }
+        public UsedImplicitlyAttribute(ImplicitUseKind useKindFlags)
+          : this(useKindFlags, ImplicitUseTarget.Default) { }
 
-        public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
-          : this(ImplicitUseKindFlags.Default, targetFlags) { }
+        public UsedImplicitlyAttribute(ImplicitUseTarget targetFlags)
+          : this(ImplicitUseKind.Default, targetFlags) { }
 
-        public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
+        public UsedImplicitlyAttribute(ImplicitUseKind useKindFlags, ImplicitUseTarget targetFlags)
         {
             UseKindFlags = useKindFlags;
             TargetFlags = targetFlags;
         }
 
-        public ImplicitUseKindFlags UseKindFlags { get; }
+        public ImplicitUseKind UseKindFlags { get; }
 
-        public ImplicitUseTargetFlags TargetFlags { get; }
+        public ImplicitUseTarget TargetFlags { get; }
     }
 
     /// <summary>
@@ -409,23 +409,23 @@ namespace JetBrains.Annotations
     internal sealed class MeansImplicitUseAttribute : Attribute
     {
         public MeansImplicitUseAttribute()
-          : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) { }
+          : this(ImplicitUseKind.Default, ImplicitUseTarget.Default) { }
 
-        public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
-          : this(useKindFlags, ImplicitUseTargetFlags.Default) { }
+        public MeansImplicitUseAttribute(ImplicitUseKind useKindFlags)
+          : this(useKindFlags, ImplicitUseTarget.Default) { }
 
-        public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
-          : this(ImplicitUseKindFlags.Default, targetFlags) { }
+        public MeansImplicitUseAttribute(ImplicitUseTarget targetFlags)
+          : this(ImplicitUseKind.Default, targetFlags) { }
 
-        public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
+        public MeansImplicitUseAttribute(ImplicitUseKind useKindFlags, ImplicitUseTarget targetFlags)
         {
             UseKindFlags = useKindFlags;
             TargetFlags = targetFlags;
         }
 
-        [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; }
+        [UsedImplicitly] public ImplicitUseKind UseKindFlags { get; }
 
-        [UsedImplicitly] public ImplicitUseTargetFlags TargetFlags { get; }
+        [UsedImplicitly] public ImplicitUseTarget TargetFlags { get; }
     }
 
     /// <summary>
@@ -433,7 +433,7 @@ namespace JetBrains.Annotations
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
     /// </summary>
     [Flags()]
-    internal enum ImplicitUseKindFlags
+    internal enum ImplicitUseKind
     {
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
         /// <summary>Only entity marked with attribute considered used.</summary>
@@ -454,7 +454,7 @@ namespace JetBrains.Annotations
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
     /// </summary>
     [Flags()]
-    internal enum ImplicitUseTargetFlags
+    internal enum ImplicitUseTarget
     {
         Default = Itself,
         Itself = 1,
@@ -468,7 +468,7 @@ namespace JetBrains.Annotations
     /// This attribute is intended to mark publicly available API
     /// which should not be removed and so is treated as used.
     /// </summary>
-    [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
+    [MeansImplicitUse(ImplicitUseTarget.WithMembers)]
     [AttributeUsage(AttributeTargets.All, Inherited = false)]
     [Conditional("JETBRAINS_ANNOTATIONS")]
     internal sealed class PublicApiAttribute : Attribute

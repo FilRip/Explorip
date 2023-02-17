@@ -355,8 +355,8 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             if (m.Msg == (int)TaskbarNativeMethods.WmDwmSendIconicLivePreviewBitmap)
             {
                 // Try to get the width/height
-                int width = (int)(((long)m.LParam) >> 16);
-                int height = (int)(((long)m.LParam) & (0xFFFF));
+                /*int width = (int)(((long)m.LParam) >> 16);
+                int height = (int)(((long)m.LParam) & (0xFFFF));*/
 
                 // Default size for the thumbnail
                 Size realWindowSize = new(200, 200);
@@ -373,14 +373,14 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 }
 
                 // If we don't have a valid height/width, use the original window's size
-                if (width <= 0)
+                /*if (width <= 0)
                 {
                     width = realWindowSize.Width;
                 }
                 if (height <= 0)
                 {
                     height = realWindowSize.Height;
-                }
+                }*/
 
                 // Fire an event to let the user update their bitmap
                 // Raise the event

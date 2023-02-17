@@ -591,7 +591,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         {
             //var flags = CommDlgBrowser2ViewFlags.NoSelectVerb;
             //Marshal.WriteInt32(pdwFlags, 0);
-            pdwFlags = (uint)CommDlgBrowser2ViewFlags.ShowAllFiles;
+            pdwFlags = (uint)CommDlgBrowser2View.ShowAllFiles;
             return HResult.Ok;
         }
 

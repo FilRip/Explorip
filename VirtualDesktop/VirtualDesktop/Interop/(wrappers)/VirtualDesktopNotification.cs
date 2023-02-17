@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace WindowsDesktop.Interop
 {
     [ComInterfaceWrapper(2)]
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [UsedImplicitly(ImplicitUseTarget.Members)]
     public abstract class VirtualDesktopNotification
     {
         internal static VirtualDesktopNotification CreateInstance(ComInterfaceAssembly assembly)

@@ -45,7 +45,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         private IFileDialog nativeDialog;
         private IFileDialogCustomize customize;
+#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
         private NativeDialogEventSink nativeEventSink;
+#pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
         private bool? canceled;
         private bool resetSelections;
         private IntPtr parentWindow = IntPtr.Zero;
@@ -881,7 +883,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
                 customize.SetControlState(control.Id, state);
             }
-            else if (propertyName == "Enabled" && dialogControl != null)
+            else if (propertyName == "Enabled" && (dialogControl = control as CommonFileDialogControl) != null)
             {
                 customize.GetControlState(control.Id, out ShellNativeMethods.ControlState state);
 

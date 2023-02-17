@@ -74,6 +74,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         Last = 8
     }
 
+#pragma warning disable S2346, S4070 // Flags enumerations zero-value members should be named "None"
     [Flags()]
     internal enum ExplorerPaneState
     {
@@ -84,6 +85,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         InitialState = 0x00010000,
         Force = 0x00020000
     }
+#pragma warning restore S2346, S4070 // Flags enumerations zero-value members should be named "None"
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     internal class FolderSettings
@@ -118,14 +120,14 @@ namespace Microsoft.WindowsAPICodePack.Controls
         Start = 2
     }
 
-    internal enum CommDlgBrowser2ViewFlags
+    internal enum CommDlgBrowser2View
     {
         ShowAllFiles = 0x00000001,
         IsFileSave = 0x00000002,
         AllowPreviewPane = 0x00000004,
         NoSelectVerb = 0x00000008,
         NoIncludeItem = 0x00000010,
-        IsFolderPicker = 0x00000020
+        IsFolderPicker = 0x00000020,
     }
 
     // Disable warning if a method declaration hides another inherited from a parent COM interface

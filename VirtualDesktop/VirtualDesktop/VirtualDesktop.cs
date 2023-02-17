@@ -15,7 +15,7 @@ namespace WindowsDesktop
     /// </summary>
     [ComInterfaceWrapper(2)]
     [DebuggerDisplay("{Id}")]
-    [UsedImplicitly(ImplicitUseTargetFlags.Members)]
+    [UsedImplicitly(ImplicitUseTarget.Members)]
     public partial class VirtualDesktop : ComInterfaceWrapperBase, IDisposable
     {
         /// <summary>

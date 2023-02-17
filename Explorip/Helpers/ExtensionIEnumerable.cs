@@ -280,7 +280,9 @@ namespace FilRip.Utils.Extensions
         public static List<T> ToList<T>(this ICollection liste)
         {
             if (liste == null)
+#pragma warning disable S1168 // Empty arrays and collections should be returned instead of null
                 return null;
+#pragma warning restore S1168 // Empty arrays and collections should be returned instead of null
             List<T> retour = new();
             IEnumerator enumerer = liste.GetEnumerator();
             while (enumerer.MoveNext())

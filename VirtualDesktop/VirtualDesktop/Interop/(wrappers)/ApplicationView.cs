@@ -19,7 +19,7 @@ namespace WindowsDesktop.Interop
         }
     }
 
-    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    [UsedImplicitly(ImplicitUseTarget.WithMembers)]
     [StructLayout(LayoutKind.Sequential)]
     public struct Size
     {
@@ -27,7 +27,7 @@ namespace WindowsDesktop.Interop
         public int Y;
     }
 
-    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    [UsedImplicitly(ImplicitUseTarget.WithMembers)]
     [StructLayout(LayoutKind.Sequential)]
     public struct Rect
     {
@@ -37,7 +37,7 @@ namespace WindowsDesktop.Interop
         public int Bottom;
     }
 
-    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    [UsedImplicitly(ImplicitUseTarget.WithMembers)]
     public enum ApplicationViewCloakType
     {
         // ReSharper disable InconsistentNaming
@@ -47,7 +47,7 @@ namespace WindowsDesktop.Interop
         // ReSharper restore InconsistentNaming
     }
 
-    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    [UsedImplicitly(ImplicitUseTarget.WithMembers)]
     public enum ApplicationViewCompatibilityPolicy
     {
         // ReSharper disable InconsistentNaming

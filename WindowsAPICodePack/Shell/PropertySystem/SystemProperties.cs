@@ -4424,7 +4424,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Multivalue String -- VT_VECTOR | VT_LPWSTR  (For variants: VT_ARRAY | VT_BSTR)</para>
                 /// <para>FormatID: {78C34FC8-104A-4ACA-9EA4-524D52996E57}, 91</para>
                 /// </summary>
-                public static PropertyKey Category
+                public static PropertyKey CategoryDevices
                 {
                     get
                     {
@@ -4679,7 +4679,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Boolean -- VT_BOOL</para>
                 /// <para>FormatID: {78C34FC8-104A-4ACA-9EA4-524D52996E57}, 84</para>
                 /// </summary>
-                public static PropertyKey IsShared
+                public static PropertyKey IsSharedDevices
                 {
                     get
                     {
@@ -5154,7 +5154,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <summary>
                 /// Notifications Properties
                 /// </summary>
-                public static class Notifications
+                public static class NotificationsDevices
                 {
 
 
@@ -5460,7 +5460,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     DateTime -- VT_FILETIME  (For variants: VT_DATE)</para>
                 /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 12 (PIDSI_CREATE_DTM)</para>
                 /// </summary>
-                public static PropertyKey DateCreated
+                public static PropertyKey DateCreatedDocument
                 {
                     get
                     {
@@ -6712,7 +6712,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
                 /// <para>FormatID: {125491F4-818F-46B2-91B5-D537753617B2}, 100</para>
                 /// </summary>
-                public static PropertyKey Status
+                public static PropertyKey StatusGps
                 {
                     get
                     {
@@ -7342,7 +7342,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
                 /// <para>FormatID: (PSGUID_LINK) {B9B4B3FC-2B51-4A42-B5D8-324146AFCF25}, 5</para>
                 /// </summary>
-                public static PropertyKey Comment
+                public static PropertyKey CommentLink
                 {
                     get
                     {
@@ -7391,7 +7391,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Int32 -- VT_I4</para>
                 /// <para>FormatID: (PSGUID_LINK) {B9B4B3FC-2B51-4A42-B5D8-324146AFCF25}, 3 (PID_LINK_TARGET_TYPE)</para>
                 /// </summary>
-                public static PropertyKey Status
+                public static PropertyKey StatusLink
                 {
                     get
                     {
@@ -10313,7 +10313,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {2804D469-788F-48AA-8570-71B9C187E138}, 100</para>
                 /// </summary>
-                public static PropertyKey Audio
+                public static PropertyKey AudioPropGroup
                 {
                     get
                     {
@@ -10329,7 +10329,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {9973D2B5-BFD8-438A-BA94-5349B293181A}, 100</para>
                 /// </summary>
-                public static PropertyKey Calendar
+                public static PropertyKey CalendarPropGroup
                 {
                     get
                     {
@@ -10361,7 +10361,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {DF975FD3-250A-4004-858F-34E29A3E37AA}, 100</para>
                 /// </summary>
-                public static PropertyKey Contact
+                public static PropertyKey ContactPropGroup
                 {
                     get
                     {
@@ -10457,7 +10457,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {E3690A87-0FA8-4A2A-9A9F-FCE8827055AC}, 100</para>
                 /// </summary>
-                public static PropertyKey Image
+                public static PropertyKey ImagePropGroup
                 {
                     get
                     {
@@ -10473,7 +10473,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {61872CF7-6B5E-4B4B-AC2D-59DA84459248}, 100</para>
                 /// </summary>
-                public static PropertyKey Media
+                public static PropertyKey MediaPropGroup
                 {
                     get
                     {
@@ -10505,7 +10505,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {7FD7259D-16B4-4135-9F97-7C96ECD2FA9E}, 100</para>
                 /// </summary>
-                public static PropertyKey Message
+                public static PropertyKey MessagePropGroup
                 {
                     get
                     {
@@ -10521,7 +10521,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {68DD6094-7216-40F1-A029-43FE7127043F}, 100</para>
                 /// </summary>
-                public static PropertyKey Music
+                public static PropertyKey MusicPropGroup
                 {
                     get
                     {
@@ -10569,7 +10569,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {E7B33238-6584-4170-A5C0-AC25EFD9DA56}, 100</para>
                 /// </summary>
-                public static PropertyKey RecordedTV
+                public static PropertyKey RecordedTVPropGroup
                 {
                     get
                     {
@@ -10585,7 +10585,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     Null -- VT_NULL</para>
                 /// <para>FormatID: {BEBE0920-7671-4C54-A3EB-49FDDFC191EE}, 100</para>
                 /// </summary>
-                public static PropertyKey Video
+                public static PropertyKey VideoPropGroup
                 {
                     get
                     {
@@ -11635,7 +11635,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
                 /// <para>FormatID: {CE50C159-2FB8-41FD-BE68-D3E042E274BC}, 3</para>
                 /// </summary>
-                public static PropertyKey ItemName
+                public static PropertyKey ItemNameSync
                 {
                     get
                     {
@@ -11685,7 +11685,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
                 /// <para>FormatID: {7BD5533E-AF15-44DB-B8C8-BD6624E1D032}, 10</para>
                 /// </summary>
-                public static PropertyKey Status
+                public static PropertyKey StatusSync
                 {
                     get
                     {

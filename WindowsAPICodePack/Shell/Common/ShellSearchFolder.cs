@@ -115,6 +115,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             }
         }
 
+#pragma warning disable S2372 // Exceptions should not be thrown from property getters
         internal override IShellItem NativeShellItem
         {
             get
@@ -130,14 +131,14 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 return shellItem;
             }
         }
-
+#pragma warning restore S2372 // Exceptions should not be thrown from property getters
 
         /// <summary>
         /// Creates a list of stack keys, as specified. If this method is not called, 
         /// by default the folder will not be stacked.
         /// </summary>
         /// <param name="canonicalNames">Array of canonical names for properties on which the folder is stacked.</param>
-        /// <exception cref="System.ArgumentException">If one of the given canonical names is invalid.</exception>
+        /// <exception cref="ArgumentException">If one of the given canonical names is invalid.</exception>
         public void SetStacks(params string[] canonicalNames)
         {
             if (canonicalNames == null) { throw new ArgumentNullException("canonicalNames"); }

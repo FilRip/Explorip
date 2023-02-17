@@ -13,7 +13,7 @@ namespace System.Windows.Forms
         // Doc : https://www.codeproject.com/Articles/55180/Extending-the-Non-Client-Area-in-Aero
         //       https://www.codeproject.com/Articles/32623/Vista-Aero-ToolStrip-on-Non-Client-Area?fid=1533828&df=90&mpp=25&sort=Position&spc=Relaxed&prof=True&view=Normal&fr=1#xx0xx
         private bool _aeroEnabled;
-        //private bool _extendNoClientArea;
+        private bool _extendNoClientArea;
         private bool _removeNoClientArea;
         private bool _margingSet;
         //private bool _isPainting;
@@ -35,7 +35,7 @@ namespace System.Windows.Forms
             }
         }
 
-        /*public bool ExtendNoClientArea
+        public bool ExtendNoClientArea
         {
             get { return _extendNoClientArea; }
             set
@@ -43,7 +43,7 @@ namespace System.Windows.Forms
                 _extendNoClientArea = value;
                 _removeNoClientArea = false;
             }
-        }*/
+        }
 
         public bool RemoveNoClientArea
         {
@@ -51,13 +51,13 @@ namespace System.Windows.Forms
             set
             {
                 _removeNoClientArea = value;
-                //_extendNoClientArea = false;
+                _extendNoClientArea = false;
             }
         }
 
-        //public bool ShowTitle { get; set; }
+        public bool ShowTitle { get; set; }
 
-        /*public Rectangle NoClientArea
+        public Rectangle NoClientArea
         {
             get { return new Rectangle(_dwmMargins.cxLeftWidth, _dwmMargins.cyTopHeight, _dwmMargins.cxRightWidth, _dwmMargins.cyBottomHeight); }
             set
@@ -72,7 +72,7 @@ namespace System.Windows.Forms
                 _dwmMargins.cyBottomHeight = value.Height;
                 _extendNoClientArea = true;
             }
-        }*/
+        }
 
         //public HorizontalAlignment TitleAlignment { get; set; }
 

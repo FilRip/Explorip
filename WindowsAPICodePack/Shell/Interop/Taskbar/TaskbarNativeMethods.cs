@@ -52,6 +52,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         THB_FLAGS = 0x8
     }
 
+#pragma warning disable S2346 // Flags enumerations zero-value members should be named "None"
     [Flags()]
     internal enum ThumbButtonOptions
     {
@@ -62,6 +63,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         Hidden = 0x00000008,
         NonInteractive = 0x00000010
     }
+#pragma warning restore S2346 // Flags enumerations zero-value members should be named "None"
 
     internal enum SetTabPropertiesOption
     {
