@@ -49,6 +49,12 @@ namespace Explorip.TaskBar.Controls
         public Toolbar()
         {
             InitializeComponent();
+            RenderTransform = new TranslateTransform();
+        }
+
+        public TranslateTransform MyRenderTransform
+        {
+            get { return (TranslateTransform)RenderTransform; }
         }
 
         private void SetupFolder(string path)
@@ -92,7 +98,7 @@ namespace Explorip.TaskBar.Controls
                 return;
             }
 
-            _ = Mouse.Capture(null);
+            Mouse.Capture(null);
 
             if (icon.DataContext is not ShellFile file || string.IsNullOrWhiteSpace(file.Path))
             {
@@ -187,15 +193,15 @@ namespace Explorip.TaskBar.Controls
 
         #region Move toolbar in taskbar by drag'n drop
 
-        private double _startX/*, _startY*/;
+        private double _startX, _startY;
         private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!TaskbarViewModel.Instance.ResizeOn)
                 return;
 
             Grid myGrid = this.FindParent<Grid>();
-            _startX = Mouse.GetPosition(myGrid).X - ((TranslateTransform)RenderTransform).X;
-            //_startY = Mouse.GetPosition(QuickLaunchGrid).Y - ((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y;
+            _startX = Mouse.GetPosition(myGrid).X - MyRenderTransform.X;
+            _startY = Mouse.GetPosition(myGrid).Y - MyRenderTransform.Y;
 
             Mouse.OverrideCursor = Cursors.ScrollAll;
             CaptureMouse();
@@ -213,20 +219,50 @@ namespace Explorip.TaskBar.Controls
                 return;
 
             Grid myGrid = this.FindParent<Grid>();
-            ((TranslateTransform)RenderTransform).X = Math.Max(0, Mouse.GetPosition(myGrid).X - _startX);
-            //((TranslateTransform)QuickLaunchToolbar.RenderTransform).Y = Mouse.GetPosition(QuickLaunchGrid).Y - _startY;
+            MyRenderTransform.X = Math.Max(0, Mouse.GetPosition(myGrid).X - _startX);
             HitTestResult result = VisualTreeHelper.HitTest(myGrid, e.GetPosition(myGrid));
             if (result?.VisualHit != null)
             {
-                Toolbar parent = result.VisualHit.FindParent<Toolbar>();
-                if (parent != null)
+                if (MyRenderTransform.X == 0)
                 {
-                    int previousRow = Grid.GetRow(this);
-                    int newRow = Grid.GetRow(parent);
-                    if (previousRow != newRow)
+                    Toolbar parent = result.VisualHit.FindParent<Toolbar>();
+                    if (parent != null)
                     {
-                        Grid.SetRow(parent, previousRow);
-                        Grid.SetRow(this, newRow);
+                        int previousRow = Grid.GetRow(this);
+                        int newRow = Grid.GetRow(parent);
+                        if (previousRow != newRow)
+                        {
+                            Grid.SetRow(parent, previousRow);
+                            Grid.SetRow(this, newRow);
+                        }
+                    }
+                }
+                else
+                {
+                    MyRenderTransform.Y = Mouse.GetPosition(myGrid).Y - _startY;
+                    Toolbar parent = result.VisualHit.FindParent<Toolbar>();
+                    if (parent != null)
+                    {
+                        int previousRow = Grid.GetRow(this);
+                        int newRow = Grid.GetRow(parent);
+                        if (previousRow != newRow)
+                        {
+                            int previousColumn = Grid.GetColumn(this);
+                            int newColumn = Grid.GetColumn(parent);
+                            if (previousColumn == newColumn)
+                            {
+                                Grid.SetRow(this, newRow);
+                                myGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+                                Grid.SetColumn(this, myGrid.ColumnDefinitions.Count - 1);
+                                MyRenderTransform.X = 0;
+                                _startX = 0;
+                            }
+                            else
+                            {
+                                Grid.SetColumn(this, newColumn);
+                                Grid.SetColumn(parent, previousColumn);
+                            }
+                        }
                     }
                 }
             }

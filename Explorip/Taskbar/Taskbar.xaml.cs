@@ -58,8 +58,6 @@ namespace Explorip.TaskBar
                 DesiredHeight += 16;
             }
 
-            QuickLaunchToolbar.RenderTransform = new TranslateTransform();
-
             MinHeight = DesiredHeight;
         }
 
