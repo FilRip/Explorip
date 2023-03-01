@@ -39,10 +39,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void NewTab_Click(object sender, RoutedEventArgs e)
         {
-            TabItemExplorerBrowser item = new();
-            item.Navigation(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
-            MyTabControl.Items.Add(item);
-            MyTabControl.SelectedItem = item;
+            MyTabControl.AddNewTab(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
         }
 
         private void CloseTab_Click(object sender, RoutedEventArgs e)

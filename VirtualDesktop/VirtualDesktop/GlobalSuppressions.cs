@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Major Code Smell", "S4220:Events should have proper arguments", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:WindowsDesktop")]
+[assembly: SuppressMessage("Info Code Smell", "S1133:Deprecated code should be removed", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:JetBrains.Annotations")]

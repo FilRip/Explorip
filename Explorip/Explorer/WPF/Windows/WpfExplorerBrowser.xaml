@@ -8,10 +8,9 @@
         xmlns:converters="clr-namespace:Explorip.Explorer.WPF.Converters"
         xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
         mc:Ignorable="d"
-        d:DesignHeight="450" d:DesignWidth="800"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
         UseLayoutRounding="True" Focusable="True" MouseDown="Window_MouseDown" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
-        ResizeMode="CanResizeWithGrip"
+        ResizeMode="CanResizeWithGrip" Activated="Window_Activated"
         Loaded="Window_Loaded">
     
     <Window.DataContext>

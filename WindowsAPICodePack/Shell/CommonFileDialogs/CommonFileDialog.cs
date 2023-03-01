@@ -854,7 +854,6 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 throw new ArgumentNullException("control");
             }
 
-            CommonFileDialogControl dialogControl = null;
             if (propertyName == "Text")
             {
                 CommonFileDialogTextBox textBox = control as CommonFileDialogTextBox;
@@ -868,7 +867,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                     customize.SetControlLabel(control.Id, textBox.Text);
                 }
             }
-            else if (propertyName == "Visible" && (dialogControl = control as CommonFileDialogControl) != null)
+            else if (propertyName == "Visible" && control is CommonFileDialogControl dialogControl)
             {
                 customize.GetControlState(control.Id, out ShellNativeMethods.ControlState state);
 

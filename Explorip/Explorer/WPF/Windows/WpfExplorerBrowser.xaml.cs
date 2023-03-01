@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -260,5 +261,24 @@ namespace Explorip.Explorer.WPF.Windows
         }
 
         #endregion
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                try
+                {
+                    Thread.Sleep(100);
+                    if (IsActive && WindowState == WindowState.Minimized)
+                    {
+                        if (MyDataContext.WindowMaximized)
+                            WindowState = WindowState.Maximized;
+                        else
+                            WindowState = WindowState.Normal;
+                    }
+                }
+                catch (Exception) { /* On ignore l'erreur */ }
+            }, System.Windows.Threading.DispatcherPriority.Background);
+        }
     }
 }

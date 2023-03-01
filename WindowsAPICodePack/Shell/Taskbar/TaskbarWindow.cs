@@ -114,7 +114,6 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             EnableThumbnailToolbars = true;
             EnableTabbedThumbnails = false;
 
-            //
             ThumbnailButtons = buttons;
             UserWindowHandle = userWindowHandle;
             WindowsControl = null;

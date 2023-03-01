@@ -293,7 +293,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
             try
             {
-                // 
                 List<ICondition> conditionList = new();
                 if (conditionNodes != null)
                 {

@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:ManagedShell.Interop")]
 [assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:ManagedShell.Interop")]
+[assembly: SuppressMessage("Info Code Smell", "S1133:Deprecated code should be removed", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:ManagedShell.Interop")]

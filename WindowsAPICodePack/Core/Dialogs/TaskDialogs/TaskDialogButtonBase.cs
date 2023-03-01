@@ -34,7 +34,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         }
 
         // Note that we don't need to explicitly 
-        // implement the add/remove delegate for the Click event;
+        // implement the add/remove delegate for the Click event
         // the hosting dialog only needs the delegate 
         // information when the Click event is 
         // raised (indirectly) by NativeTaskDialog, 

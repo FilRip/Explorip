@@ -100,7 +100,7 @@ namespace MS.WindowsAPICodePack.Internal
             // for its tooltip. This causes the resource id to
             // parse into 3 parts instead of 2 parts if we don't fix.
             resourceId = resourceId.Replace("shell32,dll", "shell32.dll");
-            parts = resourceId.Split(new char[] { ',' });
+            parts = resourceId.Split(',');
 
             library = parts[0];
             library = library.Replace(@"@", string.Empty);

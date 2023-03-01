@@ -498,7 +498,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 {
                     foreach (Delegate del in NavigationPending.GetInvocationList())
                     {
-                        del.DynamicInvoke(new object[] { this, args });
+                        del.DynamicInvoke(this, args);
                         if (args.Cancel)
                         {
                             canceled = true;
