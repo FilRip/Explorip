@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Explorip.Explorer.WPF.Converters"
              mc:Ignorable="d" AllowDrop="True" BorderThickness="2"
              d:DesignHeight="23" d:DesignWidth="81" Margin="0" IsTabStop="False">
     <UserControl.ContextMenu>
@@ -19,7 +20,10 @@
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid Margin="0">
-        <Button Content="x" Height="19" HorizontalAlignment="Right" Margin="0,3,0,0" Name="ButtonClose" VerticalAlignment="Top" Width="20" FontFamily="Courier" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" Visibility="Visible" FontSize="14" Padding="0" ToolTip="Close" IsTabStop="False"/>
-        <Label Content=" " Height="23" HorizontalAlignment="Left" Margin="0,1,0,0" Name="Label_TabTitle" VerticalAlignment="Top" FontFamily="Courier" FontSize="12" IsTabStop="False" Foreground="White"/>
+        <Button Content="x" Height="19" HorizontalAlignment="Right" Margin="0,3,0,0" Name="ButtonClose" VerticalAlignment="Top" Width="20" FontFamily="Courier" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" FontSize="14" Padding="0" ToolTip="Close" IsTabStop="False" Visibility="{Binding PlusButton, Converter={converters:InverseBoolToVisibilityConverter}}"
+                MouseEnter="ButtonClose_MouseEnter" MouseLeave="ButtonClose_MouseLeave" Click="ButtonClose_Click"/>
+        <Button Content="+" Height="19" HorizontalAlignment="Right" Margin="0,3,0,0" Name="ButtonNewTab" VerticalAlignment="Top" Width="20" FontFamily="Courier" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" FontSize="14" Padding="0" ToolTip="New tab" IsTabStop="False" Visibility="{Binding PlusButton, Converter={converters:BoolToVisibilityConverter}}"
+                MouseEnter="ButtonClose_MouseEnter" MouseLeave="ButtonClose_MouseLeave" Click="ButtonClose_Click" Foreground="White"/>
+        <Label Content="" Height="23" HorizontalAlignment="Left" Margin="0,1,0,0" Name="Label_TabTitle" VerticalAlignment="Top" FontFamily="Courier" FontSize="12" IsTabStop="False" Foreground="White" Visibility="{Binding PlusButton, Converter={converters:InverseBoolToVisibilityConverter}}"/>
     </Grid>
 </UserControl>

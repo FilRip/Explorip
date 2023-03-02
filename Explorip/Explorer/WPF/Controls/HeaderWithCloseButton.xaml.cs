@@ -1,17 +1,23 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 using Explorip.Explorer.WPF.Windows;
+
+using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Explorer.WPF.Controls
 {
     /// <summary>
     /// Interaction logic for CloseableItem.xaml
     /// </summary>
-    public partial class HeaderWithCloseButton : UserControl
+    public partial class HeaderWithCloseButton : UserControl, INotifyPropertyChanged
     {
         public HeaderWithCloseButton()
         {
+            DataContext = this;
             InitializeComponent();
         }
 
@@ -20,9 +26,27 @@ namespace Explorip.Explorer.WPF.Controls
             get { return (TabExplorerBrowser)MyTabItem.Parent; }
         }
 
-        private TabItemExplorerBrowser MyTabItem
+        private TabItem MyTabItem
         {
-            get { return (TabItemExplorerBrowser)Parent; }
+            get { return (TabItem)Parent; }
+        }
+
+        private bool _plusButton;
+        public bool PlusButton
+        {
+            get { return _plusButton; }
+            set
+            {
+                _plusButton = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName()] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #region Context menu
@@ -70,5 +94,38 @@ namespace Explorip.Explorer.WPF.Controls
         }
 
         #endregion
+
+        private void ButtonClose_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (PlusButton)
+                ButtonNewTab.Foreground = Brushes.Lime;
+            else
+                ButtonClose.Foreground = Brushes.Red;
+        }
+
+        private void ButtonClose_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (PlusButton)
+                ButtonNewTab.Foreground = Brushes.White;
+            else
+                ButtonClose.Foreground = Brushes.Black;
+        }
+
+        private void ButtonClose_Click(object sender, RoutedEventArgs e)
+        {
+            if (PlusButton)
+            {
+                MyTabControl.AddNewTab((ShellObject)KnownFolders.Desktop);
+                e.Handled = true;
+            }
+            else
+            {
+                if (MyTabControl.Items.Count == 2 && !MyTabControl.AutoriseFermerDernierOnglet)
+                    return;
+                TabExplorerBrowser previousTabControl = MyTabControl;
+                MyTabControl.Items.Remove(MyTabItem);
+                previousTabControl.HideTab();
+            }
+        }
     }
 }

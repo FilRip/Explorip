@@ -6,6 +6,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace Explorip.Explorer.WPF.Controls
@@ -25,7 +26,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         public void HideTab()
         {
-            if (MyTabControl.Items.Count == 0)
+            if (MyTabControl.Items.Count == 1)
             {
                 MyTabControl.Visibility = Visibility.Collapsed;
                 WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
@@ -37,10 +38,10 @@ namespace Explorip.Explorer.WPF.Controls
         {
             TabItemExplorerBrowser item = new();
             item.Navigation(location);
-            MyTabControl.Items.Add(item);
-            MyTabControl.SelectedItem = item;
+            Items.Insert(Items.Count - 1, item);
+            SelectedItem = item;
             WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
-            if (fenetre.RightTab == MyTabControl && MyTabControl.Items.Count == 1)
+            if (fenetre.RightTab == MyTabControl && MyTabControl.Items.Count > 1)
                 fenetre.ShowRightTab();
         }
 
@@ -76,12 +77,12 @@ namespace Explorip.Explorer.WPF.Controls
             else if (e.Key == Key.Right && e.KeyboardDevice.Modifiers == ModifierKeys.Control &&
                 MyWindow.MyDataContext.SelectionLeft)
             {
-                MyWindow.CopyLeft.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+                MyWindow.CopyLeft.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
             else if (e.Key == Key.Left && e.KeyboardDevice.Modifiers == ModifierKeys.Control &&
                 MyWindow.MyDataContext.SelectionRight)
             {
-                MyWindow.CopyRight.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+                MyWindow.CopyRight.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
             base.OnKeyUp(e);
         }
@@ -117,5 +118,14 @@ namespace Explorip.Explorer.WPF.Controls
         }
 
         #endregion
+
+        private void MyTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SelectedItem is TabItemPlusExplorerBrowser && SelectedIndex > 0)
+            {
+                SelectedIndex--;
+                e.Handled = true;
+            }
+        }
     }
 }

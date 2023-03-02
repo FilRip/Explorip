@@ -1,6 +1,7 @@
 ﻿using Explorip.Explorer.WPF.ViewModels;
 using Explorip.Explorer.WPF.Windows;
 
+using Microsoft.WindowsAPICodePack.Controls;
 using Microsoft.WindowsAPICodePack.Shell;
 
 using System;
@@ -31,9 +32,6 @@ namespace Explorip.Explorer.WPF.Controls
             Header = closableTabHeader;
             MyHeader.DragOver += MyHeader_DragOver;
 
-            closableTabHeader.ButtonClose.MouseEnter += ButtonClose_MouseEnter;
-            closableTabHeader.ButtonClose.MouseLeave += ButtonClose_MouseLeave;
-            closableTabHeader.ButtonClose.Click += ButtonClose_Click;
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
 
             CurrentPath.MouseDown += CurrentPath_MouseDown;
@@ -57,7 +55,7 @@ namespace Explorip.Explorer.WPF.Controls
             }
         }
 
-        private void ExplorerBrowserControl_NavigationFailed(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationFailedEventArgs e)
+        private void ExplorerBrowserControl_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             ExplorerBrowser.ExplorerBrowserControl.Focus();
         }
@@ -92,7 +90,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         #region Navigation file explorer
 
-        private void ExplorerBrowserControl_NavigationComplete(object sender, Microsoft.WindowsAPICodePack.Controls.NavigationCompleteEventArgs e)
+        private void ExplorerBrowserControl_NavigationComplete(object sender, NavigationCompleteEventArgs e)
         {
             MyDataContext.ModeEdit = false;
             SetTitle(e.NewLocation.Name);
@@ -154,13 +152,13 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(Microsoft.WindowsAPICodePack.Controls.NavigationLogDirection.Forward);
+            ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(NavigationLogDirection.Forward);
             ExplorerBrowser.ExplorerBrowserControl.Focus();
         }
 
         private void PreviousButton_Click(object sender, RoutedEventArgs e)
         {
-            ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(Microsoft.WindowsAPICodePack.Controls.NavigationLogDirection.Backward);
+            ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(NavigationLogDirection.Backward);
             ExplorerBrowser.ExplorerBrowserControl.Focus();
         }
 
@@ -193,25 +191,6 @@ namespace Explorip.Explorer.WPF.Controls
             {
                 MyHeader.ButtonClose.Visibility = Visibility.Hidden;
             }
-        }
-
-        private void ButtonClose_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MyHeader.ButtonClose.Foreground = Brushes.Red;
-        }
-
-        private void ButtonClose_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MyHeader.ButtonClose.Foreground = Brushes.Black;
-        }
-
-        private void ButtonClose_Click(object sender, RoutedEventArgs e)
-        {
-            if (MyTabControl.Items.Count == 1 && !MyTabControl.AutoriseFermerDernierOnglet)
-                return;
-            TabExplorerBrowser previousTabControl = MyTabControl;
-            MyTabControl.Items.Remove(this);
-            previousTabControl.HideTab();
         }
 
         private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)
