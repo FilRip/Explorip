@@ -22,7 +22,9 @@ namespace Explorip.ComposantsWinForm.FilRipListView
         public FilRipListView()
         {
             ColumnClick += new ColumnClickEventHandler(MonListView_ColumnClick);
+#pragma warning disable S125
             //ListViewItemSorter = new FilRipListViewComparateur();
+#pragma warning restore S125
             MouseDown += ConstruireMenuColonnes;
             OwnerDraw = true;
             DrawItem += MonListView_DrawItem;

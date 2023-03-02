@@ -568,6 +568,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
 
     #region Unused - Keeping for debugging bug #885228
 
+#pragma warning disable S125 // Sections of code should not be commented out
     //[ComImport,
     // Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser),
     // InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -633,6 +634,8 @@ namespace Microsoft.WindowsAPICodePack.Controls
     //        IntPtr pshv,
     //        CommDlgBrowserNotifyType notifyType);
     //}
+
+#pragma warning restore S125 // Sections of code should not be commented out
 
     #endregion
 

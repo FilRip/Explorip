@@ -350,6 +350,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             return false;
         }
 
+#pragma warning disable S125 // Sections of code should not be commented out
         private static bool DispatchLivePreviewBitmapMessage(ref System.Windows.Forms.Message m, TaskbarWindow taskbarWindow)
         {
             if (m.Msg == (int)TaskbarNativeMethods.WmDwmSendIconicLivePreviewBitmap)
@@ -503,6 +504,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             }
             return false;
         }
+#pragma warning restore S125 // Sections of code should not be commented out
 
         private static bool DispatchDestroyMessage(ref System.Windows.Forms.Message m, TaskbarWindow taskbarWindow)
         {

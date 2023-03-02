@@ -188,6 +188,7 @@ namespace MS.WindowsAPICodePack.Internal
         [FieldOffset(0)]
         ushort _valueType;
 
+#pragma warning disable S125 // Sections of code should not be commented out
         // Reserved Fields
         //[FieldOffset(2)]
         //ushort _wReserved1;
@@ -195,6 +196,7 @@ namespace MS.WindowsAPICodePack.Internal
         //ushort _wReserved2;
         //[FieldOffset(6)]
         //ushort _wReserved3;
+#pragma warning restore S125 // Sections of code should not be commented out
 
         // In order to allow x64 compat, we need to allow for
         // expansion of the IntPtr. However, the BLOB struct

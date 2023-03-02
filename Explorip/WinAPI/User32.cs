@@ -191,5 +191,8 @@ namespace Explorip.WinAPI
 
         [DllImport("user32.dll")]
         internal static extern bool GetWindowRect(IntPtr hWnd, out Rect rect);
+
+        [DllImport("USER32.DLL")]
+        internal static extern IntPtr GetDesktopWindow();
     }
 }

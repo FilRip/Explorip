@@ -391,6 +391,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         /// <param name="riid">requested interface guid</param>
         /// <param name="ppvObject">caller-allocated memory for interface pointer</param>
         /// <returns></returns>
+#pragma warning disable S125, S1871 // Sections of code should not be commented out
         HResult IServiceProvider.QueryService(
             ref Guid guidService, ref Guid riid, out IntPtr ppvObject)
         {
@@ -440,6 +441,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
 
             return hr;
         }
+#pragma warning restore S125, S1871 // Sections of code should not be commented out
         #endregion
 
         #region IExplorerPaneVisibility
@@ -548,7 +550,6 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         HResult ICommDlgBrowser3.OnDefaultCommand(IntPtr ppshv)
         {
             return HResult.False;
-            //return HResult.Ok;
         }
 
         HResult ICommDlgBrowser3.OnStateChange(IntPtr ppshv, CommDlgBrowserStateChange uChange)
@@ -581,12 +582,12 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         HResult ICommDlgBrowser3.GetDefaultMenuText(IShellView shellView, IntPtr buffer, int bufferMaxLength)
         {
             return HResult.False;
-            //return HResult.Ok;
             //OK if new
             //False if default
             //other if error
         }
 
+#pragma warning disable S125 // Sections of code should not be commented out
         HResult ICommDlgBrowser3.GetViewFlags(out uint pdwFlags)
         {
             //var flags = CommDlgBrowser2ViewFlags.NoSelectVerb;
@@ -594,6 +595,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
             pdwFlags = (uint)CommDlgBrowser2View.ShowAllFiles;
             return HResult.Ok;
         }
+#pragma warning restore S125 // Sections of code should not be commented out
 
         HResult ICommDlgBrowser3.Notify(IntPtr pshv, CommDlgBrowserNotifyType notifyType)
         {

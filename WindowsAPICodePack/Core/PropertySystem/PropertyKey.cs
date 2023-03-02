@@ -108,7 +108,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// Returns the hash code of the object. This is vital for performance of value types.
         /// </summary>
         /// <returns></returns>
+#pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
         public override int GetHashCode()
+#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
         {
             return formatId.GetHashCode() ^ propertyId;
         }

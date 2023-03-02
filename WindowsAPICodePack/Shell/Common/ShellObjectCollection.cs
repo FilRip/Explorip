@@ -181,13 +181,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
                     }
                 }
 
-                // Fill out the CIDA header
-                //
-                //    typedef struct _IDA {
-                //    UINT cidl;          // number of relative IDList
-                //    UINT aoffset[1];    // [0]: folder IDList, [1]-[cidl]: item IDList
-                //    } CIDA, * LPIDA;
-                //
                 bwriter.Write(content.Count);
                 foreach (uint offset in offsets)
                 {

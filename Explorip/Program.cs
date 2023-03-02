@@ -11,8 +11,10 @@ namespace Explorip
     public static class Program
     {
         private static System.Windows.Application _WpfHost;
+#pragma warning disable S2223 // Non-constant static fields should not be visible
         internal static Mutex _mutexTaskbar;
         internal static bool ModeShell;
+#pragma warning restore S2223 // Non-constant static fields should not be visible
 
         /// <summary>
         /// The main entry point for the application.

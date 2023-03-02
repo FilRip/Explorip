@@ -447,6 +447,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// Returns the hash code of the object.
         /// </summary>
         /// <returns></returns>
+#pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
         public override int GetHashCode()
         {
             if (!hashValue.HasValue)
@@ -467,6 +468,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             }
             return hashValue.Value;
         }
+#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
         private static readonly MD5CryptoServiceProvider hashProvider = new();
         private int? hashValue;
 

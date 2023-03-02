@@ -156,6 +156,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// Generates a nearly unique hashcode for this structure.
         /// </summary>
         /// <returns>A hash code.</returns>
+#pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
         public override int GetHashCode()
         {
             int hash = moduleName.GetHashCode();
@@ -163,7 +164,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
             hash = hash * 31 + ResourceId.GetHashCode();
             return hash;
         }
-
+#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
     }
-
 }

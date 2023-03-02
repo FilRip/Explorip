@@ -8,3 +8,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:Explorip.WinAPI")]
 [assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:Explorip")]
 [assembly: SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:Explorip")]
+[assembly: SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:Explorip")]

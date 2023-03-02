@@ -40,7 +40,9 @@ namespace ManagedShell.Interop
             // shifts the layout of the struct by 4 bytes instead of the
             // expected 2.
             ushort vt;
+#pragma warning disable S4487 // Unread "private" fields should be removed
             ushort wReserved1;
+#pragma warning restore S4487 // Unread "private" fields should be removed
             ushort wReserved2;
             ushort wReserved3;
             IntPtr p;

@@ -2116,6 +2116,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
                 return (dWord.ToInt32() >> 16) & 0xffff;
         }
 
+#pragma warning disable S125
         /*private Rectangle GetTabImageRect(int index)
         {
             using (GraphicsPath tabBorderPath = GetTabBorder(index))
@@ -2216,6 +2217,7 @@ namespace Explorip.ComposantsWinForm.FilRipTabControl
             }
             return imageRect;
         }*/
+#pragma warning restore S125
 
         #endregion
     }
