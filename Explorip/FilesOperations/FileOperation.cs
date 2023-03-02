@@ -22,8 +22,8 @@ namespace Explorip.FilesOperations
         private readonly uint _sinkCookie;
 
         public FileOperation() : this(null) { }
-        public FileOperation(FileOperationProgressSink callbackSink) : this(callbackSink, null) { }
-        public FileOperation(FileOperationProgressSink callbackSink, IWin32Window owner)
+        public FileOperation(FileOperationProgressSink callbackSink) : this(callbackSink, IntPtr.Zero) { }
+        public FileOperation(FileOperationProgressSink callbackSink, IntPtr owner)
         {
             _callbackSink = callbackSink;
             _fileOperation = (IFileOperation)Activator.CreateInstance(_fileOperationType);
@@ -31,9 +31,10 @@ namespace Explorip.FilesOperations
             _fileOperation.SetOperationFlags(Interfaces.FileOperation.FOF_NOCONFIRMMKDIR | Interfaces.FileOperation.FOFX_ADDUNDORECORD | Interfaces.FileOperation.FOFX_RECYCLEONDELETE);
             if (_callbackSink != null)
                 _sinkCookie = _fileOperation.Advise(_callbackSink);
-            if (owner != null)
-                _fileOperation.SetOwnerWindow((uint)owner.Handle);
+            if (owner != IntPtr.Zero)
+                _fileOperation.SetOwnerWindow((uint)owner);
         }
+        public FileOperation(IntPtr owner) : this(null, owner) { }
 
         public void ChangeOperationFlags(Interfaces.FileOperation flags)
         {

@@ -24,13 +24,9 @@ namespace Explorip.Explorer.WPF.Windows
     /// </summary>
     public partial class WpfExplorerBrowser : Window
     {
-        private readonly FilesOperations.FileOperation _fileOperation;
-
         public WpfExplorerBrowser()
         {
             InitializeComponent();
-
-            _fileOperation = new FilesOperations.FileOperation();
 
             string dir = null;
             if (Environment.GetCommandLineArgs().Length > 1)
@@ -183,20 +179,24 @@ namespace Explorip.Explorer.WPF.Windows
         private void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
         {
             ShellObject[] listeItems = tabSource.CurrentTab.ExplorerBrowser.SelectedItems.ToArray();
-            if (listeItems?.Length > 0)
+            string destination = tabDestination.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+            Task.Run(() =>
             {
-                string fichier, destination;
-                destination = tabDestination.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
-                foreach (ShellObject item in listeItems)
+                FilesOperations.FileOperation fileOperation = new(User32.GetDesktopWindow());
+                if (listeItems?.Length > 0)
                 {
-                    fichier = item.GetDisplayName(DisplayNameType.FileSystemPath);
-                    if (move)
-                        _fileOperation.MoveItem(fichier, destination, Path.GetFileName(fichier));
-                    else
-                        _fileOperation.CopyItem(fichier, destination, Path.GetFileName(fichier));
+                    string fichier;
+                    foreach (ShellObject item in listeItems)
+                    {
+                        fichier = item.GetDisplayName(DisplayNameType.FileSystemPath);
+                        if (move)
+                            fileOperation.MoveItem(fichier, destination, Path.GetFileName(fichier));
+                        else
+                            fileOperation.CopyItem(fichier, destination, Path.GetFileName(fichier));
+                    }
+                    fileOperation.PerformOperations();
                 }
-                _fileOperation.PerformOperations();
-            }
+            });
         }
 
         private void CopyLeft_Click(object sender, RoutedEventArgs e)
@@ -222,14 +222,18 @@ namespace Explorip.Explorer.WPF.Windows
         private void DeleteSelectTab(TabExplorerBrowser tab)
         {
             ShellObject[] listeItems = tab.CurrentTab.ExplorerBrowser.SelectedItems.ToArray();
-            if (listeItems?.Length > 0)
+            Task.Run(() =>
             {
-                foreach (ShellObject file in listeItems)
+                FilesOperations.FileOperation fileOperation = new(User32.GetDesktopWindow());
+                if (listeItems?.Length > 0)
                 {
-                    _fileOperation.DeleteItem(file.GetDisplayName(DisplayNameType.FileSystemPath));
+                    foreach (ShellObject file in listeItems)
+                    {
+                        fileOperation.DeleteItem(file.GetDisplayName(DisplayNameType.FileSystemPath));
+                    }
+                    fileOperation.PerformOperations();
                 }
-                _fileOperation.PerformOperations();
-            }
+            });
         }
 
         private void DeleteLeft_Click(object sender, RoutedEventArgs e)
