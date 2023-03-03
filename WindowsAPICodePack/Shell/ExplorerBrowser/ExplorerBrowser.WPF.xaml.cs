@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
@@ -41,7 +42,10 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             InitializeComponent();
 
             // the ExplorerBrowser WinForms control
-            ExplorerBrowserControl = new WindowsForms.ExplorerBrowser();
+            /*Task.Run(() =>
+            {*/
+                ExplorerBrowserControl = new WindowsForms.ExplorerBrowser();
+            //}).Wait();
 
             // back the dependency collection properties with instances
             SelectedItems = selectedItems = new ObservableCollection<ShellObject>();

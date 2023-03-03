@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 using Explorip.FilesOperations.Interfaces;
 using Explorip.Helpers;
@@ -10,6 +9,10 @@ using Explorip.WinAPI.Modeles;
 
 namespace Explorip.FilesOperations
 {
+    // TODO : Intercept copy/paste on the fly
+    //        https://stackoverflow.com/questions/73185376/transfer-files-remotelly-via-delayed-renderingcf-hdrop
+    //        https://stackoverflow.com/questions/74151301/c-hook-windows-explorer-paste-event
+    //        https://github.com/mity/old-new-win32api#drag-and-drop
     public class FileOperation : IDisposable
     {
         private static readonly Guid CLSID_FileOperation = new("3ad05575-8857-4850-9277-11b85bdb8e09");

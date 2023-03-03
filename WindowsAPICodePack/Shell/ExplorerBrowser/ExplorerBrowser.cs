@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Microsoft.WindowsAPICodePack.Shell;
@@ -292,43 +293,46 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
 
             if (!DesignMode)
             {
-                explorerBrowserControl = new ExplorerBrowserClass();
+                /*Task.Run(() =>
+                {*/
+                    explorerBrowserControl = new ExplorerBrowserClass();
 
-                // hooks up IExplorerPaneVisibility and ICommDlgBrowser event notifications
-                ExplorerBrowserNativeMethods.IUnknown_SetSite(explorerBrowserControl, this);
+                    // hooks up IExplorerPaneVisibility and ICommDlgBrowser event notifications
+                    ExplorerBrowserNativeMethods.IUnknown_SetSite(explorerBrowserControl, this);
 
-                // hooks up IExplorerBrowserEvents event notification
-                explorerBrowserControl.Advise(
-                    Marshal.GetComInterfaceForObject(this, typeof(IExplorerBrowserEvents)),
-                    out eventsCookie);
+                    // hooks up IExplorerBrowserEvents event notification
+                    explorerBrowserControl.Advise(
+                        Marshal.GetComInterfaceForObject(this, typeof(IExplorerBrowserEvents)),
+                        out eventsCookie);
 
-                // sets up ExplorerBrowser view connection point events
-                viewEvents = new ExplorerBrowserViewEvents(this);
+                    // sets up ExplorerBrowser view connection point events
+                    viewEvents = new ExplorerBrowserViewEvents(this);
 
-                NativeRect rect = new();
-                rect.Top = ClientRectangle.Top;
-                rect.Left = ClientRectangle.Left;
-                rect.Right = ClientRectangle.Right;
-                rect.Bottom = ClientRectangle.Bottom;
+                    NativeRect rect = new();
+                    rect.Top = ClientRectangle.Top;
+                    rect.Left = ClientRectangle.Left;
+                    rect.Right = ClientRectangle.Right;
+                    rect.Bottom = ClientRectangle.Bottom;
 
-                explorerBrowserControl.Initialize(Handle, ref rect, null);
+                    explorerBrowserControl.Initialize(Handle, ref rect, null);
 
-                // Force an initial show frames so that IExplorerPaneVisibility works the first time it is set.
-                // This also enables the control panel to be browsed to. If it is not set, then navigating to 
-                // the control panel succeeds, but no items are visible in the view.
-                explorerBrowserControl.SetOptions(ExplorerBrowserOptions.ShowFrames);
+                    // Force an initial show frames so that IExplorerPaneVisibility works the first time it is set.
+                    // This also enables the control panel to be browsed to. If it is not set, then navigating to 
+                    // the control panel succeeds, but no items are visible in the view.
+                    explorerBrowserControl.SetOptions(ExplorerBrowserOptions.ShowFrames);
 
-                explorerBrowserControl.SetPropertyBag(propertyBagName);
+                    explorerBrowserControl.SetPropertyBag(propertyBagName);
 
-                if (antecreationNavigationTarget != null)
-                {
-                    BeginInvoke(new MethodInvoker(
-                    delegate
+                    if (antecreationNavigationTarget != null)
                     {
-                        Navigate(antecreationNavigationTarget);
-                        antecreationNavigationTarget = null;
-                    }));
-                }
+                        BeginInvoke(new MethodInvoker(
+                        delegate
+                        {
+                            Navigate(antecreationNavigationTarget);
+                            antecreationNavigationTarget = null;
+                        }));
+                    }
+                //}).Wait();
             }
 
             Application.AddMessageFilter(this);
