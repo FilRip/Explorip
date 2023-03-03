@@ -178,7 +178,7 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
         {
-            ShellObject[] listeItems = tabSource.CurrentTab.ExplorerBrowser.SelectedItems.ToArray();
+            ShellObject[] listeItems = tabSource.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
             string destination = tabDestination.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
             Task.Run(() =>
             {
@@ -195,6 +195,7 @@ namespace Explorip.Explorer.WPF.Windows
                             fileOperation.CopyItem(fichier, destination, Path.GetFileName(fichier));
                     }
                     fileOperation.PerformOperations();
+                    fileOperation.Dispose();
                 }
             });
         }
@@ -221,7 +222,7 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void DeleteSelectTab(TabExplorerBrowser tab)
         {
-            ShellObject[] listeItems = tab.CurrentTab.ExplorerBrowser.SelectedItems.ToArray();
+            ShellObject[] listeItems = tab.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
             Task.Run(() =>
             {
                 FilesOperations.FileOperation fileOperation = new(User32.GetDesktopWindow());
@@ -232,6 +233,7 @@ namespace Explorip.Explorer.WPF.Windows
                         fileOperation.DeleteItem(file.GetDisplayName(DisplayNameType.FileSystemPath));
                     }
                     fileOperation.PerformOperations();
+                    fileOperation.Dispose();
                 }
             });
         }
