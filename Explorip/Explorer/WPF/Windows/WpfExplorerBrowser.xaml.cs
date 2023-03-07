@@ -257,6 +257,8 @@ namespace Explorip.Explorer.WPF.Windows
             if (_startDrag && WindowState != WindowState.Minimized && IsVisible && IsActive)
             {
                 _startDrag = false;
+                if (WindowState == WindowState.Maximized)
+                    Top = Mouse.GetPosition(Application.Current.MainWindow).Y;
                 SetWindowNormal();
                 DragMove();
             }
