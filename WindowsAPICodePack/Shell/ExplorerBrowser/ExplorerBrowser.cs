@@ -293,46 +293,43 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
 
             if (!DesignMode)
             {
-                /*Task.Run(() =>
-                {*/
-                    explorerBrowserControl = new ExplorerBrowserClass();
+                explorerBrowserControl = new ExplorerBrowserClass();
 
-                    // hooks up IExplorerPaneVisibility and ICommDlgBrowser event notifications
-                    ExplorerBrowserNativeMethods.IUnknown_SetSite(explorerBrowserControl, this);
+                // hooks up IExplorerPaneVisibility and ICommDlgBrowser event notifications
+                ExplorerBrowserNativeMethods.IUnknown_SetSite(explorerBrowserControl, this);
 
-                    // hooks up IExplorerBrowserEvents event notification
-                    explorerBrowserControl.Advise(
-                        Marshal.GetComInterfaceForObject(this, typeof(IExplorerBrowserEvents)),
-                        out eventsCookie);
+                // hooks up IExplorerBrowserEvents event notification
+                explorerBrowserControl.Advise(
+                    Marshal.GetComInterfaceForObject(this, typeof(IExplorerBrowserEvents)),
+                    out eventsCookie);
 
-                    // sets up ExplorerBrowser view connection point events
-                    viewEvents = new ExplorerBrowserViewEvents(this);
+                // sets up ExplorerBrowser view connection point events
+                viewEvents = new ExplorerBrowserViewEvents(this);
 
-                    NativeRect rect = new();
-                    rect.Top = ClientRectangle.Top;
-                    rect.Left = ClientRectangle.Left;
-                    rect.Right = ClientRectangle.Right;
-                    rect.Bottom = ClientRectangle.Bottom;
+                NativeRect rect = new();
+                rect.Top = ClientRectangle.Top;
+                rect.Left = ClientRectangle.Left;
+                rect.Right = ClientRectangle.Right;
+                rect.Bottom = ClientRectangle.Bottom;
 
-                    explorerBrowserControl.Initialize(Handle, ref rect, null);
+                explorerBrowserControl.Initialize(Handle, ref rect, null);
 
-                    // Force an initial show frames so that IExplorerPaneVisibility works the first time it is set.
-                    // This also enables the control panel to be browsed to. If it is not set, then navigating to 
-                    // the control panel succeeds, but no items are visible in the view.
-                    explorerBrowserControl.SetOptions(ExplorerBrowserOptions.ShowFrames);
+                // Force an initial show frames so that IExplorerPaneVisibility works the first time it is set.
+                // This also enables the control panel to be browsed to. If it is not set, then navigating to 
+                // the control panel succeeds, but no items are visible in the view.
+                explorerBrowserControl.SetOptions(ExplorerBrowserOptions.ShowFrames);
 
-                    explorerBrowserControl.SetPropertyBag(propertyBagName);
+                explorerBrowserControl.SetPropertyBag(propertyBagName);
 
-                    if (antecreationNavigationTarget != null)
+                if (antecreationNavigationTarget != null)
+                {
+                    BeginInvoke(new MethodInvoker(
+                    delegate
                     {
-                        BeginInvoke(new MethodInvoker(
-                        delegate
-                        {
-                            Navigate(antecreationNavigationTarget);
-                            antecreationNavigationTarget = null;
-                        }));
-                    }
-                //}).Wait();
+                        Navigate(antecreationNavigationTarget);
+                        antecreationNavigationTarget = null;
+                    }));
+                }
             }
 
             Application.AddMessageFilter(this);

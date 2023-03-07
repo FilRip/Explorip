@@ -42,10 +42,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             InitializeComponent();
 
             // the ExplorerBrowser WinForms control
-            /*Task.Run(() =>
-            {*/
-                ExplorerBrowserControl = new WindowsForms.ExplorerBrowser();
-            //}).Wait();
+            ExplorerBrowserControl = new WindowsForms.ExplorerBrowser();
 
             // back the dependency collection properties with instances
             SelectedItems = selectedItems = new ObservableCollection<ShellObject>();

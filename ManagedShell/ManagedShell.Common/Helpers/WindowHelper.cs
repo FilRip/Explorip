@@ -145,9 +145,9 @@ namespace ManagedShell.Common.Helpers
                     if (EnvironmentHelper.IsWindows10RS4OrBetter)
                     {
                         accent.AccentState = AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
-#pragma warning disable S1764 // Identical expressions should not be used on both sides of a binary operator
+#pragma warning disable S1764, S2437 // Identical expressions should not be used on both sides of a binary operator
                         accent.GradientColor = (0 << 24) | (0xFFFFFF /* BGR */ & 0xFFFFFF);
-#pragma warning restore S1764 // Identical expressions should not be used on both sides of a binary operator
+#pragma warning restore S1764, S2437 // Identical expressions should not be used on both sides of a binary operator
                     }
                     else
                     {

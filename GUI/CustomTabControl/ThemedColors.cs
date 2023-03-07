@@ -15,7 +15,6 @@ namespace System.Drawing
         private const string NormalColor = "NormalColor";
         private const string HomeStead = "HomeStead";
         private const string Metallic = "Metallic";
-        private const string NoTheme = "NoTheme";
 
         private static readonly Color[] _toolBorder = new Color[] { Color.FromArgb(127, 157, 185), Color.FromArgb(164, 185, 127), Color.FromArgb(165, 172, 178), Color.FromArgb(132, 130, 132) };
         #endregion
