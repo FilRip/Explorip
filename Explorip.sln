@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomWinForm", "GUI\Custom
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GUI", "GUI", "{52B9A3EB-0A79-4F8C-87B7-4B1EECA4CF6E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploripShellExt", "ExploripShellExt\ExploripShellExt.csproj", "{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeAnalysisDebug|Any CPU = CodeAnalysisDebug|Any CPU
@@ -247,6 +249,18 @@ Global
 		{BA89C958-015E-49F0-BF9F-F68287F9EBB2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BA89C958-015E-49F0-BF9F-F68287F9EBB2}.Release|x64.ActiveCfg = Release|Any CPU
 		{BA89C958-015E-49F0-BF9F-F68287F9EBB2}.Release|x64.Build.0 = Release|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.CodeAnalysisDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.CodeAnalysisDebug|Any CPU.Build.0 = Debug|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.CodeAnalysisDebug|x64.ActiveCfg = Debug|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.CodeAnalysisDebug|x64.Build.0 = Debug|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.Debug|x64.Build.0 = Debug|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.Release|x64.ActiveCfg = Release|Any CPU
+		{CE6A3E38-059A-4685-ACBB-8CE53E05DD6A}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
