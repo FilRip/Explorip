@@ -1,15 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <TargetFrameworks>net48</TargetFrameworks>
+    <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>WindowsDesktop</RootNamespace>
     <PackageId>VirtualDesktop</PackageId>
     <Version>5.0</Version>
-    <Company>grabacr.net</Company>
     <Description>C# wrapper for IVirtualDesktopManager on Windows 10 and 11.</Description>
-    <Copyright>Copyright © 2020 Manato KAMEYA</Copyright>
-    <Authors>Manato KAMEYA</Authors>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

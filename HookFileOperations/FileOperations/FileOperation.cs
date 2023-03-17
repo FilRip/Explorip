@@ -2,10 +2,10 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Explorip.FilesOperations.Interfaces;
-using Explorip.Helpers;
-using Explorip.WinAPI;
-using Explorip.WinAPI.Modeles;
+using Explorip.HookFileOperations.FilesOperations.Interfaces;
+using Explorip.HookFileOperations.Helpers;
+
+using ManagedShell.ShellFolders.Interfaces;
 
 namespace Explorip.FilesOperations
 {
@@ -13,7 +13,6 @@ namespace Explorip.FilesOperations
     //        https://stackoverflow.com/questions/73185376/transfer-files-remotelly-via-delayed-renderingcf-hdrop
     //        https://stackoverflow.com/questions/74151301/c-hook-windows-explorer-paste-event
     //        https://github.com/mity/old-new-win32api#drag-and-drop
-    //        https://stackoverflow.com/questions/1585453/detect-windows-explorer-copy-operation
     public class FileOperation : IDisposable
     {
         private static readonly Guid CLSID_FileOperation = new("3ad05575-8857-4850-9277-11b85bdb8e09");
@@ -32,7 +31,7 @@ namespace Explorip.FilesOperations
             _callbackSink = callbackSink;
             _fileOperation = (IFileOperation)Activator.CreateInstance(_fileOperationType);
 
-            _fileOperation.SetOperationFlags(Interfaces.FileOperation.FOF_NOCONFIRMMKDIR | Interfaces.FileOperation.FOFX_ADDUNDORECORD | Interfaces.FileOperation.FOFX_RECYCLEONDELETE);
+            _fileOperation.SetOperationFlags(EFileOperation.FOF_NOCONFIRMMKDIR | EFileOperation.FOFX_ADDUNDORECORD | EFileOperation.FOFX_RECYCLEONDELETE);
             if (_callbackSink != null)
                 _sinkCookie = _fileOperation.Advise(_callbackSink);
             if (owner != IntPtr.Zero)
@@ -40,7 +39,7 @@ namespace Explorip.FilesOperations
         }
         public FileOperation(IntPtr owner) : this(null, owner) { }
 
-        public void ChangeOperationFlags(Interfaces.FileOperation flags)
+        public void ChangeOperationFlags(EFileOperation flags)
         {
             _fileOperation.SetOperationFlags(flags);
         }
@@ -104,7 +103,7 @@ namespace Explorip.FilesOperations
 
         private static ComReleaser<IShellItem> CreateShellItem(string path)
         {
-            return new ComReleaser<IShellItem>((IShellItem)Shell32.SHCreateItemFromParsingName(path, null, ref _shellItemGuid));
+            return new ComReleaser<IShellItem>((IShellItem)ManagedShell.ShellFolders.Interop.SHCreateItemFromParsingName(path, null, ref _shellItemGuid));
         }
 
         public bool IsDisposed

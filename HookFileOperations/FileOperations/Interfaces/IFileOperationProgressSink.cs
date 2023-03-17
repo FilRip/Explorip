@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using Explorip.WinAPI.Modeles;
+using ManagedShell.ShellFolders.Interfaces;
 
-namespace Explorip.FilesOperations.Interfaces
+namespace Explorip.HookFileOperations.FilesOperations.Interfaces
 {
     [ComImport()]
     [Guid("04b0f1a7-9490-44bc-96e1-4296a31252e2")]

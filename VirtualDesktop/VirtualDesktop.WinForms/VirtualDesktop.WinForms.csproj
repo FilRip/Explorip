@@ -2,13 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>net48</TargetFrameworks>
+    <TargetFramework>net48</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Version>5.0</Version>
-    <Authors>Manato KAMEYA</Authors>
-    <Company>grabacr.net</Company>
     <Description>C# wrapper for IVirtualDesktopManager on Windows 10 and 11.</Description>
-    <Copyright>Copyright © 2020 Manato KAMEYA</Copyright>
     <Product>VirtualDesktop</Product>
     <RootNamespace>WindowsDesktop</RootNamespace>
     <LangVersion>latest</LangVersion>

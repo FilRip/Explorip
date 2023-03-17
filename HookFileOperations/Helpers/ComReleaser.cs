@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Explorip.Helpers
+namespace Explorip.HookFileOperations.Helpers
 {
     public class ComReleaser<T> : IDisposable where T : class
     {

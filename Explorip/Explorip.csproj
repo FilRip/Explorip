@@ -54,6 +54,9 @@
     <AssemblyOriginatorKeyFile>FilRip.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EasyHook, Version=2.7.7097.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
+      <HintPath>..\packages\EasyHook.2.7.7097\lib\net40\EasyHook.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -62,6 +65,7 @@
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows" />
@@ -135,11 +139,6 @@
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
     <Compile Include="FilesOperations\ContextMenuPaste.cs" />
-    <Compile Include="FilesOperations\FileOperation.cs" />
-    <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
-    <Compile Include="FilesOperations\Interfaces\FileOperation.cs" />
-    <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
-    <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
     <Compile Include="Explorer\WinForm\Forms\FormExplorerBrowser.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,7 +146,6 @@
       <DependentUpon>FormExplorerBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionIEnumerable.cs" />
     <Compile Include="Helpers\ExtensionsArray.cs" />
     <Compile Include="Helpers\ExtensionsClass.cs" />
@@ -163,6 +161,7 @@
     <Compile Include="Helpers\ExtensionsWpf.cs" />
     <Compile Include="Helpers\GestionEcrans.cs" />
     <Compile Include="Helpers\GestionFenetres.cs" />
+    <Compile Include="Helpers\HookCopyOperations.cs" />
     <Compile Include="Helpers\PopUpMenuExtensions.cs" />
     <Compile Include="Helpers\DragDropHelper.cs" />
     <Compile Include="Helpers\ViewModelBase.cs" />
@@ -253,7 +252,6 @@
     <Compile Include="WinAPI\Kernel32.cs" />
     <Compile Include="WinAPI\Modeles\BrowseInfo.cs" />
     <Compile Include="WinAPI\Modeles\CmInvokeCommandInfoEx.cs" />
-    <Compile Include="FilesOperations\Interfaces\CopyEngineResult.cs" />
     <Compile Include="WinAPI\Modeles\DwmThumbnailProperties.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu.cs" />
     <Compile Include="WinAPI\Modeles\IContextMenu2.cs" />
@@ -321,6 +319,7 @@
     <None Include="app.config" />
     <None Include="app.manifest" />
     <None Include="FilRip.snk" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -472,6 +471,10 @@
       <Project>{ba89c958-015e-49f0-bf9f-f68287f9ebb2}</Project>
       <Name>CustomWinForm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj">
+      <Project>{1fd71282-00d6-44d4-9857-1d26030662b2}</Project>
+      <Name>HookFileOperations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj">
       <Project>{faed8422-bac8-4909-a199-e16595a1f448}</Project>
       <Name>ManagedShell.AppBar</Name>
@@ -537,6 +540,32 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Desktop\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ContentWithTargetPath Include="EasyHook\EasyHook32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>EasyHook32.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyHook32Svc.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>EasyHook32Svc.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyHook64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>EasyHook64.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyHook64Svc.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>EasyHook64Svc.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyLoad32.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>EasyLoad32.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyLoad64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>EasyLoad64.dll</TargetPath>
+    </ContentWithTargetPath>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

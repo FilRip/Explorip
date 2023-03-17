@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
@@ -8,7 +9,7 @@ using ManagedShell.ShellFolders.Structs;
 
 namespace ManagedShell.ShellFolders
 {
-    static class Interop
+    internal static class Interop
     {
         public const uint CMD_FIRST = 1;
         public const uint CMD_LAST = 30000;
@@ -54,6 +55,10 @@ namespace ManagedShell.ShellFolders
 
         [DllImport("shell32.dll")]
         public static extern int SHGetIDListFromObject(IShellFolder punk, out IntPtr ppidl);
+
+        [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
+        [return: MarshalAs(UnmanagedType.Interface)]
+        internal static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
         public static extern void SHCreateItemFromParsingName(

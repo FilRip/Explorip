@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Explorip.FilesOperations.Interfaces
+namespace Explorip.HookFileOperations.FilesOperations.Interfaces
 {
     [Flags()]
-    public enum FileOperation : uint
+    public enum EFileOperation : uint
     {
         FOF_MULTIDESTFILES = 0x0001,
         FOF_CONFIRMMOUSE = 0x0002,

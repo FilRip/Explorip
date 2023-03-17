@@ -7,5 +7,4 @@
 [assembly: InternalsVisibleTo("ManagedShell.WindowsTasks")]
 [assembly: InternalsVisibleTo("ManagedShell.WindowsTray")]
 [assembly: InternalsVisibleTo("ManagedShell")]
-[assembly: InternalsVisibleTo("ManagedShell.ShellFolders")]
 [assembly: InternalsVisibleTo("HookFileOperations")]

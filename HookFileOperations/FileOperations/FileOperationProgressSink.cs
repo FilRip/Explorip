@@ -1,8 +1,9 @@
 ﻿using System.Diagnostics;
 
-using Explorip.FilesOperations.Interfaces;
-using Explorip.FilesOptions.Interfaces;
-using Explorip.WinAPI.Modeles;
+using Explorip.HookFileOperations.FilesOperations.Interfaces;
+
+using ManagedShell.ShellFolders.Enums;
+using ManagedShell.ShellFolders.Interfaces;
 
 namespace Explorip.FilesOperations
 {
@@ -114,7 +115,7 @@ namespace Explorip.FilesOperations
             string action, IShellItem item, uint hresult)
         {
             TraceAction(action,
-                item?.GetDisplayName(SIGDN.SIGDN_NORMALDISPLAY),
+                item?.GetDisplayName(SIGDN.NORMALDISPLAY),
                 hresult);
         }
     }
