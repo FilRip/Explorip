@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-using Explorip.HookFileOperations.FilesOperations.Interfaces;
+using Explorip.FilesOperations.Interfaces;
 
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;

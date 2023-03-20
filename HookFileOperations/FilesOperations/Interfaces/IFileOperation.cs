@@ -2,8 +2,6 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-using ManagedShell.ShellFolders.Interfaces;
-
 namespace Explorip.HookFileOperations.FilesOperations.Interfaces
 {
     [ComImport()]

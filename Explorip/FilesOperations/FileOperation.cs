@@ -2,8 +2,8 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Explorip.HookFileOperations.FilesOperations.Interfaces;
-using Explorip.HookFileOperations.Helpers;
+using Explorip.FilesOperations.Interfaces;
+using Explorip.Helpers;
 
 using ManagedShell.ShellFolders.Interfaces;
 

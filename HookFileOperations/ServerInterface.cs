@@ -9,7 +9,7 @@ namespace Explorip.HookFileOperations
     {
         public void IsInstalled(int clientPID)
         {
-            Console.WriteLine("Explorip has injected HookFileOperations into process {0}.\r\n", clientPID);
+            Console.WriteLine("Explorip has injected HookFileOperations into process {0}.", clientPID);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Explorip.HookFileOperations
             Console.WriteLine("The target process has reported an error:\r\n" + e.ToString());
         }
 
-        //int count = 0;
+        int count = 0;
         /// <summary>
         /// Called to confirm that the IPC channel is still open / host application has not closed
         /// </summary>

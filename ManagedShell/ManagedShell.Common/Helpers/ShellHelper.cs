@@ -283,11 +283,11 @@ namespace ManagedShell.Common.Helpers
         {
             try
             {
-                var fs = new ShFileOpStruct
+                var fs = new ShFileOpStruct()
                 {
                     wFunc = FileOperationType.FO_DELETE,
                     pFrom = path + '\0' + '\0',
-                    fFlags = FileOperation.FOF_ALLOWUNDO | flags
+                    fFlags = FileOperation.FOF_ALLOWUNDO | flags,
                 };
                 SHFileOperation(ref fs);
                 return true;

@@ -41,13 +41,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileOperations\ClSidIFileOperation.cs" />
-    <Compile Include="FileOperations\FileOperation.cs" />
-    <Compile Include="FileOperations\FileOperationProgressSink.cs" />
-    <Compile Include="FileOperations\Interfaces\CopyEngineResult.cs" />
-    <Compile Include="FileOperations\Interfaces\EFileOperation.cs" />
-    <Compile Include="FileOperations\Interfaces\IFileOperation.cs" />
-    <Compile Include="FileOperations\Interfaces\IFileOperationProgressSink.cs" />
+    <Compile Include="FilesOperations\ClSidIFileOperation.cs" />
+    <Compile Include="FilesOperations\EFileOperation.cs" />
+    <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
+    <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
+    <Compile Include="FilesOperations\Interfaces\IShellItem.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="MainHookClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,15 +74,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj">
-      <Project>{70c88862-47d9-4706-8c9a-2c9c8cfd4abd}</Project>
-      <Name>ManagedShell.Interop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj">
-      <Project>{08CA72AE-748C-45E3-88F1-0236D1AC679E}</Project>
-      <Name>ManagedShell.ShellFolders</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

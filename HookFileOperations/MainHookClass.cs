@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
 using EasyHook;
 
-using Explorip.HookFileOperations.FileOperations;
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
-
-using static ManagedShell.Interop.NativeMethods;
 
 namespace Explorip.HookFileOperations
 {
@@ -19,7 +17,7 @@ namespace Explorip.HookFileOperations
         private readonly Queue<string> _messageQueue = new();
         private LocalHook copyItemHook = null, copyItemsHook = null;
 
-#pragma warning disable IDE0060 // Supprimer le paramètre inutilisé
+#pragma warning disable IDE0060, IDE0079 // Supprimer le paramètre inutilisé
         public MainHookClass(RemoteHooking.IContext context, string channelName)
         {
             if (!string.IsNullOrWhiteSpace(channelName))
@@ -28,7 +26,7 @@ namespace Explorip.HookFileOperations
                 _server.Ping();
             }
         }
-#pragma warning restore IDE0060 // Supprimer le paramètre inutilisé
+#pragma warning restore IDE0060, IDE0079 // Supprimer le paramètre inutilisé
 
         public void Run(RemoteHooking.IContext context, string channelName)
         {
@@ -36,7 +34,7 @@ namespace Explorip.HookFileOperations
             {
                 _server?.IsInstalled(RemoteHooking.GetCurrentProcessId());
 
-                COMClassInfo copyItemsCom = new(typeof(ClSidIFileOperation), typeof(IFileOperation), nameof(IFileOperation.CopyItem), nameof(IFileOperation.CopyItems));
+                COMClassInfo copyItemsCom = new(typeof(FilesOperations.ClSidIFileOperation), typeof(IFileOperation), nameof(IFileOperation.CopyItem), nameof(IFileOperation.CopyItems));
                 copyItemsCom.Query();
                 copyItemHook = LocalHook.Create(copyItemsCom.MethodPointers[0], new DelegateCopyItem(CopyItemHooked), this);
                 copyItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[1], new DelegateCopyItems(CopyItemsHooked), this);
@@ -80,16 +78,20 @@ namespace Explorip.HookFileOperations
                         }
                     }
                 }
-                catch (Exception) { /* Ignore errors */ }
-
+                catch (Exception ex)
+                {
+                    _server?.ReportMessages(new string[] { $"Error : {ex.Message}", ex.StackTrace });
+                }
                 Uninstall();
             }
         }
 
         public void Uninstall()
         {
+            _server?.ReportMessage($"Explorip remove hook from process {RemoteHooking.GetCurrentProcessId()}");
             copyItemHook?.Dispose();
             copyItemsHook?.Dispose();
+            LocalHook.Release();
             /*ShFileOpe.Dispose();
             ShFileOpeW.Dispose();*/
         }
@@ -117,6 +119,81 @@ namespace Explorip.HookFileOperations
         #endregion
 
         #region SHFileOperation
+
+        /// <summary>
+        /// Possible flags for the SHFileOperation method.
+        /// </summary>
+        [Flags()]
+        public enum FileOperation : ushort
+        {
+            /// <summary>
+            /// Do not show a dialog during the process
+            /// </summary>
+            FOF_SILENT = 0x0004,
+            /// <summary>
+            /// Do not ask the user to confirm selection
+            /// </summary>
+            FOF_NOCONFIRMATION = 0x0010,
+            /// <summary>
+            /// Delete the file to the recycle bin.  (Required flag to send a file to the bin
+            /// </summary>
+            FOF_ALLOWUNDO = 0x0040,
+            /// <summary>
+            /// Do not show the names of the files or folders that are being recycled.
+            /// </summary>
+            FOF_SIMPLEPROGRESS = 0x0100,
+            /// <summary>
+            /// Surpress errors, if any occur during the process.
+            /// </summary>
+            FOF_NOERRORUI = 0x0400,
+            /// <summary>
+            /// Warn if files are too big to fit in the recycle bin and will need
+            /// to be deleted completely.
+            /// </summary>
+            FOF_WANTNUKEWARNING = 0x4000,
+        }
+
+        /// <summary>
+        /// File Operation Function Type for SHFileOperation
+        /// </summary>
+        public enum FileOperationType : uint
+        {
+            /// <summary>
+            /// Move the objects
+            /// </summary>
+            FO_MOVE = 0x0001,
+            /// <summary>
+            /// Copy the objects
+            /// </summary>
+            FO_COPY = 0x0002,
+            /// <summary>
+            /// Delete (or recycle) the objects
+            /// </summary>
+            FO_DELETE = 0x0003,
+            /// <summary>
+            /// Rename the object(s)
+            /// </summary>
+            FO_RENAME = 0x0004,
+        }
+
+        /// <summary>
+        /// SHFILEOPSTRUCT for SHFileOperation from COM
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct ShFileOpStruct
+        {
+
+            public IntPtr hwnd;
+            [MarshalAs(UnmanagedType.U4)]
+            public FileOperationType wFunc;
+            public string pFrom;
+            public string pTo;
+            public FileOperation fFlags;
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool fAnyOperationsAborted;
+            public IntPtr hNameMappings;
+            public string lpszProgressTitle;
+        }
 
         [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ThrowOnUnmappableChar = true)]
         private static extern int SHFileOperationA(ref ShFileOpStruct lpFileOp);

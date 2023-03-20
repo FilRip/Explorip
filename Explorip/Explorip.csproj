@@ -145,7 +145,14 @@
     <Compile Include="Explorer\WinForm\Forms\FormExplorerBrowser.Designer.cs">
       <DependentUpon>FormExplorerBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="FilesOperations\FileOperation.cs" />
+    <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
+    <Compile Include="FilesOperations\Interfaces\CopyEngineResult.cs" />
+    <Compile Include="FilesOperations\Interfaces\EFileOperation.cs" />
+    <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
+    <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionIEnumerable.cs" />
     <Compile Include="Helpers\ExtensionsArray.cs" />
     <Compile Include="Helpers\ExtensionsClass.cs" />
