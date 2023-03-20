@@ -4,17 +4,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1FD71282-00D6-44D4-9857-1D26030662B2}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Explorip.HookFileOperations</RootNamespace>
-    <AssemblyName>HookFileOperations</AssemblyName>
+    <ProjectGuid>{30E52DC9-89E9-40B7-8785-AC13479751B0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Explorip.HookFileOperationsManager</RootNamespace>
+    <AssemblyName>HookFileOperationsManager</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,12 +25,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Explorip.HookFileOperationsManager.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook, Version=2.7.7097.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
@@ -38,26 +43,21 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Runtime.Remoting" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilesOperations\ClSidIFileOperation.cs" />
-    <Compile Include="FilesOperations\CopyEngineResult.cs" />
-    <Compile Include="FilesOperations\EFileOperation.cs" />
-    <Compile Include="FilesOperations\FileOperation.cs" />
-    <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
-    <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
-    <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
-    <Compile Include="FilesOperations\Interfaces\IShellItem.cs" />
-    <Compile Include="FilesOperations\Interfaces\IShellItemArray.cs" />
-    <Compile Include="FilesOperations\Interfaces\PropertyKey.cs" />
-    <Compile Include="FilesOperations\Interfaces\ShellFileGetAttributesOptions.cs" />
-    <Compile Include="FilesOperations\Interfaces\ShellItemAttributeOptions.cs" />
-    <Compile Include="FilesOperations\Interfaces\SIGDN.cs" />
-    <Compile Include="Helpers\ComReleaser.cs" />
-    <Compile Include="MainHookClass.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerInterface.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj">
+      <Project>{1fd71282-00d6-44d4-9857-1d26030662b2}</Project>
+      <Name>HookFileOperations</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="EasyHook32.dll">
@@ -79,9 +79,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

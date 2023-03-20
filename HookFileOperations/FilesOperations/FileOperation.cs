@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 
-using Explorip.FilesOperations.Interfaces;
-using Explorip.Helpers;
+using Explorip.HookFileOperations.FilesOperations.Interfaces;
+using Explorip.HookFileOperations.Helpers;
 
-using ManagedShell.ShellFolders.Interfaces;
-
-namespace Explorip.FilesOperations
+namespace Explorip.HookFileOperations
 {
     public class FileOperation : IDisposable
     {
@@ -97,9 +96,13 @@ namespace Explorip.FilesOperations
             if (disposedValue) throw new ObjectDisposedException(GetType().Name);
         }
 
+        [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
+        [return: MarshalAs(UnmanagedType.Interface)]
+        private static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
+
         private static ComReleaser<IShellItem> CreateShellItem(string path)
         {
-            return new ComReleaser<IShellItem>((IShellItem)ManagedShell.ShellFolders.Interop.SHCreateItemFromParsingName(path, null, ref _shellItemGuid));
+            return new ComReleaser<IShellItem>((IShellItem)SHCreateItemFromParsingName(path, null, ref _shellItemGuid));
         }
 
         public bool IsDisposed

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -14,7 +12,6 @@ namespace Explorip.HookFileOperations
     public class MainHookClass : IEntryPoint
     {
         private readonly ServerInterface _server = null;
-        private readonly Queue<string> _messageQueue = new();
         private LocalHook copyItemHook = null, copyItemsHook = null;
 
 #pragma warning disable IDE0060, IDE0079 // Supprimer le paramètre inutilisé
@@ -34,7 +31,10 @@ namespace Explorip.HookFileOperations
             {
                 _server?.IsInstalled(RemoteHooking.GetCurrentProcessId());
 
-                COMClassInfo copyItemsCom = new(typeof(FilesOperations.ClSidIFileOperation), typeof(IFileOperation), nameof(IFileOperation.CopyItem), nameof(IFileOperation.CopyItems));
+                COMClassInfo copyItemsCom = new(typeof(FilesOperations.ClSidIFileOperation), typeof(IFileOperation), nameof(IFileOperation.CopyItem), nameof(IFileOperation.CopyItems)/*,
+                                                                                                                     nameof(IFileOperation.MoveItem), nameof(IFileOperation.MoveItems),
+                                                                                                                     nameof(IFileOperation.RenameItem), nameof(IFileOperation.RenameItems),
+                                                                                                                     nameof(IFileOperation.DeleteItem), nameof(IFileOperation.DeleteItems)*/);
                 copyItemsCom.Query();
                 copyItemHook = LocalHook.Create(copyItemsCom.MethodPointers[0], new DelegateCopyItem(CopyItemHooked), this);
                 copyItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[1], new DelegateCopyItems(CopyItemsHooked), this);
@@ -59,23 +59,7 @@ namespace Explorip.HookFileOperations
                     {
                         Thread.Sleep(100);
 
-                        string[] queued = null;
-
-                        lock (_messageQueue)
-                        {
-                            queued = _messageQueue.ToArray();
-                            _messageQueue.Clear();
-                        }
-
-                        // Send newly monitored file accesses to main explorip process
-                        if (queued != null && queued.Length > 0)
-                        {
-                            _server.ReportMessages(queued);
-                        }
-                        else
-                        {
-                            _server.Ping();
-                        }
+                        _server.Ping();
                     }
                 }
                 catch (Exception ex)
@@ -103,8 +87,7 @@ namespace Explorip.HookFileOperations
 
         private void CopyItemHooked(IntPtr punkItems, IntPtr psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IntPtr pfopsItem)
         {
-            MessageBox.Show("Copier");
-            //self.CopyItem(punkItems, psiDestinationFolder);
+            _server?.CopyItem(punkItems, psiDestinationFolder, pszCopyName, pfopsItem);
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
@@ -112,8 +95,7 @@ namespace Explorip.HookFileOperations
 
         private void CopyItemsHooked(IntPtr punkItems, IntPtr psiDestinationFolder)
         {
-            MessageBox.Show("Copiers");
-            //self.CopyItem(punkItems, psiDestinationFolder);
+            _server?.CopyItems(punkItems, psiDestinationFolder);
         }
 
         #endregion
@@ -203,7 +185,7 @@ namespace Explorip.HookFileOperations
 
         private int My_SHFileOperationA(ref ShFileOpStruct lpFileOp)
         {
-            MessageBox.Show("SHFileOperation");
+            MessageBox.Show("SHFileOperationA");
             //return SHFileOperationA(ref lpFileOp);
             return 0;
         }
@@ -216,7 +198,7 @@ namespace Explorip.HookFileOperations
 
         private int My_SHFileOperationW(ref ShFileOpStruct lpFileOp)
         {
-            MessageBox.Show("SHFileOperation");
+            MessageBox.Show("SHFileOperationW");
             //return SHFileOperationW(ref lpFileOp);
             return 0;
         }

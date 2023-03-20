@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+
+using Explorip.HookFileOperations.FilesOperations.Interfaces;
 
 namespace Explorip.HookFileOperations
 {
@@ -38,23 +42,37 @@ namespace Explorip.HookFileOperations
             Console.WriteLine("The target process has reported an error:\r\n" + e.ToString());
         }
 
-        int count = 0;
         /// <summary>
         /// Called to confirm that the IPC channel is still open / host application has not closed
         /// </summary>
         public void Ping()
         {
-            // Output token animation to visualise Ping
-            /*var oldTop = Console.CursorTop;
-            var oldLeft = Console.CursorLeft;
-            Console.CursorVisible = false;
+            // Just to test if server still exist
+        }
 
-            var chars = "\\|/-";
-            Console.SetCursorPosition(Console.WindowWidth - 1, oldTop - 1);
-            Console.Write(chars[count++ % chars.Length]);
+        public void CopyItem(IntPtr src, IntPtr dest, string destName, IntPtr options)
+        {
+            Task.Run(() =>
+            {
+                IFileOperation fileOperation = ReturnNewFileOperation();
+                fileOperation.CopyItem((IShellItem)Marshal.GetObjectForIUnknown(src), (IShellItem)Marshal.GetObjectForIUnknown(dest), destName, null);
+                fileOperation.PerformOperations();
+            });
+        }
 
-            Console.SetCursorPosition(oldLeft, oldTop);
-            Console.CursorVisible = true;*/
+        public void CopyItems(IntPtr listSrc, IntPtr dest)
+        {
+            Task.Run(() =>
+            {
+                IFileOperation fileOperation = ReturnNewFileOperation();
+                fileOperation.CopyItems((IShellItemArray)Marshal.GetObjectForIUnknown(listSrc), (IShellItem)Marshal.GetObjectForIUnknown(dest));
+                fileOperation.PerformOperations();
+            });
+        }
+
+        private IFileOperation ReturnNewFileOperation()
+        {
+            return (IFileOperation)Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("3ad05575-8857-4850-9277-11b85bdb8e09")));
         }
     }
 }

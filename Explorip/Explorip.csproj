@@ -478,6 +478,10 @@
       <Project>{ba89c958-015e-49f0-bf9f-f68287f9ebb2}</Project>
       <Name>CustomWinForm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\HookFileOperationsManager\HookFileOperationsManager.csproj">
+      <Project>{30e52dc9-89e9-40b7-8785-ac13479751b0}</Project>
+      <Name>HookFileOperationsManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj">
       <Project>{1fd71282-00d6-44d4-9857-1d26030662b2}</Project>
       <Name>HookFileOperations</Name>

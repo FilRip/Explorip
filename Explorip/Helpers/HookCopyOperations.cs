@@ -1,13 +1,12 @@
-﻿using System.Diagnostics;
-
-using EasyHook;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace Explorip.Helpers
 {
     internal class HookCopyOperations
     {
         private static HookCopyOperations _instance;
-        private HookFileOperations.MainHookClass _classeInjectLocal;
 
         public static HookCopyOperations GetInstance()
         {
@@ -18,24 +17,8 @@ namespace Explorip.Helpers
 
         internal void InstallHook()
         {
-            string channelName = null;
-            RemoteHooking.IpcCreateServer<HookFileOperations.ServerInterface>(ref channelName, System.Runtime.Remoting.WellKnownObjectMode.Singleton);
-
-            _classeInjectLocal = new HookFileOperations.MainHookClass(null, null);
-            _classeInjectLocal.Run(null, null);
-
-            int pidExplorer;
-            pidExplorer = Process.GetProcessesByName("explorer")[0].Id;
-            RemoteHooking.Inject(pidExplorer,
-                InjectionOptions.Default,
-                typeof(HookFileOperations.MainHookClass).Assembly.Location,
-                typeof(HookFileOperations.MainHookClass).Assembly.Location,
-                channelName);
-        }
-
-        internal void UninstallHook()
-        {
-            _classeInjectLocal.Uninstall();
+            string path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+            Process.Start(Path.Combine(path, "HookFileOperationsManager.exe"), Process.GetCurrentProcess().Id.ToString());
         }
     }
 }
