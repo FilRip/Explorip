@@ -260,7 +260,8 @@ namespace Explorip.Explorer.WPF.Windows
                 if (WindowState == WindowState.Maximized)
                     Top = Mouse.GetPosition(Application.Current.MainWindow).Y;
                 SetWindowNormal();
-                DragMove();
+                if (e.LeftButton == MouseButtonState.Pressed)
+                    DragMove();
             }
         }
 
