@@ -83,12 +83,11 @@ namespace Explorip.HookFileOperations
         #region IFileOperation
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
-        private delegate void DelegateCopyItem(IntPtr punkItems, IntPtr psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IntPtr pfopsItem);
+        private delegate void DelegateCopyItem([MarshalAs(UnmanagedType.Interface)] object punkItems, [MarshalAs(UnmanagedType.Interface)] object psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, [MarshalAs(UnmanagedType.Interface)] object pfopsItem);
 
-        private void CopyItemHooked(IntPtr punkItems, IntPtr psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IntPtr pfopsItem)
+        private void CopyItemHooked([MarshalAs(UnmanagedType.Interface)] object punkItems, [MarshalAs(UnmanagedType.Interface)] object psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, [MarshalAs(UnmanagedType.Interface)] object pfopsItem)
         {
             _server?.ReportMessage("Intercept CopyItem");
-            object shellItemSrc = Marshal.GetObjectForIUnknown(punkItems);
             /*string fileSrc = shellItemSrc.GetDisplayName(SIGDN.NORMALDISPLAY);
             _server?.ReportMessage("Source : " + fileSrc);
             _server?.CopyItem((IShellItem)punkItems, (IShellItem)psiDestinationFolder, pszCopyName, null);*/
