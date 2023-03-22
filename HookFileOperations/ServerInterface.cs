@@ -50,18 +50,20 @@ namespace Explorip.HookFileOperations
             // Just to test if server still exist
         }
 
-        public void CopyItem(IntPtr src, IntPtr dest, string destName, IntPtr options)
+        public void CopyItem(IShellItem src, IShellItem dest, string destName, IFileOperationProgressSink options)
         {
+            Console.WriteLine("Launch CopyItem");
             Task.Run(() =>
             {
                 IFileOperation fileOperation = ReturnNewFileOperation();
-                fileOperation.CopyItem((IShellItem)Marshal.GetObjectForIUnknown(src), (IShellItem)Marshal.GetObjectForIUnknown(dest), destName, null);
+                fileOperation.CopyItem(src, dest, destName, null);
                 fileOperation.PerformOperations();
             });
         }
 
         public void CopyItems(IntPtr listSrc, IntPtr dest)
         {
+            Console.WriteLine("Launch CopyItems");
             Task.Run(() =>
             {
                 IFileOperation fileOperation = ReturnNewFileOperation();

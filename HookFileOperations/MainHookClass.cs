@@ -87,7 +87,11 @@ namespace Explorip.HookFileOperations
 
         private void CopyItemHooked(IntPtr punkItems, IntPtr psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IntPtr pfopsItem)
         {
-            _server?.CopyItem(punkItems, psiDestinationFolder, pszCopyName, pfopsItem);
+            _server?.ReportMessage("Intercept CopyItem");
+            object shellItemSrc = Marshal.GetObjectForIUnknown(punkItems);
+            /*string fileSrc = shellItemSrc.GetDisplayName(SIGDN.NORMALDISPLAY);
+            _server?.ReportMessage("Source : " + fileSrc);
+            _server?.CopyItem((IShellItem)punkItems, (IShellItem)psiDestinationFolder, pszCopyName, null);*/
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
@@ -95,6 +99,7 @@ namespace Explorip.HookFileOperations
 
         private void CopyItemsHooked(IntPtr punkItems, IntPtr psiDestinationFolder)
         {
+            _server?.ReportMessage("Intercept CopyItems");
             _server?.CopyItems(punkItems, psiDestinationFolder);
         }
 

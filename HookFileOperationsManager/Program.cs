@@ -29,7 +29,10 @@ namespace Explorip.HookFileOperationsManager
                     Thread.Sleep(100);
                 }
             }
-            catch (Exception) { /* Ignore errors = exit loop */ }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }
