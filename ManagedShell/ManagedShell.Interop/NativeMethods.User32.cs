@@ -44,7 +44,7 @@ namespace ManagedShell.Interop
         internal static extern bool EndPaint(IntPtr hWnd, ref PaintStruct ps);
 
         [DllImport(User32_DllName)]
-        internal static extern int FillRect(IntPtr hDC, [In] ref Rect lprc, IntPtr hbr);
+        internal static extern int FillRect(IntPtr hDC, [In()] ref Rect lprc, IntPtr hbr);
 
         [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -52,7 +52,7 @@ namespace ManagedShell.Interop
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        internal static extern bool PtInRect([In] ref Rect lprc, System.Drawing.Point pt);
+        internal static extern bool PtInRect([In()] ref Rect lprc, System.Drawing.Point pt);
 
         public enum WindowZOrder
         {
@@ -2941,7 +2941,7 @@ namespace ManagedShell.Interop
 
         [DllImport(User32_DllName, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.U2)]
-        internal static extern ushort RegisterClass([In] ref WndClass lpwcx);
+        internal static extern ushort RegisterClass([In()] ref WndClass lpwcx);
 
         /// <summary>
         /// Unregisters a window class, freeing the memory required for the class.

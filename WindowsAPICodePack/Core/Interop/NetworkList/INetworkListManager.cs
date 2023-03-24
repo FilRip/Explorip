@@ -14,11 +14,11 @@ namespace Microsoft.WindowsAPICodePack.Net
     {
         [return: MarshalAs(UnmanagedType.Interface)]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        IEnumerable GetNetworks([In] NetworkConnectivityLevels Flags);
+        IEnumerable GetNetworks([In()] NetworkConnectivityLevels Flags);
 
         [return: MarshalAs(UnmanagedType.Interface)]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        INetwork GetNetwork([In] Guid gdNetworkId);
+        INetwork GetNetwork([In()] Guid gdNetworkId);
 
         [return: MarshalAs(UnmanagedType.Interface)]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -26,7 +26,7 @@ namespace Microsoft.WindowsAPICodePack.Net
 
         [return: MarshalAs(UnmanagedType.Interface)]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        INetworkConnection GetNetworkConnection([In] Guid gdNetworkConnectionId);
+        INetworkConnection GetNetworkConnection([In()] Guid gdNetworkConnectionId);
 
         bool IsConnectedToInternet
         {

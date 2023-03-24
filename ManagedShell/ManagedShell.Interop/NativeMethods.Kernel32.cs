@@ -76,7 +76,7 @@ namespace ManagedShell.Interop
         [DllImport(Kernel32_DllName, SetLastError = true, CallingConvention = CallingConvention.Winapi)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool IsWow64Process(
-            [In] IntPtr hProcess,
+            [In()] IntPtr hProcess,
             [Out] out bool wow64Process
         );
 

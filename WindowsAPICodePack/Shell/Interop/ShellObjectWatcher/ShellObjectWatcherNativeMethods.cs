@@ -52,7 +52,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.Interop
             IntPtr lparam);
 
         [DllImport("User32.dll")]
-        public static extern void DispatchMessage([In] ref Message message);
+        public static extern void DispatchMessage([In()] ref Message message);
 
         public delegate int WndProcDelegate(IntPtr hwnd, uint msg, IntPtr wparam, IntPtr lparam);
     }

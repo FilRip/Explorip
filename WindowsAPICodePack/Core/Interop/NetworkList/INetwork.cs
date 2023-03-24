@@ -62,6 +62,6 @@ namespace Microsoft.WindowsAPICodePack.Net
         NetworkCategory GetCategory();
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetCategory([In] NetworkCategory NewCategory);
+        void SetCategory([In()] NetworkCategory NewCategory);
     }
 }

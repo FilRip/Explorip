@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -14,7 +13,7 @@ namespace Explorip.HookFileOperations
     public class MainHookClass : IEntryPoint
     {
         private readonly ServerInterface _server = null;
-        private LocalHook copyItemHook = null, copyItemsHook = null;
+        private LocalHook copyItemHook = null, copyItemsHook = null, performOperationsHook = null;
 
 #pragma warning disable IDE0060, IDE0079 // Supprimer le paramètre inutilisé
         public MainHookClass(RemoteHooking.IContext context, string channelName)
@@ -36,17 +35,26 @@ namespace Explorip.HookFileOperations
                 COMClassInfo copyItemsCom = new(typeof(FilesOperations.ClSidIFileOperation), typeof(IFileOperation), nameof(IFileOperation.CopyItem), nameof(IFileOperation.CopyItems)/*,
                                                                                                                      nameof(IFileOperation.MoveItem), nameof(IFileOperation.MoveItems),
                                                                                                                      nameof(IFileOperation.RenameItem), nameof(IFileOperation.RenameItems),
-                                                                                                                     nameof(IFileOperation.DeleteItem), nameof(IFileOperation.DeleteItems)*/);
+                                                                                                                     nameof(IFileOperation.DeleteItem), nameof(IFileOperation.DeleteItems)*/,
+                                                                                                                     nameof(IFileOperation.PerformOperations));
                 copyItemsCom.Query();
                 copyItemHook = LocalHook.Create(copyItemsCom.MethodPointers[0], new DelegateCopyItem(CopyItemHooked), this);
                 copyItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[1], new DelegateCopyItems(CopyItemsHooked), this);
-                /*var ShFileOpe = LocalHook.Create(LocalHook.GetProcAddress("shell32.dll", "SHFileOperationA"), new DelegateSHFileOperationA(My_SHFileOperationA), this);
-                var ShFileOpeW = LocalHook.Create(LocalHook.GetProcAddress("shell32.dll", "SHFileOperationW"), new DelegateSHFileOperationW(My_SHFileOperationW), this);*/
+                performOperationsHook = LocalHook.Create(copyItemsCom.MethodPointers[2], new DelegatePerformOperations(PerformOperationsHooked), this);
 
                 copyItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
                 copyItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                performOperationsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+
+                #region SHFileOperation
+
+                /*var ShFileOpe = LocalHook.Create(LocalHook.GetProcAddress("shell32.dll", "SHFileOperationA"), new DelegateSHFileOperationA(My_SHFileOperationA), this);
+                var ShFileOpeW = LocalHook.Create(LocalHook.GetProcAddress("shell32.dll", "SHFileOperationW"), new DelegateSHFileOperationW(My_SHFileOperationW), this);*/
+
                 /*ShFileOpe.ThreadACL.SetExclusiveACL(new int[] { 0 });
                 ShFileOpeW.ThreadACL.SetExclusiveACL(new int[] { 0 });*/
+
+                #endregion
             }
             catch (Exception ex)
             {
@@ -75,18 +83,21 @@ namespace Explorip.HookFileOperations
         public void Uninstall()
         {
             _server?.ReportMessage($"Explorip remove hook from process {RemoteHooking.GetCurrentProcessId()}");
+
             copyItemHook?.Dispose();
             copyItemsHook?.Dispose();
-            LocalHook.Release();
+            performOperationsHook?.Dispose();
+
             /*ShFileOpe.Dispose();
             ShFileOpeW.Dispose();*/
+
+            LocalHook.Release();
         }
 
         #region IFileOperation
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
         private delegate void DelegateCopyItem(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem);
-
         private void CopyItemHooked(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem)
         {
             _server?.ReportMessage("Intercept CopyItem");
@@ -95,25 +106,30 @@ namespace Explorip.HookFileOperations
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
         private delegate void DelegateCopyItems(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, IShellItem psiDestinationFolder);
-
         private void CopyItemsHooked(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, IShellItem psiDestinationFolder)
         {
-            List<string> listFiles = new();
             _server?.ReportMessage("Intercept CopyItems");
-            /*IShellItem src;
-            punkItems.GetCount(out uint nbItems);
-            for (uint i = 0; i < nbItems; i++)
+            Guid guidIShellItem = typeof(IShellItem).GUID;
+            if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
             {
-                punkItems.GetItemAt(i, out src);
-                listFiles.Add(Path.GetFileName(src.GetDisplayName(SIGDN.FILESYSPATH)));
+                IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
+                string src = si.GetDisplayName(SIGDN.FILESYSPATH);
+                _server?.CopyItem(src, psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), Path.GetFileName(src));
             }
-            _server?.CopyItems(listFiles.ToArray(), psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH));*/
         }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = false)]
+        private delegate void DelegatePerformOperations(IFileOperation self);
+        private void PerformOperationsHooked(IFileOperation self)
+        {
+            _server.PerformOperations();
+        }
 
         #endregion
 
         #region SHFileOperation
 
+        /*
         /// <summary>
         /// Possible flags for the SHFileOperation method.
         /// </summary>
@@ -214,6 +230,7 @@ namespace Explorip.HookFileOperations
             //return SHFileOperationW(ref lpFileOp);
             return 0;
         }
+        */
 
         #endregion
     }

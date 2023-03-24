@@ -415,13 +415,13 @@ namespace ManagedShell.Interop
             void GetCount([Out] out uint cProps);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-            void GetAt([In] uint iProp, out PropertyKey pkey);
+            void GetAt([In()] uint iProp, out PropertyKey pkey);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-            void GetValue([In] ref PropertyKey key, out PropVariant pv);
+            void GetValue([In()] ref PropertyKey key, out PropVariant pv);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-            void SetValue([In] ref PropertyKey key, [In] ref PropVariant pv);
+            void SetValue([In()] ref PropertyKey key, [In()] ref PropVariant pv);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
             void Commit();

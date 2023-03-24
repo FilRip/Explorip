@@ -20,7 +20,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         [DllImport("Comctl32.dll", SetLastError = true)]
         internal static extern HResult TaskDialogIndirect(
-            [In] TaskDialogNativeMethods.TaskDialogConfiguration taskConfig,
+            [In()] TaskDialogNativeMethods.TaskDialogConfiguration taskConfig,
             [Out] out int button,
             [Out] out int radioButton,
             [MarshalAs(UnmanagedType.Bool), Out] out bool verificationFlagChecked);

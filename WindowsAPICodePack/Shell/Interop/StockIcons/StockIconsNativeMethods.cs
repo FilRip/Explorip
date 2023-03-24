@@ -71,7 +71,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             internal string Path;
         }
 
-        [PreserveSig]
+        [PreserveSig()]
         [DllImport("Shell32.dll", CharSet = CharSet.Unicode,
         ExactSpelling = true, SetLastError = false)]
         internal static extern HResult SHGetStockIconInfo(

@@ -36,44 +36,44 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         internal extern static object SafeArrayGetElement(IntPtr psa, ref int rgIndices);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void InitPropVariantFromPropVariantVectorElem([In] PropVariant propvarIn, uint iElem, [Out] PropVariant ppropvar);
+        internal static extern void InitPropVariantFromPropVariantVectorElem([In()] PropVariant propvarIn, uint iElem, [Out] PropVariant ppropvar);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void InitPropVariantFromFileTime([In] ref System.Runtime.InteropServices.ComTypes.FILETIME pftIn, [Out] PropVariant ppropvar);
+        internal static extern void InitPropVariantFromFileTime([In()] ref System.Runtime.InteropServices.ComTypes.FILETIME pftIn, [Out] PropVariant ppropvar);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.I4)]
-        internal static extern int PropVariantGetElementCount([In] PropVariant propVar);
+        internal static extern int PropVariantGetElementCount([In()] PropVariant propVar);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetBooleanElem([In] PropVariant propVar, [In] uint iElem, [Out, MarshalAs(UnmanagedType.Bool)] out bool pfVal);
+        internal static extern void PropVariantGetBooleanElem([In()] PropVariant propVar, [In()] uint iElem, [Out, MarshalAs(UnmanagedType.Bool)] out bool pfVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetInt16Elem([In] PropVariant propVar, [In] uint iElem, [Out] out short pnVal);
+        internal static extern void PropVariantGetInt16Elem([In()] PropVariant propVar, [In()] uint iElem, [Out] out short pnVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetUInt16Elem([In] PropVariant propVar, [In] uint iElem, [Out] out ushort pnVal);
+        internal static extern void PropVariantGetUInt16Elem([In()] PropVariant propVar, [In()] uint iElem, [Out] out ushort pnVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetInt32Elem([In] PropVariant propVar, [In] uint iElem, [Out] out int pnVal);
+        internal static extern void PropVariantGetInt32Elem([In()] PropVariant propVar, [In()] uint iElem, [Out] out int pnVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetUInt32Elem([In] PropVariant propVar, [In] uint iElem, [Out] out uint pnVal);
+        internal static extern void PropVariantGetUInt32Elem([In()] PropVariant propVar, [In()] uint iElem, [Out] out uint pnVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetInt64Elem([In] PropVariant propVar, [In] uint iElem, [Out] out Int64 pnVal);
+        internal static extern void PropVariantGetInt64Elem([In()] PropVariant propVar, [In()] uint iElem, [Out] out Int64 pnVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetUInt64Elem([In] PropVariant propVar, [In] uint iElem, [Out] out UInt64 pnVal);
+        internal static extern void PropVariantGetUInt64Elem([In()] PropVariant propVar, [In()] uint iElem, [Out] out UInt64 pnVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetDoubleElem([In] PropVariant propVar, [In] uint iElem, [Out] out double pnVal);
+        internal static extern void PropVariantGetDoubleElem([In()] PropVariant propVar, [In()] uint iElem, [Out] out double pnVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetFileTimeElem([In] PropVariant propVar, [In] uint iElem, [Out, MarshalAs(UnmanagedType.Struct)] out System.Runtime.InteropServices.ComTypes.FILETIME pftVal);
+        internal static extern void PropVariantGetFileTimeElem([In()] PropVariant propVar, [In()] uint iElem, [Out, MarshalAs(UnmanagedType.Struct)] out System.Runtime.InteropServices.ComTypes.FILETIME pftVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
-        internal static extern void PropVariantGetStringElem([In] PropVariant propVar, [In] uint iElem, [MarshalAs(UnmanagedType.LPWStr)] ref string ppszVal);
+        internal static extern void PropVariantGetStringElem([In()] PropVariant propVar, [In()] uint iElem, [MarshalAs(UnmanagedType.LPWStr)] ref string ppszVal);
 
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true, PreserveSig = false)]
         internal static extern void InitPropVariantFromBooleanVector([In, MarshalAs(UnmanagedType.LPArray)] bool[] prgf, uint cElems, [Out] PropVariant ppropvar);

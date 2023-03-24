@@ -13,7 +13,7 @@ namespace ManagedShell.Common.SupportingClasses
 
         public AppVisibilityEvents() { }
 
-        public long AppVisibilityOnMonitorChanged([In] IntPtr hMonitor, [In] MONITOR_APP_VISIBILITY previousMode, [In] MONITOR_APP_VISIBILITY currentMode)
+        public long AppVisibilityOnMonitorChanged([In()] IntPtr hMonitor, [In()] MONITOR_APP_VISIBILITY previousMode, [In()] MONITOR_APP_VISIBILITY currentMode)
         {
             AppVisibilityEventArgs args = new()
             {
@@ -26,7 +26,7 @@ namespace ManagedShell.Common.SupportingClasses
             return 0;
         }
 
-        public long LauncherVisibilityChange([In] bool currentVisibleState)
+        public long LauncherVisibilityChange([In()] bool currentVisibleState)
         {
             LauncherVisibilityEventArgs args = new()
             {

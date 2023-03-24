@@ -14,18 +14,18 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
     {
         void SetAppID(
             [MarshalAs(UnmanagedType.LPWStr)] string pszAppID);
-        [PreserveSig]
+        [PreserveSig()]
         HResult BeginList(
             out uint cMaxSlots,
             ref Guid riid,
             [Out(), MarshalAs(UnmanagedType.Interface)] out object ppvObject);
-        [PreserveSig]
+        [PreserveSig()]
         HResult AppendCategory(
             [MarshalAs(UnmanagedType.LPWStr)] string pszCategory,
             [MarshalAs(UnmanagedType.Interface)] IObjectArray poa);
         void AppendKnownCategory(
             [MarshalAs(UnmanagedType.I4)] KnownDestinationCategory category);
-        [PreserveSig]
+        [PreserveSig()]
         HResult AddUserTasks(
             [MarshalAs(UnmanagedType.Interface)] IObjectArray poa);
         void CommitList();
@@ -60,9 +60,9 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
     internal interface IObjectCollection
     {
         // IObjectArray
-        [PreserveSig]
+        [PreserveSig()]
         void GetCount(out uint cObjects);
-        [PreserveSig]
+        [PreserveSig()]
         void GetAt(
             uint iIndex,
             ref Guid riid,
@@ -88,58 +88,58 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
     internal interface ITaskbarList4
     {
         // ITaskbarList
-        [PreserveSig]
+        [PreserveSig()]
         void HrInit();
-        [PreserveSig]
+        [PreserveSig()]
         void AddTab(IntPtr hwnd);
-        [PreserveSig]
+        [PreserveSig()]
         void DeleteTab(IntPtr hwnd);
-        [PreserveSig]
+        [PreserveSig()]
         void ActivateTab(IntPtr hwnd);
-        [PreserveSig]
+        [PreserveSig()]
         void SetActiveAlt(IntPtr hwnd);
 
         // ITaskbarList2
-        [PreserveSig]
+        [PreserveSig()]
         void MarkFullscreenWindow(
             IntPtr hwnd,
             [MarshalAs(UnmanagedType.Bool)] bool fFullscreen);
 
         // ITaskbarList3
-        [PreserveSig]
+        [PreserveSig()]
         void SetProgressValue(IntPtr hwnd, UInt64 ullCompleted, UInt64 ullTotal);
-        [PreserveSig]
+        [PreserveSig()]
         void SetProgressState(IntPtr hwnd, TaskbarProgressBarStatus tbpFlags);
-        [PreserveSig]
+        [PreserveSig()]
         void RegisterTab(IntPtr hwndTab, IntPtr hwndMDI);
-        [PreserveSig]
+        [PreserveSig()]
         void UnregisterTab(IntPtr hwndTab);
-        [PreserveSig]
+        [PreserveSig()]
         void SetTabOrder(IntPtr hwndTab, IntPtr hwndInsertBefore);
-        [PreserveSig]
+        [PreserveSig()]
         void SetTabActive(IntPtr hwndTab, IntPtr hwndInsertBefore, uint dwReserved);
-        [PreserveSig]
+        [PreserveSig()]
         HResult ThumbBarAddButtons(
             IntPtr hwnd,
             uint cButtons,
             [MarshalAs(UnmanagedType.LPArray)] ThumbButton[] pButtons);
-        [PreserveSig]
+        [PreserveSig()]
         HResult ThumbBarUpdateButtons(
             IntPtr hwnd,
             uint cButtons,
             [MarshalAs(UnmanagedType.LPArray)] ThumbButton[] pButtons);
-        [PreserveSig]
+        [PreserveSig()]
         void ThumbBarSetImageList(IntPtr hwnd, IntPtr himl);
-        [PreserveSig]
+        [PreserveSig()]
         void SetOverlayIcon(
           IntPtr hwnd,
           IntPtr hIcon,
           [MarshalAs(UnmanagedType.LPWStr)] string pszDescription);
-        [PreserveSig]
+        [PreserveSig()]
         void SetThumbnailTooltip(
             IntPtr hwnd,
             [MarshalAs(UnmanagedType.LPWStr)] string pszTip);
-        [PreserveSig]
+        [PreserveSig()]
         void SetThumbnailClip(
             IntPtr hwnd,
             IntPtr prcClip);

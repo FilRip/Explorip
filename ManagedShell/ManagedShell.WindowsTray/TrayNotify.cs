@@ -35,7 +35,7 @@ namespace ManagedShell.WindowsTray
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface INotificationCB
     {
-        void Notify([In] uint nEvent, [In] ref NotifyItem notifyItem);
+        void Notify([In()] uint nEvent, [In()] ref NotifyItem notifyItem);
     }
 
     [ComImport()]
@@ -44,8 +44,8 @@ namespace ManagedShell.WindowsTray
     internal interface ITrayNotifyLegacy
     {
         void RegisterCallback([MarshalAs(UnmanagedType.Interface)] INotificationCB callback);
-        void SetPreference([In] ref NotifyItem notifyItem);
-        void EnableAutoTray([In] bool enabled);
+        void SetPreference([In()] ref NotifyItem notifyItem);
+        void EnableAutoTray([In()] bool enabled);
     }
 
     [ComImport()]
@@ -54,9 +54,9 @@ namespace ManagedShell.WindowsTray
     internal interface ITrayNotify
     {
         void RegisterCallback([MarshalAs(UnmanagedType.Interface)] INotificationCB callback, [Out] out ulong handle);
-        void UnregisterCallback([In] ulong handle);
-        void SetPreference([In] ref NotifyItem notifyItem);
-        void EnableAutoTray([In] bool enabled);
-        void DoAction([In] bool enabled);
+        void UnregisterCallback([In()] ulong handle);
+        void SetPreference([In()] ref NotifyItem notifyItem);
+        void EnableAutoTray([In()] bool enabled);
+        void DoAction([In()] bool enabled);
     }
 }

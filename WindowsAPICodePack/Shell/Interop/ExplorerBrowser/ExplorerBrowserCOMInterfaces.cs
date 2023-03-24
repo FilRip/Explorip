@@ -141,7 +141,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     internal class ExplorerBrowserClass : IExplorerBrowser
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        public virtual extern void Initialize(IntPtr hwndParent, [In] ref NativeRect prc, [In] FolderSettings pfs);
+        public virtual extern void Initialize(IntPtr hwndParent, [In()] ref NativeRect prc, [In()] FolderSettings pfs);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void Destroy();
@@ -155,20 +155,20 @@ namespace Microsoft.WindowsAPICodePack.Controls
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void SetEmptyText([MarshalAs(UnmanagedType.LPWStr)] string pszEmptyText);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern HResult SetFolderSettings(FolderSettings pfs);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern HResult Advise(IntPtr psbe, out uint pdwCookie);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern HResult Unadvise(uint dwCookie);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        public virtual extern void SetOptions([In] ExplorerBrowserOptions dwFlag);
+        public virtual extern void SetOptions([In()] ExplorerBrowserOptions dwFlag);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void GetOptions(out ExplorerBrowserOptions pdwFlag);
@@ -176,7 +176,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void BrowseToIDList(IntPtr pidl, uint uFlags);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern HResult BrowseToObject([MarshalAs(UnmanagedType.IUnknown)] object punk, uint uFlags);
 
@@ -186,7 +186,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void RemoveAll();
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern HResult GetCurrentView(ref Guid riid, out IntPtr ppv);
     }
@@ -209,7 +209,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// should be called, otherwise, the default view settings for the folder are used.</param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void Initialize(IntPtr hwndParent, [In] ref NativeRect prc, [In] FolderSettings pfs);
+        void Initialize(IntPtr hwndParent, [In()] ref NativeRect prc, [In()] FolderSettings pfs);
 
         /// <summary>
         /// Destroys the browser.
@@ -252,7 +252,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// <param name="pfs">A pointer to a FOLDERSETTINGS structure that contains the folder settings 
         /// to be applied.</param>
         /// <returns></returns>
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult SetFolderSettings(FolderSettings pfs);
 
@@ -264,7 +264,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// <param name="pdwCookie">When this method returns, contains a token that uniquely identifies 
         /// the event listener. This allows several event listeners to be subscribed at a time.</param>
         /// <returns></returns>
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult Advise(IntPtr psbe, out uint pdwCookie);
 
@@ -274,9 +274,9 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// <param name="dwCookie">A connection token previously returned from IExplorerBrowser::Advise.
         /// Identifies the connection to be terminated.</param>
         /// <returns></returns>
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        HResult Unadvise([In] uint dwCookie);
+        HResult Unadvise([In()] uint dwCookie);
 
         /// <summary>
         /// Sets the current browser options.
@@ -284,7 +284,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// <param name="dwFlag">One or more EXPLORER_BROWSER_OPTIONS flags to be set.</param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetOptions([In] ExplorerBrowserOptions dwFlag);
+        void SetOptions([In()] ExplorerBrowserOptions dwFlag);
 
         /// <summary>
         /// Gets the current browser options.
@@ -314,7 +314,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// <param name="uFlags">A flag that specifies the category of the pidl. This affects how 
         /// navigation is accomplished. </param>
         /// <returns></returns>
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult BrowseToObject([MarshalAs(UnmanagedType.IUnknown)] object punk, uint uFlags);
 
@@ -341,7 +341,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// <param name="ppv">When this method returns, contains the interface pointer requested in riid. 
         /// This will typically be IShellView or IShellView2. </param>
         /// <returns></returns>
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetCurrentView(ref Guid riid, out IntPtr ppv);
     }
@@ -351,7 +351,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IServiceProvider
     {
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall)]
         HResult QueryService(ref Guid guidService, ref Guid riid, out IntPtr ppvObject);
     };
@@ -410,7 +410,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     internal interface IFolderView2 : IFolderView
     {
         // IFolderView
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetCurrentViewMode(out uint pViewMode);
 
@@ -423,11 +423,11 @@ namespace Microsoft.WindowsAPICodePack.Controls
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void Item(int iItemIndex, out IntPtr ppidl);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult ItemCount(uint uFlags, out int pcItems);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult Items(uint uFlags, ref Guid riid, [Out, MarshalAs(UnmanagedType.IUnknown)] out object ppv);
 
@@ -510,11 +510,11 @@ namespace Microsoft.WindowsAPICodePack.Controls
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void InvokeVerbOnSelection([In, MarshalAs(UnmanagedType.LPWStr)] string pszVerb);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult SetViewModeAndIconSize(int uViewMode, int iImageSize);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetViewModeAndIconSize(out int puViewMode, out int piImageSize);
 
@@ -539,7 +539,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IExplorerPaneVisibility
     {
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetPaneState(ref Guid explorerPane, out ExplorerPaneState peps);
     };
@@ -549,19 +549,19 @@ namespace Microsoft.WindowsAPICodePack.Controls
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IExplorerBrowserEvents
     {
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult OnNavigationPending(IntPtr pidlFolder);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult OnViewCreated([MarshalAs(UnmanagedType.IUnknown)] object psv);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult OnNavigationComplete(IntPtr pidlFolder);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult OnNavigationFailed(IntPtr pidlFolder);
     }
@@ -574,17 +574,17 @@ namespace Microsoft.WindowsAPICodePack.Controls
     // InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     //internal interface ICommDlgBrowser
     //{
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult OnDefaultCommand(IntPtr ppshv);
 
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult OnStateChange(
     //        IntPtr ppshv,
     //        CommDlgBrowserStateChange uChange);
 
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult IncludeObject(
     //        IntPtr ppshv,
@@ -598,17 +598,17 @@ namespace Microsoft.WindowsAPICodePack.Controls
     //{
     //    // dlg
 
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult OnDefaultCommand(IntPtr ppshv);
 
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult OnStateChange(
     //        IntPtr ppshv,
     //        CommDlgBrowserStateChange uChange);
 
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult IncludeObject(
     //        IntPtr ppshv,
@@ -616,19 +616,19 @@ namespace Microsoft.WindowsAPICodePack.Controls
 
     //    // dlg2
 
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult GetDefaultMenuText(
-    //        [In] IShellView shellView,
+    //        [In()] IShellView shellView,
     //        StringBuilder buffer, //A pointer to a buffer that is used by the Shell browser to return the default shortcut menu text.
-    //        [In] int bufferMaxLength); //should be max size = 260?
+    //        [In()] int bufferMaxLength); //should be max size = 260?
 
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult GetViewFlags(CommDlgBrowser2ViewFlags pdwFlags);
 
 
-    //    [PreserveSig]
+    //    [PreserveSig()]
     //    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     //    HResult Notify(
     //        IntPtr pshv,
@@ -645,55 +645,55 @@ namespace Microsoft.WindowsAPICodePack.Controls
     internal interface ICommDlgBrowser3
     {
         // dlg1
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult OnDefaultCommand(IntPtr ppshv);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult OnStateChange(
             IntPtr ppshv,
             CommDlgBrowserStateChange uChange);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult IncludeObject(
             IntPtr ppshv,
             IntPtr pidl);
 
         // dlg2
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetDefaultMenuText(
             IShellView shellView,
             IntPtr buffer, //A pointer to a buffer that is used by the Shell browser to return the default shortcut menu text.
             int bufferMaxLength); //should be max size = 260?
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetViewFlags(
             [Out] out uint pdwFlags); // CommDlgBrowser2ViewFlags 
 
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult Notify(
             IntPtr pshv, CommDlgBrowserNotifyType notifyType);
 
         // dlg3
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetCurrentFilter(
             StringBuilder pszFileSpec,
             int cchFileSpec);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult OnColumnClicked(
             IShellView ppshv,
             int iColumn);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult OnPreViewCreated(IShellView ppshv);
     }
@@ -703,15 +703,15 @@ namespace Microsoft.WindowsAPICodePack.Controls
    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IInputObject
     {
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult UIActivateIO(bool fActivate, ref System.Windows.Forms.Message pMsg);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult HasFocusIO();
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult TranslateAcceleratorIO(ref System.Windows.Forms.Message pMsg);
 
@@ -723,37 +723,37 @@ namespace Microsoft.WindowsAPICodePack.Controls
     internal interface IShellView
     {
         // IOleWindow
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetWindow(
             out IntPtr phwnd);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult ContextSensitiveHelp(
             bool fEnterMode);
 
         // IShellView
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult TranslateAccelerator(
             IntPtr pmsg);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult EnableModeless(
             bool fEnable);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult UIActivate(
             uint uState);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult Refresh();
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult CreateViewWindow(
             [MarshalAs(UnmanagedType.IUnknown)] object psvPrevious,
@@ -762,33 +762,33 @@ namespace Microsoft.WindowsAPICodePack.Controls
             IntPtr prcView,
             out IntPtr phWnd);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult DestroyViewWindow();
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetCurrentInfo(
             out IntPtr pfs);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult AddPropertySheetPages(
             uint dwReserved,
             IntPtr pfn,
             uint lparam);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult SaveViewState();
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult SelectItem(
             IntPtr pidlItem,
             uint uFlags);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetItemObject(
             ShellViewGetItemObject uItem,

@@ -35,29 +35,29 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
            [MarshalAs(UnmanagedType.Bool)] bool success);
 
         [DllImport("kernel32.dll")]
-        [PreserveSig]
+        [PreserveSig()]
         internal static extern HResult ApplicationRecoveryInProgress(
             [Out, MarshalAs(UnmanagedType.Bool)] out bool canceled);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
-        [PreserveSig]
+        [PreserveSig()]
         internal static extern HResult RegisterApplicationRecoveryCallback(
             InternalRecoveryCallback callback, IntPtr param,
             uint pingInterval,
             uint flags); // Unused.
 
         [DllImport("kernel32.dll")]
-        [PreserveSig]
+        [PreserveSig()]
         internal static extern HResult RegisterApplicationRestart(
             [MarshalAs(UnmanagedType.BStr)] string commandLineArgs,
             RestartRestrictions flags);
 
         [DllImport("kernel32.dll")]
-        [PreserveSig]
+        [PreserveSig()]
         internal static extern HResult UnregisterApplicationRecoveryCallback();
 
         [DllImport("kernel32.dll")]
-        [PreserveSig]
+        [PreserveSig()]
         internal static extern HResult UnregisterApplicationRestart();
 
         #endregion

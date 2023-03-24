@@ -52,7 +52,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         [DllImport("propsys.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern int PSGetPropertyDescriptionListFromString(
             [In, MarshalAs(UnmanagedType.LPWStr)] string pszPropList,
-            [In] ref Guid riid,
+            [In()] ref Guid riid,
             out IPropertyDescriptionList ppv
         );
 

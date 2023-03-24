@@ -46,6 +46,8 @@
     <Compile Include="FilesOperations\EFileOperation.cs" />
     <Compile Include="FilesOperations\FileOperation.cs" />
     <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
+    <Compile Include="FilesOperations\Interfaces\IDataObject.cs" />
+    <Compile Include="FilesOperations\Interfaces\IEnumShellItems.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
     <Compile Include="FilesOperations\Interfaces\IPersistIDList.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="FilesOperations\Interfaces\PropertyKey.cs" />
     <Compile Include="FilesOperations\Interfaces\SIGDN.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
+    <Compile Include="Helpers\ExtensionsComInterface.cs" />
     <Compile Include="MainHookClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerInterface.cs" />

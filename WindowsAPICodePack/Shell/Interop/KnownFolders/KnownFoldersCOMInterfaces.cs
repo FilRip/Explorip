@@ -26,23 +26,23 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
-        [PreserveSig]
-        HResult GetShellItem([In] int i,
+        [PreserveSig()]
+        HResult GetShellItem([In()] int i,
              ref Guid interfaceGuid,
              [Out, MarshalAs(UnmanagedType.Interface)] out IShellItem2 shellItem);
 
         [return: MarshalAs(UnmanagedType.LPWStr)]
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
-        string GetPath([In] int option);
+        string GetPath([In()] int option);
 
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
-        void SetPath([In] int i, [In] string path);
+        void SetPath([In()] int i, [In()] string path);
 
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
-        void GetIDList([In] int i,
+        void GetIDList([In()] int i,
             [Out] out IntPtr itemIdentifierListPointer);
 
         [MethodImpl(MethodImplOptions.InternalCall,
@@ -80,7 +80,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         void GetFolderIds([Out] out IntPtr folders,
           [Out] out UInt32 count);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
         HResult GetFolder([In, MarshalAs(UnmanagedType.LPStruct)] Guid id,
@@ -95,7 +95,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             MethodCodeType = MethodCodeType.Runtime)]
         void RegisterFolder(
             [In, MarshalAs(UnmanagedType.LPStruct)] Guid knownFolderGuid,
-            [In] ref KnownFoldersSafeNativeMethods.NativeFolderDefinition knownFolderDefinition);
+            [In()] ref KnownFoldersSafeNativeMethods.NativeFolderDefinition knownFolderDefinition);
 
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
@@ -105,10 +105,10 @@ namespace Microsoft.WindowsAPICodePack.Shell
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void FindFolderFromPath(
             [In, MarshalAs(UnmanagedType.LPWStr)] string path,
-            [In] int mode,
+            [In()] int mode,
             [Out, MarshalAs(UnmanagedType.Interface)] out IKnownFolderNative knownFolder);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
         HResult FindFolderFromIDList(IntPtr pidl, [Out, MarshalAs(UnmanagedType.Interface)] out IKnownFolderNative knownFolder);
@@ -140,7 +140,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             [Out] out IntPtr folders,
             [Out] out UInt32 count);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern HResult GetFolder(
@@ -158,7 +158,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void RegisterFolder(
             [In, MarshalAs(UnmanagedType.LPStruct)] Guid knownFolderGuid,
-            [In] ref KnownFoldersSafeNativeMethods.NativeFolderDefinition knownFolderDefinition);
+            [In()] ref KnownFoldersSafeNativeMethods.NativeFolderDefinition knownFolderDefinition);
 
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
@@ -169,10 +169,10 @@ namespace Microsoft.WindowsAPICodePack.Shell
             MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void FindFolderFromPath(
             [In, MarshalAs(UnmanagedType.LPWStr)] string path,
-            [In] int mode,
+            [In()] int mode,
             [Out, MarshalAs(UnmanagedType.Interface)] out IKnownFolderNative knownFolder);
 
-        [PreserveSig]
+        [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall,
             MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern HResult FindFolderFromIDList(IntPtr pidl, [Out, MarshalAs(UnmanagedType.Interface)] out IKnownFolderNative knownFolder);

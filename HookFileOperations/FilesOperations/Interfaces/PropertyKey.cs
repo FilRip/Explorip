@@ -7,7 +7,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
     /// Defines a unique key for a Shell Property
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct PROPERTYKEY
+    public struct PropertyKey
     {
         public Guid fmtid;
         public uint pid;

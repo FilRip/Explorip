@@ -12,7 +12,7 @@ namespace ManagedShell.ShellFolders.Interfaces
     {
         int GetImage(
             [In, MarshalAs(UnmanagedType.Struct)] Size size,
-            [In] SIIGBF flags,
+            [In()] SIIGBF flags,
             [Out] out IntPtr phbm);
     }
 

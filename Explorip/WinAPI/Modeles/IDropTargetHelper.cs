@@ -10,7 +10,7 @@ namespace Explorip.WinAPI.Modeles
     public interface IDropTargetHelper
     {
         // Notifies the drag-image manager that the drop target's IDropTarget::DragEnter method has been called
-        [PreserveSig]
+        [PreserveSig()]
         Int32 DragEnter(
             IntPtr hwndTarget,
             IntPtr pDataObject,
@@ -18,24 +18,24 @@ namespace Explorip.WinAPI.Modeles
             DragDropEffects dwEffect);
 
         // Notifies the drag-image manager that the drop target's IDropTarget::DragLeave method has been called
-        [PreserveSig]
+        [PreserveSig()]
         Int32 DragLeave();
 
         // Notifies the drag-image manager that the drop target's IDropTarget::DragOver method has been called
-        [PreserveSig]
+        [PreserveSig()]
         Int32 DragOver(
             ref NativePoint ppt,
             DragDropEffects dwEffect);
 
         // Notifies the drag-image manager that the drop target's IDropTarget::Drop method has been called
-        [PreserveSig]
+        [PreserveSig()]
         Int32 Drop(
             IntPtr pDataObject,
             ref NativePoint ppt,
             DragDropEffects dwEffect);
 
         // Notifies the drag-image manager to show or hide the drag image
-        [PreserveSig]
+        [PreserveSig()]
         Int32 Show(
             bool fShow);
     }

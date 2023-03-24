@@ -609,10 +609,10 @@ namespace Microsoft.WindowsAPICodePack.Shell
         [DllImport("Shell32", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Winapi, SetLastError = true)]
         internal static extern int SHShowManageLibraryUI(
             [In, MarshalAs(UnmanagedType.Interface)] IShellItem library,
-            [In] IntPtr hwndOwner,
-            [In] string title,
-            [In] string instruction,
-            [In] LibraryManageDialogOptions lmdOptions);
+            [In()] IntPtr hwndOwner,
+            [In()] string title,
+            [In()] string instruction,
+            [In()] LibraryManageDialogOptions lmdOptions);
 
         #endregion
 

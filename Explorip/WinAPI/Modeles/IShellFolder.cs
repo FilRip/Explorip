@@ -95,7 +95,7 @@ namespace Explorip.WinAPI.Modeles
         Int32 BindToObject(
             IntPtr pidl,
             IntPtr pbc,
-            [In] ref Guid riid,
+            [In()] ref Guid riid,
             [MarshalAs(UnmanagedType.Interface)] out object ppv);
 
         // Requests a pointer to an object's storage interface. 

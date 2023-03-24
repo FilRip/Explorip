@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
@@ -14,6 +11,9 @@ namespace Explorip.HookFileOperations
     /// </summary>
     public class ServerInterface : MarshalByRefObject
     {
+        private bool _performDone = true;
+        private IFileOperation _currentFileOperation;
+
         public void IsInstalled(int clientPID)
         {
             Console.WriteLine("Explorip has injected HookFileOperations into process {0}.", clientPID);
@@ -42,7 +42,7 @@ namespace Explorip.HookFileOperations
         /// <param name="e"></param>
         public void ReportException(Exception e)
         {
-            Console.WriteLine("The target process has reported an error:\r\n" + e.ToString());
+            Console.WriteLine($"The target process has reported an error:{Environment.NewLine}" + e.ToString());
         }
 
         /// <summary>
@@ -55,43 +55,30 @@ namespace Explorip.HookFileOperations
 
         public void CopyItem(string src, string dest, string destName)
         {
-            Console.WriteLine("Launch CopyItem");
+            Console.WriteLine("Add CopyItem");
+            ReturnNewFileOperation();
+            ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
+            ComReleaser<IShellItem> siDest = FileOperation.CreateShellItem(dest);
+            _currentFileOperation.CopyItem(siSrc.Item, siDest.Item, destName, null);
+        }
+
+        public void PerformOperations()
+        {
+            Console.WriteLine("PerformOperation");
             Task.Run(() =>
             {
-                IFileOperation fileOperation = ReturnNewFileOperation();
-                ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
-                ComReleaser<IShellItem> siDest = FileOperation.CreateShellItem(dest);
-                fileOperation.CopyItem(siSrc.Item, siDest.Item, destName, null);
-                fileOperation.PerformOperations();
-                siSrc.Dispose();
-                siDest.Dispose();
+                _performDone = true;
+                _currentFileOperation.PerformOperations();
             });
         }
 
-        public void CopyItems(string[] listSrc, string dest)
+        private void ReturnNewFileOperation()
         {
-            Console.WriteLine("Launch CopyItems");
-            Task.Run(() =>
+            if (_performDone)
             {
-                List<ComReleaser<IShellItem>> listToDispose = new();
-                IFileOperation fileOperation = ReturnNewFileOperation();
-                ComReleaser<IShellItem> siDest = FileOperation.CreateShellItem(dest);
-                foreach (string src in listSrc)
-                {
-                    ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
-                    listToDispose.Add(siSrc);
-                    fileOperation.CopyItem(siSrc.Item, siDest.Item, Path.GetFileName(src), null);
-                }
-                fileOperation.PerformOperations();
-                siDest.Dispose();
-                for (int i = listToDispose.Count - 1; i >= 0; i--)
-                    listToDispose[i].Dispose();
-            });
-        }
-
-        private IFileOperation ReturnNewFileOperation()
-        {
-            return (IFileOperation)Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("3ad05575-8857-4850-9277-11b85bdb8e09")));
+                _currentFileOperation = (IFileOperation)Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("3ad05575-8857-4850-9277-11b85bdb8e09")));
+                _performDone = false;
+            }
         }
     }
 }
