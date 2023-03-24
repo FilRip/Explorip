@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
@@ -83,23 +85,29 @@ namespace Explorip.HookFileOperations
         #region IFileOperation
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
-        private delegate void DelegateCopyItem([MarshalAs(UnmanagedType.Interface)] object punkItems, [MarshalAs(UnmanagedType.Interface)] object psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, [MarshalAs(UnmanagedType.Interface)] object pfopsItem);
+        private delegate void DelegateCopyItem(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem);
 
-        private void CopyItemHooked([MarshalAs(UnmanagedType.Interface)] object punkItems, [MarshalAs(UnmanagedType.Interface)] object psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, [MarshalAs(UnmanagedType.Interface)] object pfopsItem)
+        private void CopyItemHooked(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem)
         {
             _server?.ReportMessage("Intercept CopyItem");
-            /*string fileSrc = shellItemSrc.GetDisplayName(SIGDN.NORMALDISPLAY);
-            _server?.ReportMessage("Source : " + fileSrc);
-            _server?.CopyItem((IShellItem)punkItems, (IShellItem)psiDestinationFolder, pszCopyName, null);*/
+            _server?.CopyItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH), psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), pszCopyName);
         }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
-        private delegate void DelegateCopyItems(IntPtr punkItems, IntPtr psiDestinationFolder);
+        private delegate void DelegateCopyItems(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, IShellItem psiDestinationFolder);
 
-        private void CopyItemsHooked(IntPtr punkItems, IntPtr psiDestinationFolder)
+        private void CopyItemsHooked(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, IShellItem psiDestinationFolder)
         {
+            List<string> listFiles = new();
             _server?.ReportMessage("Intercept CopyItems");
-            _server?.CopyItems(punkItems, psiDestinationFolder);
+            /*IShellItem src;
+            punkItems.GetCount(out uint nbItems);
+            for (uint i = 0; i < nbItems; i++)
+            {
+                punkItems.GetItemAt(i, out src);
+                listFiles.Add(Path.GetFileName(src.GetDisplayName(SIGDN.FILESYSPATH)));
+            }
+            _server?.CopyItems(listFiles.ToArray(), psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH));*/
         }
 
         #endregion

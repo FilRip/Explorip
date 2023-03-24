@@ -100,7 +100,7 @@ namespace Explorip.HookFileOperations
         [return: MarshalAs(UnmanagedType.Interface)]
         private static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
 
-        private static ComReleaser<IShellItem> CreateShellItem(string path)
+        internal static ComReleaser<IShellItem> CreateShellItem(string path)
         {
             return new ComReleaser<IShellItem>((IShellItem)SHCreateItemFromParsingName(path, null, ref _shellItemGuid));
         }

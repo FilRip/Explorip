@@ -48,11 +48,10 @@
     <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
+    <Compile Include="FilesOperations\Interfaces\IPersistIDList.cs" />
     <Compile Include="FilesOperations\Interfaces\IShellItem.cs" />
     <Compile Include="FilesOperations\Interfaces\IShellItemArray.cs" />
     <Compile Include="FilesOperations\Interfaces\PropertyKey.cs" />
-    <Compile Include="FilesOperations\Interfaces\ShellFileGetAttributesOptions.cs" />
-    <Compile Include="FilesOperations\Interfaces\ShellItemAttributeOptions.cs" />
     <Compile Include="FilesOperations\Interfaces\SIGDN.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="MainHookClass.cs" />

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
+using Explorip.HookFileOperations.Helpers;
 
 namespace Explorip.HookFileOperations
 {
@@ -50,25 +53,39 @@ namespace Explorip.HookFileOperations
             // Just to test if server still exist
         }
 
-        public void CopyItem(IShellItem src, IShellItem dest, string destName, IFileOperationProgressSink options)
+        public void CopyItem(string src, string dest, string destName)
         {
             Console.WriteLine("Launch CopyItem");
             Task.Run(() =>
             {
                 IFileOperation fileOperation = ReturnNewFileOperation();
-                fileOperation.CopyItem(src, dest, destName, null);
+                ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
+                ComReleaser<IShellItem> siDest = FileOperation.CreateShellItem(dest);
+                fileOperation.CopyItem(siSrc.Item, siDest.Item, destName, null);
                 fileOperation.PerformOperations();
+                siSrc.Dispose();
+                siDest.Dispose();
             });
         }
 
-        public void CopyItems(IntPtr listSrc, IntPtr dest)
+        public void CopyItems(string[] listSrc, string dest)
         {
             Console.WriteLine("Launch CopyItems");
             Task.Run(() =>
             {
+                List<ComReleaser<IShellItem>> listToDispose = new();
                 IFileOperation fileOperation = ReturnNewFileOperation();
-                fileOperation.CopyItems((IShellItemArray)Marshal.GetObjectForIUnknown(listSrc), (IShellItem)Marshal.GetObjectForIUnknown(dest));
+                ComReleaser<IShellItem> siDest = FileOperation.CreateShellItem(dest);
+                foreach (string src in listSrc)
+                {
+                    ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
+                    listToDispose.Add(siSrc);
+                    fileOperation.CopyItem(siSrc.Item, siDest.Item, Path.GetFileName(src), null);
+                }
                 fileOperation.PerformOperations();
+                siDest.Dispose();
+                for (int i = listToDispose.Count - 1; i >= 0; i--)
+                    listToDispose[i].Dispose();
             });
         }
 
