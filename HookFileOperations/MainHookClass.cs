@@ -13,7 +13,11 @@ namespace Explorip.HookFileOperations
     public class MainHookClass : IEntryPoint
     {
         private readonly ServerInterface _server = null;
-        private LocalHook copyItemHook = null, copyItemsHook = null, performOperationsHook = null;
+        private LocalHook _copyItemHook = null, _copyItemsHook = null;
+        private LocalHook _moveItemHook = null, _moveItemsHook = null;
+        private LocalHook _renameItemHook = null, _renameItemsHook = null;
+        private LocalHook _deleteItemHook = null, _deleteItemsHook = null;
+        private LocalHook _performOperationsHook = null, _newItemHook = null;
 
 #pragma warning disable IDE0060, IDE0079 // Supprimer le paramètre inutilisé
         public MainHookClass(RemoteHooking.IContext context, string channelName)
@@ -32,19 +36,33 @@ namespace Explorip.HookFileOperations
             {
                 _server?.IsInstalled(RemoteHooking.GetCurrentProcessId());
 
-                COMClassInfo copyItemsCom = new(typeof(FilesOperations.ClSidIFileOperation), typeof(IFileOperation), nameof(IFileOperation.CopyItem), nameof(IFileOperation.CopyItems)/*,
+                COMClassInfo copyItemsCom = new(typeof(FilesOperations.ClSidIFileOperation), typeof(IFileOperation), nameof(IFileOperation.CopyItem), nameof(IFileOperation.CopyItems),
                                                                                                                      nameof(IFileOperation.MoveItem), nameof(IFileOperation.MoveItems),
                                                                                                                      nameof(IFileOperation.RenameItem), nameof(IFileOperation.RenameItems),
-                                                                                                                     nameof(IFileOperation.DeleteItem), nameof(IFileOperation.DeleteItems)*/,
-                                                                                                                     nameof(IFileOperation.PerformOperations));
+                                                                                                                     nameof(IFileOperation.DeleteItem), nameof(IFileOperation.DeleteItems),
+                                                                                                                     nameof(IFileOperation.PerformOperations), nameof(IFileOperation.NewItem));
                 copyItemsCom.Query();
-                copyItemHook = LocalHook.Create(copyItemsCom.MethodPointers[0], new DelegateCopyItem(CopyItemHooked), this);
-                copyItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[1], new DelegateCopyItems(CopyItemsHooked), this);
-                performOperationsHook = LocalHook.Create(copyItemsCom.MethodPointers[2], new DelegatePerformOperations(PerformOperationsHooked), this);
+                _copyItemHook = LocalHook.Create(copyItemsCom.MethodPointers[0], new DelegateCopyItem(CopyItemHooked), this);
+                _copyItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[1], new DelegateCopyItems(CopyItemsHooked), this);
+                _moveItemHook = LocalHook.Create(copyItemsCom.MethodPointers[2], new DelegateMoveItem(MoveItemHooked), this);
+                _moveItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[3], new DelegateMoveItems(MoveItemsHooked), this);
+                _renameItemHook = LocalHook.Create(copyItemsCom.MethodPointers[4], new DelegateRenameItem(RenameItemHooked), this);
+                _renameItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[5], new DelegateRenameItems(RenameItemsHooked), this);
+                _deleteItemHook = LocalHook.Create(copyItemsCom.MethodPointers[6], new DelegateDeleteItem(DeleteItemHooked), this);
+                _deleteItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[7], new DelegateDeleteItems(DeleteItemsHooked), this);
+                _performOperationsHook = LocalHook.Create(copyItemsCom.MethodPointers[8], new DelegatePerformOperations(PerformOperationsHooked), this);
+                _newItemHook = LocalHook.Create(copyItemsCom.MethodPointers[9], new DelegateNewItem(NewItemHooked), this);
 
-                copyItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                copyItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                performOperationsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _copyItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _copyItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _moveItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _moveItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _deleteItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _deleteItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _renameItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _renameItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _performOperationsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _newItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
 
                 #region SHFileOperation
 
@@ -84,9 +102,16 @@ namespace Explorip.HookFileOperations
         {
             _server?.ReportMessage($"Explorip remove hook from process {RemoteHooking.GetCurrentProcessId()}");
 
-            copyItemHook?.Dispose();
-            copyItemsHook?.Dispose();
-            performOperationsHook?.Dispose();
+            _copyItemHook?.Dispose();
+            _copyItemsHook?.Dispose();
+            _moveItemHook.Dispose();
+            _moveItemsHook.Dispose();
+            _deleteItemHook.Dispose();
+            _deleteItemsHook.Dispose();
+            _renameItemHook.Dispose();
+            _renameItemsHook.Dispose();
+            _performOperationsHook?.Dispose();
+            _newItemHook?.Dispose();
 
             /*ShFileOpe.Dispose();
             ShFileOpeW.Dispose();*/
@@ -118,11 +143,94 @@ namespace Explorip.HookFileOperations
             }
         }
 
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
+        private delegate void DelegateMoveItem(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem);
+        private void MoveItemHooked(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem)
+        {
+            _server?.ReportMessage("Intercept MoveItem");
+            _server?.MoveItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH), psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), pszCopyName);
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
+        private delegate void DelegateMoveItems(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, IShellItem psiDestinationFolder);
+        private void MoveItemsHooked(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, IShellItem psiDestinationFolder)
+        {
+            _server?.ReportMessage("Intercept MoveItems");
+            Guid guidIShellItem = typeof(IShellItem).GUID;
+            if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
+            {
+                IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
+                string src = si.GetDisplayName(SIGDN.FILESYSPATH);
+                _server?.MoveItem(src, psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), Path.GetFileName(src));
+            }
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
+        private delegate void DelegateDeleteItem(IFileOperation self, IShellItem punkItems, IFileOperationProgressSink pfopsItem);
+        private void DeleteItemHooked(IFileOperation self, IShellItem punkItems, IFileOperationProgressSink pfopsItem)
+        {
+            _server?.ReportMessage("Intercept DeleteItem");
+            _server?.DeleteItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH));
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
+        private delegate void DelegateDeleteItems(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems);
+        private void DeleteItemsHooked(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems)
+        {
+            _server?.ReportMessage("Intercept DeleteItems");
+            Guid guidIShellItem = typeof(IShellItem).GUID;
+            Guid guidIDataObject = typeof(FilesOperations.Interfaces.IDataObject).GUID;
+            Helpers.ExtensionsComInterface.RechercheComInterface(Marshal.GetIUnknownForObject(punkItems), out System.Collections.Generic.Dictionary<Guid, string> listInterfaces);
+            if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
+            {
+                IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
+                string src = si.GetDisplayName(SIGDN.FILESYSPATH);
+                _server?.DeleteItem(src);
+            }
+            else if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIDataObject, out IntPtr ptrDataObject) == 0)
+            {
+                FilesOperations.Interfaces.IDataObject @do = (FilesOperations.Interfaces.IDataObject)Marshal.GetObjectForIUnknown(ptrShellItem);
+                /*string src = @do.GetDisplayName(SIGDN.FILESYSPATH);
+                _server?.DeleteItem(src);*/
+            }
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
+        private delegate void DelegateRenameItem(IFileOperation self, IShellItem punkItems, [MarshalAs(UnmanagedType.LPWStr)] string pszNewName, IFileOperationProgressSink pfopsItem);
+        private void RenameItemHooked(IFileOperation self, IShellItem punkItems, [MarshalAs(UnmanagedType.LPWStr)] string pszNewName, IFileOperationProgressSink pfopsItem)
+        {
+            _server?.ReportMessage("Intercept RenameItem");
+            _server?.RenameItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH), pszNewName);
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
+        private delegate void DelegateRenameItems(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, [MarshalAs(UnmanagedType.LPWStr)] string pszNewName);
+        private void RenameItemsHooked(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, [MarshalAs(UnmanagedType.LPWStr)] string pszNewName)
+        {
+            _server?.ReportMessage("Intercept RenameItems");
+            Guid guidIShellItem = typeof(IShellItem).GUID;
+            if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
+            {
+                IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
+                string src = si.GetDisplayName(SIGDN.FILESYSPATH);
+                _server?.RenameItem(src, pszNewName);
+            }
+        }
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = false)]
         private delegate void DelegatePerformOperations(IFileOperation self);
         private void PerformOperationsHooked(IFileOperation self)
         {
             _server.PerformOperations();
+        }
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = false)]
+        private delegate uint DelegateNewItem(IFileOperation self, IShellItem psiDestinationFolder, FileAttributes dwFileAttributes, [MarshalAs(UnmanagedType.LPWStr)] string pszName, [MarshalAs(UnmanagedType.LPWStr)] string pszTemplateName, IFileOperationProgressSink pfopsItem);
+        private uint NewItemHooked(IFileOperation self, IShellItem psiDestinationFolder, FileAttributes dwFileAttributes, [MarshalAs(UnmanagedType.LPWStr)] string pszName, [MarshalAs(UnmanagedType.LPWStr)] string pszTemplateName, IFileOperationProgressSink pfopsItem)
+        {
+            _server?.ReportMessage("Intercept RenameItems");
+            _server.NewItem(psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), dwFileAttributes, pszName, pszTemplateName);
+            return 0;
         }
 
         #endregion

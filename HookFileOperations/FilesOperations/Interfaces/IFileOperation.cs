@@ -45,7 +45,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
             IFileOperationProgressSink pfopsItem);
 
         public void CopyItems(
-            IShellItemArray punkItems,
+            [MarshalAs(UnmanagedType.Interface)] object punkItems,
             IShellItem psiDestinationFolder);
 
         public void DeleteItem(

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
@@ -62,6 +63,31 @@ namespace Explorip.HookFileOperations
             _currentFileOperation.CopyItem(siSrc.Item, siDest.Item, destName, null);
         }
 
+        public void MoveItem(string src, string dest, string destName)
+        {
+            Console.WriteLine("Add MoveItem");
+            ReturnNewFileOperation();
+            ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
+            ComReleaser<IShellItem> siDest = FileOperation.CreateShellItem(dest);
+            _currentFileOperation.MoveItem(siSrc.Item, siDest.Item, destName, null);
+        }
+
+        public void DeleteItem(string src)
+        {
+            Console.WriteLine("Add DeleteItem");
+            ReturnNewFileOperation();
+            ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
+            _currentFileOperation.DeleteItem(siSrc.Item, null);
+        }
+
+        public void RenameItem(string src, string dest)
+        {
+            Console.WriteLine("Add RenameItem");
+            ReturnNewFileOperation();
+            ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
+            _currentFileOperation.RenameItem(siSrc.Item, dest, null);
+        }
+
         public void PerformOperations()
         {
             Console.WriteLine("PerformOperation");
@@ -70,6 +96,15 @@ namespace Explorip.HookFileOperations
                 _performDone = true;
                 _currentFileOperation.PerformOperations();
             });
+        }
+
+        public uint NewItem(string destFolder, FileAttributes dwFileAttributes, string filename, string templateName)
+        {
+            Console.WriteLine("Add NewItem");
+            ReturnNewFileOperation();
+            ComReleaser<IShellItem> siDestFolder = FileOperation.CreateShellItem(destFolder);
+            _currentFileOperation.NewItem(siDestFolder.Item, dwFileAttributes, filename, templateName, null);
+            return 0;
         }
 
         private void ReturnNewFileOperation()
