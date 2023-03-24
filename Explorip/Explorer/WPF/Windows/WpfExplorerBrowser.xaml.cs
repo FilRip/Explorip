@@ -120,7 +120,7 @@ namespace Explorip.Explorer.WPF.Windows
                 {
                     if (e.ChangedButton == MouseButton.Left)
                     {
-                        if (e.ClickCount == 2)
+                        if (e.ClickCount == 2 && e.LeftButton == MouseButtonState.Pressed)
                         {
                             if (WindowState == WindowState.Normal)
                                 MaximizeWindow_Click(this, new RoutedEventArgs());
@@ -259,9 +259,11 @@ namespace Explorip.Explorer.WPF.Windows
                 _startDrag = false;
                 if (WindowState == WindowState.Maximized)
                     Top = Mouse.GetPosition(Application.Current.MainWindow).Y;
-                SetWindowNormal();
                 if (e.LeftButton == MouseButtonState.Pressed)
+                {
+                    SetWindowNormal();
                     DragMove();
+                }
             }
         }
 
