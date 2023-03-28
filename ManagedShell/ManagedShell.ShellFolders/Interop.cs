@@ -65,19 +65,19 @@ namespace ManagedShell.ShellFolders
             [In()][MarshalAs(UnmanagedType.LPWStr)] string pszPath,
             [In()] IntPtr pbc,
             [In()][MarshalAs(UnmanagedType.LPStruct)] Guid riid,
-            [Out][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 2)] out IShellItem ppv);
+            [Out()][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 2)] out IShellItem ppv);
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
         public static extern void SHCreateItemFromIDList(
             [In()] IntPtr pidl,
             [In()][MarshalAs(UnmanagedType.LPStruct)] Guid riid,
-            [Out][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 2)] out IShellItemImageFactory ppv);
+            [Out()][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 2)] out IShellItemImageFactory ppv);
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
         public static extern void SHCreateItemFromIDList(
             [In()] IntPtr pidl,
             [In()][MarshalAs(UnmanagedType.LPStruct)] Guid riid,
-            [Out][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 2)] out IShellItem ppv);
+            [Out()][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 2)] out IShellItem ppv);
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
         public static extern void SHCreateItemWithParent(
@@ -85,7 +85,7 @@ namespace ManagedShell.ShellFolders
             [In()] IShellFolder psfParent,
             [In()] IntPtr pidl,
             [In()][MarshalAs(UnmanagedType.LPStruct)] Guid riid,
-            [Out][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 3)] out IShellItem ppv);
+            [Out()][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 3)] out IShellItem ppv);
         // appends a new item to the end of the specified menu bar, drop-down menu, submenu, 
         // or shortcut menu. You can use this function to specify the content, appearance, and 
         // behavior of the menu item

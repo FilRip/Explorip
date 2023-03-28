@@ -53,7 +53,7 @@ namespace ManagedShell.WindowsTray
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface ITrayNotify
     {
-        void RegisterCallback([MarshalAs(UnmanagedType.Interface)] INotificationCB callback, [Out] out ulong handle);
+        void RegisterCallback([MarshalAs(UnmanagedType.Interface)] INotificationCB callback, [Out()] out ulong handle);
         void UnregisterCallback([In()] ulong handle);
         void SetPreference([In()] ref NotifyItem notifyItem);
         void EnableAutoTray([In()] bool enabled);

@@ -1695,7 +1695,7 @@ namespace ManagedShell.Interop
         internal static extern bool GetClientRect(IntPtr hWnd, out Rect lpRect);
 
         [DllImport(User32_DllName, ExactSpelling = true, SetLastError = true)]
-        internal static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In, Out] ref Rect rect, [MarshalAs(UnmanagedType.U4)] int cPoints);
+        internal static extern int MapWindowPoints(IntPtr hWndFrom, IntPtr hWndTo, [In(), Out] ref Rect rect, [MarshalAs(UnmanagedType.U4)] int cPoints);
 
         [DllImport(User32_DllName, SetLastError = true)]
         internal static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);

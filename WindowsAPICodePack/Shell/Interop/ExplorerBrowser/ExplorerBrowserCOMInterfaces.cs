@@ -147,7 +147,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         public virtual extern void Destroy();
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        public virtual extern void SetRect([In, Out] ref IntPtr phdwp, NativeRect rcBrowser);
+        public virtual extern void SetRect([In(), Out] ref IntPtr phdwp, NativeRect rcBrowser);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void SetPropertyBag([MarshalAs(UnmanagedType.LPWStr)] string pszPropertyBag);
@@ -225,7 +225,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// <param name="rcBrowser">The coordinates that the browser will occupy.</param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetRect([In, Out] ref IntPtr phdwp, NativeRect rcBrowser);
+        void SetRect([In(), Out] ref IntPtr phdwp, NativeRect rcBrowser);
 
         /// <summary>
         /// Sets the name of the property bag.
@@ -362,7 +362,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     internal interface IFolderView
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetCurrentViewMode([Out] out uint pViewMode);
+        void GetCurrentViewMode([Out()] out uint pViewMode);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetCurrentViewMode(uint ViewMode);
@@ -377,7 +377,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         void ItemCount(uint uFlags, out int pcItems);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void Items(uint uFlags, ref Guid riid, [Out, MarshalAs(UnmanagedType.IUnknown)] out object ppv);
+        void Items(uint uFlags, ref Guid riid, [Out(), MarshalAs(UnmanagedType.IUnknown)] out object ppv);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetSelectionMarkedItem(out int piItem);
@@ -389,7 +389,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         void GetItemPosition(IntPtr pidl, out NativePoint ppt);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetSpacing([Out] out NativePoint ppt);
+        void GetSpacing([Out()] out NativePoint ppt);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetDefaultSpacing(out NativePoint ppt);
@@ -429,7 +429,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
 
         [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        HResult Items(uint uFlags, ref Guid riid, [Out, MarshalAs(UnmanagedType.IUnknown)] out object ppv);
+        HResult Items(uint uFlags, ref Guid riid, [Out(), MarshalAs(UnmanagedType.IUnknown)] out object ppv);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetSelectionMarkedItem(out int piItem);
@@ -441,7 +441,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         void GetItemPosition(IntPtr pidl, out NativePoint ppt);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetSpacing([Out] out NativePoint ppt);
+        void GetSpacing([Out()] out NativePoint ppt);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetDefaultSpacing(out NativePoint ppt);
@@ -508,7 +508,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         void GetSelectionState(IntPtr pidl, out uint pdwFlags);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void InvokeVerbOnSelection([In, MarshalAs(UnmanagedType.LPWStr)] string pszVerb);
+        void InvokeVerbOnSelection([In(), MarshalAs(UnmanagedType.LPWStr)] string pszVerb);
 
         [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -672,7 +672,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         HResult GetViewFlags(
-            [Out] out uint pdwFlags); // CommDlgBrowser2ViewFlags 
+            [Out()] out uint pdwFlags); // CommDlgBrowser2ViewFlags 
 
 
         [PreserveSig()]

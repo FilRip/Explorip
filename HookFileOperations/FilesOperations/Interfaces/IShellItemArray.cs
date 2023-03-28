@@ -16,7 +16,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
     {
         // Not supported: IBindCtx
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void BindToHandler([In, MarshalAs(UnmanagedType.Interface)] IntPtr pbc, [In()] ref Guid rbhid,
+        void BindToHandler([In(), MarshalAs(UnmanagedType.Interface)] IntPtr pbc, [In()] ref Guid rbhid,
                      [In()] ref Guid riid, out IntPtr ppvOut);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]

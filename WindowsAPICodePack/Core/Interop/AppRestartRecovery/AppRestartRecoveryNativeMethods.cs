@@ -37,7 +37,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
         [DllImport("kernel32.dll")]
         [PreserveSig()]
         internal static extern HResult ApplicationRecoveryInProgress(
-            [Out, MarshalAs(UnmanagedType.Bool)] out bool canceled);
+            [Out(), MarshalAs(UnmanagedType.Bool)] out bool canceled);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         [PreserveSig()]

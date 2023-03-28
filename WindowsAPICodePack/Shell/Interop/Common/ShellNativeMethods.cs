@@ -547,7 +547,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         internal static extern int SHCreateShellItem(
             IntPtr pidlParent,
-            [In, MarshalAs(UnmanagedType.Interface)] IShellFolder psfParent,
+            [In(), MarshalAs(UnmanagedType.Interface)] IShellFolder psfParent,
             IntPtr pidl,
             [MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi
         );
@@ -608,7 +608,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         [DllImport("Shell32", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Winapi, SetLastError = true)]
         internal static extern int SHShowManageLibraryUI(
-            [In, MarshalAs(UnmanagedType.Interface)] IShellItem library,
+            [In(), MarshalAs(UnmanagedType.Interface)] IShellItem library,
             [In()] IntPtr hwndOwner,
             [In()] string title,
             [In()] string instruction,

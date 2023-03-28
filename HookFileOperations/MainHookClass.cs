@@ -42,6 +42,7 @@ namespace Explorip.HookFileOperations
                                                                                                                      nameof(IFileOperation.DeleteItem), nameof(IFileOperation.DeleteItems),
                                                                                                                      nameof(IFileOperation.PerformOperations), nameof(IFileOperation.NewItem));
                 copyItemsCom.Query();
+
                 _copyItemHook = LocalHook.Create(copyItemsCom.MethodPointers[0], new DelegateCopyItem(CopyItemHooked), this);
                 _copyItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[1], new DelegateCopyItems(CopyItemsHooked), this);
                 _moveItemHook = LocalHook.Create(copyItemsCom.MethodPointers[2], new DelegateMoveItem(MoveItemHooked), this);
@@ -90,9 +91,9 @@ namespace Explorip.HookFileOperations
                         _server.Ping();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    _server?.ReportMessages(new string[] { $"Error : {ex.Message}", ex.StackTrace });
+                    /* Ignore errors */
                 }
                 Uninstall();
             }
@@ -100,8 +101,6 @@ namespace Explorip.HookFileOperations
 
         public void Uninstall()
         {
-            _server?.ReportMessage($"Explorip remove hook from process {RemoteHooking.GetCurrentProcessId()}");
-
             _copyItemHook?.Dispose();
             _copyItemsHook?.Dispose();
             _moveItemHook.Dispose();
@@ -189,7 +188,8 @@ namespace Explorip.HookFileOperations
             }
             else if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIDataObject, out IntPtr ptrDataObject) == 0)
             {
-                FilesOperations.Interfaces.IDataObject @do = (FilesOperations.Interfaces.IDataObject)Marshal.GetObjectForIUnknown(ptrShellItem);
+                FilesOperations.Interfaces.IDataObject @do = (FilesOperations.Interfaces.IDataObject)Marshal.GetObjectForIUnknown(ptrDataObject);
+                var myEnum = @do.EnumFormatEtc(DATADIR.DATADIR_GET);
                 /*string src = @do.GetDisplayName(SIGDN.FILESYSPATH);
                 _server?.DeleteItem(src);*/
             }

@@ -177,7 +177,7 @@ namespace ManagedShell.ShellFolders.Enums
         /// <summary>
         /// When specified as input, VALIDATE instructs the folder to validate that the items contained in a folder or Shell item
         /// array exist. If one or more of those items do not exist, IShellFolder::GetAttributesOf and IShellItemArray::GetAttributes
-        /// return a failure code. This flag is never returned as an [out] value.
+        /// return a failure code. This flag is never returned as an [Out()] value.
         /// <para>
         /// When used with the file system folder, VALIDATE instructs the folder to discard cached properties retrieved by clients
         /// of IShellFolder2::GetDetailsEx that might have accumulated for the specified items.

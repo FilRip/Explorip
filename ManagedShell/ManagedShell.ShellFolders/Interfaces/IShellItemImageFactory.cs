@@ -11,9 +11,9 @@ namespace ManagedShell.ShellFolders.Interfaces
     public interface IShellItemImageFactory
     {
         int GetImage(
-            [In, MarshalAs(UnmanagedType.Struct)] Size size,
+            [In(), MarshalAs(UnmanagedType.Struct)] Size size,
             [In()] SIIGBF flags,
-            [Out] out IntPtr phbm);
+            [Out()] out IntPtr phbm);
     }
 
     [StructLayout(LayoutKind.Sequential)]

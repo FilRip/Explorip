@@ -27,6 +27,6 @@ namespace WindowsDesktop.Interop
 
         void RemoveDesktop(IVirtualDesktop pRemove, IVirtualDesktop pFallbackDesktop);
 
-        IVirtualDesktop FindDesktop([In, MarshalAs(UnmanagedType.LPStruct)] Guid desktopId);
+        IVirtualDesktop FindDesktop([In(), MarshalAs(UnmanagedType.LPStruct)] Guid desktopId);
     }
 }

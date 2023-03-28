@@ -38,7 +38,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <param name="state"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        HResult GetState(ref PropertyKey key, [Out] out PropertyStoreCacheState state);
+        HResult GetState(ref PropertyKey key, [Out()] out PropertyStoreCacheState state);
 
         /// <summary>
         /// Gets the valeu and state of a property in the cache
@@ -48,7 +48,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <param name="state"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        HResult GetValueAndState(ref PropertyKey propKey, [Out] PropVariant pv, [Out] out PropertyStoreCacheState state);
+        HResult GetValueAndState(ref PropertyKey propKey, [Out()] PropVariant pv, [Out()] out PropertyStoreCacheState state);
 
         /// <summary>
         /// Sets the state of a property in the cache.
@@ -84,7 +84,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <param name="propertyCount"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        HResult GetCount([Out] out uint propertyCount);
+        HResult GetCount([Out()] out uint propertyCount);
 
         /// <summary>
         /// Get a property key located at a specific index.
@@ -102,7 +102,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <param name="pv"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        HResult GetValue([In()] ref PropertyKey key, [Out] PropVariant pv);
+        HResult GetValue([In()] ref PropertyKey key, [Out()] PropVariant pv);
 
         /// <summary>
         /// Sets the value of a property in the store
@@ -187,9 +187,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         HResult GetConditionType(out PropertyConditionType pcontype, out PropertyConditionOperation popDefault);
         [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        HResult GetEnumTypeList([In()] ref Guid riid, [Out, MarshalAs(UnmanagedType.Interface)] out IPropertyEnumTypeList ppv);
+        HResult GetEnumTypeList([In()] ref Guid riid, [Out(), MarshalAs(UnmanagedType.Interface)] out IPropertyEnumTypeList ppv);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void CoerceToCanonicalValue([In, Out] PropVariant propvar);
+        void CoerceToCanonicalValue([In(), Out] PropVariant propvar);
         [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)] // Note: this method signature may be wrong, but it is not used.
         HResult FormatForDisplay([In()] PropVariant propvar, [In()] ref PropertyDescriptionFormatOptions pdfFlags, [MarshalAs(UnmanagedType.LPWStr)] out string ppszDisplay);
@@ -253,7 +253,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         void GetEnumTypeList([In()] ref Guid riid, out IntPtr ppv);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void CoerceToCanonicalValue([In, Out] PropVariant ppropvar);
+        void CoerceToCanonicalValue([In(), Out] PropVariant ppropvar);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void FormatForDisplay([In()] PropVariant propvar, [In()] ref PropertyDescriptionFormatOptions pdfFlags, [MarshalAs(UnmanagedType.LPWStr)] out string ppszDisplay);
@@ -264,7 +264,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetImageReferenceForValue(
             [In()] PropVariant propvar,
-            [Out, MarshalAs(UnmanagedType.LPWStr)] out string ppszImageRes);
+            [Out(), MarshalAs(UnmanagedType.LPWStr)] out string ppszImageRes);
     }
 
     [ComImport,
@@ -273,19 +273,19 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     internal interface IPropertyEnumType
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetEnumType([Out] out PropEnumType penumtype);
+        void GetEnumType([Out()] out PropEnumType penumtype);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetValue([Out] PropVariant ppropvar);
+        void GetValue([Out()] PropVariant ppropvar);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetRangeMinValue([Out] PropVariant ppropvar);
+        void GetRangeMinValue([Out()] PropVariant ppropvar);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetRangeSetValue([Out] PropVariant ppropvar);
+        void GetRangeSetValue([Out()] PropVariant ppropvar);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetDisplayText([Out, MarshalAs(UnmanagedType.LPWStr)] out string ppszDisplay);
+        void GetDisplayText([Out(), MarshalAs(UnmanagedType.LPWStr)] out string ppszDisplay);
     }
 
     [ComImport,
@@ -294,22 +294,22 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     internal interface IPropertyEnumType2 : IPropertyEnumType
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetEnumType([Out] out PropEnumType penumtype);
+        void GetEnumType([Out()] out PropEnumType penumtype);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetValue([Out] PropVariant ppropvar);
+        void GetValue([Out()] PropVariant ppropvar);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetRangeMinValue([Out] PropVariant ppropvar);
+        void GetRangeMinValue([Out()] PropVariant ppropvar);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetRangeSetValue([Out] PropVariant ppropvar);
+        void GetRangeSetValue([Out()] PropVariant ppropvar);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetDisplayText([Out, MarshalAs(UnmanagedType.LPWStr)] out string ppszDisplay);
+        void GetDisplayText([Out(), MarshalAs(UnmanagedType.LPWStr)] out string ppszDisplay);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetImageReference([Out, MarshalAs(UnmanagedType.LPWStr)] out string ppszImageRes);
+        void GetImageReference([Out(), MarshalAs(UnmanagedType.LPWStr)] out string ppszImageRes);
     }
 
 
@@ -319,13 +319,13 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     internal interface IPropertyEnumTypeList
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetCount([Out] out uint pctypes);
+        void GetCount([Out()] out uint pctypes);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetAt(
         [In()] uint itype,
         [In()] ref Guid riid,   // riid may be IID_IPropertyEnumType
-        [Out, MarshalAs(UnmanagedType.Interface)] out IPropertyEnumType ppv);
+        [Out(), MarshalAs(UnmanagedType.Interface)] out IPropertyEnumType ppv);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetConditionAt(
@@ -336,7 +336,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void FindMatchingIndex(
         [In()] PropVariant propvarCmp,
-        [Out] out uint pnIndex);
+        [Out()] out uint pnIndex);
     }
 
     #endregion

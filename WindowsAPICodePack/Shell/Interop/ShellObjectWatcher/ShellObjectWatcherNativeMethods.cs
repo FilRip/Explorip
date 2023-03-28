@@ -12,7 +12,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.Interop
         [DllImport("Ole32.dll")]
         public static extern HResult CreateBindCtx(
             int reserved, // must be 0
-            [Out] out IBindCtx bindCtx);
+            [Out()] out IBindCtx bindCtx);
 
         [DllImport("User32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern uint RegisterClassEx(
@@ -39,7 +39,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.Interop
         [DllImport("User32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetMessage(
-            [Out] out Message message,
+            [Out()] out Message message,
             IntPtr windowHandle,
             uint filterMinMessage,
             uint filterMaxMessage);

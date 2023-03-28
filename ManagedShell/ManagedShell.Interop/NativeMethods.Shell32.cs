@@ -412,7 +412,7 @@ namespace ManagedShell.Interop
         public interface IPropertyStore
         {
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-            void GetCount([Out] out uint cProps);
+            void GetCount([Out()] out uint cProps);
 
             [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
             void GetAt([In()] uint iProp, out PropertyKey pkey);

@@ -31,7 +31,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetFileTypes(
             [In()] uint cFileTypes,
-            [In, MarshalAs(UnmanagedType.LPArray)] ShellNativeMethods.FilterSpec[] rgFilterSpec);
+            [In(), MarshalAs(UnmanagedType.LPArray)] ShellNativeMethods.FilterSpec[] rgFilterSpec);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetFileTypeIndex([In()] uint iFileType);
@@ -41,7 +41,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void Advise(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialogEvents pfde,
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialogEvents pfde,
             out uint pdwCookie);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -54,10 +54,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void GetOptions(out ShellNativeMethods.FileOpenOptions pfos);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetDefaultFolder([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi);
+        void SetDefaultFolder([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFolder([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi);
+        void SetFolder([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetFolder([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
@@ -66,28 +66,28 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void GetCurrentSelection([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFileName([In, MarshalAs(UnmanagedType.LPWStr)] string pszName);
+        void SetFileName([In(), MarshalAs(UnmanagedType.LPWStr)] string pszName);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetFileName([MarshalAs(UnmanagedType.LPWStr)] out string pszName);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetTitle([In, MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
+        void SetTitle([In(), MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetOkButtonLabel([In, MarshalAs(UnmanagedType.LPWStr)] string pszText);
+        void SetOkButtonLabel([In(), MarshalAs(UnmanagedType.LPWStr)] string pszText);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFileNameLabel([In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+        void SetFileNameLabel([In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetResult([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void AddPlace([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi, ShellNativeMethods.FileDialogAddPlacement fdap);
+        void AddPlace([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi, ShellNativeMethods.FileDialogAddPlacement fdap);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetDefaultExtension([In, MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
+        void SetDefaultExtension([In(), MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void Close([MarshalAs(UnmanagedType.Error)] int hr);
@@ -125,7 +125,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void Advise(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialogEvents pfde,
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialogEvents pfde,
             out uint pdwCookie);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -138,10 +138,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void GetOptions(out ShellNativeMethods.FileOpenOptions pfos);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetDefaultFolder([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi);
+        void SetDefaultFolder([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFolder([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi);
+        void SetFolder([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetFolder([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
@@ -150,28 +150,28 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void GetCurrentSelection([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFileName([In, MarshalAs(UnmanagedType.LPWStr)] string pszName);
+        void SetFileName([In(), MarshalAs(UnmanagedType.LPWStr)] string pszName);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetFileName([MarshalAs(UnmanagedType.LPWStr)] out string pszName);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetTitle([In, MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
+        void SetTitle([In(), MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetOkButtonLabel([In, MarshalAs(UnmanagedType.LPWStr)] string pszText);
+        void SetOkButtonLabel([In(), MarshalAs(UnmanagedType.LPWStr)] string pszText);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFileNameLabel([In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+        void SetFileNameLabel([In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetResult([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void AddPlace([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi, ShellNativeMethods.FileDialogAddPlacement fdap);
+        void AddPlace([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi, ShellNativeMethods.FileDialogAddPlacement fdap);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetDefaultExtension([In, MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
+        void SetDefaultExtension([In(), MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void Close([MarshalAs(UnmanagedType.Error)] int hr);
@@ -218,7 +218,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void Advise(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialogEvents pfde,
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialogEvents pfde,
             out uint pdwCookie);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -231,10 +231,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void GetOptions(out ShellNativeMethods.FileOpenOptions pfos);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetDefaultFolder([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi);
+        void SetDefaultFolder([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFolder([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi);
+        void SetFolder([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetFolder([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
@@ -243,30 +243,30 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void GetCurrentSelection([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFileName([In, MarshalAs(UnmanagedType.LPWStr)] string pszName);
+        void SetFileName([In(), MarshalAs(UnmanagedType.LPWStr)] string pszName);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetFileName([MarshalAs(UnmanagedType.LPWStr)] out string pszName);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetTitle([In, MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
+        void SetTitle([In(), MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetOkButtonLabel([In, MarshalAs(UnmanagedType.LPWStr)] string pszText);
+        void SetOkButtonLabel([In(), MarshalAs(UnmanagedType.LPWStr)] string pszText);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetFileNameLabel([In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+        void SetFileNameLabel([In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetResult([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void AddPlace(
-            [In, MarshalAs(UnmanagedType.Interface)] IShellItem psi,
+            [In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi,
             ShellNativeMethods.FileDialogAddPlacement fdap);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetDefaultExtension([In, MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
+        void SetDefaultExtension([In(), MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void Close([MarshalAs(UnmanagedType.Error)] int hr);
@@ -284,11 +284,11 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         // Defined by IFileSaveDialog interface.
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetSaveAsItem([In, MarshalAs(UnmanagedType.Interface)] IShellItem psi);
+        void SetSaveAsItem([In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi);
 
         // Not currently supported: IPropertyStore.
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetProperties([In, MarshalAs(UnmanagedType.Interface)] IntPtr pStore);
+        void SetProperties([In(), MarshalAs(UnmanagedType.Interface)] IntPtr pStore);
 
         [PreserveSig()]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -303,10 +303,10 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         // Not currently supported: IPropertyStore, IFileOperationProgressSink.
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void ApplyProperties(
-            [In, MarshalAs(UnmanagedType.Interface)] IShellItem psi,
-            [In, MarshalAs(UnmanagedType.Interface)] IntPtr pStore,
-            [In, ComAliasName("ShellObjects.wireHWND")] ref IntPtr hwnd,
-            [In, MarshalAs(UnmanagedType.Interface)] IntPtr pSink);
+            [In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi,
+            [In(), MarshalAs(UnmanagedType.Interface)] IntPtr pStore,
+            [In(), ComAliasName("ShellObjects.wireHWND")] ref IntPtr hwnd,
+            [In(), MarshalAs(UnmanagedType.Interface)] IntPtr pSink);
     }
 
     [ComImport,
@@ -321,32 +321,32 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime),
         PreserveSig]
-        HResult OnFileOk([In, MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
+        HResult OnFileOk([In(), MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime),
         PreserveSig]
         HResult OnFolderChanging(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialog pfd,
-            [In, MarshalAs(UnmanagedType.Interface)] IShellItem psiFolder);
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialog pfd,
+            [In(), MarshalAs(UnmanagedType.Interface)] IShellItem psiFolder);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void OnFolderChange([In, MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
+        void OnFolderChange([In(), MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void OnSelectionChange([In, MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
+        void OnSelectionChange([In(), MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void OnShareViolation(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialog pfd,
-            [In, MarshalAs(UnmanagedType.Interface)] IShellItem psi,
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialog pfd,
+            [In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi,
             out ShellNativeMethods.FileDialogEventShareViolationResponse pResponse);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void OnTypeChange([In, MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
+        void OnTypeChange([In(), MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void OnOverwrite([In, MarshalAs(UnmanagedType.Interface)] IFileDialog pfd,
-            [In, MarshalAs(UnmanagedType.Interface)] IShellItem psi,
+        void OnOverwrite([In(), MarshalAs(UnmanagedType.Interface)] IFileDialog pfd,
+            [In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi,
             out ShellNativeMethods.FileDialogEventOverwriteResponse pResponse);
     }
 
@@ -361,12 +361,12 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void AddMenu(
             [In()] int dwIDCtl,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void AddPushButton(
             [In()] int dwIDCtl,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void AddComboBox([In()] int dwIDCtl);
@@ -377,13 +377,13 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void AddCheckButton(
             [In()] int dwIDCtl,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel,
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel,
             [In()] bool bChecked);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void AddEditBox(
             [In()] int dwIDCtl,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszText);
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszText);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void AddSeparator([In()] int dwIDCtl);
@@ -391,17 +391,17 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void AddText(
             [In()] int dwIDCtl,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszText);
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszText);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetControlLabel(
             [In()] int dwIDCtl,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetControlState(
             [In()] int dwIDCtl,
-            [Out] out ShellNativeMethods.ControlState pdwState);
+            [Out()] out ShellNativeMethods.ControlState pdwState);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetControlState(
@@ -416,12 +416,12 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetEditBoxText(
             [In()] int dwIDCtl,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszText);
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszText);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetCheckButtonState(
             [In()] int dwIDCtl,
-            [Out] out bool pbChecked);
+            [Out()] out bool pbChecked);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetCheckButtonState(
@@ -432,7 +432,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void AddControlItem(
             [In()] int dwIDCtl,
             [In()] int dwIDItem,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void RemoveControlItem(
@@ -446,7 +446,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void GetControlItemState(
             [In()] int dwIDCtl,
             [In()] int dwIDItem,
-            [Out] out ShellNativeMethods.ControlState pdwState);
+            [Out()] out ShellNativeMethods.ControlState pdwState);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetControlItemState(
@@ -457,7 +457,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetSelectedControlItem(
             [In()] int dwIDCtl,
-            [Out] out int pdwIDItem);
+            [Out()] out int pdwIDItem);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void SetSelectedControlItem(
@@ -467,7 +467,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void StartVisualGroup(
             [In()] int dwIDCtl,
-            [In, MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+            [In(), MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void EndVisualGroup();
@@ -483,24 +483,24 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void OnItemSelected(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialogCustomize pfdc,
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialogCustomize pfdc,
             [In()] int dwIDCtl,
             [In()] int dwIDItem);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void OnButtonClicked(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialogCustomize pfdc,
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialogCustomize pfdc,
             [In()] int dwIDCtl);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void OnCheckButtonToggled(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialogCustomize pfdc,
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialogCustomize pfdc,
             [In()] int dwIDCtl,
             [In()] bool bChecked);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void OnControlActivating(
-            [In, MarshalAs(UnmanagedType.Interface)] IFileDialogCustomize pfdc,
+            [In(), MarshalAs(UnmanagedType.Interface)] IFileDialogCustomize pfdc,
             [In()] int dwIDCtl);
     }
     // Restore the warning

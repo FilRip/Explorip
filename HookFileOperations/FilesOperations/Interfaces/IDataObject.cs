@@ -57,7 +57,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
     public interface IEnumFORMATETC
     {
         [PreserveSig()]
-        int Next(int celt, [Out, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] FormatEtc[] rgelt, [Out, MarshalAs(UnmanagedType.LPArray)] int[] pceltFetched);
+        int Next(int celt, [Out(), MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] FormatEtc[] rgelt, [Out(), MarshalAs(UnmanagedType.LPArray)] int[] pceltFetched);
         [PreserveSig()]
         int Skip(int celt);
         [PreserveSig()]

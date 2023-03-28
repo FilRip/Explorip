@@ -77,7 +77,7 @@ namespace ManagedShell.Interop
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool IsWow64Process(
             [In()] IntPtr hProcess,
-            [Out] out bool wow64Process
+            [Out()] out bool wow64Process
         );
 
         [DllImport(Kernel32_DllName)]
@@ -109,7 +109,7 @@ namespace ManagedShell.Interop
 #pragma warning restore S4070
 
         [DllImport(Kernel32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
-        internal static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, [Out, MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpExeName, ref int lpdwSize);
+        internal static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, [Out(), MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpExeName, ref int lpdwSize);
 
 
         [DllImport(Kernel32_DllName, SetLastError = true, ExactSpelling = true)]

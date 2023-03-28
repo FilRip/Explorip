@@ -17,14 +17,14 @@ namespace Microsoft.WindowsAPICodePack.Net
         string GetName();
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetName([In, MarshalAs(UnmanagedType.BStr)] string szNetworkNewName);
+        void SetName([In(), MarshalAs(UnmanagedType.BStr)] string szNetworkNewName);
 
         [return: MarshalAs(UnmanagedType.BStr)]
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         string GetDescription();
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void SetDescription([In, MarshalAs(UnmanagedType.BStr)] string szDescription);
+        void SetDescription([In(), MarshalAs(UnmanagedType.BStr)] string szDescription);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         Guid GetNetworkId();

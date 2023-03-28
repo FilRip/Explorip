@@ -28,16 +28,16 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
         int IsDirty();
 
         [PreserveSig()]
-        int Load([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName, uint dwMode);
+        int Load([In(), MarshalAs(UnmanagedType.LPWStr)] string pszFileName, uint dwMode);
 
         [PreserveSig()]
-        int Save([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName, [In, MarshalAs(UnmanagedType.Bool)] bool fRemember);
+        int Save([In(), MarshalAs(UnmanagedType.LPWStr)] string pszFileName, [In(), MarshalAs(UnmanagedType.Bool)] bool fRemember);
 
         [PreserveSig()]
-        void SaveCompleted([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
+        void SaveCompleted([In(), MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
 
         [PreserveSig()]
-        void GetCurFile([In, MarshalAs(UnmanagedType.LPWStr)] string ppszFileName);
+        void GetCurFile([In(), MarshalAs(UnmanagedType.LPWStr)] string ppszFileName);
     }
 
     [ComImport, Guid(ListGuid.IID_IPersistIDList), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
