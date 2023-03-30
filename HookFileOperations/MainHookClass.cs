@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
-using System.Windows.Forms;
 
 using EasyHook;
 
@@ -77,7 +77,7 @@ namespace Explorip.HookFileOperations
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.Forms.MessageBox.Show(ex.Message);
             }
 
             if (_server != null)
@@ -178,8 +178,8 @@ namespace Explorip.HookFileOperations
         {
             _server?.ReportMessage("Intercept DeleteItems");
             Guid guidIShellItem = typeof(IShellItem).GUID;
-            Guid guidIDataObject = typeof(FilesOperations.Interfaces.IDataObject).GUID;
-            Helpers.ExtensionsComInterface.RechercheComInterface(Marshal.GetIUnknownForObject(punkItems), out System.Collections.Generic.Dictionary<Guid, string> listInterfaces);
+            Guid guidIDataObject = typeof(IDataObject).GUID;
+            //Helpers.ExtensionsComInterface.RechercheComInterface(Marshal.GetIUnknownForObject(punkItems), out System.Collections.Generic.Dictionary<Guid, string> listInterfaces);
             if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
             {
                 IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
@@ -188,10 +188,17 @@ namespace Explorip.HookFileOperations
             }
             else if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIDataObject, out IntPtr ptrDataObject) == 0)
             {
-                FilesOperations.Interfaces.IDataObject @do = (FilesOperations.Interfaces.IDataObject)Marshal.GetObjectForIUnknown(ptrDataObject);
-                var myEnum = @do.EnumFormatEtc(DATADIR.DATADIR_GET);
-                /*string src = @do.GetDisplayName(SIGDN.FILESYSPATH);
-                _server?.DeleteItem(src);*/
+                IDataObject dataObject = (IDataObject)Marshal.GetObjectForIUnknown(ptrDataObject);
+                FORMATETC format = new();
+                format.cfFormat = (short)UFormat.CF_HDROP;
+                format.ptd = IntPtr.Zero;
+                format.dwAspect = DVASPECT.DVASPECT_CONTENT;
+                format.lindex = -1;
+                format.tymed = TYMED.TYMED_HGLOBAL;
+                dataObject.GetData(format, out STGMEDIUM medium);
+                int offset = (int)Marshal.ReadIntPtr(medium.unionmember);
+                string src = Marshal.PtrToStringUni(IntPtr.Add(medium.unionmember, offset));
+                _server?.DeleteItem(src);
             }
         }
 
@@ -228,7 +235,7 @@ namespace Explorip.HookFileOperations
         private delegate uint DelegateNewItem(IFileOperation self, IShellItem psiDestinationFolder, FileAttributes dwFileAttributes, [MarshalAs(UnmanagedType.LPWStr)] string pszName, [MarshalAs(UnmanagedType.LPWStr)] string pszTemplateName, IFileOperationProgressSink pfopsItem);
         private uint NewItemHooked(IFileOperation self, IShellItem psiDestinationFolder, FileAttributes dwFileAttributes, [MarshalAs(UnmanagedType.LPWStr)] string pszName, [MarshalAs(UnmanagedType.LPWStr)] string pszTemplateName, IFileOperationProgressSink pfopsItem)
         {
-            _server?.ReportMessage("Intercept RenameItems");
+            _server?.ReportMessage("Intercept NewItem");
             _server.NewItem(psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), dwFileAttributes, pszName, pszTemplateName);
             return 0;
         }

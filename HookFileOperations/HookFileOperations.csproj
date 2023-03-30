@@ -46,7 +46,7 @@
     <Compile Include="FilesOperations\EFileOperation.cs" />
     <Compile Include="FilesOperations\FileOperation.cs" />
     <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
-    <Compile Include="FilesOperations\Interfaces\IDataObject.cs" />
+    <Compile Include="FilesOperations\Interfaces\UFormat.cs" />
     <Compile Include="FilesOperations\Interfaces\IEnumShellItems.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />

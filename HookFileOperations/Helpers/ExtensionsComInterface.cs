@@ -16,10 +16,14 @@ namespace Explorip.HookFileOperations.Helpers
             {
                 string nomInterface = racineInterface.OpenSubKey(@interface).GetValue("")?.ToString() ?? "Inconnu";
                 Guid myGuid = new(@interface);
-                if (Marshal.QueryInterface(iUnknown, ref myGuid, out _) == 0)
+                try
                 {
-                    guid.Add(myGuid, nomInterface);
+                    if (Marshal.QueryInterface(iUnknown, ref myGuid, out _) == 0)
+                    {
+                        guid.Add(myGuid, nomInterface);
+                    }
                 }
+                catch (Exception) { }
             }
         }
     }
