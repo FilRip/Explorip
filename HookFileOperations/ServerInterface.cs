@@ -103,8 +103,7 @@ namespace Explorip.HookFileOperations
             Console.WriteLine("Add NewItem");
             ReturnNewFileOperation();
             ComReleaser<IShellItem> siDestFolder = FileOperation.CreateShellItem(destFolder);
-            _currentFileOperation.NewItem(siDestFolder.Item, dwFileAttributes, filename, templateName, null);
-            return 0;
+            return _currentFileOperation.NewItem(siDestFolder.Item, dwFileAttributes, filename, templateName, null);
         }
 
         private void ReturnNewFileOperation()
