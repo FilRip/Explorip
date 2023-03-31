@@ -46,7 +46,8 @@ namespace Explorip
             }
             else
             {
-                HookCopyOperations.GetInstance().InstallHook();
+                if (!ExtensionsCommandLineArguments.ArgumentPresent("withoutHook"))
+                    HookCopyOperations.GetInstance().InstallHook();
                 _WpfHost = new Explorer.WPF.MyExplorerApp();
                 _WpfHost.Run();
             }

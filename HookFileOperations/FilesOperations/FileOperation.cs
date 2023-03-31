@@ -24,7 +24,9 @@ namespace Explorip.HookFileOperations
         public FileOperation(FileOperationProgressSink callbackSink, IntPtr owner)
         {
             _callbackSink = callbackSink;
+            Console.WriteLine("Create ComInterface");
             _fileOperation = (IFileOperation)Activator.CreateInstance(_fileOperationType);
+            Console.WriteLine("ComInterface created");
 
             _fileOperation.SetOperationFlags(EFileOperation.FOF_NOCONFIRMMKDIR | EFileOperation.FOFX_ADDUNDORECORD | EFileOperation.FOFX_RECYCLEONDELETE);
             if (_callbackSink != null)

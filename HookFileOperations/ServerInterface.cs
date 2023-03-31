@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-using Explorip.HookFileOperations.FilesOperations.Interfaces;
-using Explorip.HookFileOperations.Helpers;
+using Explorip.HookFileOperations.Models;
 
 namespace Explorip.HookFileOperations
 {
@@ -12,8 +13,7 @@ namespace Explorip.HookFileOperations
     /// </summary>
     public class ServerInterface : MarshalByRefObject
     {
-        private bool _performDone = true;
-        private IFileOperation _currentFileOperation;
+        private readonly List<OneFileOperation> _listOperations = new();
 
         public void IsInstalled(int clientPID)
         {
@@ -23,7 +23,7 @@ namespace Explorip.HookFileOperations
         /// <summary>
         /// Output the message to the console.
         /// </summary>
-        /// <param name="fileNames"></param>
+        /// <param name="messages">List of messages to display in the console</param>
         public void ReportMessages(string[] messages)
         {
             for (int i = 0; i < messages.Length; i++)
@@ -57,62 +57,57 @@ namespace Explorip.HookFileOperations
         public void CopyItem(string src, string dest, string destName)
         {
             Console.WriteLine("Add CopyItem");
-            ReturnNewFileOperation();
-            ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
-            ComReleaser<IShellItem> siDest = FileOperation.CreateShellItem(dest);
-            _currentFileOperation.CopyItem(siSrc.Item, siDest.Item, destName, null);
+            _listOperations.Add(new OneFileOperation(EFileOperation.Copy) { Source = src, Destination = dest, NewName = destName });
         }
 
         public void MoveItem(string src, string dest, string destName)
         {
             Console.WriteLine("Add MoveItem");
-            ReturnNewFileOperation();
-            ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
-            ComReleaser<IShellItem> siDest = FileOperation.CreateShellItem(dest);
-            _currentFileOperation.MoveItem(siSrc.Item, siDest.Item, destName, null);
+            _listOperations.Add(new OneFileOperation(EFileOperation.Move) { Source = src, Destination = dest, NewName = destName });
         }
 
         public void DeleteItem(string src)
         {
             Console.WriteLine("Add DeleteItem");
-            ReturnNewFileOperation();
-            ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
-            _currentFileOperation.DeleteItem(siSrc.Item, null);
+            _listOperations.Add(new OneFileOperation(EFileOperation.Delete) { Source = src });
         }
 
         public void RenameItem(string src, string dest)
         {
             Console.WriteLine("Add RenameItem");
-            ReturnNewFileOperation();
-            ComReleaser<IShellItem> siSrc = FileOperation.CreateShellItem(src);
-            _currentFileOperation.RenameItem(siSrc.Item, dest, null);
+            _listOperations.Add(new OneFileOperation(EFileOperation.Rename) { Source = src, NewName = dest });
         }
+
+        [DllImport("USER32.DLL")]
+        private static extern IntPtr GetDesktopWindow();
 
         public void PerformOperations()
         {
             Console.WriteLine("PerformOperation");
             Task.Run(() =>
             {
-                _performDone = true;
-                _currentFileOperation.PerformOperations();
+                Console.WriteLine("Start Task");
+                if (_listOperations.Count > 0)
+                {
+                    Console.WriteLine("Current AppDomain=" + AppDomain.CurrentDomain.FriendlyName);
+                    Console.WriteLine("Create new FileOperation");
+                    FileOperation currentFileOperation = new(GetDesktopWindow());
+                    Console.WriteLine("FileOperation created");
+                    foreach (OneFileOperation ope in _listOperations)
+                        ope.WriteOperation(currentFileOperation);
+                    _listOperations.Clear();
+                    Console.WriteLine("Send PerformOperation" + Environment.NewLine);
+                    currentFileOperation.PerformOperations();
+                    currentFileOperation.Dispose();
+                }
             });
         }
 
-        public uint NewItem(string destFolder, FileAttributes dwFileAttributes, string filename, string templateName)
+        public uint NewItem(string destFolder, FileAttributes dwFileAttributes, string filename)
         {
             Console.WriteLine("Add NewItem");
-            ReturnNewFileOperation();
-            ComReleaser<IShellItem> siDestFolder = FileOperation.CreateShellItem(destFolder);
-            return _currentFileOperation.NewItem(siDestFolder.Item, dwFileAttributes, filename, templateName, null);
-        }
-
-        private void ReturnNewFileOperation()
-        {
-            if (_performDone)
-            {
-                _currentFileOperation = (IFileOperation)Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("3ad05575-8857-4850-9277-11b85bdb8e09")));
-                _performDone = false;
-            }
+            _listOperations.Add(new OneFileOperation(EFileOperation.Create) { Destination = destFolder, Attributes = dwFileAttributes, NewName = filename });
+            return 0;
         }
     }
 }

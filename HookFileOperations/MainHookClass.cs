@@ -242,7 +242,7 @@ namespace Explorip.HookFileOperations
         private uint NewItemHooked(IFileOperation self, IShellItem psiDestinationFolder, FileAttributes dwFileAttributes, [MarshalAs(UnmanagedType.LPWStr)] string pszName, [MarshalAs(UnmanagedType.LPWStr)] string pszTemplateName, IFileOperationProgressSink pfopsItem)
         {
             _server?.ReportMessage("Intercept NewItem");
-            return _server.NewItem(psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), dwFileAttributes, pszName, pszTemplateName);
+            return _server.NewItem(psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), dwFileAttributes, pszName);
         }
 
         #endregion

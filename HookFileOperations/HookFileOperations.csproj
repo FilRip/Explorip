@@ -58,6 +58,8 @@
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionsComInterface.cs" />
     <Compile Include="MainHookClass.cs" />
+    <Compile Include="Models\EFileOperation.cs" />
+    <Compile Include="Models\OneFileOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerInterface.cs" />
   </ItemGroup>

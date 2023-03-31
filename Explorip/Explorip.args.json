@@ -3,6 +3,10 @@
   "Id": "001dcda7-f4c3-4bd6-a86c-c99b35a9798a",
   "Items": [
     {
+      "Id": "9486e04d-e884-4429-8c45-d3f3a3f4736d",
+      "Command": "withoutHook"
+    },
+    {
       "Id": "7c508d1d-4da7-4a72-ad47-7ce8b55dc8bb",
       "Command": "explorer"
     },

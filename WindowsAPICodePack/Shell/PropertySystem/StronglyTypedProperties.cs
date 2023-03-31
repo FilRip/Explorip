@@ -2863,7 +2863,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             private PropertySystemAppUserModel internalPropertySystemAppUserModel;
             /// <summary>
@@ -3401,8 +3400,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemAppUserModel : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -3561,7 +3558,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -3571,8 +3567,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemAudio : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -3802,7 +3796,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -3812,8 +3805,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemCalendar : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -4147,7 +4138,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 }
             }
             #endregion
-
         }
 
         /// <summary>
@@ -4155,8 +4145,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemCommunication : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -4365,7 +4353,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -4375,8 +4362,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemComputer : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -4410,7 +4395,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -4420,8 +4404,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemContact : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -5946,7 +5928,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             private PropertyContactJA internalPropertyContactJA;
             /// <summary>
@@ -5972,8 +5953,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertyContactJA : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -6051,7 +6030,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -6061,8 +6039,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemDevice : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -6096,7 +6072,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -6106,8 +6081,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemDeviceInterface : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -6207,7 +6180,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -6217,8 +6189,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemDevices : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -7242,7 +7212,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             private PropertyDevicesNotifications internalPropertyDevicesNotifications;
             /// <summary>
@@ -7268,8 +7237,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertyDevicesNotifications : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -7413,7 +7380,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -7423,8 +7389,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemDocument : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -7981,7 +7945,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -7991,8 +7954,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemDrm : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -8114,7 +8075,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -8124,8 +8084,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemGps : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -9295,7 +9253,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -9305,8 +9262,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemIdentity : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -9472,7 +9427,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -9482,8 +9436,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemIdentityProvider : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -9539,7 +9491,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -9549,8 +9500,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemImage : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -9869,7 +9818,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -9879,8 +9827,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemJournal : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -9934,7 +9880,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -9944,8 +9889,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemLayoutPattern : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -10003,7 +9946,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -10013,8 +9955,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemLink : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -10248,7 +10188,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -10258,8 +10197,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemMedia : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -10972,7 +10909,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -10982,8 +10918,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemMessage : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -11517,7 +11451,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -11527,8 +11460,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemMusic : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -11937,7 +11868,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -11947,8 +11877,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemNote : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -12004,7 +11932,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -12014,8 +11941,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemPhoto : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -13913,7 +13838,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -13923,8 +13847,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemPropGroup : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -14335,7 +14257,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -14345,8 +14266,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemPropList : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -14656,7 +14575,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -14666,8 +14584,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemRecordedTV : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -15019,7 +14935,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -15029,8 +14944,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemSearch : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -15374,7 +15287,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -15384,8 +15296,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemShell : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -15441,7 +15351,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -15451,8 +15360,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemSoftware : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -15508,7 +15415,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -15518,8 +15424,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemSync : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -15829,7 +15733,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -15839,8 +15742,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemTask : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -15915,7 +15816,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -15925,8 +15825,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemVideo : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -16247,7 +16145,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             #endregion
 
-
             #region sub-namespaces
             #endregion
         }
@@ -16257,8 +16154,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// </summary>
         public class PropertySystemVolume : PropertyStoreItems
         {
-
-
             private readonly ShellObject shellObjectParent;
             private readonly Hashtable hashtable = new();
 
@@ -16334,7 +16229,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                 }
             }
             #endregion
-
 
             #region sub-namespaces
             #endregion
