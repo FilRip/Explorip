@@ -179,7 +179,6 @@ namespace Explorip.HookFileOperations
             _server?.ReportMessage("Intercept DeleteItems");
             Guid guidIShellItem = typeof(IShellItem).GUID;
             Guid guidIDataObject = typeof(IDataObject).GUID;
-            //Helpers.ExtensionsComInterface.RechercheComInterface(Marshal.GetIUnknownForObject(punkItems), out System.Collections.Generic.Dictionary<Guid, string> listInterfaces);
             if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
             {
                 IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
@@ -197,8 +196,15 @@ namespace Explorip.HookFileOperations
                 format.tymed = TYMED.TYMED_HGLOBAL;
                 dataObject.GetData(format, out STGMEDIUM medium);
                 int offset = (int)Marshal.ReadIntPtr(medium.unionmember);
-                string src = Marshal.PtrToStringUni(IntPtr.Add(medium.unionmember, offset));
-                _server?.DeleteItem(src);
+                IntPtr currentPos = IntPtr.Add(medium.unionmember, offset);
+                string src = Marshal.PtrToStringUni(currentPos);
+                while (!string.IsNullOrWhiteSpace(src))
+                {
+                    _server?.DeleteItem(src);
+                    int nextFile = System.Text.Encoding.Unicode.GetBytes(src).Length + 2;
+                    currentPos = IntPtr.Add(currentPos, nextFile);
+                    src = Marshal.PtrToStringUni(currentPos);
+                }
             }
         }
 
