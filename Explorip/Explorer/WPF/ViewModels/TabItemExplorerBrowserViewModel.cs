@@ -1,7 +1,5 @@
 ﻿using Explorip.Helpers;
 
-using Microsoft.WindowsAPICodePack.Shell;
-
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -18,7 +16,7 @@ namespace Explorip.Explorer.WPF.ViewModels
             System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
             Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
             _accentColor = new SolidColorBrush(mColor);
-            _disabledColor = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
+            _disabledColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
             _lastFolder = "";
         }
 
@@ -164,6 +162,28 @@ namespace Explorip.Explorer.WPF.ViewModels
                 }
             }
             catch (Exception) { /* Ignoring errors */ }
+        }
+
+        private bool _modeSearch;
+        public bool ModeSearch
+        {
+            get { return _modeSearch; }
+            set
+            {
+                _modeSearch = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _whatToSearch = "Search to :";
+        public string SearchTo
+        {
+            get { return _whatToSearch; }
+            set
+            {
+                _whatToSearch = value;
+                OnPropertyChanged();
+            }
         }
     }
 }

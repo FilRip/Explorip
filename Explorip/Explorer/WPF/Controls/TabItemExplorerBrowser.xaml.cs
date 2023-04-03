@@ -334,5 +334,12 @@ namespace Explorip.Explorer.WPF.Controls
         }
 
         #endregion
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            MyDataContext.ModeSearch = !MyDataContext.ModeSearch;
+            // TODO : MS explorer search :
+            //        search-ms:displayname=CustomSearch&crumb=System.Generic.String%3Aihm&crumb=location:C%3A%5Ctmp
+        }
     }
 }

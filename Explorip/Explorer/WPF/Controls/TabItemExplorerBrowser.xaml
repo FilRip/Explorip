@@ -25,6 +25,7 @@
                 <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="22"/>
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Name="PreviousButton" Click="PreviousButton_Click" IsEnabled="{Binding AllowNavigatePrevious}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundPrevious}" IsTabStop="False">
@@ -88,8 +89,32 @@
                       PreviewMouseDown="EditPath_PreviewMouseDown"
                       IsDropDownOpen="{Binding ShowSuggestions}"/>
 
+            <Button Name="SearchButton" Grid.Column="3" Content="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{Binding AccentColor}" Click="SearchButton_Click" BorderBrush="{Binding DisabledButtonColor}" BorderThickness="2" IsTabStop="False" Focusable="False">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{Binding DisabledButtonColor}" BorderThickness="2">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{Binding DisabledButtonColor}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
         </Grid>
 
         <explorer:ExplorerBrowser Grid.Row="1" Name="ExplorerBrowser" NavigationPane="Show" CommandsPane="Hide" IsTabStop="False" AllowDrop="True" Focusable="True"/>
+        
+        <TextBox Grid.Row="1" BorderThickness="2" Foreground="White" Background="Black" Visibility="{Binding ModeSearch, Converter={converters:BoolToVisibilityConverter}}" Text="{Binding SearchTo}"/>
     </Grid>
 </TabItem>
