@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
+/*using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;*/
+using System.Threading;
 
 using Explorip.HookFileOperations.Models;
 
@@ -78,36 +80,49 @@ namespace Explorip.HookFileOperations
             _listOperations.Add(new OneFileOperation(EFileOperation.Rename) { Source = src, NewName = dest });
         }
 
-        [DllImport("USER32.DLL")]
-        private static extern IntPtr GetDesktopWindow();
-
         public void PerformOperations()
         {
             Console.WriteLine("PerformOperation");
-            Task.Run(() =>
+            if (_listOperations.Count > 0)
             {
-                Console.WriteLine("Start Task");
-                if (_listOperations.Count > 0)
+                Console.WriteLine("Create process");
+                Process newProcess = Process.Start("HookFileOperationsManager.exe", "NI");
+                Thread.Sleep(100);
+                IpcNewInstance ni = null;
+                Console.WriteLine("Wait for Ipc channel");
+                while (ni == null)
                 {
-                    Console.WriteLine("Current AppDomain=" + AppDomain.CurrentDomain.FriendlyName);
-                    Console.WriteLine("Create new FileOperation");
-                    FileOperation currentFileOperation = new(GetDesktopWindow());
-                    Console.WriteLine("FileOperation created");
-                    foreach (OneFileOperation ope in _listOperations)
-                        ope.WriteOperation(currentFileOperation);
-                    _listOperations.Clear();
-                    Console.WriteLine("Send PerformOperation" + Environment.NewLine);
-                    currentFileOperation.PerformOperations();
-                    currentFileOperation.Dispose();
+                    Thread.Sleep(10);
+                    try
+                    {
+                        ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://{"HookFileOperation_" + newProcess.Id.ToString()}/HookManagerRemoteServer");
+                    }
+                    catch (Exception) { /* Ignore errors */ }
                 }
-            });
+                Console.WriteLine("Wait for process ready");
+                while (true)
+                {
+                    try
+                    {
+                        while (!ni.IsReady())
+                        {
+                            Thread.Sleep(10);
+                        }
+                        if (ni.IsReady())
+                            break;
+                    }
+                    catch (Exception) { /* Ignore errors */ }
+                }
+                Console.WriteLine("Send Operation" + Environment.NewLine);
+                ni.StartNewFileOperation(_listOperations);
+                _listOperations.Clear();
+            }
         }
 
-        public uint NewItem(string destFolder, FileAttributes dwFileAttributes, string filename)
+        public void NewItem(string destFolder, FileAttributes dwFileAttributes, string filename)
         {
             Console.WriteLine("Add NewItem");
             _listOperations.Add(new OneFileOperation(EFileOperation.Create) { Destination = destFolder, Attributes = dwFileAttributes, NewName = filename });
-            return 0;
         }
     }
 }

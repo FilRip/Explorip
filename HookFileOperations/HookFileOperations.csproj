@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +58,7 @@
     <Compile Include="FilesOperations\Interfaces\SIGDN.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionsComInterface.cs" />
+    <Compile Include="IpcNewInstance.cs" />
     <Compile Include="MainHookClass.cs" />
     <Compile Include="Models\EFileOperation.cs" />
     <Compile Include="Models\OneFileOperation.cs" />
