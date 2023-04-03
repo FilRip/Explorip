@@ -175,7 +175,7 @@ namespace Explorip.Explorer.WPF.ViewModels
             }
         }
 
-        private string _whatToSearch = "Search to :";
+        private string _whatToSearch;
         public string SearchTo
         {
             get { return _whatToSearch; }

@@ -11,7 +11,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
         SIATTRIBFLAGS_OR = 2
     }
 
-    [ComImport, Guid("B63EA76D-1F85-456F-A19C-48159EFA858B"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [ComImport(), Guid("B63EA76D-1F85-456F-A19C-48159EFA858B"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IShellItemArray
     {
         // Not supported: IBindCtx

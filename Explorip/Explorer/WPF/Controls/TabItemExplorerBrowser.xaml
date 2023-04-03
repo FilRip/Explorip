@@ -88,6 +88,7 @@
                       Style="{DynamicResource MyComboBox}"
                       PreviewMouseDown="EditPath_PreviewMouseDown"
                       IsDropDownOpen="{Binding ShowSuggestions}"/>
+            <TextBox Name="SearchText" Grid.Column="2" BorderThickness="2" Foreground="White" Background="Black" Visibility="{Binding ModeSearch, Converter={converters:BoolToVisibilityConverter}}" Text="{Binding SearchTo}" TextChanged="SearchText_TextChanged"/>
 
             <Button Name="SearchButton" Grid.Column="3" Content="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{Binding AccentColor}" Click="SearchButton_Click" BorderBrush="{Binding DisabledButtonColor}" BorderThickness="2" IsTabStop="False" Focusable="False">
                 <Button.Style>
@@ -115,6 +116,5 @@
 
         <explorer:ExplorerBrowser Grid.Row="1" Name="ExplorerBrowser" NavigationPane="Show" CommandsPane="Hide" IsTabStop="False" AllowDrop="True" Focusable="True"/>
         
-        <TextBox Grid.Row="1" BorderThickness="2" Foreground="White" Background="Black" Visibility="{Binding ModeSearch, Converter={converters:BoolToVisibilityConverter}}" Text="{Binding SearchTo}"/>
     </Grid>
 </TabItem>

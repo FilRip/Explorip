@@ -11,7 +11,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     // Disable warning if a method declaration hides another inherited from a parent COM interface
     // To successfully import a COM interface, all inherited methods need to be declared again with 
     // the exception of those already declared in "IUnknown"
-    [ComImport,
+    [ComImport(),
     Guid(KnownFoldersIidGuid.IKnownFolder),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IKnownFolderNative
@@ -60,7 +60,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(KnownFoldersIidGuid.IKnownFolderManager),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IKnownFolderManager

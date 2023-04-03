@@ -18,14 +18,14 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     // straightforward way. Behind the scenes, the C# compiler
     // morphs all 'new CoClass()' calls to 'new CoClassWrapper()'.
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IFileOpenDialog),
     CoClass(typeof(FileOpenDialogRCW))]
     internal interface INativeFileOpenDialog : IFileOpenDialog
     {
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IFileSaveDialog),
     CoClass(typeof(FileSaveDialogRCW))]
     internal interface INativeFileSaveDialog : IFileSaveDialog
@@ -33,7 +33,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     }
 
     // .NET classes representing runtime callable wrappers.
-    [ComImport,
+    [ComImport(),
     ClassInterface(ClassInterfaceType.None),
     TypeLibType(TypeLibTypeFlags.FCanCreate),
     Guid(ShellClSidGuid.FileOpenDialog)]
@@ -41,7 +41,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     {
     }
 
-    [ComImport,
+    [ComImport(),
     ClassInterface(ClassInterfaceType.None),
     TypeLibType(TypeLibTypeFlags.FCanCreate),
     Guid(ShellClSidGuid.FileSaveDialog)]

@@ -12,14 +12,14 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
         public static readonly Guid GUID_IPersistIDList = new(IID_IPersistIDList);
     }
 
-    [ComImport, Guid("0000010c-0000-0000-c000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [ComImport(), Guid("0000010c-0000-0000-c000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IPersist
     {
         [PreserveSig()]
         void GetClassID(out Guid pClassID);
     }
 
-    [ComImport, Guid(ListGuid.IID_IPersistFile), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [ComImport(), Guid(ListGuid.IID_IPersistFile), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IPersistFile : IPersist
     {
         new void GetClassID(out Guid pClassID);
@@ -40,7 +40,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
         void GetCurFile([In(), MarshalAs(UnmanagedType.LPWStr)] string ppszFileName);
     }
 
-    [ComImport, Guid(ListGuid.IID_IPersistIDList), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [ComImport(), Guid(ListGuid.IID_IPersistIDList), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     public interface IPersistIDList : IPersist
     {
         new void GetClassID(out Guid pClassID);

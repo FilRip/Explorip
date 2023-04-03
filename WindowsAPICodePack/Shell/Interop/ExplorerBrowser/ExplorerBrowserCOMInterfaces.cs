@@ -134,7 +134,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     // To successfully import a COM interface, all inherited methods need to be declared again with 
     // the exception of those already declared in "IUnknown"
 #pragma warning disable 108
-    [ComImport,
+    [ComImport(),
      TypeLibType(TypeLibTypeFlags.FCanCreate),
      ClassInterface(ClassInterfaceType.None),
      Guid(ExplorerBrowserClSidGuid.ExplorerBrowser)]
@@ -192,7 +192,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     }
 
 
-    [ComImport,
+    [ComImport(),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown),
      Guid(ExplorerBrowserIidGuid.IExplorerBrowser)]
     internal interface IExplorerBrowser
@@ -346,7 +346,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         HResult GetCurrentView(ref Guid riid, out IntPtr ppv);
     }
 
-    [ComImport,
+    [ComImport(),
      Guid(ExplorerBrowserIidGuid.IServiceProvider),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IServiceProvider
@@ -356,7 +356,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         HResult QueryService(ref Guid guidService, ref Guid riid, out IntPtr ppvObject);
     };
 
-    [ComImport,
+    [ComImport(),
      Guid(ExplorerBrowserIidGuid.IFolderView),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFolderView
@@ -404,7 +404,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         void SelectAndPositionItems(uint cidl, IntPtr apidl, ref NativePoint apt, uint dwFlags);
     }
 
-    [ComImport,
+    [ComImport(),
      Guid(ExplorerBrowserIidGuid.IFolderView2),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFolderView2 : IFolderView
@@ -534,7 +534,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         void DoRename();
     }
 
-    [ComImport,
+    [ComImport(),
      Guid(ExplorerBrowserIidGuid.IExplorerPaneVisibility),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IExplorerPaneVisibility
@@ -544,7 +544,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         HResult GetPaneState(ref Guid explorerPane, out ExplorerPaneState peps);
     };
 
-    [ComImport,
+    [ComImport(),
      Guid(ExplorerBrowserIidGuid.IExplorerBrowserEvents),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IExplorerBrowserEvents
@@ -569,7 +569,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     #region Unused - Keeping for debugging bug #885228
 
 #pragma warning disable S125 // Sections of code should not be commented out
-    //[ComImport,
+    //[ComImport(),
     // Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser),
     // InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     //internal interface ICommDlgBrowser
@@ -591,7 +591,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     //        IntPtr pidl);
     //}
 
-    //[ComImport,
+    //[ComImport(),
     // Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser2),
     // InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     //internal interface ICommDlgBrowser2
@@ -639,7 +639,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
 
     #endregion
 
-    [ComImport,
+    [ComImport(),
      Guid(ExplorerBrowserIidGuid.ICommDlgBrowser3),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface ICommDlgBrowser3
@@ -698,7 +698,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         HResult OnPreViewCreated(IShellView ppshv);
     }
 
-    [ComImport,
+    [ComImport(),
    Guid(ExplorerBrowserIidGuid.IInputObject),
    InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IInputObject
@@ -717,7 +717,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
 
     };
 
-    [ComImport,
+    [ComImport(),
      Guid(ExplorerBrowserIidGuid.IShellView),
      InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IShellView

@@ -122,7 +122,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         HResult Commit();
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IPropertyDescriptionList),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyDescriptionList
@@ -133,7 +133,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         void GetAt([In()] uint iElem, [In()] ref Guid riid, [MarshalAs(UnmanagedType.Interface)] out IPropertyDescription ppv);
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IPropertyDescription),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyDescription
@@ -197,7 +197,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         HResult IsValueCanonical([In()] PropVariant propvar);
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IPropertyDescription2),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyDescription2 : IPropertyDescription
@@ -267,7 +267,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             [Out(), MarshalAs(UnmanagedType.LPWStr)] out string ppszImageRes);
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IPropertyEnumType),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyEnumType
@@ -288,7 +288,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         void GetDisplayText([Out(), MarshalAs(UnmanagedType.LPWStr)] out string ppszDisplay);
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IPropertyEnumType2),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyEnumType2 : IPropertyEnumType
@@ -313,7 +313,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     }
 
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IPropertyEnumTypeList),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IPropertyEnumTypeList

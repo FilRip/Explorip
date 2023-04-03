@@ -337,9 +337,19 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
+            MyDataContext.ModeEdit = false;
             MyDataContext.ModeSearch = !MyDataContext.ModeSearch;
-            // TODO : MS explorer search :
-            //        search-ms:displayname=CustomSearch&crumb=System.Generic.String%3Aihm&crumb=location:C%3A%5Ctmp
+            if (MyDataContext.ModeSearch)
+                SearchText.Focus();
+        }
+
+        private void SearchText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (MyDataContext.ModeSearch && ExplorerBrowser?.ExplorerBrowserControl?.NavigationLog?.CurrentLocation != null)
+            {
+                string searchUrl = $"search-ms:displayname=CustomSearch&crumb=System.Generic.String%3A{SearchText.Text}&crumb=location:{ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath)}";
+                ExplorerBrowser.ExplorerBrowserControl.Navigate(ShellObject.FromParsingName(searchUrl));
+            }
         }
     }
 }

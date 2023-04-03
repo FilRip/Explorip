@@ -309,7 +309,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             [In(), MarshalAs(UnmanagedType.Interface)] IntPtr pSink);
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IFileDialogEvents),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileDialogEvents
@@ -350,7 +350,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             out ShellNativeMethods.FileDialogEventOverwriteResponse pResponse);
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IFileDialogCustomize),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileDialogCustomize
@@ -476,7 +476,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         void MakeProminent([In()] int dwIDCtl);
     }
 
-    [ComImport,
+    [ComImport(),
     Guid(ShellIidGuid.IFileDialogControlEvents),
     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IFileDialogControlEvents
