@@ -347,8 +347,11 @@ namespace Explorip.Explorer.WPF.Controls
         {
             if (MyDataContext.ModeSearch && ExplorerBrowser?.ExplorerBrowserControl?.NavigationLog?.CurrentLocation != null)
             {
-                string searchUrl = $"search-ms:displayname=CustomSearch&crumb=System.Generic.String%3A{SearchText.Text}&crumb=location:{ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath)}";
-                ExplorerBrowser.ExplorerBrowserControl.Navigate(ShellObject.FromParsingName(searchUrl));
+                // TODO : Make xml search-ms file
+                // Bind xml to IShellItem
+                // https://www.google.com/search?q=create+IShellItem+from+mapped+file
+                string searchUrl = $"search-ms://crumb=System.Generic.String:{SearchText.Text}&crumb=location:{ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath)}";
+                Navigation(searchUrl);
             }
         }
     }

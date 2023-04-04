@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<persistedQuery version="1.0">
+	<viewInfo iconSize="32" stackIconSize="0" displayName="Résultats de la recherche dans tmp" autoListFlags="0">
+		<visibleColumns>
+			<column viewField="System.ItemNameDisplay"/>
+			<column viewField="System.DateModified"/>
+			<column viewField="System.ItemTypeText"/>
+			<column viewField="System.Size"/>
+			<column viewField="System.ItemFolderPathDisplayNarrow"/>
+		</visibleColumns>
+		<sortList>
+			<sort viewField="System.Search.Rank" direction="descending"/>
+			<sort viewField="System.DateModified" direction="descending"/>
+			<sort viewField="System.ItemNameDisplay" direction="ascending"/>
+		</sortList>
+	</viewInfo>
+	<query>
+		<conditions>
+			<condition type="leafCondition" property="System.Generic.String" operator="wordmatch" propertyType="string" value="ihm" localeName="fr-FR">
+				<attributes>
+					<attribute attributeID="{9554087B-CEB6-45AB-99FF-50E8428E860D}" clsid="{C64B9B66-E53D-4C56-B9AE-FEDE4EE95DB1}" chs="1" sqro="585" timestamp_low="15890310" timestamp_high="31024855">
+						<condition type="leafCondition" property="System.Generic.String" operator="wordmatch" propertyType="string" value="ihm" localeName="fr-FR">
+							<attributes>
+								<attribute attributeID="{9554087B-CEB6-45AB-99FF-50E8428E860D}" clsid="{C64B9B66-E53D-4C56-B9AE-FEDE4EE95DB1}" chs="1" sqro="585" timestamp_low="3844721818" timestamp_high="31024854">
+									<condition type="leafCondition" property="" operator="imp" propertyType="string" value="ihm" localeName="fr-FR">
+										<attributes>
+											<attribute attributeID="{9554087B-CEB6-45AB-99FF-50E8428E860D}" clsid="{C64B9B66-E53D-4C56-B9AE-FEDE4EE95DB1}" chs="0" parsedString="ihm" localeName="fr-FR" timestamp_low="3844721818" timestamp_high="31024854"/>
+										</attributes>
+									</condition>
+								</attribute>
+							</attributes>
+						</condition>
+					</attribute>
+				</attributes>
+			</condition>
+		</conditions>
+		<kindList>
+			<kind name="item"/>
+		</kindList>
+		<scope>
+			<include path="::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\C:\tmp" attributes="1887437183"/>
+		</scope>
+	</query>
+	<properties>
+		<author Type="string">TREILLE.EXT Philippe</author>
+	</properties>
+</persistedQuery>
