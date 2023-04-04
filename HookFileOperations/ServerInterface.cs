@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-/*using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Ipc;*/
 using System.Threading;
 
 using Explorip.HookFileOperations.Models;

@@ -26,9 +26,11 @@ namespace Explorip.HookFileOperations
             });
         }
 
+#pragma warning disable S3400 // Methods should not return constants
         public bool IsReady()
         {
             return true;
         }
+#pragma warning restore S3400 // Methods should not return constants
     }
 }
