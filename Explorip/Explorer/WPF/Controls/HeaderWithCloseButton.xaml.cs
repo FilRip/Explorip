@@ -26,9 +26,9 @@ namespace Explorip.Explorer.WPF.Controls
             get { return (TabExplorerBrowser)MyTabItem.Parent; }
         }
 
-        private TabItem MyTabItem
+        private TabItemExplorerBrowser MyTabItem
         {
-            get { return (TabItem)Parent; }
+            get { return (TabItemExplorerBrowser)Parent; }
         }
 
         private bool _plusButton;
@@ -69,7 +69,7 @@ namespace Explorip.Explorer.WPF.Controls
         private void CloseTab_Click(object sender, RoutedEventArgs e)
         {
             TabExplorerBrowser myTabControl = MyTabControl;
-            if (MyTabControl.Items.Count == 1 && !MyTabControl.AutoriseFermerDernierOnglet)
+            if (MyTabControl.Items.Count == 1 && !MyTabControl.AllowCloseLastTab)
                 return;
             MyTabControl.Items.Remove(MyTabControl.SelectedItem);
             myTabControl.HideTab();
@@ -79,7 +79,7 @@ namespace Explorip.Explorer.WPF.Controls
         {
             TabExplorerBrowser myTabControl = MyTabControl;
             for (int i = myTabControl.Items.Count - 1; i >= 0; i--)
-                if (myTabControl.SelectedItem != myTabControl.Items[i] || myTabControl.AutoriseFermerDernierOnglet)
+                if (myTabControl.SelectedItem != myTabControl.Items[i] || myTabControl.AllowCloseLastTab)
                     myTabControl.Items.Remove(myTabControl.Items[i]);
             myTabControl.HideTab();
         }
@@ -120,10 +120,10 @@ namespace Explorip.Explorer.WPF.Controls
             }
             else
             {
-                if (MyTabControl.Items.Count == 2 && !MyTabControl.AutoriseFermerDernierOnglet)
+                if (MyTabControl.Items.Count == 2 && !MyTabControl.AllowCloseLastTab)
                     return;
                 TabExplorerBrowser previousTabControl = MyTabControl;
-                MyTabControl.Items.Remove(MyTabItem);
+                MyTabItem.Dispose();
                 previousTabControl.HideTab();
             }
         }

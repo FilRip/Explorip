@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Explorip.HookFileOperations.FilesOperations.Interfaces
 {
-    public enum SIATTRIBFLAGS
+    public enum SiAttrib
     {
         SIATTRIBFLAGS_AND = 1,
         SIATTRIBFLAGS_APPCOMPAT = 3,
@@ -26,7 +26,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
         void GetPropertyDescriptionList([In()] ref PropertyKey keyType, [In()] ref Guid riid, out IntPtr ppv);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-        void GetAttributes([In()] SIATTRIBFLAGS dwAttribFlags, [In()] uint sfgaoMask, out uint psfgaoAttribs);
+        void GetAttributes([In()] SiAttrib dwAttribFlags, [In()] uint sfgaoMask, out uint psfgaoAttribs);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void GetCount(out uint pdwNumItems);

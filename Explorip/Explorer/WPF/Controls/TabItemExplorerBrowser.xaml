@@ -10,7 +10,8 @@
          mc:Ignorable="d" Style="{DynamicResource CustomTabItem}"
          AllowDrop="True" PreviewMouseMove="TabItem_PreviewMouseMove"
          Drop="TabItem_Drop" IsTabStop="False"
-         d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
+         d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}"
+         Unloaded="TabItem_Unloaded">
     <TabItem.DataContext>
         <viewmodels:TabItemExplorerBrowserViewModel/>
     </TabItem.DataContext>

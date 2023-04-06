@@ -76,6 +76,8 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void CloseWindow_Click(object sender, RoutedEventArgs e)
         {
+            LeftTab.CloseAllTabs();
+            RightTab.CloseAllTabs();
             Close();
         }
 

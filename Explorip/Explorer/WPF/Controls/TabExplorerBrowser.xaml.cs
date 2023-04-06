@@ -22,7 +22,7 @@ namespace Explorip.Explorer.WPF.Controls
             InitializeComponent();
         }
 
-        public bool AutoriseFermerDernierOnglet { get; set; }
+        public bool AllowCloseLastTab { get; set; }
 
         public void HideTab()
         {
@@ -32,6 +32,14 @@ namespace Explorip.Explorer.WPF.Controls
                 WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
                 fenetre.HideRightTab();
             }
+        }
+
+        public void CloseAllTabs()
+        {
+            if (MyTabControl.Items.Count > 0)
+                for (int i = MyTabControl.Items.Count - 1; i >= 0; i--)
+                    if (MyTabControl.Items[i] is TabItemExplorerBrowser tabItem)
+                        tabItem.Dispose();
         }
 
         public void AddNewTab(ShellObject location)
@@ -64,7 +72,7 @@ namespace Explorip.Explorer.WPF.Controls
         {
             if (e.Key == Key.F4 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
             {
-                if (Items.Count > 1 || AutoriseFermerDernierOnglet)
+                if (Items.Count > 1 || AllowCloseLastTab)
                 {
                     Items.Remove(SelectedItem);
                     HideTab();

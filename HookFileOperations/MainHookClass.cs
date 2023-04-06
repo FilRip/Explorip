@@ -64,16 +64,6 @@ namespace Explorip.HookFileOperations
                 _renameItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
                 _performOperationsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
                 _newItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-
-                #region SHFileOperation
-
-                /*var ShFileOpe = LocalHook.Create(LocalHook.GetProcAddress("shell32.dll", "SHFileOperationA"), new DelegateSHFileOperationA(My_SHFileOperationA), this);
-                var ShFileOpeW = LocalHook.Create(LocalHook.GetProcAddress("shell32.dll", "SHFileOperationW"), new DelegateSHFileOperationW(My_SHFileOperationW), this);*/
-
-                /*ShFileOpe.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                ShFileOpeW.ThreadACL.SetExclusiveACL(new int[] { 0 });*/
-
-                #endregion
             }
             catch (Exception ex)
             {
@@ -111,9 +101,6 @@ namespace Explorip.HookFileOperations
             _renameItemsHook.Dispose();
             _performOperationsHook?.Dispose();
             _newItemHook?.Dispose();
-
-            /*ShFileOpe.Dispose();
-            ShFileOpeW.Dispose();*/
 
             LocalHook.Release();
         }
@@ -245,113 +232,6 @@ namespace Explorip.HookFileOperations
             _server.NewItem(psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), dwFileAttributes, pszName);
             return 0;
         }
-
-        #endregion
-
-        #region SHFileOperation
-
-        /*
-        /// <summary>
-        /// Possible flags for the SHFileOperation method.
-        /// </summary>
-        [Flags()]
-        public enum FileOperation : ushort
-        {
-            /// <summary>
-            /// Do not show a dialog during the process
-            /// </summary>
-            FOF_SILENT = 0x0004,
-            /// <summary>
-            /// Do not ask the user to confirm selection
-            /// </summary>
-            FOF_NOCONFIRMATION = 0x0010,
-            /// <summary>
-            /// Delete the file to the recycle bin.  (Required flag to send a file to the bin
-            /// </summary>
-            FOF_ALLOWUNDO = 0x0040,
-            /// <summary>
-            /// Do not show the names of the files or folders that are being recycled.
-            /// </summary>
-            FOF_SIMPLEPROGRESS = 0x0100,
-            /// <summary>
-            /// Surpress errors, if any occur during the process.
-            /// </summary>
-            FOF_NOERRORUI = 0x0400,
-            /// <summary>
-            /// Warn if files are too big to fit in the recycle bin and will need
-            /// to be deleted completely.
-            /// </summary>
-            FOF_WANTNUKEWARNING = 0x4000,
-        }
-
-        /// <summary>
-        /// File Operation Function Type for SHFileOperation
-        /// </summary>
-        public enum FileOperationType : uint
-        {
-            /// <summary>
-            /// Move the objects
-            /// </summary>
-            FO_MOVE = 0x0001,
-            /// <summary>
-            /// Copy the objects
-            /// </summary>
-            FO_COPY = 0x0002,
-            /// <summary>
-            /// Delete (or recycle) the objects
-            /// </summary>
-            FO_DELETE = 0x0003,
-            /// <summary>
-            /// Rename the object(s)
-            /// </summary>
-            FO_RENAME = 0x0004,
-        }
-
-        /// <summary>
-        /// SHFILEOPSTRUCT for SHFileOperation from COM
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public struct ShFileOpStruct
-        {
-
-            public IntPtr hwnd;
-            [MarshalAs(UnmanagedType.U4)]
-            public FileOperationType wFunc;
-            public string pFrom;
-            public string pTo;
-            public FileOperation fFlags;
-            [MarshalAs(UnmanagedType.Bool)]
-            public bool fAnyOperationsAborted;
-            public IntPtr hNameMappings;
-            public string lpszProgressTitle;
-        }
-
-        [DllImport("shell32.dll", CharSet = CharSet.Ansi, SetLastError = true, ThrowOnUnmappableChar = true)]
-        private static extern int SHFileOperationA(ref ShFileOpStruct lpFileOp);
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Ansi, SetLastError = false)]
-        private delegate int DelegateSHFileOperationA(ref ShFileOpStruct lpFileOp);
-
-        private int My_SHFileOperationA(ref ShFileOpStruct lpFileOp)
-        {
-            MessageBox.Show("SHFileOperationA");
-            //return SHFileOperationA(ref lpFileOp);
-            return 0;
-        }
-
-        [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true, ThrowOnUnmappableChar = true)]
-        private static extern int SHFileOperationW(ref ShFileOpStruct lpFileOp);
-
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
-        private delegate int DelegateSHFileOperationW(ref ShFileOpStruct lpFileOp);
-
-        private int My_SHFileOperationW(ref ShFileOpStruct lpFileOp)
-        {
-            MessageBox.Show("SHFileOperationW");
-            //return SHFileOperationW(ref lpFileOp);
-            return 0;
-        }
-        */
 
         #endregion
     }

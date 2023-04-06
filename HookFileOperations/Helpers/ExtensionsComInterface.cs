@@ -23,7 +23,7 @@ namespace Explorip.HookFileOperations.Helpers
                         guid.Add(myGuid, nomInterface);
                     }
                 }
-                catch (Exception) { }
+                catch (Exception) { /* Ignore cast error */ }
             }
         }
     }

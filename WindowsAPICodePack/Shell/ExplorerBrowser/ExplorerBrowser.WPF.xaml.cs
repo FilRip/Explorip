@@ -146,6 +146,9 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             QueryPane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.Query;
             NavigationLogIndex = ExplorerBrowserControl.NavigationLog.CurrentLocationIndex;
 
+            if (disposedValue)
+                return;
+
             if (itemsChanged.WaitOne(1, false))
             {
                 items.Clear();
@@ -953,6 +956,13 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
 
         #region IDisposable Members
 
+        private bool disposedValue;
+
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+
         /// <summary>
         /// Disposes the class
         /// </summary>        
@@ -974,11 +984,13 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
                 {
                     itemsChanged.Close();
                 }
-
                 if (selectionChanged != null)
                 {
                     selectionChanged.Close();
                 }
+                if (dtCLRUpdater != null && dtCLRUpdater.IsEnabled)
+                    dtCLRUpdater.Stop();
+                disposedValue = true;
             }
         }
 
