@@ -14,10 +14,6 @@ namespace Explorip.Helpers
 {
     public class DragDropHelper : IDropSource
     {
-#pragma warning disable S125
-        //private readonly Form _formInterception;
-#pragma warning restore S125
-
         private static DragDropHelper _instance;
         public static DragDropHelper GetInstance()
         {
@@ -42,14 +38,6 @@ namespace Explorip.Helpers
 
         private DragDropHelper()
         {
-#pragma warning disable S125
-            /*_formInterception = new Form()
-            {
-                ShowInTaskbar = false,
-                Text = "",
-                Visible = false
-            };*/
-#pragma warning restore S125
             ListeFichiersDossiers = new List<FileSystemInfo>();
         }
 

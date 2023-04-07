@@ -68,14 +68,12 @@ namespace Explorip.TaskBar.Controls
                     ShellHelper.ShowStartMenu();
                 }
                 catch (Exception) { /* Ignore errors */ }
-#pragma warning disable S125
                 /*IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Accueil");
                 if (pointeurMenuDemarrer != IntPtr.Zero)
                 {
                     Console.WriteLine("ShowWindow Démarrer");
                     ManagedShell.Interop.NativeMethods.ShowWindow(pointeurMenuDemarrer, ManagedShell.Interop.NativeMethods.WindowShowStyle.Show);
                 }*/
-#pragma warning restore S125
                 return;
             }
 

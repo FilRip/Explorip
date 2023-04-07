@@ -1,22 +1,14 @@
-﻿using Explorip.Helpers;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace Explorip.Explorer.WPF.ViewModels
 {
-    public class TabItemExplorerBrowserViewModel : ViewModelBase
+    public class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
     {
-        private readonly SolidColorBrush _accentColor, _disabledColor;
-
-        public TabItemExplorerBrowserViewModel()
+        public TabItemExplorerBrowserViewModel() : base()
         {
-            System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
-            Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
-            _accentColor = new SolidColorBrush(mColor);
-            _disabledColor = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
             _lastFolder = "";
         }
 
@@ -67,22 +59,6 @@ namespace Explorip.Explorer.WPF.ViewModels
             }
         }
 
-        public Brush AccentColor
-        {
-            get
-            {
-                return _accentColor;
-            }
-        }
-
-        public Brush DisabledButtonColor
-        {
-            get
-            {
-                return _disabledColor;
-            }
-        }
-
         private string _editPath;
         public string EditPath
         {
@@ -111,9 +87,9 @@ namespace Explorip.Explorer.WPF.ViewModels
             get
             {
                 if (AllowNavigatePrevious)
-                    return _accentColor;
+                    return AccentColor;
                 else
-                    return _disabledColor;
+                    return DisabledButtonColor;
             }
         }
 
@@ -122,9 +98,9 @@ namespace Explorip.Explorer.WPF.ViewModels
             get
             {
                 if (AllowNavigateNext)
-                    return _accentColor;
+                    return AccentColor;
                 else
-                    return _disabledColor;
+                    return DisabledButtonColor;
             }
         }
 

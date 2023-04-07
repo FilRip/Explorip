@@ -67,7 +67,6 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            ((TabItemExplorerBrowser)LeftTab.SelectedItem).ExplorerBrowser.Focus();
             MyDataContext.SelectionLeft = false;
             MyDataContext.SelectionRight = false;
         }
@@ -180,8 +179,8 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
         {
-            ShellObject[] listeItems = tabSource.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
-            string destination = tabDestination.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+            ShellObject[] listeItems = tabSource.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
+            string destination = tabDestination.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
             Task.Run(() =>
             {
                 FilesOperations.FileOperation fileOperation = new(User32.GetDesktopWindow());
@@ -224,7 +223,7 @@ namespace Explorip.Explorer.WPF.Windows
 
         private void DeleteSelectTab(TabExplorerBrowser tab)
         {
-            ShellObject[] listeItems = tab.CurrentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
+            ShellObject[] listeItems = tab.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
             Task.Run(() =>
             {
                 FilesOperations.FileOperation fileOperation = new(User32.GetDesktopWindow());

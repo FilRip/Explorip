@@ -5,4 +5,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null", Justification = "<En attente>", Scope = "namespaceanddescendants", Target = "~N:MS.WindowsAPICodePack")]
+[assembly: SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null")]

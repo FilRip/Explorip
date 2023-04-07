@@ -25,7 +25,6 @@ namespace Explorip.TaskBar.Controls
             Top = positionParent.Y - (Height);
         }
 
-#pragma warning disable S125
         private void Window_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             // TODO : Bascule 'temporaire' sur cette fenetre (premier plan en minimisant toutes les autres)
@@ -37,7 +36,6 @@ namespace Explorip.TaskBar.Controls
             // TODO : Annuler bascule 'temporaire' sur cette fenetre
             //WindowHelper.PeekWindow(false, _parent.ApplicationWindow.Handle, _parent.TaskbarParent.Handle);
         }
-#pragma warning restore S125
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

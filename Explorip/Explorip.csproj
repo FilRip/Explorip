@@ -127,14 +127,20 @@
     <Compile Include="Exceptions\ExploripException.cs" />
     <Compile Include="Exceptions\GestionEcransException.cs" />
     <Compile Include="Exceptions\GestionFenetresException.cs" />
+    <Compile Include="Explorer\WPF\Controls\TabItemConsoleCommand.xaml.cs">
+      <DependentUpon>TabItemConsoleCommand.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml.cs">
       <DependentUpon>TabItemExplorerBrowser.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Explorer\WPF\Controls\TabItemExplorip.cs" />
     <Compile Include="Explorer\WPF\Controls\TabItemPlusExplorerBrowser.xaml.cs">
       <DependentUpon>TabItemPlusExplorerBrowser.xaml</DependentUpon>
     </Compile>
     <Compile Include="Explorer\WPF\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Explorer\WPF\ViewModels\TabItemConsoleCommandViewModel.cs" />
     <Compile Include="Explorer\WPF\ViewModels\TabItemExplorerBrowserViewModel.cs" />
+    <Compile Include="Explorer\WPF\ViewModels\TabItemExploripViewModel.cs" />
     <Compile Include="Explorer\WPF\ViewModels\WpfExplorerBrowserViewModel.cs" />
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
@@ -343,6 +349,10 @@
     <Page Include="Explorer\WPF\Controls\HeaderWithCloseButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Explorer\WPF\Controls\TabItemConsoleCommand.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml">
       <SubType>Designer</SubType>

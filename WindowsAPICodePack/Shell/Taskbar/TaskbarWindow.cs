@@ -60,10 +60,8 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 
 
 
-#pragma warning disable S1135 // Track uses of "TODO" tags
         // TODO: Verify the logic of this property. There are situations where this will throw InvalidOperationException when it shouldn't.
         internal IntPtr WindowToTellTaskbarAbout
-#pragma warning restore S1135 // Track uses of "TODO" tags
         {
             get
             {

@@ -81,9 +81,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
     /// explorer browser control
     /// </summary>
     [Flags()]
-#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     public enum ExplorerBrowserContentSectionOptions
-#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     {
         /// <summary>
         /// No options.

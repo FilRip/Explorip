@@ -20,17 +20,17 @@ namespace Explorip.Explorer.WPF.Controls
     /// <summary>
     /// Logique d'interaction pour TabItemExplorerBrowser.xaml
     /// </summary>
-    public partial class TabItemExplorerBrowser : TabItem, IDisposable
+    public partial class TabItemExplorerBrowser : TabItemExplorip
     {
         private string _searchDirectory;
         private string _lastFile;
-        private bool disposedValue;
         private readonly object _lockSearchText;
         private bool _allowSearch;
 
-        public TabItemExplorerBrowser()
+        public TabItemExplorerBrowser() : base()
         {
             InitializeComponent();
+            InitializeExplorip();
 
             _lockSearchText = new object();
             _allowSearch = true;
@@ -39,42 +39,7 @@ namespace Explorip.Explorer.WPF.Controls
             ExplorerBrowser.ExplorerBrowserControl.NavigationFailed += ExplorerBrowserControl_NavigationFailed;
             ExplorerBrowser.ExplorerBrowserControl.SelectionChanged += ExplorerBrowserControl_SelectionChanged;
 
-            // Support close button in header
-            HeaderWithCloseButton closableTabHeader = new();
-            Header = closableTabHeader;
-            MyHeader.DragOver += MyHeader_DragOver;
-
-            closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
-
             CurrentPath.MouseDown += CurrentPath_MouseDown;
-        }
-
-        private void MyHeader_DragOver(object sender, DragEventArgs e)
-        {
-            TabItemExplorerBrowser tab = (TabItemExplorerBrowser)((HeaderWithCloseButton)e.Source).Parent;
-            if (MyTabControl.SelectedItem != tab &&
-                e.Data.GetData("FileDrop") != null)
-            {
-                MyTabControl.SelectedItem = tab;
-            }
-        }
-
-        public HeaderWithCloseButton MyHeader
-        {
-            get { return (HeaderWithCloseButton)Header; }
-        }
-
-        public TabExplorerBrowser MyTabControl
-        {
-            get { return (TabExplorerBrowser)Parent; }
-        }
-
-        /// <summary>
-        /// Property - Set the Title of the Tab
-        /// </summary>
-        public void SetTitle(string newTitle)
-        {
-            MyHeader.Label_TabTitle.Content = newTitle;
         }
 
         public TabItemExplorerBrowserViewModel MyDataContext
@@ -206,42 +171,6 @@ namespace Explorip.Explorer.WPF.Controls
 
         #endregion
 
-        #region Support Close button on Header
-
-        protected override void OnSelected(RoutedEventArgs e)
-        {
-            base.OnSelected(e);
-            MyHeader.ButtonClose.Visibility = Visibility.Visible;
-        }
-
-        protected override void OnUnselected(RoutedEventArgs e)
-        {
-            base.OnUnselected(e);
-            MyHeader.ButtonClose.Visibility = Visibility.Hidden;
-        }
-
-        protected override void OnMouseEnter(MouseEventArgs e)
-        {
-            base.OnMouseEnter(e);
-            MyHeader.ButtonClose.Visibility = Visibility.Visible;
-        }
-
-        protected override void OnMouseLeave(MouseEventArgs e)
-        {
-            base.OnMouseLeave(e);
-            if (!this.IsSelected)
-            {
-                MyHeader.ButtonClose.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            MyHeader.ButtonClose.Margin = new Thickness(MyHeader.Label_TabTitle.ActualWidth + 5, 3, 0, 0);
-        }
-
-        #endregion
-
         #region Edit path manually
 
         private void EditPath_KeyDown(object sender, KeyEventArgs e)
@@ -337,14 +266,18 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void TabItem_Drop(object sender, DragEventArgs e)
         {
-            TabItemExplorerBrowser tabItemTarget = null;
-            if (e.Source is TabItemExplorerBrowser browser)
+            TabItemExplorip tabItemTarget = null;
+            if (e.Source is TabItemExplorip browser)
                 tabItemTarget = browser;
-            else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorerBrowser browser2)
+            else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorip browser2)
                 tabItemTarget = browser2;
 
+            TabItemExplorip tabItemSource = (TabItemExplorerBrowser)e.Data.GetData(typeof(TabItemExplorerBrowser));
+            if (tabItemSource == null)
+                tabItemSource = (TabItemConsoleCommand)e.Data.GetData(typeof(TabItemConsoleCommand));
+
             if (tabItemTarget != null &&
-                e.Data.GetData(typeof(TabItemExplorerBrowser)) is TabItemExplorerBrowser tabItemSource &&
+                tabItemSource != null &&
                 !tabItemTarget.Equals(tabItemSource) &&
                 tabItemTarget.Parent is TabExplorerBrowser tabControlTarget)
             {
@@ -363,9 +296,9 @@ namespace Explorip.Explorer.WPF.Controls
                         tabControlSource.Items.Remove(tabItemSource);
                     else
                     {
-                        ShellObject repertoire = tabItemSource.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation;
+                        ShellObject repertoire = (ShellObject)KnownFolders.Desktop;
                         tabItemSource = new TabItemExplorerBrowser();
-                        tabItemSource.Navigation(repertoire);
+                        ((TabItemExplorerBrowser)tabItemSource).Navigation(repertoire);
                     }
                     tabControlTarget.Items.Insert(targetIndex, tabItemSource);
                     tabItemSource.IsSelected = true;
@@ -385,6 +318,8 @@ namespace Explorip.Explorer.WPF.Controls
             MyDataContext.ModeSearch = !MyDataContext.ModeSearch;
             if (MyDataContext.ModeSearch)
                 SearchText.Focus();
+            else if (!string.IsNullOrWhiteSpace(_searchDirectory))
+                Navigation(_searchDirectory);
         }
 
         private void SearchText_TextChanged(object sender, TextChangedEventArgs e)
@@ -407,8 +342,7 @@ namespace Explorip.Explorer.WPF.Controls
                             previousFile = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
 
                         string dir = _searchDirectory;
-                        // https://learn.microsoft.com/en-us/windows/win32/search/-search-savedsearchfileformat
-                        string xmlContent = $"<?xml version=\"1.0\"?><persistedQuery version=\"1.0\"><query><conditions><condition type=\"leafCondition\" property=\"System.Generic.String\" operator=\"wordmatch\" propertyType=\"string\" value=\"{SearchText.Text}\" localeName=\"fr-FR\"/></conditions><kindList><kind name=\"item\"/></kindList><scope><include path=\"::{{20D04FE0-3AEA-1069-A2D8-08002B30309D}}\\{dir}\"/></scope></query></persistedQuery>";
+                        string xmlContent = $"<?xml version=\"1.0\"?><persistedQuery version=\"1.0\"><query><conditions><condition type=\"leafCondition\" property=\"System.Generic.String\" operator=\"wordmatch\" propertyType=\"string\" value=\"{SearchText.Text}\" localeName=\"{System.Globalization.CultureInfo.CurrentCulture.Name}\"/></conditions><kindList><kind name=\"item\"/></kindList><scope><include path=\"::{{20D04FE0-3AEA-1069-A2D8-08002B30309D}}\\{dir}\"/></scope></query></persistedQuery>";
                         string filename = Environment.SpecialFolder.UserProfile.Repertoire() + $"\\Searches\\{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Hour:00}{DateTime.Now.Minute:00}{DateTime.Now.Second:00}{DateTime.Now.Millisecond:000}.search-ms";
                         File.AppendAllText(filename, xmlContent);
 
@@ -449,35 +383,14 @@ namespace Explorip.Explorer.WPF.Controls
                 File.Delete(_lastFile);
         }
 
-        #region IDispose interface
-
-        public bool IsDisposed
+        protected override void Dispose(bool disposing)
         {
-            get { return disposedValue; }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+            base.Dispose(disposing);
+            if (disposing)
             {
-                if (disposing)
-                {
-                    MyTabControl.Items.Remove(this);
-                    ExplorerBrowser.Dispose();
-                    TabItem_Unloaded(null, null);
-                }
-
-                disposedValue = true;
+                ExplorerBrowser.Dispose();
+                TabItem_Unloaded(null, null);
             }
         }
-
-        public void Dispose()
-        {
-            // Ne changez pas ce code. Placez le code de nettoyage dans la méthode 'Dispose(bool disposing)'
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
     }
 }

@@ -74,7 +74,6 @@ namespace Microsoft.WindowsAPICodePack.Controls
         Last = 8
     }
 
-#pragma warning disable S2346, S4070 // Flags enumerations zero-value members should be named "None"
     [Flags()]
     internal enum ExplorerPaneState
     {
@@ -85,7 +84,6 @@ namespace Microsoft.WindowsAPICodePack.Controls
         InitialState = 0x00010000,
         Force = 0x00020000
     }
-#pragma warning restore S2346, S4070 // Flags enumerations zero-value members should be named "None"
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     internal class FolderSettings

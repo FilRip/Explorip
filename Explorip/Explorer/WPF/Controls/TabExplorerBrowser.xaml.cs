@@ -38,7 +38,7 @@ namespace Explorip.Explorer.WPF.Controls
         {
             if (MyTabControl.Items.Count > 0)
                 for (int i = MyTabControl.Items.Count - 1; i >= 0; i--)
-                    if (MyTabControl.Items[i] is TabItemExplorerBrowser tabItem)
+                    if (MyTabControl.Items[i] is TabItemExplorip tabItem)
                         tabItem.Dispose();
         }
 
@@ -58,7 +58,12 @@ namespace Explorip.Explorer.WPF.Controls
             get { return WindowsSettings.GetWindowsAccentColor(); }
         }
 
-        public TabItemExplorerBrowser CurrentTab
+        public TabItemExplorip CurrentTab
+        {
+            get { return (TabItemExplorip)SelectedItem; }
+        }
+
+        public TabItemExplorerBrowser CurrentTabExplorer
         {
             get { return (TabItemExplorerBrowser)SelectedItem; }
         }
@@ -78,9 +83,9 @@ namespace Explorip.Explorer.WPF.Controls
                     HideTab();
                 }
             }
-            else if (e.Key == Key.N && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
+            else if (e.Key == Key.N && e.KeyboardDevice.Modifiers == ModifierKeys.Control && CurrentTab is TabItemExplorerBrowser tieb)
             {
-                AddNewTab(CurrentTab.CurrentDirectory);
+                AddNewTab(tieb.CurrentDirectory);
             }
             else if (e.Key == Key.Right && e.KeyboardDevice.Modifiers == ModifierKeys.Control &&
                 MyWindow.MyDataContext.SelectionLeft)

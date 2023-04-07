@@ -375,9 +375,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             foreach (TabbedThumbnail thumbnail in _tabbedThumbnailCache.Values)
             {
                 TaskbarWindowManager.InvalidatePreview(thumbnail.TaskbarWindow);
-#pragma warning disable S1135 // Track uses of "TODO" tags
                 thumbnail.SetImage(IntPtr.Zero); // TODO: Investigate this, and why it needs to be called.
-#pragma warning restore S1135 // Track uses of "TODO" tags
             }
 
             foreach (TabbedThumbnail thumbnail in _tabbedThumbnailCacheWPF.Values)

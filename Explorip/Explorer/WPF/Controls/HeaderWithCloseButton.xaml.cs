@@ -26,9 +26,9 @@ namespace Explorip.Explorer.WPF.Controls
             get { return (TabExplorerBrowser)MyTabItem.Parent; }
         }
 
-        private TabItemExplorerBrowser MyTabItem
+        private TabItemExplorip MyTabItem
         {
-            get { return (TabItemExplorerBrowser)Parent; }
+            get { return (TabItemExplorip)Parent; }
         }
 
         private bool _plusButton;
@@ -51,7 +51,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         #region Context menu
 
-        private TabItemExplorerBrowser CurrentTab
+        private TabItemExplorerBrowser CurrentTabExplorer
         {
             get
             {
@@ -63,7 +63,10 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void NewTab_Click(object sender, RoutedEventArgs e)
         {
-            MyTabControl.AddNewTab(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
+            if (CurrentTabExplorer == null)
+                MyTabControl.AddNewTab((ShellObject)KnownFolders.Desktop);
+            else
+                MyTabControl.AddNewTab(CurrentTabExplorer.ExplorerBrowser.NavigationLog[CurrentTabExplorer.ExplorerBrowser.NavigationLogIndex]);
         }
 
         private void CloseTab_Click(object sender, RoutedEventArgs e)
@@ -71,7 +74,7 @@ namespace Explorip.Explorer.WPF.Controls
             TabExplorerBrowser myTabControl = MyTabControl;
             if (MyTabControl.Items.Count == 1 && !MyTabControl.AllowCloseLastTab)
                 return;
-            MyTabControl.Items.Remove(MyTabControl.SelectedItem);
+            ((TabItemExplorip)MyTabControl.SelectedItem).Dispose();
             myTabControl.HideTab();
         }
 
@@ -80,7 +83,7 @@ namespace Explorip.Explorer.WPF.Controls
             TabExplorerBrowser myTabControl = MyTabControl;
             for (int i = myTabControl.Items.Count - 1; i >= 0; i--)
                 if (myTabControl.SelectedItem != myTabControl.Items[i] || myTabControl.AllowCloseLastTab)
-                    myTabControl.Items.Remove(myTabControl.Items[i]);
+                    ((TabItemExplorip)myTabControl.Items[i]).Dispose();
             myTabControl.HideTab();
         }
 
@@ -88,9 +91,15 @@ namespace Explorip.Explorer.WPF.Controls
         {
             WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
             if (fenetre.LeftTab == MyTabControl)
-                fenetre.RightTab.AddNewTab(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
+                fenetre.RightTab.AddNewTab(CurrentTabExplorer.ExplorerBrowser.NavigationLog[CurrentTabExplorer.ExplorerBrowser.NavigationLogIndex]);
             else
-                fenetre.LeftTab.AddNewTab(CurrentTab.ExplorerBrowser.NavigationLog[CurrentTab.ExplorerBrowser.NavigationLogIndex]);
+                fenetre.LeftTab.AddNewTab(CurrentTabExplorer.ExplorerBrowser.NavigationLog[CurrentTabExplorer.ExplorerBrowser.NavigationLogIndex]);
+        }
+
+        private void NewConsoleTab_Click(object sender, RoutedEventArgs e)
+        {
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand());
+            MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
         }
 
         #endregion
