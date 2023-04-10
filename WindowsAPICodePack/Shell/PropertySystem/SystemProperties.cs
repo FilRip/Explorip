@@ -35,7 +35,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <returns>Property Description for a given property key</returns>
         public static ShellPropertyDescription GetPropertyDescription(string canonicalName)
         {
-
             int result = PropertySystemNativeMethods.PSGetPropertyKeyFromName(canonicalName, out PropertyKey propKey);
 
             if (!CoreErrorHelper.Succeeded(result))

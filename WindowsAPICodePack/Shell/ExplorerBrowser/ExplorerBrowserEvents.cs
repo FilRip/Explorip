@@ -21,7 +21,6 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// Set to 'True' to cancel the navigation.
         /// </summary>
         public bool Cancel { get; set; }
-
     }
 
     /// <summary>

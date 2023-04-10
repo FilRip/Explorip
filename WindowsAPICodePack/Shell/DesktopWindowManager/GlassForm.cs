@@ -4,7 +4,6 @@ using System.Windows.Forms;
 
 using MS.WindowsAPICodePack.Internal;
 
-
 namespace Microsoft.WindowsAPICodePack.Shell
 {
     /// <summary>

@@ -39,6 +39,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 }
             }
         }
+
         private readonly Collection<string> filenames;
         internal readonly Collection<IShellItem> items;
         internal DialogShowState showState = DialogShowState.PreShow;
@@ -1266,6 +1267,4 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
         }
     }
-
-
 }

@@ -4,7 +4,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
 {
     internal static class ShellIidGuid
     {
-
         // IID GUID strings for relevant Shell COM interfaces.
         internal const string IModalWindow = "B4DB1657-70D7-485E-8E3E-6FCB5A5C1802";
         internal const string IFileDialog = "42F85136-DB7E-439C-85F1-E4075D135FC8";
@@ -50,7 +49,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
     internal static class ShellClSidGuid
     {
-
         // CLSID GUID strings for relevant coclasses.
         internal const string FileOpenDialog = "DC1C5A9C-E88A-4DDE-A5A1-60F82A20AEF7";
         internal const string FileSaveDialog = "C0B4E2F3-BA21-4773-8DBA-335EC946EB8B";
@@ -63,7 +61,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
     internal static class ShellKfidGuid
     {
-
         internal const string ComputerFolder = "0AC0837C-BBF8-452A-850D-79D08E667CA7";
         internal const string Favorites = "1777F761-68AD-4D8A-87BD-30B759FA33DD";
         internal const string Documents = "FDD39AD0-238F-46AF-ADB4-6C85480369C7";

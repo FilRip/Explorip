@@ -23,7 +23,6 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         /// </summary>        
         protected override CreateParams CreateParams
         {
-
             get
             {
                 // Add BS_COMMANDLINK style before control creation.

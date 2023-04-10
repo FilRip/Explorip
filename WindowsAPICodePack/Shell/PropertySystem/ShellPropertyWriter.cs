@@ -87,9 +87,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <param name="key">The property key.</param>
         /// <param name="value">The value associated with the key.</param>
         /// <param name="allowTruncatedValue">True to allow truncation (default); otherwise False.</param>
-        /// <exception cref="System.InvalidOperationException">If the writable property store is already 
+        /// <exception cref="InvalidOperationException">If the writable property store is already 
         /// closed.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">If AllowTruncatedValue is set to false 
+        /// <exception cref="ArgumentOutOfRangeException">If AllowTruncatedValue is set to false 
         /// and while setting the value on the property it had to be truncated in a string or rounded in 
         /// a numeric value.</exception>
         public void WriteProperty(PropertyKey key, object value, bool allowTruncatedValue)
@@ -134,7 +134,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <param name="canonicalName">The canonical name.</param>
         /// <param name="value">The property value.</param>
         /// <param name="allowTruncatedValue">True to allow truncation (default); otherwise False.</param>
-        /// <exception cref="System.ArgumentException">If the given canonical name is not valid.</exception>
+        /// <exception cref="ArgumentException">If the given canonical name is not valid.</exception>
         public void WriteProperty(string canonicalName, object value, bool allowTruncatedValue)
         {
             // Get the PropertyKey using the canonicalName passed in

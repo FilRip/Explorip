@@ -12,7 +12,6 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// </summary>        
         public PaneVisibilityState Navigation { get; set; }
 
-
         /// <summary>
         /// Commands module along the top of the Windows Explorer window.
         /// </summary>        
@@ -23,35 +22,29 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// </summary>
         public PaneVisibilityState CommandsOrganize { get; set; }
 
-
         /// <summary>
         /// View menu within the commands module.
         /// </summary>
         public PaneVisibilityState CommandsView { get; set; }
-
 
         /// <summary>
         /// Pane showing metadata along the bottom of the Windows Explorer window.
         /// </summary>
         public PaneVisibilityState Details { get; set; }
 
-
         /// <summary>
         /// Pane on the right of the Windows Explorer window that shows a large reading preview of the file.
         /// </summary>
         public PaneVisibilityState Preview { get; set; }
-
 
         /// <summary>
         /// Quick filter buttons to aid in a search.
         /// </summary>
         public PaneVisibilityState Query { get; set; }
 
-
         /// <summary>
         /// Additional fields and options to aid in a search.
         /// </summary>
         public PaneVisibilityState AdvancedQuery { get; set; }
-
     }
 }

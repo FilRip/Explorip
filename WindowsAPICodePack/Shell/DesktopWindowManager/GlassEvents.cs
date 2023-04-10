@@ -16,7 +16,5 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// The new GlassAvailable state
         /// </summary>
         public bool GlassAvailable { get; private set; }
-
     }
-
 }

@@ -10,17 +10,16 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     /// <summary>
     /// Base class for all the strongly-typed properties
     /// </summary>
-#pragma warning disable S2094 // Classes should not be empty
+#pragma warning disable S2094, IDE0079 // Classes should not be empty
     public abstract class PropertyStoreItems
     {
         // Left empty for base class
     }
-#pragma warning restore S2094 // Classes should not be empty
+#pragma warning restore S2094, IDE0079 // Classes should not be empty
 
     // TODO: FIX THIS!!!
     public partial class ShellProperties
     {
-
         /// <summary>
         /// .System Properties
         /// </summary>

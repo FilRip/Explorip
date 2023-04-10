@@ -7,7 +7,6 @@ using MS.WindowsAPICodePack.Internal;
 
 namespace Microsoft.WindowsAPICodePack.Shell
 {
-
     /// <summary>
     /// WPF Glass Window
     /// Inherit from this window class to enable glass on a WPF window
