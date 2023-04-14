@@ -36,14 +36,51 @@ namespace Explorip.HookFileOperations
         }
         public FileOperation(IntPtr owner) : this(null, owner) { }
 
+        public void SetProperties(object properties)
+        {
+            ThrowIfDisposed();
+            _fileOperation.SetProperties(properties); // TODO Interface IPropertyChangeArray
+        }
+
+        public void Advice(IFileOperationProgressSink callback)
+        {
+            ThrowIfDisposed();
+            _fileOperation.Advise(callback);
+        }
+
+        public void Unadvice(uint cookie)
+        {
+            ThrowIfDisposed();
+            _fileOperation.Unadvise(cookie);
+        }
+
+        public void ApplyPropertiesToItem(string source)
+        {
+            ThrowIfDisposed();
+            using ComReleaser<IShellItem> sourceItem = CreateShellItem(source);
+            _fileOperation.ApplyPropertiesToItem(sourceItem.Item);
+        }
+
         public void ChangeOperationFlags(EFileOperation flags)
         {
             _fileOperation.SetOperationFlags(flags);
         }
 
+        public void SetProgressDialog(object progressDialog)
+        {
+            ThrowIfDisposed();
+            _fileOperation.SetProgressDialog(progressDialog); // TODO Interface IOperationsProgressDialog
+        }
+
         public void ChangeLinkedWindow(IntPtr windowHandle)
         {
             _fileOperation.SetOwnerWindow((uint)windowHandle);
+        }
+
+        public void SetProgressMessage(string progressMessage)
+        {
+            ThrowIfDisposed();
+            _fileOperation.SetProgressMessage(progressMessage);
         }
 
         public void CopyItem(string source, string destination, string newName)

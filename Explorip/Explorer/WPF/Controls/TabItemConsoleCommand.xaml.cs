@@ -45,7 +45,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void CmdProcess_Exited(object sender, EventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() => ConsoleCommand.Text += "Console has exited");
+            Application.Current.Dispatcher.Invoke(() => ConsoleCommand.Text += Environment.NewLine + "Console has exited");
         }
 
         private void CmdProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)

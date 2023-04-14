@@ -122,5 +122,47 @@ namespace Explorip.HookFileOperations
             Console.WriteLine("Add NewItem");
             _listOperations.Add(new OneFileOperation(EFileOperation.Create) { Destination = destFolder, Attributes = dwFileAttributes, NewName = filename });
         }
+
+        public void SetOperationFlags(FilesOperations.Interfaces.EFileOperation operationFlag)
+        {
+            Console.WriteLine("Add SetOperationFlag");
+            _listOperations.Add(new OneFileOperation(EFileOperation.ChangeOperationFlags) { OperationsFlags = operationFlag });
+        }
+
+        public void ApplyPropertiesToItem(string src)
+        {
+            Console.WriteLine("Add ApplyProperties");
+            _listOperations.Add(new OneFileOperation(EFileOperation.ApplyProperties) { Source = src });
+        }
+
+        public void Advice()
+        {
+            Console.WriteLine("Add Advice");
+            _listOperations.Add(new OneFileOperation(EFileOperation.Advice));
+        }
+
+        public void Unadvice()
+        {
+            Console.WriteLine("Add Unadvice");
+            _listOperations.Add(new OneFileOperation(EFileOperation.Unadvice));
+        }
+
+        public void SetProperties(object properties)
+        {
+            Console.WriteLine("Add SetProperties");
+            _listOperations.Add(new OneFileOperation(EFileOperation.SetProperties) { Properties = properties });
+        }
+
+        public void SetProgressDialog()
+        {
+            Console.WriteLine("Add SetProgressDialog");
+            _listOperations.Add(new OneFileOperation(EFileOperation.ProgressDialog));
+        }
+
+        public void SetProgressMessage()
+        {
+            Console.WriteLine("Add SetProgressMessage");
+            _listOperations.Add(new OneFileOperation(EFileOperation.ProgressMessage));
+        }
     }
 }

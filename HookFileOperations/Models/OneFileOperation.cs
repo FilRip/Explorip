@@ -23,6 +23,18 @@ namespace Explorip.HookFileOperations.Models
 
         public FileAttributes Attributes { get; set; }
 
+        public object Properties { get; set; }
+
+        public FilesOperations.Interfaces.EFileOperation OperationsFlags { get; set; } = FilesOperations.Interfaces.EFileOperation.None;
+
+        public FilesOperations.Interfaces.IFileOperationProgressSink Callback { get; set; }
+
+        public object ProgressDialog { get; set; }
+
+        public string ProgressMessage { get; set; }
+
+        public uint Cookie { get; set; }
+
         public void WriteOperation(FileOperation currentFileOperation)
         {
             switch (FileOperation)
@@ -42,6 +54,31 @@ namespace Explorip.HookFileOperations.Models
                 case EFileOperation.Create:
                     currentFileOperation.NewItem(Destination, NewName, Attributes);
                     break;
+                case EFileOperation.ApplyProperties:
+                    currentFileOperation.ApplyPropertiesToItem(Source);
+                    break;
+                case EFileOperation.ChangeOperationFlags:
+                    currentFileOperation.ChangeOperationFlags(OperationsFlags);
+                    break;
+                case EFileOperation.Advice:
+                    currentFileOperation.Advice(Callback);
+                    break;
+                case EFileOperation.Unadvice:
+                    currentFileOperation.Unadvice(Cookie);
+                    break;
+                case EFileOperation.SetProperties:
+                    currentFileOperation.SetProperties(Properties);
+                    break;
+                case EFileOperation.ProgressDialog:
+                    currentFileOperation.SetProgressDialog(ProgressDialog);
+                    break;
+                case EFileOperation.ProgressMessage:
+                    currentFileOperation.SetProgressMessage(ProgressMessage);
+                    break;
+                default:
+#pragma warning disable S112 // General exceptions should never be thrown
+                    throw new Exception("Unknown IFileOperation command");
+#pragma warning restore S112 // General exceptions should never be thrown
             }
         }
     }

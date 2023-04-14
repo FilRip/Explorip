@@ -5,6 +5,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
     [Flags()]
     public enum EFileOperation : uint
     {
+        None = 0,
         FOF_MULTIDESTFILES = 0x0001,
         FOF_CONFIRMMOUSE = 0x0002,
         FOF_SILENT = 0x0004,  // don't create progress/report
