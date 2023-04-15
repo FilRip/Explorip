@@ -225,11 +225,6 @@
     <Compile Include="Taskbar\UserRemovedJumpListItemsEventArg.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Design\ShellThumbnailClassDiagram.cd" />
-    <None Include="Design\ShellObjects.cd" />
-    <None Include="ExplorerBrowser\ExplorerBrowserDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="Controls\CommandLinkWPF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
