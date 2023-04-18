@@ -28,13 +28,16 @@ namespace Explorip.HookFileOperations
             _fileOperation = (IFileOperation)Activator.CreateInstance(_fileOperationType);
             Console.WriteLine("ComInterface created");
 
-            _fileOperation.SetOperationFlags(EFileOperation.FOF_NOCONFIRMMKDIR | EFileOperation.FOFX_ADDUNDORECORD | EFileOperation.FOFX_RECYCLEONDELETE);
+            CurrentFileOperationFlags = EFileOperation.FOF_NOCONFIRMMKDIR | EFileOperation.FOFX_ADDUNDORECORD | EFileOperation.FOFX_RECYCLEONDELETE | EFileOperation.FOF_ALLOWUNDO;
+            _fileOperation.SetOperationFlags(CurrentFileOperationFlags);
             if (_callbackSink != null)
                 _sinkCookie = _fileOperation.Advise(_callbackSink);
             if (owner != IntPtr.Zero)
                 _fileOperation.SetOwnerWindow((uint)owner);
         }
         public FileOperation(IntPtr owner) : this(null, owner) { }
+
+        public EFileOperation CurrentFileOperationFlags { get; set; }
 
         public void SetProperties(object properties)
         {
@@ -88,6 +91,9 @@ namespace Explorip.HookFileOperations
             ThrowIfDisposed();
             using ComReleaser<IShellItem> sourceItem = CreateShellItem(source);
             using ComReleaser<IShellItem> destinationItem = CreateShellItem(destination);
+            if (Path.GetDirectoryName(source) == destination)
+                CurrentFileOperationFlags |= EFileOperation.FOF_RENAMEONCOLLISION;
+            ChangeOperationFlags(CurrentFileOperationFlags);
             _fileOperation.CopyItem(sourceItem.Item, destinationItem.Item, newName, null);
         }
 
