@@ -11,8 +11,7 @@ namespace Explorip.Constantes
 
         public static Localisation GetInstance()
         {
-            if (_instance == null)
-                _instance = new Localisation();
+            _instance ??= new Localisation();
             return _instance;
         }
 

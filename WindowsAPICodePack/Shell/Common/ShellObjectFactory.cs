@@ -194,10 +194,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
                             new KnownFolderManagerClass().FindFolderFromIDList(pidl, out nativeFolder);
 
-                            if (nativeFolder != null)
-                            {
-                                nativeFolder.GetFolderDefinition(out definition);
-                            }
+                            nativeFolder?.GetFolderDefinition(out definition);
 
                             Monitor.Pulse(padlock);
                         }

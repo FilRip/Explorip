@@ -197,22 +197,13 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 if (disposing)
                 {
                     // Dispose managed resources
-                    if (_tabbedThumbnailPreview != null)
-                    {
-                        _tabbedThumbnailPreview.Dispose();
-                    }
+                    _tabbedThumbnailPreview?.Dispose();
                     _tabbedThumbnailPreview = null;
 
-                    if (ThumbnailToolbarProxyWindow != null)
-                    {
-                        ThumbnailToolbarProxyWindow.Dispose();
-                    }
+                    ThumbnailToolbarProxyWindow?.Dispose();
                     ThumbnailToolbarProxyWindow = null;
 
-                    if (TabbedThumbnailProxyWindow != null)
-                    {
-                        TabbedThumbnailProxyWindow.Dispose();
-                    }
+                    TabbedThumbnailProxyWindow?.Dispose();
                     TabbedThumbnailProxyWindow = null;
 
                     // Don't dispose the thumbnail buttons as they might be used in another window.

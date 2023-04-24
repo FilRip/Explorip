@@ -76,9 +76,11 @@ namespace System.Windows.Forms
             float[] relativeIntensities = new float[] { 0f, 0.5f, 1f, 1f };
             float[] relativePositions = new float[] { 0f, 0.5f, 0.51f, 1f };
 
-            Blend blend = new();
-            blend.Factors = relativeIntensities;
-            blend.Positions = relativePositions;
+            Blend blend = new()
+            {
+                Factors = relativeIntensities,
+                Positions = relativePositions
+            };
 
             return blend;
         }

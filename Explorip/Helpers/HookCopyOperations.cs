@@ -10,8 +10,7 @@ namespace Explorip.Helpers
 
         public static HookCopyOperations GetInstance()
         {
-            if (_instance == null)
-                _instance = new HookCopyOperations();
+            _instance ??= new HookCopyOperations();
             return _instance;
         }
 

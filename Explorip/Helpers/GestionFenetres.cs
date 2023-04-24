@@ -24,8 +24,7 @@ namespace Explorip.Helpers
         /// <param name="IdProcessus">Id du processus</param>
         public static IntPtr RetourneFenetrePrincipale(int IdProcessus)
         {
-            Process processus = Process.GetProcessById(IdProcessus);
-            if (processus == null) throw new GestionFenetresException($"Aucun processus trouvé avec l'Id {IdProcessus}");
+            Process processus = Process.GetProcessById(IdProcessus) ?? throw new GestionFenetresException($"Aucun processus trouvé avec l'Id {IdProcessus}");
             return processus.MainWindowHandle;
         }
 

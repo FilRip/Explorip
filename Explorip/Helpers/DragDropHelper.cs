@@ -174,8 +174,7 @@ namespace Explorip.Helpers
             if (_pointeurData != IntPtr.Zero)
             {
                 Console.WriteLine("Menu Start");
-                if (_dropTarget != null)
-                    _dropTarget.DragDrop(_pointeurData, touches, new NativePoint(e.X, e.Y), ref effets);
+                _dropTarget?.DragDrop(_pointeurData, touches, new NativePoint(e.X, e.Y), ref effets);
                 _dropTargetHelper.Drop(_pointeurData, new NativePoint(e.X, e.Y), effets);
                 Console.WriteLine("Menu end");
             }
@@ -247,8 +246,7 @@ namespace Explorip.Helpers
             if (e.KeyState.EtatBit(6))
                 touches |= MK.ALT;
             DragDropEffects effets = effetDragDrop;
-            if (_dropTarget != null)
-                _dropTarget.DragEnter(_pointeurData, touches, new NativePoint(e.X, e.Y), ref effets);
+            _dropTarget?.DragEnter(_pointeurData, touches, new NativePoint(e.X, e.Y), ref effets);
             _dropTargetHelper.DragEnter(((Control)sender).Handle, _pointeurData, new NativePoint(e.X, e.Y), effetDragDrop);
         }
 
@@ -260,8 +258,7 @@ namespace Explorip.Helpers
             if (e.KeyState.EtatBit(6))
                 touches |= MK.ALT;
             DragDropEffects effets = effetDragDrop;
-            if (_dropTarget != null)
-                _dropTarget.DragOver(touches, new NativePoint(e.X, e.Y), ref effets);
+            _dropTarget?.DragOver(touches, new NativePoint(e.X, e.Y), ref effets);
             _dropTargetHelper.DragOver(new NativePoint(e.X, e.Y), effetDragDrop);
         }
 

@@ -104,10 +104,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
             set
             {
                 propertyBagName = value;
-                if (explorerBrowserControl != null)
-                {
-                    explorerBrowserControl.SetPropertyBag(propertyBagName);
-                }
+                explorerBrowserControl?.SetPropertyBag(propertyBagName);
             }
         }
 
@@ -139,8 +136,10 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 {
                     if ((hr == HResult.ResourceInUse || hr == HResult.Canceled) && NavigationFailed != null)
                     {
-                        NavigationFailedEventArgs args = new();
-                        args.FailedLocation = shellObject;
+                        NavigationFailedEventArgs args = new()
+                        {
+                            FailedLocation = shellObject
+                        };
                         NavigationFailed(this, args);
                     }
                     else
@@ -305,11 +304,13 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
                 // sets up ExplorerBrowser view connection point events
                 viewEvents = new ExplorerBrowserViewEvents(this);
 
-                NativeRect rect = new();
-                rect.Top = ClientRectangle.Top;
-                rect.Left = ClientRectangle.Left;
-                rect.Right = ClientRectangle.Right;
-                rect.Bottom = ClientRectangle.Bottom;
+                NativeRect rect = new()
+                {
+                    Top = ClientRectangle.Top,
+                    Left = ClientRectangle.Left,
+                    Right = ClientRectangle.Right,
+                    Bottom = ClientRectangle.Bottom
+                };
 
                 explorerBrowserControl.Initialize(Handle, ref rect, null);
 
@@ -342,11 +343,13 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         {
             if (explorerBrowserControl != null)
             {
-                NativeRect rect = new();
-                rect.Top = ClientRectangle.Top;
-                rect.Left = ClientRectangle.Left;
-                rect.Right = ClientRectangle.Right;
-                rect.Bottom = ClientRectangle.Bottom;
+                NativeRect rect = new()
+                {
+                    Top = ClientRectangle.Top,
+                    Left = ClientRectangle.Left,
+                    Right = ClientRectangle.Right,
+                    Bottom = ClientRectangle.Bottom
+                };
 
                 IntPtr ptr = IntPtr.Zero;
                 explorerBrowserControl.SetRect(ref ptr, rect);
@@ -490,11 +493,12 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
 
             if (NavigationPending != null)
             {
-                NavigationPendingEventArgs args = new();
-
-                // For some special items (like network machines), ShellObject.FromIDList
-                // might return null
-                args.PendingLocation = ShellObjectFactory.Create(pidlFolder);
+                NavigationPendingEventArgs args = new()
+                {
+                    // For some special items (like network machines), ShellObject.FromIDList
+                    // might return null
+                    PendingLocation = ShellObjectFactory.Create(pidlFolder)
+                };
 
                 if (args.PendingLocation != null)
                 {
@@ -526,8 +530,10 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
 
             if (NavigationComplete != null)
             {
-                NavigationCompleteEventArgs args = new();
-                args.NewLocation = ShellObjectFactory.Create(pidlFolder);
+                NavigationCompleteEventArgs args = new()
+                {
+                    NewLocation = ShellObjectFactory.Create(pidlFolder)
+                };
                 NavigationComplete(this, args);
             }
             return HResult.Ok;
@@ -537,8 +543,10 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
         {
             if (NavigationFailed != null)
             {
-                NavigationFailedEventArgs args = new();
-                args.FailedLocation = ShellObjectFactory.Create(pidlFolder);
+                NavigationFailedEventArgs args = new()
+                {
+                    FailedLocation = ShellObjectFactory.Create(pidlFolder)
+                };
                 NavigationFailed(this, args);
             }
             return HResult.Ok;
@@ -827,26 +835,17 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms
 
         internal void FireContentChanged()
         {
-            if (ItemsChanged != null)
-            {
-                ItemsChanged.Invoke(this, EventArgs.Empty);
-            }
+            ItemsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         internal void FireContentEnumerationComplete()
         {
-            if (ViewEnumerationComplete != null)
-            {
-                ViewEnumerationComplete.Invoke(this, EventArgs.Empty);
-            }
+            ViewEnumerationComplete?.Invoke(this, EventArgs.Empty);
         }
 
         internal void FireSelectedItemChanged()
         {
-            if (ViewSelectedItemChanged != null)
-            {
-                ViewSelectedItemChanged.Invoke(this, EventArgs.Empty);
-            }
+            ViewSelectedItemChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 

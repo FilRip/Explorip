@@ -173,7 +173,7 @@ namespace Explorip.Helpers
             if (objetsAAjouter == null)
                 throw new ArgumentNullException(nameof(objetsAAjouter));
 
-            foreach (T objet in objetsAAjouter)
+            foreach (T objet in objetsAAjouter.Select(v => (T)v))
             {
                 if ((typeof(T) == objet.GetType()) || (objet.GetType().IsSubclassOf(typeof(T))))
                 {
@@ -221,7 +221,7 @@ namespace Explorip.Helpers
                 throw new ArgumentNullException(nameof(objetsAInserer));
 
             if (position > liste.Length - 1) position = liste.Length;
-            foreach (T objet in objetsAInserer)
+            foreach (T objet in objetsAInserer.Select(v => (T)v))
             {
                 if ((typeof(T) == objet.GetType()) || (objet.GetType().IsSubclassOf(typeof(T))))
                 {

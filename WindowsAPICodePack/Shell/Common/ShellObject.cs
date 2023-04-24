@@ -172,10 +172,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             get
             {
-                if (properties == null)
-                {
-                    properties = new ShellProperties(this);
-                }
+                properties ??= new ShellProperties(this);
                 return properties;
             }
         }
@@ -339,7 +336,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             get
             {
-                if (thumbnail == null) { thumbnail = new ShellThumbnail(this); }
+                thumbnail ??= new ShellThumbnail(this);
                 return thumbnail;
             }
         }
@@ -398,10 +395,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 parentShellObject = null;
             }
 
-            if (properties != null)
-            {
-                properties.Dispose();
-            }
+            properties?.Dispose();
 
             if (_internalPIDL != IntPtr.Zero)
             {

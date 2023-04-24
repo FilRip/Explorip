@@ -117,10 +117,7 @@ namespace ManagedShell.WindowsTasks
         {
             TaskCategoryProvider = provider;
 
-            if (CategoryChangeDelegate == null)
-            {
-                CategoryChangeDelegate = CategoriesChanged;
-            }
+            CategoryChangeDelegate ??= CategoriesChanged;
 
             TaskCategoryProvider.SetCategoryChangeDelegate(CategoryChangeDelegate);
         }

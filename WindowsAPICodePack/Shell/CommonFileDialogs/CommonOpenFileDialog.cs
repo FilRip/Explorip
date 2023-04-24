@@ -109,10 +109,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         internal override void InitializeNativeFileDialog()
         {
-            if (openDialogCoClass == null)
-            {
-                openDialogCoClass = new INativeFileOpenDialog();
-            }
+            openDialogCoClass ??= new INativeFileOpenDialog();
         }
 
         internal override void CleanUpNativeFileDialog()

@@ -1,6 +1,7 @@
 ﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -152,7 +153,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             if (itemsChanged.WaitOne(1, false))
             {
                 items.Clear();
-                foreach (ShellObject obj in ExplorerBrowserControl.Items)
+                foreach (ShellObject obj in ExplorerBrowserControl.Items.OfType<ShellObject>())
                 {
                     items.Add(obj);
                 }
@@ -169,7 +170,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
                 if (selectionChangeWaitCount == 0)
                 {
                     selectedItems.Clear();
-                    foreach (ShellObject obj in ExplorerBrowserControl.SelectedItems)
+                    foreach (ShellObject obj in ExplorerBrowserControl.SelectedItems.OfType<ShellObject>())
                     {
                         selectedItems.Add(obj);
                     }
@@ -949,8 +950,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
         private static void OnNavigationLogIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ExplorerBrowser instance = d as ExplorerBrowser;
-            if (instance.ExplorerBrowserControl != null)
-                instance.ExplorerBrowserControl.NavigationLog.NavigateLog((int)e.NewValue);
+            instance.ExplorerBrowserControl?.NavigationLog.NavigateLog((int)e.NewValue);
         }
 
 
@@ -980,14 +980,8 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
         {
             if (disposed)
             {
-                if (itemsChanged != null)
-                {
-                    itemsChanged.Close();
-                }
-                if (selectionChanged != null)
-                {
-                    selectionChanged.Close();
-                }
+                itemsChanged?.Close();
+                selectionChanged?.Close();
                 if (dtCLRUpdater != null && dtCLRUpdater.IsEnabled)
                     dtCLRUpdater.Stop();
                 disposedValue = true;

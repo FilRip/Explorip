@@ -439,12 +439,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             CoreHelpers.ThrowIfNotVista();
 
             // If no instance cached yet, create it.
-            if (staticDialog == null)
-            {
-                // New TaskDialog will automatically pick up defaults when 
-                // a new config structure is created as part of ShowCore().
-                staticDialog = new TaskDialog();
-            }
+            // New TaskDialog will automatically pick up defaults when 
+            // a new config structure is created as part of ShowCore().
+            staticDialog ??= new TaskDialog();
 
             // Set the few relevant properties, 
             // and go with the defaults for the others.
@@ -772,7 +769,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             {
                 if (control.UseElevationIcon)
                 {
-                    if (settings.ElevatedButtons == null) { settings.ElevatedButtons = new List<int>(); }
+                    settings.ElevatedButtons ??= new List<int>();
                     settings.ElevatedButtons.Add(control.Id);
                 }
             }
@@ -814,12 +811,12 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 }
                 else if (control is TaskDialogRadioButton radButton)
                 {
-                    if (radioButtons == null) { radioButtons = new List<TaskDialogButtonBase>(); }
+                    radioButtons ??= new List<TaskDialogButtonBase>();
                     radioButtons.Add(radButton);
                 }
                 else if (buttonBase != null)
                 {
-                    if (buttons == null) { buttons = new List<TaskDialogButtonBase>(); }
+                    buttons ??= new List<TaskDialogButtonBase>();
                     buttons.Add(buttonBase);
                 }
                 else if (control is TaskDialogProgressBar progBar)
@@ -1049,7 +1046,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             // If a custom button was found, 
             // raise the event - if not, it's a standard button, and
             // we don't support custom event handling for the standard buttons
-            if (button != null) { button.RaiseClickEvent(); }
+            button?.RaiseClickEvent();
         }
 
         internal void RaiseHyperlinkClickEvent(string link)
@@ -1127,25 +1124,19 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         {
             // Reset values that would be considered 
             // 'volatile' in a given instance.
-            if (progressBar != null)
-            {
-                progressBar.Reset();
-            }
+            progressBar?.Reset();
 
             // Clean out sorted control lists - 
             // though we don't of course clear the main controls collection,
             // so the controls are still around; we'll 
             // resort on next show, since the collection may have changed.
-            if (buttons != null) { buttons.Clear(); }
-            if (commandLinks != null) { commandLinks.Clear(); }
-            if (radioButtons != null) { radioButtons.Clear(); }
+            buttons?.Clear();
+            commandLinks?.Clear();
+            radioButtons?.Clear();
             progressBar = null;
 
             // Have the native dialog clean up the rest.
-            if (nativeDialog != null)
-            {
-                nativeDialog.Dispose();
-            }
+            nativeDialog?.Dispose();
         }
 
 

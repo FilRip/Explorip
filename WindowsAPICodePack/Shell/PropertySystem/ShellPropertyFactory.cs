@@ -120,14 +120,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             // Finds the correct constructor by matching the hash of the types.
 #pragma warning disable S3011
             ConstructorInfo ctorInfo = type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                .FirstOrDefault(x => typeHash == GetTypeHash(x.GetParameters().Select(a => a.ParameterType)));
-#pragma warning restore S3011
-
-            if (ctorInfo == null)
-            {
-                throw new ArgumentException(LocalizedMessages.ShellPropertyFactoryConstructorNotFound, "type");
-            }
-
+                .FirstOrDefault(x => typeHash == GetTypeHash(x.GetParameters().Select(a => a.ParameterType))) ?? throw new ArgumentException(LocalizedMessages.ShellPropertyFactoryConstructorNotFound, "type");
             var key = Expression.Parameter(argTypes[0], "propKey");
             var desc = Expression.Parameter(argTypes[1], "desc");
             var third = Expression.Parameter(typeof(object), "third"); //needs to be object to avoid casting later

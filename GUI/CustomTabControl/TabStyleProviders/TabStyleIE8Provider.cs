@@ -181,9 +181,11 @@ namespace System.Windows.Forms
                 relativePositions = new float[] { 0f, 0.2f, 1f };
             }
 
-            Blend blend = new();
-            blend.Factors = relativeIntensities;
-            blend.Positions = relativePositions;
+            Blend blend = new()
+            {
+                Factors = relativeIntensities,
+                Positions = relativePositions
+            };
 
             return blend;
         }

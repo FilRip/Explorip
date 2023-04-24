@@ -78,10 +78,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         {
             get
             {
-                if (propertySystem == null)
-                {
-                    propertySystem = new PropertySystem(ParentShellObject);
-                }
+                propertySystem ??= new PropertySystem(ParentShellObject);
 
                 return propertySystem;
             }
@@ -94,10 +91,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         {
             get
             {
-                if (defaultPropertyCollection == null)
-                {
-                    defaultPropertyCollection = new ShellPropertyCollection(ParentShellObject);
-                }
+                defaultPropertyCollection ??= new ShellPropertyCollection(ParentShellObject);
 
                 return defaultPropertyCollection;
             }

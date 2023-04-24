@@ -76,7 +76,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             if (disposing)
             {
                 // Dispose managed resources
-                if (TabbedThumbnail != null) { TabbedThumbnail.Dispose(); }
+                TabbedThumbnail?.Dispose();
 
                 TabbedThumbnail = null;
 

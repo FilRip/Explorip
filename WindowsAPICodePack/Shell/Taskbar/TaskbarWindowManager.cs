@@ -35,7 +35,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             }
             catch
             {
-                if (temp != null) { temp.Dispose(); }
+                temp?.Dispose();
                 throw;
             }
         }
@@ -56,7 +56,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             }
             catch
             {
-                if (temp != null) { temp.Dispose(); }
+                temp?.Dispose();
                 throw;
             }
         }
@@ -99,10 +99,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 taskbarWindow = new TaskbarWindow(preview);
                 _taskbarWindowList.Add(taskbarWindow);
             }
-            else if (taskbarWindow.TabbedThumbnail == null)
-            {
-                taskbarWindow.TabbedThumbnail = preview;
-            }
+            else taskbarWindow.TabbedThumbnail ??= preview;
 
             // Listen for Title changes
             preview.TitleChanged += new EventHandler(ThumbnailPreview_TitleChanged);
@@ -776,10 +773,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             }
 
             // Update the proxy window for the tabbed thumbnail
-            if (taskbarWindow != null)
-            {
-                taskbarWindow.SetTitle(preview.Title);
-            }
+            taskbarWindow?.SetTitle(preview.Title);
         }
 
         #endregion

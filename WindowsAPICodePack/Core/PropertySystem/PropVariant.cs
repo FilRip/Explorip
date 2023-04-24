@@ -29,89 +29,126 @@ namespace MS.WindowsAPICodePack.Internal
 
         private static Dictionary<Type, Action<PropVariant, Array, uint>> GenerateVectorActions()
         {
-            Dictionary<Type, Action<PropVariant, Array, uint>> cache = new();
-
-            cache.Add(typeof(Int16), (pv, array, i) =>
+            Dictionary<Type, Action<PropVariant, Array, uint>> cache = new()
             {
-                PropVariantNativeMethods.PropVariantGetInt16Elem(pv, i, out short val);
-                array.SetValue(val, i);
-            });
-
-            cache.Add(typeof(UInt16), (pv, array, i) =>
-            {
-                PropVariantNativeMethods.PropVariantGetUInt16Elem(pv, i, out ushort val);
-                array.SetValue(val, i);
-            });
-
-            cache.Add(typeof(Int32), (pv, array, i) =>
-            {
-                PropVariantNativeMethods.PropVariantGetInt32Elem(pv, i, out int val);
-                array.SetValue(val, i);
-            });
-
-            cache.Add(typeof(UInt32), (pv, array, i) =>
-            {
-                PropVariantNativeMethods.PropVariantGetUInt32Elem(pv, i, out uint val);
-                array.SetValue(val, i);
-            });
-
-            cache.Add(typeof(Int64), (pv, array, i) =>
-            {
-                PropVariantNativeMethods.PropVariantGetInt64Elem(pv, i, out long val);
-                array.SetValue(val, i);
-            });
-
-            cache.Add(typeof(UInt64), (pv, array, i) =>
-            {
-                PropVariantNativeMethods.PropVariantGetUInt64Elem(pv, i, out ulong val);
-                array.SetValue(val, i);
-            });
-
-            cache.Add(typeof(DateTime), (pv, array, i) =>
-            {
-                PropVariantNativeMethods.PropVariantGetFileTimeElem(pv, i, out System.Runtime.InteropServices.ComTypes.FILETIME val);
-
-                long fileTime = GetFileTimeAsLong(ref val);
-
-                array.SetValue(DateTime.FromFileTime(fileTime), i);
-            });
-
-            cache.Add(typeof(Boolean), (pv, array, i) =>
-            {
-                PropVariantNativeMethods.PropVariantGetBooleanElem(pv, i, out bool val);
-                array.SetValue(val, i);
-            });
-
-            cache.Add(typeof(Double), (pv, array, i) =>
-            {
-                PropVariantNativeMethods.PropVariantGetDoubleElem(pv, i, out double val);
-                array.SetValue(val, i);
-            });
-
-            cache.Add(typeof(Single), (pv, array, i) => // float
-            {
-                float[] val = new float[1];
-                Marshal.Copy(pv._ptr2, val, (int)i, 1);
-                array.SetValue(val[0], (int)i);
-            });
-
-            cache.Add(typeof(Decimal), (pv, array, i) =>
-            {
-                int[] val = new int[4];
-                for (int a = 0; a < val.Length; a++)
                 {
-                    val[a] = Marshal.ReadInt32(pv._ptr2,
-                        (int)i * sizeof(decimal) + a * sizeof(int)); //index * size + offset quarter
-                }
-                array.SetValue(new decimal(val), i);
-            });
+                    typeof(Int16),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetInt16Elem(pv, i, out short val);
+                        array.SetValue(val, i);
+                    }
+                },
 
-            cache.Add(typeof(String), (pv, array, i) =>
-            {
-                string val = string.Empty;
-                PropVariantNativeMethods.PropVariantGetStringElem(pv, i, ref val);
-                array.SetValue(val, i);
-            });
+                {
+                    typeof(UInt16),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetUInt16Elem(pv, i, out ushort val);
+                        array.SetValue(val, i);
+                    }
+                },
+
+                {
+                    typeof(Int32),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetInt32Elem(pv, i, out int val);
+                        array.SetValue(val, i);
+                    }
+                },
+
+                {
+                    typeof(UInt32),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetUInt32Elem(pv, i, out uint val);
+                        array.SetValue(val, i);
+                    }
+                },
+
+                {
+                    typeof(Int64),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetInt64Elem(pv, i, out long val);
+                        array.SetValue(val, i);
+                    }
+                },
+
+                {
+                    typeof(UInt64),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetUInt64Elem(pv, i, out ulong val);
+                        array.SetValue(val, i);
+                    }
+                },
+
+                {
+                    typeof(DateTime),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetFileTimeElem(pv, i, out System.Runtime.InteropServices.ComTypes.FILETIME val);
+
+                        long fileTime = GetFileTimeAsLong(ref val);
+
+                        array.SetValue(DateTime.FromFileTime(fileTime), i);
+                    }
+                },
+
+                {
+                    typeof(Boolean),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetBooleanElem(pv, i, out bool val);
+                        array.SetValue(val, i);
+                    }
+                },
+
+                {
+                    typeof(Double),
+                    (pv, array, i) =>
+                    {
+                        PropVariantNativeMethods.PropVariantGetDoubleElem(pv, i, out double val);
+                        array.SetValue(val, i);
+                    }
+                },
+
+                {
+                    typeof(Single),
+                    (pv, array, i) => // float
+                    {
+                        float[] val = new float[1];
+                        Marshal.Copy(pv._ptr2, val, (int)i, 1);
+                        array.SetValue(val[0], (int)i);
+                    }
+                },
+
+                {
+                    typeof(Decimal),
+                    (pv, array, i) =>
+                    {
+                        int[] val = new int[4];
+                        for (int a = 0; a < val.Length; a++)
+                        {
+                            val[a] = Marshal.ReadInt32(pv._ptr2,
+                                (int)i * sizeof(decimal) + a * sizeof(int)); //index * size + offset quarter
+                        }
+                        array.SetValue(new decimal(val), i);
+                    }
+                },
+
+                {
+                    typeof(String),
+                    (pv, array, i) =>
+                    {
+                        string val = string.Empty;
+                        PropVariantNativeMethods.PropVariantGetStringElem(pv, i, ref val);
+                        array.SetValue(val, i);
+                    }
+                }
+            };
 
             return cache;
         }
@@ -661,9 +698,11 @@ namespace MS.WindowsAPICodePack.Internal
         private static System.Runtime.InteropServices.ComTypes.FILETIME DateTimeToFileTime(DateTime value)
         {
             long hFT = value.ToFileTime();
-            System.Runtime.InteropServices.ComTypes.FILETIME ft = new();
-            ft.dwLowDateTime = (int)(hFT & 0xFFFFFFFF);
-            ft.dwHighDateTime = (int)(hFT >> 32);
+            System.Runtime.InteropServices.ComTypes.FILETIME ft = new()
+            {
+                dwLowDateTime = (int)(hFT & 0xFFFFFFFF),
+                dwHighDateTime = (int)(hFT >> 32)
+            };
             return ft;
         }
 

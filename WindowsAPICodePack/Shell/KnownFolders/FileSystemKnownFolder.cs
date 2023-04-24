@@ -64,10 +64,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
                 // If this is the first time this property is being called,
                 // get the native Folder Defination (KnownFolder properties)
-                if (knownFolderSettings == null)
-                {
-                    knownFolderSettings = new KnownFolderSettings(knownFolderNative);
-                }
+                knownFolderSettings ??= new KnownFolderSettings(knownFolderNative);
 
                 return knownFolderSettings;
             }

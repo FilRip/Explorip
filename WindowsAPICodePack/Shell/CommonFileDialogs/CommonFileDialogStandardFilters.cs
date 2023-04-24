@@ -17,10 +17,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         {
             get
             {
-                if (textFilesFilter == null)
-                {
-                    textFilesFilter = new CommonFileDialogFilter(LocalizedMessages.CommonFiltersText, "*.txt");
-                }
+                textFilesFilter ??= new CommonFileDialogFilter(LocalizedMessages.CommonFiltersText, "*.txt");
                 return textFilesFilter;
             }
         }
@@ -33,11 +30,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         {
             get
             {
-                if (pictureFilesFilter == null)
-                {
-                    pictureFilesFilter = new CommonFileDialogFilter(LocalizedMessages.CommonFiltersPicture,
+                pictureFilesFilter ??= new CommonFileDialogFilter(LocalizedMessages.CommonFiltersPicture,
                         "*.bmp, *.jpg, *.jpeg, *.png, *.ico");
-                }
                 return pictureFilesFilter;
             }
 
@@ -50,11 +44,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         {
             get
             {
-                if (officeFilesFilter == null)
-                {
-                    officeFilesFilter = new CommonFileDialogFilter(LocalizedMessages.CommonFiltersOffice,
+                officeFilesFilter ??= new CommonFileDialogFilter(LocalizedMessages.CommonFiltersOffice,
                         "*.doc, *.docx, *.xls, *.xlsx, *.ppt, *.pptx");
-                }
                 return officeFilesFilter;
             }
         }

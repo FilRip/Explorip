@@ -234,8 +234,7 @@ namespace Explorip.TaskBar.Controls
         {
             try
             {
-                if (_thumb != null)
-                    _thumb.Close();
+                _thumb?.Close();
             }
             catch (Exception) { /* Ignore errors */ }
             _thumb = new TaskThumbButton(this);
@@ -246,8 +245,7 @@ namespace Explorip.TaskBar.Controls
         {
             try
             {
-                if (_thumb != null)
-                    _thumb.Close();
+                _thumb?.Close();
             }
             catch (Exception) { /* Ignore errors */ }
         }

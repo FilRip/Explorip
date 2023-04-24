@@ -37,11 +37,8 @@ namespace Microsoft.WindowsAPICodePack.Controls
             set
             {
                 ExplorerBrowserOptions ebo = (ExplorerBrowserOptions)value;
-                if (eb.explorerBrowserControl != null)
-                {
-                    // Always forcing SHOWFRAMES because we handle IExplorerPaneVisibility
-                    eb.explorerBrowserControl.SetOptions(ebo | ExplorerBrowserOptions.ShowFrames);
-                }
+                // Always forcing SHOWFRAMES because we handle IExplorerPaneVisibility
+                eb.explorerBrowserControl?.SetOptions(ebo | ExplorerBrowserOptions.ShowFrames);
             }
         }
         #endregion

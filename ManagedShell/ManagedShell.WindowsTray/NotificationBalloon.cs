@@ -103,11 +103,8 @@ namespace ManagedShell.WindowsTray
         {
             if (hIcon == IntPtr.Zero)
             {
-                if (Icon == null)
-                {
-                    // Use default only if we don't have a valid icon already
-                    Icon = IconImageConverter.GetDefaultIcon();
-                }
+                // Use default only if we don't have a valid icon already
+                Icon ??= IconImageConverter.GetDefaultIcon();
 
                 return;
             }
@@ -118,11 +115,8 @@ namespace ManagedShell.WindowsTray
             {
                 Icon = icon;
             }
-            else if (Icon == null)
-            {
-                // Use default only if we don't have a valid icon already
-                Icon = IconImageConverter.GetDefaultIcon();
-            }
+            else                 // Use default only if we don't have a valid icon already
+                Icon ??= IconImageConverter.GetDefaultIcon();
         }
 
         private BitmapSource GetSystemIcon(IntPtr hIcon)

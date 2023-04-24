@@ -177,9 +177,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     // The file might be locked. This is probably quicker, and sufficient for what we need
                     ParentShellObject.NativeShellItem2.GetProperty(ref propertyKey, propVar);
                 }
-                else if (NativePropertyStore != null)
+                else
                 {
-                    NativePropertyStore.GetValue(ref propertyKey, propVar);
+                    NativePropertyStore?.GetValue(ref propertyKey, propVar);
                 }
 
                 //Get the value
@@ -370,9 +370,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     Marshal.ReleaseComObject(store);
                 }
-                else if (NativePropertyStore != null)
+                else
                 {
-                    NativePropertyStore.GetValue(ref propertyKey, propVar);
+                    NativePropertyStore?.GetValue(ref propertyKey, propVar);
                 }
 
                 return propVar?.Value;

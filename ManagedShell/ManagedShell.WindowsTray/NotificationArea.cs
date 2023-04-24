@@ -341,8 +341,7 @@ namespace ManagedShell.WindowsTray
                             trayIcon.Path = ShellHelper.GetPathForHandle(trayIcon.HWnd);
                             trayIcon.SetPinValues();
 
-                            if (trayIcon.Icon == null)
-                                trayIcon.Icon = IconImageConverter.GetDefaultIcon();
+                            trayIcon.Icon ??= IconImageConverter.GetDefaultIcon();
 
                             TrayIcons.Add(trayIcon);
 

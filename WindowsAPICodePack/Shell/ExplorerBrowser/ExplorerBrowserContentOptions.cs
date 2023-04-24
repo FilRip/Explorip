@@ -41,10 +41,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
             {
                 folderSettings.ViewMode = (FolderViewMode)value;
 
-                if (eb.explorerBrowserControl != null)
-                {
-                    eb.explorerBrowserControl.SetFolderSettings(folderSettings);
-                }
+                eb.explorerBrowserControl?.SetFolderSettings(folderSettings);
             }
         }
         #endregion
@@ -62,10 +59,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
             set
             {
                 folderSettings.Options = (FolderOptions)value | FolderOptions.UseSearchFolders | FolderOptions.NoWebView;
-                if (eb.explorerBrowserControl != null)
-                {
-                    eb.explorerBrowserControl.SetFolderSettings(folderSettings);
-                }
+                eb.explorerBrowserControl?.SetFolderSettings(folderSettings);
             }
         }
         #endregion
@@ -266,8 +260,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
             else
                 folderSettings.Options &= ~(FolderOptions)flag;
 
-            if (eb.explorerBrowserControl != null)
-                eb.explorerBrowserControl.SetFolderSettings(folderSettings);
+            eb.explorerBrowserControl?.SetFolderSettings(folderSettings);
         }
 
         #endregion

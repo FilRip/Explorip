@@ -159,10 +159,8 @@ namespace Explorip.ComposantsWinForm
             {
                 if (e.Node.Tag is DirectoryInfo dirInfo)
                 {
-                    if (SelectionneRepertoire != null)
-                        SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(dirInfo), new AsyncCallback(SelectionneRepertoire_Termine), null);
-                    if (LiensFichiers != null)
-                        LiensFichiers.Rafraichir(dirInfo);
+                    SelectionneRepertoire?.BeginInvoke(this, new SelectionneRepertoireEventArgs(dirInfo), new AsyncCallback(SelectionneRepertoire_Termine), null);
+                    LiensFichiers?.Rafraichir(dirInfo);
                     if (!e.Node.IsExpanded)
                     {
                         try
@@ -180,8 +178,7 @@ namespace Explorip.ComposantsWinForm
             else
             {
                 LiensFichiers.Initialise(e.Node);
-                if (SelectionneRepertoire != null)
-                    SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(null), new AsyncCallback(SelectionneRepertoire_Termine), null);
+                SelectionneRepertoire?.BeginInvoke(this, new SelectionneRepertoireEventArgs(null), new AsyncCallback(SelectionneRepertoire_Termine), null);
             }
         }
 

@@ -70,7 +70,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         // NOTE: We include a "spacer" so that the struct size varies on 
         // 64-bit architectures.
         [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Auto)]
-        internal struct IconUnion
+        internal readonly struct IconUnion
         {
             internal IconUnion(int i)
             {

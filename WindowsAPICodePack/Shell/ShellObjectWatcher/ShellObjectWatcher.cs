@@ -69,10 +69,12 @@ namespace Microsoft.WindowsAPICodePack.Shell
             if (Running) { return; }
 
             #region Registration
-            ShellNativeMethods.SHChangeNotifyEntry entry = new();
-            entry.recursively = _recursive;
+            ShellNativeMethods.SHChangeNotifyEntry entry = new()
+            {
+                recursively = _recursive,
 
-            entry.pIdl = _shellObject.PIDL;
+                pIdl = _shellObject.PIDL
+            };
 
             _registrationId = ShellNativeMethods.SHChangeNotifyRegister(
                 _listenerHandle,

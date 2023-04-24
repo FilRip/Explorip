@@ -50,10 +50,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             }
             catch
             {
-                if (parent != null)
-                {
-                    parent.Dispose();
-                }
+                parent?.Dispose();
                 throw;
             }
             finally
@@ -168,13 +165,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     throw new ArgumentException(LocalizedMessages.PropertyCollectionNullCanonicalName, "canonicalName");
                 }
 
-                IShellProperty prop = Items.FirstOrDefault(p => p.CanonicalName == canonicalName);
-                if (prop == null)
-                {
-#pragma warning disable S112
-                    throw new IndexOutOfRangeException(LocalizedMessages.PropertyCollectionCanonicalInvalidIndex);
-#pragma warning restore S112
-                }
+                IShellProperty prop = Items.FirstOrDefault(p => p.CanonicalName == canonicalName) ?? throw new IndexOutOfRangeException(LocalizedMessages.PropertyCollectionCanonicalInvalidIndex);
                 return prop;
             }
         }

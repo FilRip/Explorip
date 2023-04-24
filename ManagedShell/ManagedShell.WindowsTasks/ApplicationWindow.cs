@@ -90,10 +90,7 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (_isUWP == null)
-                {
-                    _isUWP = WinFileName.ToLower().Contains("applicationframehost.exe");
-                }
+                _isUWP ??= WinFileName.ToLower().Contains("applicationframehost.exe");
 
                 return (bool)_isUWP;
             }

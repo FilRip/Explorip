@@ -232,10 +232,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         internal override void InitializeNativeFileDialog()
         {
-            if (saveDialogCoClass == null)
-            {
-                saveDialogCoClass = new INativeFileSaveDialog();
-            }
+            saveDialogCoClass ??= new INativeFileSaveDialog();
         }
 
         internal override IFileDialog GetNativeFileDialog()

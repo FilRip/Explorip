@@ -139,8 +139,7 @@ namespace Explorip.ComposantsWinForm.FilRipListView
             if (e.Button != MouseButtons.Right) return;
             if (!AddMenuShowColumns || Columns.Count == 0) return;
 
-            if (ContextMenuStrip == null)
-                ContextMenuStrip = new ContextMenuStrip();
+            ContextMenuStrip ??= new ContextMenuStrip();
 
             if ((ContextMenuStrip.Items != null) && (ContextMenuStrip.Items.Count > 0))
                 foreach (ToolStripMenuItem item in ContextMenuStrip.Items.OfType<ToolStripMenuItem>())

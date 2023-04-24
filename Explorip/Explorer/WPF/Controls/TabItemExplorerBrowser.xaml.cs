@@ -272,9 +272,11 @@ namespace Explorip.Explorer.WPF.Controls
             else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorip browser2)
                 tabItemTarget = browser2;
 
+#pragma warning disable IDE0074, IDE0270 // Utiliser une assignation composée
             TabItemExplorip tabItemSource = (TabItemExplorerBrowser)e.Data.GetData(typeof(TabItemExplorerBrowser));
             if (tabItemSource == null)
                 tabItemSource = (TabItemConsoleCommand)e.Data.GetData(typeof(TabItemConsoleCommand));
+#pragma warning restore IDE0074, IDE0270 // Utiliser une assignation composée
 
             if (tabItemTarget != null &&
                 tabItemSource != null &&

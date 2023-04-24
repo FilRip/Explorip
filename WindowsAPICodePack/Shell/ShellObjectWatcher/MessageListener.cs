@@ -94,11 +94,13 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         private static void RegisterWindowClass()
         {
-            WindowClassEx classEx = new();
-            classEx.ClassName = MessageWindowClassName;
-            classEx.WndProc = wndProc;
+            WindowClassEx classEx = new()
+            {
+                ClassName = MessageWindowClassName,
+                WndProc = wndProc,
 
-            classEx.Size = (uint)Marshal.SizeOf(typeof(WindowClassEx));
+                Size = (uint)Marshal.SizeOf(typeof(WindowClassEx))
+            };
 
             var atom = ShellObjectWatcherNativeMethods.RegisterClassEx(ref classEx);
             if (atom == 0)

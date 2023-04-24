@@ -56,31 +56,13 @@ namespace System.Windows.Forms
             base.Dispose(disposing);
             if (disposing)
             {
-                if (_BackImage != null)
-                {
-                    _BackImage.Dispose();
-                }
-                if (_BackBufferGraphics != null)
-                {
-                    _BackBufferGraphics.Dispose();
-                }
-                if (_BackBuffer != null)
-                {
-                    _BackBuffer.Dispose();
-                }
-                if (_TabBufferGraphics != null)
-                {
-                    _TabBufferGraphics.Dispose();
-                }
-                if (_TabBuffer != null)
-                {
-                    _TabBuffer.Dispose();
-                }
+                _BackImage?.Dispose();
+                _BackBufferGraphics?.Dispose();
+                _BackBuffer?.Dispose();
+                _TabBufferGraphics?.Dispose();
+                _TabBuffer?.Dispose();
 
-                if (_StyleProvider != null)
-                {
-                    _StyleProvider.Dispose();
-                }
+                _StyleProvider?.Dispose();
             }
         }
 
@@ -517,26 +499,14 @@ namespace System.Windows.Forms
                     _BackImage.Dispose();
                     _BackImage = null;
                 }
-                if (_BackBufferGraphics != null)
-                {
-                    _BackBufferGraphics.Dispose();
-                }
-                if (_BackBuffer != null)
-                {
-                    _BackBuffer.Dispose();
-                }
+                _BackBufferGraphics?.Dispose();
+                _BackBuffer?.Dispose();
 
                 _BackBuffer = new Bitmap(Width, Height);
                 _BackBufferGraphics = Graphics.FromImage(_BackBuffer);
 
-                if (_TabBufferGraphics != null)
-                {
-                    _TabBufferGraphics.Dispose();
-                }
-                if (_TabBuffer != null)
-                {
-                    _TabBuffer.Dispose();
-                }
+                _TabBufferGraphics?.Dispose();
+                _TabBuffer?.Dispose();
 
                 _TabBuffer = new Bitmap(Width, Height);
                 _TabBufferGraphics = Graphics.FromImage(_TabBuffer);

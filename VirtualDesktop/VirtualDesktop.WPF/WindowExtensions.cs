@@ -88,9 +88,7 @@ namespace WindowsDesktop
         /// </summary>
         internal static IntPtr GetHandle(this Visual visual)
         {
-            var hwndSource = (HwndSource)PresentationSource.FromVisual(visual);
-            if (hwndSource == null) throw new InvalidOperationException();
-
+            var hwndSource = (HwndSource)PresentationSource.FromVisual(visual) ?? throw new InvalidOperationException();
             return hwndSource.Handle;
         }
     }

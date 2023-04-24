@@ -56,6 +56,7 @@
     <Compile Include="FilesOperations\Interfaces\IShellItemArray.cs" />
     <Compile Include="FilesOperations\Interfaces\PropertyKey.cs" />
     <Compile Include="FilesOperations\Interfaces\SIGDN.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionsComInterface.cs" />
     <Compile Include="IpcNewInstance.cs" />

@@ -36,10 +36,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 {
                     lock (_syncLock)
                     {
-                        if (_instance == null)
-                        {
-                            _instance = new TaskbarManager();
-                        }
+                        _instance ??= new TaskbarManager();
                     }
                 }
 
@@ -178,10 +175,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         {
             get
             {
-                if (_tabbedThumbnail == null)
-                {
-                    _tabbedThumbnail = new TabbedThumbnailManager();
-                }
+                _tabbedThumbnail ??= new TabbedThumbnailManager();
                 return _tabbedThumbnail;
             }
         }
@@ -195,10 +189,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         {
             get
             {
-                if (_thumbnailToolBarManager == null)
-                {
-                    _thumbnailToolBarManager = new ThumbnailToolBarManager();
-                }
+                _thumbnailToolBarManager ??= new ThumbnailToolBarManager();
 
                 return _thumbnailToolBarManager;
             }

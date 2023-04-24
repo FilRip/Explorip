@@ -11,10 +11,7 @@ namespace ManagedShell.Common.Helpers
         {
             get
             {
-                if (_oldDpiScale == null)
-                {
-                    _oldDpiScale = GetDpiScale();
-                }
+                _oldDpiScale ??= GetDpiScale();
 
                 return (double)_oldDpiScale;
             }
@@ -30,10 +27,7 @@ namespace ManagedShell.Common.Helpers
         {
             get
             {
-                if (_dpiScale == null)
-                {
-                    _dpiScale = GetDpiScale();
-                }
+                _dpiScale ??= GetDpiScale();
 
                 return (double)_dpiScale;
             }

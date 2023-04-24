@@ -280,8 +280,7 @@ namespace Explorip.TaskBar
             if (result?.VisualHit != null)
             {
                 Toolbar toolbar = result.VisualHit.FindParent<Toolbar>();
-                if (toolbar != null)
-                    toolbar.ShowHideTitle_Click(sender, e);
+                toolbar?.ShowHideTitle_Click(sender, e);
             }
         }
 
@@ -296,8 +295,7 @@ namespace Explorip.TaskBar
             if (result?.VisualHit != null)
             {
                 Toolbar toolbar = result.VisualHit.FindParent<Toolbar>();
-                if (toolbar != null)
-                    toolbar.ShowLargeIcon_Click(sender, e);
+                toolbar?.ShowLargeIcon_Click(sender, e);
             }
         }
     }

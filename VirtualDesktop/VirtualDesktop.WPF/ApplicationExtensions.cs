@@ -59,9 +59,7 @@ namespace WindowsDesktop
 
         private static IntPtr GetWindowHandle(this Application app)
         {
-            var window = app.Windows.OfType<Window>().FirstOrDefault();
-            if (window == null) throw new InvalidOperationException();
-
+            var window = app.Windows.OfType<Window>().FirstOrDefault() ?? throw new InvalidOperationException();
             return window.GetHandle();
         }
     }

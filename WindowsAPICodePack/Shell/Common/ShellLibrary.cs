@@ -499,8 +499,10 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
             nsl.LoadLibraryFromItem(nativeShellItem, flags);
 
-            ShellLibrary library = new(nsl);
-            library.nativeShellItem = (IShellItem2)nativeShellItem;
+            ShellLibrary library = new(nsl)
+            {
+                nativeShellItem = (IShellItem2)nativeShellItem
+            };
 
             return library;
         }

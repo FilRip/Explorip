@@ -434,7 +434,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             }
             catch
             {
-                if (searchCondition != null) { searchCondition.Dispose(); }
+                searchCondition?.Dispose();
                 throw;
             }
             finally

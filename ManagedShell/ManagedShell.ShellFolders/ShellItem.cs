@@ -38,10 +38,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                if (_isFileSystem == null)
-                {
-                    _isFileSystem = (Attributes & SFGAO.FILESYSTEM) != 0;
-                }
+                _isFileSystem ??= (Attributes & SFGAO.FILESYSTEM) != 0;
 
                 return (bool)_isFileSystem;
             }
@@ -53,10 +50,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                if (_isNavigableFolder == null)
-                {
-                    _isNavigableFolder = ((Attributes & SFGAO.FOLDER) != 0);
-                }
+                _isNavigableFolder ??= ((Attributes & SFGAO.FOLDER) != 0);
 
                 return (bool)_isNavigableFolder;
             }
@@ -68,10 +62,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                if (_isFolder == null)
-                {
-                    _isFolder = ((Attributes & SFGAO.FOLDER) != 0 && (Attributes & SFGAO.STREAM) == 0);
-                }
+                _isFolder ??= ((Attributes & SFGAO.FOLDER) != 0 && (Attributes & SFGAO.STREAM) == 0);
 
                 return (bool)_isFolder;
             }
@@ -83,10 +74,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                if (_parentItem == null)
-                {
-                    _parentItem = new ShellItem(GetParentShellItem());
-                }
+                _parentItem ??= new ShellItem(GetParentShellItem());
 
                 return _parentItem;
             }
@@ -132,10 +120,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                if (_path == null)
-                {
-                    _path = GetDisplayName(SIGDN.DESKTOPABSOLUTEPARSING);
-                }
+                _path ??= GetDisplayName(SIGDN.DESKTOPABSOLUTEPARSING);
 
                 return _path;
             }
@@ -147,10 +132,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                if (_fileName == null)
-                {
-                    _fileName = GetDisplayName(SIGDN.PARENTRELATIVEPARSING);
-                }
+                _fileName ??= GetDisplayName(SIGDN.PARENTRELATIVEPARSING);
 
                 return _fileName;
             }
@@ -162,10 +144,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                if (_displayName == null)
-                {
-                    _displayName = GetDisplayName(SIGDN.NORMALDISPLAY);
-                }
+                _displayName ??= GetDisplayName(SIGDN.NORMALDISPLAY);
 
                 return _displayName;
             }
@@ -510,9 +489,8 @@ namespace ManagedShell.ShellFolders
 
         private SFGAO GetAttributes()
         {
-            SFGAO attrs = 0;
 
-            if (_shellItem?.GetAttributes(SFGAO.FILESYSTEM | SFGAO.FOLDER | SFGAO.HIDDEN | SFGAO.STREAM, out attrs) !=
+            if (_shellItem?.GetAttributes(SFGAO.FILESYSTEM | SFGAO.FOLDER | SFGAO.HIDDEN | SFGAO.STREAM, out SFGAO attrs) !=
                 NativeMethods.S_OK)
             {
                 attrs = 0;
@@ -585,16 +563,10 @@ namespace ManagedShell.ShellFolders
                 }
             }
 
-            if (icon == null)
-            {
-                // Fall back to SHGetFileInfo
-                icon = IconImageConverter.GetImageFromAssociatedIcon(AbsolutePidl, size);
-            }
+            // Fall back to SHGetFileInfo
+            icon ??= IconImageConverter.GetImageFromAssociatedIcon(AbsolutePidl, size);
 
-            if (icon == null)
-            {
-                icon = IconImageConverter.GetDefaultIcon();
-            }
+            icon ??= IconImageConverter.GetDefaultIcon();
 
             return icon;
         }

@@ -185,10 +185,7 @@ namespace FilRip.Utils.Extensions
         /// <returns>Retourne un dictionaire pourvu du même type et contenant la somme des valeurs pour chaque clé, plus les valeurs se trouvant dans le dictionaire AAjouter mais absent du dictionaire source</returns>
         public static Dictionary<TKey, TValue> Addition<TKey, TValue>(this Dictionary<TKey, TValue> source, Dictionary<TKey, TValue> AAjouter) where TValue : struct
         {
-            Dictionary<TKey, TValue> retour = source;
-            if (retour == null)
-                retour = new Dictionary<TKey, TValue>();
-
+            Dictionary<TKey, TValue> retour = source ?? new Dictionary<TKey, TValue>();
             if ((AAjouter == null) || (AAjouter.Count == 0))
                 return retour;
 

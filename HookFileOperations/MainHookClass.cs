@@ -18,6 +18,7 @@ namespace Explorip.HookFileOperations
         private LocalHook _renameItemHook = null, _renameItemsHook = null;
         private LocalHook _deleteItemHook = null, _deleteItemsHook = null;
         private LocalHook _performOperationsHook = null, _newItemHook = null;
+        //private LocalHook _setOperationFlagsHook = null;
 
 #pragma warning disable IDE0060, IDE0079 // Supprimer le paramètre inutilisé
         public MainHookClass(RemoteHooking.IContext context, string channelName)
@@ -40,7 +41,8 @@ namespace Explorip.HookFileOperations
                                                                                                                      nameof(IFileOperation.MoveItem), nameof(IFileOperation.MoveItems),
                                                                                                                      nameof(IFileOperation.RenameItem), nameof(IFileOperation.RenameItems),
                                                                                                                      nameof(IFileOperation.DeleteItem), nameof(IFileOperation.DeleteItems),
-                                                                                                                     nameof(IFileOperation.PerformOperations), nameof(IFileOperation.NewItem));
+                                                                                                                     nameof(IFileOperation.PerformOperations), nameof(IFileOperation.NewItem)/*,
+                                                                                                                     nameof(IFileOperation.SetOperationFlags)*/);
                 copyItemsCom.Query();
 
                 _copyItemHook = LocalHook.Create(copyItemsCom.MethodPointers[0], new DelegateCopyItem(CopyItemHooked), this);
@@ -53,6 +55,7 @@ namespace Explorip.HookFileOperations
                 _deleteItemsHook = LocalHook.Create(copyItemsCom.MethodPointers[7], new DelegateDeleteItems(DeleteItemsHooked), this);
                 _performOperationsHook = LocalHook.Create(copyItemsCom.MethodPointers[8], new DelegatePerformOperations(PerformOperationsHooked), this);
                 _newItemHook = LocalHook.Create(copyItemsCom.MethodPointers[9], new DelegateNewItem(NewItemHooked), this);
+                //_setOperationFlagsHook = LocalHook.Create(copyItemsCom.MethodPointers[10], new DelegateSetOperationFlags(NewSetOperationFlags), this);
 
                 _copyItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
                 _copyItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
@@ -64,6 +67,7 @@ namespace Explorip.HookFileOperations
                 _renameItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
                 _performOperationsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
                 _newItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                //_setOperationFlagsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
             }
             catch (Exception ex)
             {
@@ -93,14 +97,15 @@ namespace Explorip.HookFileOperations
         {
             _copyItemHook?.Dispose();
             _copyItemsHook?.Dispose();
-            _moveItemHook.Dispose();
-            _moveItemsHook.Dispose();
-            _deleteItemHook.Dispose();
-            _deleteItemsHook.Dispose();
-            _renameItemHook.Dispose();
-            _renameItemsHook.Dispose();
+            _moveItemHook?.Dispose();
+            _moveItemsHook?.Dispose();
+            _deleteItemHook?.Dispose();
+            _deleteItemsHook?.Dispose();
+            _renameItemHook?.Dispose();
+            _renameItemsHook?.Dispose();
             _performOperationsHook?.Dispose();
             _newItemHook?.Dispose();
+            //_setOperationFlagsHook?.Dispose();
 
             LocalHook.Release();
         }
@@ -175,12 +180,14 @@ namespace Explorip.HookFileOperations
             else if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIDataObject, out IntPtr ptrDataObject) == 0)
             {
                 IDataObject dataObject = (IDataObject)Marshal.GetObjectForIUnknown(ptrDataObject);
-                FORMATETC format = new();
-                format.cfFormat = (short)UFormat.CF_HDROP;
-                format.ptd = IntPtr.Zero;
-                format.dwAspect = DVASPECT.DVASPECT_CONTENT;
-                format.lindex = -1;
-                format.tymed = TYMED.TYMED_HGLOBAL;
+                FORMATETC format = new()
+                {
+                    cfFormat = (short)UFormat.CF_HDROP,
+                    ptd = IntPtr.Zero,
+                    dwAspect = DVASPECT.DVASPECT_CONTENT,
+                    lindex = -1,
+                    tymed = TYMED.TYMED_HGLOBAL,
+                };
                 dataObject.GetData(format, out STGMEDIUM medium);
                 int offset = (int)Marshal.ReadIntPtr(medium.unionmember);
                 IntPtr currentPos = IntPtr.Add(medium.unionmember, offset);
@@ -233,6 +240,13 @@ namespace Explorip.HookFileOperations
             return 0;
         }
 
+        /*[UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = false)]
+        private delegate void DelegateSetOperationFlags(IFileOperation self, EFileOperation flags);
+        private void NewSetOperationFlags(IFileOperation self, EFileOperation flags)
+        {
+            _server?.ReportMessage("Intercept change flags");
+            _server.SetOperationFlags(flags);
+        }*/
         #endregion
     }
 }

@@ -58,11 +58,13 @@ namespace System.Windows.Forms
                 return IntPtr.Zero;
             }
 
-            Message message = new();
-            message.HWnd = hWnd;
-            message.LParam = lParam;
-            message.WParam = wParam;
-            message.Msg = msg;
+            Message message = new()
+            {
+                HWnd = hWnd,
+                LParam = lParam,
+                WParam = wParam,
+                Msg = msg
+            };
 
 #pragma warning disable S3011
             MethodInfo wproc = control.GetType().GetMethod("WndProc"

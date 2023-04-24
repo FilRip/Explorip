@@ -72,7 +72,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 }
                 catch
                 {
-                    if (targetBitmap != null) { targetBitmap.Dispose(); }
+                    targetBitmap?.Dispose();
                     throw;
                 }
             }

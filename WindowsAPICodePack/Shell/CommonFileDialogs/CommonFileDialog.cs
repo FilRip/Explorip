@@ -353,7 +353,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             // make sure it's a Save dialog and that there is a default 
             // extension to sync to.
 #pragma warning disable S3060 // "is" should not be used with "this"
-            if (!(this is CommonSaveFileDialog) || DefaultExtension == null ||
+            if (this is not CommonSaveFileDialog || DefaultExtension == null ||
                 filters.Count <= 0)
             {
                 return;
@@ -458,10 +458,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
 
             // Add the shellitem to the places list
-            if (nativeDialog != null)
-            {
-                nativeDialog.AddPlace(place.NativeShellItem, (ShellNativeMethods.FileDialogAddPlacement)location);
-            }
+            nativeDialog?.AddPlace(place.NativeShellItem, (ShellNativeMethods.FileDialogAddPlacement)location);
         }
 
         /// <summary>
@@ -493,10 +490,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
 
             // Add the shellitem to the places list
-            if (nativeDialog != null)
-            {
-                nativeDialog.AddPlace(nativeShellItem, (ShellNativeMethods.FileDialogAddPlacement)location);
-            }
+            nativeDialog?.AddPlace(nativeShellItem, (ShellNativeMethods.FileDialogAddPlacement)location);
         }
 
         /// <summary>

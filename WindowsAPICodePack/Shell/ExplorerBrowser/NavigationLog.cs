@@ -30,10 +30,12 @@ namespace Microsoft.WindowsAPICodePack.Controls
             _locations.Clear();
             currentLocationIndex = -1;
 
-            NavigationLogEventArgs args = new();
-            args.LocationsChanged = true;
-            args.CanNavigateBackwardChanged = (oldCanNavigateBackward != CanNavigateBackward);
-            args.CanNavigateForwardChanged = (oldCanNavigateForward != CanNavigateForward);
+            NavigationLogEventArgs args = new()
+            {
+                LocationsChanged = true,
+                CanNavigateBackwardChanged = (oldCanNavigateBackward != CanNavigateBackward),
+                CanNavigateForwardChanged = (oldCanNavigateForward != CanNavigateForward)
+            };
             NavigationLogChanged?.Invoke(this, args);
         }
         #endregion

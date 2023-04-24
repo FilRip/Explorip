@@ -2,7 +2,7 @@
 
 namespace Explorip.HookFileOperations.FilesOperations.Interfaces
 {
-    [Flags()]
+    [Flags(), Serializable()]
     public enum EFileOperation : uint
     {
         None = 0,

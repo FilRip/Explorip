@@ -18,10 +18,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         {
             get
             {
-                if (cacheInstance == null)
-                {
-                    cacheInstance = new ShellPropertyDescriptionsCache();
-                }
+                cacheInstance ??= new ShellPropertyDescriptionsCache();
                 return cacheInstance;
             }
         }

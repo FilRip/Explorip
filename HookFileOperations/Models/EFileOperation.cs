@@ -1,5 +1,8 @@
-﻿namespace Explorip.HookFileOperations.Models
+﻿using System;
+
+namespace Explorip.HookFileOperations.Models
 {
+    [Serializable()]
     public enum EFileOperation
     {
         None = 0,

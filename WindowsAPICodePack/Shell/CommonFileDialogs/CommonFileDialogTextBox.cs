@@ -46,10 +46,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
 
             set
             {
-                if (customizedDialog != null)
-                {
-                    customizedDialog.SetEditBoxText(Id, value);
-                }
+                customizedDialog?.SetEditBoxText(Id, value);
 
                 base.Text = value;
             }

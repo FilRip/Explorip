@@ -73,8 +73,7 @@ namespace Explorip.ComposantsWinForm
                 }
                 else if (item.Tag is DirectoryInfo directoryInfo)
                 {
-                    if (SelectionneRepertoire != null)
-                        SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(directoryInfo), new AsyncCallback(SelectionneRepertoire_Termine), null);
+                    SelectionneRepertoire?.BeginInvoke(this, new SelectionneRepertoireEventArgs(directoryInfo), new AsyncCallback(SelectionneRepertoire_Termine), null);
                     if (LiensRepertoires != null)
                     {
                         LiensRepertoires.RafraichirRepertoire(directoryInfo);
@@ -149,10 +148,8 @@ namespace Explorip.ComposantsWinForm
             if (SmallImageList?.Images != null)
                 foreach (Bitmap img in SmallImageList.Images)
                     img.Dispose();
-            if (LargeImageList != null)
-                LargeImageList.Images.Clear();
-            if (SmallImageList != null)
-                SmallImageList.Images.Clear();
+            LargeImageList?.Images.Clear();
+            SmallImageList?.Images.Clear();
         }
 
         private delegate void InvokeRafraichir(DirectoryInfo dirInfo);
@@ -291,8 +288,7 @@ namespace Explorip.ComposantsWinForm
             else if (e.KeyCode == Keys.Back)
             {
                 _repCourant = Directory.GetParent(_repCourant.FullName);
-                if (SelectionneRepertoire != null)
-                    SelectionneRepertoire.BeginInvoke(this, new SelectionneRepertoireEventArgs(_repCourant), new AsyncCallback(SelectionneRepertoire_Termine), null);
+                SelectionneRepertoire?.BeginInvoke(this, new SelectionneRepertoireEventArgs(_repCourant), new AsyncCallback(SelectionneRepertoire_Termine), null);
                 if (LiensRepertoires != null)
                 {
                     LiensRepertoires.RafraichirRepertoire(_repCourant);

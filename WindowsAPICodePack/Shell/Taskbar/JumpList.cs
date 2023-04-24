@@ -70,10 +70,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         {
             lock (syncLock)
             {
-                if (customCategoriesCollection == null)
-                {
-                    customCategoriesCollection = new JumpListCustomCategoryCollection();
-                }
+                customCategoriesCollection ??= new JumpListCustomCategoryCollection();
             }
 
             if (customCategories != null)
@@ -99,10 +96,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 // of this object
                 lock (syncLock)
                 {
-                    if (userTasks == null)
-                    {
-                        userTasks = new JumpListItemCollection<JumpListTask>();
-                    }
+                    userTasks ??= new JumpListItemCollection<JumpListTask>();
                 }
             }
 
@@ -120,10 +114,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// </summary>
         public void ClearAllUserTasks()
         {
-            if (userTasks != null)
-            {
-                userTasks.Clear();
-            }
+            userTasks?.Clear();
         }
 
         /// <summary>

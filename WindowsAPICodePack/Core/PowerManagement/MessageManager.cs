@@ -53,12 +53,9 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
         {
             lock (lockObject)
             {
-                if (window == null)
-                {
-                    // Create a new hidden window to listen
-                    // for power management related window messages.
-                    window = new PowerRegWindow();
-                }
+                // Create a new hidden window to listen
+                // for power management related window messages.
+                window ??= new PowerRegWindow();
             }
         }
 
@@ -92,8 +89,10 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                 if (!eventList.Contains(eventId))
                 {
                     Power.RegisterPowerSettingNotification(Handle, eventId);
-                    ArrayList newList = new();
-                    newList.Add(eventToRegister);
+                    ArrayList newList = new()
+                    {
+                        eventToRegister
+                    };
                     eventList.Add(eventId, newList);
                 }
                 else

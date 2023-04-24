@@ -296,10 +296,7 @@ namespace ManagedShell.UWPInterop
 
         private static IEnumerable<Windows.ApplicationModel.Package> GetPackages(Windows.Management.Deployment.PackageManager pman, string packageFamilyName)
         {
-            if (userSID == null)
-            {
-                userSID = System.Security.Principal.WindowsIdentity.GetCurrent().User?.ToString();
-            }
+            userSID ??= System.Security.Principal.WindowsIdentity.GetCurrent().User?.ToString();
 
             if (userSID == null)
             {

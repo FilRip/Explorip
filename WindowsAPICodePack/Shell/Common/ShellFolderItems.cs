@@ -92,10 +92,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// </summary>
         public void Reset()
         {
-            if (nativeEnumIdList != null)
-            {
-                nativeEnumIdList.Reset();
-            }
+            nativeEnumIdList?.Reset();
         }
 
         #endregion

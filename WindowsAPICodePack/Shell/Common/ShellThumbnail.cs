@@ -288,9 +288,11 @@ namespace Microsoft.WindowsAPICodePack.Shell
         private IntPtr GetHBitmap(System.Windows.Size size)
         {
             // Create a size structure to pass to the native method
-            CoreNativeMethods.Size nativeSIZE = new();
-            nativeSIZE.Width = Convert.ToInt32(size.Width);
-            nativeSIZE.Height = Convert.ToInt32(size.Height);
+            CoreNativeMethods.Size nativeSIZE = new()
+            {
+                Width = Convert.ToInt32(size.Width),
+                Height = Convert.ToInt32(size.Height)
+            };
 
             // Use IShellItemImageFactory to get an icon
             // Options passed in: Resize to fit
