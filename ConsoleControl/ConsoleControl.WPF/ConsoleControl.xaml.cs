@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -14,10 +12,30 @@ namespace ConsoleControl.WPF
     /// <summary>
     /// Interaction logic for ConsoleControl.xaml
     /// </summary>
-    public partial class ConsoleControl : UserControl
+    public partial class ConsoleControl : UserControl, IDisposable
     {
-        private readonly object _lockInput = new();
-        private int offset = 6;
+        #region Fields
+
+        private readonly object _lockInput;
+        private int offset;
+        /// <summary>
+        /// The internal process interface used to interface with the process.
+        /// </summary>
+        private readonly ProcessInterface processInterface;
+
+        /// <summary>
+        /// Current position that input starts at.
+        /// </summary>
+        private int inputStartPos;
+
+        /// <summary>
+        /// The last input string (used so that we can make sure we don't echo input twice).
+        /// </summary>
+        private string lastInput;
+
+        #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleControl"/> class.
@@ -25,6 +43,10 @@ namespace ConsoleControl.WPF
         public ConsoleControl()
         {
             InitializeComponent();
+            _lockInput = new object();
+            offset = 6;
+            processInterface = new ProcessInterface();
+            IsInputEnabled = true;
 
             //  Handle process events.
             processInterface.OnProcessOutput += ProcessInterface_OnProcessOutput;
@@ -32,6 +54,10 @@ namespace ConsoleControl.WPF
             processInterface.OnProcessInput += ProcessInterface_OnProcessInput;
             processInterface.OnProcessExit += ProcessInterface_OnProcessExit;
         }
+
+        #endregion
+
+        #region Events ProcessInterface
 
         /// <summary>
         /// Handles the OnProcessError event of the processInterace control.
@@ -94,6 +120,10 @@ namespace ConsoleControl.WPF
             });
         }
 
+        #endregion
+
+        #region Keyboard input
+
         /// <summary>
         /// Handles the KeyDown event of the richTextBoxConsole control.
         /// </summary>
@@ -129,6 +159,56 @@ namespace ConsoleControl.WPF
                 }
             }
         }
+
+        private void RichTextBoxConsole_KeyUp(object sender, KeyEventArgs e)
+        {
+            //  Is it the return key?
+            if (e.Key == Key.Return)
+            {
+                int caretPosition = richTextBoxConsole.GetCaretPosition();
+                int delta = caretPosition - inputStartPos;
+                //  Get the input.
+                string rtb = new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.Document.ContentEnd).Text.Trim();
+                string cmd = rtb.Substring(rtb.Length - delta + offset);
+                if (offset == 6)
+                    offset = 4;
+                Console.WriteLine($"CaretPosition={caretPosition}, delta={delta}, inputStartPos={inputStartPos}, Text={cmd}, RtbLength={new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.Document.ContentEnd).Text.Length}");
+                //  Write the input (without echoing).
+                WriteInput(cmd, Colors.White, false);
+            }
+        }
+
+        /// <summary>
+        /// Writes the input to the console control.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="color">The color.</param>
+        /// <param name="echo">if set to <c>true</c> echo the input.</param>
+        public void WriteInput(string input, Color color, bool echo)
+        {
+            RunOnUIDispatcher(() =>
+            {
+                //  Are we echoing?
+                if (echo)
+                {
+                    richTextBoxConsole.Selection.ApplyPropertyValue(TextBlock.ForegroundProperty, new SolidColorBrush(color));
+                    richTextBoxConsole.AppendText(input);
+                    inputStartPos = richTextBoxConsole.GetEndPosition();
+                }
+
+                lastInput = input;
+
+                //  Write the input.
+                processInterface.WriteInput(input);
+
+                //  Fire the event.
+                FireProcessInputEvent(new ProcessEventArgs(input));
+            });
+        }
+
+        #endregion
+
+        #region Output console
 
         /// <summary>
         /// Writes the output to the console control.
@@ -166,51 +246,9 @@ namespace ConsoleControl.WPF
             inputStartPos = 0;
         }
 
-        /// <summary>
-        /// Writes the input to the console control.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <param name="color">The color.</param>
-        /// <param name="echo">if set to <c>true</c> echo the input.</param>
-        public void WriteInput(string input, Color color, bool echo)
-        {
-            RunOnUIDispatcher(() =>
-            {
-                //  Are we echoing?
-                if (echo)
-                {
-                    richTextBoxConsole.Selection.ApplyPropertyValue(TextBlock.ForegroundProperty, new SolidColorBrush(color));
-                    richTextBoxConsole.AppendText(input);
-                    inputStartPos = richTextBoxConsole.GetEndPosition();
-                }
+        #endregion
 
-                lastInput = input;
-
-                //  Write the input.
-                processInterface.WriteInput(input);
-
-                //  Fire the event.
-                FireProcessInputEvent(new ProcessEventArgs(input));
-            });
-        }
-
-        /// <summary>
-        /// Runs the on UI dispatcher.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        private void RunOnUIDispatcher(Action action)
-        {
-            if (Dispatcher.CheckAccess())
-            {
-                //  Invoke the action.
-                action();
-            }
-            else
-            {
-                Dispatcher.BeginInvoke(action, null);
-            }
-        }
-
+        #region Process manager
 
         /// <summary>
         /// Runs a process.
@@ -283,21 +321,6 @@ namespace ConsoleControl.WPF
         }
 
         /// <summary>
-        /// The internal process interface used to interface with the process.
-        /// </summary>
-        private readonly ProcessInterface processInterface = new();
-
-        /// <summary>
-        /// Current position that input starts at.
-        /// </summary>
-        private int inputStartPos;
-
-        /// <summary>
-        /// The last input string (used so that we can make sure we don't echo input twice).
-        /// </summary>
-        private string lastInput;
-
-        /// <summary>
         /// Occurs when console output is produced.
         /// </summary>
         public event ProcessEventHandler OnProcessOutput;
@@ -307,9 +330,9 @@ namespace ConsoleControl.WPF
         /// </summary>
         public event ProcessEventHandler OnProcessInput;
 
-        private static readonly DependencyProperty ShowDiagnosticsProperty =
-            DependencyProperty.Register("ShowDiagnostics", typeof(bool), typeof(ConsoleControl),
-            new PropertyMetadata(false, OnShowDiagnosticsChanged));
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether to show diagnostics.
@@ -317,21 +340,7 @@ namespace ConsoleControl.WPF
         /// <value>
         ///   <c>true</c> if show diagnostics; otherwise, <c>false</c>.
         /// </value>
-        public bool ShowDiagnostics
-        {
-            get => (bool)GetValue(ShowDiagnosticsProperty);
-            set => SetValue(ShowDiagnosticsProperty, value);
-        }
-
-        private static void OnShowDiagnosticsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
-        {
-            // Empty by default
-        }
-
-
-        private static readonly DependencyProperty IsInputEnabledProperty =
-          DependencyProperty.Register("IsInputEnabled", typeof(bool), typeof(ConsoleControl),
-          new PropertyMetadata(true));
+        public bool ShowDiagnostics { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance has input enabled.
@@ -339,17 +348,7 @@ namespace ConsoleControl.WPF
         /// <value>
         /// <c>true</c> if this instance has input enabled; otherwise, <c>false</c>.
         /// </value>
-        public bool IsInputEnabled
-        {
-            get { return (bool)GetValue(IsInputEnabledProperty); }
-            set { SetValue(IsInputEnabledProperty, value); }
-        }
-
-        internal static readonly DependencyPropertyKey IsProcessRunningPropertyKey =
-          DependencyProperty.RegisterReadOnly("IsProcessRunning", typeof(bool), typeof(ConsoleControl),
-          new PropertyMetadata(false));
-
-        private static readonly DependencyProperty IsProcessRunningProperty = IsProcessRunningPropertyKey.DependencyProperty;
+        public bool IsInputEnabled { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this instance has a process running.
@@ -357,11 +356,7 @@ namespace ConsoleControl.WPF
         /// <value>
         /// <c>true</c> if this instance has a process running; otherwise, <c>false</c>.
         /// </value>
-        public bool IsProcessRunning
-        {
-            get { return (bool)GetValue(IsProcessRunningProperty); }
-            private set { SetValue(IsProcessRunningPropertyKey, value); }
-        }
+        public bool IsProcessRunning { get; private set; }
 
         /// <summary>
         /// Gets the internally used process interface.
@@ -374,27 +369,75 @@ namespace ConsoleControl.WPF
             get { return processInterface; }
         }
 
+        #endregion
+
+        #region UserControl management
+
         public void SetFocus()
         {
             richTextBoxConsole.Focus();
         }
 
-        private void RichTextBoxConsole_KeyUp(object sender, KeyEventArgs e)
+        /// <summary>
+        /// Runs the on UI dispatcher.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        private void RunOnUIDispatcher(Action action)
         {
-            //  Is it the return key?
-            if (e.Key == Key.Return)
+            if (Dispatcher.CheckAccess())
             {
-                int caretPosition = richTextBoxConsole.GetCaretPosition();
-                int delta = caretPosition - inputStartPos;
-                //  Get the input.
-                string rtb = new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.Document.ContentEnd).Text.Trim();
-                string cmd = rtb.Substring(rtb.Length - delta + offset);
-                if (offset == 6)
-                    offset = 4;
-                Console.WriteLine($"CaretPosition={caretPosition}, delta={delta}, inputStartPos={inputStartPos}, Text={cmd}, RtbLength={new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.Document.ContentEnd).Text.Length}");
-                //  Write the input (without echoing).
-                WriteInput(cmd, Colors.White, false);
+                //  Invoke the action.
+                action();
+            }
+            else
+            {
+                Dispatcher.BeginInvoke(action, null);
             }
         }
+
+        public void SetForeground(Brush foreground)
+        {
+            richTextBoxConsole.Foreground = foreground;
+        }
+
+        public void SetBackground(Brush background)
+        {
+            richTextBoxConsole.Background = background;
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        private bool disposedValue;
+        public bool IsDisposed
+        {
+            get { return disposedValue; }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing && processInterface != null)
+                {
+                    processInterface.OnProcessOutput -= ProcessInterface_OnProcessOutput;
+                    processInterface.OnProcessError -= ProcessInterface_OnProcessError;
+                    processInterface.OnProcessInput -= ProcessInterface_OnProcessInput;
+                    processInterface.OnProcessExit -= ProcessInterface_OnProcessExit;
+                    processInterface.StopProcess();
+                    processInterface.Dispose();
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -19,7 +20,8 @@ namespace ConsoleControlAPI
     public class ProcessInterface : IDisposable
     {
         private const int BUFFER_SIZE = 256;
-        private readonly object _lockInput = new();
+        private readonly object _lockInput;
+        private readonly List<string> _historicCommands;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
@@ -37,6 +39,9 @@ namespace ConsoleControlAPI
             errorWorker.WorkerSupportsCancellation = true;
             errorWorker.DoWork += ErrorWorker_DoWork;
             errorWorker.ProgressChanged += ErrorWorker_ProgressChanged;
+
+            _lockInput = new object();
+            _historicCommands = new List<string>();
         }
 
         /// <summary>
@@ -61,7 +66,7 @@ namespace ConsoleControlAPI
         /// <param name="e">The <see cref="DoWorkEventArgs"/> instance containing the event data.</param>
         private void OutputWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (!outputWorker.CancellationPending)
+            while (outputWorker?.CancellationPending == false)
             {
                 //  Any lines to read?
                 int count;
@@ -71,7 +76,7 @@ namespace ConsoleControlAPI
                     StringBuilder builder = new();
                     count = outputReader.Read(buffer, 0, BUFFER_SIZE);
                     builder.Append(buffer, 0, count);
-                    outputWorker.ReportProgress(0, builder.ToString());
+                    outputWorker?.ReportProgress(0, builder.ToString());
                 } while (count > 0);
 
                 System.Threading.Thread.Sleep(10);
@@ -100,7 +105,7 @@ namespace ConsoleControlAPI
         /// <param name="e">The <see cref="DoWorkEventArgs"/> instance containing the event data.</param>
         private void ErrorWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            while (!errorWorker.CancellationPending)
+            while (errorWorker?.CancellationPending == false)
             {
                 //  Any lines to read?
                 int count;
@@ -110,7 +115,7 @@ namespace ConsoleControlAPI
                     StringBuilder builder = new();
                     count = errorReader.Read(buffer, 0, BUFFER_SIZE);
                     builder.Append(buffer, 0, count);
-                    errorWorker.ReportProgress(0, builder.ToString());
+                    errorWorker?.ReportProgress(0, builder.ToString());
                 } while (count > 0);
 
                 System.Threading.Thread.Sleep(10);
@@ -266,10 +271,16 @@ namespace ConsoleControlAPI
             {
                 if (IsProcessRunning)
                 {
+                    _historicCommands.Insert(0, input);
                     inputWriter.WriteLine(input);
                     inputWriter.Flush();
                 }
             }
+        }
+
+        public List<string> HistoricCommands
+        {
+            get { return _historicCommands; }
         }
 
         private bool disposedValue;
@@ -287,11 +298,13 @@ namespace ConsoleControlAPI
             {
                 if (outputWorker != null)
                 {
+                    outputWorker.CancelAsync();
                     outputWorker.Dispose();
                     outputWorker = null;
                 }
                 if (errorWorker != null)
                 {
+                    errorWorker.CancelAsync();
                     errorWorker.Dispose();
                     errorWorker = null;
                 }
@@ -315,6 +328,7 @@ namespace ConsoleControlAPI
                     errorReader.Dispose();
                     errorReader = null;
                 }
+                _historicCommands?.Clear();
                 disposedValue = true;
             }
         }

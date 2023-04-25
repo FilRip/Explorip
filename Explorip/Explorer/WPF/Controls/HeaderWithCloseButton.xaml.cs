@@ -98,7 +98,7 @@ namespace Explorip.Explorer.WPF.Controls
 
         private void NewConsoleTab_Click(object sender, RoutedEventArgs e)
         {
-            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand());
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand("cmd.exe"));
             MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
         }
 

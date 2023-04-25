@@ -12,7 +12,7 @@ namespace Explorip.Explorer.WPF.Controls
     /// </summary>
     public partial class TabItemConsoleCommand : TabItemExplorip
     {
-        public TabItemConsoleCommand() : base()
+        public TabItemConsoleCommand(string commandLine) : base()
         {
             InitializeComponent();
             InitializeExplorip();
@@ -22,7 +22,7 @@ namespace Explorip.Explorer.WPF.Controls
             {
                 StandardOutputEncoding = Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage),
                 StandardErrorEncoding = Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage),
-                FileName = "cmd.exe",
+                FileName = commandLine,
             };
             MyConsoleControl.StartProcess(processStartInfo);
         }
@@ -39,7 +39,7 @@ namespace Explorip.Explorer.WPF.Controls
             {
                 try
                 {
-                    MyConsoleControl.StopProcess();
+                    MyConsoleControl.Dispose();
                 }
                 catch (Exception) { /* Ignore errors */ }
             }
