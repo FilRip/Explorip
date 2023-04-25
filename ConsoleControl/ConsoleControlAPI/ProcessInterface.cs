@@ -1,8 +1,8 @@
 using System;
-using System.Text;
-using System.Diagnostics;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
 
 namespace ConsoleControlAPI
 {
@@ -16,7 +16,7 @@ namespace ConsoleControlAPI
     /// <summary>
     /// A class the wraps a process, allowing programmatic input and output.
     /// </summary>
-    public class ProcessInterface: IDisposable
+    public class ProcessInterface : IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
@@ -71,7 +71,7 @@ namespace ConsoleControlAPI
                     outputWorker.ReportProgress(0, builder.ToString());
                 } while (count > 0);
 
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(10);
             }
         }
 
@@ -101,10 +101,10 @@ namespace ConsoleControlAPI
             {
                 //  Any lines to read?
                 int count;
-                var buffer = new char[1024];
+                char[] buffer = new char[1024];
                 do
                 {
-                    var builder = new StringBuilder();
+                    StringBuilder builder = new();
                     count = errorReader.Read(buffer, 0, 1024);
                     builder.Append(buffer, 0, count);
                     errorWorker.ReportProgress(0, builder.ToString());
@@ -122,7 +122,7 @@ namespace ConsoleControlAPI
         public void StartProcess(string fileName, string arguments)
         {
             //  Create the process start info.
-            var processStartInfo = new ProcessStartInfo(fileName, arguments);
+            ProcessStartInfo processStartInfo = new(fileName, arguments);
             StartProcess(processStartInfo);
         }
 
@@ -324,27 +324,27 @@ namespace ConsoleControlAPI
         /// The current process.
         /// </summary>
         private Process process;
-        
+
         /// <summary>
         /// The input writer.
         /// </summary>
         private StreamWriter inputWriter;
-        
+
         /// <summary>
         /// The output reader.
         /// </summary>
         private TextReader outputReader;
-        
+
         /// <summary>
         /// The error reader.
         /// </summary>
         private TextReader errorReader;
-        
+
         /// <summary>
         /// The output worker.
         /// </summary>
         private BackgroundWorker outputWorker = new();
-        
+
         /// <summary>
         /// The error worker.
         /// </summary>
@@ -359,7 +359,7 @@ namespace ConsoleControlAPI
         /// Arguments sent to the current process.
         /// </summary>
         private string processArguments;
-        
+
         /// <summary>
         /// Occurs when process output is produced.
         /// </summary>
@@ -379,7 +379,7 @@ namespace ConsoleControlAPI
         /// Occurs when the process ends.
         /// </summary>
         public event ProcessEventHandler OnProcessExit;
-        
+
         /// <summary>
         /// Gets a value indicating whether this instance is process running.
         /// </summary>

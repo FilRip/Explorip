@@ -4,6 +4,8 @@ using Explorip.Helpers;
 using Microsoft.WindowsAPICodePack.Shell;
 
 using System.Drawing;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -138,6 +140,10 @@ namespace Explorip.Explorer.WPF.Controls
             {
                 SelectedIndex--;
                 e.Handled = true;
+            }
+            else if (SelectedItem is TabItemConsoleCommand tabConsoleCommand)
+            {
+                tabConsoleCommand.MyConsoleControl.Focus();
             }
         }
     }

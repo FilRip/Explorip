@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Documents;
 
 //  Notes: Many thanks to https://github.com/adamecr/RadProjectsExtension for this code!
@@ -59,7 +55,7 @@ namespace ConsoleControl.WPF
         /// <param name="richTextBox">Rich text box to work with</param>
         public static void SetCaretToEnd(this RichTextBox richTextBox)
         {
-        richTextBox.CaretPosition = richTextBox.GetEndPointer();
+            richTextBox.CaretPosition = richTextBox.GetEndPointer();
         }
     }
 }

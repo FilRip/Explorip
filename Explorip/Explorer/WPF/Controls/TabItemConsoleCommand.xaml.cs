@@ -25,7 +25,6 @@ namespace Explorip.Explorer.WPF.Controls
                 FileName = "cmd.exe",
             };
             MyConsoleControl.StartProcess(processStartInfo);
-            MyConsoleControl.Focus();
         }
 
         public TabItemConsoleCommandViewModel MyDataContext

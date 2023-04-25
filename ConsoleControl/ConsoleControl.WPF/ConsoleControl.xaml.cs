@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+
 using ConsoleControlAPI;
 
 namespace ConsoleControl.WPF
@@ -20,7 +21,7 @@ namespace ConsoleControl.WPF
         public ConsoleControl()
         {
             InitializeComponent();
-            
+
             //  Handle process events.
             processInterface.OnProcessOutput += ProcessInterface_OnProcessOutput;
             processInterface.OnProcessError += ProcessInterface_OnProcessError;
@@ -99,12 +100,12 @@ namespace ConsoleControl.WPF
         /// <param name="e">The <see cref="KeyEventArgs" /> instance containing the event data.</param>
         private void RichTextBoxConsole_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            var caretPosition = richTextBoxConsole.GetCaretPosition();
-            var delta = caretPosition - inputStartPos;
-            var inReadOnlyZone = delta < 0;
+            int caretPosition = richTextBoxConsole.GetCaretPosition();
+            int delta = caretPosition - inputStartPos;
+            bool inReadOnlyZone = delta < 0;
 
             //  If we're at the input point and it's backspace, bail.
-            if (inReadOnlyZone && e.Key == Key.Back)
+            if (delta == 0 && e.Key == Key.Back)
                 e.Handled = true;
 
             //  Are we in the read-only zone?
@@ -123,7 +124,7 @@ namespace ConsoleControl.WPF
             if (e.Key == Key.Return)
             {
                 //  Get the input.
-                var input = new TextRange(richTextBoxConsole.GetPointerAt(inputStartPos), richTextBoxConsole.Selection.Start).Text;
+                string input = new TextRange(richTextBoxConsole.GetPointerAt(inputStartPos), richTextBoxConsole.Selection.Start).Text;
 
                 //  Write the input (without echoing).
                 WriteInput(input, Colors.White, false);
@@ -144,12 +145,12 @@ namespace ConsoleControl.WPF
             RunOnUIDispatcher(() =>
             {
                 //  Write the output.
-                var range = new TextRange(richTextBoxConsole.GetEndPointer(), richTextBoxConsole.GetEndPointer())
+                TextRange range = new(richTextBoxConsole.GetEndPointer(), richTextBoxConsole.GetEndPointer())
                 {
                     Text = output
                 };
                 range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
-                
+
                 //  Record the new input start.
                 richTextBoxConsole.ScrollToEnd();
                 richTextBoxConsole.SetCaretToEnd();
@@ -249,7 +250,7 @@ namespace ConsoleControl.WPF
 
                 //  We're now running.
                 IsProcessRunning = true;
-                    
+
             });
         }
 
@@ -291,12 +292,12 @@ namespace ConsoleControl.WPF
         /// Current position that input starts at.
         /// </summary>
         private int inputStartPos;
-        
+
         /// <summary>
         /// The last input string (used so that we can make sure we don't echo input twice).
         /// </summary>
         private string lastInput;
-        
+
         /// <summary>
         /// Occurs when console output is produced.
         /// </summary>
@@ -306,8 +307,8 @@ namespace ConsoleControl.WPF
         /// Occurs when console input is produced.
         /// </summary>
         public event ProcessEventHandler OnProcessInput;
-          
-        private static readonly DependencyProperty ShowDiagnosticsProperty = 
+
+        private static readonly DependencyProperty ShowDiagnosticsProperty =
             DependencyProperty.Register("ShowDiagnostics", typeof(bool), typeof(ConsoleControl),
             new PropertyMetadata(false, OnShowDiagnosticsChanged));
 
@@ -327,9 +328,9 @@ namespace ConsoleControl.WPF
         {
             // Empty by default
         }
-        
-        
-        private static readonly DependencyProperty IsInputEnabledProperty = 
+
+
+        private static readonly DependencyProperty IsInputEnabledProperty =
           DependencyProperty.Register("IsInputEnabled", typeof(bool), typeof(ConsoleControl),
           new PropertyMetadata(true));
 
@@ -341,10 +342,10 @@ namespace ConsoleControl.WPF
         /// </value>
         public bool IsInputEnabled
         {
-          get { return (bool)GetValue(IsInputEnabledProperty); }
-          set { SetValue(IsInputEnabledProperty, value); }
+            get { return (bool)GetValue(IsInputEnabledProperty); }
+            set { SetValue(IsInputEnabledProperty, value); }
         }
-        
+
         internal static readonly DependencyPropertyKey IsProcessRunningPropertyKey =
           DependencyProperty.RegisterReadOnly("IsProcessRunning", typeof(bool), typeof(ConsoleControl),
           new PropertyMetadata(false));
