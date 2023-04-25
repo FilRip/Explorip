@@ -374,5 +374,10 @@ namespace ConsoleControl.WPF
         {
             get { return processInterface; }
         }
+
+        public void SetFocus()
+        {
+            richTextBoxConsole.Focus();
+        }
     }
 }

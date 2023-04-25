@@ -143,7 +143,11 @@ namespace Explorip.Explorer.WPF.Controls
             }
             else if (SelectedItem is TabItemConsoleCommand tabConsoleCommand)
             {
-                tabConsoleCommand.MyConsoleControl.Focus();
+                Application.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    Thread.Sleep(100);
+                    tabConsoleCommand.MyConsoleControl.SetFocus();
+                }, System.Windows.Threading.DispatcherPriority.Background);
             }
         }
     }
