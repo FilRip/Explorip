@@ -23,7 +23,7 @@
         FontFamily="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type consoleControl:ConsoleControl}}, Path=FontFamily}"
         Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type consoleControl:ConsoleControl}}, Path=Background}"
         FontSize="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type consoleControl:ConsoleControl}}, Path=FontSize}"
-        CaretBrush="White">
+        CaretBrush="White" PreviewKeyDown="RichTextBoxConsole_PreviewKeyDown" KeyUp="RichTextBoxConsole_KeyUp" VerticalScrollBarVisibility="Visible">
         <RichTextBox.Resources>
             <Style TargetType="{x:Type Paragraph}">
                 <Setter Property="Margin" Value="0" />

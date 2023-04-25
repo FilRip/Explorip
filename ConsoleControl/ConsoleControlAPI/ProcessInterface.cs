@@ -18,6 +18,9 @@ namespace ConsoleControlAPI
     /// </summary>
     public class ProcessInterface : IDisposable
     {
+        private const int BUFFER_SIZE = 256;
+        private readonly object _lockInput = new();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
         /// </summary>
@@ -62,11 +65,11 @@ namespace ConsoleControlAPI
             {
                 //  Any lines to read?
                 int count;
-                char[] buffer = new char[1024];
+                char[] buffer = new char[BUFFER_SIZE];
                 do
                 {
                     StringBuilder builder = new();
-                    count = outputReader.Read(buffer, 0, 1024);
+                    count = outputReader.Read(buffer, 0, BUFFER_SIZE);
                     builder.Append(buffer, 0, count);
                     outputWorker.ReportProgress(0, builder.ToString());
                 } while (count > 0);
@@ -101,11 +104,11 @@ namespace ConsoleControlAPI
             {
                 //  Any lines to read?
                 int count;
-                char[] buffer = new char[1024];
+                char[] buffer = new char[BUFFER_SIZE];
                 do
                 {
                     StringBuilder builder = new();
-                    count = errorReader.Read(buffer, 0, 1024);
+                    count = errorReader.Read(buffer, 0, BUFFER_SIZE);
                     builder.Append(buffer, 0, count);
                     errorWorker.ReportProgress(0, builder.ToString());
                 } while (count > 0);
@@ -259,10 +262,13 @@ namespace ConsoleControlAPI
         /// <param name="input">The input.</param>
         public void WriteInput(string input)
         {
-            if (IsProcessRunning)
+            lock (_lockInput)
             {
-                inputWriter.WriteLine(input);
-                inputWriter.Flush();
+                if (IsProcessRunning)
+                {
+                    inputWriter.WriteLine(input);
+                    inputWriter.Flush();
+                }
             }
         }
 

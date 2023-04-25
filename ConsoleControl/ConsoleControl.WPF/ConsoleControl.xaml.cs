@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -15,6 +16,9 @@ namespace ConsoleControl.WPF
     /// </summary>
     public partial class ConsoleControl : UserControl
     {
+        private readonly object _lockInput = new();
+        private int offset = 6;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConsoleControl"/> class.
         /// </summary>
@@ -27,9 +31,6 @@ namespace ConsoleControl.WPF
             processInterface.OnProcessError += ProcessInterface_OnProcessError;
             processInterface.OnProcessInput += ProcessInterface_OnProcessInput;
             processInterface.OnProcessExit += ProcessInterface_OnProcessExit;
-
-            //  Wait for key down messages on the rich text box.
-            richTextBoxConsole.PreviewKeyDown += RichTextBoxConsole_PreviewKeyDown;
         }
 
         /// <summary>
@@ -100,34 +101,32 @@ namespace ConsoleControl.WPF
         /// <param name="e">The <see cref="KeyEventArgs" /> instance containing the event data.</param>
         private void RichTextBoxConsole_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            int caretPosition = richTextBoxConsole.GetCaretPosition();
-            int delta = caretPosition - inputStartPos;
-            bool inReadOnlyZone = delta < 0;
-
-            //  If we're at the input point and it's backspace, bail.
-            if (delta == 0 && e.Key == Key.Back)
-                e.Handled = true;
-
-            //  Are we in the read-only zone?
-            //  Allow arrows and Ctrl-C.
-            if (inReadOnlyZone && (!(e.Key == Key.Left ||
-                e.Key == Key.Right ||
-                e.Key == Key.Up ||
-                e.Key == Key.Down ||
-                (e.Key == Key.C && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) ||
-                e.Key == Key.Tab)))
+            lock (_lockInput)
             {
-                e.Handled = true;
-            }
+                int caretPosition = richTextBoxConsole.GetCaretPosition();
+                int delta = caretPosition - inputStartPos;
+                bool inReadOnlyZone = delta < 0;
 
-            //  Is it the return key?
-            if (e.Key == Key.Return)
-            {
-                //  Get the input.
-                string input = new TextRange(richTextBoxConsole.GetPointerAt(inputStartPos), richTextBoxConsole.Selection.Start).Text;
+                //  If we're at the input point and it's backspace, bail.
+                if (delta == 0 && e.Key == Key.Back)
+                    e.Handled = true;
 
-                //  Write the input (without echoing).
-                WriteInput(input, Colors.White, false);
+                //  Are we in the read-only zone?
+                //  Allow arrows and Ctrl-C.
+                if (inReadOnlyZone && (!(e.Key == Key.Left ||
+                    e.Key == Key.Right ||
+                    e.Key == Key.Up ||
+                    e.Key == Key.Down ||
+                    (e.Key == Key.C && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) ||
+                    e.Key == Key.Tab)))
+                {
+                    e.Handled = true;
+                }
+
+                if (e.Key == Key.Return)
+                {
+                    richTextBoxConsole.SetCaretToEnd();
+                }
             }
         }
 
@@ -378,6 +377,24 @@ namespace ConsoleControl.WPF
         public void SetFocus()
         {
             richTextBoxConsole.Focus();
+        }
+
+        private void RichTextBoxConsole_KeyUp(object sender, KeyEventArgs e)
+        {
+            //  Is it the return key?
+            if (e.Key == Key.Return)
+            {
+                int caretPosition = richTextBoxConsole.GetCaretPosition();
+                int delta = caretPosition - inputStartPos;
+                //  Get the input.
+                string rtb = new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.Document.ContentEnd).Text.Trim();
+                string cmd = rtb.Substring(rtb.Length - delta + offset);
+                if (offset == 6)
+                    offset = 4;
+                Console.WriteLine($"CaretPosition={caretPosition}, delta={delta}, inputStartPos={inputStartPos}, Text={cmd}, RtbLength={new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.Document.ContentEnd).Text.Length}");
+                //  Write the input (without echoing).
+                WriteInput(cmd, Colors.White, false);
+            }
         }
     }
 }
