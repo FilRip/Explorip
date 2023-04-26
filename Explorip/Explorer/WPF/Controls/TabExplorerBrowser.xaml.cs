@@ -117,21 +117,6 @@ namespace Explorip.Explorer.WPF.Controls
             }
         }
 
-        private void TabItem_Drop(object sender, DragEventArgs e)
-        {
-            if (e.Source is TabItem tabItemTarget &&
-                e.Data.GetData(typeof(TabItem)) is TabItem tabItemSource &&
-                !tabItemTarget.Equals(tabItemSource) &&
-                tabItemTarget.Parent is TabControl tabControl)
-            {
-                int targetIndex = tabControl.Items.IndexOf(tabItemTarget);
-
-                tabControl.Items.Remove(tabItemSource);
-                tabControl.Items.Insert(targetIndex, tabItemSource);
-                tabItemSource.IsSelected = true;
-            }
-        }
-
         #endregion
 
         private void MyTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)

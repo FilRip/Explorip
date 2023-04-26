@@ -17,6 +17,8 @@ namespace ConsoleControl.WPF
         #region Fields
 
         private readonly object _lockInput;
+        private readonly object _lockOutput;
+
         private int offset;
         /// <summary>
         /// The internal process interface used to interface with the process.
@@ -44,6 +46,7 @@ namespace ConsoleControl.WPF
         {
             InitializeComponent();
             _lockInput = new object();
+            _lockOutput = new object();
             offset = 6;
             processInterface = new ProcessInterface();
             IsInputEnabled = true;
@@ -154,7 +157,7 @@ namespace ConsoleControl.WPF
                     e.Handled = true;
                 }
 
-                if (e.Key == Key.Left && ((caretPosition + (offset - 4)) <= inputStartPos))
+                if (e.Key == Key.Left && delta <= 0)
                 {
                     e.Handled = true;
                 }
@@ -162,6 +165,12 @@ namespace ConsoleControl.WPF
                 if (e.Key == Key.Home)
                 {
                     richTextBoxConsole.CaretPosition = richTextBoxConsole.GetPointerAt(inputStartPos);
+                    e.Handled = true;
+                }
+
+                if (e.Key == Key.Tab)
+                {
+                    processInterface.SendKey((char)9);
                     e.Handled = true;
                 }
 
@@ -191,7 +200,9 @@ namespace ConsoleControl.WPF
                 int delta = caretPosition - inputStartPos;
                 //  Get the input.
                 string rtb = new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.Document.ContentEnd).Text.Trim();
-                string cmd = rtb.Substring(rtb.Length - delta + offset);
+                string cmd = "";
+                if (rtb.Length >= rtb.Length - delta + offset)
+                    cmd = rtb.Substring(rtb.Length - delta + offset);
                 if (offset == 6)
                     offset = 4;
                 //  Write the input (without echoing).
@@ -247,17 +258,20 @@ namespace ConsoleControl.WPF
 
             RunOnUIDispatcher(() =>
             {
-                //  Write the output.
-                TextRange range = new(richTextBoxConsole.GetEndPointer(), richTextBoxConsole.GetEndPointer())
+                lock (_lockOutput)
                 {
-                    Text = output
-                };
-                range.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+                    //  Write the output.
+                    TextRange range = new(richTextBoxConsole.GetEndPointer(), richTextBoxConsole.GetEndPointer())
+                    {
+                        Text = output
+                    };
+                    range.ApplyPropertyValue(TextElement.ForegroundProperty, color);
 
-                //  Record the new input start.
-                richTextBoxConsole.ScrollToEnd();
-                richTextBoxConsole.SetCaretToEnd();
-                inputStartPos = richTextBoxConsole.GetCaretPosition();
+                    //  Record the new input start.
+                    richTextBoxConsole.ScrollToEnd();
+                    richTextBoxConsole.SetCaretToEnd();
+                    inputStartPos = richTextBoxConsole.GetCaretPosition();
+                }
             });
         }
 

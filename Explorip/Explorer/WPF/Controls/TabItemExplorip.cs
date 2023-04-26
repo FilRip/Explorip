@@ -3,16 +3,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Microsoft.WindowsAPICodePack.Shell;
+
 namespace Explorip.Explorer.WPF.Controls
 {
     public abstract class TabItemExplorip : TabItem, IDisposable
     {
         protected void InitializeExplorip()
         {
+            AllowDrop = true;
             HeaderWithCloseButton closableTabHeader = new();
             Header = closableTabHeader;
             MyHeader.DragOver += MyHeader_DragOver;
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
+            Drop += TabItem_Drop;
         }
 
         private void MyHeader_DragOver(object sender, DragEventArgs e)
@@ -79,6 +83,52 @@ namespace Explorip.Explorer.WPF.Controls
             }
         }
 
+        private void TabItem_Drop(object sender, DragEventArgs e)
+        {
+            TabItemExplorip tabItemTarget = null;
+            if (e.Source is TabItemExplorip browser)
+                tabItemTarget = browser;
+            else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorip browser2)
+                tabItemTarget = browser2;
+
+#pragma warning disable IDE0074, IDE0270 // Utiliser une assignation composée
+            TabItemExplorip tabItemSource = (TabItemExplorerBrowser)e.Data.GetData(typeof(TabItemExplorerBrowser));
+            if (tabItemSource == null)
+                tabItemSource = (TabItemConsoleCommand)e.Data.GetData(typeof(TabItemConsoleCommand));
+#pragma warning restore IDE0074, IDE0270 // Utiliser une assignation composée
+
+            if (tabItemTarget != null &&
+                tabItemSource != null &&
+                !tabItemTarget.Equals(tabItemSource) &&
+                tabItemTarget.Parent is TabExplorerBrowser tabControlTarget)
+            {
+                TabExplorerBrowser tabControlSource = (TabExplorerBrowser)tabItemSource.Parent;
+                int targetIndex = tabControlTarget.Items.IndexOf(tabItemTarget);
+
+                if (tabControlTarget == tabControlSource)
+                {
+                    tabControlTarget.Items.Remove(tabItemSource);
+                    tabControlTarget.Items.Insert(targetIndex, tabItemSource);
+                    tabItemSource.IsSelected = true;
+                }
+                else
+                {
+                    if (tabControlSource.Items.Count > 1 || tabControlSource.AllowCloseLastTab)
+                        tabControlSource.Items.Remove(tabItemSource);
+                    else
+                    {
+                        ShellObject repertoire = (ShellObject)KnownFolders.Desktop;
+                        tabItemSource = new TabItemExplorerBrowser();
+                        ((TabItemExplorerBrowser)tabItemSource).Navigation(repertoire);
+                    }
+                    tabControlTarget.Items.Insert(targetIndex, tabItemSource);
+                    tabItemSource.IsSelected = true;
+                    tabControlTarget.HideTab();
+                    tabControlSource.HideTab();
+                }
+            }
+        }
+
         private bool disposedValue;
         public bool IsDisposed
         {
@@ -93,6 +143,7 @@ namespace Explorip.Explorer.WPF.Controls
                 {
                     MyTabControl.Items.Remove(this);
                     MyHeader.DragOver -= MyHeader_DragOver;
+                    Drop -= TabItem_Drop;
                     MyHeader.Label_TabTitle.SizeChanged -= TabTitle_SizeChanged;
                     Header = null;
                 }

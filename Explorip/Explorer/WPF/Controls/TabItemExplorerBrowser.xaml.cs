@@ -264,52 +264,6 @@ namespace Explorip.Explorer.WPF.Controls
             }
         }
 
-        private void TabItem_Drop(object sender, DragEventArgs e)
-        {
-            TabItemExplorip tabItemTarget = null;
-            if (e.Source is TabItemExplorip browser)
-                tabItemTarget = browser;
-            else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorip browser2)
-                tabItemTarget = browser2;
-
-#pragma warning disable IDE0074, IDE0270 // Utiliser une assignation composée
-            TabItemExplorip tabItemSource = (TabItemExplorerBrowser)e.Data.GetData(typeof(TabItemExplorerBrowser));
-            if (tabItemSource == null)
-                tabItemSource = (TabItemConsoleCommand)e.Data.GetData(typeof(TabItemConsoleCommand));
-#pragma warning restore IDE0074, IDE0270 // Utiliser une assignation composée
-
-            if (tabItemTarget != null &&
-                tabItemSource != null &&
-                !tabItemTarget.Equals(tabItemSource) &&
-                tabItemTarget.Parent is TabExplorerBrowser tabControlTarget)
-            {
-                TabExplorerBrowser tabControlSource = (TabExplorerBrowser)tabItemSource.Parent;
-                int targetIndex = tabControlTarget.Items.IndexOf(tabItemTarget);
-
-                if (tabControlTarget == tabControlSource)
-                {
-                    tabControlTarget.Items.Remove(tabItemSource);
-                    tabControlTarget.Items.Insert(targetIndex, tabItemSource);
-                    tabItemSource.IsSelected = true;
-                }
-                else
-                {
-                    if (tabControlSource.Items.Count > 1 || tabControlSource.AllowCloseLastTab)
-                        tabControlSource.Items.Remove(tabItemSource);
-                    else
-                    {
-                        ShellObject repertoire = (ShellObject)KnownFolders.Desktop;
-                        tabItemSource = new TabItemExplorerBrowser();
-                        ((TabItemExplorerBrowser)tabItemSource).Navigation(repertoire);
-                    }
-                    tabControlTarget.Items.Insert(targetIndex, tabItemSource);
-                    tabItemSource.IsSelected = true;
-                    tabControlTarget.HideTab();
-                    tabControlSource.HideTab();
-                }
-            }
-        }
-
         #endregion
 
         #region Search file/folder

@@ -13,7 +13,6 @@
         <Style TargetType="TabItem">
             <Setter Property="AllowDrop" Value="True"/>
             <EventSetter Event="PreviewMouseMove" Handler="TabItem_PreviewMouseMove"/>
-            <EventSetter Event="Drop" Handler="TabItem_Drop"/>
         </Style>
     </TabControl.Resources>
 </TabControl>
