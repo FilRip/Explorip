@@ -136,5 +136,11 @@ namespace Explorip.Explorer.WPF.Controls
                 previousTabControl.HideTab();
             }
         }
+
+        private void NewPowerShellTab_Click(object sender, RoutedEventArgs e)
+        {
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand("powershell.exe"));
+            MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
+        }
     }
 }

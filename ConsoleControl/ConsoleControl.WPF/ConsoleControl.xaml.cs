@@ -47,6 +47,7 @@ namespace ConsoleControl.WPF
             offset = 6;
             processInterface = new ProcessInterface();
             IsInputEnabled = true;
+            _currentPosInHistoric = -1;
 
             //  Handle process events.
             processInterface.OnProcessOutput += ProcessInterface_OnProcessOutput;
@@ -67,7 +68,7 @@ namespace ConsoleControl.WPF
         private void ProcessInterface_OnProcessError(object sender, ProcessEventArgs args)
         {
             //  Write the output, in red
-            WriteOutput(args.Content, Colors.Red);
+            WriteOutput(args.Content, new SolidColorBrush(Colors.Red));
 
             //  Fire the output event.
             FireProcessOutputEvent(args);
@@ -81,7 +82,7 @@ namespace ConsoleControl.WPF
         private void ProcessInterface_OnProcessOutput(object sender, ProcessEventArgs args)
         {
             //  Write the output, in white
-            WriteOutput(args.Content, Colors.White);
+            WriteOutput(args.Content, richTextBoxConsole.Foreground);
 
             //  Fire the output event.
             FireProcessOutputEvent(args);
@@ -110,7 +111,7 @@ namespace ConsoleControl.WPF
                 //  Are we showing diagnostics?
                 if (ShowDiagnostics)
                 {
-                    WriteOutput(Environment.NewLine + processInterface.ProcessFileName + " exited.", Color.FromArgb(255, 0, 255, 0));
+                    WriteOutput(Environment.NewLine + processInterface.ProcessFileName + " exited.", new SolidColorBrush(Color.FromArgb(255, 0, 255, 0)));
                 }
 
                 richTextBoxConsole.IsReadOnly = true;
@@ -141,12 +142,33 @@ namespace ConsoleControl.WPF
                 if (delta == 0 && e.Key == Key.Back)
                     e.Handled = true;
 
+                if (e.Key == Key.Up || e.Key == Key.Down)
+                {
+                    NavigateHistoric(e.Key);
+                    e.Handled = true;
+                }
+
+                if (e.Key == Key.Escape)
+                {
+                    SetCommand();
+                    e.Handled = true;
+                }
+
+                if (e.Key == Key.Left && ((caretPosition + (offset - 4)) <= inputStartPos))
+                {
+                    e.Handled = true;
+                }
+
+                if (e.Key == Key.Home)
+                {
+                    richTextBoxConsole.CaretPosition = richTextBoxConsole.GetPointerAt(inputStartPos);
+                    e.Handled = true;
+                }
+
                 //  Are we in the read-only zone?
                 //  Allow arrows and Ctrl-C.
                 if (inReadOnlyZone && (!(e.Key == Key.Left ||
                     e.Key == Key.Right ||
-                    e.Key == Key.Up ||
-                    e.Key == Key.Down ||
                     (e.Key == Key.C && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) ||
                     e.Key == Key.Tab)))
                 {
@@ -172,7 +194,6 @@ namespace ConsoleControl.WPF
                 string cmd = rtb.Substring(rtb.Length - delta + offset);
                 if (offset == 6)
                     offset = 4;
-                Console.WriteLine($"CaretPosition={caretPosition}, delta={delta}, inputStartPos={inputStartPos}, Text={cmd}, RtbLength={new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.Document.ContentEnd).Text.Length}");
                 //  Write the input (without echoing).
                 WriteInput(cmd, Colors.White, false);
             }
@@ -201,6 +222,9 @@ namespace ConsoleControl.WPF
                 //  Write the input.
                 processInterface.WriteInput(input);
 
+                if (!string.IsNullOrWhiteSpace(input) && _currentPosInHistoric >= 0)
+                    _currentPosInHistoric++;
+
                 //  Fire the event.
                 FireProcessInputEvent(new ProcessEventArgs(input));
             });
@@ -215,7 +239,7 @@ namespace ConsoleControl.WPF
         /// </summary>
         /// <param name="output">The output.</param>
         /// <param name="color">The color.</param>
-        public void WriteOutput(string output, Color color)
+        public void WriteOutput(string output, Brush color)
         {
             if (!string.IsNullOrEmpty(lastInput) &&
                 (output == lastInput || output.Replace("\r\n", "") == lastInput))
@@ -228,7 +252,7 @@ namespace ConsoleControl.WPF
                 {
                     Text = output
                 };
-                range.ApplyPropertyValue(TextElement.ForegroundProperty, new SolidColorBrush(color));
+                range.ApplyPropertyValue(TextElement.ForegroundProperty, color);
 
                 //  Record the new input start.
                 richTextBoxConsole.ScrollToEnd();
@@ -269,11 +293,11 @@ namespace ConsoleControl.WPF
             //  Are we showing diagnostics?
             if (ShowDiagnostics)
             {
-                WriteOutput("Preparing to run " + processStartInfo.FileName, Color.FromArgb(255, 0, 255, 0));
+                WriteOutput("Preparing to run " + processStartInfo.FileName, new SolidColorBrush(Color.FromArgb(255, 0, 255, 0)));
                 if (!string.IsNullOrEmpty(processStartInfo.Arguments))
-                    WriteOutput(" with arguments " + processStartInfo.Arguments + "." + Environment.NewLine, Color.FromArgb(255, 0, 255, 0));
+                    WriteOutput(" with arguments " + processStartInfo.Arguments + "." + Environment.NewLine, new SolidColorBrush(Color.FromArgb(255, 0, 255, 0)));
                 else
-                    WriteOutput("." + Environment.NewLine, Color.FromArgb(255, 0, 255, 0));
+                    WriteOutput("." + Environment.NewLine, new SolidColorBrush(Color.FromArgb(255, 0, 255, 0)));
             }
 
             //  Start the process.
@@ -403,6 +427,37 @@ namespace ConsoleControl.WPF
         public void SetBackground(Brush background)
         {
             richTextBoxConsole.Background = background;
+        }
+
+        #endregion
+
+        #region Historic manager
+
+        private int _currentPosInHistoric;
+        private void NavigateHistoric(Key key)
+        {
+            if (processInterface.HistoricCommands.Count == 0)
+                return;
+
+            if (key == Key.Up && _currentPosInHistoric < processInterface.HistoricCommands.Count - 1)
+                _currentPosInHistoric++;
+            if (key == Key.Down)
+                if (_currentPosInHistoric > 0)
+                    _currentPosInHistoric--;
+                else
+                {
+                    SetCommand();
+                    return;
+                }
+
+            SetCommand(processInterface.HistoricCommands[_currentPosInHistoric]);
+        }
+
+        private void SetCommand(string command = "")
+        {
+            richTextBoxConsole.Selection.Select(richTextBoxConsole.GetPointerAt(inputStartPos), richTextBoxConsole.Document.ContentEnd);
+            richTextBoxConsole.Selection.Text = command;
+            richTextBoxConsole.Selection.Select(richTextBoxConsole.Document.ContentEnd, richTextBoxConsole.Document.ContentEnd);
         }
 
         #endregion

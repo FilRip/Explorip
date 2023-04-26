@@ -271,7 +271,8 @@ namespace ConsoleControlAPI
             {
                 if (IsProcessRunning)
                 {
-                    _historicCommands.Insert(0, input);
+                    if (!string.IsNullOrWhiteSpace(input))
+                        _historicCommands.Insert(0, input);
                     inputWriter.WriteLine(input);
                     inputWriter.Flush();
                 }

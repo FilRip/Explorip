@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
+using System.Windows.Media;
 
 using Explorip.Explorer.WPF.ViewModels;
 
@@ -24,6 +25,11 @@ namespace Explorip.Explorer.WPF.Controls
                 StandardErrorEncoding = Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage),
                 FileName = commandLine,
             };
+            if (commandLine.StartsWith("powershell.exe"))
+            {
+                MyConsoleControl.SetBackground(Brushes.Blue);
+                MyConsoleControl.SetForeground(Brushes.Yellow);
+            }
             MyConsoleControl.StartProcess(processStartInfo);
         }
 

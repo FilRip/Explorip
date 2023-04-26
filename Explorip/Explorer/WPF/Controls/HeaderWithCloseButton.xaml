@@ -19,6 +19,7 @@
             <MenuItem Header="Fermer tous les onglets" Name="CloseAllTab" Click="CloseAllTab_Click"/>
             <Separator/>
             <MenuItem Header="Ouvrir une console/ligne de commande" Name="NewConsoleTab" Click="NewConsoleTab_Click"/>
+            <MenuItem Header="Ouvrir une console PowerShell" Name="NewPowerShellTab" Click="NewPowerShellTab_Click"/>
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid Margin="0">
