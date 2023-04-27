@@ -26,9 +26,9 @@ namespace Explorip.Explorer.WPF.Controls
             get { return (TabExplorerBrowser)MyTabItem.Parent; }
         }
 
-        private TabItemExplorip MyTabItem
+        private TabItem MyTabItem
         {
-            get { return (TabItemExplorip)Parent; }
+            get { return (TabItem)Parent; }
         }
 
         private bool _plusButton;
@@ -57,7 +57,7 @@ namespace Explorip.Explorer.WPF.Controls
             {
                 if (MyTabControl.Items.Count == 0)
                     return null;
-                return (TabItemExplorerBrowser)MyTabControl.SelectedItem;
+                return MyTabControl.SelectedItem as TabItemExplorerBrowser;
             }
         }
 
@@ -90,10 +90,11 @@ namespace Explorip.Explorer.WPF.Controls
         private void NewTabOther_Click(object sender, RoutedEventArgs e)
         {
             WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
+            ShellObject dir = CurrentTabExplorer?.ExplorerBrowser?.NavigationLog[CurrentTabExplorer.ExplorerBrowser.NavigationLogIndex] ?? (ShellObject)KnownFolders.Desktop;
             if (fenetre.LeftTab == MyTabControl)
-                fenetre.RightTab.AddNewTab(CurrentTabExplorer.ExplorerBrowser.NavigationLog[CurrentTabExplorer.ExplorerBrowser.NavigationLogIndex]);
+                fenetre.RightTab.AddNewTab(dir);
             else
-                fenetre.LeftTab.AddNewTab(CurrentTabExplorer.ExplorerBrowser.NavigationLog[CurrentTabExplorer.ExplorerBrowser.NavigationLogIndex]);
+                fenetre.LeftTab.AddNewTab(dir);
         }
 
         private void NewConsoleTab_Click(object sender, RoutedEventArgs e)
@@ -132,7 +133,8 @@ namespace Explorip.Explorer.WPF.Controls
                 if (MyTabControl.Items.Count == 2 && !MyTabControl.AllowCloseLastTab)
                     return;
                 TabExplorerBrowser previousTabControl = MyTabControl;
-                MyTabItem.Dispose();
+                if (MyTabItem is TabItemExplorip tab)
+                    tab.Dispose();
                 previousTabControl.HideTab();
             }
         }

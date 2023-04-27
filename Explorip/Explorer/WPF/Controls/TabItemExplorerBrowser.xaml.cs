@@ -249,23 +249,6 @@ namespace Explorip.Explorer.WPF.Controls
 
         #endregion
 
-        #region drag's drop tabitem in tabcontrol
-
-        private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Source is not TabItem tabItem)
-            {
-                return;
-            }
-
-            if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
-            {
-                DragDrop.DoDragDrop(tabItem, tabItem, DragDropEffects.All);
-            }
-        }
-
-        #endregion
-
         #region Search file/folder
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)

@@ -17,16 +17,7 @@ namespace Explorip.Explorer.WPF.Controls
             MyHeader.DragOver += MyHeader_DragOver;
             closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
             Drop += TabItem_Drop;
-        }
-
-        private void MyHeader_DragOver(object sender, DragEventArgs e)
-        {
-            TabItemExplorip tab = (TabItemExplorip)((HeaderWithCloseButton)e.Source).Parent;
-            if (MyTabControl.SelectedItem != tab &&
-                e.Data.GetData("FileDrop") != null)
-            {
-                MyTabControl.SelectedItem = tab;
-            }
+            PreviewMouseMove += TabItem_PreviewMouseMove;
         }
 
         private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -43,6 +34,8 @@ namespace Explorip.Explorer.WPF.Controls
                 MyHeader.Label_TabTitle.Content = newTitle;
         }
 
+        #region Properties
+
         protected HeaderWithCloseButton MyHeader
         {
             get { return (HeaderWithCloseButton)Header; }
@@ -52,6 +45,10 @@ namespace Explorip.Explorer.WPF.Controls
         {
             get { return (TabExplorerBrowser)Parent; }
         }
+
+        #endregion
+
+        #region Events for Close button
 
         protected override void OnSelected(RoutedEventArgs e)
         {
@@ -80,6 +77,33 @@ namespace Explorip.Explorer.WPF.Controls
             if (MyHeader != null && !IsSelected)
             {
                 MyHeader.ButtonClose.Visibility = Visibility.Hidden;
+            }
+        }
+
+        #endregion
+
+        #region Drag'n Drop
+
+        private void MyHeader_DragOver(object sender, DragEventArgs e)
+        {
+            TabItemExplorip tab = (TabItemExplorip)((HeaderWithCloseButton)e.Source).Parent;
+            if (MyTabControl.SelectedItem != tab &&
+                e.Data.GetData("FileDrop") != null)
+            {
+                MyTabControl.SelectedItem = tab;
+            }
+        }
+
+        private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Source is not TabItem tabItem)
+            {
+                return;
+            }
+
+            if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
+            {
+                DragDrop.DoDragDrop(tabItem, tabItem, DragDropEffects.All);
             }
         }
 
@@ -129,6 +153,10 @@ namespace Explorip.Explorer.WPF.Controls
             }
         }
 
+        #endregion
+
+        #region IDisposable
+
         private bool disposedValue;
         public bool IsDisposed
         {
@@ -144,6 +172,7 @@ namespace Explorip.Explorer.WPF.Controls
                     MyTabControl.Items.Remove(this);
                     MyHeader.DragOver -= MyHeader_DragOver;
                     Drop -= TabItem_Drop;
+                    PreviewMouseMove -= TabItem_PreviewMouseMove;
                     MyHeader.Label_TabTitle.SizeChanged -= TabTitle_SizeChanged;
                     Header = null;
                 }
@@ -157,5 +186,7 @@ namespace Explorip.Explorer.WPF.Controls
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }
