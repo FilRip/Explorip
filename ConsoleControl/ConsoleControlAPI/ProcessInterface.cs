@@ -23,7 +23,6 @@ namespace ConsoleControlAPI
         private const int BUFFER_SIZE = 256;
         private readonly object _lockInput;
         private readonly List<string> _historicCommands;
-        private IntPtr _inputConsoleHandle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
@@ -177,13 +176,6 @@ namespace ConsoleControlAPI
             processFileName = processStartInfo.FileName;
             processArguments = processStartInfo.Arguments;
 
-            while (!Imports.AttachConsole(process.Id))
-            {
-                Thread.Sleep(100);
-            }
-            _inputConsoleHandle = Imports.GetStdHandle(StdHandle.InputHandle);
-            Imports.FreeConsole();
-
             //  Create the readers and writers.
             inputWriter = process.StandardInput;
             outputReader = TextReader.Synchronized(process.StandardOutput);
@@ -284,27 +276,6 @@ namespace ConsoleControlAPI
                         _historicCommands.Insert(0, input);
                     inputWriter.WriteLine(input);
                     inputWriter.Flush();
-                }
-            }
-        }
-
-        public void SendKey(char input)
-        {
-            lock (_lockInput)
-            {
-                if (IsProcessRunning)
-                {
-                    if (input == (char)0)
-                        return;
-                    INPUT_RECORD[] buffer = new INPUT_RECORD[1];
-                    buffer[1].EventType = EventType.KEY_EVENT;
-                    buffer[1].KeyEvent = new KEY_EVENT_RECORD();
-                    buffer[1].KeyEvent.UnicodeChar = input;
-                    buffer[1].KeyEvent.bKeyDown = true;
-                    if (Imports.WriteConsoleInput(_inputConsoleHandle, buffer, 1, out uint nbKeySend))
-                        Console.WriteLine("touche envoyée : " + nbKeySend.ToString());
-                    else
-                        Console.WriteLine("Erreur à la tentative d'envoyer une touche : " + nbKeySend.ToString());
                 }
             }
         }

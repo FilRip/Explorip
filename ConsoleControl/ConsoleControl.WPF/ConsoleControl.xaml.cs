@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -51,6 +55,7 @@ namespace ConsoleControl.WPF
             processInterface = new ProcessInterface();
             IsInputEnabled = true;
             _currentPosInHistoric = -1;
+            _currentNumAC = -1;
 
             //  Handle process events.
             processInterface.OnProcessOutput += ProcessInterface_OnProcessOutput;
@@ -168,18 +173,11 @@ namespace ConsoleControl.WPF
                     e.Handled = true;
                 }
 
-                if (e.Key == Key.Tab)
-                {
-                    processInterface.SendKey((char)9);
-                    e.Handled = true;
-                }
-
                 //  Are we in the read-only zone?
                 //  Allow arrows and Ctrl-C.
                 if (inReadOnlyZone && (!(e.Key == Key.Left ||
                     e.Key == Key.Right ||
-                    (e.Key == Key.C && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) ||
-                    e.Key == Key.Tab)))
+                    (e.Key == Key.C && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)))))
                 {
                     e.Handled = true;
                 }
@@ -235,10 +233,40 @@ namespace ConsoleControl.WPF
 
                 if (!string.IsNullOrWhiteSpace(input) && _currentPosInHistoric >= 0)
                     _currentPosInHistoric++;
+                _currentNumAC = -1;
 
                 //  Fire the event.
                 FireProcessInputEvent(new ProcessEventArgs(input));
             });
+        }
+
+        #endregion
+
+        #region Auto completion
+
+        private int _currentNumAC;
+        private void RichTextBoxConsole_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Tab)
+            {
+                string rtb = new TextRange(richTextBoxConsole.Document.ContentStart, richTextBoxConsole.GetPointerAt(inputStartPos)).Text.Trim();
+                int posLastLine = rtb.LastIndexOf(Environment.NewLine) + 2;
+                string currentDir = rtb.Substring(posLastLine);
+                currentDir = currentDir.Substring(0, currentDir.Length - 1);
+                DirectoryInfo dirInfo = new(currentDir);
+                List<string> possibilities = new();
+                possibilities.AddRange(dirInfo.GetDirectories().Select(dir => dir.Name));
+                possibilities.AddRange(dirInfo.GetFiles().Select(file => file.Name));
+                if (possibilities.Count == 0)
+                    return;
+                possibilities.Sort();
+                _currentNumAC++;
+                if (_currentNumAC >= possibilities.Count)
+                    _currentNumAC = 0;
+                richTextBoxConsole.CaretPosition.InsertTextInRun(possibilities[_currentNumAC]);
+                richTextBoxConsole.CaretPosition = richTextBoxConsole.GetPointerAt(richTextBoxConsole.GetCaretPosition() + possibilities[_currentNumAC].Length);
+                e.Handled = true;
+            }
         }
 
         #endregion

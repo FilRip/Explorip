@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+using ConsoleControlAPI;
+using Explorip.WinAPI.Modeles;
+
 namespace Explorip.WinAPI
 {
     public static class Kernel32
@@ -16,5 +19,21 @@ namespace Explorip.WinAPI
 
         [DllImport("Kernel32.dll", SetLastError = true)]
         internal static extern bool FreeLibrary(IntPtr hModule);
+
+        [DllImport("kernel32.dll", EntryPoint = "WriteConsoleInputW", CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern bool WriteConsoleInput(
+                IntPtr hConsoleInput,
+                InputRecord[] lpBuffer,
+                uint nLength,
+                out uint lpNumberOfEventsWritten);
+
+        [DllImport("kernel32.dll", EntryPoint = "AttachConsole", SetLastError = true)]
+        internal static extern bool AttachConsole(int IdProcessus);
+
+        [DllImport("kernel32.dll", EntryPoint = "FreeConsole", SetLastError = true)]
+        internal static extern bool FreeConsole();
+
+        [DllImport("kernel32")]
+        internal static extern IntPtr GetStdHandle(StdHandle index);
     }
 }

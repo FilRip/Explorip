@@ -19,7 +19,7 @@
     
     <!-- The internal rich text box for the console. -->
     <RichTextBox 
-        x:Name="richTextBoxConsole" Foreground="White" AcceptsTab="True"
+        x:Name="richTextBoxConsole" Foreground="White" AcceptsTab="True" PreviewKeyUp="RichTextBoxConsole_PreviewKeyUp"
         FontFamily="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type consoleControl:ConsoleControl}}, Path=FontFamily}"
         Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type consoleControl:ConsoleControl}}, Path=Background}"
         FontSize="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type consoleControl:ConsoleControl}}, Path=FontSize}"
