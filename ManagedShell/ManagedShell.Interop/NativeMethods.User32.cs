@@ -3024,6 +3024,9 @@ namespace ManagedShell.Interop
         [DllImport(User32_DllName)]
         internal static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lpRect, MonitorEnumProc callback, int dwData);
 
+        [DllImport(User32_DllName)]
+        internal static extern short GetKeyState(VK nVirtKey);
+
         public enum VK
         {
             NONE = 0x0,
