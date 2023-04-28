@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 using ConsoleControlAPI;
 
@@ -38,6 +42,7 @@ namespace ConsoleControl.WPF
         /// The last input string (used so that we can make sure we don't echo input twice).
         /// </summary>
         private string lastInput;
+        private Brush _foregroundColor;
 
         #endregion
 
@@ -56,6 +61,8 @@ namespace ConsoleControl.WPF
             IsInputEnabled = true;
             _currentPosInHistoric = -1;
             _currentNumAC = -1;
+            DataContext = this;
+            _foregroundColor = Brushes.White;
 
             //  Handle process events.
             processInterface.OnProcessOutput += ProcessInterface_OnProcessOutput;
@@ -75,11 +82,14 @@ namespace ConsoleControl.WPF
         /// <param name="args">The <see cref="ProcessEventArgs"/> instance containing the event data.</param>
         private void ProcessInterface_OnProcessError(object sender, ProcessEventArgs args)
         {
-            //  Write the output, in red
-            WriteOutput(args.Content, new SolidColorBrush(Colors.Red));
+            lock (_lockOutput)
+            {
+                //  Write the output, in red
+                WriteOutput(args.Content, new SolidColorBrush(Colors.Red));
 
-            //  Fire the output event.
-            FireProcessOutputEvent(args);
+                //  Fire the output event.
+                FireProcessOutputEvent(args);
+            }
         }
 
         /// <summary>
@@ -89,11 +99,14 @@ namespace ConsoleControl.WPF
         /// <param name="args">The <see cref="ProcessEventArgs"/> instance containing the event data.</param>
         private void ProcessInterface_OnProcessOutput(object sender, ProcessEventArgs args)
         {
-            //  Write the output, in white
-            WriteOutput(args.Content, richTextBoxConsole.Foreground);
+            lock (_lockOutput)
+            {
+                //  Write the output, in white
+                WriteOutput(args.Content, _foregroundColor);
 
-            //  Fire the output event.
-            FireProcessOutputEvent(args);
+                //  Fire the output event.
+                FireProcessOutputEvent(args);
+            }
         }
 
         /// <summary>
@@ -286,20 +299,17 @@ namespace ConsoleControl.WPF
 
             RunOnUIDispatcher(() =>
             {
-                lock (_lockOutput)
+                //  Write the output.
+                TextRange range = new(richTextBoxConsole.GetEndPointer(), richTextBoxConsole.GetEndPointer())
                 {
-                    //  Write the output.
-                    TextRange range = new(richTextBoxConsole.GetEndPointer(), richTextBoxConsole.GetEndPointer())
-                    {
-                        Text = output
-                    };
-                    range.ApplyPropertyValue(TextElement.ForegroundProperty, color);
+                    Text = output
+                };
+                range.ApplyPropertyValue(TextElement.ForegroundProperty, color);
 
-                    //  Record the new input start.
-                    richTextBoxConsole.ScrollToEnd();
-                    richTextBoxConsole.SetCaretToEnd();
-                    inputStartPos = richTextBoxConsole.GetCaretPosition();
-                }
+                //  Record the new input start.
+                richTextBoxConsole.ScrollToEnd();
+                richTextBoxConsole.SetCaretToEnd();
+                inputStartPos = richTextBoxConsole.GetCaretPosition();
             });
         }
 
@@ -365,6 +375,10 @@ namespace ConsoleControl.WPF
             //  Stop the interface.
             processInterface.StopProcess();
         }
+
+        #endregion
+
+        #region ConsoleControl events
 
         /// <summary>
         /// Fires the console output event.
@@ -448,9 +462,9 @@ namespace ConsoleControl.WPF
         /// Runs the on UI dispatcher.
         /// </summary>
         /// <param name="action">The action.</param>
-        private void RunOnUIDispatcher(Action action)
+        private void RunOnUIDispatcher(Action action, bool forceBeginInvoke = false)
         {
-            if (Dispatcher.CheckAccess())
+            if (Dispatcher.CheckAccess() && !forceBeginInvoke)
             {
                 //  Invoke the action.
                 action();
@@ -463,6 +477,7 @@ namespace ConsoleControl.WPF
 
         public void SetForeground(Brush foreground)
         {
+            _foregroundColor = foreground;
             richTextBoxConsole.Foreground = foreground;
         }
 
