@@ -20,13 +20,13 @@ namespace ConsoleControlAPI
     /// </summary>
     public class ProcessInterface : IDisposable
     {
-        private const int BUFFER_SIZE = 256;
+        private const int BUFFER_SIZE = 1;
         private readonly object _lockInput;
         private readonly List<string> _historicCommands;
         private readonly object _lockOutput;
         private readonly StringBuilder _builder;
         private readonly Thread _threadDetectEnd;
-        private bool _waitEnd;
+        private readonly AutoResetEvent _eventDetectEnd;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
@@ -51,6 +51,7 @@ namespace ConsoleControlAPI
             _builder = new StringBuilder();
             _threadDetectEnd = new(new ThreadStart(DetectEnd));
             _threadDetectEnd.Start();
+            _eventDetectEnd = new(true);
         }
 
         /// <summary>
@@ -60,15 +61,8 @@ namespace ConsoleControlAPI
         /// <param name="e">The <see cref="ProgressChangedEventArgs"/> instance containing the event data.</param>
         private void OutputWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            lock (_lockOutput)
-            {
-                //  We must be passed a string in the user state.
-                if (e.UserState is string)
-                {
-                    //  Fire the output event.
-                    FireProcessOutputEvent(e.UserState as string);
-                }
-            }
+            //  Fire the output event.
+            FireProcessOutputEvent(e.UserState.ToString());
         }
 
         /// <summary>
@@ -78,38 +72,34 @@ namespace ConsoleControlAPI
         /// <param name="e">The <see cref="DoWorkEventArgs"/> instance containing the event data.</param>
         private void OutputWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            int count;
+            char[] buffer = new char[BUFFER_SIZE];
+
             while (outputWorker?.CancellationPending == false)
             {
-                //  Any lines to read?
-                int caractere;
                 do
                 {
                     if (outputReader == null)
                         break;
-                    _waitEnd = true;
-                    caractere = outputReader.Read();
-                    _waitEnd = false;
-                    if (caractere > 0)
+
+                    _eventDetectEnd.Reset();
+                    count = outputReader.Read(buffer, 0, BUFFER_SIZE);
+                    _eventDetectEnd.Set();
+                    if (count > 0)
                     {
-                        if (caractere == 10)
+                        lock (_lockOutput)
                         {
-                            outputWorker?.ReportProgress(0, _builder.ToString() + Environment.NewLine);
-                            _builder.Clear();
+                            if (BUFFER_SIZE > 1 || buffer[0] != (char)13)
+                                _builder.Append(buffer, 0, count);
+                            if (_builder.ToString().EndsWith(Environment.NewLine))
+                            {
+                                outputWorker?.ReportProgress(0, _builder.ToString());
+                                _builder.Clear();
+                                Thread.Sleep(10);
+                            }
                         }
-                        else if (caractere != 13)
-                            _builder.Append((char)caractere);
                     }
-                    else if (_builder.Length > 0)
-                    {
-                        outputWorker?.ReportProgress(0, _builder.ToString());
-                        _builder.Clear();
-                    }
-                } while (caractere > 0);
-                if (_builder.Length > 0)
-                {
-                    outputWorker?.ReportProgress(0, _builder.ToString() + Environment.NewLine);
-                    _builder.Clear();
-                }
+                } while (count > 0);
                 Thread.Sleep(10);
             }
         }
@@ -118,24 +108,33 @@ namespace ConsoleControlAPI
         {
             while (true)
             {
-                string contentBefore;
-                string contentAfter;
-
                 try
                 {
-                    if (outputWorker?.CancellationPending == false)
+                    if (IsProcessRunning && outputWorker?.CancellationPending == false)
                     {
-                        if (IsProcessRunning)
+                        if (!_eventDetectEnd.WaitOne(500))
                         {
-                            if (_builder.Length > 0 && _waitEnd)
+                            lock (_lockOutput)
                             {
-                                contentBefore = _builder.ToString();
-                                Thread.Sleep(100);
-                                contentAfter = _builder.ToString();
-                                if (contentAfter == contentBefore)
+                                if (_builder.Length > 0)
                                 {
+                                    Console.WriteLine("DetectEnd wait read : " + _builder.ToString());
+                                    outputWorker?.ReportProgress(0, _builder.ToString());
                                     _builder.Clear();
-                                    FireProcessOutputEvent(contentAfter);
+                                    Thread.Sleep(10);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            lock (_lockOutput)
+                            {
+                                if (_builder.Length >= BUFFER_SIZE)
+                                {
+                                    Console.WriteLine("DetectEnd buffer size reach : " + _builder.ToString());
+                                    outputWorker?.ReportProgress(0, _builder.ToString());
+                                    _builder.Clear();
+                                    Thread.Sleep(10);
                                 }
                             }
                         }
@@ -157,15 +156,8 @@ namespace ConsoleControlAPI
         /// <param name="e">The <see cref="ProgressChangedEventArgs"/> instance containing the event data.</param>
         private void ErrorWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            lock (_lockOutput)
-            {
-                //  The userstate must be a string.
-                if (e.UserState is string)
-                {
-                    //  Fire the error event.
-                    FireProcessErrorEvent(e.UserState as string);
-                }
-            }
+            //  Fire the error event.
+            FireProcessErrorEvent((string)e.UserState);
         }
 
         /// <summary>
@@ -406,6 +398,7 @@ namespace ConsoleControlAPI
                 _historicCommands?.Clear();
                 if (_threadDetectEnd != null && _threadDetectEnd.IsAlive)
                     _threadDetectEnd.Abort();
+                _eventDetectEnd.Dispose();
                 disposedValue = true;
             }
         }

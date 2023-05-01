@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Version>5.0</Version>
     <Description>C# wrapper for IVirtualDesktopManager on Windows 10 and 11.</Description>

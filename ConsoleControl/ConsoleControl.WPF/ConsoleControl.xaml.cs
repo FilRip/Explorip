@@ -294,8 +294,16 @@ namespace ConsoleControl.WPF
         public void WriteOutput(string output, Brush color)
         {
             if (!string.IsNullOrEmpty(lastInput) &&
-                (output == lastInput || output.Replace("\r\n", "") == lastInput))
+                (output == lastInput || output.Trim() == lastInput))
+            {
+                lastInput = null;
                 return;
+            }
+
+            if (!string.IsNullOrEmpty(lastInput) && output.StartsWith(lastInput + Environment.NewLine))
+                output = output.Substring(lastInput.Length).TrimStart();
+
+            lastInput = null;
 
             RunOnUIDispatcher(() =>
             {

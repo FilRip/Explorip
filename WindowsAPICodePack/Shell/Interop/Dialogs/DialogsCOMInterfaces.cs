@@ -14,7 +14,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
     // Disable warning if a method declaration hides another inherited from a parent COM interface
     // To successfully import a COM interface, all inherited methods need to be declared again with 
     // the exception of those already declared in "IUnknown"
-#pragma warning disable 0108
+#pragma warning disable CS0108, IDE0079
 
     [ComImport(),
     Guid(ShellIidGuid.IFileDialog),
@@ -504,6 +504,6 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             [In()] int dwIDCtl);
     }
     // Restore the warning
-#pragma warning restore 0108
+#pragma warning restore CS0108, IDE0079
 
 }

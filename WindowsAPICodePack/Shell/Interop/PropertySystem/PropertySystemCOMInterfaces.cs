@@ -11,7 +11,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
     // Disable warning if a method declaration hides another inherited from a parent COM interface
     // To successfully import a COM interface, all inherited methods need to be declared again with 
     // the exception of those already declared in "IUnknown"
-#pragma warning disable 108
+#pragma warning disable CS0108, IDE0079
 
     #region Property System COM Interfaces
 
@@ -341,6 +341,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
     #endregion
 
-#pragma warning restore 108
+#pragma warning restore CS0108, IDE0079
 
 }
