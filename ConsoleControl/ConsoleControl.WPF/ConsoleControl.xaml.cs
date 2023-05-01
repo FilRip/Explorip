@@ -293,17 +293,26 @@ namespace ConsoleControl.WPF
         /// <param name="color">The color.</param>
         public void WriteOutput(string output, Brush color)
         {
-            if (!string.IsNullOrEmpty(lastInput) &&
-                (output == lastInput || output.Trim() == lastInput))
+            if (!string.IsNullOrEmpty(lastInput))
             {
-                lastInput = null;
-                return;
+                if (output == lastInput || output.Trim() == lastInput)
+                {
+                    lastInput = null;
+                    return;
+                }
+
+                if (output.StartsWith(lastInput))
+                {
+                    output = output.Substring(lastInput.Length);
+                    lastInput = null;
+                }
+                else if (lastInput.StartsWith(output))
+                {
+                    lastInput = lastInput.Substring(output.Length);
+                    return;
+                }
             }
 
-            if (!string.IsNullOrEmpty(lastInput) && output.StartsWith(lastInput + Environment.NewLine))
-                output = output.Substring(lastInput.Length).TrimStart();
-
-            lastInput = null;
 
             RunOnUIDispatcher(() =>
             {
