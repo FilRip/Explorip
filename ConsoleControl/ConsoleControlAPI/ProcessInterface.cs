@@ -36,14 +36,20 @@ namespace ConsoleControlAPI
         public ProcessInterface()
         {
             //  Configure the output worker.
-            outputWorker.WorkerReportsProgress = true;
-            outputWorker.WorkerSupportsCancellation = true;
+            outputWorker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true,
+            };
             outputWorker.DoWork += OutputWorker_DoWork;
             outputWorker.ProgressChanged += OutputWorker_ProgressChanged;
 
             //  Configure the error worker.
-            errorWorker.WorkerReportsProgress = true;
-            errorWorker.WorkerSupportsCancellation = true;
+            errorWorker = new BackgroundWorker
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true,
+            };
             errorWorker.DoWork += ErrorWorker_DoWork;
             errorWorker.ProgressChanged += ErrorWorker_ProgressChanged;
 
@@ -59,6 +65,8 @@ namespace ConsoleControlAPI
             _threadDetectEndError.Start();
             _eventDetectEndError = new(true);
         }
+
+        #region Output
 
         /// <summary>
         /// Handles the ProgressChanged event of the outputWorker control.
@@ -148,6 +156,20 @@ namespace ConsoleControlAPI
         }
 
         /// <summary>
+        /// Fires the process output event.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        private void FireProcessOutputEvent(string content)
+        {
+            //  Get the event and fire it.
+            OnProcessOutput?.Invoke(this, new ProcessEventArgs(content));
+        }
+
+        #endregion
+
+        #region Errors
+
+        /// <summary>
         /// Handles the ProgressChanged event of the errorWorker control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -233,6 +255,20 @@ namespace ConsoleControlAPI
                 Thread.Sleep(10);
             }
         }
+
+        /// <summary>
+        /// Fires the process error output event.
+        /// </summary>
+        /// <param name="content">The content.</param>
+        private void FireProcessErrorEvent(string content)
+        {
+            //  Get the event and fire it.
+            OnProcessError?.Invoke(this, new ProcessEventArgs(content));
+        }
+
+        #endregion
+
+        #region Progress manager
 
         /// <summary>
         /// Runs a process.
@@ -332,24 +368,66 @@ namespace ConsoleControlAPI
         }
 
         /// <summary>
-        /// Fires the process output event.
+        /// Fires the process exit event.
         /// </summary>
-        /// <param name="content">The content.</param>
-        private void FireProcessOutputEvent(string content)
+        /// <param name="code">The code.</param>
+        private void FireProcessExitEvent(int code)
         {
             //  Get the event and fire it.
-            OnProcessOutput?.Invoke(this, new ProcessEventArgs(content));
+            OnProcessExit?.Invoke(this, new ProcessEventArgs(code));
         }
 
         /// <summary>
-        /// Fires the process error output event.
+        /// Gets a value indicating whether this instance is process running.
         /// </summary>
-        /// <param name="content">The content.</param>
-        private void FireProcessErrorEvent(string content)
+        /// <value>
+        /// 	<c>true</c> if this instance is process running; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsProcessRunning
         {
-            //  Get the event and fire it.
-            OnProcessError?.Invoke(this, new ProcessEventArgs(content));
+            get
+            {
+                try
+                {
+                    return (process != null && !process.HasExited);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
         }
+
+        /// <summary>
+        /// Gets the internal process.
+        /// </summary>
+        public Process Process
+        {
+            get { return process; }
+        }
+
+        /// <summary>
+        /// Gets the name of the process.
+        /// </summary>
+        /// <value>
+        /// The name of the process.
+        /// </value>
+        public string ProcessFileName
+        {
+            get { return processFileName; }
+        }
+
+        /// <summary>
+        /// Gets the process arguments.
+        /// </summary>
+        public string ProcessArguments
+        {
+            get { return processArguments; }
+        }
+
+        #endregion
+
+        #region Input
 
         /// <summary>
         /// Fires the process input event.
@@ -362,16 +440,6 @@ namespace ConsoleControlAPI
             OnProcessInput?.Invoke(this, new ProcessEventArgs(content));
         }
 #pragma warning restore S1144, IDE0051 // Unused private types or members should be removed
-
-        /// <summary>
-        /// Fires the process exit event.
-        /// </summary>
-        /// <param name="code">The code.</param>
-        private void FireProcessExitEvent(int code)
-        {
-            //  Get the event and fire it.
-            OnProcessExit?.Invoke(this, new ProcessEventArgs(code));
-        }
 
         /// <summary>
         /// Writes the input.
@@ -395,6 +463,10 @@ namespace ConsoleControlAPI
         {
             get { return _historicCommands; }
         }
+
+        #endregion
+
+        #region IDisposable
 
         private bool disposedValue;
         public bool IsDisposed
@@ -461,6 +533,8 @@ namespace ConsoleControlAPI
             GC.SuppressFinalize(this);
         }
 
+        #endregion
+
         /// <summary>
         /// The current process.
         /// </summary>
@@ -484,12 +558,12 @@ namespace ConsoleControlAPI
         /// <summary>
         /// The output worker.
         /// </summary>
-        private BackgroundWorker outputWorker = new();
+        private BackgroundWorker outputWorker;
 
         /// <summary>
         /// The error worker.
         /// </summary>
-        private BackgroundWorker errorWorker = new();
+        private BackgroundWorker errorWorker;
 
         /// <summary>
         /// Current process file name.
@@ -520,53 +594,5 @@ namespace ConsoleControlAPI
         /// Occurs when the process ends.
         /// </summary>
         public event ProcessEventHandler OnProcessExit;
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is process running.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is process running; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsProcessRunning
-        {
-            get
-            {
-                try
-                {
-                    return (process != null && !process.HasExited);
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the internal process.
-        /// </summary>
-        public Process Process
-        {
-            get { return process; }
-        }
-
-        /// <summary>
-        /// Gets the name of the process.
-        /// </summary>
-        /// <value>
-        /// The name of the process.
-        /// </value>
-        public string ProcessFileName
-        {
-            get { return processFileName; }
-        }
-
-        /// <summary>
-        /// Gets the process arguments.
-        /// </summary>
-        public string ProcessArguments
-        {
-            get { return processArguments; }
-        }
     }
 }
