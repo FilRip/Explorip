@@ -24,9 +24,11 @@ namespace ConsoleControlAPI
         private readonly object _lockInput;
         private readonly List<string> _historicCommands;
         private readonly object _lockOutput;
-        private readonly StringBuilder _builder;
+        private readonly StringBuilder _builderOutput, _builderError;
         private readonly Thread _threadDetectEnd;
         private readonly AutoResetEvent _eventDetectEnd;
+        private readonly Thread _threadDetectEndError;
+        private readonly AutoResetEvent _eventDetectEndError;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
@@ -48,10 +50,14 @@ namespace ConsoleControlAPI
             _lockInput = new object();
             _lockOutput = new object();
             _historicCommands = new List<string>();
-            _builder = new StringBuilder();
-            _threadDetectEnd = new(new ThreadStart(DetectEnd));
+            _builderOutput = new StringBuilder();
+            _builderError = new StringBuilder();
+            _threadDetectEnd = new(new ThreadStart(DetectEndOutput));
             _threadDetectEnd.Start();
             _eventDetectEnd = new(true);
+            _threadDetectEndError = new(new ThreadStart(DetectEndError));
+            _threadDetectEndError.Start();
+            _eventDetectEndError = new(true);
         }
 
         /// <summary>
@@ -90,13 +96,7 @@ namespace ConsoleControlAPI
                         lock (_lockOutput)
                         {
                             if (BUFFER_SIZE > 1 || buffer[0] != (char)13)
-                                _builder.Append(buffer, 0, count);
-                            if (_builder.ToString().EndsWith(Environment.NewLine))
-                            {
-                                outputWorker?.ReportProgress(0, _builder.ToString());
-                                _builder.Clear();
-                                Thread.Sleep(10);
-                            }
+                                _builderOutput.Append(buffer, 0, count);
                         }
                     }
                 } while (count > 0);
@@ -104,7 +104,7 @@ namespace ConsoleControlAPI
             }
         }
 
-        private void DetectEnd()
+        private void DetectEndOutput()
         {
             while (true)
             {
@@ -116,11 +116,10 @@ namespace ConsoleControlAPI
                         {
                             lock (_lockOutput)
                             {
-                                if (_builder.Length > 0)
+                                if (_builderOutput.Length > 0)
                                 {
-                                    Console.WriteLine("DetectEnd wait read : " + _builder.ToString());
-                                    outputWorker?.ReportProgress(0, _builder.ToString());
-                                    _builder.Clear();
+                                    outputWorker?.ReportProgress(0, _builderOutput.ToString());
+                                    _builderOutput.Clear();
                                     Thread.Sleep(10);
                                 }
                             }
@@ -129,11 +128,10 @@ namespace ConsoleControlAPI
                         {
                             lock (_lockOutput)
                             {
-                                if (_builder.Length >= BUFFER_SIZE)
+                                if (_builderOutput.Length >= BUFFER_SIZE)
                                 {
-                                    Console.WriteLine("DetectEnd buffer size reach : " + _builder.ToString());
-                                    outputWorker?.ReportProgress(0, _builder.ToString());
-                                    _builder.Clear();
+                                    outputWorker?.ReportProgress(0, _builderOutput.ToString());
+                                    _builderOutput.Clear();
                                     Thread.Sleep(10);
                                 }
                             }
@@ -167,24 +165,72 @@ namespace ConsoleControlAPI
         /// <param name="e">The <see cref="DoWorkEventArgs"/> instance containing the event data.</param>
         private void ErrorWorker_DoWork(object sender, DoWorkEventArgs e)
         {
+            int count;
+            char[] buffer = new char[BUFFER_SIZE];
+
             while (errorWorker?.CancellationPending == false)
             {
-                //  Any lines to read?
-                int count;
-                char[] buffer = new char[BUFFER_SIZE];
                 do
                 {
                     if (errorReader == null)
                         break;
+
+                    _eventDetectEndError.Reset();
                     count = errorReader.Read(buffer, 0, BUFFER_SIZE);
+                    _eventDetectEndError.Set();
                     if (count > 0)
                     {
-                        StringBuilder builder = new();
-                        builder.Append(buffer, 0, count);
-                        errorWorker?.ReportProgress(0, builder.ToString());
+                        lock (_lockOutput)
+                        {
+                            if (BUFFER_SIZE > 1 || buffer[0] != (char)13)
+                                _builderError.Append(buffer, 0, count);
+                        }
                     }
-                    Thread.Sleep(10);
                 } while (count > 0);
+                Thread.Sleep(10);
+            }
+        }
+
+        private void DetectEndError()
+        {
+            while (true)
+            {
+                try
+                {
+                    if (IsProcessRunning && errorWorker?.CancellationPending == false)
+                    {
+                        if (!_eventDetectEndError.WaitOne(500))
+                        {
+                            lock (_lockOutput)
+                            {
+                                if (_builderError.Length > 0)
+                                {
+                                    errorWorker?.ReportProgress(0, _builderError.ToString());
+                                    _builderError.Clear();
+                                    Thread.Sleep(10);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            lock (_lockOutput)
+                            {
+                                if (_builderError.Length >= BUFFER_SIZE)
+                                {
+                                    errorWorker?.ReportProgress(0, _builderError.ToString());
+                                    _builderError.Clear();
+                                    Thread.Sleep(10);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (ThreadAbortException)
+                {
+                    break;
+                }
+                catch (Exception) { /* Ignore all errors */}
+                Thread.Sleep(10);
             }
         }
 
@@ -399,6 +445,11 @@ namespace ConsoleControlAPI
                 if (_threadDetectEnd != null && _threadDetectEnd.IsAlive)
                     _threadDetectEnd.Abort();
                 _eventDetectEnd.Dispose();
+                if (_threadDetectEndError != null && _threadDetectEndError.IsAlive)
+                    _threadDetectEndError.Abort();
+                _eventDetectEndError.Dispose();
+                _builderOutput.Clear();
+                _builderError.Clear();
                 disposedValue = true;
             }
         }
