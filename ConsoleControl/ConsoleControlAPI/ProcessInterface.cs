@@ -9,13 +9,6 @@ using System.Threading;
 namespace ConsoleControlAPI
 {
     /// <summary>
-    /// A ProcessEventHandler is a delegate for process input/output events.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="args">The <see cref="ProcessEventArgs"/> instance containing the event data.</param>
-    public delegate void ProcessEventHandler(object sender, ProcessEventArgs args);
-
-    /// <summary>
     /// A class the wraps a process, allowing programmatic input and output.
     /// </summary>
     public class ProcessInterface : IDisposable
@@ -36,22 +29,22 @@ namespace ConsoleControlAPI
         public ProcessInterface()
         {
             //  Configure the output worker.
-            outputWorker = new BackgroundWorker
+            _outputWorker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true,
             };
-            outputWorker.DoWork += OutputWorker_DoWork;
-            outputWorker.ProgressChanged += OutputWorker_ProgressChanged;
+            _outputWorker.DoWork += OutputWorker_DoWork;
+            _outputWorker.ProgressChanged += OutputWorker_ProgressChanged;
 
             //  Configure the error worker.
-            errorWorker = new BackgroundWorker
+            _errorWorker = new BackgroundWorker
             {
                 WorkerReportsProgress = true,
                 WorkerSupportsCancellation = true,
             };
-            errorWorker.DoWork += ErrorWorker_DoWork;
-            errorWorker.ProgressChanged += ErrorWorker_ProgressChanged;
+            _errorWorker.DoWork += ErrorWorker_DoWork;
+            _errorWorker.ProgressChanged += ErrorWorker_ProgressChanged;
 
             _lockInput = new object();
             _lockOutput = new object();
@@ -67,6 +60,16 @@ namespace ConsoleControlAPI
         }
 
         #region Output
+
+        /// <summary>
+        /// The output reader.
+        /// </summary>
+        private TextReader _outputReader;
+
+        /// <summary>
+        /// The output worker.
+        /// </summary>
+        private BackgroundWorker _outputWorker;
 
         /// <summary>
         /// Handles the ProgressChanged event of the outputWorker control.
@@ -89,15 +92,15 @@ namespace ConsoleControlAPI
             int count;
             char[] buffer = new char[BUFFER_SIZE];
 
-            while (outputWorker?.CancellationPending == false)
+            while (_outputWorker?.CancellationPending == false)
             {
                 do
                 {
-                    if (outputReader == null)
+                    if (_outputReader == null)
                         break;
 
                     _eventDetectEnd.Reset();
-                    count = outputReader.Read(buffer, 0, BUFFER_SIZE);
+                    count = _outputReader.Read(buffer, 0, BUFFER_SIZE);
                     _eventDetectEnd.Set();
                     if (count > 0)
                     {
@@ -118,7 +121,7 @@ namespace ConsoleControlAPI
             {
                 try
                 {
-                    if (IsProcessRunning && outputWorker?.CancellationPending == false)
+                    if (IsProcessRunning && _outputWorker?.CancellationPending == false)
                     {
                         if (!_eventDetectEnd.WaitOne(500))
                         {
@@ -126,7 +129,7 @@ namespace ConsoleControlAPI
                             {
                                 if (_builderOutput.Length > 0)
                                 {
-                                    outputWorker?.ReportProgress(0, _builderOutput.ToString());
+                                    _outputWorker?.ReportProgress(0, _builderOutput.ToString());
                                     _builderOutput.Clear();
                                     Thread.Sleep(10);
                                 }
@@ -138,7 +141,7 @@ namespace ConsoleControlAPI
                             {
                                 if (_builderOutput.Length >= BUFFER_SIZE)
                                 {
-                                    outputWorker?.ReportProgress(0, _builderOutput.ToString());
+                                    _outputWorker?.ReportProgress(0, _builderOutput.ToString());
                                     _builderOutput.Clear();
                                     Thread.Sleep(10);
                                 }
@@ -170,6 +173,16 @@ namespace ConsoleControlAPI
         #region Errors
 
         /// <summary>
+        /// The error reader.
+        /// </summary>
+        private TextReader _errorReader;
+
+        /// <summary>
+        /// The error worker.
+        /// </summary>
+        private BackgroundWorker _errorWorker;
+
+        /// <summary>
         /// Handles the ProgressChanged event of the errorWorker control.
         /// </summary>
         /// <param name="sender">The source of the event.</param>
@@ -190,15 +203,15 @@ namespace ConsoleControlAPI
             int count;
             char[] buffer = new char[BUFFER_SIZE];
 
-            while (errorWorker?.CancellationPending == false)
+            while (_errorWorker?.CancellationPending == false)
             {
                 do
                 {
-                    if (errorReader == null)
+                    if (_errorReader == null)
                         break;
 
                     _eventDetectEndError.Reset();
-                    count = errorReader.Read(buffer, 0, BUFFER_SIZE);
+                    count = _errorReader.Read(buffer, 0, BUFFER_SIZE);
                     _eventDetectEndError.Set();
                     if (count > 0)
                     {
@@ -219,7 +232,7 @@ namespace ConsoleControlAPI
             {
                 try
                 {
-                    if (IsProcessRunning && errorWorker?.CancellationPending == false)
+                    if (IsProcessRunning && _errorWorker?.CancellationPending == false)
                     {
                         if (!_eventDetectEndError.WaitOne(500))
                         {
@@ -227,7 +240,7 @@ namespace ConsoleControlAPI
                             {
                                 if (_builderError.Length > 0)
                                 {
-                                    errorWorker?.ReportProgress(0, _builderError.ToString());
+                                    _errorWorker?.ReportProgress(0, _builderError.ToString());
                                     _builderError.Clear();
                                     Thread.Sleep(10);
                                 }
@@ -239,7 +252,7 @@ namespace ConsoleControlAPI
                             {
                                 if (_builderError.Length >= BUFFER_SIZE)
                                 {
-                                    errorWorker?.ReportProgress(0, _builderError.ToString());
+                                    _errorWorker?.ReportProgress(0, _builderError.ToString());
                                     _builderError.Clear();
                                     Thread.Sleep(10);
                                 }
@@ -271,6 +284,21 @@ namespace ConsoleControlAPI
         #region Progress manager
 
         /// <summary>
+        /// The current process.
+        /// </summary>
+        private Process _process;
+
+        /// <summary>
+        /// Current process file name.
+        /// </summary>
+        private string _processFileName;
+
+        /// <summary>
+        /// Arguments sent to the current process.
+        /// </summary>
+        private string _processArguments;
+
+        /// <summary>
         /// Runs a process.
         /// </summary>
         /// <param name="fileName">Name of the file.</param>
@@ -299,17 +327,17 @@ namespace ConsoleControlAPI
             processStartInfo.RedirectStandardOutput = true;
 
             //  Create the process.
-            process = new Process()
+            _process = new Process()
             {
                 EnableRaisingEvents = true,
                 StartInfo = processStartInfo,
             };
-            process.Exited += CurrentProcess_Exited;
+            _process.Exited += CurrentProcess_Exited;
 
             //  Start the process.
             try
             {
-                process.Start();
+                _process.Start();
             }
             catch (Exception e)
             {
@@ -320,17 +348,17 @@ namespace ConsoleControlAPI
             }
 
             //  Store name and arguments.
-            processFileName = processStartInfo.FileName;
-            processArguments = processStartInfo.Arguments;
+            _processFileName = processStartInfo.FileName;
+            _processArguments = processStartInfo.Arguments;
 
             //  Create the readers and writers.
-            inputWriter = process.StandardInput;
-            outputReader = TextReader.Synchronized(process.StandardOutput);
-            errorReader = TextReader.Synchronized(process.StandardError);
+            inputWriter = _process.StandardInput;
+            _outputReader = TextReader.Synchronized(_process.StandardOutput);
+            _errorReader = TextReader.Synchronized(_process.StandardError);
 
             //  Run the workers that read output and error.
-            outputWorker.RunWorkerAsync();
-            errorWorker.RunWorkerAsync();
+            _outputWorker.RunWorkerAsync();
+            _errorWorker.RunWorkerAsync();
         }
 
         /// <summary>
@@ -343,7 +371,7 @@ namespace ConsoleControlAPI
                 return;
 
             //  Kill the process.
-            process.Kill();
+            _process.Kill();
         }
 
         /// <summary>
@@ -354,17 +382,17 @@ namespace ConsoleControlAPI
         private void CurrentProcess_Exited(object sender, EventArgs e)
         {
             //  Fire process exited.
-            FireProcessExitEvent(process.ExitCode);
+            FireProcessExitEvent(_process.ExitCode);
 
             //  Disable the threads.
-            outputWorker.CancelAsync();
-            errorWorker.CancelAsync();
+            _outputWorker.CancelAsync();
+            _errorWorker.CancelAsync();
             inputWriter = null;
-            outputReader = null;
-            errorReader = null;
-            process = null;
-            processFileName = null;
-            processArguments = null;
+            _outputReader = null;
+            _errorReader = null;
+            _process = null;
+            _processFileName = null;
+            _processArguments = null;
         }
 
         /// <summary>
@@ -389,7 +417,7 @@ namespace ConsoleControlAPI
             {
                 try
                 {
-                    return (process != null && !process.HasExited);
+                    return (_process != null && !_process.HasExited);
                 }
                 catch
                 {
@@ -403,7 +431,7 @@ namespace ConsoleControlAPI
         /// </summary>
         public Process Process
         {
-            get { return process; }
+            get { return _process; }
         }
 
         /// <summary>
@@ -414,7 +442,7 @@ namespace ConsoleControlAPI
         /// </value>
         public string ProcessFileName
         {
-            get { return processFileName; }
+            get { return _processFileName; }
         }
 
         /// <summary>
@@ -422,12 +450,17 @@ namespace ConsoleControlAPI
         /// </summary>
         public string ProcessArguments
         {
-            get { return processArguments; }
+            get { return _processArguments; }
         }
 
         #endregion
 
         #region Input
+
+        /// <summary>
+        /// The input writer.
+        /// </summary>
+        private StreamWriter inputWriter;
 
         /// <summary>
         /// Fires the process input event.
@@ -481,37 +514,37 @@ namespace ConsoleControlAPI
         {
             if (!disposedValue)
             {
-                if (outputWorker != null)
+                if (_outputWorker != null)
                 {
-                    outputWorker.CancelAsync();
-                    outputWorker.Dispose();
-                    outputWorker = null;
+                    _outputWorker.CancelAsync();
+                    _outputWorker.Dispose();
+                    _outputWorker = null;
                 }
-                if (errorWorker != null)
+                if (_errorWorker != null)
                 {
-                    errorWorker.CancelAsync();
-                    errorWorker.Dispose();
-                    errorWorker = null;
+                    _errorWorker.CancelAsync();
+                    _errorWorker.Dispose();
+                    _errorWorker = null;
                 }
-                if (process != null)
+                if (_process != null)
                 {
-                    process.Dispose();
-                    process = null;
+                    _process.Dispose();
+                    _process = null;
                 }
                 if (inputWriter != null)
                 {
                     inputWriter.Dispose();
                     inputWriter = null;
                 }
-                if (outputReader != null)
+                if (_outputReader != null)
                 {
-                    outputReader.Dispose();
-                    outputReader = null;
+                    _outputReader.Dispose();
+                    _outputReader = null;
                 }
-                if (errorReader != null)
+                if (_errorReader != null)
                 {
-                    errorReader.Dispose();
-                    errorReader = null;
+                    _errorReader.Dispose();
+                    _errorReader = null;
                 }
                 _historicCommands?.Clear();
                 if (_threadDetectEnd != null && _threadDetectEnd.IsAlive)
@@ -535,45 +568,7 @@ namespace ConsoleControlAPI
 
         #endregion
 
-        /// <summary>
-        /// The current process.
-        /// </summary>
-        private Process process;
-
-        /// <summary>
-        /// The input writer.
-        /// </summary>
-        private StreamWriter inputWriter;
-
-        /// <summary>
-        /// The output reader.
-        /// </summary>
-        private TextReader outputReader;
-
-        /// <summary>
-        /// The error reader.
-        /// </summary>
-        private TextReader errorReader;
-
-        /// <summary>
-        /// The output worker.
-        /// </summary>
-        private BackgroundWorker outputWorker;
-
-        /// <summary>
-        /// The error worker.
-        /// </summary>
-        private BackgroundWorker errorWorker;
-
-        /// <summary>
-        /// Current process file name.
-        /// </summary>
-        private string processFileName;
-
-        /// <summary>
-        /// Arguments sent to the current process.
-        /// </summary>
-        private string processArguments;
+        #region Events
 
         /// <summary>
         /// Occurs when process output is produced.
@@ -594,5 +589,14 @@ namespace ConsoleControlAPI
         /// Occurs when the process ends.
         /// </summary>
         public event ProcessEventHandler OnProcessExit;
+
+        #endregion
     }
+
+    /// <summary>
+    /// A ProcessEventHandler is a delegate for process input/output events.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="args">The <see cref="ProcessEventArgs"/> instance containing the event data.</param>
+    public delegate void ProcessEventHandler(object sender, ProcessEventArgs args);
 }
