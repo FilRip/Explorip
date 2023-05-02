@@ -14,6 +14,7 @@ namespace ConsoleControlAPI
     public class ProcessInterface : IDisposable
     {
         private const int BUFFER_SIZE = 1;
+        private const int MAX_TIMEOUT_READ_STREAM = 100;
         private readonly object _lockInput;
         private readonly List<string> _historicCommands;
         private readonly object _lockOutput;
@@ -123,7 +124,7 @@ namespace ConsoleControlAPI
                 {
                     if (IsProcessRunning && _outputWorker?.CancellationPending == false)
                     {
-                        if (!_eventDetectEnd.WaitOne(500))
+                        if (!_eventDetectEnd.WaitOne(MAX_TIMEOUT_READ_STREAM))
                         {
                             lock (_lockOutput)
                             {
@@ -234,7 +235,7 @@ namespace ConsoleControlAPI
                 {
                     if (IsProcessRunning && _errorWorker?.CancellationPending == false)
                     {
-                        if (!_eventDetectEndError.WaitOne(500))
+                        if (!_eventDetectEndError.WaitOne(MAX_TIMEOUT_READ_STREAM))
                         {
                             lock (_lockOutput)
                             {

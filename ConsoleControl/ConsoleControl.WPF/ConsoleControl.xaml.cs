@@ -243,6 +243,7 @@ namespace ConsoleControl.WPF
                 if (!string.IsNullOrWhiteSpace(input) && _currentPosInHistoric >= 0)
                     _currentPosInHistoric++;
                 _currentNumAC = -1;
+                _lastCmd = null;
 
                 //  Fire the event.
                 FireProcessInputEvent(new ProcessEventArgs(input));
@@ -254,6 +255,7 @@ namespace ConsoleControl.WPF
         #region Auto completion
 
         private int _currentNumAC;
+        private string _lastCmd;
         private void RichTextBoxConsole_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Tab)
@@ -269,11 +271,49 @@ namespace ConsoleControl.WPF
                 if (possibilities.Count == 0)
                     return;
                 possibilities.Sort();
+                if (richTextBoxConsole.GetCaretPosition() > inputStartPos)
+                {
+                    string currentCmd = new TextRange(richTextBoxConsole.GetPointerAt(inputStartPos), richTextBoxConsole.CaretPosition).Text.Trim((char)13, (char)10);
+                    string searchFor = "";
+                    int currentPos = currentCmd.Length - 1;
+                    while (currentPos >= 0)
+                    {
+                        if ((currentCmd[currentPos] == ' ' && !searchFor.EndsWith("\"")) || currentCmd[currentPos] == '\\')
+                            break;
+                        searchFor = currentCmd[currentPos] + searchFor;
+                        if (searchFor.StartsWith("\"") && searchFor.EndsWith("\"") && searchFor.Length > 1)
+                            break;
+                        currentPos--;
+                    }
+                    int sizeToDelete = searchFor.Length;
+                    searchFor = searchFor.Trim('\"');
+                    if (!string.IsNullOrWhiteSpace(searchFor))
+                    {
+                        if (!string.IsNullOrWhiteSpace(_lastCmd) && possibilities.Contains(searchFor, StringComparer.CurrentCultureIgnoreCase))
+                            possibilities.RemoveAll(s => !s.StartsWith(_lastCmd, StringComparison.CurrentCultureIgnoreCase));
+                        else
+                        {
+                            _lastCmd = searchFor;
+                            possibilities.RemoveAll(s => !s.StartsWith(searchFor, StringComparison.CurrentCultureIgnoreCase));
+                        }
+                        _ = new TextRange(richTextBoxConsole.GetPointerAt(richTextBoxConsole.GetCaretPosition() - sizeToDelete), richTextBoxConsole.Document.ContentEnd).Text = "";
+                    }
+                    else
+                        _lastCmd = null;
+                }
+                if (possibilities.Count == 0)
+                    return;
                 _currentNumAC++;
                 if (_currentNumAC >= possibilities.Count)
                     _currentNumAC = 0;
+                if (possibilities[_currentNumAC].IndexOf(' ') >= 0)
+                    richTextBoxConsole.CaretPosition.InsertTextInRun("\"");
                 richTextBoxConsole.CaretPosition.InsertTextInRun(possibilities[_currentNumAC]);
-                richTextBoxConsole.CaretPosition = richTextBoxConsole.GetPointerAt(richTextBoxConsole.GetCaretPosition() + possibilities[_currentNumAC].Length);
+                if (possibilities[_currentNumAC].IndexOf(' ') >= 0)
+                    richTextBoxConsole.CaretPosition.InsertTextInRun("\"");
+                richTextBoxConsole.ScrollToEnd();
+                richTextBoxConsole.SetCaretToEnd();
+
                 e.Handled = true;
             }
         }
