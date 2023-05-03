@@ -21,8 +21,6 @@ namespace Explorip.Explorer.WPF.Controls
             SetTitle("Console");
             ProcessStartInfo processStartInfo = new()
             {
-                StandardOutputEncoding = Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage),
-                StandardErrorEncoding = Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage),
                 FileName = commandLine,
             };
             if (commandLine.StartsWith("powershell.exe"))

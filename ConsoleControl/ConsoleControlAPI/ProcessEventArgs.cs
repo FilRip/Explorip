@@ -31,7 +31,7 @@ namespace ConsoleControlAPI
         public ProcessEventArgs(int code)
         {
             //  Set the content and code.
-            Code = code;
+            ErrorCode = code;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace ConsoleControlAPI
         {
             //  Set the content and code.
             Content = content;
-            Code = code;
+            ErrorCode = code;
         }
 
         /// <summary>
@@ -57,6 +57,16 @@ namespace ConsoleControlAPI
         /// <value>
         /// The code.
         /// </value>
-        public int? Code { get; private set; }
+        public int? ErrorCode { get; private set; }
+
+        /// <summary>
+        /// Specify the color of this text in the console
+        /// </summary>
+        public ConsoleColor? Color { get; private set; }
+
+        /// <summary>
+        /// Specify the background color of this text in the console
+        /// </summary>
+        public ConsoleColor? BackgroundColor { get; private set; }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -23,6 +24,7 @@ namespace ConsoleControlAPI
         private readonly AutoResetEvent _eventDetectEnd;
         private readonly Thread _threadDetectEndError;
         private readonly AutoResetEvent _eventDetectEndError;
+        private IntPtr _consoleHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
@@ -102,6 +104,11 @@ namespace ConsoleControlAPI
 
                     _eventDetectEnd.Reset();
                     count = _outputReader.Read(buffer, 0, BUFFER_SIZE);
+                    /*Imports.ConsoleCharAttribute[] attr = new Imports.ConsoleCharAttribute[50];
+                    if (Imports.ReadConsoleOutputAttribute(_consoleHandler, out attr, 50, new Imports.Coord(0, 0), out uint nbAttr) != 0)
+                    {
+
+                    }*/
                     _eventDetectEnd.Set();
                     if (count > 0)
                     {
@@ -115,6 +122,9 @@ namespace ConsoleControlAPI
                 Thread.Sleep(10);
             }
         }
+
+        // TODO : Get color console
+        //        https://stackoverflow.com/questions/35845980/how-can-i-recieve-color-output-from-console-application-like-far
 
         private void DetectEndOutput()
         {
@@ -323,6 +333,8 @@ namespace ConsoleControlAPI
             processStartInfo.CreateNoWindow = true;
 
             //  Specify redirection.
+            processStartInfo.StandardOutputEncoding = Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage);
+            processStartInfo.StandardErrorEncoding = Encoding.GetEncoding(CultureInfo.CurrentCulture.TextInfo.OEMCodePage);
             processStartInfo.RedirectStandardError = true;
             processStartInfo.RedirectStandardInput = true;
             processStartInfo.RedirectStandardOutput = true;
@@ -351,6 +363,12 @@ namespace ConsoleControlAPI
             //  Store name and arguments.
             _processFileName = processStartInfo.FileName;
             _processArguments = processStartInfo.Arguments;
+
+            /*while (!Imports.AttachConsole(_process.Id))
+            {
+                Thread.Sleep(100);
+            }
+            _consoleHandler = Imports.GetStdHandle(Imports.StdHandle.OutputHandle);*/
 
             //  Create the readers and writers.
             inputWriter = _process.StandardInput;
@@ -556,6 +574,7 @@ namespace ConsoleControlAPI
                 _eventDetectEndError.Dispose();
                 _builderOutput.Clear();
                 _builderError.Clear();
+                //Imports.FreeConsole();
                 disposedValue = true;
             }
         }
