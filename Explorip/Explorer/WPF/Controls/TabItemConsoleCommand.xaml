@@ -7,7 +7,7 @@
              xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
              mc:Ignorable="d" Style="{DynamicResource CustomTabItem}"
              d:DesignHeight="450" d:DesignWidth="800"
-             Loaded="TabItemExplorip_Loaded" OnSelecting="TabItemExplorip_OnSelecting" OnDeSelecting="TabItemExplorip_OnDeSelecting">
+             Loaded="TabItemExplorip_Loaded">
     <TabItem.DataContext>
         <viewmodels:TabItemConsoleCommandViewModel/>
     </TabItem.DataContext>

@@ -18,6 +18,23 @@ namespace Explorip.Explorer.WPF.Controls
             InitializeComponent();
             InitializeExplorip();
             _commandLine = commandLine;
+            OnSelecting += TabItemConsoleCommand_OnSelecting;
+            OnDeSelecting += TabItemConsoleCommand_OnDeSelecting;
+        }
+
+        private void TabItemConsoleCommand_OnDeSelecting()
+        {
+            MyConsoleControl.Hide();
+        }
+
+        private void TabItemConsoleCommand_OnSelecting()
+        {
+            MyConsoleControl.Show();
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                Thread.Sleep(100);
+                MyConsoleControl.SetFocus();
+            }, System.Windows.Threading.DispatcherPriority.Background);
         }
 
         public TabItemConsoleCommandViewModel MyDataContext
@@ -42,21 +59,6 @@ namespace Explorip.Explorer.WPF.Controls
         {
             SetTitle("Console");
             MyConsoleControl.StartProcess(_commandLine);
-        }
-
-        private void TabItemExplorip_OnSelecting()
-        {
-            MyConsoleControl.Show();
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                Thread.Sleep(100);
-                MyConsoleControl.SetFocus();
-            }, System.Windows.Threading.DispatcherPriority.Background);
-        }
-
-        private void TabItemExplorip_OnDeSelecting()
-        {
-            MyConsoleControl.Hide();
         }
     }
 }

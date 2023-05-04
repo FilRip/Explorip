@@ -17,7 +17,7 @@ namespace Explorip.Explorer.WPF.Controls
     {
         private const int OFFSET_X = 6;
         private const int OFFSET_Y = 62;
-        private const int OFFSET_SIZE_HEIGHT = 30;
+        private const int OFFSET_SIZE_HEIGHT = 24;
 
         private Process _myProcess;
         private IntPtr _pointeurSource, _pointeurDestination;
