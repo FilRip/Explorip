@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;
 
 namespace ConsoleControlAPI
 {
@@ -36,7 +37,7 @@ namespace ConsoleControlAPI
         internal static extern bool GenerateConsoleCtrlEvent(CTRL_EVENT dwCtrlEvent, UInt32 dwProcessGroupId);
 
         [DllImport("kernel32.dll")]
-        internal static extern int ReadConsoleOutputAttribute(IntPtr hConsoleOutput, out ConsoleCharAttribute[] lpAttribute, uint nLength, Coord dwReadCoord, out uint lpNumberOfAttrsRead);
+        internal static extern int ReadConsoleOutputAttribute(IntPtr hConsoleOutput, out ushort[] lpAttribute, uint nLength, Coord dwReadCoord, out uint lpNumberOfAttrsRead);
 
         [DllImport("kernel32.dll", EntryPoint = "AttachConsole", SetLastError = true)]
         internal static extern bool AttachConsole(int IdProcessus);
@@ -47,11 +48,119 @@ namespace ConsoleControlAPI
         [DllImport("kernel32")]
         internal static extern IntPtr GetStdHandle(StdHandle index);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        internal static extern IntPtr CreateConsoleScreenBuffer(ConsoleAccess dwDesiredAccess, ConsoleAccess dwShareMode, [MarshalAs(UnmanagedType.LPStruct)] SecurityAttributes lpSecurityAttributes, int dwFlags, IntPtr lpScreenBufferData);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool GetConsoleScreenBufferInfo(IntPtr hConsoleOutput, [MarshalAs(UnmanagedType.LPStruct)] out ConsoleScreenBufferInfo lpConsoleScreenBufferInfo);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleActiveScreenBuffer(IntPtr hConsoleOutput);
+
         internal enum StdHandle
         {
             OutputHandle = -11,
             InputHandle = -10,
             ErrorHandle = -12
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public class ConsoleScreenBufferInfo
+        {
+            public Coord dwSize;
+            public Coord dwCursorPosition;
+            public short wAttributes;
+            [MarshalAs(UnmanagedType.Struct)] public SmallRect srWindow;
+            public Coord dwMaximumWindowSize;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public class SmallRect
+        {
+            public short left;
+            public short top;
+            public short right;
+            public short bottom;
+
+            /// <summary>
+            /// Creates a new instance of the SmallRect structure.
+            /// </summary>
+            /// <param name="mLeft">Column position of top left corner.</param>
+            /// <param name="mTop">Row position of the top left corner.</param>
+            /// <param name="mRight">Column position of the bottom right corner.</param>
+            /// <param name="mBottom">Row position of the bottom right corner.</param>
+            public SmallRect(short mLeft, short mTop, short mRight, short mBottom)
+            {
+                left = mLeft;
+                top = mTop;
+                right = mRight;
+                bottom = mBottom;
+            }
+
+            /// <summary>
+            /// Gets or sets the column position of the top left corner of a rectangle.
+            /// </summary>
+            public short Left
+            {
+                get { return left; }
+                set { left = value; }
+            }
+
+            /// <summary>
+            /// Gets or sets the row position of the top left corner of a rectangle.
+            /// </summary>
+            public short Top
+            {
+                get { return top; }
+                set { top = value; }
+            }
+
+            /// <summary>
+            /// Gets or sets the column position of the bottom right corner of a rectangle.
+            /// </summary>
+            public short Right
+            {
+                get { return right; }
+                set { right = value; }
+            }
+
+            /// <summary>
+            /// Gets or sets the row position of the bottom right corner of a rectangle.
+            /// </summary>
+            public short Bottom
+            {
+                get { return bottom; }
+                set { bottom = value; }
+            }
+
+            /// <summary>
+            /// Gets or sets the width of a rectangle.  When setting the width, the
+            /// column position of the bottom right corner is adjusted.
+            /// </summary>
+            public short Width
+            {
+                get { return (short)(right - left + 1); }
+                set { right = (short)(left + value - 1); }
+            }
+
+            /// <summary>
+            /// Gets or sets the height of a rectangle.  When setting the height, the
+            /// row position of the bottom right corner is adjusted.
+            /// </summary>
+            public short Height
+            {
+                get { return (short)(bottom - top + 1); }
+                set { bottom = (short)(top + value - 1); }
+            }
+        }
+
+        [Flags()]
+        internal enum ConsoleAccess
+        {
+            FILE_SHARE_READ = 1,
+            FILE_SHARE_WRITE = 2,
+            GENERIC_READ = unchecked((int)0x80000000),
+            GENERIC_WRITE = 0x40000000,
         }
 
         /// <summary>
@@ -68,6 +177,14 @@ namespace ConsoleControlAPI
             /// Generates a CTRL+BREAK signal.
             /// </summary>
             CTRL_BREAK_EVENT = 1
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public class SecurityAttributes
+        {
+            public int nLength;
+            public IntPtr lpSecurityDescriptor;
+            public bool bInheritHandle;
         }
     }
 }

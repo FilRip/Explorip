@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -24,7 +25,7 @@ namespace ConsoleControlAPI
         private readonly AutoResetEvent _eventDetectEnd;
         private readonly Thread _threadDetectEndError;
         private readonly AutoResetEvent _eventDetectEndError;
-        private IntPtr _consoleHandler;
+        //private IntPtr _consoleHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProcessInterface"/> class.
@@ -105,7 +106,7 @@ namespace ConsoleControlAPI
                     _eventDetectEnd.Reset();
                     count = _outputReader.Read(buffer, 0, BUFFER_SIZE);
                     /*Imports.ConsoleCharAttribute[] attr = new Imports.ConsoleCharAttribute[50];
-                    if (Imports.ReadConsoleOutputAttribute(_consoleHandler, out attr, 50, new Imports.Coord(0, 0), out uint nbAttr) != 0)
+                    if (Imports.ReadConsoleOutputAttribute(_consoleHandler, out attr, 50, new Imports.Coord(0, 1), out uint nbAttr) != 0)
                     {
 
                     }*/
@@ -364,11 +365,21 @@ namespace ConsoleControlAPI
             _processFileName = processStartInfo.FileName;
             _processArguments = processStartInfo.Arguments;
 
-            /*while (!Imports.AttachConsole(_process.Id))
+            /*Imports.FreeConsole();
+            while (!Imports.AttachConsole(_process.Id))
             {
                 Thread.Sleep(100);
             }
-            _consoleHandler = Imports.GetStdHandle(Imports.StdHandle.OutputHandle);*/
+            _consoleHandler = Imports.GetStdHandle(Imports.StdHandle.OutputHandle);
+            _consoleHandler = Imports.CreateConsoleScreenBuffer(Imports.ConsoleAccess.GENERIC_READ | Imports.ConsoleAccess.GENERIC_WRITE, Imports.ConsoleAccess.FILE_SHARE_READ | Imports.ConsoleAccess.FILE_SHARE_WRITE, null, 1, IntPtr.Zero);
+            Imports.SetConsoleActiveScreenBuffer(_consoleHandler);
+            Imports.ConsoleScreenBufferInfo buffer;
+            Imports.GetConsoleScreenBufferInfo(_consoleHandler, out buffer);
+            ushort[] attr = new ushort[buffer.dwSize.X];
+            if (Imports.ReadConsoleOutputAttribute(_consoleHandler, out attr, Convert.ToUInt32(buffer.dwSize.X), new Imports.Coord(0, 0), out uint nbAttr) != 0)
+            {
+
+            }*/
 
             //  Create the readers and writers.
             inputWriter = _process.StandardInput;
