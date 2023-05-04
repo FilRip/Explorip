@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 
+using Explorip.Helpers;
 using Explorip.WinAPI;
 
 using ManagedShell.Interop;
@@ -38,6 +39,8 @@ namespace Explorip.Explorer.WPF.Controls
             _myProcess = new Process();
             _myProcess.StartInfo.FileName = commandline;
             _myProcess.StartInfo.UseShellExecute = false;
+            _myProcess.EnableRaisingEvents = true;
+            _myProcess.Exited += MyProcess_Exited;
             _myProcess.Start();
             while (_myProcess.MainWindowHandle == IntPtr.Zero) { /* Nothing to do, waiting process start */ }
             _pointeurSource = _myProcess.MainWindowHandle;
@@ -45,6 +48,14 @@ namespace Explorip.Explorer.WPF.Controls
             User32.SetWindowPos(_pointeurSource, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
             int currentStyle = NativeMethods.GetWindowLong(_pointeurSource, NativeMethods.GWL_STYLE);
             NativeMethods.SetWindowLong(_pointeurSource, NativeMethods.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
+        }
+
+        private void MyProcess_Exited(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ((TabItemConsoleCommand)((Grid)Parent).Parent).Dispose();
+            });
         }
 
         public void SetFocus()
