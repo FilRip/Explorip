@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using ConsoleControlAPI;
 using Explorip.WinAPI.Modeles;
 
 namespace Explorip.WinAPI

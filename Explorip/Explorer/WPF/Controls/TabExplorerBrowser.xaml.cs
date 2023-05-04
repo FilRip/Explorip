@@ -5,7 +5,6 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 using System.Drawing;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -25,6 +24,8 @@ namespace Explorip.Explorer.WPF.Controls
         }
 
         public bool AllowCloseLastTab { get; set; }
+
+        #region tabcontrol when add/remove tabitem
 
         public void HideTab()
         {
@@ -55,6 +56,10 @@ namespace Explorip.Explorer.WPF.Controls
                 fenetre.ShowRightTab();
         }
 
+        #endregion
+
+        #region Properties
+
         public Color AccentColor
         {
             get { return WindowsSettings.GetWindowsAccentColor(); }
@@ -74,6 +79,10 @@ namespace Explorip.Explorer.WPF.Controls
         {
             get { return (WpfExplorerBrowser)Window.GetWindow(this); }
         }
+
+        #endregion
+
+        #region Shortcuts
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
@@ -102,6 +111,8 @@ namespace Explorip.Explorer.WPF.Controls
             base.OnKeyUp(e);
         }
 
+        #endregion
+
         #region Drag'n Drop tab item in tab control
 
         private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
@@ -126,14 +137,10 @@ namespace Explorip.Explorer.WPF.Controls
                 SelectedIndex--;
                 e.Handled = true;
             }
-            else if (SelectedItem is TabItemConsoleCommand tabConsoleCommand)
-            {
-                Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    Thread.Sleep(100);
-                    tabConsoleCommand.MyConsoleControl.SetFocus();
-                }, System.Windows.Threading.DispatcherPriority.Background);
-            }
+            if (e.AddedItems?.Count > 0 && e.AddedItems[0] is TabItemExplorip tabSelecting)
+                tabSelecting.RaiseOnSelecting();
+            if (e.RemovedItems?.Count > 0 && e.RemovedItems[0] is TabItemExplorip tabDeselecting)
+                tabDeselecting.RaiseOnDeSelecting();
         }
     }
 }

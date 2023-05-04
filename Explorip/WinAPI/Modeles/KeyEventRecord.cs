@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-using ConsoleControlAPI;
-
 namespace Explorip.WinAPI.Modeles
 {
     [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]

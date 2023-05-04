@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+
+#pragma warning disable S125
 
 namespace ConsoleControlAPI
 {
@@ -631,3 +632,4 @@ namespace ConsoleControlAPI
     /// <param name="args">The <see cref="ProcessEventArgs"/> instance containing the event data.</param>
     public delegate void ProcessEventHandler(object sender, ProcessEventArgs args);
 }
+#pragma warning restore S125

@@ -75,6 +75,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Explorer\WPF\Controls\ConsoleHost.xaml.cs">
+      <DependentUpon>ConsoleHost.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Explorer\WPF\Controls\HeaderWithCloseButton.xaml.cs">
       <DependentUpon>HeaderWithCloseButton.xaml</DependentUpon>
     </Compile>
@@ -358,6 +361,10 @@
     <Compile Include="Helpers\ShellContextMenu.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Explorer\WPF\Controls\ConsoleHost.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Explorer\WPF\Controls\HeaderWithCloseButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -492,14 +499,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleControl\ConsoleControl.WPF\ConsoleControl.WPF.csproj">
-      <Project>{039bae62-06db-4357-a8aa-2dfa49005f0e}</Project>
-      <Name>ConsoleControl.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ConsoleControl\ConsoleControlAPI\ConsoleControlAPI.csproj">
-      <Project>{84261216-0071-497e-a8be-06b68298563d}</Project>
-      <Name>ConsoleControlAPI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GUI\CustomTabControl\CustomTabControl.csproj">
       <Project>{2b296f74-67a8-42c7-81ee-26506611a9ff}</Project>
       <Name>CustomTabControl</Name>

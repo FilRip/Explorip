@@ -34,6 +34,26 @@ namespace Explorip.Explorer.WPF.Controls
                 MyHeader.Label_TabTitle.Content = newTitle;
         }
 
+        #region Events for selecting/deselecting
+
+        public delegate void DelegateOnSelecting();
+        public event DelegateOnSelecting OnSelecting;
+
+        public delegate void DelegateOnDeSelecting();
+        public event DelegateOnSelecting OnDeSelecting;
+
+        public void RaiseOnSelecting()
+        {
+            OnSelecting?.Invoke();
+        }
+
+        public void RaiseOnDeSelecting()
+        {
+            OnDeSelecting?.Invoke();
+        }
+
+        #endregion
+
         #region Properties
 
         protected HeaderWithCloseButton MyHeader

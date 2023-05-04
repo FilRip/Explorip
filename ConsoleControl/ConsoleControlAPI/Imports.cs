@@ -74,6 +74,7 @@ namespace ConsoleControlAPI
             public Coord dwMaximumWindowSize;
         }
 
+#pragma warning disable S2292
         [StructLayout(LayoutKind.Sequential)]
         public class SmallRect
         {
@@ -153,8 +154,10 @@ namespace ConsoleControlAPI
                 set { bottom = (short)(top + value - 1); }
             }
         }
+#pragma warning restore S2292
 
         [Flags()]
+#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
         internal enum ConsoleAccess
         {
             FILE_SHARE_READ = 1,
@@ -162,6 +165,7 @@ namespace ConsoleControlAPI
             GENERIC_READ = unchecked((int)0x80000000),
             GENERIC_WRITE = 0x40000000,
         }
+#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
 
         /// <summary>
         /// The type of signal to be generated.

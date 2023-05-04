@@ -194,5 +194,8 @@ namespace Explorip.WinAPI
 
         [DllImport("USER32.DLL")]
         internal static extern IntPtr GetDesktopWindow();
+
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
     }
 }

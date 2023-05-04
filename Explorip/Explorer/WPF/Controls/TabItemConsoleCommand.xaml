@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Explorip.Explorer.WPF.Controls"
              xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
-             xmlns:consoleControl="clr-namespace:ConsoleControl.WPF;assembly=ConsoleControl.WPF"
              mc:Ignorable="d" Style="{DynamicResource CustomTabItem}"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="TabItemExplorip_Loaded" OnSelecting="TabItemExplorip_OnSelecting" OnDeSelecting="TabItemExplorip_OnDeSelecting">
     <TabItem.DataContext>
         <viewmodels:TabItemConsoleCommandViewModel/>
     </TabItem.DataContext>
@@ -18,8 +18,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <consoleControl:ConsoleControl 
-            x:Name="MyConsoleControl"
-            FontSize="14" Focusable="True"/>
+        <local:ConsoleHost x:Name="MyConsoleControl"/>
     </Grid>
 </local:TabItemExplorip>

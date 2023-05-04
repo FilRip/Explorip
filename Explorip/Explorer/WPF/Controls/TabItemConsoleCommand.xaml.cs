@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Text;
-using System.Windows.Media;
+using System.Threading;
+using System.Windows;
 
 using Explorip.Explorer.WPF.ViewModels;
 
@@ -13,22 +11,13 @@ namespace Explorip.Explorer.WPF.Controls
     /// </summary>
     public partial class TabItemConsoleCommand : TabItemExplorip
     {
+        private readonly string _commandLine;
+
         public TabItemConsoleCommand(string commandLine) : base()
         {
             InitializeComponent();
             InitializeExplorip();
-
-            SetTitle("Console");
-            ProcessStartInfo processStartInfo = new()
-            {
-                FileName = commandLine,
-            };
-            if (commandLine.StartsWith("powershell.exe"))
-            {
-                MyConsoleControl.SetBackground(Brushes.Blue);
-                MyConsoleControl.SetForeground(Brushes.Yellow);
-            }
-            MyConsoleControl.StartProcess(processStartInfo);
+            _commandLine = commandLine;
         }
 
         public TabItemConsoleCommandViewModel MyDataContext
@@ -47,6 +36,27 @@ namespace Explorip.Explorer.WPF.Controls
                 }
                 catch (Exception) { /* Ignore errors */ }
             }
+        }
+
+        private void TabItemExplorip_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetTitle("Console");
+            MyConsoleControl.StartProcess(_commandLine);
+        }
+
+        private void TabItemExplorip_OnSelecting()
+        {
+            MyConsoleControl.Show();
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                Thread.Sleep(100);
+                MyConsoleControl.SetFocus();
+            }, System.Windows.Threading.DispatcherPriority.Background);
+        }
+
+        private void TabItemExplorip_OnDeSelecting()
+        {
+            MyConsoleControl.Hide();
         }
     }
 }
