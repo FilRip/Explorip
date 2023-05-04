@@ -197,5 +197,15 @@ namespace Explorip.WinAPI
 
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        internal static extern IntPtr SetCapture(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool EnableWindow(IntPtr hWnd, int bEnable);
     }
 }

@@ -52,9 +52,11 @@ namespace Explorip.Explorer.WPF.Controls
             Task.Run(() =>
             {
                 Thread.Sleep(100);
-                //NativeMethods.SendMessage(_pointeurSource, (int)NativeMethods.WM.SETFOCUS, IntPtr.Zero, IntPtr.Zero);
-                NativeMethods.SendMessage(_pointeurSource, (int)NativeMethods.WM.LBUTTONDOWN, IntPtr.Zero, IntPtr.Zero);
-                NativeMethods.SendMessage(_pointeurSource, (int)NativeMethods.WM.LBUTTONUP, IntPtr.Zero, IntPtr.Zero);
+                NativeMethods.SetForegroundWindow(_pointeurSource);
+                User32.SetCapture(_pointeurSource);
+                User32.SetFocus(_pointeurSource);
+                User32.SetActiveWindow(_pointeurSource);
+                User32.EnableWindow(_pointeurSource, 1);
             });
         }
 
