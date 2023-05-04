@@ -72,7 +72,7 @@ namespace Explorip.Explorer.WPF.Controls
         private void CloseTab_Click(object sender, RoutedEventArgs e)
         {
             TabExplorerBrowser myTabControl = MyTabControl;
-            if (MyTabControl.Items.Count == 1 && !MyTabControl.AllowCloseLastTab)
+            if (MyTabControl.Items.Count == 2 && !MyTabControl.AllowCloseLastTab)
                 return;
             ((TabItemExplorip)MyTabControl.SelectedItem).Dispose();
             myTabControl.HideTab();
@@ -82,8 +82,8 @@ namespace Explorip.Explorer.WPF.Controls
         {
             TabExplorerBrowser myTabControl = MyTabControl;
             for (int i = myTabControl.Items.Count - 1; i >= 0; i--)
-                if (myTabControl.SelectedItem != myTabControl.Items[i] || myTabControl.AllowCloseLastTab)
-                    ((TabItemExplorip)myTabControl.Items[i]).Dispose();
+                if (myTabControl.Items[i] is TabItemExplorip currentTab && (myTabControl.SelectedItem != myTabControl.Items[i] || myTabControl.AllowCloseLastTab))
+                    currentTab.Dispose();
             myTabControl.HideTab();
         }
 

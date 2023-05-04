@@ -88,7 +88,7 @@ namespace Explorip.Explorer.WPF.Controls
         {
             if (e.Key == Key.F4 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
             {
-                if (Items.Count > 1 || AllowCloseLastTab)
+                if (Items.Count > 2 || AllowCloseLastTab)
                 {
                     Items.Remove(SelectedItem);
                     HideTab();

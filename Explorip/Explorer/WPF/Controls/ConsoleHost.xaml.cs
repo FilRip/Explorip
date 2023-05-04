@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -30,6 +32,8 @@ namespace Explorip.Explorer.WPF.Controls
 
         public void StartProcess(string commandline)
         {
+            if (_pointeurSource != IntPtr.Zero)
+                return;
             _pointeurDestination = (PresentationSource.FromVisual(this) as HwndSource).Handle;
             _myProcess = new Process();
             _myProcess.StartInfo.FileName = commandline;
@@ -38,26 +42,32 @@ namespace Explorip.Explorer.WPF.Controls
             while (_myProcess.MainWindowHandle == IntPtr.Zero) { /* Nothing to do, waiting process start */ }
             _pointeurSource = _myProcess.MainWindowHandle;
             User32.SetParent(_pointeurSource, _pointeurDestination);
-            User32.SetWindowPos(_pointeurSource, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.NOACTIVATE);
+            User32.SetWindowPos(_pointeurSource, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
             int currentStyle = NativeMethods.GetWindowLong(_pointeurSource, NativeMethods.GWL_STYLE);
             NativeMethods.SetWindowLong(_pointeurSource, NativeMethods.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
         }
 
         public void SetFocus()
         {
-            User32.SetFocus(_pointeurSource);
-            NativeMethods.SendMessage(_pointeurSource, (int)NativeMethods.WM.SETFOCUS, IntPtr.Zero, IntPtr.Zero);
+            Task.Run(() =>
+            {
+                Thread.Sleep(100);
+                //NativeMethods.SendMessage(_pointeurSource, (int)NativeMethods.WM.SETFOCUS, IntPtr.Zero, IntPtr.Zero);
+                NativeMethods.SendMessage(_pointeurSource, (int)NativeMethods.WM.LBUTTONDOWN, IntPtr.Zero, IntPtr.Zero);
+                NativeMethods.SendMessage(_pointeurSource, (int)NativeMethods.WM.LBUTTONUP, IntPtr.Zero, IntPtr.Zero);
+            });
         }
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_pointeurDestination != IntPtr.Zero)
-                User32.SetWindowPos(_pointeurSource, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.NOACTIVATE);
+            if (_pointeurSource != IntPtr.Zero)
+                User32.SetWindowPos(_pointeurSource, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
         }
 
         public void Show()
         {
             NativeMethods.ShowWindow(_pointeurSource, NativeMethods.WindowShowStyle.ShowNormal);
+            SetFocus();
         }
 
         public void Hide()

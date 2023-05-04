@@ -30,11 +30,6 @@ namespace Explorip.Explorer.WPF.Controls
         private void TabItemConsoleCommand_OnSelecting()
         {
             MyConsoleControl.Show();
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                Thread.Sleep(100);
-                MyConsoleControl.SetFocus();
-            }, System.Windows.Threading.DispatcherPriority.Background);
         }
 
         public TabItemConsoleCommandViewModel MyDataContext
