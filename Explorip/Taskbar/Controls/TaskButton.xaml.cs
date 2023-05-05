@@ -1,11 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Threading;
 
+using Explorip.Helpers;
 using Explorip.TaskBar.Converters;
 using Explorip.TaskBar.Utilities;
 
@@ -180,7 +183,7 @@ namespace Explorip.TaskBar.Controls
                     return;
                 }
 
-                ShellHelper.StartProcess(Window.WinFileName);
+                ManagedShell.Common.Helpers.ShellHelper.StartProcess(Window.WinFileName);
             }
         }
 
@@ -232,24 +235,27 @@ namespace Explorip.TaskBar.Controls
 
         private void AppButton_MouseEnter(object sender, MouseEventArgs e)
         {
-            try
-            {
-                _thumb?.Close();
-            }
-            catch (Exception) { /* Ignore errors */ }
+            _thumb?.Close();
             _thumb = new TaskThumbButton(this);
             _thumb.Show();
         }
 
         private void AppButton_MouseLeave(object sender, MouseEventArgs e)
         {
-            try
+            Task.Run(() =>
             {
-                _thumb?.Close();
-            }
-            catch (Exception) { /* Ignore errors */ }
+                Thread.Sleep(500);
+                if (!_thumb.MouseIn)
+                    Application.Current.Dispatcher.Invoke(() => { _thumb.Close(); });
+            });
         }
 
-        public Taskbar TaskbarParent { get; set; }
+        public Taskbar TaskbarParent
+        {
+            get
+            {
+                return this.FindVisualParent<Taskbar>();
+            }
+        }
     }
 }

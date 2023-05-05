@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
 
 using Explorip.WinAPI;
+
+using ManagedShell.Common.Helpers;
 
 namespace Explorip.TaskBar.Controls
 {
@@ -25,17 +28,19 @@ namespace Explorip.TaskBar.Controls
             Top = positionParent.Y - (Height);
         }
 
-        private void Window_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Window_MouseEnter(object sender, MouseEventArgs e)
         {
-            // TODO : Bascule 'temporaire' sur cette fenetre (premier plan en minimisant toutes les autres)
-            //WindowHelper.PeekWindow(true, _parent.ApplicationWindow.Handle, _parent.TaskbarParent.Handle);
+            MouseIn = true;
+            WindowHelper.PeekWindow(true, _parent.ApplicationWindow.Handle, _parent.TaskbarParent.Handle);
         }
 
-        private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
-            // TODO : Annuler bascule 'temporaire' sur cette fenetre
-            //WindowHelper.PeekWindow(false, _parent.ApplicationWindow.Handle, _parent.TaskbarParent.Handle);
+            MouseIn = false;
+            WindowHelper.PeekWindow(false, _parent.ApplicationWindow.Handle, _parent.TaskbarParent.Handle);
         }
+
+        public bool MouseIn { get; private set; }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -57,10 +62,21 @@ namespace Explorip.TaskBar.Controls
                     dwFlags = WinAPI.Modeles.DWM_TNP.VISIBLE | WinAPI.Modeles.DWM_TNP.RECTDESTINATION | WinAPI.Modeles.DWM_TNP.OPACITY,
                     fVisible = true,
                     opacity = 255,
-                    rcDestination = new WinAPI.Modeles.Rect() { left = 0, top = 0, right = (int)Width, bottom = (int)Height }
+                    rcDestination = new WinAPI.Modeles.Rect() { left = 0, top = 0, right = (int)Width, bottom = (int)Height },
                 };
                 Dwmapi.DwmUpdateThumbnailProperties(_thumbPtr, ref _thumb);
             }
+        }
+
+        private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            _parent.ApplicationWindow.BringToFront();
+            this.Close();
+        }
+
+        private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // Display system menu for the selected window/app
         }
     }
 }
