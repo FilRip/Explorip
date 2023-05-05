@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
 
 using Explorip.TaskBar.Utilities;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.Controls
 {
     /// <summary>
     /// Interaction logic for StartButton.xaml
     /// </summary>
-    public partial class StartButton : UserControl
+    public partial class StartButton : System.Windows.Controls.UserControl
     {
         private bool allowOpenStart;
         private readonly DispatcherTimer pendingOpenTimer;
@@ -65,15 +66,16 @@ namespace Explorip.TaskBar.Controls
                 pendingOpenTimer.Start();
                 try
                 {
+                    IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Démarrer");
+                    if (pointeurMenuDemarrer != IntPtr.Zero)
+                    {
+                        Screen screen = Screen.FromPoint(System.Windows.Forms.Cursor.Position);
+                        NativeMethods.SetWindowPos(pointeurMenuDemarrer, IntPtr.Zero, screen.WorkingArea.X, screen.WorkingArea.Y, screen.WorkingArea.Width, screen.WorkingArea.Height, (int)ManagedShell.Interop.NativeMethods.SWP.SWP_NOACTIVATE);
+                    }
                     ShellHelper.ShowStartMenu();
                 }
                 catch (Exception) { /* Ignore errors */ }
-                /*IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Accueil");
-                if (pointeurMenuDemarrer != IntPtr.Zero)
-                {
-                    Console.WriteLine("ShowWindow Démarrer");
-                    ManagedShell.Interop.NativeMethods.ShowWindow(pointeurMenuDemarrer, ManagedShell.Interop.NativeMethods.WindowShowStyle.Show);
-                }*/
+
                 return;
             }
 

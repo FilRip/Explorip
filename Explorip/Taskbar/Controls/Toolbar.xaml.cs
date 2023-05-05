@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -60,8 +61,11 @@ namespace Explorip.TaskBar.Controls
         private void SetupFolder(string path)
         {
             Folder?.Dispose();
-            Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
-            Title.Content = Folder.DisplayName;
+            if (Directory.Exists(path))
+            {
+                Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
+                Title.Content = Folder.DisplayName;
+            }
         }
 
         private void UnloadFolder()
