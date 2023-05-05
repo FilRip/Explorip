@@ -279,7 +279,7 @@ namespace Explorip.TaskBar
             HitTestResult result = VisualTreeHelper.HitTest(ToolsBars, _lastMousePosition);
             if (result?.VisualHit != null)
             {
-                Toolbar toolbar = result.VisualHit.FindParent<Toolbar>();
+                Toolbar toolbar = result.VisualHit.FindVisualParent<Toolbar>();
                 toolbar?.ShowHideTitle_Click(sender, e);
             }
         }
@@ -294,7 +294,7 @@ namespace Explorip.TaskBar
             HitTestResult result = VisualTreeHelper.HitTest(ToolsBars, _lastMousePosition);
             if (result?.VisualHit != null)
             {
-                Toolbar toolbar = result.VisualHit.FindParent<Toolbar>();
+                Toolbar toolbar = result.VisualHit.FindVisualParent<Toolbar>();
                 toolbar?.ShowLargeIcon_Click(sender, e);
             }
         }

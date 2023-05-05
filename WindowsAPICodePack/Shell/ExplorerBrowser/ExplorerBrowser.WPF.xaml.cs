@@ -76,12 +76,12 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             Loaded += new RoutedEventHandler(ExplorerBrowser_Loaded);
         }
 
-        void ExplorerBrowserControl_ViewSelectedItemChanged(object sender, EventArgs e)
+        private void ExplorerBrowserControl_ViewSelectedItemChanged(object sender, EventArgs e)
         {
             // Empty method ?!
         }
 
-        void ExplorerBrowserControl_ViewEnumerationComplete(object sender, EventArgs e)
+        private void ExplorerBrowserControl_ViewEnumerationComplete(object sender, EventArgs e)
         {
             itemsChanged.Set();
             selectionChanged.Set();
@@ -93,7 +93,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void ExplorerBrowser_Loaded(object sender, RoutedEventArgs e)
+        private void ExplorerBrowser_Loaded(object sender, RoutedEventArgs e)
         {
             // setup timer to update dependency properties from CLR properties of WinForms ExplorerBrowser object
             dtCLRUpdater.Tick += new EventHandler(UpdateDependencyPropertiesFromCLRPRoperties);
@@ -118,7 +118,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void UpdateDependencyPropertiesFromCLRPRoperties(object sender, EventArgs e)
+        private void UpdateDependencyPropertiesFromCLRPRoperties(object sender, EventArgs e)
         {
             AlignLeft = ExplorerBrowserControl.ContentOptions.AlignLeft;
             AutoArrange = ExplorerBrowserControl.ContentOptions.AutoArrange;
@@ -183,7 +183,7 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        void NavigationLogChanged(object sender, NavigationLogEventArgs args)
+        private void NavigationLogChanged(object sender, NavigationLogEventArgs args)
         {
             navigationLog.Clear();
             foreach (ShellObject obj in ExplorerBrowserControl.NavigationLog.Locations)
@@ -197,13 +197,13 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void SelectionChanged(object sender, EventArgs e)
+        private void SelectionChanged(object sender, EventArgs e)
         {
             selectionChanged.Set();
         }
 
         // Synchronize ItemsCollection to dependency collection
-        void ItemsChanged(object sender, EventArgs e)
+        private void ItemsChanged(object sender, EventArgs e)
         {
             itemsChanged.Set();
         }

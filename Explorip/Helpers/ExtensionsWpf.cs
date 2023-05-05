@@ -8,7 +8,7 @@ namespace Explorip.Helpers
         /// <summary>
         /// Retourne le premier parent de type T de l'objet donné
         /// </summary>
-        public static T FindParent<T>(this DependencyObject child) where T : DependencyObject
+        public static T FindVisualParent<T>(this DependencyObject child) where T : DependencyObject
         {
             // get parent item
             DependencyObject parentObject = VisualTreeHelper.GetParent(child);
@@ -20,10 +20,10 @@ namespace Explorip.Helpers
             if (parentObject is T parent)
                 return parent;
             else
-                return FindParent<T>(parentObject);
+                return FindVisualParent<T>(parentObject);
         }
 
-        public static T FindChild<T>(this DependencyObject parent) where T : DependencyObject
+        public static T FindVisualChild<T>(this DependencyObject parent) where T : DependencyObject
         {
             int nbChild;
             if ((nbChild = VisualTreeHelper.GetChildrenCount(parent)) == 0)
@@ -35,12 +35,27 @@ namespace Explorip.Helpers
                     return result;
                 else
                 {
-                    childObject = FindChild<T>(childObject);
+                    childObject = FindVisualChild<T>(childObject);
                     if (childObject is T retour)
                         return retour;
                 }
             }
             return null;
+        }
+
+        public static T FindControlParent<T>(this FrameworkElement control) where T : FrameworkElement
+        {
+            // get parent item
+            DependencyObject @object = control.Parent;
+
+            if (@object is not FrameworkElement parentObject)
+                return null;
+
+            // check if the parent matches the type we're looking for
+            if (parentObject is T parent)
+                return parent;
+            else
+                return FindControlParent<T>(parentObject);
         }
     }
 }

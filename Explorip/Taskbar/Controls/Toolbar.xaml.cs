@@ -199,7 +199,7 @@ namespace Explorip.TaskBar.Controls
             if (!TaskbarViewModel.Instance.ResizeOn)
                 return;
 
-            Grid myGrid = this.FindParent<Grid>();
+            Grid myGrid = this.FindVisualParent<Grid>();
             _startX = Mouse.GetPosition(myGrid).X - MyRenderTransform.X;
             _startY = Mouse.GetPosition(myGrid).Y - MyRenderTransform.Y;
 
@@ -218,14 +218,14 @@ namespace Explorip.TaskBar.Controls
             if (!IsMouseCaptured)
                 return;
 
-            Grid myGrid = this.FindParent<Grid>();
+            Grid myGrid = this.FindVisualParent<Grid>();
             MyRenderTransform.X = Math.Max(0, Mouse.GetPosition(myGrid).X - _startX);
             HitTestResult result = VisualTreeHelper.HitTest(myGrid, e.GetPosition(myGrid));
             if (result?.VisualHit != null)
             {
                 if (MyRenderTransform.X == 0)
                 {
-                    Toolbar parent = result.VisualHit.FindParent<Toolbar>();
+                    Toolbar parent = result.VisualHit.FindVisualParent<Toolbar>();
                     if (parent != null)
                     {
                         int previousRow = Grid.GetRow(this);
@@ -240,7 +240,7 @@ namespace Explorip.TaskBar.Controls
                 else
                 {
                     MyRenderTransform.Y = Mouse.GetPosition(myGrid).Y - _startY;
-                    Toolbar parent = result.VisualHit.FindParent<Toolbar>();
+                    Toolbar parent = result.VisualHit.FindVisualParent<Toolbar>();
                     if (parent != null)
                     {
                         int previousRow = Grid.GetRow(this);
@@ -294,7 +294,7 @@ namespace Explorip.TaskBar.Controls
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             FrameworkElement element = container as FrameworkElement;
-            if (container.FindParent<Toolbar>().CurrentShowLargeIcon)
+            if (container.FindVisualParent<Toolbar>().CurrentShowLargeIcon)
                 return (DataTemplate)element.FindResource("LargeIconTemplate");
             else
                 return (DataTemplate)element.FindResource("SmallIconTemplate");

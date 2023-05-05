@@ -54,7 +54,7 @@ namespace Explorip.Explorer.WPF.Controls
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ((TabItemConsoleCommand)((Grid)Parent).Parent).Dispose();
+                this.FindControlParent<TabItemConsoleCommand>().Dispose();
             });
         }
 
