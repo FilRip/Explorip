@@ -4,7 +4,6 @@ using Explorip.Helpers;
 using Microsoft.WindowsAPICodePack.Shell;
 
 using System.Drawing;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -109,23 +108,6 @@ namespace Explorip.Explorer.WPF.Controls
                 MyWindow.CopyRight.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
             }
             base.OnKeyUp(e);
-        }
-
-        #endregion
-
-        #region Drag'n Drop tab item in tab control
-
-        private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Source is not TabItem tabItem)
-            {
-                return;
-            }
-
-            if (Mouse.PrimaryDevice.LeftButton == MouseButtonState.Pressed)
-            {
-                DragDrop.DoDragDrop(tabItem, tabItem, DragDropEffects.All);
-            }
         }
 
         #endregion

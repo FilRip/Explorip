@@ -9,10 +9,4 @@
             Name="MyTabControl" IsTabStop="False" SelectionChanged="MyTabControl_SelectionChanged">
     <local:TabItemExplorerBrowser x:Name="FirstTab"/>
     <local:TabItemPlusExplorerBrowser x:Name="PlusTab"/>
-    <TabControl.Resources>
-        <Style TargetType="TabItem">
-            <Setter Property="AllowDrop" Value="True"/>
-            <EventSetter Event="PreviewMouseMove" Handler="TabItem_PreviewMouseMove"/>
-        </Style>
-    </TabControl.Resources>
 </TabControl>

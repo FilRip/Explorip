@@ -44,7 +44,7 @@ namespace ManagedShell.Common.Common
                 _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { InsertItemImpl(e); }, e);
             }
         }
-        void InsertItemImpl(object[] e)
+        private void InsertItemImpl(object[] e)
         {
             if (_dispatcher.CheckAccess())
             {
@@ -71,7 +71,7 @@ namespace ManagedShell.Common.Common
                 _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { MoveItemImpl(e); }, e);
             }
         }
-        void MoveItemImpl(object[] e)
+        private void MoveItemImpl(object[] e)
         {
             if (_dispatcher.CheckAccess())
             {
@@ -111,7 +111,7 @@ namespace ManagedShell.Common.Common
                 _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { SetItemImpl(e); }, e);
             }
         }
-        void SetItemImpl(object[] e)
+        private void SetItemImpl(object[] e)
         {
             if (_dispatcher.CheckAccess())
             {
