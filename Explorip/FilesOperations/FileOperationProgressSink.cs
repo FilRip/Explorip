@@ -1,7 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 using Explorip.FilesOperations.Interfaces;
 
+using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 
@@ -114,8 +117,14 @@ namespace Explorip.FilesOperations
         private static void TraceAction(
             string action, IShellItem item, uint hresult)
         {
+            string displayName = "";
+            if (item?.GetDisplayName(SIGDN.NORMALDISPLAY, out IntPtr ptrDisplayName) == NativeMethods.S_OK && ptrDisplayName != IntPtr.Zero)
+            {
+                displayName = Marshal.PtrToStringAuto(ptrDisplayName);
+                Marshal.FreeCoTaskMem(ptrDisplayName);
+            }    
             TraceAction(action,
-                item?.GetDisplayName(SIGDN.NORMALDISPLAY),
+                displayName,
                 hresult);
         }
     }

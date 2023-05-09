@@ -23,6 +23,7 @@ namespace Explorip.TaskBar.Controls
         {
             InitializeComponent();
             _parent = parent;
+            Owner = _parent.TaskbarParent;
             Point positionParent = _parent.PointToScreen(new Point(0, 0));
             Left = positionParent.X - (Width / 2);
             Top = positionParent.Y - (Height);

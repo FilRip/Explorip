@@ -31,14 +31,13 @@ namespace ManagedShell.ShellFolders
 
         public bool AllowAsync { get; set; } = true;
 
-
         private bool? _isFileSystem;
 
         public bool IsFileSystem
         {
             get
             {
-                _isFileSystem ??= (Attributes & SFGAO.FILESYSTEM) != 0;
+                _isFileSystem ??= Attributes.HasFlag(SFGAO.FILESYSTEM);
 
                 return (bool)_isFileSystem;
             }
@@ -50,7 +49,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                _isNavigableFolder ??= ((Attributes & SFGAO.FOLDER) != 0);
+                _isNavigableFolder ??= Attributes.HasFlag(SFGAO.FOLDER);
 
                 return (bool)_isNavigableFolder;
             }
@@ -62,7 +61,7 @@ namespace ManagedShell.ShellFolders
         {
             get
             {
-                _isFolder ??= ((Attributes & SFGAO.FOLDER) != 0 && (Attributes & SFGAO.STREAM) == 0);
+                _isFolder ??= Attributes.HasFlag(SFGAO.FOLDER) && !Attributes.HasFlag(SFGAO.STREAM);
 
                 return (bool)_isFolder;
             }
@@ -343,21 +342,21 @@ namespace ManagedShell.ShellFolders
             _extraLargeIcon = null;
             _jumboIcon = null;
 
-            OnPropertyChanged("DisplayName");
+            OnPropertyChanged(nameof(DisplayName));
             if (newPath)
             {
-                OnPropertyChanged("FileName");
-                OnPropertyChanged("Path");
+                OnPropertyChanged(nameof(FileName));
+                OnPropertyChanged(nameof(Path));
             }
 
-            OnPropertyChanged("Attributes");
-            OnPropertyChanged("IsFileSystem");
-            OnPropertyChanged("IsFolder");
+            OnPropertyChanged(nameof(Attributes));
+            OnPropertyChanged(nameof(IsFileSystem));
+            OnPropertyChanged(nameof(IsFolder));
 
-            OnPropertyChanged("SmallIcon");
-            OnPropertyChanged("LargeIcon");
-            OnPropertyChanged("ExtraLargeIcon");
-            OnPropertyChanged("JumboIcon");
+            OnPropertyChanged(nameof(SmallIcon));
+            OnPropertyChanged(nameof(LargeIcon));
+            OnPropertyChanged(nameof(ExtraLargeIcon));
+            OnPropertyChanged(nameof(JumboIcon));
         }
 
         public override string ToString()
@@ -489,7 +488,6 @@ namespace ManagedShell.ShellFolders
 
         private SFGAO GetAttributes()
         {
-
             if (_shellItem?.GetAttributes(SFGAO.FILESYSTEM | SFGAO.FOLDER | SFGAO.HIDDEN | SFGAO.STREAM, out SFGAO attrs) !=
                 NativeMethods.S_OK)
             {
@@ -628,10 +626,13 @@ namespace ManagedShell.ShellFolders
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+#nullable enable
+        protected virtual void OnPropertyChanged([CallerMemberName()] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+#nullable disable
+
         #endregion
 
         private bool updateShellFolder;

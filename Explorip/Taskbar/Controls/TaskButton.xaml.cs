@@ -12,7 +12,6 @@ using Explorip.Helpers;
 using Explorip.TaskBar.Converters;
 using Explorip.TaskBar.Utilities;
 
-using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
@@ -28,8 +27,6 @@ namespace Explorip.TaskBar.Controls
         private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
         private TaskThumbButton _thumb;
         private bool _isLoaded;
-
-        public readonly static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(Taskbar), typeof(TaskButton), new PropertyMetadata(null));
 
         public TaskButton()
         {
@@ -244,7 +241,7 @@ namespace Explorip.TaskBar.Controls
         {
             Task.Run(() =>
             {
-                Thread.Sleep(500);
+                Thread.Sleep(100);
                 if (!_thumb.MouseIn)
                     Application.Current.Dispatcher.Invoke(() => { _thumb.Close(); });
             });

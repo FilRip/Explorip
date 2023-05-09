@@ -61,7 +61,7 @@ namespace Explorip.TaskBar.Controls
         private void SetupFolder(string path)
         {
             Folder?.Dispose();
-            if (Directory.Exists(path))
+            if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
             {
                 Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
                 Title.Content = Folder.DisplayName;

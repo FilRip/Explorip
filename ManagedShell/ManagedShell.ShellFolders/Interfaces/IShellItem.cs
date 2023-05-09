@@ -19,9 +19,6 @@ namespace ManagedShell.ShellFolders.Interfaces
 
         int GetDisplayName(SIGDN sigdnName, out IntPtr ppszName);
 
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        string GetDisplayName(SIGDN sigdnName);
-
         int GetAttributes(SFGAO sfgaoMask, out SFGAO psfgaoAttribs);
 
         int Compare(IShellItem psi, uint hint, out int piOrder);
