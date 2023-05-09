@@ -51,8 +51,7 @@ namespace Explorip.Explorer.WPF.Windows
 
             Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
-            // TODO : https://stackoverflow.com/questions/59366391/is-there-any-way-to-make-a-wpf-app-respect-the-system-choice-of-dark-light-theme
-            //        https://stackoverflow.com/questions/69097246/how-to-support-for-windows-11-snap-layout-to-the-custom-maximize-restore-butto
+            // TODO : https://stackoverflow.com/questions/69097246/how-to-support-for-windows-11-snap-layout-to-the-custom-maximize-restore-butto
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Interop;
 
+using Explorip.Helpers;
 using Explorip.TaskBar.Utilities;
+using Explorip.WinAPI;
 
 using ManagedShell;
 using ManagedShell.AppBar;
@@ -68,7 +71,12 @@ namespace Explorip.TaskBar
             taskBar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen(), (AppBarEdge)Settings.Instance.Edge);
             taskBar.Show();
             _taskbarList.Add(taskBar);
-            if (Helpers.ExtensionsCommandLineArguments.ArgumentPresent("taskbars"))
+            if (WindowsSettings.IsWindowsApplicationInDarkMode())
+            {
+                WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(taskBar).Handle, true);
+                Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
+            }
+            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbars"))
                 AfficheTaskBarAutresMoniteurs();
         }
 
