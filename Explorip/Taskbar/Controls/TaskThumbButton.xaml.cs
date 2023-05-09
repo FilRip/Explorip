@@ -55,6 +55,7 @@ namespace Explorip.TaskBar.Controls
         {
             WindowInteropHelper helper = new(this);
             _handle = helper.Handle;
+            WindowHelper.ExcludeWindowFromPeek(_handle);
             int result = Dwmapi.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.Handle, out _thumbPtr);
             if (result == (int)Commun.HRESULT.S_OK)
             {

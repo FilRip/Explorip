@@ -29,7 +29,7 @@ namespace ManagedShell.ShellFolders
 
         public bool Loaded => _shellItem != null;
 
-        public bool AllowAsync { get; set; } = true;
+        public bool AllowAsync { get; set; }
 
         private bool? _isFileSystem;
 
@@ -315,14 +315,12 @@ namespace ManagedShell.ShellFolders
             _shellItem = GetShellItem(parsingName);
         }
 
-#pragma warning disable IDE0060
-        public ShellItem(IntPtr parentPidl, IShellFolder parentShellFolder, IntPtr relativePidl, bool isAsync = false)
+        public ShellItem(IntPtr parentPidl, IShellFolder parentShellFolder, IntPtr relativePidl, bool isAsync = true)
         {
+            AllowAsync = isAsync;
             _relativePidl = relativePidl;
-
             _shellItem = GetShellItem(parentPidl, parentShellFolder, _relativePidl);
         }
-#pragma warning restore IDE0060
 
         public void Refresh(bool newPath = false)
         {
