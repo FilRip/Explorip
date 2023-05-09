@@ -3,14 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local="clr-namespace:Explorip.Explorer.WPF.Windows"
         xmlns:controls="clr-namespace:Explorip.Explorer.WPF.Controls"
         xmlns:converters="clr-namespace:Explorip.Explorer.WPF.Converters"
         xmlns:viewmodels="clr-namespace:Explorip.Explorer.WPF.ViewModels"
         mc:Ignorable="d"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
         UseLayoutRounding="True" Focusable="True" MouseDown="Window_MouseDown" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
-        ResizeMode="CanResizeWithGrip" Activated="Window_Activated"
+        ResizeMode="CanResizeWithGrip" Activated="Window_Activated" StateChanged="Window_StateChanged"
         Loaded="Window_Loaded">
     
     <Window.DataContext>

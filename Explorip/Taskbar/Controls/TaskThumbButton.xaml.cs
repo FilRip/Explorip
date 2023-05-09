@@ -78,7 +78,15 @@ namespace Explorip.TaskBar.Controls
 
         private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            // Display system menu for the selected window/app
+            IntPtr wMenu = User32.GetSystemMenu(_parent.ApplicationWindow.Handle, false);
+            // Display the menu
+            Point posMouse = PointToScreen(Mouse.GetPosition(this));
+            uint command = User32.TrackPopupMenuEx(wMenu,
+                User32.TPM.LEFTBUTTON | User32.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, _handle, IntPtr.Zero);
+            if (command == 0)
+                return;
+
+            User32.PostMessage(_parent.ApplicationWindow.Handle, (uint)Commun.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
         }
     }
 }
