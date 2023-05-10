@@ -107,9 +107,9 @@ namespace Explorip.Explorer.WPF.Controls
                         {
                             MyDataContext.EditPath = pathLink;
                             StringBuilder partialPath = new();
-                            foreach (string path in pathLink.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries))
+                            foreach (string path in pathLink.Split(new char[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                partialPath.Append(path + @"\");
+                                partialPath.Append(path + Path.DirectorySeparatorChar);
                                 Hyperlink lb = new()
                                 {
                                     Foreground = Brushes.Yellow,
@@ -118,7 +118,7 @@ namespace Explorip.Explorer.WPF.Controls
                                 lb.RequestNavigate += Lb_RequestNavigate;
                                 lb.Inlines.Add(path);
                                 CurrentPath.Inlines.Add(lb);
-                                CurrentPath.Inlines.Add(" \\ ");
+                                CurrentPath.Inlines.Add($" {Path.DirectorySeparatorChar} ");
                             }
                         }
                         else

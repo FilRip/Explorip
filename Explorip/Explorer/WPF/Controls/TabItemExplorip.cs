@@ -28,10 +28,10 @@ namespace Explorip.Explorer.WPF.Controls
         /// <summary>
         /// Property - Set the Title of the Tab
         /// </summary>
-        public void SetTitle(string newTitle)
+        protected void SetTitle(string newTitle)
         {
             if (MyHeader != null)
-                MyHeader.Label_TabTitle.Content = newTitle;
+                MyHeader.Label_TabTitle.Content = newTitle.Replace("_","__");
         }
 
         #region Events for selecting/deselecting
