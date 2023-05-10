@@ -39,6 +39,7 @@ namespace Explorip.TaskBar.Controls
         {
             MouseIn = false;
             WindowHelper.PeekWindow(false, _parent.ApplicationWindow.Handle, _parent.TaskbarParent.Handle);
+            Close();
         }
 
         public bool MouseIn { get; private set; }
