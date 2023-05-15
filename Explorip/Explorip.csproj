@@ -142,6 +142,9 @@
     <Compile Include="TaskBar\Controls\TabTipButton.xaml.cs">
       <DependentUpon>TabTipButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TaskBar\Controls\WidgetsButton.xaml.cs">
+      <DependentUpon>WidgetsButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TaskBar\Controls\TaskManButton.xaml.cs">
       <DependentUpon>TaskManButton.xaml</DependentUpon>
     </Compile>
@@ -346,6 +349,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="TaskBar\Controls\WidgetsButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TaskBar\Controls\TaskManButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -534,6 +541,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TaskBar\Resources\tabtip.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="TaskBar\Resources\widget11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="TaskBar\Resources\search11.png" />
+    <Resource Include="TaskBar\Resources\start11.png" />
+    <Resource Include="TaskBar\Resources\taskman11.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

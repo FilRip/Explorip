@@ -7,7 +7,7 @@ namespace Explorip.HookFileOperations.FilesOperations.Interfaces
     {
         public const string IID_IPersistFile = "0000010b-0000-0000-C000-000000000046";
         public static readonly Guid GUID_IPersistFile = new(IID_IPersistFile);
-        
+
         public const string IID_IPersistIDList = "1079acfc-29bd-11d3-8e0d-00c04f6837d5";
         public static readonly Guid GUID_IPersistIDList = new(IID_IPersistIDList);
     }

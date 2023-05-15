@@ -31,7 +31,7 @@ namespace Explorip.Explorer.WPF.Controls
         protected void SetTitle(string newTitle)
         {
             if (MyHeader != null)
-                MyHeader.Label_TabTitle.Content = newTitle.Replace("_","__");
+                MyHeader.Label_TabTitle.Content = newTitle.Replace("_", "__");
         }
 
         #region Events for selecting/deselecting
@@ -118,7 +118,7 @@ namespace Explorip.Explorer.WPF.Controls
                         tabItemTarget = browser;
                     else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorip browser2)
                         tabItemTarget = browser2;
-                    
+
 #pragma warning disable IDE0074, IDE0270 // Utiliser une assignation composée
                     TabItemExplorip tabItemSource = (TabItemExplorerBrowser)e.Data.GetData(typeof(TabItemExplorerBrowser));
                     if (tabItemSource == null)

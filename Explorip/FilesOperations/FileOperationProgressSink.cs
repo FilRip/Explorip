@@ -122,7 +122,7 @@ namespace Explorip.FilesOperations
             {
                 displayName = Marshal.PtrToStringAuto(ptrDisplayName);
                 Marshal.FreeCoTaskMem(ptrDisplayName);
-            }    
+            }
             TraceAction(action,
                 displayName,
                 hresult);

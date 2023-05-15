@@ -7,10 +7,10 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using WindowsDesktop.Properties;
-
 using Microsoft.CSharp;
+
 using WindowsDesktop.Exceptions;
+using WindowsDesktop.Properties;
 
 namespace WindowsDesktop.Interop
 {

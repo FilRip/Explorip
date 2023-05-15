@@ -1,6 +1,6 @@
-﻿using Explorip.Helpers;
+﻿using System.Windows.Media;
 
-using System.Windows.Media;
+using Explorip.Helpers;
 
 namespace Explorip.Explorer.WPF.ViewModels
 {

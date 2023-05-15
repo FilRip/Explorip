@@ -237,7 +237,7 @@ namespace ManagedShell.AppBar
 
                 if (!isSameCoords)
                 {
-                    ShellLogger.Debug($"AppBarManager: {abWindow.Name} changing position (TxLxBxR) to {abd.rc.Top}x{abd.rc.Left}x{abd.rc.Bottom}x{abd.rc.Right} from {abWindow.Top * abWindow.DpiScale}x{abWindow.Left * abWindow.DpiScale}x{(abWindow.Top * abWindow.DpiScale) + sHeight}x{ (abWindow.Left * abWindow.DpiScale) + sWidth}");
+                    ShellLogger.Debug($"AppBarManager: {abWindow.Name} changing position (TxLxBxR) to {abd.rc.Top}x{abd.rc.Left}x{abd.rc.Bottom}x{abd.rc.Right} from {abWindow.Top * abWindow.DpiScale}x{abWindow.Left * abWindow.DpiScale}x{(abWindow.Top * abWindow.DpiScale) + sHeight}x{(abWindow.Left * abWindow.DpiScale) + sWidth}");
                     abWindow.SetAppBarPosition(abd.rc);
                 }
 

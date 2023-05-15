@@ -118,7 +118,7 @@ namespace Explorip.HookFileOperations
         {
             _server?.ReportMessage("Intercept CopyItem");
             _server?.CopyItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH), psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), pszCopyName);
-        }
+        }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
         private delegate void DelegateCopyItems(IFileOperation self, [MarshalAs(UnmanagedType.IUnknown)] object punkItems, IShellItem psiDestinationFolder);
@@ -132,7 +132,7 @@ namespace Explorip.HookFileOperations
                 string src = si.GetDisplayName(SIGDN.FILESYSPATH);
                 _server?.CopyItem(src, psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), Path.GetFileName(src));
             }
-        }
+        }
 
         [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
         private delegate void DelegateMoveItem(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem);

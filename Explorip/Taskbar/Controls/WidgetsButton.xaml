@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="Explorip.TaskBar.Controls.WidgetsButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ToggleButton ToolTip="{DynamicResource WidgetsButtonTip}"
+            Click="Widgets_OnClick"
+            Name="Widgets"
+            Style="{DynamicResource WidgetsButton}">
+        <Image Style="{DynamicResource WidgetsIcon}"/>
+    </ToggleButton>
+</UserControl>

@@ -97,11 +97,11 @@ namespace Explorip.TaskBar.Utilities
             }
             else
             {
-                dictFilePath = Path.ChangeExtension(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dictFolder, dictionary),dictExtension);
+                dictFilePath = Path.ChangeExtension(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dictFolder, dictionary), dictExtension);
 
                 if (!File.Exists(dictFilePath))
                 {
-                    dictFilePath = Path.ChangeExtension(Path.Combine(Path.GetDirectoryName(ExePath.GetExecutablePath()), dictFolder, dictionary),dictExtension);
+                    dictFilePath = Path.ChangeExtension(Path.Combine(Path.GetDirectoryName(ExePath.GetExecutablePath()), dictFolder, dictionary), dictExtension);
 
                     if (!File.Exists(dictFilePath))
                     {

@@ -43,7 +43,7 @@ namespace Explorip.Explorer.WPF.Windows
                     dir = null;
                 }
             }
-            
+
             if (string.IsNullOrWhiteSpace(dir))
                 LeftTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
 

@@ -1,11 +1,4 @@
-﻿using Explorip.Explorer.WPF.ViewModels;
-using Explorip.Explorer.WPF.Windows;
-using Explorip.Helpers;
-
-using Microsoft.WindowsAPICodePack.Controls;
-using Microsoft.WindowsAPICodePack.Shell;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +7,13 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+
+using Explorip.Explorer.WPF.ViewModels;
+using Explorip.Explorer.WPF.Windows;
+using Explorip.Helpers;
+
+using Microsoft.WindowsAPICodePack.Controls;
+using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Explorer.WPF.Controls
 {

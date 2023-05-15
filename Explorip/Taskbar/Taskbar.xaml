@@ -31,6 +31,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="0"/>
@@ -64,7 +65,15 @@
                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:TaskManButton>
-                <Grid Grid.Column="3" Grid.Row="0" Name="ToolsBars">
+                <controls:WidgetsButton x:Name="WidgetsButton" Grid.Column="3" Grid.RowSpan="2">
+                    <DockPanel.Dock>
+                        <Binding Converter="{StaticResource dockOrientationConverter}"
+                             ConverterParameter="leading"
+                             Path="Orientation"
+                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                    </DockPanel.Dock>
+                </controls:WidgetsButton>
+                <Grid Grid.Column="4" Grid.Row="0" Name="ToolsBars">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
@@ -76,8 +85,8 @@
                               Path="{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}">
                     </controls:Toolbar>
                 </Grid>
-                <controls:TaskList VerticalAlignment="Top" Grid.Column="3" Grid.Row="1" x:Name="ListeDesTaches" EcranPrincipal="{Binding MainScreen}" TaskbarParent="{Binding .}"/>
-                <GroupBox Style="{DynamicResource Tray}" Grid.Column="4" Grid.RowSpan="2">
+                <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="ListeDesTaches" EcranPrincipal="{Binding MainScreen}" TaskbarParent="{Binding .}"/>
+                <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Converter="{StaticResource dockOrientationConverter}"
                              ConverterParameter="trailing"
@@ -95,7 +104,7 @@
                         <controls:Clock VerticalAlignment="Center"></controls:Clock>
                     </StackPanel>
                 </GroupBox>
-                <controls:TabTipButton x:Name="TabTipButton" Grid.Column="5" Grid.RowSpan="2" Visibility="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=ShowTabTip}">
+                <controls:TabTipButton x:Name="TabTipButton" Grid.Column="6" Grid.RowSpan="2" Visibility="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=ShowTabTip}">
                     <DockPanel.Dock>
                         <Binding Converter="{StaticResource dockOrientationConverter}"
                              ConverterParameter="leading"
@@ -103,7 +112,7 @@
                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:TabTipButton>
-                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="6" Grid.RowSpan="2">
+                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="7" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Converter="{StaticResource dockOrientationConverter}"
                              ConverterParameter="leading"

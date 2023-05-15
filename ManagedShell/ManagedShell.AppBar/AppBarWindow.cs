@@ -231,7 +231,7 @@ namespace ManagedShell.AppBar
 
                 DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
                 Screen.ChangeDpi();
-                
+
                 ProcessScreenChange(ScreenSetupReason.DpiChange);
             }
             else if (msg == (int)NativeMethods.WM.DISPLAYCHANGE)
