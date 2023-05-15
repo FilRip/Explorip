@@ -298,5 +298,12 @@ namespace Explorip.TaskBar
                 toolbar?.ShowLargeIcon_Click(sender, e);
             }
         }
+
+        private void MenuShowTabTip_Click(object sender, RoutedEventArgs e)
+        {
+            TaskbarViewModel.Instance.ShowTabTip = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            MenuShowTabTip.IsChecked = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible;
+            MainGrid.ColumnDefinitions[5].Width = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? GridLength.Auto : new GridLength(0);
+        }
     }
 }

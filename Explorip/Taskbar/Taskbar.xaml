@@ -33,6 +33,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="0"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -94,7 +95,15 @@
                         <controls:Clock VerticalAlignment="Center"></controls:Clock>
                     </StackPanel>
                 </GroupBox>
-                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="5" Grid.RowSpan="2">
+                <controls:TabTipButton x:Name="TabTipButton" Grid.Column="5" Grid.RowSpan="2" Visibility="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=ShowTabTip}">
+                    <DockPanel.Dock>
+                        <Binding Converter="{StaticResource dockOrientationConverter}"
+                             ConverterParameter="leading"
+                             Path="Orientation"
+                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                    </DockPanel.Dock>
+                </controls:TabTipButton>
+                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="6" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Converter="{StaticResource dockOrientationConverter}"
                              ConverterParameter="leading"
@@ -117,8 +126,9 @@
             <MenuItem Header="Barre des tâches sur tous les écrans" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
             <MenuItem Header="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=LabelUnlock}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="Ajouter une barre d'outils" Name="MenuAjoutToolbar" Click="MenuAjoutToolbar_Click"/>
+            <MenuItem Header="Affiche/Cache icone clavier visuel" Name="MenuShowTabTip" Click="MenuShowTabTip_Click"/>
             <Separator/>
-            <MenuItem Header="{DynamicResource exit_retrobar}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
+            <MenuItem Header="{DynamicResource exit_explorip}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>
     </appbar:AppBarWindow.ContextMenu>
 </appbar:AppBarWindow>

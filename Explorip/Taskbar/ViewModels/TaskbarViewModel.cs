@@ -1,4 +1,6 @@
-﻿using Explorip.Helpers;
+﻿using System.Windows;
+
+using Explorip.Helpers;
 
 namespace Explorip.TaskBar.ViewModels
 {
@@ -15,7 +17,10 @@ namespace Explorip.TaskBar.ViewModels
             }
         }
 
-        private TaskbarViewModel() : base() { }
+        private TaskbarViewModel() : base()
+        {
+            ShowTabTip = Visibility.Hidden;
+        }
 
         private bool _resizeMode;
         public bool ResizeOn
@@ -36,6 +41,17 @@ namespace Explorip.TaskBar.ViewModels
                     return "Lock";
                 else
                     return "Unlock";
+            }
+        }
+
+        private Visibility _showKeyboard;
+        public Visibility ShowTabTip
+        {
+            get { return _showKeyboard; }
+            set
+            {
+                _showKeyboard = value;
+                OnPropertyChanged();
             }
         }
     }

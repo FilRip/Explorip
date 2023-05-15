@@ -139,6 +139,9 @@
     <Compile Include="TaskBar\Controls\NotificationButton.xaml.cs">
       <DependentUpon>NotificationButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TaskBar\Controls\TabTipButton.xaml.cs">
+      <DependentUpon>TabTipButton.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TaskBar\Controls\TaskManButton.xaml.cs">
       <DependentUpon>TaskManButton.xaml</DependentUpon>
     </Compile>
@@ -209,12 +212,14 @@
     <Compile Include="WinAPI\Modeles\IDropTargetHelper.cs" />
     <Compile Include="WinAPI\Modeles\DwmColorizationParams.cs" />
     <Compile Include="WinAPI\Modeles\InputRecord.cs" />
+    <Compile Include="WinAPI\Modeles\ITipInvocation.cs" />
     <Compile Include="WinAPI\Modeles\KeyEventRecord.cs" />
     <Compile Include="WinAPI\Modeles\MenuEventRecord.cs" />
     <Compile Include="WinAPI\Modeles\MouseButtonState.cs" />
     <Compile Include="WinAPI\Modeles\MouseEvent.cs" />
     <Compile Include="WinAPI\Modeles\MouseEventRecord.cs" />
     <Compile Include="WinAPI\Modeles\StdHandle.cs" />
+    <Compile Include="WinAPI\Modeles\UIHostNoLaunch.cs" />
     <Compile Include="WinAPI\Modeles\WindowBufferSizeRecord.cs" />
     <Compile Include="WinAPI\Uxtheme.cs" />
     <Compile Include="WinAPI\Ole32.cs" />
@@ -334,6 +339,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TaskBar\Controls\NotificationButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TaskBar\Controls\TabTipButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -522,6 +531,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>EasyLoad64.dll</TargetPath>
     </ContentWithTargetPath>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="TaskBar\Resources\tabtip.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
