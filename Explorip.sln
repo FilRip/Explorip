@@ -5,29 +5,29 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorip", "Explorip\Explorip.csproj", "{001DCDA7-F4C3-4BD6-A86C-C99B35A9798A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualDesktop", "VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj", "{4A2D2831-B4D0-403F-A749-9E9143798C8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualDesktop", "Libraries\VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj", "{4A2D2831-B4D0-403F-A749-9E9143798C8D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualDesktop.WinForms", "VirtualDesktop\VirtualDesktop.WinForms\VirtualDesktop.WinForms.csproj", "{216E7CEC-137F-4C93-99AD-C01CACF9A4D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualDesktop.WinForms", "Libraries\VirtualDesktop\VirtualDesktop.WinForms\VirtualDesktop.WinForms.csproj", "{216E7CEC-137F-4C93-99AD-C01CACF9A4D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualDesktop.WPF", "VirtualDesktop\VirtualDesktop.WPF\VirtualDesktop.WPF.csproj", "{8977ACAF-EDED-45E3-BE03-0C4E26F28D81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualDesktop.WPF", "Libraries\VirtualDesktop\VirtualDesktop.WPF\VirtualDesktop.WPF.csproj", "{8977ACAF-EDED-45E3-BE03-0C4E26F28D81}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell", "ManagedShell\ManagedShell\ManagedShell.csproj", "{78F2AD9F-F689-4F84-AD24-FCE54B23C6E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell", "Libraries\ManagedShell\ManagedShell\ManagedShell.csproj", "{78F2AD9F-F689-4F84-AD24-FCE54B23C6E6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.AppBar", "ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj", "{FAED8422-BAC8-4909-A199-E16595A1F448}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.AppBar", "Libraries\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj", "{FAED8422-BAC8-4909-A199-E16595A1F448}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.Common", "ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj", "{B5AFDC3A-12D6-44BB-8B03-D4A3D6CDCE0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.Common", "Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj", "{B5AFDC3A-12D6-44BB-8B03-D4A3D6CDCE0D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.Interop", "ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj", "{70C88862-47D9-4706-8C9A-2C9C8CFD4ABD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.Interop", "Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj", "{70C88862-47D9-4706-8C9A-2C9C8CFD4ABD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.ShellFolders", "ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj", "{08CA72AE-748C-45E3-88F1-0236D1AC679E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.ShellFolders", "Libraries\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj", "{08CA72AE-748C-45E3-88F1-0236D1AC679E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.UWPInterop", "ManagedShell\ManagedShell.UWPInterop\ManagedShell.UWPInterop.csproj", "{51215E01-FAA3-4C16-9381-6F7B593A8FBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.UWPInterop", "Libraries\ManagedShell\ManagedShell.UWPInterop\ManagedShell.UWPInterop.csproj", "{51215E01-FAA3-4C16-9381-6F7B593A8FBE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.WindowsTasks", "ManagedShell\ManagedShell.WindowsTasks\ManagedShell.WindowsTasks.csproj", "{DDC9D4FA-8457-4D65-A776-32F84227C2D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.WindowsTasks", "Libraries\ManagedShell\ManagedShell.WindowsTasks\ManagedShell.WindowsTasks.csproj", "{DDC9D4FA-8457-4D65-A776-32F84227C2D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.WindowsTray", "ManagedShell\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj", "{B469BD3C-8790-4262-AB02-0195AECB9CE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManagedShell.WindowsTray", "Libraries\ManagedShell\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj", "{B469BD3C-8790-4262-AB02-0195AECB9CE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "WindowsAPICodePack\Core\Core.csproj", "{2E1FB0DF-F9BB-4909-9F32-2D9D022A8E57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Libraries\WindowsAPICodePack\Core\Core.csproj", "{2E1FB0DF-F9BB-4909-9F32-2D9D022A8E57}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{02E20678-9AD3-4370-904E-02D800F25B35}"
 EndProject
@@ -37,11 +37,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VirtualDesktop", "VirtualDe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WindowsAPICodePack", "WindowsAPICodePack", "{27C336B7-987D-4EF8-B330-41FB020BC094}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shell", "WindowsAPICodePack\Shell\Shell.csproj", "{AA0C00CB-8699-4F37-BFAE-40CA87ACC06D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shell", "Libraries\WindowsAPICodePack\Shell\Shell.csproj", "{AA0C00CB-8699-4F37-BFAE-40CA87ACC06D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookFileOperations", "HookFileOperations\HookFileOperations.csproj", "{1FD71282-00D6-44D4-9857-1D26030662B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookFileOperations", "HookFileOperation\HookFileOperations\HookFileOperations.csproj", "{1FD71282-00D6-44D4-9857-1D26030662B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookFileOperationsManager", "HookFileOperationsManager\HookFileOperationsManager.csproj", "{30E52DC9-89E9-40B7-8785-AC13479751B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookFileOperationsManager", "HookFileOperation\HookFileOperationsManager\HookFileOperationsManager.csproj", "{30E52DC9-89E9-40B7-8785-AC13479751B0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HookFileOperation", "HookFileOperation", "{218DB468-F097-4391-9481-971D3F07B588}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploripCopy", "ExploripCopy\ExploripCopy.csproj", "{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -245,6 +249,18 @@ Global
 		{30E52DC9-89E9-40B7-8785-AC13479751B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30E52DC9-89E9-40B7-8785-AC13479751B0}.Release|x64.ActiveCfg = Release|Any CPU
 		{30E52DC9-89E9-40B7-8785-AC13479751B0}.Release|x64.Build.0 = Release|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.CodeAnalysisDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.CodeAnalysisDebug|Any CPU.Build.0 = Debug|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.CodeAnalysisDebug|x64.ActiveCfg = Debug|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.CodeAnalysisDebug|x64.Build.0 = Debug|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Debug|x64.Build.0 = Debug|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Release|x64.ActiveCfg = Release|Any CPU
+		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -266,8 +282,9 @@ Global
 		{D4060886-926E-4C66-B162-6AF9021DCCB1} = {02E20678-9AD3-4370-904E-02D800F25B35}
 		{27C336B7-987D-4EF8-B330-41FB020BC094} = {02E20678-9AD3-4370-904E-02D800F25B35}
 		{AA0C00CB-8699-4F37-BFAE-40CA87ACC06D} = {27C336B7-987D-4EF8-B330-41FB020BC094}
-		{1FD71282-00D6-44D4-9857-1D26030662B2} = {02E20678-9AD3-4370-904E-02D800F25B35}
-		{30E52DC9-89E9-40B7-8785-AC13479751B0} = {02E20678-9AD3-4370-904E-02D800F25B35}
+		{1FD71282-00D6-44D4-9857-1D26030662B2} = {218DB468-F097-4391-9481-971D3F07B588}
+		{30E52DC9-89E9-40B7-8785-AC13479751B0} = {218DB468-F097-4391-9481-971D3F07B588}
+		{218DB468-F097-4391-9481-971D3F07B588} = {02E20678-9AD3-4370-904E-02D800F25B35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}

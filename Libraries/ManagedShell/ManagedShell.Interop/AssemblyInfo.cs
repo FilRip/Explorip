@@ -9,3 +9,4 @@
 [assembly: InternalsVisibleTo("ManagedShell")]
 [assembly: InternalsVisibleTo("ManagedShell.ShellFolders")]
 [assembly: InternalsVisibleTo("HookFileOperations")]
+[assembly: InternalsVisibleTo("ExploripCopy")]

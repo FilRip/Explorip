@@ -3027,6 +3027,15 @@ namespace ManagedShell.Interop
         [DllImport(User32_DllName)]
         internal static extern short GetKeyState(VK nVirtKey);
 
+        [DllImport(User32_DllName)]
+        internal static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+        [DllImport(User32_DllName)]
+        internal static extern int TrackPopupMenu(IntPtr hMenu, uint uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
+
+        [DllImport(User32_DllName)]
+        internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+
         public enum VK
         {
             NONE = 0x0,
