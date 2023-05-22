@@ -54,9 +54,6 @@
     <AssemblyOriginatorKeyFile>FilRip.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EasyHook, Version=2.7.7097.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
-      <HintPath>..\packages\EasyHook.2.7.7097\lib\net40\EasyHook.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -279,7 +276,6 @@
     <None Include="app.config" />
     <None Include="app.manifest" />
     <None Include="FilRip.snk" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -512,32 +508,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Desktop\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ContentWithTargetPath Include="EasyHook\EasyHook32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>EasyHook32.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="EasyHook\EasyHook32Svc.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>EasyHook32Svc.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="EasyHook\EasyHook64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>EasyHook64.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="EasyHook\EasyHook64Svc.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>EasyHook64Svc.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="EasyHook\EasyLoad32.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>EasyLoad32.dll</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="EasyHook\EasyLoad64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>EasyLoad64.dll</TargetPath>
-    </ContentWithTargetPath>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TaskBar\Resources\tabtip.png" />

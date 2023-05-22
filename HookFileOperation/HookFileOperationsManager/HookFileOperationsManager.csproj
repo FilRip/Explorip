@@ -61,24 +61,30 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EasyHook32.dll">
+    <ContentWithTargetPath Include="EasyHook\EasyHook32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyHook32Svc.exe">
+      <TargetPath>EasyHook32.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyHook32Svc.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyHook64.dll">
+      <TargetPath>EasyHook32Svc.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyHook64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyHook64Svc.exe">
+      <TargetPath>EasyHook64.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyHook64Svc.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyLoad32.dll">
+      <TargetPath>EasyHook64Svc.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyLoad32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="EasyLoad64.dll">
+      <TargetPath>EasyLoad32.dll</TargetPath>
+    </ContentWithTargetPath>
+    <ContentWithTargetPath Include="EasyHook\EasyLoad64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+      <TargetPath>EasyLoad64.dll</TargetPath>
+    </ContentWithTargetPath>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
