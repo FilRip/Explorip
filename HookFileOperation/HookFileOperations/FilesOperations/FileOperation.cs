@@ -11,7 +11,7 @@ namespace Explorip.HookFileOperations
     public class FileOperation : IDisposable
     {
         [DllImport("USER32.dll")]
-        static extern short GetKeyState(int nVirtKey);
+        private static extern short GetKeyState(int nVirtKey);
 
         private static readonly Guid CLSID_FileOperation = new("3ad05575-8857-4850-9277-11b85bdb8e09");
         private static readonly Type _fileOperationType = Type.GetTypeFromCLSID(CLSID_FileOperation);

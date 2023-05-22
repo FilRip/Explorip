@@ -7,6 +7,7 @@ using System.Threading;
 using EasyHook;
 
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
+using Explorip.HookFileOperations.Ipc;
 
 namespace Explorip.HookFileOperations
 {

@@ -50,9 +50,12 @@ namespace ManagedShell.Interop
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool GetCursorPos(ref System.Drawing.Point lpPoint);
 
-        [DllImport("user32.dll")]
+        [DllImport(User32_DllName)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool PtInRect([In()] ref Rect lprc, System.Drawing.Point pt);
+
+        [DllImport(User32_DllName)]
+        internal static extern IntPtr GetDesktopWindow();
 
         public enum WindowZOrder
         {

@@ -6,11 +6,8 @@
         xmlns:viewmodels="clr-namespace:ExploripCopy.ViewModels"
         xmlns:converters="clr-namespace:ExploripCopy.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Background="Transparent" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True" Closing="Window_Closing">
-    
-    <Window.DataContext>
-        <viewmodels:MainViewModels/>
-    </Window.DataContext>
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
+        Title="MainWindow" Height="450" Width="800" Background="Transparent" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True" Closing="Window_Closing" Foreground="White" MouseMove="Window_MouseMove">
     
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -29,25 +26,30 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Text="ExploripCopy" MouseRightButtonUp="TitleBar_MouseRightButtonUp" Name="TitleBar"/>
-        <Button Grid.Column="1" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" IsTabStop="False"/>
+        <TextBlock Grid.Column="0" Text="ExploripCopy" MouseRightButtonUp="TitleBar_MouseRightButtonUp" Name="TitleBar" MouseDown="TitleBar_MouseDown" MouseUp="TitleBar_MouseUp" Margin="5 0 0 0"/>
+        <Button Grid.Column="1" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" Click="MinimizeWindow_Click" IsTabStop="False"/>
         <Button Grid.Column="2" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Click="MaximizeWindow_Click" Visibility="{Binding WindowMaximized, Converter={converters:InverseBoolToVisibilityConverter}}" IsTabStop="False"/>
         <Button Grid.Column="2" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Click="RestoreWindow_Click" Visibility="{Binding WindowMaximized, Converter={converters:BoolToVisibilityConverter}}" IsTabStop="False"/>
         <Button Grid.Column="3" Style="{DynamicResource CloseButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="CloseWindow" Click="CloseWindow_Click" IsTabStop="False"/>
 
-        <!-- Current progress -->
-        <Grid Grid.Row="0" Name="CurrentProgress">
+        <Grid Grid.Row="1" Name="CurrentProgress" Grid.ColumnSpan="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-        </Grid>
-        
-        <!-- List operations are waiting -->
-        <Grid Grid.Row="1" Name="ListOperations">
-            
+            <!-- Current progress -->
+            <TextBlock Grid.Row="0" Text="{Binding CurrentFile}" IsEnabled="False"/>
+            <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress}" Minimum="0" Maximum="100"/>
+            <TextBlock Grid.Row="2" Text="{Binding GlobalReport}" IsEnabled="False"/>
+            <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress}" Minimum="0" Maximum="100"/>
+
+            <!-- List operations are waiting -->
+            <Grid Grid.Row="4" Name="ListOperations">
+
+            </Grid>
         </Grid>
     </Grid>
 </Window>

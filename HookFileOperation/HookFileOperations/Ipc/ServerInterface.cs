@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 using Explorip.HookFileOperations.Models;
 
-namespace Explorip.HookFileOperations
+namespace Explorip.HookFileOperations.Ipc
 {
     /// <summary>
     /// Provides an interface for communicating from the client (target) to the server (injector)
@@ -66,10 +67,16 @@ namespace Explorip.HookFileOperations
             _listOperations.Add(new OneFileOperation(EFileOperation.Move) { Source = src, Destination = dest, NewName = destName });
         }
 
+        [DllImport("USER32.dll")]
+        private static extern short GetKeyState(int nVirtKey);
         public void DeleteItem(string src)
         {
             Console.WriteLine("Add DeleteItem");
-            _listOperations.Add(new OneFileOperation(EFileOperation.Delete) { Source = src });
+            bool forceDelete = true;
+            short ret = GetKeyState(0x10);
+            if (ret == 0 || ret == 1)
+                forceDelete = false;
+            _listOperations.Add(new OneFileOperation(EFileOperation.Delete) { Source = src, ForceDeleteNoRecycled = forceDelete });
         }
 
         public void RenameItem(string src, string dest)
@@ -83,19 +90,22 @@ namespace Explorip.HookFileOperations
             Console.WriteLine("PerformOperation");
             if (_listOperations.Count > 0)
             {
-                Console.WriteLine("Create process");
-                Process newProcess = Process.Start("HookFileOperationsManager.exe", "NI");
-                Thread.Sleep(100);
-                IpcNewInstance ni = null;
-                Console.WriteLine("Wait for Ipc channel");
-                while (ni == null)
+                IpcNewInstance ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://ExploripCopy/HookManagerRemoteServer");
+                if (ni == null)
                 {
-                    Thread.Sleep(10);
-                    try
+                    Console.WriteLine("Create process");
+                    Process newProcess = Process.Start("HookFileOperationsManager.exe", "NI");
+                    Thread.Sleep(100);
+                    Console.WriteLine("Wait for Ipc channel");
+                    while (ni == null)
                     {
-                        ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://{"HookFileOperation_" + newProcess.Id.ToString()}/HookManagerRemoteServer");
+                        Thread.Sleep(10);
+                        try
+                        {
+                            ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://{"HookFileOperation_" + newProcess.Id.ToString()}/HookManagerRemoteServer");
+                        }
+                        catch (Exception) { /* Ignore errors */ }
                     }
-                    catch (Exception) { /* Ignore errors */ }
                 }
                 Console.WriteLine("Wait for process ready");
                 while (true)

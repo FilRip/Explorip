@@ -7,6 +7,9 @@ using System.Threading;
 
 using EasyHook;
 
+using Explorip.HookFileOperations;
+using Explorip.HookFileOperations.Ipc;
+
 namespace Explorip.HookFileOperationsManager
 {
     public static class Program
@@ -20,7 +23,7 @@ namespace Explorip.HookFileOperationsManager
                 Console.WriteLine("Create channel");
                 IpcChannel canal = new("HookFileOperation_" + Process.GetCurrentProcess().Id.ToString());
                 ChannelServices.RegisterChannel(canal, false);
-                RemotingConfiguration.RegisterWellKnownServiceType(typeof(HookFileOperations.IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
+                RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
                 Console.WriteLine("Channel created");
                 while (true)
                 {
@@ -31,11 +34,11 @@ namespace Explorip.HookFileOperationsManager
             {
                 int processId = int.Parse(Environment.GetCommandLineArgs()[1]);
 
-                RemoteHooking.IpcCreateServer<HookFileOperations.ServerInterface>(ref channelName, WellKnownObjectMode.Singleton);
+                RemoteHooking.IpcCreateServer<ServerInterface>(ref channelName, WellKnownObjectMode.Singleton);
                 RemoteHooking.Inject(processId,
                     InjectionOptions.Default,
-                    typeof(HookFileOperations.MainHookClass).Assembly.Location,
-                    typeof(HookFileOperations.MainHookClass).Assembly.Location,
+                    typeof(MainHookClass).Assembly.Location,
+                    typeof(MainHookClass).Assembly.Location,
                     channelName);
 
                 try

@@ -35,6 +35,8 @@ namespace Explorip.HookFileOperations.Models
 
         public uint Cookie { get; set; }
 
+        public bool ForceDeleteNoRecycled { get; set; }
+
         public void WriteOperation(FileOperation currentFileOperation)
         {
             switch (FileOperation)

@@ -60,12 +60,13 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
     <Compile Include="Helpers\ExtensionsComInterface.cs" />
-    <Compile Include="IpcNewInstance.cs" />
+    <Compile Include="Interfaces\IInteractionMainProcess.cs" />
+    <Compile Include="Ipc\IpcNewInstance.cs" />
     <Compile Include="MainHookClass.cs" />
     <Compile Include="Models\EFileOperation.cs" />
     <Compile Include="Models\OneFileOperation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerInterface.cs" />
+    <Compile Include="Ipc\ServerInterface.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="EasyHook32.dll">

@@ -38,6 +38,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -55,6 +56,8 @@
     </ApplicationDefinition>
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\CopyHelper.cs" />
+    <Compile Include="Helpers\IpcServer.cs" />
+    <Compile Include="Models\InteractionMainProcess.cs" />
     <Compile Include="ViewModels\MainViewModels.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="GUI\MainWindow.xaml">
@@ -69,6 +72,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Styles\StyleBrush.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\StyleWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -99,10 +110,12 @@
   <ItemGroup>
     <Resource Include="Resources\icone.ico" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Styles\" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\HookFileOperation\HookFileOperations\HookFileOperations.csproj">
+      <Project>{1fd71282-00d6-44d4-9857-1d26030662b2}</Project>
+      <Name>HookFileOperations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj">
       <Project>{70c88862-47d9-4706-8c9a-2c9c8cfd4abd}</Project>
       <Name>ManagedShell.Interop</Name>
