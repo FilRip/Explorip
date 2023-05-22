@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -142,6 +143,18 @@ namespace Explorip.Explorer.WPF.Controls
         private void NewPowerShellTab_Click(object sender, RoutedEventArgs e)
         {
             MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand("powershell.exe"));
+            MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
+        }
+
+        private void NewAdminConsoleTab_Click(object sender, RoutedEventArgs e)
+        {
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "cmd.exe", Verb = "runas", UseShellExecute = true }));
+            MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
+        }
+
+        private void NewAdminPowerShellTab_Click(object sender, RoutedEventArgs e)
+        {
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "powershell.exe", Verb = "runas", UseShellExecute = true }));
             MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
         }
     }

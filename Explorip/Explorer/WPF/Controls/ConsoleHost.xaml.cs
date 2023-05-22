@@ -23,31 +23,65 @@ namespace Explorip.Explorer.WPF.Controls
         private const int OFFSET_SIZE_HEIGHT = 24;
 
         private Process _myProcess;
-        private IntPtr _pointeurSource, _pointeurDestination;
+        private IntPtr _srcPtr, _destPtr;
 
         public ConsoleHost()
         {
             InitializeComponent();
-            _pointeurDestination = IntPtr.Zero;
+            _destPtr = IntPtr.Zero;
         }
 
-        public void StartProcess(string commandline)
+        private bool InitProcess(ProcessStartInfo psi)
         {
-            if (_pointeurSource != IntPtr.Zero)
-                return;
-            _pointeurDestination = (PresentationSource.FromVisual(this) as HwndSource).Handle;
-            _myProcess = new Process();
-            _myProcess.StartInfo.FileName = commandline;
-            _myProcess.StartInfo.UseShellExecute = false;
-            _myProcess.EnableRaisingEvents = true;
+            _myProcess = new Process()
+            {
+                StartInfo = psi,
+                EnableRaisingEvents = true,
+            };
             _myProcess.Exited += MyProcess_Exited;
-            _myProcess.Start();
-            while (_myProcess.MainWindowHandle == IntPtr.Zero) { /* Nothing to do, waiting process start */ }
-            _pointeurSource = _myProcess.MainWindowHandle;
-            User32.SetParent(_pointeurSource, _pointeurDestination);
-            User32.SetWindowPos(_pointeurSource, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
-            int currentStyle = NativeMethods.GetWindowLong(_pointeurSource, NativeMethods.GWL_STYLE);
-            NativeMethods.SetWindowLong(_pointeurSource, NativeMethods.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
+            try
+            {
+                _myProcess.Start();
+                while (_myProcess.MainWindowHandle == IntPtr.Zero) { /* Nothing to do, waiting process start */ }
+                _srcPtr = _myProcess.MainWindowHandle;
+                return true;
+            }
+            catch (Exception) { /* Ignore errors */ }
+            return false;
+        }
+
+        public bool StartProcess(string commandline)
+        {
+            if (_srcPtr != IntPtr.Zero)
+                return true;
+            _destPtr = (PresentationSource.FromVisual(this) as HwndSource).Handle;
+            if (InitProcess(new ProcessStartInfo() { FileName = commandline }))
+            {
+                InitRedirectWindow();
+                return true;
+            }
+            return false;
+        }
+
+        public bool StartProcess(ProcessStartInfo psi)
+        {
+            if (_srcPtr != IntPtr.Zero)
+                return true;
+            _destPtr = (PresentationSource.FromVisual(this) as HwndSource).Handle;
+            if (InitProcess(psi))
+            {
+                InitRedirectWindow();
+                return true;
+            }
+            return false;
+        }
+
+        private void InitRedirectWindow()
+        {
+            User32.SetParent(_srcPtr, _destPtr);
+            User32.SetWindowPos(_srcPtr, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
+            int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.GWL_STYLE);
+            NativeMethods.SetWindowLong(_srcPtr, NativeMethods.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
         }
 
         private void MyProcess_Exited(object sender, EventArgs e)
@@ -63,29 +97,29 @@ namespace Explorip.Explorer.WPF.Controls
             Task.Run(() =>
             {
                 Thread.Sleep(100);
-                NativeMethods.SetForegroundWindow(_pointeurSource);
-                User32.SetCapture(_pointeurSource);
-                User32.SetFocus(_pointeurSource);
-                User32.SetActiveWindow(_pointeurSource);
-                User32.EnableWindow(_pointeurSource, 1);
+                NativeMethods.SetForegroundWindow(_srcPtr);
+                User32.SetCapture(_srcPtr);
+                User32.SetFocus(_srcPtr);
+                User32.SetActiveWindow(_srcPtr);
+                User32.EnableWindow(_srcPtr, 1);
             });
         }
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (_pointeurSource != IntPtr.Zero)
-                User32.SetWindowPos(_pointeurSource, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
+            if (_srcPtr != IntPtr.Zero)
+                User32.SetWindowPos(_srcPtr, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
         }
 
         public void Show()
         {
-            NativeMethods.ShowWindow(_pointeurSource, NativeMethods.WindowShowStyle.ShowNormal);
+            NativeMethods.ShowWindow(_srcPtr, NativeMethods.WindowShowStyle.ShowNormal);
             SetFocus();
         }
 
         public void Hide()
         {
-            NativeMethods.ShowWindow(_pointeurSource, NativeMethods.WindowShowStyle.Hide);
+            NativeMethods.ShowWindow(_srcPtr, NativeMethods.WindowShowStyle.Hide);
         }
 
         #region IDisposable

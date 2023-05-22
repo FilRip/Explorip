@@ -105,7 +105,7 @@ namespace WindowsDesktop.Interop
                 string typeName = texts.LastOrDefault();
                 if (typeName == null) continue;
 
-                if (int.TryParse(string.Concat(texts[texts.Length - 2].Skip(1)), out int build) && build != interfaceVersion)
+                if (texts != null && int.TryParse(string.Concat(texts[texts.Length - 2].Skip(1)), out int build) && build != interfaceVersion)
                 {
                     continue;
                 }

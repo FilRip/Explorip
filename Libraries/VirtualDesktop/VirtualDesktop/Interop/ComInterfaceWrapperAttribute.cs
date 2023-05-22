@@ -65,11 +65,16 @@ namespace WindowsDesktop.Interop
             string baseName = attr != null
                 ? attr.InterfaceName ?? $"I{type.Name}"
                 : null;
-            if (string.IsNullOrEmpty(baseName)) return Enumerable.Empty<string>();
-            if (targetBuild != -1 && attr.BuildVersion != -1 && attr.BuildVersion != targetBuild) return Enumerable.Empty<string>();
+            if (string.IsNullOrEmpty(baseName))
+                return Enumerable.Empty<string>();
+            if (targetBuild != -1 && attr != null && attr.BuildVersion != -1 && attr.BuildVersion != targetBuild)
+                return Enumerable.Empty<string>();
 
-            return Enumerable.Range(1, (int)attr.LatestVersion)
-                .Select(v => v == 1 ? baseName : $"{baseName}{v}");
+            if (attr != null)
+                return Enumerable.Range(1, (int)attr.LatestVersion)
+                    .Select(v => v == 1 ? baseName : $"{baseName}{v}");
+            else
+                return Enumerable.Empty<string>();
         }
     }
 }

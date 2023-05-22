@@ -307,6 +307,9 @@ namespace ManagedShell.Interop
         [DllImport(User32_DllName)]
         internal static extern IntPtr SendMessage(IntPtr hWnd, int messageId, IntPtr wparam, IntPtr lparam);
 
+        [DllImport(User32_DllName)]
+        internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
+
 #pragma warning disable IDE0060, IDE0079
         [StructLayout(LayoutKind.Sequential)]
         public struct WindowInfo
@@ -3032,9 +3035,6 @@ namespace ManagedShell.Interop
 
         [DllImport(User32_DllName)]
         internal static extern int TrackPopupMenu(IntPtr hMenu, uint uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
-
-        [DllImport(User32_DllName)]
-        internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
 
         public enum VK
         {

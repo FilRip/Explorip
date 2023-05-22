@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 
 using Explorip.Explorer.WPF.ViewModels;
@@ -11,6 +12,7 @@ namespace Explorip.Explorer.WPF.Controls
     public partial class TabItemConsoleCommand : TabItemExplorip
     {
         private readonly string _commandLine;
+        private readonly ProcessStartInfo _processStartInfo;
 
         public TabItemConsoleCommand(string commandLine) : base()
         {
@@ -19,6 +21,11 @@ namespace Explorip.Explorer.WPF.Controls
             _commandLine = commandLine;
             OnSelecting += TabItemConsoleCommand_OnSelecting;
             OnDeSelecting += TabItemConsoleCommand_OnDeSelecting;
+        }
+
+        public TabItemConsoleCommand(ProcessStartInfo psi) : this("")
+        {
+            _processStartInfo = psi;
         }
 
         private void TabItemConsoleCommand_OnDeSelecting()
@@ -43,7 +50,7 @@ namespace Explorip.Explorer.WPF.Controls
             {
                 try
                 {
-                    MyConsoleControl.Dispose();
+                    MyConsoleControl?.Dispose();
                 }
                 catch (Exception) { /* Ignore errors */ }
             }
@@ -52,7 +59,15 @@ namespace Explorip.Explorer.WPF.Controls
         private void TabItemExplorip_Loaded(object sender, RoutedEventArgs e)
         {
             SetTitle("Console");
-            MyConsoleControl.StartProcess(_commandLine);
+            if (!string.IsNullOrWhiteSpace(_commandLine))
+            {
+                if (!MyConsoleControl.StartProcess(_commandLine))
+                    Dispose();
+            }
+            else if (_processStartInfo != null && !MyConsoleControl.StartProcess(_processStartInfo))
+            {
+                Dispose();
+            }
         }
     }
 }
