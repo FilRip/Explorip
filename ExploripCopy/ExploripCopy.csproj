@@ -110,7 +110,6 @@
   <ItemGroup>
     <Resource Include="Resources\icone.ico" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\HookFileOperation\HookFileOperations\HookFileOperations.csproj">
       <Project>{1fd71282-00d6-44d4-9857-1d26030662b2}</Project>

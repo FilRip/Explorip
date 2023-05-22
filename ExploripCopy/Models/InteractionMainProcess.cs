@@ -14,6 +14,7 @@ namespace ExploripCopy.Models
         public void StartNewFileOperation(List<OneFileOperation> listOperations)
         {
             MainViewModels.Instance.ListWaiting.AddRange(listOperations);
+            MainViewModels.Instance.ForceUpdateWaitingList();
         }
     }
 }

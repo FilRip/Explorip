@@ -72,7 +72,7 @@ namespace Explorip.HookFileOperations
             }
             catch (Exception ex)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                Console.WriteLine(ex.Message);
             }
 
             if (_server != null)

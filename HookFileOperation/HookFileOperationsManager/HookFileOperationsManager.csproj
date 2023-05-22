@@ -67,7 +67,7 @@
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="EasyHook\EasyHook32Svc.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>EasyHook32Svc.dll</TargetPath>
+      <TargetPath>EasyHook32Svc.exe</TargetPath>
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="EasyHook\EasyHook64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -75,7 +75,7 @@
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="EasyHook\EasyHook64Svc.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>EasyHook64Svc.dll</TargetPath>
+      <TargetPath>EasyHook64Svc.exe</TargetPath>
     </ContentWithTargetPath>
     <ContentWithTargetPath Include="EasyHook\EasyLoad32.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

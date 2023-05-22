@@ -30,7 +30,7 @@ namespace ExploripCopy.GUI
             _forceClose = false;
 
             _myMenu = new ContextMenuStrip();
-            _myMenu.Items.Add(new ToolStripMenuItem("Quitter", null, Menu_Quitter));
+            _myMenu.Items.Add(new ToolStripMenuItem("&Quitter", null, Menu_Exit));
             _iconInSystray = new NotifyIcon
             {
                 Icon = Properties.Resources.icone,
@@ -42,7 +42,7 @@ namespace ExploripCopy.GUI
             IpcServer.CreateIpcServer();
         }
 
-        private void Menu_Quitter(object sender, EventArgs e)
+        private void Menu_Exit(object sender, EventArgs e)
         {
             _iconInSystray.Visible = false;
             MainViewModels.Instance.Dispose();

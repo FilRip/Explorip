@@ -73,6 +73,7 @@ namespace Explorip.HookFileOperations
         public void ChangeOperationFlags(EFileOperation flags)
         {
             _fileOperation.SetOperationFlags(flags);
+            CurrentFileOperationFlags = flags;
         }
 
         public void SetProgressDialog(object progressDialog)

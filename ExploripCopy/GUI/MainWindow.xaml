@@ -48,7 +48,12 @@
 
             <!-- List operations are waiting -->
             <Grid Grid.Row="4" Name="ListOperations">
-
+                <DataGrid ItemsSource="{Binding ListWaiting}" Background="Transparent" Foreground="White">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Source}"/>
+                        <DataGridTextColumn Binding="{Binding Destination}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </Grid>
     </Grid>
