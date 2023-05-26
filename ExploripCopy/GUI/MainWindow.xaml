@@ -7,7 +7,8 @@
         xmlns:converters="clr-namespace:ExploripCopy.Converters"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
-        Title="MainWindow" Height="450" Width="800" Background="Transparent" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True" Closing="Window_Closing" Foreground="White" MouseMove="Window_MouseMove">
+        Title="MainWindow" Height="450" Width="800" Background="Transparent" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
+        Closing="Window_Closing" Foreground="White" MouseMove="Window_MouseMove" Closed="Window_Closed" Activated="Window_Activated">
     
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -48,7 +49,7 @@
 
             <!-- List operations are waiting -->
             <Grid Grid.Row="4" Name="ListOperations">
-                <DataGrid ItemsSource="{Binding ListWaiting}" Background="Transparent" Foreground="White">
+                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Transparent" Foreground="White" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Source}"/>
                         <DataGridTextColumn Binding="{Binding Destination}"/>

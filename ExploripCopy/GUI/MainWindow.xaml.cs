@@ -132,5 +132,15 @@ namespace ExploripCopy.GUI
         }
 
         #endregion
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            IpcServer.ShutdownIpcServer();
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            DgListWaiting.Items.Refresh();
+        }
     }
 }
