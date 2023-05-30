@@ -124,12 +124,9 @@
     <Compile Include="Helpers\GestionEcrans.cs" />
     <Compile Include="Helpers\GestionFenetres.cs" />
     <Compile Include="Helpers\HookCopyOperations.cs" />
-    <Compile Include="Helpers\PopUpMenuExtensions.cs" />
-    <Compile Include="Helpers\DragDropHelper.cs" />
     <Compile Include="Helpers\ViewModelBase.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Sorters\TriAlphabetique.cs" />
-    <Compile Include="Helpers\Icones.cs" />
     <Compile Include="Localization\GestionString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -286,7 +283,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="WinAPI\Shell32.cs" />
-    <Compile Include="Helpers\ShellContextMenu.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Explorer\WPF\Controls\ConsoleHost.xaml">
@@ -435,6 +431,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExploripCopy\ExploripCopy.csproj">
+      <Project>{3eede2b5-f238-42d0-9666-ed4fe1453e23}</Project>
+      <Name>ExploripCopy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HookFileOperation\HookFileOperationsManager\HookFileOperationsManager.csproj">
       <Project>{30e52dc9-89e9-40b7-8785-ac13479751b0}</Project>
       <Name>HookFileOperationsManager</Name>
