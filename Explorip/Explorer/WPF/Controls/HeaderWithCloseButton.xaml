@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Explorip.Explorer.WPF.Converters"
+             xmlns:localization="clr-namespace:Explorip.Constantes"
              mc:Ignorable="d" AllowDrop="True" BorderThickness="2"
              d:DesignHeight="23" d:DesignWidth="81" Margin="0" IsTabStop="False">
     <UserControl.ContextMenu>
@@ -18,11 +19,11 @@
             <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Click="NewTabOther_Click"/>
             <MenuItem Header="Fermer tous les onglets" Name="CloseAllTab" Click="CloseAllTab_Click"/>
             <Separator/>
-            <MenuItem Header="Ouvrir une console/ligne de commande" Name="NewConsoleTab" Click="NewConsoleTab_Click"/>
-            <MenuItem Header="Ouvrir une console PowerShell" Name="NewPowerShellTab" Click="NewPowerShellTab_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.COMMANDLINE}}" Name="NewConsoleTab" Click="NewConsoleTab_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.POWER_SHELL}}" Name="NewPowerShellTab" Click="NewPowerShellTab_Click"/>
             <Separator/>
-            <MenuItem Header="Ouvrir une console/ligne de commande administrateur" Name="NewAdminConsoleTab" Click="NewAdminConsoleTab_Click"/>
-            <MenuItem Header="Ouvrir une console PowerShell administrateur" Name="NewAdminPowerShellTab" Click="NewAdminPowerShellTab_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.COMMANDLINE_ADMIN}}" Name="NewAdminConsoleTab" Click="NewAdminConsoleTab_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.POWER_SHELL_ADMIN}}" Name="NewAdminPowerShellTab" Click="NewAdminPowerShellTab_Click"/>
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid Margin="0">

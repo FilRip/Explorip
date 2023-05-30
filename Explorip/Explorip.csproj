@@ -78,7 +78,7 @@
     <Compile Include="Explorer\WPF\Controls\HeaderWithCloseButton.xaml.cs">
       <DependentUpon>HeaderWithCloseButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Constantes\Localisation.cs" />
+    <Compile Include="Constantes\Localization.cs" />
     <Compile Include="Exceptions\ExploripException.cs" />
     <Compile Include="Exceptions\GestionEcransException.cs" />
     <Compile Include="Exceptions\GestionFenetresException.cs" />

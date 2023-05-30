@@ -30,9 +30,8 @@ namespace Explorip
                 ModeShell = process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.Repertoire() + "\\explorer.exe"));
             }
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
             Application.ApplicationExit += Application_ApplicationExit;
+            Constantes.Localization.LoadTranslation();
 
             if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
             {

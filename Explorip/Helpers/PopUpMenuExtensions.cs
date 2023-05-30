@@ -136,8 +136,8 @@ namespace Explorip.Helpers
                                     catch (Exception) { /* Ignore errors */ }
                                 }
                                 menuAAjouter.Click += ClickMenu;
-                                if ((background) && (libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER.Trim().ToLower() ||
-                                        libelle.Trim().ToLower().Replace("&", "") == Constantes.Localisation.GetInstance().LIBELLE_COLLER_RACCOURCI.Trim().ToLower()) &&
+                                if ((background) && (libelle.Trim().ToLower().Replace("&", "") == Constantes.Localization.LIBELLE_COLLER.Trim().ToLower() ||
+                                        libelle.Trim().ToLower().Replace("&", "") == Constantes.Localization.LIBELLE_COLLER_RACCOURCI.Trim().ToLower()) &&
                                         (FilesOperations.ContextMenuPaste.CollerDispo()))
                                 {
                                     menuAAjouter.Enabled = true;

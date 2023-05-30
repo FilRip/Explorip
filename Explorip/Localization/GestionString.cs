@@ -25,6 +25,11 @@ namespace Explorip.Localization
         public static string Load(string libraryName, uint Ident, string DefaultText)
         {
             IntPtr libraryHandle = Kernel32.GetModuleHandle(libraryName);
+            if (libraryHandle == IntPtr.Zero)
+            {
+                Kernel32.LoadLibrary(libraryName);
+                libraryHandle = Kernel32.GetModuleHandle(libraryName);
+            }
             if (libraryHandle != IntPtr.Zero)
             {
                 StringBuilder sb = new(1024);
