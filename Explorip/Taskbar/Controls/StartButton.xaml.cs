@@ -67,11 +67,15 @@ namespace Explorip.TaskBar.Controls
                 pendingOpenTimer.Start();
                 try
                 {
-                    IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Démarrer");
+                    IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
                     if (pointeurMenuDemarrer != IntPtr.Zero)
                     {
-                        Screen screen = Screen.FromPoint(new Point(System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y));
-                        NativeMethods.SetWindowPos(pointeurMenuDemarrer, IntPtr.Zero, (int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height, (int)NativeMethods.SWP.SWP_NOACTIVATE);
+                        System.Drawing.Point p = new();
+                        if (NativeMethods.GetCursorPos(ref p))
+                        {
+                            Screen screen = Screen.FromPoint(new Point(p.X, p.Y));
+                            NativeMethods.SetWindowPos(pointeurMenuDemarrer, IntPtr.Zero, (int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height, (int)NativeMethods.SWP.SWP_NOACTIVATE);
+                        }
                     }
                     ShellHelper.ShowStartMenu();
                 }

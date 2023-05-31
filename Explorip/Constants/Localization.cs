@@ -25,6 +25,8 @@ namespace Explorip.Constants
         public static string NO_MONITOR_CONNECTED { get; private set; }
         public static string UNLOCK_TASKBAR { get; private set; }
         public static string TOOLBAR { get; private set; }
+        public static string QUIT { get; private set; }
+        public static string START { get; private set; }
 
         public static void LoadTranslation()
         {
@@ -46,6 +48,8 @@ namespace Explorip.Constants
             NO_MONITOR_CONNECTED = Load("mblctr.exe", 130, "No monitor connected");
             UNLOCK_TASKBAR = Load("shell32.dll", 24290, "Lock or unlock all taskbars");
             TOOLBAR = Load("ieframe.dll", 17986, "Toolbars");
+            QUIT = Load("srh.dll", 8032, "Quit") + " Explorip";
+            START = Load("shell32.dll", 22073, "Start");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

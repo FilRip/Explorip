@@ -191,9 +191,6 @@
     <Compile Include="WinAPI\Modeles\Coord.cs" />
     <Compile Include="WinAPI\Modeles\EventType.cs" />
     <Compile Include="WinAPI\Modeles\FocusEventRecord.cs" />
-    <Compile Include="WinAPI\Modeles\IDropSource.cs" />
-    <Compile Include="WinAPI\Modeles\IDropTarget.cs" />
-    <Compile Include="WinAPI\Modeles\IDropTargetHelper.cs" />
     <Compile Include="WinAPI\Modeles\DwmColorizationParams.cs" />
     <Compile Include="WinAPI\Modeles\InputRecord.cs" />
     <Compile Include="WinAPI\Modeles\ITipInvocation.cs" />
@@ -206,7 +203,6 @@
     <Compile Include="WinAPI\Modeles\UIHostNoLaunch.cs" />
     <Compile Include="WinAPI\Modeles\WindowBufferSizeRecord.cs" />
     <Compile Include="WinAPI\Uxtheme.cs" />
-    <Compile Include="WinAPI\Ole32.cs" />
     <Compile Include="Exceptions\Win32Error.cs" />
     <Compile Include="WinAPI\Gdi32.cs" />
     <Compile Include="WinAPI\Kernel32.cs" />

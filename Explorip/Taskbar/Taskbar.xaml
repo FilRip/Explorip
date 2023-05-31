@@ -138,7 +138,7 @@
             <MenuItem Header="{Binding Source={x:Static localization:Localization.NEW_TOOLBAR}}" Name="MenuAjoutToolbar" Click="MenuAjoutToolbar_Click"/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}}" Name="MenuShowTabTip" Click="MenuShowTabTip_Click"/>
             <Separator/>
-            <MenuItem Header="{DynamicResource exit_explorip}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.QUIT}}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>
     </appbar:AppBarWindow.ContextMenu>
 </appbar:AppBarWindow>
