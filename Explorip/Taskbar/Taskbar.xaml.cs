@@ -199,7 +199,7 @@ namespace Explorip.TaskBar
 
         private void TaskManagerMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            ManagedShell.Common.Helpers.ShellHelper.StartTaskManager();
+            ShellHelper.StartTaskManager();
         }
 
         private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -232,6 +232,15 @@ namespace Explorip.TaskBar
         }
 
         #region Move/stretch
+
+        public void ChangeDesiredSize(double height, double width)
+        {
+            Height = height;
+            Width = width;
+            DesiredHeight = height;
+            DesiredWidth = width;
+            _appBarManager.SetWorkArea(Screen);
+        }
 
         private void UnlockTaskbar_Click(object sender, RoutedEventArgs e)
         {

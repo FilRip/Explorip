@@ -37,7 +37,7 @@
                   Style="{DynamicResource ToolbarItems}" ItemTemplateSelector="{StaticResource MyDataTemplateSelector}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" Name="MyWrapPanel"/>
+                    <StackPanel Orientation="Horizontal" Name="MyWrapPanel"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

@@ -290,6 +290,13 @@ namespace Explorip.TaskBar.Controls
             DataTemplateSelector dts = ToolbarItems.ItemTemplateSelector;
             ToolbarItems.ItemTemplateSelector = null;
             ToolbarItems.ItemTemplateSelector = dts;
+            Taskbar parentTaskbar = this.FindVisualParent<Taskbar>();
+            double newHeight = parentTaskbar.Height;
+            if (CurrentShowLargeIcon)
+                newHeight += 16;
+            else
+                newHeight -= 16;
+            parentTaskbar.ChangeDesiredSize(newHeight, parentTaskbar.Width);
         }
     }
 

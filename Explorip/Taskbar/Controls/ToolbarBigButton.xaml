@@ -4,6 +4,6 @@
     <Button ToolTip="{Binding Path=DisplayName}"
             Style="{DynamicResource ToolbarButton}">
         <Image Source="{Binding Path=LargeIcon, Mode=OneWay}"
-               Style="{DynamicResource ToolbarIcon}" />
+               Style="{DynamicResource ToolbarBigIcon}" />
     </Button>
 </UserControl>
