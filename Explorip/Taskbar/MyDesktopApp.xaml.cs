@@ -82,7 +82,7 @@ namespace Explorip.TaskBar
 
         public void AfficheTaskBarAutresMoniteurs()
         {
-            if (_taskbarList.Count == 1 && System.Windows.Forms.Screen.AllScreens.Length > 1)
+            if (_taskbarList.Count == 1 && WpfScreenHelper.Screen.AllScreens.Count() > 1)
             {
                 Taskbar taskBar;
                 List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();

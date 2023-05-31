@@ -47,6 +47,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HookFileOperation", "HookFi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploripCopy", "ExploripCopy\ExploripCopy.csproj", "{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfScreenHelper", "Libraries\WpfScreenHelper\WpfScreenHelper.csproj", "{3F507334-F494-4D80-B698-DE4798CF5C8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CodeAnalysisDebug|Any CPU = CodeAnalysisDebug|Any CPU
@@ -261,6 +263,18 @@ Global
 		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Release|x64.ActiveCfg = Release|Any CPU
 		{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}.Release|x64.Build.0 = Release|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.CodeAnalysisDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.CodeAnalysisDebug|Any CPU.Build.0 = Debug|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.CodeAnalysisDebug|x64.ActiveCfg = Debug|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.CodeAnalysisDebug|x64.Build.0 = Debug|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.Debug|x64.Build.0 = Debug|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.Release|x64.ActiveCfg = Release|Any CPU
+		{3F507334-F494-4D80-B698-DE4798CF5C8C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -285,6 +299,7 @@ Global
 		{1FD71282-00D6-44D4-9857-1D26030662B2} = {218DB468-F097-4391-9481-971D3F07B588}
 		{30E52DC9-89E9-40B7-8785-AC13479751B0} = {218DB468-F097-4391-9481-971D3F07B588}
 		{218DB468-F097-4391-9481-971D3F07B588} = {02E20678-9AD3-4370-904E-02D800F25B35}
+		{3F507334-F494-4D80-B698-DE4798CF5C8C} = {02E20678-9AD3-4370-904E-02D800F25B35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
-             xmlns:localization="clr-namespace:Explorip.Constantes"
+             xmlns:localization="clr-namespace:Explorip.Constants"
              mc:Ignorable="d" AllowDrop="True" BorderThickness="2"
              d:DesignHeight="23" d:DesignWidth="81" Margin="0" IsTabStop="False">
     <UserControl.ContextMenu>
@@ -14,10 +14,10 @@
                     <StackPanel Margin="-20,0,0,0" Background="Black"/>
                 </ItemsPanelTemplate>
             </ContextMenu.ItemsPanel>
-            <MenuItem Header="Ouvrir un nouvel onglet" Name="NewTab" Click="NewTab_Click"/>
-            <MenuItem Header="Fermer cet onglet" Name="CloseTab" Click="CloseTab_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.OPEN_NEW_TAB}}" Name="NewTab" Click="NewTab_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.CLOSE_TAB}}" Name="CloseTab" Click="CloseTab_Click"/>
             <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Click="NewTabOther_Click"/>
-            <MenuItem Header="Fermer tous les onglets" Name="CloseAllTab" Click="CloseAllTab_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.CLOSE_OTHER_TAB}}" Name="CloseAllTab" Click="CloseAllTab_Click"/>
             <Separator/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.COMMANDLINE}}" Name="NewConsoleTab" Click="NewConsoleTab_Click"/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.POWER_SHELL}}" Name="NewPowerShellTab" Click="NewPowerShellTab_Click"/>

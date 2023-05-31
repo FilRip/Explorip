@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -8,6 +7,8 @@ using Explorip.TaskBar.Utilities;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+
+using WpfScreenHelper;
 
 namespace Explorip.TaskBar.Controls
 {
@@ -69,8 +70,8 @@ namespace Explorip.TaskBar.Controls
                     IntPtr pointeurMenuDemarrer = WinAPI.User32.FindWindow("Windows.UI.Core.CoreWindow", "Démarrer");
                     if (pointeurMenuDemarrer != IntPtr.Zero)
                     {
-                        Screen screen = Screen.FromPoint(System.Windows.Forms.Cursor.Position);
-                        NativeMethods.SetWindowPos(pointeurMenuDemarrer, IntPtr.Zero, screen.WorkingArea.X, screen.WorkingArea.Y, screen.WorkingArea.Width, screen.WorkingArea.Height, (int)ManagedShell.Interop.NativeMethods.SWP.SWP_NOACTIVATE);
+                        Screen screen = Screen.FromPoint(new Point(System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y));
+                        NativeMethods.SetWindowPos(pointeurMenuDemarrer, IntPtr.Zero, (int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height, (int)NativeMethods.SWP.SWP_NOACTIVATE);
                     }
                     ShellHelper.ShowStartMenu();
                 }

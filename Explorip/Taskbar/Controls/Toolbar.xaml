@@ -24,7 +24,7 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Label Name="Title" Width="auto" Foreground="White">
+        <Label Name="Title" Width="auto" Foreground="White" Grid.Column="0">
             <Label.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Show/Hide title" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>

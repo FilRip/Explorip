@@ -78,9 +78,9 @@
     <Compile Include="Explorer\Controls\HeaderWithCloseButton.xaml.cs">
       <DependentUpon>HeaderWithCloseButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Constantes\Localization.cs" />
+    <Compile Include="Constants\Localization.cs" />
     <Compile Include="Exceptions\ExploripException.cs" />
-    <Compile Include="Exceptions\GestionEcransException.cs" />
+    <Compile Include="Exceptions\ScreenManagerException.cs" />
     <Compile Include="Exceptions\GestionFenetresException.cs" />
     <Compile Include="Explorer\Controls\TabItemConsoleCommand.xaml.cs">
       <DependentUpon>TabItemConsoleCommand.xaml</DependentUpon>
@@ -97,9 +97,7 @@
     <Compile Include="Explorer\ViewModels\TabItemExplorerBrowserViewModel.cs" />
     <Compile Include="Explorer\ViewModels\TabItemExploripViewModel.cs" />
     <Compile Include="Explorer\ViewModels\WpfExplorerBrowserViewModel.cs" />
-    <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
-    <Compile Include="FilesOperations\ContextMenuPaste.cs" />
     <Compile Include="FilesOperations\FileOperation.cs" />
     <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
     <Compile Include="FilesOperations\Interfaces\CopyEngineResult.cs" />
@@ -108,26 +106,16 @@
     <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helpers\ComReleaser.cs" />
-    <Compile Include="Helpers\ExtensionIEnumerable.cs" />
     <Compile Include="Helpers\ExtensionsArray.cs" />
-    <Compile Include="Helpers\ExtensionsClass.cs" />
-    <Compile Include="Helpers\ExtensionsClipboard.cs" />
     <Compile Include="Helpers\ExtensionsCommandLineArguments.cs" />
-    <Compile Include="Helpers\ExtensionsDossiers.cs" />
-    <Compile Include="Helpers\ExtensionsImage.cs" />
+    <Compile Include="Helpers\ExtensionsDirectory.cs" />
     <Compile Include="Helpers\ExtensionsInt.cs" />
-    <Compile Include="Helpers\ExtensionsProcess.cs" />
     <Compile Include="Helpers\ExtensionsString.cs" />
-    <Compile Include="Helpers\ExtensionsWindows.cs" />
-    <Compile Include="Helpers\ExtensionsWinForm.cs" />
     <Compile Include="Helpers\ExtensionsWpf.cs" />
-    <Compile Include="Helpers\GestionEcrans.cs" />
-    <Compile Include="Helpers\GestionFenetres.cs" />
+    <Compile Include="Helpers\ScreenManager.cs" />
     <Compile Include="Helpers\HookCopyOperations.cs" />
     <Compile Include="Helpers\ViewModelBase.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
-    <Compile Include="Sorters\TriAlphabetique.cs" />
-    <Compile Include="Localization\GestionString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskBar\Controls\NotificationButton.xaml.cs">
@@ -197,7 +185,6 @@
     <Compile Include="TaskBar\Utilities\StartMenuMonitor.cs" />
     <Compile Include="TaskBar\Utilities\TaskCategoryProvider.cs" />
     <Compile Include="TaskBar\ViewModels\TaskbarViewModel.cs" />
-    <Compile Include="Themes\AutoTheme.cs" />
     <Compile Include="WinAPI\Commun.cs" />
     <Compile Include="WinAPI\Dwmapi.cs" />
     <Compile Include="WinAPI\Modeles\ControlKeyState.cs" />
@@ -486,6 +473,10 @@
     <ProjectReference Include="..\Libraries\WindowsAPICodePack\Shell\Shell.csproj">
       <Project>{aa0c00cb-8699-4f37-bfae-40ca87acc06d}</Project>
       <Name>Shell</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj">
+      <Project>{3f507334-f494-4d80-b698-de4798cf5c8c}</Project>
+      <Name>WpfScreenHelper</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

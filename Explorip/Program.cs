@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
 
 using Explorip.Helpers;
 
@@ -27,11 +26,11 @@ namespace Explorip
             Process[] process = Process.GetProcessesByName("explorer");
             if (process != null && process.Length > 0)
             {
-                ModeShell = process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.Repertoire() + "\\explorer.exe"));
+                ModeShell = process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.FullPath() + "\\explorer.exe"));
             }
 
-            Application.ApplicationExit += Application_ApplicationExit;
-            Constantes.Localization.LoadTranslation();
+            System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
+            Constants.Localization.LoadTranslation();
 
             if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
             {

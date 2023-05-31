@@ -6,7 +6,7 @@
                      xmlns:utilities="clr-namespace:Explorip.TaskBar.Utilities"
                      xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
                      xmlns:appbar="clr-namespace:ManagedShell.AppBar;assembly=ManagedShell.AppBar"
-                     xmlns:localization="clr-namespace:Explorip.Constantes"
+                     xmlns:localization="clr-namespace:Explorip.Constants"
                      Title="Explorip's taskbar"
                      Loaded="AppBarWindow_Loaded"
                      Left="0"
@@ -35,7 +35,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="0"/>
+                    <ColumnDefinition Width="0" x:Name="ColumnVirtualKeyboard"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -126,15 +126,15 @@
     </ContentControl>
     <appbar:AppBarWindow.ContextMenu>
         <ContextMenu>
-            <MenuItem Style="{DynamicResource TaskManMenuItem}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.TASK_MANAGER}}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick"/>
             <Separator />
-            <MenuItem Header="Toolbar">
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.TOOLBAR}}">
                 <MenuItem Header="{Binding Source={x:Static localization:Localization.SHOW_TITLE}}" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
                 <MenuItem Header="{Binding Source={x:Static localization:Localization.LARGE_ICON}}" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
             </MenuItem>
             <Separator />
             <MenuItem Header="Barre des tâches sur tous les écrans" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
-            <MenuItem Header="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=LabelUnlock}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.UNLOCK_TASKBAR}}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.NEW_TOOLBAR}}" Name="MenuAjoutToolbar" Click="MenuAjoutToolbar_Click"/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}}" Name="MenuShowTabTip" Click="MenuShowTabTip_Click"/>
             <Separator/>

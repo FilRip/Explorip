@@ -1,18 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-
-using Explorip.Localization;
-using Explorip.WinAPI;
-using Explorip.WinAPI.Modeles;
 
 namespace Explorip.Helpers
 {
-    public static class ExtensionsDossiers
+    public static class ExtensionsDirectory
     {
         public static bool IsShortcut(this FileSystemInfo repertoireOuFichier)
         {
+            // TODO : Recognize symbolic directory shortcut
             if (repertoireOuFichier is FileInfo)
             {
                 return (Path.GetExtension(repertoireOuFichier.Name).ToLower().Trim() == ".lnk");
@@ -23,7 +18,7 @@ namespace Explorip.Helpers
             }
         }
 
-        public static string Repertoire(this Environment.SpecialFolder specialFolder)
+        public static string FullPath(this Environment.SpecialFolder specialFolder)
         {
             return Environment.GetFolderPath(specialFolder);
         }

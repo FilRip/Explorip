@@ -4,11 +4,11 @@ using System.Runtime.Serialization;
 namespace Explorip.Exceptions
 {
     [Serializable()]
-    public class GestionEcransException : ExploripException
+    public class ScreenManagerException : ExploripException
     {
         private readonly string _erreur;
 
-        public GestionEcransException(string erreur)
+        public ScreenManagerException(string erreur)
         {
             _erreur = erreur;
         }
@@ -21,6 +21,6 @@ namespace Explorip.Exceptions
             }
         }
 
-        protected GestionEcransException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        protected ScreenManagerException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

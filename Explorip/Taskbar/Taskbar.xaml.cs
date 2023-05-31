@@ -303,7 +303,7 @@ namespace Explorip.TaskBar
         {
             TaskbarViewModel.Instance.ShowTabTip = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
             MenuShowTabTip.IsChecked = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible;
-            MainGrid.ColumnDefinitions[5].Width = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? GridLength.Auto : new GridLength(0);
+            ColumnVirtualKeyboard.Width = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? GridLength.Auto : new GridLength(0);
         }
     }
 }

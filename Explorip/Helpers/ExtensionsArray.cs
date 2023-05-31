@@ -47,9 +47,7 @@ namespace Explorip.Helpers
             if (liste == null)
                 throw new ArgumentNullException(nameof(liste));
 #pragma warning disable S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
-            if (index >= liste.Length)
-                throw new IndexOutOfRangeException();
-            if (liste.Length == 0)
+            if (index >= liste.Length || liste.Length == 0)
                 throw new IndexOutOfRangeException();
 #pragma warning restore S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
 

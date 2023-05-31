@@ -75,7 +75,7 @@ namespace Explorip.Explorer.Controls
                 lock (_lockSearchText)
                 {
                     MyDataContext.ModeEdit = false;
-                    if (!SearchText.IsFocused || !e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath).StartsWith(Environment.SpecialFolder.UserProfile.Repertoire() + $"\\Searches"))
+                    if (!SearchText.IsFocused || !e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath).StartsWith(Environment.SpecialFolder.UserProfile.FullPath() + $"\\Searches"))
                     {
                         SetTitle(e.NewLocation.Name);
                         MyDataContext.ModeSearch = false;
@@ -282,7 +282,7 @@ namespace Explorip.Explorer.Controls
 
                         string dir = _searchDirectory;
                         string xmlContent = $"<?xml version=\"1.0\"?><persistedQuery version=\"1.0\"><query><conditions><condition type=\"leafCondition\" property=\"System.Generic.String\" operator=\"wordmatch\" propertyType=\"string\" value=\"{SearchText.Text}\" localeName=\"{System.Globalization.CultureInfo.CurrentCulture.Name}\"/></conditions><kindList><kind name=\"item\"/></kindList><scope><include path=\"::{{20D04FE0-3AEA-1069-A2D8-08002B30309D}}\\{dir}\"/></scope></query></persistedQuery>";
-                        string filename = Environment.SpecialFolder.UserProfile.Repertoire() + $"\\Searches\\{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Hour:00}{DateTime.Now.Minute:00}{DateTime.Now.Second:00}{DateTime.Now.Millisecond:000}.search-ms";
+                        string filename = Environment.SpecialFolder.UserProfile.FullPath() + $"\\Searches\\{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Hour:00}{DateTime.Now.Minute:00}{DateTime.Now.Second:00}{DateTime.Now.Millisecond:000}.search-ms";
                         File.AppendAllText(filename, xmlContent);
 
                         Navigation(filename);

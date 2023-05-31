@@ -72,7 +72,7 @@ namespace Explorip.Helpers
         /// <param name="comparateur">Comparateur de chaine</param>
         public static bool ArgumentVariablePresent(string argument, string separateur, StringComparison comparateur)
         {
-            return Environment.GetCommandLineArgs().Any(a => a.Trim().StartsWith((argument + separateur).SupprimeDoublons(' '), comparateur));
+            return Environment.GetCommandLineArgs().Any(a => a.Trim().StartsWith((argument + separateur).RemoveDuplicate(' '), comparateur));
         }
 
         /// <summary>
@@ -116,9 +116,9 @@ namespace Explorip.Helpers
         /// <param name="comparateur">Comparateur de chaine</param>
         public static string ArgumentValeur(string argument, string separateur, StringComparison comparateur)
         {
-            string arg = Environment.GetCommandLineArgs().FirstOrDefault(arg => arg.Trim().StartsWith((argument + separateur).SupprimeDoublons(' '), comparateur));
+            string arg = Environment.GetCommandLineArgs().FirstOrDefault(arg => arg.Trim().StartsWith((argument + separateur).RemoveDuplicate(' '), comparateur));
             if (arg != null)
-                return arg.Trim().Substring(argument.Length + separateur.Length).SupprimeDoublons(' ').Trim().TrimEnd('"');
+                return arg.Trim().Substring(argument.Length + separateur.Length).RemoveDuplicate(' ').Trim().TrimEnd('"');
             return null;
         }
 
