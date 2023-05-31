@@ -2,7 +2,7 @@
 
 using Explorip.Helpers;
 
-namespace Explorip.Explorer.WPF.ViewModels
+namespace Explorip.Explorer.ViewModels
 {
     public class WpfExplorerBrowserViewModel : ViewModelBase
     {

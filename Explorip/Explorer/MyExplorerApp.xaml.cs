@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Explorip.Explorer.WPF
+namespace Explorip.Explorer
 {
     /// <summary>
     /// Logique d'interaction pour MyApp.xaml

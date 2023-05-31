@@ -72,31 +72,31 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Explorer\WPF\Controls\ConsoleHost.xaml.cs">
+    <Compile Include="Explorer\Controls\ConsoleHost.xaml.cs">
       <DependentUpon>ConsoleHost.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\WPF\Controls\HeaderWithCloseButton.xaml.cs">
+    <Compile Include="Explorer\Controls\HeaderWithCloseButton.xaml.cs">
       <DependentUpon>HeaderWithCloseButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Constantes\Localization.cs" />
     <Compile Include="Exceptions\ExploripException.cs" />
     <Compile Include="Exceptions\GestionEcransException.cs" />
     <Compile Include="Exceptions\GestionFenetresException.cs" />
-    <Compile Include="Explorer\WPF\Controls\TabItemConsoleCommand.xaml.cs">
+    <Compile Include="Explorer\Controls\TabItemConsoleCommand.xaml.cs">
       <DependentUpon>TabItemConsoleCommand.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml.cs">
+    <Compile Include="Explorer\Controls\TabItemExplorerBrowser.xaml.cs">
       <DependentUpon>TabItemExplorerBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\WPF\Controls\TabItemExplorip.cs" />
-    <Compile Include="Explorer\WPF\Controls\TabItemPlusExplorerBrowser.xaml.cs">
+    <Compile Include="Explorer\Controls\TabItemExplorip.cs" />
+    <Compile Include="Explorer\Controls\TabItemPlusExplorerBrowser.xaml.cs">
       <DependentUpon>TabItemPlusExplorerBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\WPF\Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Explorer\WPF\ViewModels\TabItemConsoleCommandViewModel.cs" />
-    <Compile Include="Explorer\WPF\ViewModels\TabItemExplorerBrowserViewModel.cs" />
-    <Compile Include="Explorer\WPF\ViewModels\TabItemExploripViewModel.cs" />
-    <Compile Include="Explorer\WPF\ViewModels\WpfExplorerBrowserViewModel.cs" />
+    <Compile Include="Explorer\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Explorer\ViewModels\TabItemConsoleCommandViewModel.cs" />
+    <Compile Include="Explorer\ViewModels\TabItemExplorerBrowserViewModel.cs" />
+    <Compile Include="Explorer\ViewModels\TabItemExploripViewModel.cs" />
+    <Compile Include="Explorer\ViewModels\WpfExplorerBrowserViewModel.cs" />
     <Compile Include="ExploripEventArgs\SelectionneRepertoireEventArgs.cs" />
     <Compile Include="Exceptions\ShellContextMenuException.cs" />
     <Compile Include="FilesOperations\ContextMenuPaste.cs" />
@@ -251,13 +251,13 @@
     <Compile Include="WinAPI\Ntdll.cs" />
     <Compile Include="WinAPI\Shlwapi.cs" />
     <Compile Include="WinAPI\User32.cs" />
-    <Compile Include="Explorer\WPF\Controls\TabExplorerBrowser.xaml.cs">
+    <Compile Include="Explorer\Controls\TabExplorerBrowser.xaml.cs">
       <DependentUpon>TabExplorerBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\WPF\MyExplorerApp.xaml.cs">
+    <Compile Include="Explorer\MyExplorerApp.xaml.cs">
       <DependentUpon>MyExplorerApp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\WPF\Windows\WpfExplorerBrowser.xaml.cs">
+    <Compile Include="Explorer\Windows\WpfExplorerBrowser.xaml.cs">
       <DependentUpon>WpfExplorerBrowser.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -285,51 +285,51 @@
     <Compile Include="WinAPI\Shell32.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Explorer\WPF\Controls\ConsoleHost.xaml">
+    <Page Include="Explorer\Controls\ConsoleHost.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Controls\HeaderWithCloseButton.xaml">
+    <Page Include="Explorer\Controls\HeaderWithCloseButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Explorer\WPF\Controls\TabItemConsoleCommand.xaml">
+    <Page Include="Explorer\Controls\TabItemConsoleCommand.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Controls\TabItemExplorerBrowser.xaml">
+    <Page Include="Explorer\Controls\TabItemExplorerBrowser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Controls\TabItemPlusExplorerBrowser.xaml">
+    <Page Include="Explorer\Controls\TabItemPlusExplorerBrowser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Styles\StyleBrush.xaml">
+    <Page Include="Explorer\Styles\StyleBrush.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Styles\StyleButton.xaml">
+    <Page Include="Explorer\Styles\StyleButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Styles\StyleComboBox.xaml">
+    <Page Include="Explorer\Styles\StyleComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Styles\StyleTabItem.xaml">
+    <Page Include="Explorer\Styles\StyleTabItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Styles\StyleContextMenuItem.xaml">
+    <Page Include="Explorer\Styles\StyleContextMenuItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Styles\StyleTabControl.xaml">
+    <Page Include="Explorer\Styles\StyleTabControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Styles\StyleWindow.xaml">
+    <Page Include="Explorer\Styles\StyleWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -417,15 +417,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Explorer\WPF\Controls\TabExplorerBrowser.xaml">
+    <Page Include="Explorer\Controls\TabExplorerBrowser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\MyExplorerApp.xaml">
+    <Page Include="Explorer\MyExplorerApp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Explorer\WPF\Windows\WpfExplorerBrowser.xaml">
+    <Page Include="Explorer\Windows\WpfExplorerBrowser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

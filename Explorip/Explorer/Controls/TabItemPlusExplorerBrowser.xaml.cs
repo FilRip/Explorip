@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Explorip.Explorer.WPF.Controls
+namespace Explorip.Explorer.Controls
 {
     /// <summary>
     /// Logique d'interaction pour TabItemPlusExplorerBrowser.xaml

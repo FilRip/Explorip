@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace Explorip.Explorer.WPF.ViewModels
+namespace Explorip.Explorer.ViewModels
 {
     public class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
     {

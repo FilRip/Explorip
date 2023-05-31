@@ -8,14 +8,14 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-using Explorip.Explorer.WPF.ViewModels;
-using Explorip.Explorer.WPF.Windows;
+using Explorip.Explorer.ViewModels;
+using Explorip.Explorer.Windows;
 using Explorip.Helpers;
 
 using Microsoft.WindowsAPICodePack.Controls;
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Explorip.Explorer.WPF.Controls
+namespace Explorip.Explorer.Controls
 {
     /// <summary>
     /// Logique d'interaction pour TabItemExplorerBrowser.xaml

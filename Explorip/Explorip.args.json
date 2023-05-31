@@ -3,6 +3,10 @@
   "Id": "001dcda7-f4c3-4bd6-a86c-c99b35a9798a",
   "Items": [
     {
+      "Id": "c53fcf05-15c7-49a0-b025-442e5bc08979",
+      "Command": "UseOwnCopier"
+    },
+    {
       "Id": "9486e04d-e884-4429-8c45-d3f3a3f4736d",
       "Command": "withoutHook"
     },

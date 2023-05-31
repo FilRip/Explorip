@@ -6,6 +6,7 @@
                      xmlns:utilities="clr-namespace:Explorip.TaskBar.Utilities"
                      xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
                      xmlns:appbar="clr-namespace:ManagedShell.AppBar;assembly=ManagedShell.AppBar"
+                     xmlns:localization="clr-namespace:Explorip.Constantes"
                      Title="Explorip's taskbar"
                      Loaded="AppBarWindow_Loaded"
                      Left="0"
@@ -128,14 +129,14 @@
             <MenuItem Style="{DynamicResource TaskManMenuItem}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick"/>
             <Separator />
             <MenuItem Header="Toolbar">
-                <MenuItem Header="Show/Hide title" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
-                <MenuItem Header="Show small/large icon" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
+                <MenuItem Header="{Binding Source={x:Static localization:Localization.SHOW_TITLE}}" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
+                <MenuItem Header="{Binding Source={x:Static localization:Localization.LARGE_ICON}}" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
             </MenuItem>
             <Separator />
             <MenuItem Header="Barre des tâches sur tous les écrans" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
             <MenuItem Header="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=LabelUnlock}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
-            <MenuItem Header="Ajouter une barre d'outils" Name="MenuAjoutToolbar" Click="MenuAjoutToolbar_Click"/>
-            <MenuItem Header="Affiche/Cache icone clavier visuel" Name="MenuShowTabTip" Click="MenuShowTabTip_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.NEW_TOOLBAR}}" Name="MenuAjoutToolbar" Click="MenuAjoutToolbar_Click"/>
+            <MenuItem Header="{Binding Source={x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}}" Name="MenuShowTabTip" Click="MenuShowTabTip_Click"/>
             <Separator/>
             <MenuItem Header="{DynamicResource exit_explorip}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>

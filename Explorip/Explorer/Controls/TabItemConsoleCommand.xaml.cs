@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Windows;
 
-using Explorip.Explorer.WPF.ViewModels;
+using Explorip.Explorer.ViewModels;
 
-namespace Explorip.Explorer.WPF.Controls
+namespace Explorip.Explorer.Controls
 {
     /// <summary>
     /// Logique d'interaction pour TabItemConsoleCommand.xaml

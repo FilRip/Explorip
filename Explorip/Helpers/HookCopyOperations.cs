@@ -18,6 +18,8 @@ namespace Explorip.Helpers
         {
             string path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
             Process.Start(Path.Combine(path, "HookFileOperationsManager.exe"), Process.GetCurrentProcess().Id.ToString());
+            if (ExtensionsCommandLineArguments.ArgumentPresent("useowncopier"))
+                Process.Start(Path.Combine(path, "ExploripCopy.exe"), Process.GetCurrentProcess().Id.ToString());
         }
     }
 }

@@ -5,11 +5,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-using Explorip.Explorer.WPF.Windows;
+using Explorip.Explorer.Windows;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Explorip.Explorer.WPF.Controls
+namespace Explorip.Explorer.Controls
 {
     /// <summary>
     /// Interaction logic for CloseableItem.xaml

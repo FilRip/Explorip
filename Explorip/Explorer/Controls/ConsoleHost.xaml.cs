@@ -11,7 +11,7 @@ using Explorip.WinAPI;
 
 using ManagedShell.Interop;
 
-namespace Explorip.Explorer.WPF.Controls
+namespace Explorip.Explorer.Controls
 {
     /// <summary>
     /// Logique d'interaction pour ConsoleHost.xaml

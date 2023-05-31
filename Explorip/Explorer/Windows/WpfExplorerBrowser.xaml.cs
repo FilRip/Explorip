@@ -10,14 +10,14 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-using Explorip.Explorer.WPF.Controls;
-using Explorip.Explorer.WPF.ViewModels;
+using Explorip.Explorer.Controls;
+using Explorip.Explorer.ViewModels;
 using Explorip.Helpers;
 using Explorip.WinAPI;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Explorip.Explorer.WPF.Windows
+namespace Explorip.Explorer.Windows
 {
     /// <summary>
     /// Logique d'interaction pour WpfExplorerBrowser.xaml

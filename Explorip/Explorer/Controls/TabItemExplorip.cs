@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Explorip.Explorer.WPF.Controls
+namespace Explorip.Explorer.Controls
 {
     public abstract class TabItemExplorip : TabItem, IDisposable
     {
