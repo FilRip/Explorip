@@ -8,6 +8,8 @@ using Explorip.TaskBar.Utilities;
 
 using ManagedShell.Common.Helpers;
 
+using Microsoft.WindowsAPICodePack.Shell.Constants;
+
 namespace Explorip.TaskBar.Controls
 {
     /// <summary>
@@ -63,7 +65,7 @@ namespace Explorip.TaskBar.Controls
             clock.Tick += Clock_Tick;
             clock.Start();
 
-            singleClick.Interval = TimeSpan.FromMilliseconds(System.Windows.Forms.SystemInformation.DoubleClickTime);
+            singleClick.Interval = TimeSpan.FromMilliseconds(SystemInformations.DoubleClickTime);
             singleClick.Tick += SingleClick_Tick;
 
             ClockTextBlock.Visibility = Visibility.Visible;

@@ -8,6 +8,8 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
 
+using Microsoft.WindowsAPICodePack.Shell.Constants;
+
 namespace Explorip.TaskBar.Controls
 {
     /// <summary>
@@ -67,13 +69,13 @@ namespace Explorip.TaskBar.Controls
         private void NotifyIcon_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
-            TrayIcon?.IconMouseDown(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+            TrayIcon?.IconMouseDown(e.ChangedButton, MouseHelper.GetCursorPositionParam(), SystemInformations.DoubleClickTime);
         }
 
         private void NotifyIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
-            TrayIcon?.IconMouseUp(e.ChangedButton, MouseHelper.GetCursorPositionParam(), System.Windows.Forms.SystemInformation.DoubleClickTime);
+            TrayIcon?.IconMouseUp(e.ChangedButton, MouseHelper.GetCursorPositionParam(), SystemInformations.DoubleClickTime);
         }
 
         private void NotifyIcon_OnMouseEnter(object sender, MouseEventArgs e)

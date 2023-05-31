@@ -931,6 +931,20 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             }
         }
 
+        public void Navigate(ShellObject destination)
+        {
+            ExplorerBrowserControl.Navigate(destination);
+        }
+
+        public void SetFocus()
+        {
+            ExplorerBrowserControl.Focus();
+        }
+
+        public void NavigateLogLocation(NavigationLogDirection direction)
+        {
+            ExplorerBrowserControl.NavigateLogLocation(direction);
+        }
 
         /// <summary>
         /// Navigation log index

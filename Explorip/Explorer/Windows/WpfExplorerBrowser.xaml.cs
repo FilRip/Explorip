@@ -45,9 +45,9 @@ namespace Explorip.Explorer.Windows
             }
 
             if (string.IsNullOrWhiteSpace(dir))
-                LeftTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
+                LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)KnownFolders.Desktop);
 
-            RightTab.FirstTab.ExplorerBrowser.ExplorerBrowserControl.Navigate((ShellObject)KnownFolders.Desktop);
+            RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)KnownFolders.Desktop);
 
             Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 

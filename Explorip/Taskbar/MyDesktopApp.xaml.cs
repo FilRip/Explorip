@@ -98,6 +98,7 @@ namespace Explorip.TaskBar
         private void App_OnExit(object sender, ExitEventArgs e)
         {
             ExitApp();
+            Program.Application_ApplicationExit(this, e);
         }
 
         private void App_OnSessionEnding(object sender, SessionEndingCancelEventArgs e)

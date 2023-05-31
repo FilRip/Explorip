@@ -56,7 +56,7 @@ namespace Explorip.Explorer.Controls
 
         private void ExplorerBrowserControl_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            ExplorerBrowser.ExplorerBrowserControl.Focus();
+            ExplorerBrowser.SetFocus();
             _allowSearch = true;
         }
 
@@ -144,29 +144,29 @@ namespace Explorip.Explorer.Controls
 
         private void Lb_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            ExplorerBrowser.ExplorerBrowserControl.Navigate(ShellObject.FromParsingName(e.Uri.ToString()));
+            ExplorerBrowser.Navigate(ShellObject.FromParsingName(e.Uri.ToString()));
         }
 
         public void Navigation(string repertoire)
         {
-            ExplorerBrowser.ExplorerBrowserControl.Navigate(ShellObject.FromParsingName(repertoire));
+            ExplorerBrowser.Navigate(ShellObject.FromParsingName(repertoire));
         }
 
         public void Navigation(ShellObject repertoire)
         {
-            ExplorerBrowser.ExplorerBrowserControl.Navigate(repertoire);
+            ExplorerBrowser.Navigate(repertoire);
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(NavigationLogDirection.Forward);
-            ExplorerBrowser.ExplorerBrowserControl.Focus();
+            ExplorerBrowser.NavigateLogLocation(NavigationLogDirection.Forward);
+            ExplorerBrowser.SetFocus();
         }
 
         private void PreviousButton_Click(object sender, RoutedEventArgs e)
         {
-            ExplorerBrowser.ExplorerBrowserControl.NavigateLogLocation(NavigationLogDirection.Backward);
-            ExplorerBrowser.ExplorerBrowserControl.Focus();
+            ExplorerBrowser.NavigateLogLocation(NavigationLogDirection.Backward);
+            ExplorerBrowser.SetFocus();
         }
 
         #endregion
@@ -185,7 +185,7 @@ namespace Explorip.Explorer.Controls
                 {
                     MyDataContext.ModeEdit = false;
                     MyDataContext.EditPath = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
-                    ExplorerBrowser.ExplorerBrowserControl.Focus();
+                    ExplorerBrowser.SetFocus();
                 }
             }
             else if (e.Key is Key.Enter or Key.Return)
@@ -197,12 +197,12 @@ namespace Explorip.Explorer.Controls
                 {
                     try
                     {
-                        ExplorerBrowser.ExplorerBrowserControl.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
+                        ExplorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
                     }
                     catch (Exception)
                     {
                         MessageBox.Show("Chemin non trouvé");
-                        ExplorerBrowser.ExplorerBrowserControl.Navigate(previousLocation);
+                        ExplorerBrowser.Navigate(previousLocation);
                     }
                 });
             }

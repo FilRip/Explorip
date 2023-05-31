@@ -67,6 +67,7 @@
     <Compile Include="Common\ShellObjectCollection.cs" />
     <Compile Include="Common\DefaultShellImageSizes.cs" />
     <Compile Include="Common\SortColumn.cs" />
+    <Compile Include="Constants\SystemInformation.cs" />
     <Compile Include="Controls\CommandLinkWinforms.cs">
       <SubType>Component</SubType>
     </Compile>

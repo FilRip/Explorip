@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
 
 using Explorip.TaskBar.Utilities;
 
@@ -12,6 +11,7 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Shell.Constants;
 
 namespace Explorip.TaskBar
 {
@@ -95,16 +95,16 @@ namespace Explorip.TaskBar
             {
                 case (int)AppBarEdge.Left:
                 case (int)AppBarEdge.Top:
-                    Left = (SystemInformation.WorkingArea.Left / DpiHelper.DpiScale) + 10;
-                    Top = (SystemInformation.WorkingArea.Top / DpiHelper.DpiScale) + 10;
+                    Left = (SystemInformations.WorkingArea.Left / DpiHelper.DpiScale) + 10;
+                    Top = (SystemInformations.WorkingArea.Top / DpiHelper.DpiScale) + 10;
                     break;
                 case (int)AppBarEdge.Right:
-                    Left = (SystemInformation.WorkingArea.Right / DpiHelper.DpiScale) - Width - 10;
-                    Top = (SystemInformation.WorkingArea.Top / DpiHelper.DpiScale) + 10;
+                    Left = (SystemInformations.WorkingArea.Right / DpiHelper.DpiScale) - Width - 10;
+                    Top = (SystemInformations.WorkingArea.Top / DpiHelper.DpiScale) + 10;
                     break;
                 case (int)AppBarEdge.Bottom:
-                    Left = (SystemInformation.WorkingArea.Left / DpiHelper.DpiScale) + 10;
-                    Top = (SystemInformation.WorkingArea.Bottom / DpiHelper.DpiScale) - Height - 10;
+                    Left = (SystemInformations.WorkingArea.Left / DpiHelper.DpiScale) + 10;
+                    Top = (SystemInformations.WorkingArea.Bottom / DpiHelper.DpiScale) - Height - 10;
                     break;
             }
         }
@@ -116,7 +116,7 @@ namespace Explorip.TaskBar
 
         private void SetQuickLaunchLocation_OnClick(object sender, RoutedEventArgs e)
         {
-            FolderBrowserDialog fbd = new()
+            /*FolderBrowserDialog fbd = new()
             {
                 Description = (string)FindResource("quick_launch_folder"),
                 ShowNewFolderButton = false,
@@ -126,7 +126,7 @@ namespace Explorip.TaskBar
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 Settings.Instance.QuickLaunchPath = fbd.SelectedPath;
-            }
+            }*/
         }
 
         private static void RecycleInstance()

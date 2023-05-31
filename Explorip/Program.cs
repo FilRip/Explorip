@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Windows;
 
 using Explorip.Helpers;
 
@@ -9,7 +10,7 @@ namespace Explorip
 {
     public static class Program
     {
-        private static System.Windows.Application _WpfHost;
+        private static Application _WpfHost;
 #pragma warning disable S2223 // Non-constant static fields should not be visible
         internal static Mutex _mutexTaskbar;
         internal static bool ModeShell;
@@ -29,7 +30,6 @@ namespace Explorip
                 ModeShell = process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.FullPath() + "\\explorer.exe"));
             }
 
-            System.Windows.Forms.Application.ApplicationExit += Application_ApplicationExit;
             Constants.Localization.LoadTranslation();
 
             if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
@@ -51,16 +51,16 @@ namespace Explorip
             }
         }
 
-        public static System.Windows.Application MonApp
+        public static Application MonApp
         {
             get { return _WpfHost; }
         }
 
-        private static void Application_ApplicationExit(object sender, EventArgs e)
+        public static void Application_ApplicationExit(object sender, EventArgs e)
         {
-            if (_WpfHost != null)
+            if (_WpfHost is TaskBar.MyDesktopApp myApp)
             {
-                ((TaskBar.MyDesktopApp)_WpfHost).ExitGracefully();
+                myApp.ExitGracefully();
             }
         }
     }
