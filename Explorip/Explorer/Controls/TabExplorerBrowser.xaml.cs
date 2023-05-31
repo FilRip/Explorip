@@ -124,5 +124,10 @@ namespace Explorip.Explorer.Controls
             if (e.RemovedItems?.Count > 0 && e.RemovedItems[0] is TabItemExplorip tabDeselecting)
                 tabDeselecting.RaiseOnDeSelecting();
         }
+
+        public Vector GetVisualOffset()
+        {
+            return VisualOffset;
+        }
     }
 }

@@ -79,7 +79,7 @@ namespace Explorip.Explorer.Controls
         private void InitRedirectWindow()
         {
             User32.SetParent(_srcPtr, _destPtr);
-            User32.SetWindowPos(_srcPtr, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
+            User32.SetWindowPos(_srcPtr, IntPtr.Zero, OFFSET_X + (int)this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
             int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.GWL_STYLE);
             NativeMethods.SetWindowLong(_srcPtr, NativeMethods.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
         }
@@ -108,7 +108,7 @@ namespace Explorip.Explorer.Controls
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (_srcPtr != IntPtr.Zero)
-                User32.SetWindowPos(_srcPtr, IntPtr.Zero, OFFSET_X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
+                User32.SetWindowPos(_srcPtr, IntPtr.Zero, OFFSET_X + (int)this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
         }
 
         public void Show()
