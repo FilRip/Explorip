@@ -77,10 +77,10 @@ namespace Explorip.TaskBar
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
             if (ExtensionsCommandLineArguments.ArgumentPresent("taskbars"))
-                AfficheTaskBarAutresMoniteurs();
+                ShowTaskbarOnAllOthersScreen();
         }
 
-        public void AfficheTaskBarAutresMoniteurs()
+        public void ShowTaskbarOnAllOthersScreen()
         {
             if (_taskbarList.Count == 1 && WpfScreenHelper.Screen.AllScreens.Count() > 1)
             {
@@ -145,7 +145,7 @@ namespace Explorip.TaskBar
             }
         }
 
-        public List<Taskbar> ListeBarreDesTaches()
+        public List<Taskbar> ListAllTaskbar()
         {
             return _taskbarList;
         }

@@ -9,6 +9,50 @@ namespace ExploripCopy.Helpers
     {
         internal delegate void CallbackRefreshProgress(long fullSize, long remainingSize, int speed);
 
+        internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null)
+        {
+            Exception result;
+            foreach (string file in Directory.GetFiles(sourceDir))
+            {
+                result = CopyFile(file, destinationDir, bufferSize, refreshFrequency, CallbackRefresh);
+                if (result != null)
+                    return result;
+            }
+            foreach (string dir in Directory.GetDirectories(sourceDir))
+            {
+                result = CopyDirectory(dir, destinationDir + Path.DirectorySeparatorChar + Path.GetDirectoryName(dir), bufferSize, refreshFrequency, CallbackRefresh);
+                if (result != null)
+                    return result;
+            }
+            return null;
+        }
+
+        internal static Exception MoveDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null)
+        {
+            Exception result;
+            foreach (string file in Directory.GetFiles(sourceDir))
+            {
+                result = MoveFile(file, destinationDir, bufferSize, refreshFrequency, CallbackRefresh);
+                if (result != null)
+                    return result;
+            }
+            foreach (string dir in Directory.GetDirectories(sourceDir))
+            {
+                result = MoveDirectory(dir, destinationDir + Path.DirectorySeparatorChar + Path.GetDirectoryName(dir), bufferSize, refreshFrequency, CallbackRefresh);
+                if (result != null)
+                    return result;
+                try
+                {
+                    Directory.Delete(dir);
+                }
+                catch (Exception ex)
+                {
+                    return ex;
+                }
+            }
+            return null;
+        }
+
         internal static Exception MoveFile(string sourceFile, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null)
         {
             Exception result;
@@ -37,6 +81,8 @@ namespace ExploripCopy.Helpers
                 long fullSize = fi.Length;
                 long remaining = fullSize;
                 FileStream source = new(sourceFile, FileMode.Open, FileAccess.Read);
+                if (!Directory.Exists(Path.GetFullPath(destinationDir)))
+                    Directory.CreateDirectory(Path.GetFullPath(destinationDir));
                 FileStream destination = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceFile), FileMode.Create, FileAccess.Write);
                 destination.SetLength(fullSize);
                 int nbOctets = 1;

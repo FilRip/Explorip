@@ -71,6 +71,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\Colors.cs" />
     <Compile Include="Explorer\Controls\ConsoleHost.xaml.cs">
       <DependentUpon>ConsoleHost.xaml</DependentUpon>
     </Compile>

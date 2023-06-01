@@ -52,7 +52,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         }
 
         private PropertyKey propertyKey;
-        private PropertyKey emptyPropertyKey = new();
+        private readonly PropertyKey emptyPropertyKey = new();
         /// <summary>
         /// The property key for the property that is to be compared.
         /// </summary>        

@@ -87,7 +87,7 @@ namespace Explorip.Explorer.ViewModels
             get
             {
                 if (AllowNavigatePrevious)
-                    return AccentColor;
+                    return Constants.Colors.AccentColorBrush;
                 else
                     return DisabledButtonColor;
             }
@@ -98,7 +98,7 @@ namespace Explorip.Explorer.ViewModels
             get
             {
                 if (AllowNavigateNext)
-                    return AccentColor;
+                    return Constants.Colors.AccentColorBrush;
                 else
                     return DisabledButtonColor;
             }

@@ -1,18 +1,11 @@
-﻿using System.Windows.Media;
-
-using Explorip.Helpers;
+﻿using Explorip.Helpers;
 
 namespace Explorip.Explorer.ViewModels
 {
     public class WpfExplorerBrowserViewModel : ViewModelBase
     {
-        private readonly SolidColorBrush _accentColor;
-
-        public WpfExplorerBrowserViewModel()
+        public WpfExplorerBrowserViewModel() : base()
         {
-            System.Drawing.Color myColor = WindowsSettings.GetWindowsAccentColor();
-            Color mColor = Color.FromArgb(myColor.A, myColor.R, myColor.G, myColor.B);
-            _accentColor = new SolidColorBrush(mColor);
         }
 
         private bool _isMaximized;
@@ -27,11 +20,6 @@ namespace Explorip.Explorer.ViewModels
                     OnPropertyChanged();
                 }
             }
-        }
-
-        public Brush AccentColor
-        {
-            get { return _accentColor; }
         }
 
         private bool _selectionLeft;

@@ -221,7 +221,7 @@ namespace Explorip.TaskBar
 
         private void TaskbarAllScreenMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            ((MyDesktopApp)Program.MonApp).AfficheTaskBarAutresMoniteurs();
+            ((MyDesktopApp)Program.MonApp).ShowTaskbarOnAllOthersScreen();
         }
 
         private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
@@ -260,7 +260,7 @@ namespace Explorip.TaskBar
 
         #endregion
 
-        private void MenuAjoutToolbar_Click(object sender, RoutedEventArgs e)
+        private void AddToolbar_Click(object sender, RoutedEventArgs e)
         {
             CommonOpenFileDialog dialog = new()
             {

@@ -31,6 +31,7 @@ namespace Explorip
             }
 
             Constants.Localization.LoadTranslation();
+            Constants.Colors.LoadTheme();
 
             if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
             {

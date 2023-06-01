@@ -59,11 +59,6 @@ namespace Explorip.Explorer.Controls
 
         #region Properties
 
-        public Color AccentColor
-        {
-            get { return WindowsSettings.GetWindowsAccentColor(); }
-        }
-
         public TabItemExplorip CurrentTab
         {
             get { return (TabItemExplorip)SelectedItem; }
