@@ -7,20 +7,32 @@ namespace ExploripCopy.Helpers
 {
     internal static class CopyHelper
     {
-        internal delegate void CallbackRefreshProgress(long fullSize, long remainingSize, int speed);
+        internal delegate void CallbackRefreshProgress(string currentFile, long fullSize, long remainingSize, int speed);
 
-        internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null)
+        internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
         {
             Exception result;
+            string destDir = destinationDir;
+            if (renameOnCollision)
+            {
+                DirectoryInfo dirInfo = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceDir));
+                int nbCopy = 0;
+                while (dirInfo.Exists)
+                {
+                    dirInfo = new DirectoryInfo(destinationDir + Path.DirectorySeparatorChar + Constants.Localization.COPY_OF.Replace("%s", Path.GetFileName(sourceDir)) + (nbCopy > 0 ? $" ({nbCopy})" : ""));
+                    nbCopy++;
+                }
+                destDir = dirInfo.FullName;
+            }
             foreach (string file in Directory.GetFiles(sourceDir))
             {
-                result = CopyFile(file, destinationDir, bufferSize, refreshFrequency, CallbackRefresh);
+                result = CopyFile(file, destDir, bufferSize, refreshFrequency, CallbackRefresh);
                 if (result != null)
                     return result;
             }
             foreach (string dir in Directory.GetDirectories(sourceDir))
             {
-                result = CopyDirectory(dir, destinationDir + Path.DirectorySeparatorChar + Path.GetDirectoryName(dir), bufferSize, refreshFrequency, CallbackRefresh);
+                result = CopyDirectory(dir, destDir + Path.DirectorySeparatorChar + Path.GetFileName(dir), bufferSize, refreshFrequency, CallbackRefresh);
                 if (result != null)
                     return result;
             }
@@ -30,26 +42,30 @@ namespace ExploripCopy.Helpers
         internal static Exception MoveDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null)
         {
             Exception result;
+            DirectoryInfo destDir = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceDir));
+            if (!destDir.Exists)
+                destDir.Create();
             foreach (string file in Directory.GetFiles(sourceDir))
             {
-                result = MoveFile(file, destinationDir, bufferSize, refreshFrequency, CallbackRefresh);
+                result = MoveFile(file, destDir.FullName, bufferSize, refreshFrequency, CallbackRefresh);
                 if (result != null)
                     return result;
             }
             foreach (string dir in Directory.GetDirectories(sourceDir))
             {
-                result = MoveDirectory(dir, destinationDir + Path.DirectorySeparatorChar + Path.GetDirectoryName(dir), bufferSize, refreshFrequency, CallbackRefresh);
+                result = MoveDirectory(dir, destDir.FullName, bufferSize, refreshFrequency, CallbackRefresh);
                 if (result != null)
                     return result;
-                try
-                {
-                    Directory.Delete(dir);
-                }
-                catch (Exception ex)
-                {
-                    return ex;
-                }
             }
+            try
+            {
+                Directory.Delete(sourceDir);
+            }
+            catch (Exception ex)
+            {
+                return ex;
+            }
+
             return null;
         }
 
@@ -72,18 +88,26 @@ namespace ExploripCopy.Helpers
             return null;
         }
 
-        internal static Exception CopyFile(string sourceFile, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null)
+        internal static Exception CopyFile(string sourceFile, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
         {
             try
             {
                 byte[] buffer = new byte[bufferSize];
                 FileInfo fi = new(sourceFile);
+                FileInfo destFile = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceFile));
+                int nbCopy = 0;
+                if (renameOnCollision)
+                    while (destFile.Exists)
+                    {
+                        destFile = new(destinationDir + Path.DirectorySeparatorChar + Constants.Localization.COPY_OF.Replace("%s", Path.GetFileNameWithoutExtension(sourceFile)) + (nbCopy > 0 ? $" ({nbCopy})" : "") + Path.GetExtension(sourceFile));
+                        nbCopy++;
+                    }
                 long fullSize = fi.Length;
                 long remaining = fullSize;
                 FileStream source = new(sourceFile, FileMode.Open, FileAccess.Read);
                 if (!Directory.Exists(Path.GetFullPath(destinationDir)))
                     Directory.CreateDirectory(Path.GetFullPath(destinationDir));
-                FileStream destination = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceFile), FileMode.Create, FileAccess.Write);
+                FileStream destination = new(destFile.FullName, FileMode.Create, FileAccess.Write);
                 destination.SetLength(fullSize);
                 int nbOctets = 1;
                 int derniereVitesse = 0;
@@ -98,10 +122,10 @@ namespace ExploripCopy.Helpers
                         destination.Write(buffer, 0, nbOctets);
                         remaining -= nbOctets;
                         derniereVitesse += nbOctets;
-                        CallbackRefresh?.BeginInvoke(fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
+                        CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
                         if (stopwatch.ElapsedMilliseconds > refreshFrequency)
                         {
-                            CallbackRefresh?.BeginInvoke(fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
+                            CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
                             derniereVitesse = 0;
                             stopwatch.Stop();
                         }

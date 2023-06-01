@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +16,7 @@ namespace ExploripCopy.ViewModels
     {
         private static MainViewModels _instance;
         private readonly Thread _mainThread;
+        private readonly object _lockOperation;
 
         public static MainViewModels Instance
         {
@@ -22,9 +25,10 @@ namespace ExploripCopy.ViewModels
 
         internal MainViewModels() : base()
         {
+            _lockOperation = new object();
             _listWait = new();
             _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
-            //_mainThread.Start();
+            _mainThread.Start();
         }
 
         private bool _isMaximized;
@@ -122,13 +126,21 @@ namespace ExploripCopy.ViewModels
             }
         }
 
-        private void Callback_Operation(long fullSize, long remainingSize, int speed)
+        private void Callback_Operation(string currentFile, long fullSize, long remainingSize, int speed)
         {
+            CurrentFile = currentFile;
             _lastSpeed = speed;
             long diff = fullSize - remainingSize;
             if (diff < 0)
                 diff = fullSize;
             CurrentProgress = diff / fullSize * 100; // Convert in percent
+        }
+
+        private void FinishCurrent()
+        {
+            _listWait.RemoveAt(0);
+            _currentOperation = null;
+            OnPropertyChanged(nameof(ListWaiting));
         }
 
         private OneFileOperation _currentOperation;
@@ -137,10 +149,25 @@ namespace ExploripCopy.ViewModels
             _currentOperation = operation;
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
+                DirectoryInfo srcDir, destDir;
+                srcDir = new DirectoryInfo(operation.Source).Parent;
+                destDir = new DirectoryInfo(operation.Destination);
+                bool isDirectory = Directory.Exists(operation.Source);
                 if (operation.FileOperation == EFileOperation.Copy)
-                    _lastError = Helpers.CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
-                else
-                    _lastError = Helpers.CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                {
+                    if (isDirectory)
+                        _lastError = Helpers.CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: true);
+                    else
+                        _lastError = Helpers.CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: true);
+                }
+                else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
+                {
+                    if (isDirectory)
+                        _lastError = Helpers.CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                    else
+                        _lastError = Helpers.CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                }
+                FinishCurrent();
             }
             else
             {
@@ -170,7 +197,6 @@ namespace ExploripCopy.ViewModels
                     try
                     {
                         fo.PerformOperations();
-                        _currentOperation = null;
                     }
                     catch (Exception ex)
                     {
@@ -178,8 +204,9 @@ namespace ExploripCopy.ViewModels
                     }
                     finally
                     {
-                        fo.Dispose();
+                        fo?.Dispose();
                     }
+                    FinishCurrent();
                 });
             }
         }
@@ -192,7 +219,10 @@ namespace ExploripCopy.ViewModels
                 {
                     if (_currentOperation == null && _listWait.Count > 0 && _lastError == null)
                     {
-                        Treatment(_listWait[0]);
+                        lock (_lockOperation)
+                        {
+                            Treatment(_listWait[0]);
+                        }
                     }
                     Thread.Sleep(10);
                 }

@@ -25,6 +25,9 @@ namespace ExploripCopy.GUI
         public MainWindow()
         {
             InitializeComponent();
+
+            Constants.Localization.LoadTranslation();
+
             Instance = this;
             DataContext = MainViewModels.Instance;
             _forceClose = false;
