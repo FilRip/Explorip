@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -133,7 +132,7 @@ namespace ExploripCopy.ViewModels
             long diff = fullSize - remainingSize;
             if (diff < 0)
                 diff = fullSize;
-            CurrentProgress = diff / fullSize * 100; // Convert in percent
+            CurrentProgress = diff / (double)fullSize * 100; // Convert in percent
         }
 
         private void FinishCurrent()
@@ -156,9 +155,9 @@ namespace ExploripCopy.ViewModels
                 if (operation.FileOperation == EFileOperation.Copy)
                 {
                     if (isDirectory)
-                        _lastError = Helpers.CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: true);
+                        _lastError = Helpers.CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                     else
-                        _lastError = Helpers.CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: true);
+                        _lastError = Helpers.CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                 }
                 else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
                 {

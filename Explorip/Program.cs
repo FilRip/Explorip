@@ -41,7 +41,7 @@ namespace Explorip
                     _WpfHost = new TaskBar.MyDesktopApp();
                     _WpfHost.Run();
                 }
-                _mutexTaskbar.Dispose();
+                _mutexTaskbar?.Dispose();
             }
             else
             {

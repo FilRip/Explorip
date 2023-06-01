@@ -2,11 +2,14 @@
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
+using System.Threading;
 
 namespace ExploripCopy.Helpers
 {
     internal static class CopyHelper
     {
+        public static bool Pause { get; set; }
+
         internal delegate void CallbackRefreshProgress(string currentFile, long fullSize, long remainingSize, int speed);
 
         internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
@@ -114,20 +117,25 @@ namespace ExploripCopy.Helpers
                 Stopwatch stopwatch = new();
                 while (source.CanRead && nbOctets > 0)
                 {
-                    if (!stopwatch.IsRunning)
-                        stopwatch.Restart();
-                    nbOctets = source.Read(buffer, 0, buffer.Length);
-                    if (nbOctets > 0)
+                    if (Pause)
+                        Thread.Sleep(100);
+                    else
                     {
-                        destination.Write(buffer, 0, nbOctets);
-                        remaining -= nbOctets;
-                        derniereVitesse += nbOctets;
-                        CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
-                        if (stopwatch.ElapsedMilliseconds > refreshFrequency)
+                        if (!stopwatch.IsRunning)
+                            stopwatch.Restart();
+                        nbOctets = source.Read(buffer, 0, buffer.Length);
+                        if (nbOctets > 0)
                         {
+                            destination.Write(buffer, 0, nbOctets);
+                            remaining -= nbOctets;
+                            derniereVitesse += nbOctets;
                             CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
-                            derniereVitesse = 0;
-                            stopwatch.Stop();
+                            if (stopwatch.ElapsedMilliseconds > refreshFrequency)
+                            {
+                                CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
+                                derniereVitesse = 0;
+                                stopwatch.Stop();
+                            }
                         }
                     }
                 }

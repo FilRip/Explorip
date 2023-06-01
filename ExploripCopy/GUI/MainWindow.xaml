@@ -43,9 +43,9 @@
             </Grid.RowDefinitions>
             <!-- Current progress -->
             <Label Grid.Row="0" Content="{Binding CurrentFile}" Background="Transparent" Foreground="White"/>
-            <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress}" Minimum="0" Maximum="100"/>
+            <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100"/>
             <Label Grid.Row="2" Content="{Binding GlobalReport}" Background="Transparent" Foreground="White"/>
-            <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress}" Minimum="0" Maximum="100"/>
+            <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100"/>
 
             <!-- List operations are waiting -->
             <Grid Grid.Row="4" Name="ListOperations">

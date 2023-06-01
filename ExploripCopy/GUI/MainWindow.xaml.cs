@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 
@@ -16,8 +15,6 @@ namespace ExploripCopy.GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly NotifyIcon _iconInSystray;
-        private readonly ContextMenuStrip _myMenu;
         private bool _forceClose;
 
         public static MainWindow Instance { get; private set; }
@@ -32,22 +29,11 @@ namespace ExploripCopy.GUI
             DataContext = MainViewModels.Instance;
             _forceClose = false;
 
-            _myMenu = new ContextMenuStrip();
-            _myMenu.Items.Add(new ToolStripMenuItem("&Quitter", null, Menu_Exit));
-            _iconInSystray = new NotifyIcon
-            {
-                Icon = Properties.Resources.icone,
-                Visible = true,
-                ContextMenuStrip = _myMenu,
-            };
-            _iconInSystray.DoubleClick += IconInSystray_DoubleClick;
-
             IpcServer.CreateIpcServer();
         }
 
-        private void Menu_Exit(object sender, EventArgs e)
+        public void IconInSystray_Exit()
         {
-            _iconInSystray.Visible = false;
             MainViewModels.Instance.Dispose();
             _forceClose = true;
             Close();
@@ -60,7 +46,7 @@ namespace ExploripCopy.GUI
 
         #region Window manager
 
-        private void IconInSystray_DoubleClick(object sender, EventArgs e)
+        public void IconInSystray_DoubleClick()
         {
             Visibility = Visibility.Visible;
             WindowState = WindowState.Normal;

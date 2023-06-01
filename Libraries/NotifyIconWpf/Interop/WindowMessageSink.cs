@@ -246,7 +246,6 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
             }
 
             var message = (WindowsMessages)lParam.ToInt32();
-            Debug.WriteLine("Got message " + message);
             switch (message)
             {
                 case WindowsMessages.WM_CONTEXTMENU:
