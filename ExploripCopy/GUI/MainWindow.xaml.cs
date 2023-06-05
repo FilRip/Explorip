@@ -131,5 +131,10 @@ namespace ExploripCopy.GUI
         {
             DgListWaiting.Items.Refresh();
         }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            MyDataContext.WindowMaximized = WindowState == WindowState.Maximized;
+        }
     }
 }

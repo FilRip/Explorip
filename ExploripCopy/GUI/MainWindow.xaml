@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
         Title="MainWindow" Height="450" Width="800" Background="Transparent" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
-        Closing="Window_Closing" Foreground="White" MouseMove="Window_MouseMove" Closed="Window_Closed" Activated="Window_Activated">
+        Closing="Window_Closing" Foreground="White" MouseMove="Window_MouseMove" Closed="Window_Closed" Activated="Window_Activated" WindowStyle="None" ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged">
     
     <WindowChrome.WindowChrome>
         <WindowChrome
@@ -42,10 +42,12 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- Current progress -->
-            <Label Grid.Row="0" Content="{Binding CurrentFile}" Background="Transparent" Foreground="White"/>
+            <Label Grid.Row="0" Content="{Binding CurrentFile}" Background="Transparent" Foreground="White" Padding="0"/>
             <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100"/>
-            <Label Grid.Row="2" Content="{Binding GlobalReport}" Background="Transparent" Foreground="White"/>
+            <TextBlock Grid.Row="1" Text="{Binding ElementName=ReportCurrentProgress, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Label Grid.Row="2" Content="{Binding GlobalReport}" Background="Transparent" Foreground="White" Padding="0"/>
             <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100"/>
+            <TextBlock Grid.Row="3" Text="{Binding ElementName=ReportGlobalProgress, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
             <!-- List operations are waiting -->
             <Grid Grid.Row="4" Name="ListOperations">
