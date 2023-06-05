@@ -23,6 +23,7 @@ namespace ExploripCopy.GUI
         {
             InitializeComponent();
 
+            Constants.Colors.LoadTheme();
             Constants.Localization.LoadTranslation();
 
             Instance = this;

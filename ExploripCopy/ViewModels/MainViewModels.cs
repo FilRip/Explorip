@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 using Explorip.HookFileOperations;
 using Explorip.HookFileOperations.Models;
+
+using ExploripCopy.Helpers;
+using ExploripCopy.Models;
 
 using ManagedShell.Interop;
 
@@ -63,6 +68,7 @@ namespace ExploripCopy.ViewModels
             {
                 _globalReport = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ColorGlobalReport));
             }
         }
 
@@ -85,6 +91,17 @@ namespace ExploripCopy.ViewModels
             {
                 _globalProgress = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public SolidColorBrush ColorGlobalReport
+        {
+            get
+            {
+                if (_lastError == null)
+                    return Constants.Colors.ForegroundColorBrush;
+                else
+                    return Brushes.Red;
             }
         }
 
@@ -111,6 +128,7 @@ namespace ExploripCopy.ViewModels
             {
                 _lastError = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(ColorGlobalReport));
             }
         }
 
@@ -137,9 +155,17 @@ namespace ExploripCopy.ViewModels
 
         private void FinishCurrent()
         {
-            _listWait.RemoveAt(0);
-            _currentOperation = null;
+            if (_lastError == null)
+            {
+                _listWait.RemoveAt(0);
+                _currentOperation = null;
+            }
+            else
+            {
+                GlobalReport = _lastError.Message;
+            }
             OnPropertyChanged(nameof(ListWaiting));
+            CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
         }
 
         private OneFileOperation _currentOperation;
@@ -148,6 +174,7 @@ namespace ExploripCopy.ViewModels
             _currentOperation = operation;
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
+                CurrentFile = operation.Source;
                 DirectoryInfo srcDir, destDir;
                 srcDir = new DirectoryInfo(operation.Source).Parent;
                 destDir = new DirectoryInfo(operation.Destination);
@@ -155,16 +182,16 @@ namespace ExploripCopy.ViewModels
                 if (operation.FileOperation == EFileOperation.Copy)
                 {
                     if (isDirectory)
-                        _lastError = Helpers.CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                        GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                     else
-                        _lastError = Helpers.CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                        GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                 }
                 else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
                 {
                     if (isDirectory)
-                        _lastError = Helpers.CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                        GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
                     else
-                        _lastError = Helpers.CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                        GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
                 }
                 FinishCurrent();
             }
@@ -199,7 +226,7 @@ namespace ExploripCopy.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        _lastError = ex;
+                        GetLastError = ex;
                     }
                     finally
                     {

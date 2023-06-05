@@ -1,0 +1,41 @@
+﻿<Window x:Class="ExploripCopy.GUI.ChoiceConflictFiles"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:constants="clr-namespace:ExploripCopy.Constants"
+        xmlns:viewmodels="clr-namespace:ExploripCopy.ViewModels"
+        mc:Ignorable="d"
+        Title="ChoiceConflictFiles" Height="450" Width="800" WindowStyle="None" Topmost="True" Background="Transparent" Foreground="White" ResizeMode="NoResize">
+    <Window.DataContext>
+        <viewmodels:ChoiceOnCollisionViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="{Binding Source={x:Static constants:Localization.FILE_COLLISION_TITLE}}"/>
+        <RadioButton Grid.Row="1" GroupName="MyChoice" Name="ReplaceAll" Click="RadioButton_Click">
+            <TextBlock Text="{Binding Source={x:Static constants:Localization.REPLACE_FILE}}" Foreground="White"/>
+        </RadioButton>
+        <RadioButton Grid.Row="2" GroupName="MyChoice" Name="IgnoreAll" Click="RadioButton_Click">
+            <TextBlock Text="{Binding Source={x:Static constants:Localization.IGNORE_FILE}}" Foreground="White"/>
+        </RadioButton>
+        <RadioButton Grid.Row="3" GroupName="MyChoice" Name="IgnoreSameDateSize" Click="RadioButton_Click" IsChecked="True">
+            <TextBlock Text="{Binding Source={x:Static constants:Localization.IGNORE_FILE_SAME_DATE_SIZE}}" Foreground="White"/>
+        </RadioButton>
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Annuler" Grid.Column="1" Name="ButtonAnnuler" Click="ButtonAnnuler_Click" Width="100" Margin="0 0 50 0"/>
+            <Button Content="OK" Grid.Column="2" Name="ButtonOK" Click="ButtonOK_Click" Width="100"/>
+        </Grid>
+    </Grid>
+</Window>

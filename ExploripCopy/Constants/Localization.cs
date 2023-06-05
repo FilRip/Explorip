@@ -4,13 +4,23 @@ using System.Text;
 
 namespace ExploripCopy.Constants
 {
-    internal static class Localization
+    public static class Localization
     {
-        internal static string COPY_OF { get; private set; }
+        public static string COPY_OF { get; private set; }
+        public static string FILE_COLLISION_TITLE { get; private set; }
+        public static string FILE_NAME_EXIST { get; private set; }
+        public static string REPLACE_FILE { get;private set; }
+        public static string IGNORE_FILE { get;private set; }
+        public static string IGNORE_FILE_SAME_DATE_SIZE { get; private set; }
 
         internal static void LoadTranslation()
         {
             COPY_OF = Load("shell32.dll", 4178, " - Copy");
+            FILE_COLLISION_TITLE = Load("shell32.dll", 33163, "Replace or ignore files");
+            FILE_NAME_EXIST = Load("shell32.dll", 33163, "Destination already contain a file named \" %s \"").Replace("%1!s!", "%s");
+            REPLACE_FILE = Load("shell32.dll", 33237, "Replace all files in destination");
+            IGNORE_FILE = Load("shell32.dll", 33239, "Ignore all files");
+            IGNORE_FILE_SAME_DATE_SIZE = Load("shell32.dll", 33197, "Ignore files with same date and size").Replace("%1!lu!", "");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

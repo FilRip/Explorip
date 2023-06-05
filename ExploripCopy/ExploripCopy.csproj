@@ -56,15 +56,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants\Colors.cs" />
     <Compile Include="Constants\Localization.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Exceptions\ExploripCopyException.cs" />
+    <Compile Include="GUI\ChoiceConflictFiles.xaml.cs">
+      <DependentUpon>ChoiceConflictFiles.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\CopyHelper.cs" />
     <Compile Include="Helpers\IpcServer.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
+    <Compile Include="Helpers\WindowsSettings.cs" />
+    <Compile Include="Models\EChoiceFileOperation.cs" />
     <Compile Include="Models\InteractionMainProcess.cs" />
+    <Compile Include="ViewModels\ChoiceOnCollisionViewModel.cs" />
     <Compile Include="ViewModels\MainViewModels.cs" />
     <Compile Include="ViewModels\NotifyIconViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Page Include="GUI\ChoiceConflictFiles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GUI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -3,12 +3,18 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Remoting.Messaging;
 using System.Threading;
+using System.Windows;
+
+using ExploripCopy.Exceptions;
+using ExploripCopy.GUI;
+using ExploripCopy.Models;
 
 namespace ExploripCopy.Helpers
 {
     internal static class CopyHelper
     {
         public static bool Pause { get; set; }
+        public static EChoiceFileOperation ChoiceOnCollision { get; set; }
 
         internal delegate void CallbackRefreshProgress(string currentFile, long fullSize, long remainingSize, int speed);
 
@@ -99,12 +105,47 @@ namespace ExploripCopy.Helpers
                 FileInfo fi = new(sourceFile);
                 FileInfo destFile = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceFile));
                 int nbCopy = 0;
-                if (renameOnCollision)
-                    while (destFile.Exists)
+                if (destFile.Exists)
+                {
+                    if (renameOnCollision)
                     {
-                        destFile = new(destinationDir + Path.DirectorySeparatorChar + Constants.Localization.COPY_OF.Replace("%s", Path.GetFileNameWithoutExtension(sourceFile)) + (nbCopy > 0 ? $" ({nbCopy})" : "") + Path.GetExtension(sourceFile));
-                        nbCopy++;
+                        while (destFile.Exists)
+                        {
+                            destFile = new(destinationDir + Path.DirectorySeparatorChar + Constants.Localization.COPY_OF.Replace("%s", Path.GetFileNameWithoutExtension(sourceFile)) + (nbCopy > 0 ? $" ({nbCopy})" : "") + Path.GetExtension(sourceFile));
+                            nbCopy++;
+                        }
                     }
+                    else
+                    {
+                        if (ChoiceOnCollision == EChoiceFileOperation.None)
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                ChoiceConflictFiles window = new()
+                                {
+                                    Owner = MainWindow.Instance
+                                };
+                                window.ShowDialog();
+                                ChoiceOnCollision = window.MyDataContext.Choice;
+                            });
+                        }
+                        switch (ChoiceOnCollision)
+                        {
+                            case EChoiceFileOperation.None:
+                                return new ExploripCopyException("Canceled by user");
+                            case EChoiceFileOperation.KeepExisting:
+                                return null;
+                            case EChoiceFileOperation.KeepMostRecent:
+                                if (fi.Length > destFile.Length)
+                                    return null;
+                                DateTime hdSrc = fi.LastWriteTimeUtc;
+                                DateTime hdDest = destFile.LastWriteTimeUtc;
+                                if (hdSrc.CompareTo(hdDest) > 0)
+                                    return null;
+                                break;
+                        }
+                    }
+                }
                 long fullSize = fi.Length;
                 long remaining = fullSize;
                 FileStream source = new(sourceFile, FileMode.Open, FileAccess.Read);

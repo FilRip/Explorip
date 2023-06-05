@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:ExploripCopy.ViewModels"
         xmlns:converters="clr-namespace:ExploripCopy.Converters"
+        xmlns:constants="clr-namespace:ExploripCopy.Constants"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
         Title="MainWindow" Height="450" Width="800" Background="Transparent" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
@@ -42,11 +43,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!-- Current progress -->
-            <Label Grid.Row="0" Content="{Binding CurrentFile}" Background="Transparent" Foreground="White" Padding="0"/>
-            <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100"/>
+            <Label Grid.Row="0" Content="{Binding CurrentFile}" Background="Transparent" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Padding="0"/>
+            <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
             <TextBlock Grid.Row="1" Text="{Binding ElementName=ReportCurrentProgress, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Label Grid.Row="2" Content="{Binding GlobalReport}" Background="Transparent" Foreground="White" Padding="0"/>
-            <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100"/>
+            <Label Grid.Row="2" Content="{Binding GlobalReport}" Background="Transparent" Foreground="{Binding ColorGlobalReport}" Padding="0"/>
+            <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
             <TextBlock Grid.Row="3" Text="{Binding ElementName=ReportGlobalProgress, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
             <!-- List operations are waiting -->
