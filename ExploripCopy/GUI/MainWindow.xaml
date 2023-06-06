@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
         Title="MainWindow" Height="450" Width="800" Background="Transparent" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
-        Closing="Window_Closing" Foreground="White" MouseMove="Window_MouseMove" Closed="Window_Closed" Activated="Window_Activated" WindowStyle="None" ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged">
+        Closing="Window_Closing" Foreground="White" MouseMove="Window_MouseMove" Closed="Window_Closed" WindowStyle="None" ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged">
     
     <WindowChrome.WindowChrome>
         <WindowChrome

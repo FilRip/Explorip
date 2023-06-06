@@ -28,6 +28,7 @@ namespace ExploripCopy.GUI
 
             Instance = this;
             DataContext = MainViewModels.Instance;
+            MyDataContext.ForceRefreshList += ForceRefresh;
             _forceClose = false;
 
             IpcServer.CreateIpcServer();
@@ -96,13 +97,13 @@ namespace ExploripCopy.GUI
         #region Drag Window
 
         private bool _startDrag;
-        private void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             if (_startDrag && WindowState != WindowState.Minimized && IsVisible && IsActive)
             {
                 _startDrag = false;
                 if (WindowState == WindowState.Maximized)
-                    Top = Mouse.GetPosition(System.Windows.Application.Current.MainWindow).Y;
+                    Top = Mouse.GetPosition(Application.Current.MainWindow).Y;
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     RestoreWindow_Click(sender, null);
@@ -128,9 +129,12 @@ namespace ExploripCopy.GUI
             IpcServer.ShutdownIpcServer();
         }
 
-        private void Window_Activated(object sender, EventArgs e)
+        private void ForceRefresh(object sender, EventArgs e)
         {
-            DgListWaiting.Items.Refresh();
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                DgListWaiting.Items.Refresh();
+            });
         }
 
         private void Window_StateChanged(object sender, EventArgs e)

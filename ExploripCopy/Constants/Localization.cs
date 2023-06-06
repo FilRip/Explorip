@@ -12,15 +12,19 @@ namespace ExploripCopy.Constants
         public static string REPLACE_FILE { get;private set; }
         public static string IGNORE_FILE { get;private set; }
         public static string IGNORE_FILE_SAME_DATE_SIZE { get; private set; }
+        public static string CANCEL { get;private set; }
+        public static string CONTINUE { get;private set; }
 
         internal static void LoadTranslation()
         {
             COPY_OF = Load("shell32.dll", 4178, " - Copy");
             FILE_COLLISION_TITLE = Load("shell32.dll", 33163, "Replace or ignore files");
-            FILE_NAME_EXIST = Load("shell32.dll", 33163, "Destination already contain a file named \" %s \"").Replace("%1!s!", "%s");
+            FILE_NAME_EXIST = Load("shell32.dll", 33234, "Destination already contain a file named \" %s \"").Replace("%1!s!", "%s");
             REPLACE_FILE = Load("shell32.dll", 33237, "Replace all files in destination");
             IGNORE_FILE = Load("shell32.dll", 33239, "Ignore all files");
             IGNORE_FILE_SAME_DATE_SIZE = Load("shell32.dll", 33197, "Ignore files with same date and size").Replace("%1!lu!", "");
+            CANCEL = Load("shell32.dll", 33187, "Cancel");
+            CONTINUE = Load("shell32.dll", 33188, "Continue");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

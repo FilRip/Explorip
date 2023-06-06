@@ -117,16 +117,19 @@ namespace ExploripCopy.Helpers
                     }
                     else
                     {
+                        bool reset = false;
                         if (ChoiceOnCollision == EChoiceFileOperation.None)
                         {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 ChoiceConflictFiles window = new()
                                 {
-                                    Owner = MainWindow.Instance
+                                    Owner = MainWindow.Instance,
                                 };
+                                window.MyDataContext.ConflictFile = Path.GetFileName(destFile.FullName);
                                 window.ShowDialog();
                                 ChoiceOnCollision = window.MyDataContext.Choice;
+                                reset = window.MyDataContext.DoSameForAllFiles;
                             });
                         }
                         switch (ChoiceOnCollision)
@@ -134,16 +137,28 @@ namespace ExploripCopy.Helpers
                             case EChoiceFileOperation.None:
                                 return new ExploripCopyException("Canceled by user");
                             case EChoiceFileOperation.KeepExisting:
+                                if (reset)
+                                    ChoiceOnCollision = EChoiceFileOperation.None;
                                 return null;
                             case EChoiceFileOperation.KeepMostRecent:
                                 if (fi.Length > destFile.Length)
+                                {
+                                    if (reset)
+                                        ChoiceOnCollision = EChoiceFileOperation.None;
                                     return null;
+                                }
                                 DateTime hdSrc = fi.LastWriteTimeUtc;
                                 DateTime hdDest = destFile.LastWriteTimeUtc;
                                 if (hdSrc.CompareTo(hdDest) > 0)
+                                {
+                                    if (reset)
+                                        ChoiceOnCollision = EChoiceFileOperation.None;
                                     return null;
+                                }
                                 break;
                         }
+                        if (reset)
+                            ChoiceOnCollision = EChoiceFileOperation.None;
                     }
                 }
                 long fullSize = fi.Length;

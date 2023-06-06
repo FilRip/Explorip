@@ -22,6 +22,8 @@ namespace ExploripCopy.ViewModels
         private readonly Thread _mainThread;
         private readonly object _lockOperation;
 
+        public event EventHandler ForceRefreshList;
+
         public static MainViewModels Instance
         {
             get { return _instance ??= new MainViewModels(); }
@@ -118,6 +120,7 @@ namespace ExploripCopy.ViewModels
         public void ForceUpdateWaitingList()
         {
             OnPropertyChanged(nameof(ListWaiting));
+            ForceRefreshList?.Invoke(this, EventArgs.Empty);
         }
 
         private Exception _lastError;
