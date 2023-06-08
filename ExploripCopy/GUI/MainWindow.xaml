@@ -8,7 +8,7 @@
         xmlns:constants="clr-namespace:ExploripCopy.Constants"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
-        Title="MainWindow" Height="450" Width="800" Background="Transparent" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
+        Title="MainWindow" Height="450" Width="800" Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
         Closing="Window_Closing" Foreground="White" MouseMove="Window_MouseMove" Closed="Window_Closed" WindowStyle="None" ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged">
     
     <WindowChrome.WindowChrome>
@@ -40,8 +40,10 @@
                 <RowDefinition Height="16"/>
                 <RowDefinition Height="16"/>
                 <RowDefinition Height="16"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            
             <!-- Current progress -->
             <Label Grid.Row="0" Content="{Binding CurrentFile}" Background="Transparent" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Padding="0"/>
             <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
@@ -49,10 +51,11 @@
             <Label Grid.Row="2" Content="{Binding GlobalReport}" Background="Transparent" Foreground="{Binding ColorGlobalReport}" Padding="0"/>
             <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
             <TextBlock Grid.Row="3" Text="{Binding ElementName=ReportGlobalProgress, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+            <Button Grid.Row="4" Content="Pause" HorizontalAlignment="Right" Name="BtnPause" Click="BtnPause_Click"/>
+            
             <!-- List operations are waiting -->
-            <Grid Grid.Row="4" Name="ListOperations">
-                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Extended" SelectionUnit="FullRow">
+            <Grid Grid.Row="5" Name="ListOperations">
+                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Extended" SelectionUnit="FullRow" SelectedItem="{Binding SelectedLine, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Source}" Width="0.5*">
                             <DataGridTextColumn.HeaderStyle>

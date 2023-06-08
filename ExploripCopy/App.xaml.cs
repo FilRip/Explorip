@@ -18,6 +18,9 @@ namespace ExploripCopy
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            Constants.Colors.LoadTheme();
+            Constants.Localization.LoadTranslation();
+
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
         }
     }

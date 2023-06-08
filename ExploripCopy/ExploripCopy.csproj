@@ -64,6 +64,7 @@
       <DependentUpon>ChoiceConflictFiles.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CopyHelper.cs" />
+    <Compile Include="Helpers\IconExtractor.cs" />
     <Compile Include="Helpers\IpcServer.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />

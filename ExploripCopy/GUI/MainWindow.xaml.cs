@@ -2,6 +2,8 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
@@ -23,15 +25,14 @@ namespace ExploripCopy.GUI
         {
             InitializeComponent();
 
-            Constants.Colors.LoadTheme();
-            Constants.Localization.LoadTranslation();
-
             Instance = this;
             DataContext = MainViewModels.Instance;
             MyDataContext.ForceRefreshList += ForceRefresh;
             _forceClose = false;
 
             IpcServer.CreateIpcServer();
+
+            Icon = IconExtractor.Extract("shell32.dll", 249, true);
         }
 
         public void IconInSystray_Exit()
@@ -140,6 +141,11 @@ namespace ExploripCopy.GUI
         private void Window_StateChanged(object sender, EventArgs e)
         {
             MyDataContext.WindowMaximized = WindowState == WindowState.Maximized;
+        }
+
+        private void BtnPause_Click(object sender, RoutedEventArgs e)
+        {
+            CopyHelper.Pause = !CopyHelper.Pause;
         }
     }
 }

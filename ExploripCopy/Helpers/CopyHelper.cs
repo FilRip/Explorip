@@ -21,18 +21,20 @@ namespace ExploripCopy.Helpers
         internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
         {
             Exception result;
-            string destDir = destinationDir;
+            string destDir;
+            DirectoryInfo dirInfo = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceDir));
             if (renameOnCollision)
             {
-                DirectoryInfo dirInfo = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceDir));
                 int nbCopy = 0;
                 while (dirInfo.Exists)
                 {
                     dirInfo = new DirectoryInfo(destinationDir + Path.DirectorySeparatorChar + Constants.Localization.COPY_OF.Replace("%s", Path.GetFileName(sourceDir)) + (nbCopy > 0 ? $" ({nbCopy})" : ""));
                     nbCopy++;
                 }
-                destDir = dirInfo.FullName;
             }
+            if (!dirInfo.Exists)
+                dirInfo.Create();
+            destDir = dirInfo.FullName;
             foreach (string file in Directory.GetFiles(sourceDir))
             {
                 result = CopyFile(file, destDir, bufferSize, refreshFrequency, CallbackRefresh);
@@ -41,7 +43,7 @@ namespace ExploripCopy.Helpers
             }
             foreach (string dir in Directory.GetDirectories(sourceDir))
             {
-                result = CopyDirectory(dir, destDir + Path.DirectorySeparatorChar + Path.GetFileName(dir), bufferSize, refreshFrequency, CallbackRefresh);
+                result = CopyDirectory(dir, destDir, bufferSize, refreshFrequency, CallbackRefresh);
                 if (result != null)
                     return result;
             }

@@ -693,5 +693,8 @@ namespace ManagedShell.Interop
             NoAppcontainerRedirection = 0x00010000,
             AliasOnly = 0x80000000
         }
+
+        [DllImport(Shell32_DllName, EntryPoint = "ExtractIconExW", CharSet = CharSet.Unicode, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
+        internal static extern int ExtractIconEx(string sFile, int iIndex, out IntPtr piLargeVersion, out IntPtr piSmallVersion, int amountIcons);
     }
 }

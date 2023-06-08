@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using Explorip.HookFileOperations;
@@ -35,6 +36,8 @@ namespace ExploripCopy.ViewModels
             _listWait = new();
             _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
             _mainThread.Start();
+            
+            CmdRemoveLine = new RelayCommand(new Action<object>((param) => RemoveLine()));
         }
 
         private bool _isMaximized;
@@ -123,6 +126,8 @@ namespace ExploripCopy.ViewModels
             ForceRefreshList?.Invoke(this, EventArgs.Empty);
         }
 
+        public OneFileOperation SelectedLine { get; set; }
+
         private Exception _lastError;
         public Exception GetLastError
         {
@@ -178,25 +183,38 @@ namespace ExploripCopy.ViewModels
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
                 CurrentFile = operation.Source;
-                DirectoryInfo srcDir, destDir;
-                srcDir = new DirectoryInfo(operation.Source).Parent;
-                destDir = new DirectoryInfo(operation.Destination);
-                bool isDirectory = Directory.Exists(operation.Source);
-                if (operation.FileOperation == EFileOperation.Copy)
+                Task.Run(() =>
                 {
-                    if (isDirectory)
-                        GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
-                    else
-                        GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
-                }
-                else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
-                {
-                    if (isDirectory)
-                        GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
-                    else
-                        GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
-                }
-                FinishCurrent();
+                    try
+                    {
+                        DirectoryInfo srcDir, destDir;
+                        srcDir = new DirectoryInfo(operation.Source).Parent;
+                        destDir = new DirectoryInfo(operation.Destination);
+                        bool isDirectory = Directory.Exists(operation.Source);
+                        if (operation.FileOperation == EFileOperation.Copy)
+                        {
+                            if (isDirectory)
+                                GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                            else
+                                GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                        }
+                        else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
+                        {
+                            if (isDirectory)
+                                GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                            else
+                                GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        GetLastError = ex;
+                    }
+                    finally
+                    {
+                        FinishCurrent();
+                    }
+                });
             }
             else
             {
@@ -258,6 +276,18 @@ namespace ExploripCopy.ViewModels
                 catch (ThreadAbortException) { break; }
                 catch (Exception) { /* Ignore errors */ }
             }
+        }
+
+        public ICommand CmdRemoveLine { get; private set; }
+
+        private void RemoveLine()
+        {
+            try
+            {
+                ListWaiting.Remove(SelectedLine);
+                ForceUpdateWaitingList();
+            }
+            catch (Exception) { /* Ignore errors */ }
         }
 
         protected override void Dispose(bool disposing)
