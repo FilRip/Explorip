@@ -172,7 +172,7 @@ namespace ExploripCopy.ViewModels
             {
                 GlobalReport = _lastError.Message;
             }
-            OnPropertyChanged(nameof(ListWaiting));
+            ForceUpdateWaitingList();
             CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
         }
 
