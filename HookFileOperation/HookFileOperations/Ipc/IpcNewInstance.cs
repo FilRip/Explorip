@@ -17,6 +17,11 @@ namespace Explorip.HookFileOperations.Ipc
             _interactionWithMainProcess = interactionWithMainProcess;
         }
 
+        public bool ExploripCopyLaunched()
+        {
+            return _interactionWithMainProcess != null;
+        }
+
         [DllImport("USER32.DLL")]
         private static extern IntPtr GetDesktopWindow();
 

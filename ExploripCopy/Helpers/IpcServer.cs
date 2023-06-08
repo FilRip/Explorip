@@ -10,6 +10,7 @@ namespace ExploripCopy.Helpers
     internal static class IpcServer
     {
         private static IpcChannel _channel;
+        private static IpcNewInstance _ni;
 
         internal static void CreateIpcServer()
         {
@@ -18,13 +19,18 @@ namespace ExploripCopy.Helpers
             ChannelServices.RegisterChannel(_channel, false);
             RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
             Console.WriteLine("Channel created");
-            IpcNewInstance ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://ExploripCopy/HookManagerRemoteServer");
-            ni.SetMainProcess(new Models.InteractionMainProcess());
+            _ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://ExploripCopy/HookManagerRemoteServer");
+            _ni.SetMainProcess(new Models.InteractionMainProcess());
         }
 
         internal static void ShutdownIpcServer()
         {
-            ChannelServices.UnregisterChannel(_channel);
+            try
+            {
+                ChannelServices.UnregisterChannel(_channel);
+                _ni.SetMainProcess(null);
+            }
+            catch (Exception) { /* Ignore errors */ }
         }
     }
 }

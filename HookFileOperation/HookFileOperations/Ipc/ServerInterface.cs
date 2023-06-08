@@ -90,7 +90,17 @@ namespace Explorip.HookFileOperations.Ipc
             Console.WriteLine("PerformOperation");
             if (_listOperations.Count > 0)
             {
-                IpcNewInstance ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://ExploripCopy/HookManagerRemoteServer");
+                IpcNewInstance ni = null;
+                try
+                {
+                    ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://ExploripCopy/HookManagerRemoteServer");
+                    if (ni?.ExploripCopyLaunched() != true)
+                        ni = null;
+                }
+                catch (Exception)
+                {
+                    ni = null;
+                }
                 if (ni == null)
                 {
                     Console.WriteLine("Create process");
