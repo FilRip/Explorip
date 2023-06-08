@@ -23,6 +23,11 @@ namespace ExploripCopy.Constants
         public static string SPEED_PETA { get; private set; }
         public static string SPEED_EXA { get; private set; }
         public static string AVERAGE { get; private set; }
+        public static string MOVE_OF_FILESYSTEM { get; private set; }
+        public static string COPY_OF_FILESYSTEM { get; private set; }
+        public static string DELETE_OF_FILESYSTEM { get; private set; }
+        public static string RENAME_OF_FILESYSTEM { get; private set; }
+        public static string CREATE_OF_FILESYSTEM { get; private set; }
 
         internal static void LoadTranslation()
         {
@@ -43,6 +48,11 @@ namespace ExploripCopy.Constants
             SPEED_PETA = Load("dskquota.dll", 14477, "peta");
             SPEED_EXA = Load("dskquota.dll", 14478, "exa");
             AVERAGE = Load("comres.dll", 2705, "average");
+            MOVE_OF_FILESYSTEM = Load("shell32.dll", 4193, "Move of '%1!ls!'").Replace("%1!ls!", "%s");
+            COPY_OF_FILESYSTEM = Load("shell32.dll", 4194, "Copy of '%1!ls!'").Replace("%1!ls!", "%s");
+            DELETE_OF_FILESYSTEM = Load("shell32.dll", 4195, "Delete of %1!ls!").Replace("%1!ls!", "%s");
+            RENAME_OF_FILESYSTEM = Load("shell32.dll", 4196, "Rename of %1!ls!").Replace("%1!ls!", "%s");
+            CREATE_OF_FILESYSTEM = Load("shell32.dll", 4199, "Create of %1!ls!").Replace("%1!ls!", "%s");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

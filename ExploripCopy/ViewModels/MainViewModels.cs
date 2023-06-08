@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -207,10 +208,35 @@ namespace ExploripCopy.ViewModels
             CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
         }
 
+        private void UpdateGlobalReport()
+        {
+            StringBuilder sb = new StringBuilder();
+            switch (_currentOperation.FileOperation)
+            {
+                case EFileOperation.Copy:
+                    sb.Append(Localization.COPY_OF_FILESYSTEM);
+                    break;
+                case EFileOperation.Move:
+                    sb.Append(Localization.MOVE_OF_FILESYSTEM);
+                    break;
+                case EFileOperation.Delete:
+                    sb.Append(Localization.DELETE_OF_FILESYSTEM);
+                    break;
+                case EFileOperation.Rename:
+                    sb.Append(Localization.RENAME_OF_FILESYSTEM);
+                    break;
+                case EFileOperation.Create:
+                    sb.Append(Localization.CREATE_OF_FILESYSTEM);
+                    break;
+            }
+            sb = sb.Replace("%s", _currentOperation.Source);
+            GlobalReport = sb.ToString();
+        }
         private OneFileOperation _currentOperation;
         private void Treatment(OneFileOperation operation)
         {
             _currentOperation = operation;
+            UpdateGlobalReport();
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
                 CurrentFile = operation.Source;

@@ -27,8 +27,8 @@ namespace ExploripCopy.Helpers
         {
             try
             {
-                ChannelServices.UnregisterChannel(_channel);
                 _ni.SetMainProcess(null);
+                ChannelServices.UnregisterChannel(_channel);
             }
             catch (Exception) { /* Ignore errors */ }
         }
