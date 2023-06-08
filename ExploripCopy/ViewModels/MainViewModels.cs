@@ -231,10 +231,29 @@ namespace ExploripCopy.ViewModels
                         }
                         else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
                         {
-                            if (isDirectory)
-                                GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                            if (Path.GetPathRoot(Path.GetFullPath(srcDir.FullName)).CompareTo(Path.GetPathRoot(Path.GetFullPath(destDir.FullName))) == 0)
+                            {
+                                // If move in same disk, just change location in file system table
+                                try
+                                {
+                                    if (isDirectory)
+                                        Directory.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.Source));
+                                    else
+                                        File.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.Source));
+                                }
+                                catch (Exception ex)
+                                {
+                                    GetLastError = ex;
+                                }
+                            }
                             else
-                                GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                            {
+                                // Finally, else, we must Copy/Delete
+                                if (isDirectory)
+                                    GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                                else
+                                    GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                            }
                         }
                     }
                     catch (Exception ex)
