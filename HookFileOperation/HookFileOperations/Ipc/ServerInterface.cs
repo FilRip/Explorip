@@ -90,7 +90,7 @@ namespace Explorip.HookFileOperations.Ipc
             Console.WriteLine("PerformOperation");
             if (_listOperations.Count > 0)
             {
-                IpcNewInstance ni = null;
+                IpcNewInstance ni;
                 try
                 {
                     ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://ExploripCopy/HookManagerRemoteServer");

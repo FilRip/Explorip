@@ -9,11 +9,20 @@ namespace ExploripCopy.Constants
         public static string COPY_OF { get; private set; }
         public static string FILE_COLLISION_TITLE { get; private set; }
         public static string FILE_NAME_EXIST { get; private set; }
-        public static string REPLACE_FILE { get;private set; }
-        public static string IGNORE_FILE { get;private set; }
+        public static string REPLACE_FILE { get; private set; }
+        public static string IGNORE_FILE { get; private set; }
         public static string IGNORE_FILE_SAME_DATE_SIZE { get; private set; }
-        public static string CANCEL { get;private set; }
-        public static string CONTINUE { get;private set; }
+        public static string CANCEL { get; private set; }
+        public static string CONTINUE { get; private set; }
+        public static string SPEED_COPY { get; private set; }
+        public static string SPEED_BYTE { get; private set; }
+        public static string SPEED_KILO { get; private set; }
+        public static string SPEED_MEGA { get; private set; }
+        public static string SPEED_GIGA { get; private set; }
+        public static string SPEED_TERA { get; private set; }
+        public static string SPEED_PETA { get; private set; }
+        public static string SPEED_EXA { get; private set; }
+        public static string AVERAGE { get; private set; }
 
         internal static void LoadTranslation()
         {
@@ -25,6 +34,15 @@ namespace ExploripCopy.Constants
             IGNORE_FILE_SAME_DATE_SIZE = Load("shell32.dll", 33197, "Ignore files with same date and size").Replace("%1!lu!", "");
             CANCEL = Load("shell32.dll", 33187, "Cancel");
             CONTINUE = Load("shell32.dll", 33188, "Continue");
+            SPEED_COPY = Load("shell32.dll", 33200, "Speed %1!s!/s").Replace("%1!s!", "%s");
+            SPEED_BYTE = Load("dskquota.dll", 14472, "bytes");
+            SPEED_KILO = Load("dskquota.dll", 14473, "kilo");
+            SPEED_MEGA = Load("dskquota.dll", 14474, "mega");
+            SPEED_GIGA = Load("dskquota.dll", 14475, "giga");
+            SPEED_TERA = Load("dskquota.dll", 14476, "tera");
+            SPEED_PETA = Load("dskquota.dll", 14477, "peta");
+            SPEED_EXA = Load("dskquota.dll", 14478, "exa");
+            AVERAGE = Load("comres.dll", 2705, "average");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

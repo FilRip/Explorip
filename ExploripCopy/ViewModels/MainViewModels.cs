@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,6 +9,7 @@ using System.Windows.Media;
 using Explorip.HookFileOperations;
 using Explorip.HookFileOperations.Models;
 
+using ExploripCopy.Constants;
 using ExploripCopy.Helpers;
 using ExploripCopy.Models;
 
@@ -140,21 +140,52 @@ namespace ExploripCopy.ViewModels
             }
         }
 
-        public int _lastSpeed;
-        public int LastSpeed
+        public double _lastSpeed;
+        public string TxtCurrentSpeed
+        {
+            get
+            {
+                string word = Localization.SPEED_BYTE;
+                double speed = _lastSpeed;
+
+                static void ChangeDim(ref double value, string word, ref string currentWord)
+                {
+                    if (value > 1024)
+                    {
+                        value = Math.Round(value / 1024, 2);
+                        currentWord = word;
+                    }
+                }
+
+                ChangeDim(ref speed, Localization.SPEED_KILO, ref word);
+                ChangeDim(ref speed, Localization.SPEED_MEGA, ref word);
+                ChangeDim(ref speed, Localization.SPEED_GIGA, ref word);
+                ChangeDim(ref speed, Localization.SPEED_TERA, ref word);
+                ChangeDim(ref speed, Localization.SPEED_PETA, ref word);
+                ChangeDim(ref speed, Localization.SPEED_EXA, ref word);
+
+                return Localization.SPEED_COPY.Replace("%s", $"{speed} {word}");
+            }
+        }
+
+        public double CurrentSpeed
         {
             get { return _lastSpeed; }
             set
             {
-                _lastSpeed = value;
-                OnPropertyChanged();
+                if (_lastSpeed != value)
+                {
+                    _lastSpeed = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(TxtCurrentSpeed));
+                }
             }
         }
 
         private void Callback_Operation(string currentFile, long fullSize, long remainingSize, int speed)
         {
             CurrentFile = currentFile;
-            _lastSpeed = speed;
+            CurrentSpeed = speed;
             long diff = fullSize - remainingSize;
             if (diff < 0)
                 diff = fullSize;

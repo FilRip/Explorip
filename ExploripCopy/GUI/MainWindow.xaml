@@ -51,7 +51,15 @@
             <Label Grid.Row="2" Content="{Binding GlobalReport, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{Binding ColorGlobalReport}" Padding="0"/>
             <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
             <TextBlock Grid.Row="3" Text="{Binding ElementName=ReportGlobalProgress, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Button Grid.Row="4" Content="Pause" HorizontalAlignment="Right" Name="BtnPause" Click="BtnPause_Click"/>
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="1" Content="{Binding TxtCurrentSpeed, UpdateSourceTrigger=PropertyChanged}" Name="ShowCurrentSpeed" Background="Transparent" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Padding="0" Margin="0 0 5 0"/>
+                <Button Grid.Column="2" Content="Pause" HorizontalAlignment="Right" Name="BtnPause" Click="BtnPause_Click"/>
+            </Grid>
             
             <!-- List operations are waiting -->
             <Grid Grid.Row="5" Name="ListOperations">
