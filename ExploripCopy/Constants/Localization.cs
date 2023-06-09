@@ -28,6 +28,10 @@ namespace ExploripCopy.Constants
         public static string DELETE_OF_FILESYSTEM { get; private set; }
         public static string RENAME_OF_FILESYSTEM { get; private set; }
         public static string CREATE_OF_FILESYSTEM { get; private set; }
+        public static string CALCUL { get; private set; }
+        public static string REMANING { get; private set; }
+        public static string TOTAL { get; private set; }
+        public static string FINISH { get; private set; }
 
         internal static void LoadTranslation()
         {
@@ -53,6 +57,10 @@ namespace ExploripCopy.Constants
             DELETE_OF_FILESYSTEM = Load("shell32.dll", 4195, "Delete of %1!ls!").Replace("%1!ls!", "%s");
             RENAME_OF_FILESYSTEM = Load("shell32.dll", 4196, "Rename of %1!ls!").Replace("%1!ls!", "%s");
             CREATE_OF_FILESYSTEM = Load("shell32.dll", 4199, "Create of %1!ls!").Replace("%1!ls!", "%s");
+            CALCUL = Load("shell32.dll", 13580, "Calculate...");
+            REMANING = Load("shell32.dll", 33221, "Remaining items...");
+            TOTAL = Load("shell32.dll", 9306, "Total size") + " %s";
+            FINISH = Load("shell32.dll", 51249, "Finished");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

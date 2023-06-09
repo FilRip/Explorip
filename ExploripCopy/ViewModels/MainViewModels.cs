@@ -89,6 +89,20 @@ namespace ExploripCopy.ViewModels
             }
         }
 
+        private double _maxGlobalProgress;
+        public double MaxGlobalProgress
+        {
+            get { return _maxGlobalProgress; }
+            set
+            {
+                if (_maxGlobalProgress != value)
+                {
+                    _maxGlobalProgress = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private double _globalProgress;
         public double GlobalProgress
         {
@@ -97,6 +111,15 @@ namespace ExploripCopy.ViewModels
             {
                 _globalProgress = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(TxtGlobalReport));
+            }
+        }
+
+        public string TxtGlobalReport
+        {
+            get
+            {
+                return CopyHelper.SizeInText(_globalProgress, Localization.TOTAL);
             }
         }
 
@@ -146,26 +169,7 @@ namespace ExploripCopy.ViewModels
         {
             get
             {
-                string word = Localization.SPEED_BYTE;
-                double speed = _lastSpeed;
-
-                static void ChangeDim(ref double value, string word, ref string currentWord)
-                {
-                    if (value > 1024)
-                    {
-                        value = Math.Round(value / 1024, 2);
-                        currentWord = word;
-                    }
-                }
-
-                ChangeDim(ref speed, Localization.SPEED_KILO, ref word);
-                ChangeDim(ref speed, Localization.SPEED_MEGA, ref word);
-                ChangeDim(ref speed, Localization.SPEED_GIGA, ref word);
-                ChangeDim(ref speed, Localization.SPEED_TERA, ref word);
-                ChangeDim(ref speed, Localization.SPEED_PETA, ref word);
-                ChangeDim(ref speed, Localization.SPEED_EXA, ref word);
-
-                return Localization.SPEED_COPY.Replace("%s", $"{speed} {word}");
+                return CopyHelper.SizeInText(_lastSpeed, Localization.SPEED_COPY);
             }
         }
 
@@ -191,6 +195,7 @@ namespace ExploripCopy.ViewModels
             if (diff < 0)
                 diff = fullSize;
             CurrentProgress = diff / (double)fullSize * 100; // Convert in percent
+            GlobalProgress += diff;
         }
 
         private void FinishCurrent()
@@ -199,6 +204,7 @@ namespace ExploripCopy.ViewModels
             {
                 _listWait.RemoveAt(0);
                 _currentOperation = null;
+                GlobalReport = Localization.FINISH;
             }
             else
             {
@@ -210,7 +216,7 @@ namespace ExploripCopy.ViewModels
 
         private void UpdateGlobalReport()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             switch (_currentOperation.FileOperation)
             {
                 case EFileOperation.Copy:
@@ -236,6 +242,7 @@ namespace ExploripCopy.ViewModels
         private void Treatment(OneFileOperation operation)
         {
             _currentOperation = operation;
+            GlobalProgress = 0;
             UpdateGlobalReport();
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
@@ -250,6 +257,10 @@ namespace ExploripCopy.ViewModels
                         bool isDirectory = Directory.Exists(operation.Source);
                         if (operation.FileOperation == EFileOperation.Copy)
                         {
+                            GlobalReport = Localization.CALCUL;
+                            MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
+                            GlobalProgress = 0;
+                            UpdateGlobalReport();
                             if (isDirectory)
                                 GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                             else
@@ -275,6 +286,10 @@ namespace ExploripCopy.ViewModels
                             else
                             {
                                 // Finally, else, we must Copy/Delete
+                                GlobalReport = Localization.CALCUL;
+                                MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
+                                GlobalProgress = 0;
+                                UpdateGlobalReport();
                                 if (isDirectory)
                                     GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
                                 else

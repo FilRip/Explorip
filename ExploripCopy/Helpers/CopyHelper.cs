@@ -217,5 +217,55 @@ namespace ExploripCopy.Helpers
             }
             catch (Exception) { /* Ignore errors */ }
         }
+
+        internal static long TotalSizeDirectory(string dir)
+        {
+            long result = 0;
+
+            foreach (string file in Directory.GetFiles(dir))
+            {
+                FileInfo fi = new(file);
+                result += fi.Length;
+            }
+            foreach (string subdir in Directory.GetDirectories(dir))
+                result += TotalSizeDirectory(subdir);
+
+            return result;
+        }
+
+        internal static int TotalNbFiles(string dir)
+        {
+            int nbFiles = 0;
+
+            nbFiles += Directory.GetFiles(dir).Length;
+            foreach (string subdir in Directory.GetDirectories(dir))
+                nbFiles += TotalNbFiles(subdir);
+
+            return nbFiles;
+        }
+
+        internal static string SizeInText(double size, string fullText)
+        {
+            string word = Constants.Localization.SPEED_BYTE;
+            double speed = size;
+
+            static void ChangeDim(ref double value, string word, ref string currentWord)
+            {
+                if (value > 1024)
+                {
+                    value = Math.Round(value / 1024, 2);
+                    currentWord = word;
+                }
+            }
+
+            ChangeDim(ref speed, Constants.Localization.SPEED_KILO, ref word);
+            ChangeDim(ref speed, Constants.Localization.SPEED_MEGA, ref word);
+            ChangeDim(ref speed, Constants.Localization.SPEED_GIGA, ref word);
+            ChangeDim(ref speed, Constants.Localization.SPEED_TERA, ref word);
+            ChangeDim(ref speed, Constants.Localization.SPEED_PETA, ref word);
+            ChangeDim(ref speed, Constants.Localization.SPEED_EXA, ref word);
+
+            return fullText.Replace("%s", $"{speed} {word}");
+        }
     }
 }
