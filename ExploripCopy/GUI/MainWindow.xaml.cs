@@ -2,8 +2,6 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
@@ -32,7 +30,7 @@ namespace ExploripCopy.GUI
 
             IpcServer.CreateIpcServer();
 
-            Icon = IconExtractor.Extract("shell32.dll", 249, true);
+            Icon = Constants.Icons.MainIconSource;
         }
 
         public void IconInSystray_Exit()
@@ -49,10 +47,11 @@ namespace ExploripCopy.GUI
 
         #region Window manager
 
-        public void IconInSystray_DoubleClick()
+        public void ShowWindow()
         {
             Visibility = Visibility.Visible;
             WindowState = WindowState.Normal;
+            Activate();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

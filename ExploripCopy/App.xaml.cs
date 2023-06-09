@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 
+using ExploripCopy.ViewModels;
+
 using Hardcodet.Wpf.TaskbarNotification;
 
 namespace ExploripCopy
@@ -20,8 +22,10 @@ namespace ExploripCopy
         {
             Constants.Colors.LoadTheme();
             Constants.Localization.LoadTranslation();
+            Constants.Icons.LoadIcons();
 
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
+            NotifyIconViewModel.Instance.SetControl(notifyIcon);
         }
     }
 }

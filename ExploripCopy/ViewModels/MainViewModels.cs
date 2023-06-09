@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -23,6 +24,7 @@ namespace ExploripCopy.ViewModels
         private static MainViewModels _instance;
         private readonly Thread _mainThread;
         private readonly object _lockOperation;
+        private readonly Stopwatch _chronoSpeed;
 
         public event EventHandler ForceRefreshList;
 
@@ -37,7 +39,7 @@ namespace ExploripCopy.ViewModels
             _listWait = new();
             _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
             _mainThread.Start();
-            
+            _chronoSpeed = new Stopwatch();
             CmdRemoveLine = new RelayCommand(new Action<object>((param) => RemoveLine()));
         }
 
@@ -61,7 +63,7 @@ namespace ExploripCopy.ViewModels
             get { return _currentFile; }
             set
             {
-                _currentFile = value;
+                _currentFile = value.Replace("_", "__");
                 OnPropertyChanged();
             }
         }
@@ -173,7 +175,7 @@ namespace ExploripCopy.ViewModels
             }
         }
 
-        public double CurrentSpeed
+        public double LastSpeed
         {
             get { return _lastSpeed; }
             set
@@ -187,31 +189,43 @@ namespace ExploripCopy.ViewModels
             }
         }
 
-        private void Callback_Operation(string currentFile, long fullSize, long remainingSize, int speed)
+        private long _currentSpeed;
+        private void Callback_Operation(string currentFile, long fullSize, long remainingSize, long nbBytesRead)
         {
             CurrentFile = currentFile;
-            CurrentSpeed = speed;
+            _currentSpeed += nbBytesRead;
+            if (_chronoSpeed.IsRunning && _chronoSpeed.ElapsedMilliseconds >= 1000)
+            {
+                LastSpeed = _currentSpeed;
+                _chronoSpeed.Restart();
+                _currentSpeed = 0;
+            }
             long diff = fullSize - remainingSize;
             if (diff < 0)
                 diff = fullSize;
             CurrentProgress = diff / (double)fullSize * 100; // Convert in percent
-            GlobalProgress += diff;
+            GlobalProgress += nbBytesRead;
         }
 
         private void FinishCurrent()
         {
+            NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
             if (_lastError == null)
             {
                 _listWait.RemoveAt(0);
                 _currentOperation = null;
+                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.FINISH, GlobalReport, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
                 GlobalReport = Localization.FINISH;
             }
             else
             {
+                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.ERROR, GlobalReport, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
                 GlobalReport = _lastError.Message;
             }
             ForceUpdateWaitingList();
             CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
+            NotifyIconViewModel.Instance.SetSystrayIcon(false);
+            _chronoSpeed.Stop();
         }
 
         private void UpdateGlobalReport()
@@ -237,13 +251,18 @@ namespace ExploripCopy.ViewModels
             }
             sb = sb.Replace("%s", _currentOperation.Source);
             GlobalReport = sb.ToString();
+            NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
+            NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
         }
         private OneFileOperation _currentOperation;
         private void Treatment(OneFileOperation operation)
         {
             _currentOperation = operation;
+            NotifyIconViewModel.Instance.SetSystrayIcon(true);
             GlobalProgress = 0;
             UpdateGlobalReport();
+            _chronoSpeed.Restart();
+            _lastSpeed = 0;
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
                 CurrentFile = operation.Source;
@@ -257,14 +276,18 @@ namespace ExploripCopy.ViewModels
                         bool isDirectory = Directory.Exists(operation.Source);
                         if (operation.FileOperation == EFileOperation.Copy)
                         {
-                            GlobalReport = Localization.CALCUL;
-                            MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
-                            GlobalProgress = 0;
-                            UpdateGlobalReport();
                             if (isDirectory)
+                            {
+                                GlobalReport = Localization.CALCUL;
+                                MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
+                                UpdateGlobalReport();
                                 GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                            }
                             else
+                            {
+                                MaxGlobalProgress = new FileInfo(operation.Source).Length;
                                 GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                            }
                         }
                         else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
                         {
@@ -286,14 +309,18 @@ namespace ExploripCopy.ViewModels
                             else
                             {
                                 // Finally, else, we must Copy/Delete
-                                GlobalReport = Localization.CALCUL;
-                                MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
-                                GlobalProgress = 0;
-                                UpdateGlobalReport();
                                 if (isDirectory)
+                                {
+                                    GlobalReport = Localization.CALCUL;
+                                    MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
+                                    UpdateGlobalReport();
                                     GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                                }
                                 else
+                                {
+                                    MaxGlobalProgress = new FileInfo(operation.Source).Length;
                                     GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                                }
                             }
                         }
                     }

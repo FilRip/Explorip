@@ -16,7 +16,7 @@ namespace ExploripCopy.Helpers
         public static bool Pause { get; set; }
         public static EChoiceFileOperation ChoiceOnCollision { get; set; }
 
-        internal delegate void CallbackRefreshProgress(string currentFile, long fullSize, long remainingSize, int speed);
+        internal delegate void CallbackRefreshProgress(string currentFile, long fullSize, long remainingSize, long nbBytesRead);
 
         internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
         {
@@ -107,6 +107,8 @@ namespace ExploripCopy.Helpers
                 FileInfo fi = new(sourceFile);
                 FileInfo destFile = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceFile));
                 int nbCopy = 0;
+                long fullSize = fi.Length;
+                long remaining = fullSize;
                 if (destFile.Exists)
                 {
                     if (renameOnCollision)
@@ -131,22 +133,24 @@ namespace ExploripCopy.Helpers
                                 window.MyDataContext.ConflictFile = Path.GetFileName(destFile.FullName);
                                 window.ShowDialog();
                                 ChoiceOnCollision = window.MyDataContext.Choice;
-                                reset = window.MyDataContext.DoSameForAllFiles;
+                                reset = !window.MyDataContext.DoSameForAllFiles;
                             });
                         }
                         switch (ChoiceOnCollision)
                         {
                             case EChoiceFileOperation.None:
-                                return new ExploripCopyException("Canceled by user");
+                                return new ExploripCopyException(Constants.Localization.CANCELED);
                             case EChoiceFileOperation.KeepExisting:
                                 if (reset)
                                     ChoiceOnCollision = EChoiceFileOperation.None;
+                                CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, fullSize, new AsyncCallback(EndReportProgress), null);
                                 return null;
                             case EChoiceFileOperation.KeepMostRecent:
                                 if (fi.Length > destFile.Length)
                                 {
                                     if (reset)
                                         ChoiceOnCollision = EChoiceFileOperation.None;
+                                    CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, fullSize, new AsyncCallback(EndReportProgress), null);
                                     return null;
                                 }
                                 DateTime hdSrc = fi.LastWriteTimeUtc;
@@ -155,6 +159,7 @@ namespace ExploripCopy.Helpers
                                 {
                                     if (reset)
                                         ChoiceOnCollision = EChoiceFileOperation.None;
+                                    CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, fullSize, new AsyncCallback(EndReportProgress), null);
                                     return null;
                                 }
                                 break;
@@ -163,37 +168,24 @@ namespace ExploripCopy.Helpers
                             ChoiceOnCollision = EChoiceFileOperation.None;
                     }
                 }
-                long fullSize = fi.Length;
-                long remaining = fullSize;
                 FileStream source = new(sourceFile, FileMode.Open, FileAccess.Read);
                 if (!Directory.Exists(Path.GetFullPath(destinationDir)))
                     Directory.CreateDirectory(Path.GetFullPath(destinationDir));
                 FileStream destination = new(destFile.FullName, FileMode.Create, FileAccess.Write);
                 destination.SetLength(fullSize);
-                int nbOctets = 1;
-                int derniereVitesse = 0;
-                Stopwatch stopwatch = new();
-                while (source.CanRead && nbOctets > 0)
+                int nbBytes = 1;
+                while (source.CanRead && nbBytes > 0)
                 {
                     if (Pause)
                         Thread.Sleep(100);
                     else
                     {
-                        if (!stopwatch.IsRunning)
-                            stopwatch.Restart();
-                        nbOctets = source.Read(buffer, 0, buffer.Length);
-                        if (nbOctets > 0)
+                        nbBytes = source.Read(buffer, 0, buffer.Length);
+                        if (nbBytes > 0)
                         {
-                            destination.Write(buffer, 0, nbOctets);
-                            remaining -= nbOctets;
-                            derniereVitesse += nbOctets;
-                            CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
-                            if (stopwatch.ElapsedMilliseconds > refreshFrequency)
-                            {
-                                CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, derniereVitesse, new AsyncCallback(EndReportProgress), null);
-                                derniereVitesse = 0;
-                                stopwatch.Stop();
-                            }
+                            destination.Write(buffer, 0, nbBytes);
+                            remaining -= nbBytes;
+                            CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, nbBytes, new AsyncCallback(EndReportProgress), null);
                         }
                     }
                 }

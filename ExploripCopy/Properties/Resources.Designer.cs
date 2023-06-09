@@ -69,5 +69,25 @@ namespace ExploripCopy.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon SystrayIconG {
+            get {
+                object obj = ResourceManager.GetObject("SystrayIconG", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        /// </summary>
+        internal static System.Drawing.Icon SystrayIconR {
+            get {
+                object obj = ResourceManager.GetObject("SystrayIconR", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }

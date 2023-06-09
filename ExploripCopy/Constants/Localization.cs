@@ -32,6 +32,10 @@ namespace ExploripCopy.Constants
         public static string REMANING { get; private set; }
         public static string TOTAL { get; private set; }
         public static string FINISH { get; private set; }
+        public static string QUIT { get; private set; }
+        public static string ERROR { get; private set; }
+        public static string IN_PROGRESS { get; private set; }
+        public static string CANCELED { get; private set; }
 
         internal static void LoadTranslation()
         {
@@ -61,6 +65,10 @@ namespace ExploripCopy.Constants
             REMANING = Load("shell32.dll", 33221, "Remaining items...");
             TOTAL = Load("shell32.dll", 9306, "Total size") + " %s";
             FINISH = Load("shell32.dll", 51249, "Finished");
+            QUIT = Load("dinput.dll", 5268, "Exit");
+            ERROR = Load("shell32.dll", 51248, "Error");
+            IN_PROGRESS = Load("shell32.dll", 32908, "Treatment in progress");
+            CANCELED = Load("shell32.dll", 51256, "Canceled");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)
