@@ -133,7 +133,7 @@ namespace ManagedShell.ShellFolders
             CharSet = CharSet.Auto)]
         public static extern uint TrackPopupMenuEx(
             IntPtr hmenu,
-            TPM flags,
+            NativeMethods.TPM flags,
             int x,
             int y,
             IntPtr hwnd,

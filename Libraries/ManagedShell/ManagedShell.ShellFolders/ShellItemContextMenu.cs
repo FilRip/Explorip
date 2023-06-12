@@ -172,7 +172,7 @@ namespace ManagedShell.ShellFolders
 
             uint selected = Interop.TrackPopupMenuEx(
                 nativeMenuPtr,
-                TPM.RETURNCMD,
+                NativeMethods.TPM.RETURNCMD,
                 x,
                 y,
                 Handle,

@@ -82,9 +82,9 @@ namespace ExploripCopy.GUI
             IntPtr hWnd = new WindowInteropHelper(this).Handle;
             IntPtr hMenu = NativeMethods.GetSystemMenu(hWnd, false);
             Point posMouse = PointToScreen(Mouse.GetPosition(this));
-            int cmd = NativeMethods.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
+            int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
             if (cmd > 0)
-                NativeMethods.SendMessage(hWnd, 0x112, (uint)cmd, 0);
+                NativeMethods.SendMessage(hWnd, NativeMethods.WM.SYSCOMMAND, (uint)cmd, 0);
         }
 
         private void MinimizeWindow_Click(object sender, RoutedEventArgs e)

@@ -139,6 +139,10 @@
       <Project>{1fd71282-00d6-44d4-9857-1d26030662b2}</Project>
       <Name>HookFileOperations</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj">
+      <Project>{b5afdc3a-12d6-44bb-8b03-d4a3d6cdce0d}</Project>
+      <Name>ManagedShell.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj">
       <Project>{70c88862-47d9-4706-8c9a-2c9c8cfd4abd}</Project>
       <Name>ManagedShell.Interop</Name>
