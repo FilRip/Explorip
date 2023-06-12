@@ -18,7 +18,7 @@ namespace ExploripCopy.Helpers
 
         internal delegate void CallbackRefreshProgress(string currentFile, long fullSize, long remainingSize, long nbBytesRead);
 
-        internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
+        internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
         {
             Exception result;
             string destDir;
@@ -37,20 +37,20 @@ namespace ExploripCopy.Helpers
             destDir = dirInfo.FullName;
             foreach (string file in Directory.GetFiles(sourceDir))
             {
-                result = CopyFile(file, destDir, bufferSize, refreshFrequency, CallbackRefresh);
+                result = CopyFile(file, destDir, bufferSize, CallbackRefresh);
                 if (result != null)
                     return result;
             }
             foreach (string dir in Directory.GetDirectories(sourceDir))
             {
-                result = CopyDirectory(dir, destDir, bufferSize, refreshFrequency, CallbackRefresh);
+                result = CopyDirectory(dir, destDir, bufferSize, CallbackRefresh);
                 if (result != null)
                     return result;
             }
             return null;
         }
 
-        internal static Exception MoveDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null)
+        internal static Exception MoveDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, CallbackRefreshProgress CallbackRefresh = null)
         {
             Exception result;
             DirectoryInfo destDir = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceDir));
@@ -58,13 +58,13 @@ namespace ExploripCopy.Helpers
                 destDir.Create();
             foreach (string file in Directory.GetFiles(sourceDir))
             {
-                result = MoveFile(file, destDir.FullName, bufferSize, refreshFrequency, CallbackRefresh);
+                result = MoveFile(file, destDir.FullName, bufferSize, CallbackRefresh);
                 if (result != null)
                     return result;
             }
             foreach (string dir in Directory.GetDirectories(sourceDir))
             {
-                result = MoveDirectory(dir, destDir.FullName, bufferSize, refreshFrequency, CallbackRefresh);
+                result = MoveDirectory(dir, destDir.FullName, bufferSize, CallbackRefresh);
                 if (result != null)
                     return result;
             }
@@ -80,10 +80,10 @@ namespace ExploripCopy.Helpers
             return null;
         }
 
-        internal static Exception MoveFile(string sourceFile, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null)
+        internal static Exception MoveFile(string sourceFile, string destinationDir, int bufferSize = 10485760, CallbackRefreshProgress CallbackRefresh = null)
         {
             Exception result;
-            if ((result = CopyFile(sourceFile, destinationDir, bufferSize, refreshFrequency, CallbackRefresh)) == null)
+            if ((result = CopyFile(sourceFile, destinationDir, bufferSize, CallbackRefresh)) == null)
             {
                 try
                 {
@@ -99,7 +99,7 @@ namespace ExploripCopy.Helpers
             return null;
         }
 
-        internal static Exception CopyFile(string sourceFile, string destinationDir, int bufferSize = 10485760, int refreshFrequency = 1000, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
+        internal static Exception CopyFile(string sourceFile, string destinationDir, int bufferSize = 10485760, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
         {
             try
             {
