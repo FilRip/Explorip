@@ -141,10 +141,5 @@ namespace ExploripCopy.GUI
         {
             MyDataContext.WindowMaximized = WindowState == WindowState.Maximized;
         }
-
-        private void BtnPause_Click(object sender, RoutedEventArgs e)
-        {
-            CopyHelper.Pause = !CopyHelper.Pause;
-        }
     }
 }

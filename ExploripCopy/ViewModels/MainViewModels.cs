@@ -15,6 +15,8 @@ using ExploripCopy.Constants;
 using ExploripCopy.Helpers;
 using ExploripCopy.Models;
 
+using Hardcodet.Wpf.TaskbarNotification;
+
 using ManagedShell.Interop;
 
 namespace ExploripCopy.ViewModels
@@ -25,8 +27,9 @@ namespace ExploripCopy.ViewModels
         private readonly Thread _mainThread;
         private readonly object _lockOperation;
         private readonly Stopwatch _chronoSpeed;
-
+        private CancellationTokenSource _cancelCurrent;
         public event EventHandler ForceRefreshList;
+        private Task _currentTask;
 
         public static MainViewModels Instance
         {
@@ -41,6 +44,8 @@ namespace ExploripCopy.ViewModels
             _mainThread.Start();
             _chronoSpeed = new Stopwatch();
             CmdRemoveLine = new RelayCommand(new Action<object>((param) => RemoveLine()));
+            BtnIgnoreCurrent = new RelayCommand(new Action<object>((param) => IgnoreCurrent()));
+            BtnPause = new RelayCommand(new Action<object>((param) => DoPause()));
         }
 
         private bool _isMaximized;
@@ -63,7 +68,7 @@ namespace ExploripCopy.ViewModels
             get { return _currentFile; }
             set
             {
-                _currentFile = value.Replace("_", "__");
+                _currentFile = value;
                 OnPropertyChanged();
             }
         }
@@ -153,6 +158,7 @@ namespace ExploripCopy.ViewModels
         }
 
         public OneFileOperation SelectedLine { get; set; }
+        public int NumSelectedLine { get; set; }
 
         private Exception _lastError;
         public Exception GetLastError
@@ -160,7 +166,10 @@ namespace ExploripCopy.ViewModels
             get { return _lastError; }
             set
             {
-                _lastError = value;
+                if (_lastError is ThreadAbortException)
+                    _lastError = null;
+                else
+                    _lastError = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(ColorGlobalReport));
             }
@@ -209,22 +218,22 @@ namespace ExploripCopy.ViewModels
 
         private void FinishCurrent()
         {
+            NotifyIconViewModel.Instance.SetSystrayIcon(false);
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
             if (_lastError == null)
             {
                 _listWait.RemoveAt(0);
                 _currentOperation = null;
-                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.FINISH, GlobalReport, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.FINISH, GlobalReport, BalloonIcon.Info);
                 GlobalReport = Localization.FINISH;
             }
             else
             {
-                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.ERROR, GlobalReport, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Error);
+                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.ERROR, GlobalReport, BalloonIcon.Error);
                 GlobalReport = _lastError.Message;
             }
             ForceUpdateWaitingList();
             CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
-            NotifyIconViewModel.Instance.SetSystrayIcon(false);
             _chronoSpeed.Stop();
         }
 
@@ -249,10 +258,11 @@ namespace ExploripCopy.ViewModels
                     sb.Append(Localization.CREATE_OF_FILESYSTEM);
                     break;
             }
-            sb = sb.Replace("%s", _currentOperation.Source);
+            sb = sb.Replace("%s2", _currentOperation.NewName);
+            sb = sb.Replace("%s", Path.GetFileName(_currentOperation.Source));
             GlobalReport = sb.ToString();
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
-            NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+            NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, BalloonIcon.Info);
         }
         private OneFileOperation _currentOperation;
         private void Treatment(OneFileOperation operation)
@@ -263,10 +273,13 @@ namespace ExploripCopy.ViewModels
             UpdateGlobalReport();
             _chronoSpeed.Restart();
             _lastSpeed = 0;
+            _cancelCurrent?.Dispose();
+            _currentTask?.Dispose();
+            _cancelCurrent = new CancellationTokenSource();
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
                 CurrentFile = operation.Source;
-                Task.Run(() =>
+                _currentTask = Task.Run(() =>
                 {
                     try
                     {
@@ -332,12 +345,12 @@ namespace ExploripCopy.ViewModels
                     {
                         FinishCurrent();
                     }
-                });
+                }, _cancelCurrent.Token);
             }
             else
             {
                 CurrentFile = operation.Source ?? operation.NewName;
-                Task.Run(() =>
+                _currentTask = Task.Run(() =>
                 {
                     FileOperation fo = new(NativeMethods.GetDesktopWindow());
                     fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_SILENT);
@@ -372,7 +385,7 @@ namespace ExploripCopy.ViewModels
                         fo?.Dispose();
                     }
                     FinishCurrent();
-                });
+                }, _cancelCurrent.Token);
             }
         }
 
@@ -389,7 +402,7 @@ namespace ExploripCopy.ViewModels
                             Treatment(_listWait[0]);
                         }
                     }
-                    Thread.Sleep(10);
+                    Thread.Sleep(100);
                 }
                 catch (ThreadAbortException) { break; }
                 catch (Exception) { /* Ignore errors */ }
@@ -402,10 +415,28 @@ namespace ExploripCopy.ViewModels
         {
             try
             {
-                ListWaiting.Remove(SelectedLine);
+                lock (_lockOperation)
+                {
+                    if (NumSelectedLine > 0)
+                        ListWaiting.Remove(SelectedLine);
+                }
                 ForceUpdateWaitingList();
             }
             catch (Exception) { /* Ignore errors */ }
+        }
+
+        public ICommand BtnIgnoreCurrent { get; private set; }
+        private void IgnoreCurrent()
+        {
+            if (_cancelCurrent != null && !_cancelCurrent.IsCancellationRequested && _currentTask != null && !_currentTask.IsCompleted)
+                _cancelCurrent.Cancel();
+        }
+
+        public ICommand BtnPause { get; private set; }
+        private void DoPause()
+        {
+            if (_currentFile != null && _lastError == null)
+                CopyHelper.Pause = !CopyHelper.Pause;
         }
 
         protected override void Dispose(bool disposing)

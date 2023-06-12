@@ -45,10 +45,10 @@
             </Grid.RowDefinitions>
             
             <!-- Current progress -->
-            <Label Grid.Row="0" Content="{Binding CurrentFile, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Padding="0"/>
+            <TextBlock Grid.Row="0" Text="{Binding CurrentFile, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
             <TextBlock Grid.Row="1" Text="{Binding ElementName=ReportCurrentProgress, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Label Grid.Row="2" Content="{Binding GlobalReport, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{Binding ColorGlobalReport}" Padding="0"/>
+            <TextBlock Grid.Row="2" Text="{Binding GlobalReport, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{Binding ColorGlobalReport}" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MaxGlobalProgress}" Foreground="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
             <TextBlock Grid.Row="3" Text="{Binding TxtGlobalReport, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Grid Grid.Row="4">
@@ -56,44 +56,52 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="1" Content="{Binding TxtCurrentSpeed, UpdateSourceTrigger=PropertyChanged}" Name="ShowCurrentSpeed" Background="Transparent" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Padding="0" Margin="0 0 5 0"/>
-                <Button Grid.Column="2" Content="Pause" HorizontalAlignment="Right" Name="BtnPause" Click="BtnPause_Click"/>
+                <Button Grid.Column="2" Content="{Binding Source={x:Static constants:Localization.STOP}}" HorizontalAlignment="Right" Name="BtnStop" Command="{Binding BtnIgnoreCurrent}"/>
+                <Button Grid.Column="3" Content="{Binding Source={x:Static constants:Localization.PAUSE}}" HorizontalAlignment="Right" Name="BtnPause" Command="{Binding BtnPause}"/>
             </Grid>
             
             <!-- List operations are waiting -->
             <Grid Grid.Row="5" Name="ListOperations">
-                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Extended" SelectionUnit="FullRow" SelectedItem="{Binding SelectedLine, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Extended" SelectionUnit="FullRow" SelectedItem="{Binding SelectedLine, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectedIndex="{Binding NumSelectedLine}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Source}" Width="0.5*">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="Black"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}"/>
+                                    <Setter Property="Foreground" Value="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}"/>
                                 </Style>
                             </DataGridTextColumn.HeaderStyle>
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Background" Value="Black"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}"/>
+                                    <Setter Property="Foreground" Value="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding Destination}" Width="0.5*">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="Black"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}"/>
+                                    <Setter Property="Foreground" Value="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}"/>
                                 </Style>
                             </DataGridTextColumn.HeaderStyle>
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Background" Value="Black"/>
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}"/>
+                                    <Setter Property="Foreground" Value="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                     </DataGrid.Columns>
+
+                    <DataGrid.ContextMenu>
+                        <ContextMenu Name="ListOperationMenu">
+                            <MenuItem Header="{Binding Source={x:Static constants:Localization.REMOVE}}" Command="{Binding CmdRemoveLine}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
                 </DataGrid>
             </Grid>
         </Grid>

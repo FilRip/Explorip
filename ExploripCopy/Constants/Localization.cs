@@ -36,6 +36,9 @@ namespace ExploripCopy.Constants
         public static string ERROR { get; private set; }
         public static string IN_PROGRESS { get; private set; }
         public static string CANCELED { get; private set; }
+        public static string REMOVE { get; private set; }
+        public static string PAUSE { get; private set; }
+        public static string STOP { get; private set; }
 
         internal static void LoadTranslation()
         {
@@ -59,8 +62,8 @@ namespace ExploripCopy.Constants
             MOVE_OF_FILESYSTEM = Load("shell32.dll", 4193, "Move of '%1!ls!'").Replace("%1!ls!", "%s");
             COPY_OF_FILESYSTEM = Load("shell32.dll", 4194, "Copy of '%1!ls!'").Replace("%1!ls!", "%s");
             DELETE_OF_FILESYSTEM = Load("shell32.dll", 4195, "Delete of %1!ls!").Replace("%1!ls!", "%s");
-            RENAME_OF_FILESYSTEM = Load("shell32.dll", 4196, "Rename of %1!ls!").Replace("%1!ls!", "%s");
-            CREATE_OF_FILESYSTEM = Load("shell32.dll", 4199, "Create of %1!ls!").Replace("%1!ls!", "%s");
+            RENAME_OF_FILESYSTEM = Load("shell32.dll", 4196, "Rename of %1!ls!").Replace("%1!ls!", "%s").Replace("%2!ls!", "%s2");
+            CREATE_OF_FILESYSTEM = Load("shell32.dll", 4199, "Create of %2!ls!").Replace("%2!ls!", "%s2");
             CALCUL = Load("shell32.dll", 13580, "Calculate...");
             REMANING = Load("shell32.dll", 33221, "Remaining items...");
             TOTAL = Load("shell32.dll", 9306, "Total size") + " %s";
@@ -69,6 +72,9 @@ namespace ExploripCopy.Constants
             ERROR = Load("shell32.dll", 51248, "Error");
             IN_PROGRESS = Load("shell32.dll", 32908, "Treatment in progress");
             CANCELED = Load("shell32.dll", 51256, "Canceled");
+            REMOVE = Load("shell32.dll", 33230, "Remove");
+            PAUSE = Load("dinput.dll", 709, "Pause");
+            STOP = Load("dinput.dll", 661, "Stop");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)
@@ -90,6 +96,7 @@ namespace ExploripCopy.Constants
             }
             else
             {
+                Console.WriteLine($"Error, unable to find StringResource={Ident} in {libraryName}");
                 return DefaultText;
             }
         }
