@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -165,7 +164,7 @@ namespace ExploripCopy.ViewModels
             get { return _lastError; }
             set
             {
-                if (_lastError is ThreadAbortException)
+                if (value is ThreadAbortException)
                     _lastError = null;
                 else
                     _lastError = value;
@@ -219,9 +218,9 @@ namespace ExploripCopy.ViewModels
         {
             NotifyIconViewModel.Instance.SetSystrayIcon(false);
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
+            _listWait.RemoveAt(0);
             if (_lastError == null)
             {
-                _listWait.RemoveAt(0);
                 _currentOperation = null;
                 NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.FINISH, GlobalReport, BalloonIcon.Info);
                 GlobalReport = Localization.FINISH;
@@ -430,6 +429,8 @@ namespace ExploripCopy.ViewModels
         {
             if (_currentThread?.IsAlive == true)
                 _currentThread?.Abort();
+            else if (_lastError != null)
+                GetLastError = null;
         }
 
         public ICommand BtnPause { get; private set; }
