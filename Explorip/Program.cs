@@ -12,7 +12,6 @@ namespace Explorip
     {
         private static Application _WpfHost;
 #pragma warning disable S2223 // Non-constant static fields should not be visible
-        internal static Mutex _mutexTaskbar;
         internal static bool ModeShell;
 #pragma warning restore S2223 // Non-constant static fields should not be visible
 
@@ -20,9 +19,10 @@ namespace Explorip
         /// The main entry point for the application.
         /// </summary>
         [STAThread()]
-        public static void Main()
+        public static void Main(string[] args)
         {
             ModeShell = true;
+            Mutex mutexProcess;
 
             Process[] process = Process.GetProcessesByName("explorer");
             if (process != null && process.Length > 0)
@@ -33,23 +33,32 @@ namespace Explorip
             Constants.Localization.LoadTranslation();
             Constants.Colors.LoadTheme();
 
-            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar"))
+            mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
+            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") ||
+                ExtensionsCommandLineArguments.ArgumentPresent("taskbars"))
             {
-                _mutexTaskbar = new Mutex(true, "ExploripTaskbar", out bool taskBarNotLaunched);
-                if (taskBarNotLaunched)
+                if (processNotLaunched)
                 {
                     _WpfHost = new TaskBar.MyDesktopApp();
                     _WpfHost.Run();
                 }
-                _mutexTaskbar?.Dispose();
             }
             else
             {
-                if (!ExtensionsCommandLineArguments.ArgumentPresent("withoutHook"))
-                    HookCopyOperations.GetInstance().InstallHook();
-                _WpfHost = new Explorer.MyExplorerApp();
-                _WpfHost.Run();
+                if (processNotLaunched || args.Contains("newinstance"))
+                {
+                    IpcServerManager.InitChannel();
+                    if (!ExtensionsCommandLineArguments.ArgumentPresent("withoutHook"))
+                        HookCopyOperations.GetInstance().InstallHook();
+                    _WpfHost = new Explorer.MyExplorerApp();
+                    _WpfHost.Run();
+                }
+                else
+                {
+                    IpcServerManager.SendMessage(args);
+                }
             }
+            mutexProcess?.Dispose();
         }
 
         public static Application MonApp

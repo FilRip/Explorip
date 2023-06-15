@@ -113,6 +113,7 @@
     <Compile Include="Helpers\ExtensionsInt.cs" />
     <Compile Include="Helpers\ExtensionsString.cs" />
     <Compile Include="Helpers\ExtensionsWpf.cs" />
+    <Compile Include="Helpers\IpcServer.cs" />
     <Compile Include="Helpers\ScreenManager.cs" />
     <Compile Include="Helpers\HookCopyOperations.cs" />
     <Compile Include="Helpers\ViewModelBase.cs" />

@@ -24,30 +24,35 @@ namespace Explorip.Explorer.Windows
     /// </summary>
     public partial class WpfExplorerBrowser : Window
     {
-        public WpfExplorerBrowser()
+        public WpfExplorerBrowser() : this(true) { }
+
+        public WpfExplorerBrowser(bool openDefaultView)
         {
             InitializeComponent();
 
-            string dir = null;
-            if (Environment.GetCommandLineArgs().Length > 1)
+            if (openDefaultView)
             {
-                dir = Environment.GetCommandLineArgs()[1].Trim().ToLower() == "explorer" && Environment.GetCommandLineArgs().Length > 2
-                    ? Environment.GetCommandLineArgs()[2]
-                    : Environment.GetCommandLineArgs()[1];
-                try
+                string dir = null;
+                if (Environment.GetCommandLineArgs().Length > 1)
                 {
-                    LeftTab.FirstTab.Navigation(dir);
+                    dir = Environment.GetCommandLineArgs()[1].Trim().ToLower() == "explorer" && Environment.GetCommandLineArgs().Length > 2
+                        ? Environment.GetCommandLineArgs()[2]
+                        : Environment.GetCommandLineArgs()[1];
+                    try
+                    {
+                        LeftTab.FirstTab.Navigation(dir);
+                    }
+                    catch (Exception)
+                    {
+                        dir = null;
+                    }
                 }
-                catch (Exception)
-                {
-                    dir = null;
-                }
+
+                if (string.IsNullOrWhiteSpace(dir))
+                    LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)KnownFolders.Desktop);
+
+                RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)KnownFolders.Desktop);
             }
-
-            if (string.IsNullOrWhiteSpace(dir))
-                LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)KnownFolders.Desktop);
-
-            RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)KnownFolders.Desktop);
 
             Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
@@ -286,7 +291,7 @@ namespace Explorip.Explorer.Windows
                             WindowState = WindowState.Normal;
                     }
                 }
-                catch (Exception) { /* On ignore l'erreur */ }
+                catch (Exception) { /* Ignore errors */ }
             }, System.Windows.Threading.DispatcherPriority.Background);
         }
 
