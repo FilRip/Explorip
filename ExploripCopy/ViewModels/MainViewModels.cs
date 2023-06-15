@@ -27,9 +27,8 @@ namespace ExploripCopy.ViewModels
         private readonly Thread _mainThread;
         private readonly object _lockOperation;
         private readonly Stopwatch _chronoSpeed;
-        private CancellationTokenSource _cancelCurrent;
         public event EventHandler ForceRefreshList;
-        private Task _currentTask;
+        private Thread _currentThread;
 
         public static MainViewModels Instance
         {
@@ -273,13 +272,12 @@ namespace ExploripCopy.ViewModels
             UpdateGlobalReport();
             _chronoSpeed.Restart();
             _lastSpeed = 0;
-            _cancelCurrent?.Dispose();
-            _currentTask?.Dispose();
-            _cancelCurrent = new CancellationTokenSource();
+            if (_currentThread?.IsAlive == true)
+                _currentThread?.Abort();
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
                 CurrentFile = operation.Source;
-                _currentTask = Task.Run(() =>
+                _currentThread = new Thread(new ThreadStart(() =>
                 {
                     try
                     {
@@ -345,12 +343,13 @@ namespace ExploripCopy.ViewModels
                     {
                         FinishCurrent();
                     }
-                }, _cancelCurrent.Token);
+                }));
+                _currentThread.Start();
             }
             else
             {
                 CurrentFile = operation.Source ?? operation.NewName;
-                _currentTask = Task.Run(() =>
+                _currentThread = new Thread(new ThreadStart(() =>
                 {
                     FileOperation fo = new(NativeMethods.GetDesktopWindow());
                     fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_SILENT);
@@ -385,7 +384,8 @@ namespace ExploripCopy.ViewModels
                         fo?.Dispose();
                     }
                     FinishCurrent();
-                }, _cancelCurrent.Token);
+                }));
+                _currentThread.Start();
             }
         }
 
@@ -428,8 +428,8 @@ namespace ExploripCopy.ViewModels
         public ICommand BtnIgnoreCurrent { get; private set; }
         private void IgnoreCurrent()
         {
-            if (_cancelCurrent != null && !_cancelCurrent.IsCancellationRequested && _currentTask != null && !_currentTask.IsCompleted)
-                _cancelCurrent.Cancel();
+            if (_currentThread?.IsAlive == true)
+                _currentThread?.Abort();
         }
 
         public ICommand BtnPause { get; private set; }
