@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-using JetBrains.Annotations;
-
 using WindowsDesktop.Interop;
 using WindowsDesktop.Properties;
 
@@ -15,7 +13,6 @@ namespace WindowsDesktop
     /// </summary>
     [ComInterfaceWrapper(2)]
     [DebuggerDisplay("{Id}")]
-    [UsedImplicitly(ImplicitUseTarget.Members)]
     public partial class VirtualDesktop : ComInterfaceWrapperBase, IDisposable
     {
         /// <summary>
@@ -70,7 +67,6 @@ namespace WindowsDesktop
             }
         }
 
-        [UsedImplicitly]
         internal VirtualDesktop(ComInterfaceAssembly assembly, Guid id, object comObject)
             : base(assembly, comObject, latestVersion: 2)
         {

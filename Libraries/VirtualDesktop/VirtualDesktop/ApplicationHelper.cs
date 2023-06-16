@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using JetBrains.Annotations;
-
 using WindowsDesktop.Interop;
 
 namespace WindowsDesktop
@@ -14,7 +12,6 @@ namespace WindowsDesktop
             return ComInterface.ApplicationViewCollection.GetViewForHwnd(hWnd);
         }
 
-        [CanBeNull()]
         public static string GetAppId(IntPtr hWnd)
         {
             VirtualDesktopHelper.ThrowIfNotSupported();

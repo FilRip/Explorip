@@ -456,10 +456,6 @@
       <Project>{78f2ad9f-f689-4f84-ad24-fce54b23c6e6}</Project>
       <Name>ManagedShell</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop.WinForms\VirtualDesktop.WinForms.csproj">
-      <Project>{216e7cec-137f-4c93-99ad-c01cacf9a4d3}</Project>
-      <Name>VirtualDesktop.WinForms</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop.WPF\VirtualDesktop.WPF.csproj">
       <Project>{8977acaf-eded-45e3-be03-0c4e26f28d81}</Project>
       <Name>VirtualDesktop.WPF</Name>

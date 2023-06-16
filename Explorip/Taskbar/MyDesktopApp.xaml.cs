@@ -46,10 +46,10 @@ namespace Explorip.TaskBar
             foreach (Taskbar taskbar in _taskbarList)
             {
                 taskbar.AllowClose = true;
-                taskbar.Close();
+                taskbar?.Close();
             }
-            MonShellManager.ExplorerHelper.HideExplorerTaskbar = false;
             MonShellManager.AppBarManager.SignalGracefulShutdown();
+            ExitApp();
             Application.Current.Shutdown();
         }
 
@@ -95,13 +95,12 @@ namespace Explorip.TaskBar
 
         private void App_OnExit(object sender, ExitEventArgs e)
         {
-            ExitApp();
-            Program.Application_ApplicationExit(this, e);
+            ExitGracefully();
         }
 
         private void App_OnSessionEnding(object sender, SessionEndingCancelEventArgs e)
         {
-            ExitApp();
+            ExitGracefully();
         }
 
         private ShellManager SetupManagedShell()

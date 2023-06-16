@@ -65,13 +65,5 @@ namespace Explorip
         {
             get { return _WpfHost; }
         }
-
-        public static void Application_ApplicationExit(object sender, EventArgs e)
-        {
-            if (_WpfHost is TaskBar.MyDesktopApp myApp)
-            {
-                myApp.ExitGracefully();
-            }
-        }
     }
 }

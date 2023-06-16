@@ -1,7 +1,5 @@
 ﻿using System;
 
-using JetBrains.Annotations;
-
 using WindowsDesktop.Interop;
 
 namespace WindowsDesktop
@@ -55,7 +53,7 @@ namespace WindowsDesktop
         /// Determines whether the specified app is pinned.
         /// </summary>
         /// <param name="appId">The identifier of the app.</param>
-        public static bool IsPinnedApplication([NotNull] string appId)
+        public static bool IsPinnedApplication(string appId)
         {
             VirtualDesktopHelper.ThrowIfNotSupported();
 
@@ -66,7 +64,7 @@ namespace WindowsDesktop
         /// Pins the specified app, showing it on all virtual desktops.
         /// </summary>
         /// <param name="appId">The identifier of the app.</param>
-        public static void PinApplication([NotNull] string appId)
+        public static void PinApplication(string appId)
         {
             VirtualDesktopHelper.ThrowIfNotSupported();
 
@@ -80,7 +78,7 @@ namespace WindowsDesktop
         /// Unpins the specified app.
         /// </summary>
         /// <param name="appId">The identifier of the app.</param>
-        public static void UnpinApplication([NotNull] string appId)
+        public static void UnpinApplication(string appId)
         {
             VirtualDesktopHelper.ThrowIfNotSupported();
 

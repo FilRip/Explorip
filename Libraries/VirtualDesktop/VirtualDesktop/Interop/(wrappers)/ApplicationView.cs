@@ -1,7 +1,5 @@
 ﻿using System.Runtime.InteropServices;
 
-using JetBrains.Annotations;
-
 namespace WindowsDesktop.Interop
 {
     [ComInterfaceWrapper]
@@ -19,7 +17,6 @@ namespace WindowsDesktop.Interop
         }
     }
 
-    [UsedImplicitly(ImplicitUseTarget.WithMembers)]
     [StructLayout(LayoutKind.Sequential)]
     public struct Size
     {
@@ -27,7 +24,6 @@ namespace WindowsDesktop.Interop
         public int Y;
     }
 
-    [UsedImplicitly(ImplicitUseTarget.WithMembers)]
     [StructLayout(LayoutKind.Sequential)]
     public struct Rect
     {
@@ -37,7 +33,6 @@ namespace WindowsDesktop.Interop
         public int Bottom;
     }
 
-    [UsedImplicitly(ImplicitUseTarget.WithMembers)]
     public enum ApplicationViewCloakType
     {
         // ReSharper disable InconsistentNaming
@@ -47,7 +42,6 @@ namespace WindowsDesktop.Interop
         // ReSharper restore InconsistentNaming
     }
 
-    [UsedImplicitly(ImplicitUseTarget.WithMembers)]
     public enum ApplicationViewCompatibilityPolicy
     {
         // ReSharper disable InconsistentNaming
