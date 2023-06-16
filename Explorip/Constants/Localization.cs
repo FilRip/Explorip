@@ -27,6 +27,11 @@ namespace Explorip.Constants
         public static string TOOLBAR { get; private set; }
         public static string QUIT { get; private set; }
         public static string START { get; private set; }
+        public static string RESTORE { get; private set; }
+        public static string MOVE { get; private set; }
+        public static string MINIMIZE { get; private set; }
+        public static string MAXIMIZE { get; private set; }
+        public static string CLOSE { get; private set; }
 
         public static void LoadTranslation()
         {
@@ -50,6 +55,11 @@ namespace Explorip.Constants
             TOOLBAR = Load("ieframe.dll", 17986, "Toolbars");
             QUIT = Load("srh.dll", 8032, "Quit") + " Explorip";
             START = Load("shell32.dll", 22073, "Start");
+            MOVE = Load("oleaccrc.dll", 120, "Move");
+            MINIMIZE = Load("oleaccrc.dll", 142, "Minimize");
+            MAXIMIZE = Load("oleaccrc.dll", 143, "Maximize");
+            CLOSE = Load("oleaccrc.dll", 145, "Close");
+            RESTORE = Load("oleaccrc.dll", 146, "Restore");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

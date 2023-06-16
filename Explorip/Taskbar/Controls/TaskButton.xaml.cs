@@ -32,13 +32,14 @@ namespace Explorip.TaskBar.Controls
         {
             InitializeComponent();
             SetStyle();
+            // TODO : https://stackoverflow.com/questions/23619093/wpf-menu-unwanted-borders
         }
 
         private void SetStyle()
         {
             MultiBinding multiBinding = new()
             {
-                Converter = StyleConverter
+                Converter = StyleConverter,
             };
 
             multiBinding.Bindings.Add(new Binding { RelativeSource = RelativeSource.Self });

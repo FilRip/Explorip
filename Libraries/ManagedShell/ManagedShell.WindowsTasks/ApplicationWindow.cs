@@ -36,7 +36,7 @@ namespace ManagedShell.WindowsTasks
         private int _progressValue;
         private WindowState _state;
         private bool? _showInTaskbar;
-        private DateTime? _dateDemarrage;
+        private DateTime? _dateStart;
 
         public ApplicationWindow(TasksService tasksService, IntPtr handle)
         {
@@ -632,24 +632,24 @@ namespace ManagedShell.WindowsTasks
             NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
         }
 
-        public DateTime DateDemarrage
+        public DateTime DateStart
         {
             get
             {
-                if (!_dateDemarrage.HasValue)
+                if (!_dateStart.HasValue)
                 {
-                    _dateDemarrage = DateTime.MinValue;
+                    _dateStart = DateTime.MinValue;
                     if (_procId.HasValue)
                     {
                         Process process = Process.GetProcessById((int)_procId.Value);
                         if (process != null)
                         {
-                            _dateDemarrage = process.StartTime;
+                            _dateStart = process.StartTime;
                         }
                     }
                 }
 
-                return _dateDemarrage.Value;
+                return _dateStart.Value;
             }
         }
 
