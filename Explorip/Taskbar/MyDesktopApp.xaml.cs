@@ -13,8 +13,6 @@ using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
-using Application = System.Windows.Application;
-
 namespace Explorip.TaskBar
 {
     /// <summary>
@@ -52,7 +50,7 @@ namespace Explorip.TaskBar
             }
             MonShellManager.ExplorerHelper.HideExplorerTaskbar = false;
             MonShellManager.AppBarManager.SignalGracefulShutdown();
-            Current.Shutdown();
+            Application.Current.Shutdown();
         }
 
         public void ReopenTaskbar()
@@ -120,7 +118,7 @@ namespace Explorip.TaskBar
 
                 EnableTrayService = true,
                 AutoStartTrayService = true,
-                PinnedNotifyIcons = ManagedShell.WindowsTray.NotificationArea.DEFAULT_PINNED
+                PinnedNotifyIcons = ManagedShell.WindowsTray.NotificationArea.DEFAULT_PINNED,
             };
 
             return new ShellManager(config);

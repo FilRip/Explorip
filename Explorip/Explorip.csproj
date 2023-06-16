@@ -116,6 +116,7 @@
     <Compile Include="Helpers\IpcServer.cs" />
     <Compile Include="Helpers\ScreenManager.cs" />
     <Compile Include="Helpers\HookCopyOperations.cs" />
+    <Compile Include="Helpers\ShellContextMenuHelper.cs" />
     <Compile Include="Helpers\ViewModelBase.cs" />
     <Compile Include="Helpers\WindowsSettings.cs" />
     <Compile Include="Program.cs" />

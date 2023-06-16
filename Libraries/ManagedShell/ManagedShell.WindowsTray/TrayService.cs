@@ -12,7 +12,6 @@ namespace ManagedShell.WindowsTray
     public class TrayService : IDisposable
     {
         private const string NotifyWndClass = "TrayNotifyWnd";
-        private const string TrayWndClass = "Shell_TrayWnd";
 
         private IconDataDelegate iconDataDelegate;
         private TrayHostSizeDelegate trayHostSizeDelegate;
@@ -137,8 +136,8 @@ namespace ManagedShell.WindowsTray
             if (HwndTray != IntPtr.Zero)
             {
                 DestroyWindow(HwndTray);
-                UnregisterClass(TrayWndClass, hInstance);
-                ShellLogger.Debug($"TrayService: Unregistered {TrayWndClass}");
+                UnregisterClass(WindowHelper.TrayWndClass, hInstance);
+                ShellLogger.Debug($"TrayService: Unregistered {WindowHelper.TrayWndClass}");
             }
         }
 
@@ -254,7 +253,7 @@ namespace ManagedShell.WindowsTray
                             GetWindowLong(HwndTray, GWL_STYLE) &
                             ~(int)WindowStyles.WS_VISIBLE);
 
-                        ShellLogger.Debug($"TrayService: {TrayWndClass} became visible; hiding");
+                        ShellLogger.Debug($"TrayService: {WindowHelper.TrayWndClass} became visible; hiding");
                     }
                     break;
             }
@@ -334,10 +333,10 @@ namespace ManagedShell.WindowsTray
 
         private void RegisterTrayWnd()
         {
-            ushort trayClassReg = RegisterWndClass(TrayWndClass);
+            ushort trayClassReg = RegisterWndClass(WindowHelper.TrayWndClass);
             if (trayClassReg == 0)
             {
-                ShellLogger.Info($"TrayService: Error registering {TrayWndClass} class ({Marshal.GetLastWin32Error()})");
+                ShellLogger.Info($"TrayService: Error registering {WindowHelper.TrayWndClass} class ({Marshal.GetLastWin32Error()})");
             }
 
             HwndTray = CreateWindowEx(
@@ -349,11 +348,11 @@ namespace ManagedShell.WindowsTray
 
             if (HwndTray == IntPtr.Zero)
             {
-                ShellLogger.Info($"TrayService: Error creating {TrayWndClass} window ({Marshal.GetLastWin32Error()})");
+                ShellLogger.Info($"TrayService: Error creating {WindowHelper.TrayWndClass} window ({Marshal.GetLastWin32Error()})");
             }
             else
             {
-                ShellLogger.Debug($"TrayService: Created {TrayWndClass}");
+                ShellLogger.Debug($"TrayService: Created {WindowHelper.TrayWndClass}");
             }
         }
 
@@ -390,7 +389,7 @@ namespace ManagedShell.WindowsTray
         {
             if (HwndTray == IntPtr.Zero) return;
 
-            IntPtr taskbarHwnd = FindWindow(TrayWndClass, "");
+            IntPtr taskbarHwnd = FindWindow(WindowHelper.TrayWndClass, "");
 
             if (taskbarHwnd == HwndTray) return;
 

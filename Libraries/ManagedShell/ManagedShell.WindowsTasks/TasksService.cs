@@ -580,7 +580,7 @@ namespace ManagedShell.WindowsTasks
         {
             // set property on hook window that should receive ITaskbarList messages
 
-            IntPtr taskbarHwnd = FindWindow("Shell_TrayWnd", "");
+            IntPtr taskbarHwnd = FindWindow(WindowHelper.TrayWndClass, "");
             if (taskbarHwnd != IntPtr.Zero)
             {
                 if (hwndHook == IntPtr.Zero)

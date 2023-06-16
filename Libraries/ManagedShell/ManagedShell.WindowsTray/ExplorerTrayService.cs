@@ -114,7 +114,7 @@ namespace ManagedShell.WindowsTray
 
         private IntPtr FindExplorerTrayToolbarHwnd()
         {
-            IntPtr hwnd = FindWindow("Shell_TrayWnd", "");
+            IntPtr hwnd = FindWindow(WindowHelper.TrayWndClass, "");
 
             if (hwnd != IntPtr.Zero)
             {

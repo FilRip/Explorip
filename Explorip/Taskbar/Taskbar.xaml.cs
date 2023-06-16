@@ -197,6 +197,8 @@ namespace Explorip.TaskBar
             }
         }
 
+        #region Context menu
+
         private void TaskManagerMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             ShellHelper.StartTaskManager();
@@ -206,6 +208,20 @@ namespace Explorip.TaskBar
         {
             ((MyDesktopApp)Application.Current).ExitGracefully();
         }
+
+        private void TaskbarAllScreenMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            ((MyDesktopApp)Program.MonApp).ShowTaskbarOnAllOthersScreen();
+        }
+
+        private void MenuShowTabTip_Click(object sender, RoutedEventArgs e)
+        {
+            TaskbarViewModel.Instance.ShowTabTip = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            MenuShowTabTip.IsChecked = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible;
+            ColumnVirtualKeyboard.Width = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? GridLength.Auto : new GridLength(0);
+        }
+
+        #endregion
 
         protected override void CustomClosing()
         {
@@ -217,11 +233,6 @@ namespace Explorip.TaskBar
 
                 Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
             }
-        }
-
-        private void TaskbarAllScreenMenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            ((MyDesktopApp)Program.MonApp).ShowTaskbarOnAllOthersScreen();
         }
 
         private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
@@ -258,7 +269,14 @@ namespace Explorip.TaskBar
             }
         }
 
+        private void Taskbar_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            _lastMousePosition = e.GetPosition(ToolsBars);
+        }
+
         #endregion
+
+        #region Manage toolbar
 
         private void AddToolbar_Click(object sender, RoutedEventArgs e)
         {
@@ -293,11 +311,6 @@ namespace Explorip.TaskBar
             }
         }
 
-        private void Taskbar_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            _lastMousePosition = e.GetPosition(ToolsBars);
-        }
-
         private void ShowSmallLargeIcon_Click(object sender, RoutedEventArgs e)
         {
             HitTestResult result = VisualTreeHelper.HitTest(ToolsBars, _lastMousePosition);
@@ -308,11 +321,6 @@ namespace Explorip.TaskBar
             }
         }
 
-        private void MenuShowTabTip_Click(object sender, RoutedEventArgs e)
-        {
-            TaskbarViewModel.Instance.ShowTabTip = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
-            MenuShowTabTip.IsChecked = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible;
-            ColumnVirtualKeyboard.Width = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? GridLength.Auto : new GridLength(0);
-        }
+        #endregion
     }
 }
