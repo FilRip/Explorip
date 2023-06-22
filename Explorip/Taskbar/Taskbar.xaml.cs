@@ -16,8 +16,6 @@ using ManagedShell.WindowsTray;
 
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-using Application = System.Windows.Application;
-
 namespace Explorip.TaskBar
 {
     /// <summary>

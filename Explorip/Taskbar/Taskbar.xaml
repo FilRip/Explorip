@@ -86,7 +86,7 @@
                               Path="{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}">
                     </controls:Toolbar>
                 </Grid>
-                <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="ListeDesTaches" EcranPrincipal="{Binding MainScreen}" TaskbarParent="{Binding .}"/>
+                <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="ListeDesTaches" MainScreen="{Binding MainScreen}" TaskbarParent="{Binding .}"/>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Converter="{StaticResource dockOrientationConverter}"

@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
+using Explorip.Helpers;
 using Explorip.TaskBar.Utilities;
 
 using ManagedShell.AppBar;
 using ManagedShell.WindowsTasks;
+
+using Securify.ShellLink;
 
 using WindowsDesktop;
 
@@ -22,15 +26,16 @@ namespace Explorip.TaskBar.Controls
         private double DefaultButtonWidth;
         private double TaskButtonLeftMargin;
         private double TaskButtonRightMargin;
-        private readonly object _lockChangeDesktop = new();
+        private readonly object _lockChangeDesktop;
 
         public readonly static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
-        public readonly static DependencyProperty EcranPrincipalProperty = DependencyProperty.Register(nameof(EcranPrincipal), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
+        public readonly static DependencyProperty MainScreenProperty = DependencyProperty.Register(nameof(MainScreen), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
         public readonly static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
 
         public TaskList()
         {
             InitializeComponent();
+            _lockChangeDesktop = new object();
         }
 
         public double ButtonWidth
@@ -39,7 +44,7 @@ namespace Explorip.TaskBar.Controls
             set { SetValue(ButtonWidthProperty, value); }
         }
 
-        public bool EcranPrincipal { get; set; }
+        public bool MainScreen { get; set; }
 
         public Taskbar TaskbarParent { get; set; }
 
@@ -68,6 +73,8 @@ namespace Explorip.TaskBar.Controls
 
             if (!isLoaded && MyDesktopApp.MonShellManager.Tasks != null)
             {
+                InsertPinnedApp();
+
                 TasksList.ItemsSource = MyDesktopApp.MonShellManager.Tasks.GroupedWindows;
                 if (MyDesktopApp.MonShellManager.Tasks.GroupedWindows != null)
                     MyDesktopApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
@@ -112,6 +119,8 @@ namespace Explorip.TaskBar.Controls
                         return true;
                     }, 0);
 
+                    InsertPinnedApp();
+
                     IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
                     if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
                     {
@@ -124,6 +133,30 @@ namespace Explorip.TaskBar.Controls
                     MyDesktopApp.MonShellManager.Tasks.GroupedWindows = nouvelleListeGroupedWindows;
                     TasksList.ItemsSource = MyDesktopApp.MonShellManager.Tasks.GroupedWindows;
                 }));
+            }
+        }
+
+        private void InsertPinnedApp()
+        {
+            string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
+            if (Directory.Exists(path))
+            {
+                Shortcut pinnedApp;
+                ApplicationWindow appWin;
+                foreach (string file in Directory.GetFiles(path).Where(file => !MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
+                {
+                    pinnedApp = Shortcut.ReadFromFile(file);
+                    appWin = new ApplicationWindow(MyDesktopApp.MonShellManager.TasksService, IntPtr.Zero);
+                    appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
+                    appWin.WinFileName = Path.GetFullPath(pinnedApp.LinkTargetIDList.Path);
+                    if (string.IsNullOrWhiteSpace(pinnedApp.StringData.IconLocation))
+                        appWin.Icon = IconManager.Convert(IconManager.Extract(appWin.WinFileName, 0, true));
+                    else
+                        appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
+                    appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
+                    appWin.State = ApplicationWindow.WindowState.Unknown;
+                    MyDesktopApp.MonShellManager.TasksService.Windows.Insert(0, appWin);
+                }
             }
         }
 

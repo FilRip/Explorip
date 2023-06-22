@@ -141,7 +141,7 @@ namespace Explorip.TaskBar.Utilities
                 dictionaries.Add(Path.GetFileNameWithoutExtension(subStr));
             }
 
-            // Because RetroBar is published as a single-file app, it gets extracted to a temp directory, so custom dictionaries won't be there.
+            // Because Explorip is published as a single-file app, it gets extracted to a temp directory, so custom dictionaries won't be there.
             // Get the executable path to find the custom dictionaries directory when not a debug build.
             string customDictDir = Path.Combine(Path.GetDirectoryName(ExePath.GetExecutablePath()), dictFolder);
 

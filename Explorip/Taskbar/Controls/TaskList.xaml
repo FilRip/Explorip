@@ -30,7 +30,13 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <ItemContainerTemplate>
-                    <local:TaskButton Width="{Binding Path=ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}}"></local:TaskButton>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="5"/>
+                        </Grid.ColumnDefinitions>
+                        <local:TaskButton Grid.Column="0" Width="{Binding Path=ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}}"/>
+                    </Grid>
                 </ItemContainerTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

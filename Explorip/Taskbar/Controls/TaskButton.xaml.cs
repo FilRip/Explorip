@@ -158,9 +158,15 @@ namespace Explorip.TaskBar.Controls
             {
                 Window?.Minimize();
             }
-            else
+            else if (Window.State != ApplicationWindow.WindowState.Unknown)
             {
                 Window?.BringToFront();
+            }
+            else
+            {
+                ManagedShell.Common.Helpers.ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
+                // TODO : Update Handle and State
+                Window.OnPropertyChanged(nameof(ApplicationWindow.Handle));
             }
         }
 
@@ -181,7 +187,9 @@ namespace Explorip.TaskBar.Controls
                     return;
                 }
 
-                ManagedShell.Common.Helpers.ShellHelper.StartProcess(Window.WinFileName);
+                ManagedShell.Common.Helpers.ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
+                // TODO : Update Handle and State
+                Window.OnPropertyChanged(nameof(ApplicationWindow.Handle));
             }
         }
 
@@ -233,6 +241,9 @@ namespace Explorip.TaskBar.Controls
 
         private void AppButton_MouseEnter(object sender, MouseEventArgs e)
         {
+            if (Window.Handle == IntPtr.Zero)
+                return;
+
             _thumb?.Close();
             _thumb = new TaskThumbButton(this);
             _thumb.Show();
@@ -240,6 +251,12 @@ namespace Explorip.TaskBar.Controls
 
         private void AppButton_MouseLeave(object sender, MouseEventArgs e)
         {
+            if (Window.Handle == IntPtr.Zero)
+            {
+                _thumb?.Close();
+                return;
+            }
+
             Task.Run(() =>
             {
                 Thread.Sleep(100);

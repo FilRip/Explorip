@@ -4,8 +4,16 @@
              xmlns:constants="clr-namespace:Explorip.Constants"
              Loaded="TaskButton_OnLoaded"
              Unloaded="TaskButton_OnUnloaded" Background="Black" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave">
-    
-    <Button Name="AppButton" BorderThickness="0"
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="2"/>
+        </Grid.RowDefinitions>
+        <Button Name="AppButton" BorderThickness="0"
+            Grid.Row="0"
             ToolTip="{Binding Path=Title}"
             Click="AppButton_OnClick"
             MouseUp="AppButton_OnMouseUp"
@@ -14,70 +22,71 @@
             DragEnter="AppButton_OnDragEnter"
             DragLeave="AppButton_OnDragLeave">
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
-                   Grid.Column="0"
-                   Style="{DynamicResource TaskIcon}" />
-        <Button.ContextMenu>
-            <ContextMenu BorderThickness="0" BorderBrush="Black">
-                <MenuItem Header="{Binding Source={x:Static constants:Localization.RESTORE}}" BorderThickness="0"
+                   Style="{DynamicResource TaskIcon}"/>
+            <Button.ContextMenu>
+                <ContextMenu BorderThickness="0" BorderBrush="Black">
+                    <MenuItem Header="{Binding Source={x:Static constants:Localization.RESTORE}}" BorderThickness="0"
                           Click="RestoreMenuItem_OnClick"
                           Background="{x:Static constants:Colors.BackgroundColorBrush}"
                           Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
                           Name="RestoreMenuItem">
-                    <MenuItem.Icon>
-                        <TextBlock FontFamily="Marlett"
+                        <MenuItem.Icon>
+                            <TextBlock FontFamily="Marlett"
                                    Text="&#x32;"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="{Binding Source={x:Static constants:Localization.MOVE}}" BorderThickness="0"
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="{Binding Source={x:Static constants:Localization.MOVE}}" BorderThickness="0"
                           Click="MoveMenuItem_OnClick"
                           Background="{x:Static constants:Colors.BackgroundColorBrush}"
                           Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
                           Name="MoveMenuItem" />
-                <MenuItem Header="{DynamicResource size}" BorderThickness="0"
+                    <MenuItem Header="{DynamicResource size}" BorderThickness="0"
                           Click="SizeMenuItem_OnClick"
                           Background="{x:Static constants:Colors.BackgroundColorBrush}"
                           Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
                           Name="SizeMenuItem" />
-                <MenuItem Header="{Binding Source={x:Static constants:Localization.MINIMIZE}}" BorderThickness="0"
+                    <MenuItem Header="{Binding Source={x:Static constants:Localization.MINIMIZE}}" BorderThickness="0"
                           Click="MinimizeMenuItem_OnClick"
                           Background="{x:Static constants:Colors.BackgroundColorBrush}"
                           Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
                           Name="MinimizeMenuItem">
-                    <MenuItem.Icon>
-                        <TextBlock FontFamily="Marlett"
+                        <MenuItem.Icon>
+                            <TextBlock FontFamily="Marlett"
                                    Text="&#x30;"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="{Binding Source={x:Static constants:Localization.MAXIMIZE}}" BorderThickness="0"
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="{Binding Source={x:Static constants:Localization.MAXIMIZE}}" BorderThickness="0"
                           Click="MaximizeMenuItem_OnClick"
                           Background="{x:Static constants:Colors.BackgroundColorBrush}"
                           Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
                           Name="MaximizeMenuItem">
-                    <MenuItem.Icon>
-                        <TextBlock FontFamily="Marlett"
+                        <MenuItem.Icon>
+                            <TextBlock FontFamily="Marlett"
                                    Text="&#x31;"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <Separator BorderThickness="0"/>
-                <MenuItem Header="{Binding Source={x:Static constants:Localization.CLOSE}}" BorderThickness="0"
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator BorderThickness="0"/>
+                    <MenuItem Header="{Binding Source={x:Static constants:Localization.CLOSE}}" BorderThickness="0"
                           FontWeight="Bold"
                           Background="{x:Static constants:Colors.BackgroundColorBrush}"
                           Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
                           Click="CloseMenuItem_OnClick">
-                    <MenuItem.Icon>
-                        <TextBlock FontFamily="Marlett" 
+                        <MenuItem.Icon>
+                            <TextBlock FontFamily="Marlett" 
                                    Text="&#x72;"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </ContextMenu>
-        </Button.ContextMenu>
-    </Button>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </Button.ContextMenu>
+        </Button>
+        <StackPanel Grid.Row="1" Background="{Binding Source={x:Static constants:Colors.AccentColorBrush}}" Visibility="{Binding Launched, Converter={StaticResource BoolToVisibility}}"/>
+    </Grid>
 </UserControl>

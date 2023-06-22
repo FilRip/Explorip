@@ -8,7 +8,7 @@ namespace Explorip.TaskBar.Utilities
 {
     class ManagedShellLogger : IDisposable
     {
-        private readonly string _logPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RetroBar"), "Logs");
+        private readonly string _logPath = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CoolBytes\\Explorip"), "Logs");
         private readonly string _logName = DateTime.Now.ToString("yyyy-MM-dd_HHmmssfff");
         private readonly string _logExt = "log";
         private readonly LogSeverity _logSeverity = LogSeverity.Debug;

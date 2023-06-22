@@ -72,7 +72,6 @@ namespace ManagedShell.Common.Logging
         /// <param name="message">Log message</param>
         public static void Debug(string message)
         {
-            // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
             DebugIf(true, message, null);
         }
 
@@ -83,7 +82,6 @@ namespace ManagedShell.Common.Logging
         /// <param name="exception">Inner exception.</param>
         public static void Debug(string message, Exception exception)
         {
-            // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
             DebugIf(true, message, exception);
         }
 
@@ -93,7 +91,6 @@ namespace ManagedShell.Common.Logging
         /// <param name="message">Log message</param>
         public static void DebugIf(bool condition, string message)
         {
-            // if (_isDebug) // Removed due to the same condition exisiting in the DebugIf call
             DebugIf(condition, message, null);
         }
 

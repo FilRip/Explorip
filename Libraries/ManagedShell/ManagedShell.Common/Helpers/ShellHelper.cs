@@ -64,7 +64,7 @@ namespace ManagedShell.Common.Helpers
             {
                 ProcessStartInfo psi = new()
                 {
-                    UseShellExecute = true
+                    UseShellExecute = true,
                 };
 
                 if (filename.StartsWith("appx:"))

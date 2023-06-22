@@ -28,7 +28,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         /// <summary>
         /// The path for this link
         /// </summary>
-        virtual public string Path
+        public virtual string Path
         {
             get
             {
@@ -136,7 +136,6 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 return internalComments;
             }
         }
-
 
         #endregion
     }

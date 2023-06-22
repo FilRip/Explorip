@@ -34,8 +34,8 @@
     <s:String x:Key="notification_button_tip">Centre de notification</s:String>
     <s:String x:Key="tabtip_button_tip">Clavier visuel</s:String>
     <s:String x:Key="widgets_button_tip">Widgets</s:String>
-    
-    <s:String x:Key="retrobar_title">Barre des tâches Explorip</s:String>
+
+    <s:String x:Key="explorip_title">Barre des tâches Explorip</s:String>
     <s:String x:Key="toolbars">Barres d'ou_tils</s:String>
     <s:String x:Key="quick_launch">Lancement _rapide</s:String>
     <s:String x:Key="new_toolbar">_Nouvelle barre d'outils...</s:String>

@@ -113,6 +113,7 @@
     <Compile Include="Helpers\ExtensionsInt.cs" />
     <Compile Include="Helpers\ExtensionsString.cs" />
     <Compile Include="Helpers\ExtensionsWpf.cs" />
+    <Compile Include="Helpers\IconManager.cs" />
     <Compile Include="Helpers\IpcServer.cs" />
     <Compile Include="Helpers\ScreenManager.cs" />
     <Compile Include="Helpers\HookCopyOperations.cs" />
@@ -455,6 +456,10 @@
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell\ManagedShell.csproj">
       <Project>{78f2ad9f-f689-4f84-ad24-fce54b23c6e6}</Project>
       <Name>ManagedShell</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\Securifybv\ShellLink\Securify.ShellLink.csproj">
+      <Project>{c9341443-36d5-4309-ab3d-d3d2612d5609}</Project>
+      <Name>Securify.ShellLink</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop.WPF\VirtualDesktop.WPF.csproj">
       <Project>{8977acaf-eded-45e3-be03-0c4e26f28d81}</Project>

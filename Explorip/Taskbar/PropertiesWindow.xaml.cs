@@ -57,7 +57,7 @@ namespace Explorip.TaskBar
 
                 if (rKeyValueNames != null)
                 {
-                    if (rKeyValueNames.Contains("RetroBar"))
+                    if (rKeyValueNames.Contains("Explorip"))
                     {
                         AutoStartCheckBox.IsChecked = true;
                     }
@@ -159,11 +159,11 @@ namespace Explorip.TaskBar
 
                 if (chkBox.IsChecked.Equals(false))
                 {
-                    rKey?.DeleteValue("RetroBar");
+                    rKey?.DeleteValue("Explorip");
                 }
                 else
                 {
-                    rKey?.SetValue("RetroBar", ExePath.GetExecutablePath());
+                    rKey?.SetValue("Explorip", ExePath.GetExecutablePath());
                 }
             }
             catch (Exception exception)

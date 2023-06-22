@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -67,17 +68,13 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        public IntPtr Handle
-        {
-            get;
-            set;
-        }
+        public IntPtr Handle { get; set; }
 
         public string AppUserModelID
         {
             get
             {
-                if (string.IsNullOrEmpty(_appUserModelId))
+                if (string.IsNullOrEmpty(_appUserModelId) && Handle != IntPtr.Zero)
                 {
                     _appUserModelId = ShellHelper.GetAppUserModelIdPropertyForHandle(Handle);
                 }
@@ -100,16 +97,31 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (string.IsNullOrEmpty(_winFileName))
+                if (string.IsNullOrEmpty(_winFileName) && Handle != IntPtr.Zero)
                 {
                     _winFileName = ShellHelper.GetPathForHandle(Handle);
                 }
 
                 return _winFileName;
             }
+            set
+            {
+                if (_winFileName != value)
+                {
+                    _winFileName = value;
+                }
+            }
         }
 
-        public uint? ProcId => _procId ??= ShellHelper.GetProcIdForHandle(Handle);
+        public uint? ProcId
+        {
+            get
+            {
+                if (!_procId.HasValue && Handle != IntPtr.Zero)
+                    _procId = ShellHelper.GetProcIdForHandle(Handle);
+                return _procId;
+            }
+        }
 
         public int Position { get; set; }
 
@@ -124,7 +136,7 @@ namespace ManagedShell.WindowsTasks
                 if (value != _category)
                 {
                     _category = value;
-                    OnPropertyChanged("Category");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -139,6 +151,11 @@ namespace ManagedShell.WindowsTasks
                 }
 
                 return _title;
+            }
+            private set
+            {
+                _title = value;
+                OnPropertyChanged();
             }
         }
 
@@ -156,9 +173,13 @@ namespace ManagedShell.WindowsTasks
 
             if (_title != title)
             {
-                _title = title;
-                OnPropertyChanged("Title");
+                Title = title;
             }
+        }
+
+        public void SetTitle(string newTitle)
+        {
+            Title = newTitle;
         }
 
         public string ClassName
@@ -170,6 +191,14 @@ namespace ManagedShell.WindowsTasks
                     SetClassName();
                 }
                 return _className;
+            }
+            private set
+            {
+                if (_className != value)
+                {
+                    _className = value;
+                    OnPropertyChanged();
+                }
             }
         }
         private void SetClassName()
@@ -184,11 +213,7 @@ namespace ManagedShell.WindowsTasks
             }
             catch { /* Ignore errors */ }
 
-            if (_className != className)
-            {
-                _className = className;
-                OnPropertyChanged(nameof(ClassName));
-            }
+            ClassName = className;
         }
 
         public ImageSource Icon
@@ -203,7 +228,7 @@ namespace ManagedShell.WindowsTasks
             set
             {
                 _icon = value;
-                OnPropertyChanged("Icon");
+                OnPropertyChanged();
             }
         }
 
@@ -216,7 +241,7 @@ namespace ManagedShell.WindowsTasks
             private set
             {
                 _overlayIcon = value;
-                OnPropertyChanged("OverlayIcon");
+                OnPropertyChanged();
             }
         }
 
@@ -229,7 +254,7 @@ namespace ManagedShell.WindowsTasks
             private set
             {
                 _overlayIconDescription = value;
-                OnPropertyChanged("OverlayIconDescription");
+                OnPropertyChanged();
             }
         }
 
@@ -249,7 +274,7 @@ namespace ManagedShell.WindowsTasks
                     ProgressValue = 0;
                 }
 
-                OnPropertyChanged("ProgressState");
+                OnPropertyChanged();
             }
         }
 
@@ -263,7 +288,7 @@ namespace ManagedShell.WindowsTasks
             set
             {
                 _progressValue = value;
-                OnPropertyChanged("ProgressValue");
+                OnPropertyChanged();
             }
         }
 
@@ -277,24 +302,36 @@ namespace ManagedShell.WindowsTasks
             set
             {
                 _state = value;
-                OnPropertyChanged("State");
+                OnPropertyChanged();
             }
         }
 
         public bool IsMinimized
         {
-            get { return NativeMethods.IsIconic(Handle); }
+            get
+            {
+                if (Handle == IntPtr.Zero)
+                    return true;
+                return NativeMethods.IsIconic(Handle);
+            }
         }
 
         public NativeMethods.WindowShowStyle ShowStyle
         {
-            get { return GetWindowShowStyle(Handle); }
+            get
+            {
+                if (Handle == IntPtr.Zero)
+                    return NativeMethods.WindowShowStyle.Hide;
+                return GetWindowShowStyle(Handle);
+            }
         }
 
         public int WindowStyles
         {
             get
             {
+                if (Handle == IntPtr.Zero)
+                    return 0;
                 return NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_STYLE);
             }
         }
@@ -303,6 +340,8 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
+                if (Handle == IntPtr.Zero)
+                    return 0;
                 return NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE);
             }
         }
@@ -311,6 +350,8 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
+                if (Handle == IntPtr.Zero)
+                    return true;
                 int extendedWindowStyles = ExtendedWindowStyles;
                 bool isWindow = NativeMethods.IsWindow(Handle);
                 bool isVisible = NativeMethods.IsWindowVisible(Handle);
@@ -351,14 +392,14 @@ namespace ManagedShell.WindowsTasks
                     Category = _tasksService.TaskCategoryProvider?.GetCategory(this);
                 }
 
-                OnPropertyChanged("ShowInTaskbar");
+                OnPropertyChanged(nameof(ShowInTaskbar));
             }
         }
 
         private bool GetShowInTaskbar()
         {
             // EnumWindows and ShellHook return UWP app windows that are 'cloaked', which should not be visible in the taskbar.
-            if (EnvironmentHelper.IsWindows8OrBetter)
+            if (EnvironmentHelper.IsWindows8OrBetter && Handle != IntPtr.Zero)
             {
                 int cbSize = Marshal.SizeOf(typeof(uint));
                 NativeMethods.DwmGetWindowAttribute(Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out var cloaked, cbSize);
@@ -400,7 +441,7 @@ namespace ManagedShell.WindowsTasks
 
         private void SetIcon()
         {
-            if (!_iconLoading && ShowInTaskbar)
+            if (!_iconLoading && ShowInTaskbar && Handle != IntPtr.Zero)
             {
                 _iconLoading = true;
 
@@ -411,7 +452,7 @@ namespace ManagedShell.WindowsTasks
                         // UWP apps
                         try
                         {
-                            var storeApp = UWPInterop.StoreAppHelper.AppList.GetAppByAumid(AppUserModelID);
+                            UWPInterop.StoreApp storeApp = UWPInterop.StoreAppHelper.AppList.GetAppByAumid(AppUserModelID);
 
                             if (storeApp != null)
                             {
@@ -664,6 +705,11 @@ namespace ManagedShell.WindowsTasks
             return placement.showCmd;
         }
 
+        public bool Launched
+        {
+            get { return Handle != IntPtr.Zero; }
+        }
+
         #region IEquatable<Window> Members
 
         public bool Equals(ApplicationWindow other)
@@ -675,14 +721,20 @@ namespace ManagedShell.WindowsTasks
 
         #region INotifyPropertyChanged Members
 
+#nullable enable
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void OnPropertyChanged(string PropertyName)
+        public void OnPropertyChanged([CallerMemberName()] string? PropertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
         }
 
+#nullable disable
+
         #endregion
+
+        public string Arguments { get; set; }
 
         public enum WindowState
         {
@@ -693,5 +745,4 @@ namespace ManagedShell.WindowsTasks
             Unknown = 999
         }
     }
-
 }
