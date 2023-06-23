@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
@@ -287,7 +288,7 @@ namespace ManagedShell.WindowsTasks
                         {
                             case HSHELL.WINDOWCREATED:
                                 ShellLogger.Debug("TasksService: Created: " + msg.LParam);
-                                if (!Windows.Any(i => i.Handle == msg.LParam))
+                                if (!Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
                                 {
                                     AddWindow(msg.LParam);
                                 }
@@ -305,7 +306,7 @@ namespace ManagedShell.WindowsTasks
 
                             case HSHELL.WINDOWREPLACING:
                                 ShellLogger.Debug("TasksService: Replacing: " + msg.LParam);
-                                if (Windows.Any(i => i.Handle == msg.LParam))
+                                if (Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
                                 {
                                     ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
                                     win.State = ApplicationWindow.WindowState.Inactive;
@@ -335,9 +336,9 @@ namespace ManagedShell.WindowsTasks
                                 {
                                     ApplicationWindow win = null;
 
-                                    if (Windows.Any(i => i.Handle == msg.LParam))
+                                    if (Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
                                     {
-                                        win = Windows.First(wnd => wnd.Handle == msg.LParam);
+                                        win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam));
                                         win.State = ApplicationWindow.WindowState.Active;
                                         win.SetShowInTaskbar();
                                     }
@@ -359,9 +360,9 @@ namespace ManagedShell.WindowsTasks
 
                             case HSHELL.FLASH:
                                 ShellLogger.Debug("TasksService: Flashing window: " + msg.LParam);
-                                if (Windows.Any(i => i.Handle == msg.LParam))
+                                if (Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
                                 {
-                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
+                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam));
 
                                     if (win.State != ApplicationWindow.WindowState.Active)
                                     {
@@ -395,9 +396,9 @@ namespace ManagedShell.WindowsTasks
 
                             case HSHELL.REDRAW:
                                 ShellLogger.Debug("TasksService: Redraw called: " + msg.LParam);
-                                if (Windows.Any(i => i.Handle == msg.LParam))
+                                if (Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
                                 {
-                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
+                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam));
 
                                     if (win.State == ApplicationWindow.WindowState.Flashing)
                                     {
@@ -569,7 +570,7 @@ namespace ManagedShell.WindowsTasks
 
         private void UncloakEventCallback(IntPtr hWinEventHook, uint eventType, IntPtr hWnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
         {
-            if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && Windows.Any(i => i.Handle == hWnd))
+            if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && Windows.Any(i => i.Handle == hWnd || i.ListWindows.Contains(hWnd)))
             {
                 ApplicationWindow win = Windows.First(wnd => wnd.Handle == hWnd);
                 win.Uncloak();

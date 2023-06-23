@@ -122,9 +122,9 @@ namespace Explorip.TaskBar.Controls
                     InsertPinnedApp();
 
                     IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
-                    if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
+                    if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(i => (i.Handle == hWndForeground || i.ListWindows.Contains(hWndForeground)) && i.ShowInTaskbar))
                     {
-                        ApplicationWindow win = MyDesktopApp.MonShellManager.TasksService.Windows.First(wnd => wnd.Handle == hWndForeground);
+                        ApplicationWindow win = MyDesktopApp.MonShellManager.TasksService.Windows.First(wnd => (wnd.Handle == hWndForeground || wnd.ListWindows.Contains(hWndForeground)));
                         win.State = ApplicationWindow.WindowState.Active;
                         win.SetShowInTaskbar();
                     }

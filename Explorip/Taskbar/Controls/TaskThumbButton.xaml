@@ -11,8 +11,8 @@
         WindowStyle="None"
         ResizeMode="NoResize"
         Topmost="True"
-        MouseEnter="Window_MouseEnter"
         MouseLeave="Window_MouseLeave"
+        MouseMove="Window_MouseMove"
         Closing="Window_Closing"
         MouseLeftButtonUp="Window_MouseLeftButtonUp"
         MouseRightButtonDown="Window_MouseRightButtonDown"
@@ -24,6 +24,6 @@
             <RowDefinition Height="16"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Background="Black" Foreground="White" Text="" Name="TitleFirst" Width="250" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="0" Background="Black" Foreground="White" Name="TitleFirst" Width="250" HorizontalAlignment="Left"/>
     </Grid>
 </Window>

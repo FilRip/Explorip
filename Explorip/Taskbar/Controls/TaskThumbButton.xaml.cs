@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 
 using Explorip.WinAPI;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.Controls
 {
@@ -19,12 +22,14 @@ namespace Explorip.TaskBar.Controls
         private IntPtr _handle;
         private readonly List<IntPtr> _thumbPtr;
         private const int ThumbWidth = 250;
+        private IntPtr _lastPeek;
 
         public TaskThumbButton(TaskButton parent)
         {
             InitializeComponent();
             _thumbPtr = new List<IntPtr>();
             Width = ThumbWidth;
+            TitleFirst.Width = ThumbWidth;
             if (parent.ApplicationWindow.Handle == IntPtr.Zero && parent.ApplicationWindow.ListWindows.Count > 0)
             {
                 Width *= parent.ApplicationWindow.ListWindows.Count;
@@ -36,16 +41,11 @@ namespace Explorip.TaskBar.Controls
             Top = positionParent.Y - Height;
         }
 
-        private void Window_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MouseIn = true;
-            WindowHelper.PeekWindow(true, _parent.ApplicationWindow.Handle, _parent.TaskbarParent.Handle);
-        }
-
         private void Window_MouseLeave(object sender, MouseEventArgs e)
         {
             MouseIn = false;
-            WindowHelper.PeekWindow(false, _parent.ApplicationWindow.Handle, _parent.TaskbarParent.Handle);
+            if (_lastPeek != IntPtr.Zero)
+                WindowHelper.PeekWindow(false, _lastPeek, _parent.TaskbarParent.Handle);
             Close();
         }
 
@@ -92,7 +92,23 @@ namespace Explorip.TaskBar.Controls
                             opacity = 255,
                             rcDestination = new WinAPI.Modeles.Rect() { left = (ThumbWidth * i), top = 18, right = ThumbWidth + (ThumbWidth * i), bottom = (int)Height },
                         };
-                        //TitleFirst.Text = _parent.ApplicationWindow.Title;
+                        StringBuilder sb = new(255);
+                        NativeMethods.GetWindowText(_parent.ApplicationWindow.ListWindows[i], sb, 255);
+                        if (i > 0)
+                        {
+                            TextBlock txtTitle = new()
+                            {
+                                Text = sb.ToString(),
+                                Width = ThumbWidth,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                Margin = new Thickness(ThumbWidth * i, 0, 0, 0),
+                                Background = Constants.Colors.BackgroundColorBrush,
+                                Foreground = Constants.Colors.ForegroundColorBrush,
+                            };
+                            MainGrid.Children.Add(txtTitle);
+                        }
+                        else
+                            TitleFirst.Text = sb.ToString();
                         Dwmapi.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
                         _thumbPtr.Add(thumbPtr);
                     }
@@ -102,13 +118,13 @@ namespace Explorip.TaskBar.Controls
 
         private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            _parent.ApplicationWindow.BringToFront();
+            _parent.ApplicationWindow.BringToFront(_lastPeek);
             this.Close();
         }
 
         private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            IntPtr wMenu = User32.GetSystemMenu(_parent.ApplicationWindow.Handle, false);
+            IntPtr wMenu = User32.GetSystemMenu(_lastPeek, false);
             // Display the menu
             Point posMouse = PointToScreen(Mouse.GetPosition(this));
             uint command = User32.TrackPopupMenuEx(wMenu,
@@ -116,7 +132,30 @@ namespace Explorip.TaskBar.Controls
             if (command == 0)
                 return;
 
-            User32.PostMessage(_parent.ApplicationWindow.Handle, (uint)Commun.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+            User32.PostMessage(_lastPeek, (uint)Commun.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+        }
+
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            MouseIn = true;
+            IntPtr newPeek = IntPtr.Zero;
+            if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
+                newPeek = _parent.ApplicationWindow.Handle;
+            else
+            {
+                Point p = Mouse.GetPosition(this);
+                int index = (int)Math.Floor(p.X / ThumbWidth);
+                if (index <= _parent.ApplicationWindow.ListWindows.Count)
+                    newPeek = _parent.ApplicationWindow.ListWindows[index];
+            }
+            if (newPeek != _lastPeek)
+            {
+                if (_lastPeek != IntPtr.Zero)
+                    WindowHelper.PeekWindow(false, _lastPeek, _parent.TaskbarParent.Handle);
+                _lastPeek = newPeek;
+                if (newPeek != IntPtr.Zero)
+                    WindowHelper.PeekWindow(true, _lastPeek, _parent.TaskbarParent.Handle);
+            }
         }
     }
 }

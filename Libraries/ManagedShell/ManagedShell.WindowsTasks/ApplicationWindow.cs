@@ -309,14 +309,13 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        public bool IsMinimized
+        public bool IsMinimized(IntPtr handle = default)
         {
-            get
-            {
-                if (Handle == IntPtr.Zero)
-                    return true;
-                return NativeMethods.IsIconic(Handle);
-            }
+            if (handle == default)
+                handle = Handle;
+            if (handle == IntPtr.Zero)
+                return true;
+            return NativeMethods.IsIconic(handle);
         }
 
         public NativeMethods.WindowShowStyle ShowStyle
@@ -602,17 +601,20 @@ namespace ManagedShell.WindowsTasks
             SetClassName();
         }
 
-        public void BringToFront()
+        public void BringToFront(IntPtr handle = default)
         {
+            if (handle == default)
+                handle = Handle;
+
             // call restore if window is minimized
-            if (IsMinimized)
+            if (IsMinimized(handle))
             {
                 Restore();
             }
             else
             {
-                NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Show);
-                NativeMethods.SetForegroundWindow(Handle);
+                NativeMethods.ShowWindow(handle, NativeMethods.WindowShowStyle.Show);
+                NativeMethods.SetForegroundWindow(handle);
 
                 if (State == WindowState.Flashing) State = WindowState.Active; // some stubborn windows (Outlook) start flashing while already active, this lets us stop
             }
@@ -627,12 +629,14 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        public void Restore()
+        public void Restore(IntPtr handle = default)
         {
+            if (handle == default)
+                handle = Handle;
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
 
-            NativeMethods.SetForegroundWindow(Handle);
+            NativeMethods.SetForegroundWindow(handle);
         }
 
         public void Maximize()
