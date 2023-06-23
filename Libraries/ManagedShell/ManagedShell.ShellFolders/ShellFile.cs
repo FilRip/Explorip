@@ -34,7 +34,7 @@ namespace ManagedShell.ShellFolders
         private long GetFileSize()
         {
             // TODO: Replace this using properties via IShellItem2
-            using var file = new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using FileStream file = new(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             return file.Length;
         }
     }

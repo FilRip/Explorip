@@ -71,7 +71,7 @@ namespace WindowsDesktop
         /// </summary>
         public static void TogglePin(this Window window)
         {
-            var handle = window.GetHandle();
+            IntPtr handle = window.GetHandle();
 
             if (VirtualDesktop.IsPinnedWindow(handle))
             {
@@ -88,7 +88,7 @@ namespace WindowsDesktop
         /// </summary>
         internal static IntPtr GetHandle(this Visual visual)
         {
-            var hwndSource = (HwndSource)PresentationSource.FromVisual(visual) ?? throw new InvalidOperationException();
+            HwndSource hwndSource = (HwndSource)PresentationSource.FromVisual(visual) ?? throw new InvalidOperationException();
             return hwndSource.Handle;
         }
     }

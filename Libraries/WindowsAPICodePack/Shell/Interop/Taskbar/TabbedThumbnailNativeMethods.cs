@@ -148,7 +148,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// frame around the bitmap.</param>
         internal static void SetPeekBitmap(IntPtr hwnd, IntPtr bitmap, System.Drawing.Point offset, bool displayFrame)
         {
-            var nativePoint = new NativePoint(offset.X, offset.Y);
+            NativePoint nativePoint = new(offset.X, offset.Y);
             int rc = DwmSetIconicLivePreviewBitmap(
                 hwnd,
                 bitmap,

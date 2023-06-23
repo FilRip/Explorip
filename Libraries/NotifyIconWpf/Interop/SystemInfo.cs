@@ -44,7 +44,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         /// </summary>
         internal static void UpdateDpiFactors()
         {
-            using (var source = new HwndSource(new HwndSourceParameters()))
+            using (HwndSource source = new(new HwndSourceParameters()))
             {
                 if (source.CompositionTarget?.TransformToDevice != null)
                 {

@@ -19,10 +19,10 @@ namespace WpfScreenHelper
         {
             get
             {
-                var size = new Size(
+                Size size = new(
                     NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_CXVIRTUALSCREEN),
                     NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_CYVIRTUALSCREEN));
-                var location = new Point(
+                Point location = new(
                     NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_XVIRTUALSCREEN),
                     NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_YVIRTUALSCREEN));
                 return new Rect(location.X, location.Y, size.Width, size.Height);

@@ -43,7 +43,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             _shellObject = shellObject ?? throw new ArgumentNullException(nameof(shellObject));
             _recursive = recursive;
 
-            var result = MessageListenerFilter.Register(OnWindowMessageReceived);
+            MessageListenerFilterRegistrationResult result = MessageListenerFilter.Register(OnWindowMessageReceived);
             _listenerHandle = result.WindowHandle;
             _message = result.Message;
         }

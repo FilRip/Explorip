@@ -133,7 +133,7 @@ hresult),
         internal void NativeClose(TaskDialogResult result)
         {
             ShowState = DialogShowState.Closing;
-            var id = result switch
+            int id = result switch
             {
                 TaskDialogResult.Close => (int)TaskDialogNativeMethods.TaskDialogCommonButtonReturnIds.Close,
                 TaskDialogResult.CustomButtonClicked => DialogsDefaults.MinimumDialogControlId,// custom buttons

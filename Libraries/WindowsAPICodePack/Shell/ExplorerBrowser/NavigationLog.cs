@@ -70,7 +70,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         /// </summary>
         public IEnumerable<ShellObject> Locations
         {
-            get { foreach (var obj in _locations) { yield return obj; } }
+            get { foreach (ShellObject obj in _locations) { yield return obj; } }
         }
         private readonly List<ShellObject> _locations = new();
 

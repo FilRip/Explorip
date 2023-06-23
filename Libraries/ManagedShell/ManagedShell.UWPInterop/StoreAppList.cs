@@ -16,7 +16,7 @@ namespace ManagedShell.UWPInterop
         public StoreApp GetAppByAumid(string appUserModelId)
         {
             // first attempt to get an app in our list already
-            foreach (var storeApp in _appList)
+            foreach (StoreApp storeApp in _appList)
             {
                 if (storeApp.AppUserModelId == appUserModelId)
                 {

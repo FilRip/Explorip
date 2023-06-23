@@ -209,7 +209,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
             if (messageId == taskbarRestartMessageId)
             {
                 //recreate the icon if the taskbar was restarted (e.g. due to Win Explorer shutdown)
-                var listener = TaskbarCreated;
+                Action listener = TaskbarCreated;
                 listener?.Invoke();
             }
 
@@ -245,7 +245,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
                 return;
             }
 
-            var message = (WindowsMessages)lParam.ToInt32();
+            WindowsMessages message = (WindowsMessages)lParam.ToInt32();
             switch (message)
             {
                 case WindowsMessages.WM_CONTEXTMENU:

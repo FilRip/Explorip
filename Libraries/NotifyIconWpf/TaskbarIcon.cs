@@ -101,9 +101,9 @@ namespace Hardcodet.Wpf.TaskbarNotification
         {
             get
             {
-                var popup = TrayPopupResolved;
-                var menu = ContextMenu;
-                var balloon = CustomBalloon;
+                Popup popup = TrayPopupResolved;
+                ContextMenu menu = ContextMenu;
+                Popup balloon = CustomBalloon;
 
                 return popup != null && popup.IsOpen ||
                        menu != null && menu.IsOpen ||
@@ -184,10 +184,10 @@ namespace Hardcodet.Wpf.TaskbarNotification
         /// is a null reference.</exception>
         public void ShowCustomBalloon(UIElement balloon, PopupAnimation animation, int? timeout)
         {
-            var dispatcher = this.GetDispatcher();
+            Dispatcher dispatcher = this.GetDispatcher();
             if (!dispatcher.CheckAccess())
             {
-                var action = new Action(() => ShowCustomBalloon(balloon, animation, timeout));
+                Action action = new(() => ShowCustomBalloon(balloon, animation, timeout));
                 dispatcher.Invoke(DispatcherPriority.Normal, action);
                 return;
             }
@@ -224,7 +224,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
             // control didn't remove the balloon from its parent popup when
             // if was closed the last time - just make sure it doesn't have
             // a parent that is a popup
-            var parent = LogicalTreeHelper.GetParent(balloon) as Popup;
+            Popup parent = LogicalTreeHelper.GetParent(balloon) as Popup;
             if (parent != null) parent.Child = null;
 
             if (parent != null)
@@ -404,7 +404,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
                     throw new ArgumentOutOfRangeException(nameof(me), "Missing handler for mouse event flag: " + me);
             }
 
-            var cursorPosition = WinApi.GetCursorPosition(messageSink.Version);
+            Point cursorPosition = WinApi.GetCursorPosition(messageSink.Version);
 
             bool isLeftClickCommandInvoked = false;
 
@@ -486,7 +486,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
                     return;
                 }
 
-                var args = RaisePreviewTrayToolTipOpenEvent();
+                RoutedEventArgs args = RaisePreviewTrayToolTipOpenEvent();
                 if (args.Handled) return;
 
                 TrayToolTipResolved.IsOpen = true;
@@ -499,7 +499,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
             }
             else
             {
-                var args = RaisePreviewTrayToolTipCloseEvent();
+                RoutedEventArgs args = RaisePreviewTrayToolTipCloseEvent();
                 if (args.Handled) return;
 
                 // raise attached event first
@@ -645,7 +645,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
         {
             if (IsDisposed) return;
 
-            var args = RaisePreviewTrayPopupOpenEvent();
+            RoutedEventArgs args = RaisePreviewTrayPopupOpenEvent();
             if (args.Handled) return;
 
             if (TrayPopup == null) return;
@@ -662,7 +662,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
 
             // raise preview event no matter whether popup is currently set
             // or not (enables client to set it on demand)
-            var args = RaisePreviewTrayPopupOpenEvent();
+            RoutedEventArgs args = RaisePreviewTrayPopupOpenEvent();
             if (args.Handled) return;
 
             if (TrayPopup == null) return;
@@ -703,7 +703,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
             if (placementMode == PlacementMode.Bottom)
             {
                 // place popup above system taskbar
-                var point = TrayInfo.GetTrayLocation(0);
+                Point point = TrayInfo.GetTrayLocation(0);
                 TrayPopupResolved.Placement = PlacementMode.AbsolutePoint;
                 TrayPopupResolved.HorizontalOffset = point.X;
                 TrayPopupResolved.VerticalOffset = point.Y;
@@ -711,7 +711,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
             else if (placementMode == PlacementMode.AbsolutePoint)
             {
                 // place popup near mouse cursor
-                var point = WinApi.GetCursorPosition(messageSink.Version);
+                Point point = WinApi.GetCursorPosition(messageSink.Version);
                 TrayPopupResolved.HorizontalOffset = point.X;
                 TrayPopupResolved.VerticalOffset = point.Y;
             }
@@ -733,7 +733,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
 
             // raise preview event no matter whether context menu is currently set
             // or not (enables client to set it on demand)
-            var args = RaisePreviewTrayContextMenuOpenEvent();
+            RoutedEventArgs args = RaisePreviewTrayContextMenuOpenEvent();
             if (args.Handled) return;
 
             if (ContextMenu == null)
@@ -823,7 +823,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
 
             lock (lockObject)
             {
-                var flags = EBalloon.User;
+                EBalloon flags = EBalloon.User;
 
                 if (largeIcon)
                 {
@@ -959,7 +959,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
                                                 | IconDataMembers.Tip;
 
                 //write initial configuration
-                var status = Util.WriteIconData(ref iconData, NotifyCommand.Add, members);
+                bool status = Util.WriteIconData(ref iconData, NotifyCommand.Add, members);
                 if (!status)
                 {
                     // couldn't create the icon - we can assume this is because explorer is not running (yet!)

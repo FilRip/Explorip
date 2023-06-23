@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
@@ -36,17 +35,17 @@ namespace Explorip.Helpers
 
         public static Screen[] ListScreenExceptPrimary()
         {
-            List<Screen> retour = null;
+            List<Screen> result = null;
             if (NumberOfScreen() > 1)
             {
-                retour = new List<Screen>();
+                result = new List<Screen>();
                 foreach (Screen ecran in Screen.AllScreens)
                 {
                     if (!ecran.Primary)
-                        retour.Add(ecran);
+                        result.Add(ecran);
                 }
             }
-            return retour?.ToArray();
+            return result?.ToArray();
         }
 
         public static Screen GetLeftScreen()
@@ -86,16 +85,16 @@ namespace Explorip.Helpers
                 return Screen.AllScreens.ElementAt(0);
             if (Screen.AllScreens.Count() == 2)
                 return Screen.PrimaryScreen;
-            Math.DivRem(Screen.AllScreens.Count(), 2, out int nbEcranPair);
-            if (nbEcranPair == 0) return Screen.PrimaryScreen; // A voir si on retourne une exception ou l'écran principal quand il n'y a pas d'écran central (nombre paire d'écran)
-            List<Screen> EcranTries;
-            EcranTries = Screen.AllScreens.OrderBy(item => item.WorkingArea.Location.X).ToList();
-            while (EcranTries.Count > 1)
+            Math.DivRem(Screen.AllScreens.Count(), 2, out int nbEvenScreen);
+            if (nbEvenScreen == 0) return Screen.PrimaryScreen; // A voir si on retourne une exception ou l'écran principal quand il n'y a pas d'écran central (nombre paire d'écran)
+            List<Screen> OrderedScreen;
+            OrderedScreen = Screen.AllScreens.OrderBy(item => item.WorkingArea.Location.X).ToList();
+            while (OrderedScreen.Count > 1)
             {
-                EcranTries.RemoveAt(0);
-                EcranTries.RemoveAt(EcranTries.Count - 1);
+                OrderedScreen.RemoveAt(0);
+                OrderedScreen.RemoveAt(OrderedScreen.Count - 1);
             }
-            return EcranTries[0];
+            return OrderedScreen[0];
         }
 
         /// <summary>
@@ -111,9 +110,9 @@ namespace Explorip.Helpers
             return Screen.AllScreens.ElementAt(id);
         }
 
-        public static Screen GetScreen(SCREEN_POSITION posEcran)
+        public static Screen GetScreen(SCREEN_POSITION positionScreen)
         {
-            return posEcran switch
+            return positionScreen switch
             {
                 SCREEN_POSITION.LEFT => GetLeftScreen(),
                 SCREEN_POSITION.CENTER => GetCenterScreen(),
@@ -131,41 +130,41 @@ namespace Explorip.Helpers
 
         #region WPF
 
-        public static void MoveWindowToScreen(Window fenetre, int numEcran)
+        public static void MoveWindowToScreen(Window window, int numScreen)
         {
-            MoveWindowToScreen(fenetre, numEcran, false);
+            MoveWindowToScreen(window, numScreen, false);
         }
 
-        public static void MoveWindowToScreen(Window fenetre, int numEcran, bool pleinEcran)
+        public static void MoveWindowToScreen(Window window, int numScreen, bool pleinEcran)
         {
-            if (numEcran > Screen.AllScreens.Count() - 1)
-                throw new ArgumentOutOfRangeException(nameof(numEcran));
-            MoveWindowToScreen(fenetre, Screen.AllScreens.ElementAt(numEcran), pleinEcran);
+            if (numScreen > Screen.AllScreens.Count() - 1)
+                throw new ArgumentOutOfRangeException(nameof(numScreen));
+            MoveWindowToScreen(window, Screen.AllScreens.ElementAt(numScreen), pleinEcran);
         }
 
-        public static void MoveWindowToScreen(Window fenetre, Screen ecran)
+        public static void MoveWindowToScreen(Window fenetre, Screen screen)
         {
-            MoveWindowToScreen(fenetre, ecran, false);
+            MoveWindowToScreen(fenetre, screen, false);
         }
 
-        public static void MoveWindowToScreen(Window fenetre, Screen ecran, bool pleinEcran)
+        public static void MoveWindowToScreen(Window fenetre, Screen screen, bool pleinEcran)
         {
-            fenetre.Left = ecran.WorkingArea.Location.X;
-            fenetre.Top = ecran.WorkingArea.Location.Y;
-            if (fenetre.Width > ecran.WorkingArea.Width) fenetre.Width = ecran.WorkingArea.Width;
-            if (fenetre.Height > ecran.WorkingArea.Height) fenetre.Height = ecran.WorkingArea.Height;
+            fenetre.Left = screen.WorkingArea.Location.X;
+            fenetre.Top = screen.WorkingArea.Location.Y;
+            if (fenetre.Width > screen.WorkingArea.Width) fenetre.Width = screen.WorkingArea.Width;
+            if (fenetre.Height > screen.WorkingArea.Height) fenetre.Height = screen.WorkingArea.Height;
             if (pleinEcran) fenetre.WindowState = WindowState.Maximized;
         }
 
-        public static void MoveWindowToScreen(Window fenetre, SCREEN_POSITION ecran)
+        public static void MoveWindowToScreen(Window window, SCREEN_POSITION screen)
         {
-            MoveWindowToScreen(fenetre, ecran, false);
+            MoveWindowToScreen(window, screen, false);
         }
 
-        public static void MoveWindowToScreen(Window fenetre, SCREEN_POSITION ecran, bool pleinEcran)
+        public static void MoveWindowToScreen(Window window, SCREEN_POSITION screen, bool fullScreen)
         {
-            Screen s = GetScreen(ecran);
-            MoveWindowToScreen(fenetre, s, pleinEcran);
+            Screen s = GetScreen(screen);
+            MoveWindowToScreen(window, s, fullScreen);
         }
 
         /// <summary>
@@ -173,28 +172,28 @@ namespace Explorip.Helpers
         /// </summary>
         public static Screen GetCurrentScreen()
         {
-            var ecranCourant = Application.Current.Dispatcher.Invoke(() =>
+            Screen currentScreen = Application.Current.Dispatcher.Invoke(() =>
             {
-                Window fenetreCourante = Application.Current.Windows.OfType<Window>().FirstOrDefault();
-                Screen ecran = Screen.FromHandle(new WindowInteropHelper(fenetreCourante).Handle);
+                Window currentWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault();
+                Screen ecran = Screen.FromHandle(new WindowInteropHelper(currentWindow).Handle);
                 return ecran;
             });
 
-            return ecranCourant;
+            return currentScreen;
         }
 
         /// <summary>
         /// Affichage sur l'écran choisi dans le fichier de config puis centrage
         /// TODO : vérifier avec tous les écrans, s'inspirer de DeplacerSurEcran ?
-        public static void CenterOnScreen(Window targetWindow, int numeroEcran = -1)
+        public static void CenterOnScreen(Window targetWindow, int numScreen = -1)
         {
-            Screen ecran;
-            if (numeroEcran < 0)
-                ecran = GetCurrentScreen();
+            Screen screen;
+            if (numScreen < 0)
+                screen = GetCurrentScreen();
             else
-                ecran = GetScreen(numeroEcran);
+                screen = GetScreen(numScreen);
 
-            Rect r = ecran.WorkingArea;
+            Rect r = screen.WorkingArea;
             targetWindow.Top = r.Top + r.Height / 2 - targetWindow.ActualHeight / 2;
             targetWindow.Left = r.Left + r.Width / 2 - targetWindow.ActualWidth / 2;
         }

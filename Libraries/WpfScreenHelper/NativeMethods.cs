@@ -71,7 +71,7 @@ namespace WpfScreenHelper
             D2D1_FACTORY_TYPE_MULTI_THREADED = 1,
         }
 
-        public static readonly HandleRef NullHandleRef = new HandleRef(null, IntPtr.Zero);
+        public static readonly HandleRef NullHandleRef = new(null, IntPtr.Zero);
 
         [DllImport(ExternDll.Shcore, CharSet = CharSet.Auto)]
         [ResourceExposure(ResourceScope.None)]
@@ -143,7 +143,7 @@ namespace WpfScreenHelper
                 return new Rect(x, y, x + width, y + height);
             }
 
-            public Size Size => new Size(right - left, bottom - top);
+            public readonly Size Size => new(right - left, bottom - top);
         }
 
         // use this in cases where the Native API takes a POINT not a POINT*
@@ -192,8 +192,8 @@ namespace WpfScreenHelper
         {
             internal int cbSize = Marshal.SizeOf(typeof(MonitorInfoEx));
 
-            internal Rect rcMonitor = new Rect();
-            internal Rect rcWork = new Rect();
+            internal Rect rcMonitor = new();
+            internal Rect rcWork = new();
             internal int dwFlags = 0;
 
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]

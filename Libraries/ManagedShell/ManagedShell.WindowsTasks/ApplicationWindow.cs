@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -38,9 +39,11 @@ namespace ManagedShell.WindowsTasks
         private WindowState _state;
         private bool? _showInTaskbar;
         private DateTime? _dateStart;
+        private readonly List<IntPtr> _windows;
 
         public ApplicationWindow(TasksService tasksService, IntPtr handle)
         {
+            _windows = new List<IntPtr>();
             _tasksService = tasksService;
             Handle = handle;
             State = WindowState.Inactive;
@@ -402,7 +405,7 @@ namespace ManagedShell.WindowsTasks
             if (EnvironmentHelper.IsWindows8OrBetter && Handle != IntPtr.Zero)
             {
                 int cbSize = Marshal.SizeOf(typeof(uint));
-                NativeMethods.DwmGetWindowAttribute(Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out var cloaked, cbSize);
+                NativeMethods.DwmGetWindowAttribute(Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
 
                 if (cloaked > 0)
                 {
@@ -707,7 +710,12 @@ namespace ManagedShell.WindowsTasks
 
         public bool Launched
         {
-            get { return Handle != IntPtr.Zero; }
+            get { return Handle != IntPtr.Zero || _windows.Count > 0; }
+        }
+
+        public List<IntPtr> ListWindows
+        {
+            get { return _windows; }
         }
 
         #region IEquatable<Window> Members

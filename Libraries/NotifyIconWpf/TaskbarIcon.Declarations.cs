@@ -1961,7 +1961,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
         static TaskbarIcon()
         {
             //register change listener for the Visibility property
-            var md = new PropertyMetadata(Visibility.Visible, VisibilityPropertyChanged);
+            PropertyMetadata md = new(Visibility.Visible, VisibilityPropertyChanged);
             VisibilityProperty.OverrideMetadata(typeof(TaskbarIcon), md);
 
             //register change listener for the DataContext property

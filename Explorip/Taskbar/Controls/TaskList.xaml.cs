@@ -141,6 +141,7 @@ namespace Explorip.TaskBar.Controls
             string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
             if (Directory.Exists(path))
             {
+                int numPinnedApp = 0;
                 Shortcut pinnedApp;
                 ApplicationWindow appWin;
                 foreach (string file in Directory.GetFiles(path).Where(file => !MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
@@ -155,7 +156,18 @@ namespace Explorip.TaskBar.Controls
                         appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
                     appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
                     appWin.State = ApplicationWindow.WindowState.Unknown;
-                    MyDesktopApp.MonShellManager.TasksService.Windows.Insert(0, appWin);
+                    MyDesktopApp.MonShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
+                    if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.WinFileName == pinnedApp.LinkTargetIDList.Path))
+                    {
+                        foreach (ApplicationWindow win in MyDesktopApp.MonShellManager.TasksService.Windows.Where(aw => aw.WinFileName == pinnedApp.LinkTargetIDList.Path).ToList())
+                        {
+                            if (win != appWin)
+                            {
+                                MyDesktopApp.MonShellManager.TasksService.Windows.Remove(win);
+                                appWin.ListWindows.Add(win.Handle);
+                            }
+                        }
+                    }
                 }
             }
         }

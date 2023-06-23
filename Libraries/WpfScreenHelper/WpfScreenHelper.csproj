@@ -15,6 +15,7 @@
     <RepositoryUrl>https://github.com/micdenny/WpfScreenHelper</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>2.1.0</Version>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
 
 </Project>

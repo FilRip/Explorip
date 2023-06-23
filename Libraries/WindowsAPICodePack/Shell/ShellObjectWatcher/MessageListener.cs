@@ -102,7 +102,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 Size = (uint)Marshal.SizeOf(typeof(WindowClassEx))
             };
 
-            var atom = ShellObjectWatcherNativeMethods.RegisterClassEx(ref classEx);
+            uint atom = ShellObjectWatcherNativeMethods.RegisterClassEx(ref classEx);
             if (atom == 0)
             {
                 throw new ShellException(LocalizedMessages.MessageListenerClassNotRegistered,

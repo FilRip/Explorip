@@ -75,7 +75,7 @@ namespace Explorip.TaskBar
 
         private void LoadLanguages()
         {
-            foreach (var language in _dictionaryManager.GetLanguages())
+            foreach (string language in _dictionaryManager.GetLanguages())
             {
                 cboLanguageSelect.Items.Add(language);
             }
@@ -83,7 +83,7 @@ namespace Explorip.TaskBar
 
         private void LoadThemes()
         {
-            foreach (var theme in _dictionaryManager.GetThemes())
+            foreach (string theme in _dictionaryManager.GetThemes())
             {
                 cboThemeSelect.Items.Add(theme);
             }

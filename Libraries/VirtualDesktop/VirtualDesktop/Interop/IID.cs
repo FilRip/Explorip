@@ -66,7 +66,7 @@ namespace WindowsDesktop.Interop
                 if (key?.GetValue("") is string value)
                 {
                     string match = targets.FirstOrDefault(x => x == value);
-                    if (match != null && Guid.TryParse(key.Name.Split('\\').Last(), out var guid))
+                    if (match != null && Guid.TryParse(key.Name.Split('\\').Last(), out Guid guid))
                     {
                         result[match] = guid;
                     }

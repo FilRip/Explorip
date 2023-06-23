@@ -141,7 +141,7 @@ namespace ManagedShell.Common.Helpers
                 {
                     m_results.Clear();
 
-                    foreach (var result in results)
+                    foreach (SearchResult result in results)
                     {
                         if (QueryNum != localQueryNum)
                         {

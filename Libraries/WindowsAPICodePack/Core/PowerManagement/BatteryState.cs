@@ -13,7 +13,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
     {
         internal BatteryState()
         {
-            var state = Power.GetSystemBatteryState();
+            PowerManagementNativeMethods.SystemBatteryState state = Power.GetSystemBatteryState();
 
             if (!state.BatteryPresent)
             {

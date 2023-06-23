@@ -13,7 +13,7 @@ namespace WindowsDesktop.Interop
 
         public IDisposable Register(VirtualDesktopNotification pNotification)
         {
-            var dwCookie = this.Invoke<uint>(Args(pNotification));
+            uint dwCookie = this.Invoke<uint>(Args(pNotification));
             return Disposable.Create(() => this.Unregister(dwCookie));
         }
 

@@ -65,7 +65,7 @@ namespace Explorip.TaskBar.Utilities
             SetLanguage(LANG_FALLBACK);
             if (Settings.Instance.Language == LANG_DEFAULT)
             {
-                var currentUICulture = System.Globalization.CultureInfo.CurrentUICulture;
+                System.Globalization.CultureInfo currentUICulture = System.Globalization.CultureInfo.CurrentUICulture;
                 string systemLanguageParent = currentUICulture.Parent.NativeName;
                 string systemLanguage = currentUICulture.NativeName;
                 ManagedShell.Common.Logging.ShellLogger.Info($"Loading system language (if available): {systemLanguageParent}, {systemLanguage}");

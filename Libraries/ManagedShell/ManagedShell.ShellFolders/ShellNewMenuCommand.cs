@@ -82,7 +82,7 @@ namespace ManagedShell.ShellFolders
                 if (Marshal.QueryInterface(
                     iContextMenuPtr,
                     ref guid,
-                    out var iShellExtInitPtr) == NativeMethods.S_OK)
+                    out IntPtr iShellExtInitPtr) == NativeMethods.S_OK)
                 {
                     IShellExtInit iShellExtInit = Marshal.GetTypedObjectForIUnknown(
                         iShellExtInitPtr, typeof(IShellExtInit)) as IShellExtInit;

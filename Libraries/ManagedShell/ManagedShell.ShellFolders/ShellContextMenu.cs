@@ -209,7 +209,7 @@ namespace ManagedShell.ShellFolders
                 return;
             }
 
-            foreach (var subMenu in ShellNewMenus)
+            foreach (ShellNewMenuCommand subMenu in ShellNewMenus)
             {
                 if (m.WParam != subMenu.nativeMenuPtr)
                 {

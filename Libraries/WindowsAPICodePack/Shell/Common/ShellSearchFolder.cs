@@ -84,7 +84,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             get
             {
-                foreach (var scopePath in searchScopePaths)
+                foreach (string scopePath in searchScopePaths)
                 {
                     yield return scopePath;
                 }

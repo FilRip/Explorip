@@ -91,7 +91,7 @@ namespace ManagedShell.Common.SupportingClasses
         {
             List<StartupEntry> startupApps = new();
 
-            foreach (var entry in StartupEntries)
+            foreach (StartupLocation entry in StartupEntries)
             {
                 startupApps.AddRange(GetAppsFromEntry(entry));
             }
@@ -108,7 +108,7 @@ namespace ManagedShell.Common.SupportingClasses
                 StartupEntryScope scope = overrideScope ?? location.Scope;
                 RegistryKey[] roots = ScopeToRoots(scope);
 
-                foreach (var root in roots)
+                foreach (RegistryKey root in roots)
                 {
                     try
                     {
@@ -117,7 +117,7 @@ namespace ManagedShell.Common.SupportingClasses
 
                         if (registryKey != null && registryKey.ValueCount > 0)
                         {
-                            foreach (var valueName in registryKey.GetValueNames())
+                            foreach (string valueName in registryKey.GetValueNames())
                             {
                                 if (((byte[])registryKey.GetValue(valueName))[0] % 2 != 0) // if value is odd number, item is disabled
                                 {
@@ -199,7 +199,7 @@ namespace ManagedShell.Common.SupportingClasses
             RegistryKey[] roots = ScopeToRoots(location.Scope);
             List<StartupEntry> startupApps = new();
 
-            foreach (var root in roots)
+            foreach (RegistryKey root in roots)
             {
                 bool isRunOnce = location.Location.Contains("RunOnce");
 
@@ -217,7 +217,7 @@ namespace ManagedShell.Common.SupportingClasses
                         List<string> disallowedItems = GetDisallowedItems(location, root == Registry.LocalMachine ? StartupEntryScope.Machine : StartupEntryScope.User);
 
                         // add items from registry key
-                        foreach (var valueName in registryKey.GetValueNames())
+                        foreach (string valueName in registryKey.GetValueNames())
                         {
                             // only add items that are not disabled
                             if (!disallowedItems.Contains(valueName))

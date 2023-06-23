@@ -155,7 +155,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
                 // Search GroupBox child items
                 if (control is CommonFileDialogGroupBox groupBox)
                 {
-                    var temp = GetSubControlbyId(groupBox.Items, id);
+                    DialogControl temp = GetSubControlbyId(groupBox.Items, id);
                     if (temp != null) { return temp; }
                 }
             }

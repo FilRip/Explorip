@@ -19,7 +19,11 @@
         ContentRendered="Window_ContentRendered"
         Background="Black"
         Height="150" Width="250" Margin="0" Padding="0">
-    <Grid>
-
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Background="Black" Foreground="White" Text="" Name="TitleFirst" Width="250" HorizontalAlignment="Left"/>
     </Grid>
 </Window>

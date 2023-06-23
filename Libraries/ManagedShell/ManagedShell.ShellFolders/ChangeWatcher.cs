@@ -52,7 +52,7 @@ namespace ManagedShell.ShellFolders
 
         public void StartWatching()
         {
-            foreach (var watcher in _watchers)
+            foreach (FileSystemWatcher watcher in _watchers)
             {
                 if (watcher == null)
                 {

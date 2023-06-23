@@ -17,7 +17,7 @@ namespace WindowsDesktop.Interop
 
         internal Type GetType(string typeName)
         {
-            if (!_knownTypes.TryGetValue(typeName, out var type))
+            if (!_knownTypes.TryGetValue(typeName, out Type type))
             {
                 type = _knownTypes[typeName] = _compiledAssembly
                     .GetTypes()
@@ -32,7 +32,7 @@ namespace WindowsDesktop.Interop
             Type shellType = Type.GetTypeFromCLSID(ClSid.ImmersiveShell);
             IServiceProvider shell = (IServiceProvider)Activator.CreateInstance(shellType);
 
-            shell.QueryService(guidService ?? type.GUID, type.GUID, out var ppvObject);
+            shell.QueryService(guidService ?? type.GUID, type.GUID, out object ppvObject);
 
             return ppvObject;
         }

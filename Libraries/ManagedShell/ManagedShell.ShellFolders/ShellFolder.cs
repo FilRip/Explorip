@@ -186,7 +186,7 @@ namespace ManagedShell.ShellFolders
                         IEnumIDList enumIdList =
                             (IEnumIDList)Marshal.GetTypedObjectForIUnknown(hEnum, typeof(IEnumIDList));
 
-                        while (enumIdList.Next(1, out var pidlChild, out var numFetched) == NativeMethods.S_OK && numFetched == 1)
+                        while (enumIdList.Next(1, out IntPtr pidlChild, out uint numFetched) == NativeMethods.S_OK && numFetched == 1)
                         {
                             if (_isDisposed)
                             {
@@ -226,7 +226,7 @@ namespace ManagedShell.ShellFolders
 
                 bool exists = false;
 
-                foreach (var file in Files)
+                foreach (ShellFile file in Files)
                 {
                     if (_isDisposed)
                     {
@@ -371,7 +371,7 @@ namespace ManagedShell.ShellFolders
         {
             bool exists = false;
 
-            foreach (var file in Files)
+            foreach (ShellFile file in Files)
             {
                 if (file.Path == parsingName)
                 {

@@ -168,7 +168,7 @@ namespace MS.WindowsAPICodePack.Internal
             }
             else
             {
-                var func = GetDynamicConstructor(value.GetType());
+                Func<object, PropVariant> func = GetDynamicConstructor(value.GetType());
                 return func(value);
             }
         }
@@ -199,10 +199,10 @@ namespace MS.WindowsAPICodePack.Internal
                     else // if the method was found, create an expression to call it.
                     {
                         // create parameters to action                    
-                        var arg = Expression.Parameter(typeof(object), "arg");
+                        ParameterExpression arg = Expression.Parameter(typeof(object), "arg");
 
                         // create an expression to invoke the constructor with an argument cast to the correct type
-                        var create = Expression.New(constructor, Expression.Convert(arg, type));
+                        NewExpression create = Expression.New(constructor, Expression.Convert(arg, type));
 
                         // compiles expression into an action delegate
                         action = Expression.Lambda<Func<object, PropVariant>>(create, arg).Compile();

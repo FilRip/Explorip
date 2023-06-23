@@ -39,7 +39,7 @@ namespace ManagedShell.ShellFolders
             int numAdded = 0;
             ShellNewMenus.Clear();
 
-            foreach (var command in builder.Commands)
+            foreach (ShellMenuCommand command in builder.Commands)
             {
                 if (command is ShellNewMenuCommand shellNewCommand)
                 {
@@ -73,7 +73,7 @@ namespace ManagedShell.ShellFolders
             {
                 FreeResources();
 
-                foreach (var subMenu in ShellNewMenus)
+                foreach (ShellNewMenuCommand subMenu in ShellNewMenus)
                 {
                     subMenu.FreeResources();
                 }

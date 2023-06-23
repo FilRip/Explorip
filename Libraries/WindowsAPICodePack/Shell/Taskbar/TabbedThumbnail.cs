@@ -419,10 +419,10 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// <returns>Returns true if the thumbnail was removed from the taskbar; false if it was not.</returns>
         internal bool OnTabbedThumbnailClosed()
         {
-            var closedHandler = TabbedThumbnailClosed;
+            EventHandler<TabbedThumbnailClosedEventArgs> closedHandler = TabbedThumbnailClosed;
             if (closedHandler != null)
             {
-                var closingEvent = GetTabbedThumbnailClosingEventArgs();
+                TabbedThumbnailClosedEventArgs closingEvent = GetTabbedThumbnailClosingEventArgs();
 
                 closedHandler(this, closingEvent);
 

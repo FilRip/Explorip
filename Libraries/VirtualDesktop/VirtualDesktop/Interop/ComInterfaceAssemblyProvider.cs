@@ -56,7 +56,7 @@ namespace WindowsDesktop.Interop
 
                 foreach (FileInfo file in dir.GetFiles())
                 {
-                    if (int.TryParse(_assemblyRegex.Match(file.Name).Groups["build"]?.ToString(), out var build)
+                    if (int.TryParse(_assemblyRegex.Match(file.Name).Groups["build"]?.ToString(), out int build)
                         && build == ProductInfo.OSBuild)
                     {
                         AssemblyName name = AssemblyName.GetAssemblyName(file.FullName);
@@ -130,7 +130,7 @@ namespace WindowsDesktop.Interop
 
         private Assembly Compile(IEnumerable<string> sources)
         {
-            var dir = new DirectoryInfo(this._assemblyDirectoryPath);
+            DirectoryInfo dir = new(this._assemblyDirectoryPath);
 
             if (!dir.Exists)
             {

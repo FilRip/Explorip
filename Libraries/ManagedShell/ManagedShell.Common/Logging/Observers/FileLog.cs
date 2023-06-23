@@ -35,7 +35,7 @@ namespace ManagedShell.Common.Logging.Observers
             if (!Directory.Exists(_fileInfo.DirectoryName))
                 Directory.CreateDirectory(_fileInfo.DirectoryName);
 
-            var stream = File.AppendText(_fileInfo.FullName);
+            StreamWriter stream = File.AppendText(_fileInfo.FullName);
             stream.AutoFlush = true;
 
             _textWriter = TextWriter.Synchronized(stream);

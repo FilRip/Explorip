@@ -116,7 +116,7 @@ namespace ManagedShell.ShellFolders
         {
             BackgroundFileOperation operation = (BackgroundFileOperation)e.Argument;
 
-            foreach (var path in operation.Paths)
+            foreach (string path in operation.Paths)
             {
                 DoOperation(operation, path);
             }
@@ -125,7 +125,7 @@ namespace ManagedShell.ShellFolders
         static void CopyDirectory(string sourceDir, string destinationDir, bool recursive)
         {
             // Get information about the source directory
-            var dir = new DirectoryInfo(sourceDir);
+            DirectoryInfo dir = new(sourceDir);
 
             // Check if the source directory exists
             if (!dir.Exists)

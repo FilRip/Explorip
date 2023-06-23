@@ -241,7 +241,7 @@ namespace Explorip.TaskBar.Controls
 
         private void AppButton_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (Window.Handle == IntPtr.Zero)
+            if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
                 return;
 
             _thumb?.Close();
@@ -251,7 +251,7 @@ namespace Explorip.TaskBar.Controls
 
         private void AppButton_MouseLeave(object sender, MouseEventArgs e)
         {
-            if (Window.Handle == IntPtr.Zero)
+            if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
             {
                 _thumb?.Close();
                 return;

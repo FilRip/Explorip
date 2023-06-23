@@ -286,7 +286,7 @@ namespace ManagedShell.AppBar
             Rect rc;
 
             // get appropriate windows for this display
-            foreach (var window in AppBars)
+            foreach (AppBarWindow window in AppBars)
             {
                 if (window.Screen.DeviceName == screen.DeviceName)
                 {

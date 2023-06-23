@@ -10,7 +10,7 @@ namespace WindowsDesktop.Interop
 
         public string GetAppUserModelId()
         {
-            var param = Args((string)null);
+            object[] param = Args((string)null);
             this.Invoke(param);
 
             return (string)param[0];

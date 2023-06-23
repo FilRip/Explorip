@@ -126,7 +126,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         /// <returns>NotifyIconData</returns>
         public static NotifyIconData CreateDefault(IntPtr handle)
         {
-            var data = new NotifyIconData();
+            NotifyIconData data = new();
 
             if (Environment.OSVersion.Version.Major >= 6)
             {

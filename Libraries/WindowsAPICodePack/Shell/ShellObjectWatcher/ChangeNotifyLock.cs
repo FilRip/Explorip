@@ -19,7 +19,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             {
                 Trace.TraceInformation("Message: {0}", (ShellObjectChangeTypes)_event);
 
-                var notifyStruct = pidl.MarshalAs<ShellNativeMethods.ShellNotifyStruct>();
+                ShellNativeMethods.ShellNotifyStruct notifyStruct = pidl.MarshalAs<ShellNativeMethods.ShellNotifyStruct>();
 
                 Guid guid = new(ShellIidGuid.IShellItem2);
                 if (notifyStruct.item1 != IntPtr.Zero &&

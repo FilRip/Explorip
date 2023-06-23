@@ -10,7 +10,7 @@ namespace WindowsDesktop.Interop
 
         public ApplicationView GetViewForHwnd(IntPtr hWnd)
         {
-            var param = Args(hWnd, null);
+            object[] param = Args(hWnd, null);
             this.Invoke(param);
 
             return new ApplicationView(this.ComInterfaceAssembly, param[1]);

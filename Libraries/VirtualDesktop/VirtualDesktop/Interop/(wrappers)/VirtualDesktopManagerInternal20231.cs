@@ -24,13 +24,13 @@ namespace WindowsDesktop.Interop
 
         public override IEnumerable<VirtualDesktop> GetDesktops()
         {
-            var array = this.Invoke<IObjectArray>(Args(IntPtr.Zero));
-            var count = array.GetCount();
-            var vdType = this.ComInterfaceAssembly.GetType("IVirtualDesktop");
+            IObjectArray array = this.Invoke<IObjectArray>(Args(IntPtr.Zero));
+            uint count = array.GetCount();
+            Type vdType = this.ComInterfaceAssembly.GetType("IVirtualDesktop");
 
-            for (var i = 0u; i < count; i++)
+            for (uint i = 0; i < count; i++)
             {
-                array.GetAt(i, vdType.GUID, out var ppvObject);
+                array.GetAt(i, vdType.GUID, out object ppvObject);
                 yield return VirtualDesktopCache.GetOrCreate(ppvObject);
             }
         }

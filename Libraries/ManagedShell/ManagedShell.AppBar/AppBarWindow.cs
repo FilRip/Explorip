@@ -259,7 +259,7 @@ namespace ManagedShell.AppBar
         {
             // delay changing things when we are shell. it seems that explorer AppBars do this too.
             // if we don't, the system moves things to bad places
-            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
+            DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(0.1) };
             timer.Start();
             timer.Tick += (sender1, args) =>
             {
@@ -384,7 +384,7 @@ namespace ManagedShell.AppBar
         {
             if (!isSameCoords)
             {
-                var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.1) };
+                DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(0.1) };
                 timer.Start();
                 timer.Tick += (sender1, args) =>
                 {

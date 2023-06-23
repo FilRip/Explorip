@@ -51,7 +51,7 @@ namespace ManagedShell.Common.Logging
                 _severity = value;
 
                 // Set Booleans to help improve performance
-                var severity = (int)_severity;
+                int severity = (int)_severity;
 
                 _isDebug = ((int)LogSeverity.Debug) >= severity;
                 _isInfo = ((int)LogSeverity.Info) >= severity;
@@ -211,7 +211,7 @@ namespace ManagedShell.Common.Logging
 
         public static void Attach(ILog[] observers)
         {
-            foreach (var observer in observers)
+            foreach (ILog observer in observers)
                 Attach(observer);
         }
 
@@ -226,7 +226,7 @@ namespace ManagedShell.Common.Logging
 
         public static void Detach(ILog[] observers)
         {
-            foreach (var observer in observers)
+            foreach (ILog observer in observers)
                 Detach(observer);
         }
     }

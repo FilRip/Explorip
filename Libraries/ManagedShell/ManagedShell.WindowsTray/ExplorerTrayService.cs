@@ -77,7 +77,7 @@ namespace ManagedShell.WindowsTray
                 return;
             }
 
-            GetWindowThreadProcessId(toolbarHwnd, out var processId);
+            GetWindowThreadProcessId(toolbarHwnd, out uint processId);
             IntPtr hProcess = OpenProcess(ProcessAccess.All, false, (int)processId);
             IntPtr hBuffer = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)Marshal.SizeOf(new TbButton()), AllocationType.Commit,
                 MemoryProtection.ReadWrite);
@@ -211,7 +211,7 @@ namespace ManagedShell.WindowsTray
 
                 if (explorerKey != null)
                 {
-                    var enableAutoTrayValue = explorerKey.GetValue("EnableAutoTray");
+                    object enableAutoTrayValue = explorerKey.GetValue("EnableAutoTray");
 
                     if (enableAutoTrayValue != null)
                     {
@@ -233,12 +233,12 @@ namespace ManagedShell.WindowsTray
             {
                 if (EnvironmentHelper.IsWindows8OrBetter)
                 {
-                    var trayNotifyInstance = (ITrayNotify)trayNotify;
+                    ITrayNotify trayNotifyInstance = (ITrayNotify)trayNotify;
                     trayNotifyInstance.EnableAutoTray(enabled);
                 }
                 else
                 {
-                    var trayNotifyInstance = (ITrayNotifyLegacy)trayNotify;
+                    ITrayNotifyLegacy trayNotifyInstance = (ITrayNotifyLegacy)trayNotify;
                     trayNotifyInstance.EnableAutoTray(enabled);
                 }
             }

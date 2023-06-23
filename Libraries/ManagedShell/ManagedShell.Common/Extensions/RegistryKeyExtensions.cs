@@ -30,7 +30,7 @@ namespace ManagedShell.Common.Extensions
             if (string.IsNullOrWhiteSpace(valueName))
                 return defaultValue;
 
-            var reg = key.OpenSubKey(subKey);
+            RegistryKey reg = key.OpenSubKey(subKey);
 
             if (reg == null)
                 return defaultValue;

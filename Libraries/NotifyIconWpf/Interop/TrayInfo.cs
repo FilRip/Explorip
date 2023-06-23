@@ -15,7 +15,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         /// <returns>Tray coordinates.</returns>
         public static Point GetTrayLocation(int space = 2)
         {
-            var info = new AppBarInfo();
+            AppBarInfo info = new();
             info.GetSystemTaskBarPosition();
 
             Rectangle rcWorkArea = info.WorkArea;

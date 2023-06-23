@@ -35,7 +35,7 @@ namespace WpfScreenHelper
         /// <param name="screen">The screen to which we move.</param>
         public static void SetWindowPosition(this Window window, WindowPositions pos, Screen screen)
         {
-            var coordinates = CalculateWindowCoordinates(window, pos, screen);
+            Rect coordinates = CalculateWindowCoordinates(window, pos, screen);
 
             window.SetWindowPosition((int)coordinates.X, (int)coordinates.Y, (int)coordinates.Width, (int)coordinates.Height);
         }
@@ -45,7 +45,7 @@ namespace WpfScreenHelper
         /// </summary>
         public static Rect GetWindowAbsolutePlacement(this Window window)
         {
-            var placement = GetWindowPlacement(window);
+            Rect placement = GetWindowPlacement(window);
 
             return new Rect(
                 Math.Abs(placement.Left),
@@ -56,12 +56,12 @@ namespace WpfScreenHelper
 
         public static Rect GetWindowPlacement(this Window window)
         {
-            var screen = Screen.FromWindow(window);
+            Screen screen = Screen.FromWindow(window);
 
-            var left = (screen.WpfBounds.Left - window.Left) * screen.ScaleFactor;
-            var top = (screen.WpfBounds.Top - window.Top) * screen.ScaleFactor;
-            var width = window.Width * screen.ScaleFactor;
-            var height = window.Height * screen.ScaleFactor;
+            double left = (screen.WpfBounds.Left - window.Left) * screen.ScaleFactor;
+            double top = (screen.WpfBounds.Top - window.Top) * screen.ScaleFactor;
+            double width = window.Width * screen.ScaleFactor;
+            double height = window.Height * screen.ScaleFactor;
 
             return new Rect(left, top, width, height);
         }
@@ -75,38 +75,38 @@ namespace WpfScreenHelper
             {
                 case WindowPositions.Center:
                     {
-                        var x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width) / 2.0;
-                        var y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height) / 2.0;
+                        double x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width) / 2.0;
+                        double y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height) / 2.0;
 
                         return new Rect(x * screen.ScaleFactor, y * screen.ScaleFactor, window.Width * screen.ScaleFactor, window.Height * screen.ScaleFactor);
                     }
 
                 case WindowPositions.Left:
                     {
-                        var y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height) / 2.0;
+                        double y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height) / 2.0;
 
                         return new Rect(screen.WpfBounds.X * screen.ScaleFactor, y * screen.ScaleFactor, window.Width * screen.ScaleFactor, window.Height * screen.ScaleFactor);
                     }
 
                 case WindowPositions.Top:
                     {
-                        var x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width) / 2.0;
+                        double x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width) / 2.0;
 
                         return new Rect(x * screen.ScaleFactor, screen.WpfBounds.Y * screen.ScaleFactor, window.Width * screen.ScaleFactor, window.Height * screen.ScaleFactor);
                     }
 
                 case WindowPositions.Right:
                     {
-                        var x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width);
-                        var y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height) / 2.0;
+                        double x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width);
+                        double y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height) / 2.0;
 
                         return new Rect(x * screen.ScaleFactor, y * screen.ScaleFactor, window.Width * screen.ScaleFactor, window.Height * screen.ScaleFactor);
                     }
 
                 case WindowPositions.Bottom:
                     {
-                        var x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width) / 2.0;
-                        var y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height);
+                        double x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width) / 2.0;
+                        double y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height);
 
                         return new Rect(x * screen.ScaleFactor, y * screen.ScaleFactor, window.Width * screen.ScaleFactor, window.Height * screen.ScaleFactor);
                     }
@@ -116,22 +116,22 @@ namespace WpfScreenHelper
 
                 case WindowPositions.TopRight:
                     {
-                        var x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width);
+                        double x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width);
 
                         return new Rect(x * screen.ScaleFactor, screen.WpfBounds.Y * screen.ScaleFactor, window.Width * screen.ScaleFactor, window.Height * screen.ScaleFactor);
                     }
 
                 case WindowPositions.BottomRight:
                     {
-                        var x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width);
-                        var y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height);
+                        double x = screen.WpfBounds.X + (screen.WpfBounds.Width - window.Width);
+                        double y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height);
 
                         return new Rect(x * screen.ScaleFactor, y * screen.ScaleFactor, window.Width * screen.ScaleFactor, window.Height * screen.ScaleFactor);
                     }
 
                 case WindowPositions.BottomLeft:
                     {
-                        var y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height);
+                        double y = screen.WpfBounds.Y + (screen.WpfBounds.Height - window.Height);
 
                         return new Rect(screen.WpfBounds.X * screen.ScaleFactor, y * screen.ScaleFactor, window.Width * screen.ScaleFactor, window.Height * screen.ScaleFactor);
                     }

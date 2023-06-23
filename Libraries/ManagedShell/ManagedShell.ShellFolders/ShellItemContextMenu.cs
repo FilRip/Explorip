@@ -45,7 +45,7 @@ namespace ManagedShell.ShellFolders
         {
             uint numAdded = 0;
 
-            foreach (var command in builder.Commands)
+            foreach (ShellMenuCommand command in builder.Commands)
             {
                 if (allFolders || !command.FoldersOnly)
                 {
@@ -154,7 +154,7 @@ namespace ManagedShell.ShellFolders
             {
                 FreeResources();
 
-                foreach (var subMenu in ShellNewMenus)
+                foreach (ShellNewMenuCommand subMenu in ShellNewMenus)
                 {
                     subMenu.FreeResources();
                 }
@@ -211,7 +211,7 @@ namespace ManagedShell.ShellFolders
         private bool ItemsAllFolders(ShellItem[] items)
         {
             bool allFolders = true;
-            foreach (var item in items)
+            foreach (ShellItem item in items)
             {
                 if (!item.IsNavigableFolder || !item.IsFileSystem)
                 {

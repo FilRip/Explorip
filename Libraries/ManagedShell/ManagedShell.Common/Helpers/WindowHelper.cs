@@ -138,8 +138,8 @@ namespace ManagedShell.Common.Helpers
             {
                 // https://github.com/riverar/sample-win32-acrylicblur
                 // License: MIT
-                var accent = new AccentPolicy();
-                var accentStructSize = Marshal.SizeOf(accent);
+                AccentPolicy accent = new();
+                int accentStructSize = Marshal.SizeOf(accent);
                 if (enable)
                 {
                     if (EnvironmentHelper.IsWindows10RS4OrBetter)
@@ -159,10 +159,10 @@ namespace ManagedShell.Common.Helpers
                     accent.AccentState = AccentState.ACCENT_DISABLED;
                 }
 
-                var accentPtr = Marshal.AllocHGlobal(accentStructSize);
+                IntPtr accentPtr = Marshal.AllocHGlobal(accentStructSize);
                 Marshal.StructureToPtr(accent, accentPtr, false);
 
-                var data = new WindowCompositionAttributeData
+                WindowCompositionAttributeData data = new()
                 {
                     Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY,
                     SizeOfData = accentStructSize,

@@ -752,7 +752,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         // the default control, or 0 if no default was specified.
         private static int FindDefaultButtonId(List<TaskDialogButtonBase> controls)
         {
-            var defaults = controls.FindAll(control => control.Default);
+            List<TaskDialogButtonBase> defaults = controls.FindAll(control => control.Default);
 
             if (defaults.Count == 1) { return defaults[0].Id; }
             else if (defaults.Count > 1)

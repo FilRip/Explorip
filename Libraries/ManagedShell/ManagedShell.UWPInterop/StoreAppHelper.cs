@@ -166,10 +166,10 @@ namespace ManagedShell.UWPInterop
 
             string nameKey = nameNode.Value;
 
-            if (!Uri.TryCreate(nameKey, UriKind.Absolute, out var nameUri))
+            if (!Uri.TryCreate(nameKey, UriKind.Absolute, out Uri nameUri))
                 return nameKey;
 
-            var resourceKey = $"ms-resource://{packageName}/resources/{nameUri.Segments.Last()}";
+            string resourceKey = $"ms-resource://{packageName}/resources/{nameUri.Segments.Last()}";
             string name = ExtractStringFromPRIFile(packagePath + "\\resources.pri", resourceKey);
             if (!string.IsNullOrEmpty(name))
                 return name;
@@ -388,7 +388,7 @@ namespace ManagedShell.UWPInterop
         internal static string ExtractStringFromPRIFile(string pathToPRI, string resourceKey)
         {
             string sWin8ManifestString = $"@{{{pathToPRI}? {resourceKey}}}";
-            var outBuff = new StringBuilder(256);
+            StringBuilder outBuff = new(256);
             _ = SHLoadIndirectString(sWin8ManifestString, outBuff, outBuff.Capacity, IntPtr.Zero);
             return outBuff.ToString();
         }

@@ -14,7 +14,7 @@ namespace WpfScreenHelper
         {
             get
             {
-                var pt = new NativeMethods.Point();
+                NativeMethods.Point pt = new();
                 NativeMethods.GetCursorPos(pt);
                 return new Point(pt.x, pt.y);
             }

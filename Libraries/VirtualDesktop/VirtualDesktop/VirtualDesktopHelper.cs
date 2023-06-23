@@ -38,7 +38,7 @@ namespace WindowsDesktop
         {
             ThrowIfNotSupported();
 
-            NativeMethods.GetWindowThreadProcessId(hWnd, out var processId);
+            NativeMethods.GetWindowThreadProcessId(hWnd, out int processId);
 
             if (Process.GetCurrentProcess().Id == processId)
             {

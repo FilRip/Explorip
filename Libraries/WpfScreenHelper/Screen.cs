@@ -44,7 +44,7 @@ namespace WpfScreenHelper
                 {
                     if (monitor == (IntPtr)PRIMARY_MONITOR)
                     {
-                        var ptr = NativeMethods.MonitorFromPoint(new NativeMethods.PointStruct(0, 0), NativeMethods.MonitorDefault.MONITOR_DEFAULTTOPRIMARY);
+                        IntPtr ptr = NativeMethods.MonitorFromPoint(new NativeMethods.PointStruct(0, 0), NativeMethods.MonitorDefault.MONITOR_DEFAULTTOPRIMARY);
                         NativeMethods.GetDpiForMonitor(ptr, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
                     }
                     else
@@ -55,14 +55,14 @@ namespace WpfScreenHelper
                 catch
                 {
                     // Windows 7 fallback
-                    var hr = NativeMethods.D2D1CreateFactory(NativeMethods.D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_SINGLE_THREADED, typeof(NativeMethods.ID2D1Factory).GUID, IntPtr.Zero, out var factory);
+                    int hr = NativeMethods.D2D1CreateFactory(NativeMethods.D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_SINGLE_THREADED, typeof(NativeMethods.ID2D1Factory).GUID, IntPtr.Zero, out NativeMethods.ID2D1Factory factory);
                     if (hr < 0)
                     {
                         dpiX = 96;
                     }
                     else
                     {
-                        factory.GetDesktopDpi(out var x, out _);
+                        factory.GetDesktopDpi(out float x, out _);
                         Marshal.ReleaseComObject(factory);
                         dpiX = (uint)x;
                     }
@@ -73,7 +73,7 @@ namespace WpfScreenHelper
 
             if (!MultiMonitorSupport || monitor == (IntPtr)PRIMARY_MONITOR)
             {
-                var size = new Size(
+                Size size = new(
                     NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_CXSCREEN),
                     NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_CYSCREEN));
 
@@ -83,7 +83,7 @@ namespace WpfScreenHelper
             }
             else
             {
-                var info = new NativeMethods.MonitorInfoEx();
+                NativeMethods.MonitorInfoEx info = new();
 
                 NativeMethods.GetMonitorInfo(new HandleRef(null, monitor), info);
 
@@ -109,8 +109,8 @@ namespace WpfScreenHelper
             {
                 if (MultiMonitorSupport)
                 {
-                    var closure = new MonitorEnumCallback();
-                    var proc = new NativeMethods.MonitorEnumProc(closure.Callback);
+                    MonitorEnumCallback closure = new();
+                    NativeMethods.MonitorEnumProc proc = new(closure.Callback);
                     NativeMethods.EnumDisplayMonitors(NativeMethods.NullHandleRef, null, proc, IntPtr.Zero);
                     if (closure.Screens.Count > 0)
                     {
@@ -184,7 +184,7 @@ namespace WpfScreenHelper
 
                 if (!MultiMonitorSupport || monitorHandle == (IntPtr)PRIMARY_MONITOR)
                 {
-                    var rc = new NativeMethods.Rect();
+                    NativeMethods.Rect rc = new();
 
                     NativeMethods.SystemParametersInfo(NativeMethods.SPI.SPI_GETWORKAREA, 0, ref rc, NativeMethods.SPIF.SPIF_SENDCHANGE);
 
@@ -192,7 +192,7 @@ namespace WpfScreenHelper
                 }
                 else
                 {
-                    var info = new NativeMethods.MonitorInfoEx();
+                    NativeMethods.MonitorInfoEx info = new();
                     NativeMethods.GetMonitorInfo(new HandleRef(null, monitorHandle), info);
 
                     workingArea = new Rect(info.rcWork.left, info.rcWork.top, info.rcWork.right - info.rcWork.left, info.rcWork.bottom - info.rcWork.top);
@@ -243,7 +243,7 @@ namespace WpfScreenHelper
         {
             if (MultiMonitorSupport)
             {
-                var pt = new NativeMethods.PointStruct((int)point.X, (int)point.Y);
+                NativeMethods.PointStruct pt = new((int)point.X, (int)point.Y);
                 return new Screen(NativeMethods.MonitorFromPoint(pt, NativeMethods.MonitorDefault.MONITOR_DEFAULTTONEAREST));
             }
 

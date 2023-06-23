@@ -205,7 +205,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 {
                     int buttonId = CoreNativeMethods.GetLoWord(m.WParam.ToInt64());
 
-                    var buttonsFound =
+                    IEnumerable<ThumbnailToolBarButton> buttonsFound =
                         from b in taskbarWindow.ThumbnailButtons
                         where b.Id == buttonId
                         select b;

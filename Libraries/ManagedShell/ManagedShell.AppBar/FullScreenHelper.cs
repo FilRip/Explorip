@@ -92,11 +92,11 @@ namespace ManagedShell.AppBar
                 GetWindowRect(hWnd, out rect);
             }
 
-            var allScreens = Screen.AllScreens.Select(ScreenInfo.Create).ToList();
+            List<ScreenInfo> allScreens = Screen.AllScreens.Select(ScreenInfo.Create).ToList();
             if (allScreens.Count > 1) allScreens.Add(ScreenInfo.CreateVirtualScreen());
 
             // check if this is a fullscreen app
-            foreach (var screen in allScreens)
+            foreach (ScreenInfo screen in allScreens)
             {
                 if (rect.Top == screen.Bounds.Top && rect.Left == screen.Bounds.Left &&
                     rect.Bottom == screen.Bounds.Bottom && rect.Right == screen.Bounds.Right)

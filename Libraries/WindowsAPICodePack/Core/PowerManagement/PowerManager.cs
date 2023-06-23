@@ -322,7 +322,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                 if (!Power.GetSystemBatteryState().BatteryPresent)
                     throw new InvalidOperationException(LocalizedMessages.PowerManagerBatteryNotPresent);
 
-                var state = Power.GetSystemBatteryState();
+                PowerManagementNativeMethods.SystemBatteryState state = Power.GetSystemBatteryState();
 
                 int percent = (int)Math.Round(((double)state.RemainingCapacity / state.MaxCapacity * 100), 0);
                 return percent;

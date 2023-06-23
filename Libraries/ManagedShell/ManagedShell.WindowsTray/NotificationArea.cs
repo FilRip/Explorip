@@ -189,7 +189,7 @@ namespace ManagedShell.WindowsTray
             PinnedIcons.CollectionChanged += PinnedIcons_Changed;
             PinnedIcons.Filter = PinnedIcons_Filter;
             PinnedIcons.SortDescriptions.Add(new SortDescription("PinOrder", ListSortDirection.Ascending));
-            var pinnedIconsView = PinnedIcons as ICollectionViewLiveShaping;
+            ICollectionViewLiveShaping pinnedIconsView = PinnedIcons as ICollectionViewLiveShaping;
             pinnedIconsView.IsLiveFiltering = true;
             pinnedIconsView.LiveFilteringProperties.Add("IsHidden");
             pinnedIconsView.LiveFilteringProperties.Add("IsPinned");
@@ -199,7 +199,7 @@ namespace ManagedShell.WindowsTray
             UnpinnedIcons = new ListCollectionView(TrayIcons);
             UnpinnedIcons.CollectionChanged += PinnedIcons_Changed;
             UnpinnedIcons.Filter = UnpinnedIcons_Filter;
-            var unpinnedIconsView = UnpinnedIcons as ICollectionViewLiveShaping;
+            ICollectionViewLiveShaping unpinnedIconsView = UnpinnedIcons as ICollectionViewLiveShaping;
             unpinnedIconsView.IsLiveFiltering = true;
             unpinnedIconsView.LiveFilteringProperties.Add("IsHidden");
             unpinnedIconsView.LiveFilteringProperties.Add("IsPinned");

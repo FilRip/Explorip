@@ -8,6 +8,7 @@ using System.Text;
 using ManagedShell.Common.Logging;
 
 using Microsoft.Win32;
+using Microsoft.Win32.SafeHandles;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -168,7 +169,7 @@ namespace ManagedShell.Common.Helpers
 
                 if (windowsKey != null)
                 {
-                    var menuDropAlignmentValue = windowsKey.GetValue("MenuDropAlignment");
+                    object menuDropAlignmentValue = windowsKey.GetValue("MenuDropAlignment");
 
                     if (menuDropAlignmentValue != null)
                     {
@@ -283,7 +284,7 @@ namespace ManagedShell.Common.Helpers
         {
             try
             {
-                var fs = new ShFileOpStruct()
+                ShFileOpStruct fs = new()
                 {
                     wFunc = FileOperationType.FO_DELETE,
                     pFrom = path + '\0' + '\0',
@@ -321,7 +322,7 @@ namespace ManagedShell.Common.Helpers
         {
             if (!EnvironmentHelper.IsAppRunningAsShell)
             {
-                var toggleDesktopCommand = new IntPtr(0x7402);
+                IntPtr toggleDesktopCommand = new(0x7402);
                 IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView",
                     "");
 
@@ -357,7 +358,7 @@ namespace ManagedShell.Common.Helpers
             StringBuilder outFileName = new(1024);
 
             // get process id
-            var procId = GetProcIdForHandle(hWnd);
+            uint procId = GetProcIdForHandle(hWnd);
 
             if (procId != 0)
             {
@@ -551,21 +552,21 @@ namespace ManagedShell.Common.Helpers
         {
             if (path1 == path2) return true;
 
-            using var sfh1 = CreateFile(path1, FileAccess.Read, FileShare.ReadWrite,
+            using SafeFileHandle sfh1 = CreateFile(path1, FileAccess.Read, FileShare.ReadWrite,
                 IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
             if (sfh1.IsInvalid)
                 ShellLogger.Error($"Win32 error occured when trying to open file {path1}", Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
 
-            using var sfh2 = CreateFile(path2, FileAccess.Read, FileShare.ReadWrite,
+            using SafeFileHandle sfh2 = CreateFile(path2, FileAccess.Read, FileShare.ReadWrite,
                 IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
             if (sfh2.IsInvalid)
                 ShellLogger.Error($"Win32 error occured when trying to open file {path2}", Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error()));
 
-            var result1 = GetFileInformationByHandle(sfh1, out ByHandleFileInformation fileInfo1);
+            bool result1 = GetFileInformationByHandle(sfh1, out ByHandleFileInformation fileInfo1);
             if (!result1)
                 ShellLogger.Error($"GetFileInformationByHandle has failed on {path1}");
 
-            var result2 = GetFileInformationByHandle(sfh2, out ByHandleFileInformation fileInfo2);
+            bool result2 = GetFileInformationByHandle(sfh2, out ByHandleFileInformation fileInfo2);
             if (!result2)
                 ShellLogger.Error($"GetFileInformationByHandle has failed on {path2}");
 

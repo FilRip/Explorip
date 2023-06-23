@@ -64,7 +64,7 @@ namespace WindowsDesktop.Interop
 
         protected T Invoke<T>(object[] parameters = null, [CallerMemberName] string methodName = "")
         {
-            if (!_methods.TryGetValue(methodName, out var methodInfo))
+            if (!_methods.TryGetValue(methodName, out MethodInfo methodInfo))
             {
                 _methods[methodName] = methodInfo = ComInterfaceType.GetMethod(methodName);
 

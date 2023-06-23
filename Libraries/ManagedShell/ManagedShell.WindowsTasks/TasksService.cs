@@ -326,7 +326,7 @@ namespace ManagedShell.WindowsTasks
                             case HSHELL.RUDEAPPACTIVATED:
                                 ShellLogger.Debug("TasksService: Activated: " + msg.LParam);
 
-                                foreach (var aWin in Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
+                                foreach (ApplicationWindow aWin in Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
                                 {
                                     aWin.State = ApplicationWindow.WindowState.Inactive;
                                 }
