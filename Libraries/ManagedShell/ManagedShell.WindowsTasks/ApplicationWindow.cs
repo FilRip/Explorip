@@ -313,6 +313,8 @@ namespace ManagedShell.WindowsTasks
         {
             if (handle == default)
                 handle = Handle;
+            if (handle == IntPtr.Zero && _windows.Count == 1)
+                handle = _windows[0];
             if (handle == IntPtr.Zero)
                 return true;
             return NativeMethods.IsIconic(handle);
@@ -606,6 +608,9 @@ namespace ManagedShell.WindowsTasks
             if (handle == default)
                 handle = Handle;
 
+            if (handle == IntPtr.Zero && _windows.Count == 1)
+                handle = _windows[0];
+
             // call restore if window is minimized
             if (IsMinimized(handle))
             {
@@ -633,6 +638,8 @@ namespace ManagedShell.WindowsTasks
         {
             if (handle == default)
                 handle = Handle;
+            if (handle == IntPtr.Zero && _windows.Count == 1)
+                handle = _windows[0];
             IntPtr retval = IntPtr.Zero;
             NativeMethods.SendMessageTimeout(handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
 

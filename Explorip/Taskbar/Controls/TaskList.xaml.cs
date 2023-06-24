@@ -163,7 +163,6 @@ namespace Explorip.TaskBar.Controls
                     else
                         appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
                     appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
-                    appWin.State = ApplicationWindow.WindowState.Unknown;
                     MyDesktopApp.MonShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
                     if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
                     {
@@ -173,6 +172,10 @@ namespace Explorip.TaskBar.Controls
                             {
                                 MyDesktopApp.MonShellManager.TasksService.Windows.Remove(win);
                                 appWin.ListWindows.Add(win.Handle);
+                                if (appWin.ListWindows.Count > 1)
+                                    appWin.State = ApplicationWindow.WindowState.Unknown;
+                                else
+                                    appWin.State = win.State;
                             }
                         }
                     }

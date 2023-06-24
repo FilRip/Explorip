@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 using Explorip.WinAPI;
 
@@ -28,8 +29,8 @@ namespace Explorip.TaskBar.Controls
         {
             InitializeComponent();
             _thumbPtr = new List<IntPtr>();
-            Width = ThumbWidth;
-            TitleFirst.Width = ThumbWidth;
+            Width = WidthDPI;
+            TitleFirst.Width = WidthDPI;
             if (parent.ApplicationWindow.Handle == IntPtr.Zero && parent.ApplicationWindow.ListWindows.Count > 0)
             {
                 Width *= parent.ApplicationWindow.ListWindows.Count;
@@ -39,6 +40,11 @@ namespace Explorip.TaskBar.Controls
             Point positionParent = _parent.PointToScreen(new Point(0, 0));
             Left = positionParent.X - (Width / 2);
             Top = positionParent.Y - Height;
+        }
+
+        private int WidthDPI
+        {
+            get { return (int)Math.Round(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX, 0); }
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
@@ -90,7 +96,7 @@ namespace Explorip.TaskBar.Controls
                             dwFlags = WinAPI.Modeles.DWM_TNP.VISIBLE | WinAPI.Modeles.DWM_TNP.RECTDESTINATION | WinAPI.Modeles.DWM_TNP.OPACITY,
                             fVisible = true,
                             opacity = 255,
-                            rcDestination = new WinAPI.Modeles.Rect() { left = (ThumbWidth * i), top = 18, right = ThumbWidth + (ThumbWidth * i), bottom = (int)Height },
+                            rcDestination = new WinAPI.Modeles.Rect() { left = (WidthDPI * i), top = 18, right = WidthDPI + (WidthDPI * i), bottom = (int)Height },
                         };
                         StringBuilder sb = new(255);
                         NativeMethods.GetWindowText(_parent.ApplicationWindow.ListWindows[i], sb, 255);
@@ -99,9 +105,9 @@ namespace Explorip.TaskBar.Controls
                             TextBlock txtTitle = new()
                             {
                                 Text = sb.ToString(),
-                                Width = ThumbWidth,
+                                Width = WidthDPI,
                                 HorizontalAlignment = HorizontalAlignment.Left,
-                                Margin = new Thickness(ThumbWidth * i, 0, 0, 0),
+                                Margin = new Thickness(WidthDPI * i, 0, 0, 0),
                                 Background = Constants.Colors.BackgroundColorBrush,
                                 Foreground = Constants.Colors.ForegroundColorBrush,
                             };
@@ -144,7 +150,7 @@ namespace Explorip.TaskBar.Controls
             else
             {
                 Point p = Mouse.GetPosition(this);
-                int index = (int)Math.Floor(p.X / ThumbWidth);
+                int index = (int)Math.Floor(p.X / WidthDPI);
                 if (index <= _parent.ApplicationWindow.ListWindows.Count)
                     newPeek = _parent.ApplicationWindow.ListWindows[index];
             }

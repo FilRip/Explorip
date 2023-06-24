@@ -24,11 +24,11 @@
     <SolidColorBrush x:Key="ToolTipForeground" Color="{x:Static SystemColors.InfoTextColor}" />
 
     <BitmapImage x:Key="StartIconImage"
-                 UriSource="/Taskbar/Resources/start10.png" />
+                 UriSource="/Taskbar/Resources/start11.png" />
     <BitmapImage x:Key="SearchIconImage"
-                 UriSource="/Taskbar/Resources/search10.png" />
+                 UriSource="/Taskbar/Resources/search11.png" />
     <BitmapImage x:Key="TaskManIconImage"
-                 UriSource="/Taskbar/Resources/taskman10.png" />
+                 UriSource="/Taskbar/Resources/taskman11.png" />
     <BitmapImage x:Key="NotificationIconImage"
                  UriSource="/Taskbar/Resources/notification10.png" />
     <BitmapImage x:Key="TabTipIconImage"

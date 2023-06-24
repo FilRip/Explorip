@@ -104,6 +104,8 @@ namespace Explorip.TaskBar.Controls
             _isLoaded = false;
         }
 
+        #region System context menu
+
         private void AppButton_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             if (Window == null)
@@ -151,6 +153,8 @@ namespace Explorip.TaskBar.Controls
         {
             Window?.Maximize();
         }
+
+        #endregion
 
         private void AppButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -239,6 +243,8 @@ namespace Explorip.TaskBar.Controls
         }
         #endregion
 
+        #region Thumbnail
+
         private void AppButton_MouseEnter(object sender, MouseEventArgs e)
         {
             if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
@@ -264,6 +270,8 @@ namespace Explorip.TaskBar.Controls
                     Application.Current.Dispatcher.Invoke(() => { _thumb.Close(); });
             });
         }
+
+        #endregion
 
         public Taskbar TaskbarParent
         {
