@@ -144,12 +144,20 @@ namespace Explorip.TaskBar.Controls
                 int numPinnedApp = 0;
                 Shortcut pinnedApp;
                 ApplicationWindow appWin;
-                foreach (string file in Directory.GetFiles(path).Where(file => !MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
+                foreach (string file in Directory.GetFiles(path, "*.lnk").Where(file => !MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
                 {
                     pinnedApp = Shortcut.ReadFromFile(file);
                     appWin = new ApplicationWindow(MyDesktopApp.MonShellManager.TasksService, IntPtr.Zero);
                     appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
-                    appWin.WinFileName = Path.GetFullPath(pinnedApp.LinkTargetIDList.Path);
+                    if (pinnedApp.LinkTargetIDList?.Path != null)
+                        appWin.WinFileName = Path.GetFullPath(pinnedApp.LinkTargetIDList.Path);
+                    else if (pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode != null)
+                        appWin.WinFileName = Path.GetFullPath(pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode);
+                    else
+                    {
+                        Console.WriteLine($"Unable to add {file} as pinned app");
+                        continue;
+                    }
                     if (string.IsNullOrWhiteSpace(pinnedApp.StringData.IconLocation))
                         appWin.Icon = IconManager.Convert(IconManager.Extract(appWin.WinFileName, 0, true));
                     else
@@ -157,9 +165,9 @@ namespace Explorip.TaskBar.Controls
                     appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
                     appWin.State = ApplicationWindow.WindowState.Unknown;
                     MyDesktopApp.MonShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
-                    if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.WinFileName == pinnedApp.LinkTargetIDList.Path))
+                    if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
                     {
-                        foreach (ApplicationWindow win in MyDesktopApp.MonShellManager.TasksService.Windows.Where(aw => aw.WinFileName == pinnedApp.LinkTargetIDList.Path).ToList())
+                        foreach (ApplicationWindow win in MyDesktopApp.MonShellManager.TasksService.Windows.Where(aw => aw.WinFileName == appWin.WinFileName).ToList())
                         {
                             if (win != appWin)
                             {
