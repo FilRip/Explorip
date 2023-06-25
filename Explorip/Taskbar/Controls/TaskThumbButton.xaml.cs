@@ -72,7 +72,7 @@ namespace Explorip.TaskBar.Controls
                         dwFlags = WinAPI.Modeles.DWM_TNP.VISIBLE | WinAPI.Modeles.DWM_TNP.RECTDESTINATION | WinAPI.Modeles.DWM_TNP.OPACITY,
                         fVisible = true,
                         opacity = 255,
-                        rcDestination = new WinAPI.Modeles.Rect() { left = 0, top = 18, right = (int)(Width * VisualTreeHelper.GetDpi(this).DpiScaleX), bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
+                        rcDestination = new WinAPI.Modeles.Rect() { left = 0, top = (int)(TitleFirst.ActualHeight * VisualTreeHelper.GetDpi(this).DpiScaleY), right = (int)(Width * VisualTreeHelper.GetDpi(this).DpiScaleX), bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
                     };
                     TitleFirst.Text = _parent.ApplicationWindow.Title;
                     Dwmapi.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
@@ -91,7 +91,7 @@ namespace Explorip.TaskBar.Controls
                             dwFlags = WinAPI.Modeles.DWM_TNP.VISIBLE | WinAPI.Modeles.DWM_TNP.RECTDESTINATION | WinAPI.Modeles.DWM_TNP.OPACITY,
                             fVisible = true,
                             opacity = 255,
-                            rcDestination = new WinAPI.Modeles.Rect() { left = (ThumbWidth * i), top = 18, right = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX) + (ThumbWidth * i), bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
+                            rcDestination = new WinAPI.Modeles.Rect() { left = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX * i), top = (int)(TitleFirst.ActualHeight * VisualTreeHelper.GetDpi(this).DpiScaleY), right = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX * i), bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
                         };
                         StringBuilder sb = new(255);
                         NativeMethods.GetWindowText(_parent.ApplicationWindow.ListWindows[i], sb, 255);
@@ -100,9 +100,9 @@ namespace Explorip.TaskBar.Controls
                             TextBlock txtTitle = new()
                             {
                                 Text = sb.ToString(),
-                                Width = ThumbWidth,
+                                Width = TitleFirst.Width,
                                 HorizontalAlignment = HorizontalAlignment.Left,
-                                Margin = new Thickness(ThumbWidth * i, 0, 0, 0),
+                                Margin = new Thickness(TitleFirst.Width * i, 0, 0, 0),
                                 Background = Constants.Colors.BackgroundColorBrush,
                                 Foreground = Constants.Colors.ForegroundColorBrush,
                             };
