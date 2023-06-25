@@ -146,7 +146,7 @@ namespace Explorip.TaskBar.Controls
             {
                 Point p = Mouse.GetPosition(this);
                 int index = (int)Math.Floor(p.X / ThumbWidth);
-                if (index <= _parent.ApplicationWindow.ListWindows.Count)
+                if (index < _parent.ApplicationWindow.ListWindows.Count)
                     newPeek = _parent.ApplicationWindow.ListWindows[index];
             }
             if (newPeek != _lastPeek)

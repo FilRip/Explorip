@@ -265,7 +265,7 @@ namespace Explorip.TaskBar.Controls
 
             Task.Run(() =>
             {
-                Thread.Sleep(500);
+                Thread.Sleep(200);
                 if (!_thumb.MouseIn)
                     Application.Current.Dispatcher.Invoke(() => { _thumb.Close(); });
             });
