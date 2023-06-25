@@ -37,9 +37,9 @@ namespace Explorip.TaskBar.Controls
             }
             _parent = parent;
             Owner = _parent.TaskbarParent;
-            Point positionParent = _parent.PointToScreen(new Point(0, 0));
-            Left = positionParent.X - (Width / 2);
-            Top = positionParent.Y - Height;
+            Point positionParent = _parent.PointToScreen(Mouse.GetPosition(this));
+            Left = (int)((positionParent.X - (Width / 2)) / VisualTreeHelper.GetDpi(this).DpiScaleX);
+            Top = _parent.TaskbarParent.Top - Height;
         }
 
         private void Window_MouseLeave(object sender, MouseEventArgs e)
@@ -72,7 +72,7 @@ namespace Explorip.TaskBar.Controls
                         dwFlags = WinAPI.Modeles.DWM_TNP.VISIBLE | WinAPI.Modeles.DWM_TNP.RECTDESTINATION | WinAPI.Modeles.DWM_TNP.OPACITY,
                         fVisible = true,
                         opacity = 255,
-                        rcDestination = new WinAPI.Modeles.Rect() { left = 0, top = 18, right = (int)Width, bottom = (int)Height },
+                        rcDestination = new WinAPI.Modeles.Rect() { left = 0, top = 18, right = (int)(Width * VisualTreeHelper.GetDpi(this).DpiScaleX), bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
                     };
                     TitleFirst.Text = _parent.ApplicationWindow.Title;
                     Dwmapi.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
@@ -91,7 +91,7 @@ namespace Explorip.TaskBar.Controls
                             dwFlags = WinAPI.Modeles.DWM_TNP.VISIBLE | WinAPI.Modeles.DWM_TNP.RECTDESTINATION | WinAPI.Modeles.DWM_TNP.OPACITY,
                             fVisible = true,
                             opacity = 255,
-                            rcDestination = new WinAPI.Modeles.Rect() { left = (ThumbWidth * i), top = 18, right = ThumbWidth + (ThumbWidth * i), bottom = (int)Height },
+                            rcDestination = new WinAPI.Modeles.Rect() { left = (ThumbWidth * i), top = 18, right = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX) + (ThumbWidth * i), bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
                         };
                         StringBuilder sb = new(255);
                         NativeMethods.GetWindowText(_parent.ApplicationWindow.ListWindows[i], sb, 255);
