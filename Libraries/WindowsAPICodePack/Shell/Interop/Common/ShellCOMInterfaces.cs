@@ -286,9 +286,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
             [MarshalAs(UnmanagedType.Interface)] out IShellItem2 savedTo);
     };
 
-    [ComImportAttribute()]
-    [GuidAttribute("bcc18b79-ba16-442f-80c4-8a59c30c463b")]
-    [InterfaceTypeAttribute(ComInterfaceType.InterfaceIsIUnknown)]
+    [ComImport()]
+    [Guid("bcc18b79-ba16-442f-80c4-8a59c30c463b")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     interface IShellItemImageFactory
     {
         [PreserveSig()]

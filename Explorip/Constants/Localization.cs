@@ -32,6 +32,8 @@ namespace Explorip.Constants
         public static string MINIMIZE { get; private set; }
         public static string MAXIMIZE { get; private set; }
         public static string CLOSE { get; private set; }
+        public static string ATTACH_TO_TASKBAR { get; private set; }
+        public static string DETACH_FROM_TASKBAR { get; private set; }
 
         public static void LoadTranslation()
         {
@@ -60,6 +62,8 @@ namespace Explorip.Constants
             MAXIMIZE = Load("oleaccrc.dll", 143, "Maximize");
             CLOSE = Load("oleaccrc.dll", 145, "Close");
             RESTORE = Load("oleaccrc.dll", 146, "Restore");
+            ATTACH_TO_TASKBAR = Load("starttiledata.dll", 1009, "Attach to taskbar");
+            DETACH_FROM_TASKBAR = Load("starttiledata.dll", 1010, "Detach from taskbar");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

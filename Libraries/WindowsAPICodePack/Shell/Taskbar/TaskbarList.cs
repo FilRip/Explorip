@@ -1,5 +1,4 @@
-﻿
-namespace Microsoft.WindowsAPICodePack.Taskbar
+﻿namespace Microsoft.WindowsAPICodePack.Taskbar
 {
     /// <summary>
     /// Provides internal access to the functions provided by the ITaskbarList4 interface,

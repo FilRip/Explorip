@@ -132,8 +132,11 @@ namespace Explorip.Explorer.ViewModels
                     _lastFolder = currentPath;
                     Task.Run(() =>
                     {
-                        ComboBoxEditPath = Directory.GetDirectories(currentPath);
-                        ShowSuggestions = true;
+                        if (Directory.Exists(currentPath))
+                        {
+                            ComboBoxEditPath = Directory.GetDirectories(currentPath);
+                            ShowSuggestions = true;
+                        }
                     });
                 }
             }

@@ -192,7 +192,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// Creates a new instance of the JumpList class with the specified
         /// appId. The JumpList is associated with the main window of the application.
         /// </summary>
-        /// <param name="appID">Application Id to use for this instace.</param>
+        /// <param name="appID">Application Id to use for this instance.</param>
         internal JumpList(string appID)
             : this(appID, TaskbarManager.Instance.OwnerHandle)
         {
@@ -202,7 +202,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// Creates a new instance of the JumpList class with the specified
         /// appId. The JumpList is associated with the given WPF Window.
         /// </summary>
-        /// <param name="appID">Application Id to use for this instace.</param>
+        /// <param name="appID">Application Id to use for this instance.</param>
         /// <param name="window">WPF Window that is associated with this JumpList</param>
         internal JumpList(string appID, System.Windows.Window window)
             : this(appID, (new System.Windows.Interop.WindowInteropHelper(window)).Handle)
@@ -213,7 +213,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// Creates a new instance of the JumpList class with the specified
         /// appId. The JumpList is associated with the given window.
         /// </summary>
-        /// <param name="appID">Application Id to use for this instace.</param>
+        /// <param name="appID">Application Id to use for this instance.</param>
         /// <param name="windowHandle">Window handle for the window that is associated with this JumpList</param>
         private JumpList(string appID, IntPtr windowHandle)
         {
@@ -253,9 +253,9 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// <summary>
         /// Commits the pending JumpList changes and refreshes the Taskbar.
         /// </summary>
-        /// <exception cref="System.InvalidOperationException">Will throw if the type of the file being added to the JumpList is not registered with the application.</exception>
-        /// <exception cref="System.UnauthorizedAccessException">Will throw if recent documents tracking is turned off by the user or via group policy.</exception>
-        /// <exception cref="System.Runtime.InteropServices.COMException">Will throw if updating the JumpList fails for any other reason.</exception>
+        /// <exception cref="InvalidOperationException">Will throw if the type of the file being added to the JumpList is not registered with the application.</exception>
+        /// <exception cref="UnauthorizedAccessException">Will throw if recent documents tracking is turned off by the user or via group policy.</exception>
+        /// <exception cref="COMException">Will throw if updating the JumpList fails for any other reason.</exception>
         public void Refresh()
         {
             // Let the taskbar know which specific jumplist we are updating

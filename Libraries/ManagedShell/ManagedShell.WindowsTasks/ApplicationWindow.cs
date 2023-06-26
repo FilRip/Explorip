@@ -66,6 +66,10 @@ namespace ManagedShell.WindowsTasks
                 if (disposing)
                 {
                     // no longer required
+                    _windows.Clear();
+                    _icon = null;
+                    if (_hIcon != IntPtr.Zero)
+                        NativeMethods.DestroyIcon(_hIcon);
                 }
                 _isDisposed = true;
             }
@@ -595,8 +599,17 @@ namespace ManagedShell.WindowsTasks
             }
         }
 
-        internal void UpdateProperties()
+        internal void UpdateProperties(IntPtr handle = default)
         {
+            if (handle != IntPtr.Zero && !_windows.Contains(handle))
+            {
+                _windows.Add(handle);
+                if (Handle != IntPtr.Zero)
+                {
+                    _windows.Insert(0, Handle);
+                    Handle = IntPtr.Zero;
+                }
+            }
             SetTitle();
             SetShowInTaskbar();
             SetIcon();

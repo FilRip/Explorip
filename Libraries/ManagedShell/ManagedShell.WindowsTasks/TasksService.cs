@@ -251,15 +251,25 @@ namespace ManagedShell.WindowsTasks
 
         private void RemoveWindow(IntPtr hWnd)
         {
-            if (Windows.Any(i => i.Handle == hWnd))
+            ApplicationWindow win;
+            while ((win = Windows.FirstOrDefault(wnd => wnd.Handle == hWnd || wnd.ListWindows.Contains(hWnd))) != null)
             {
-                do
+                bool disposeWindow = false;
+                if (win.Handle == hWnd)
+                    disposeWindow = true;
+                else if (win.ListWindows.Contains(hWnd))
                 {
-                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == hWnd);
-                    win.Dispose();
-                    Windows.Remove(win);
+                    win.ListWindows.Remove(hWnd);
+                    if (win.ListWindows.Count == 0)
+                        disposeWindow = true;
                 }
-                while (Windows.Any(i => i.Handle == hWnd));
+                if (disposeWindow)
+                {
+                    if (win.Handle == IntPtr.Zero)
+                        win.Handle = hWnd;
+                    Windows.Remove(win);
+                    win.Dispose();
+                }
             }
         }
 
@@ -288,14 +298,15 @@ namespace ManagedShell.WindowsTasks
                         {
                             case HSHELL.WINDOWCREATED:
                                 ShellLogger.Debug("TasksService: Created: " + msg.LParam);
-                                if (!Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
+                                string winFileName = ShellHelper.GetPathForHandle(msg.LParam);
+                                if (!Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam) || i.WinFileName == winFileName))
                                 {
                                     AddWindow(msg.LParam);
                                 }
                                 else
                                 {
-                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
-                                    win.UpdateProperties();
+                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
+                                    win.UpdateProperties(msg.LParam);
                                 }
                                 break;
 

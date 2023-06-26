@@ -24,6 +24,7 @@ namespace Explorip.TaskBar.Controls
         private readonly List<IntPtr> _thumbPtr;
         private const int ThumbWidth = 250;
         private IntPtr _lastPeek;
+        private bool _showContextMenu;
 
         public TaskThumbButton(TaskButton parent)
         {
@@ -54,6 +55,11 @@ namespace Explorip.TaskBar.Controls
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (_showContextMenu)
+            {
+                e.Cancel = true;
+                return;
+            }
             foreach (IntPtr thumb in _thumbPtr)
                 Dwmapi.DwmUnregisterThumbnail(thumb);
         }
@@ -125,19 +131,31 @@ namespace Explorip.TaskBar.Controls
 
         private void Window_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            IntPtr wMenu = User32.GetSystemMenu(_lastPeek, false);
-            // Display the menu
-            Point posMouse = PointToScreen(Mouse.GetPosition(this));
-            uint command = User32.TrackPopupMenuEx(wMenu,
-                User32.TPM.LEFTBUTTON | User32.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, _handle, IntPtr.Zero);
-            if (command == 0)
-                return;
-
-            User32.PostMessage(_lastPeek, (uint)Commun.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+            try
+            {
+                _showContextMenu = true;
+                if (_lastPeek != IntPtr.Zero)
+                    WindowHelper.PeekWindow(false, _lastPeek, _parent.TaskbarParent.Handle);
+                IntPtr wMenu = User32.GetSystemMenu(_lastPeek, false);
+                // Display the menu
+                Point posMouse = PointToScreen(Mouse.GetPosition(this));
+                uint command = User32.TrackPopupMenuEx(wMenu,
+                    User32.TPM.LEFTBUTTON | User32.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, _handle, IntPtr.Zero);
+                if (command != 0)
+                    User32.PostMessage(_lastPeek, (uint)Commun.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+            }
+            finally
+            {
+                _lastPeek = IntPtr.Zero;
+                _showContextMenu = false;
+            }
+            Close();
         }
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
+            if (_showContextMenu)
+                return;
             MouseIn = true;
             IntPtr newPeek = IntPtr.Zero;
             if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
