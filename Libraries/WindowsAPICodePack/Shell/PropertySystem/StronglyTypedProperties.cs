@@ -64,7 +64,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)  Legacy code may treat this as VT_LPSTR.</para>
             /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 18 (PIDSI_APPNAME)</para>
             /// </summary>
-            public ShellProperty<String> ApplicationName
+            public ShellProperty<string> ApplicationName
             {
                 get
                 {
@@ -72,10 +72,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -152,7 +152,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)  Legacy code may treat this as VT_LPSTR.</para>
             /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 6 (PIDSI_COMMENTS)</para>
             /// </summary>
-            public ShellProperty<String> Comment
+            public ShellProperty<string> Comment
             {
                 get
                 {
@@ -160,10 +160,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -174,7 +174,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_DocumentSummaryInformation) {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 15 (PIDDSI_COMPANY)</para>
             /// </summary>
-            public ShellProperty<String> Company
+            public ShellProperty<string> Company
             {
                 get
                 {
@@ -182,10 +182,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -196,7 +196,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ShellDetails) {28636AA6-953D-11D2-B5D6-00C04FD918D0}, 5 (PID_COMPUTERNAME)</para>
             /// </summary>
-            public ShellProperty<String> ComputerName
+            public ShellProperty<string> ComputerName
             {
                 get
                 {
@@ -204,10 +204,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -240,7 +240,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_DocumentSummaryInformation) {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 27</para>
             /// </summary>
-            public ShellProperty<String> ContentStatus
+            public ShellProperty<string> ContentStatus
             {
                 get
                 {
@@ -248,10 +248,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -261,7 +261,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_DocumentSummaryInformation) {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 26</para>
             /// </summary>
-            public ShellProperty<String> ContentType
+            public ShellProperty<string> ContentType
             {
                 get
                 {
@@ -269,10 +269,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -283,7 +283,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 11 (PIDMSI_COPYRIGHT)</para>
             /// </summary>
-            public ShellProperty<String> Copyright
+            public ShellProperty<string> Copyright
             {
                 get
                 {
@@ -291,10 +291,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -588,7 +588,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSFMTID_VERSION) {0CEF7D53-FA64-11D1-A203-0000F81FEDEE}, 3 (PIDVSI_FileDescription)</para>
             /// </summary>
-            public ShellProperty<String> FileDescription
+            public ShellProperty<string> FileDescription
             {
                 get
                 {
@@ -596,10 +596,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -627,7 +627,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E4F10A3C-49E6-405D-8288-A23BD4EEAA6C}, 100</para>
             /// </summary>
-            public ShellProperty<String> FileExtension
+            public ShellProperty<string> FileExtension
             {
                 get
                 {
@@ -635,10 +635,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -692,7 +692,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {41CF5AE0-F75A-4806-BD87-59C7D9248EB9}, 100</para>
             /// </summary>
-            public ShellProperty<String> FileName
+            public ShellProperty<string> FileName
             {
                 get
                 {
@@ -700,10 +700,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -714,7 +714,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_Misc) {9B174B34-40FF-11D2-A27E-00C04FC30871}, 4 (PID_MISC_OWNER)</para>
             /// </summary>
-            public ShellProperty<String> FileOwner
+            public ShellProperty<string> FileOwner
             {
                 get
                 {
@@ -722,10 +722,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -736,7 +736,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSFMTID_VERSION) {0CEF7D53-FA64-11D1-A203-0000F81FEDEE}, 4 (PIDVSI_FileVersion)</para>
             /// </summary>
-            public ShellProperty<String> FileVersion
+            public ShellProperty<string> FileVersion
             {
                 get
                 {
@@ -744,10 +744,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -803,7 +803,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {45EAE747-8E2A-40AE-8CBF-CA52ABA6152A}, 100</para>
             /// </summary>
-            public ShellProperty<String> FlagColorText
+            public ShellProperty<string> FlagColorText
             {
                 get
                 {
@@ -811,10 +811,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -848,7 +848,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {DC54FD2E-189D-4871-AA01-08C2F57A4ABC}, 100</para>
             /// </summary>
-            public ShellProperty<String> FlagStatusText
+            public ShellProperty<string> FlagStatusText
             {
                 get
                 {
@@ -856,10 +856,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -894,7 +894,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {1E3EE840-BC2B-476C-8237-2ACD1A839B22}, 6</para>
             /// </summary>
-            public ShellProperty<String> FullText
+            public ShellProperty<string> FullText
             {
                 get
                 {
@@ -902,10 +902,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -915,7 +915,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {A26F4AFC-7346-4299-BE47-EB1AE613139F}, 100</para>
             /// </summary>
-            public ShellProperty<String> IdentityProperty
+            public ShellProperty<string> IdentityProperty
             {
                 get
                 {
@@ -923,10 +923,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -980,7 +980,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {A3B29791-7713-4E1D-BB40-17DB85F01831}, 100</para>
             /// </summary>
-            public ShellProperty<String> ImportanceText
+            public ShellProperty<string> ImportanceText
             {
                 get
                 {
@@ -988,10 +988,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1002,7 +1002,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 17</para>
             /// </summary>
-            public ShellProperty<String> InfoTipText
+            public ShellProperty<string> InfoTipText
             {
                 get
                 {
@@ -1010,10 +1010,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1024,7 +1024,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSFMTID_VERSION) {0CEF7D53-FA64-11D1-A203-0000F81FEDEE}, 5 (PIDVSI_InternalName)</para>
             /// </summary>
-            public ShellProperty<String> InternalName
+            public ShellProperty<string> InternalName
             {
                 get
                 {
@@ -1032,10 +1032,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1374,7 +1374,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {048658AD-2DB8-41A4-BBB6-AC1EF1207EB1}, 100</para>
             /// </summary>
-            public ShellProperty<String> ItemClassType
+            public ShellProperty<string> ItemClassType
             {
                 get
                 {
@@ -1382,10 +1382,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1435,7 +1435,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_Storage) {B725F130-47EF-101A-A5F1-02608C9EEBAC}, 2 (PID_STG_DIRECTORY)</para>
             /// </summary>
-            public ShellProperty<String> ItemFolderNameDisplay
+            public ShellProperty<string> ItemFolderNameDisplay
             {
                 get
                 {
@@ -1443,10 +1443,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1470,7 +1470,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD}, 6</para>
             /// </summary>
-            public ShellProperty<String> ItemFolderPathDisplay
+            public ShellProperty<string> ItemFolderPathDisplay
             {
                 get
                 {
@@ -1478,10 +1478,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1508,7 +1508,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {DABD30ED-0043-4789-A7F8-D013A4736622}, 100</para>
             /// </summary>
-            public ShellProperty<String> ItemFolderPathDisplayNarrow
+            public ShellProperty<string> ItemFolderPathDisplayNarrow
             {
                 get
                 {
@@ -1516,10 +1516,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1536,7 +1536,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6B8DA074-3B5C-43BC-886F-0A2CDCE00B6F}, 100</para>
             /// </summary>
-            public ShellProperty<String> ItemName
+            public ShellProperty<string> ItemName
             {
                 get
                 {
@@ -1544,10 +1544,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1595,7 +1595,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_Storage) {B725F130-47EF-101A-A5F1-02608C9EEBAC}, 10 (PID_STG_NAME)</para>
             /// </summary>
-            public ShellProperty<String> ItemNameDisplay
+            public ShellProperty<string> ItemNameDisplay
             {
                 get
                 {
@@ -1603,10 +1603,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1632,7 +1632,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D7313FF1-A77A-401C-8C99-3DBDD68ADD36}, 100</para>
             /// </summary>
-            public ShellProperty<String> ItemNamePrefix
+            public ShellProperty<string> ItemNamePrefix
             {
                 get
                 {
@@ -1640,10 +1640,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1700,7 +1700,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD}, 7</para>
             /// </summary>
-            public ShellProperty<String> ItemPathDisplay
+            public ShellProperty<string> ItemPathDisplay
             {
                 get
                 {
@@ -1708,10 +1708,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1738,7 +1738,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ShellDetails) {28636AA6-953D-11D2-B5D6-00C04FD918D0}, 8</para>
             /// </summary>
-            public ShellProperty<String> ItemPathDisplayNarrow
+            public ShellProperty<string> ItemPathDisplayNarrow
             {
                 get
                 {
@@ -1746,10 +1746,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1781,7 +1781,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ShellDetails) {28636AA6-953D-11D2-B5D6-00C04FD918D0}, 11</para>
             /// </summary>
-            public ShellProperty<String> ItemType
+            public ShellProperty<string> ItemType
             {
                 get
                 {
@@ -1789,10 +1789,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1823,7 +1823,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_Storage) {B725F130-47EF-101A-A5F1-02608C9EEBAC}, 4 (PID_STG_STORAGETYPE)</para>
             /// </summary>
-            public ShellProperty<String> ItemTypeText
+            public ShellProperty<string> ItemTypeText
             {
                 get
                 {
@@ -1831,10 +1831,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1853,7 +1853,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_Query) {49691C90-7E17-101A-A91C-08002B2ECDA9}, 9 (DISPID_QUERY_VIRTUALPATH)</para>
             /// </summary>
-            public ShellProperty<String> ItemUrl
+            public ShellProperty<string> ItemUrl
             {
                 get
                 {
@@ -1861,10 +1861,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1922,7 +1922,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {F04BEF95-C585-4197-A2B7-DF46FDC9EE6D}, 100</para>
             /// </summary>
-            public ShellProperty<String> KindText
+            public ShellProperty<string> KindText
             {
                 get
                 {
@@ -1930,10 +1930,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1944,7 +1944,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_DocumentSummaryInformation) {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 28</para>
             /// </summary>
-            public ShellProperty<String> Language
+            public ShellProperty<string> Language
             {
                 get
                 {
@@ -1952,10 +1952,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1965,7 +1965,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {FDF84370-031A-4ADD-9E91-0D775F1C6605}, 100</para>
             /// </summary>
-            public ShellProperty<String> MileageInformation
+            public ShellProperty<string> MileageInformation
             {
                 get
                 {
@@ -1973,10 +1973,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -1987,7 +1987,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {0B63E350-9CCC-11D0-BCDB-00805FCCCE04}, 5</para>
             /// </summary>
-            public ShellProperty<String> MIMEType
+            public ShellProperty<string> MIMEType
             {
                 get
                 {
@@ -1995,10 +1995,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2094,7 +2094,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSFMTID_VERSION) {0CEF7D53-FA64-11D1-A203-0000F81FEDEE}, 6</para>
             /// </summary>
-            public ShellProperty<String> OriginalFileName
+            public ShellProperty<string> OriginalFileName
             {
                 get
                 {
@@ -2102,10 +2102,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2116,7 +2116,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {5D76B67F-9B3D-44BB-B6AE-25DA4F638A67}, 6</para>
             /// </summary>
-            public ShellProperty<String> OwnerSid
+            public ShellProperty<string> OwnerSid
             {
                 get
                 {
@@ -2124,10 +2124,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2138,7 +2138,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 21 (PIDMSI_PARENTAL_RATING)</para>
             /// </summary>
-            public ShellProperty<String> ParentalRating
+            public ShellProperty<string> ParentalRating
             {
                 get
                 {
@@ -2146,10 +2146,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2159,7 +2159,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {10984E0A-F9F2-4321-B7EF-BAF195AF4319}, 100</para>
             /// </summary>
-            public ShellProperty<String> ParentalRatingReason
+            public ShellProperty<string> ParentalRatingReason
             {
                 get
                 {
@@ -2167,10 +2167,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2180,7 +2180,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {A7FE0840-1344-46F0-8D37-52ED712A4BF9}, 100</para>
             /// </summary>
-            public ShellProperty<String> ParentalRatingsOrganization
+            public ShellProperty<string> ParentalRatingsOrganization
             {
                 get
                 {
@@ -2188,10 +2188,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2225,7 +2225,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ShellDetails) {28636AA6-953D-11D2-B5D6-00C04FD918D0}, 24</para>
             /// </summary>
-            public ShellProperty<String> ParsingName
+            public ShellProperty<string> ParsingName
             {
                 get
                 {
@@ -2233,10 +2233,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2252,7 +2252,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ShellDetails) {28636AA6-953D-11D2-B5D6-00C04FD918D0}, 30</para>
             /// </summary>
-            public ShellProperty<String> ParsingPath
+            public ShellProperty<string> ParsingPath
             {
                 get
                 {
@@ -2260,10 +2260,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2341,7 +2341,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D98BE98B-B86B-4095-BF52-9D23B2E0A752}, 100</para>
             /// </summary>
-            public ShellProperty<String> PriorityText
+            public ShellProperty<string> PriorityText
             {
                 get
                 {
@@ -2349,10 +2349,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2362,7 +2362,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {39A7F922-477C-48DE-8BC8-B28441E342E3}, 100</para>
             /// </summary>
-            public ShellProperty<String> Project
+            public ShellProperty<string> Project
             {
                 get
                 {
@@ -2370,10 +2370,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2384,7 +2384,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {F21D9941-81F0-471A-ADEE-4E74B49217ED}, 100</para>
             /// </summary>
-            public ShellProperty<String> ProviderItemID
+            public ShellProperty<string> ProviderItemID
             {
                 get
                 {
@@ -2392,10 +2392,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2430,7 +2430,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {90197CA7-FD8F-4E8C-9DA3-B57E1E609295}, 100</para>
             /// </summary>
-            public ShellProperty<String> RatingText
+            public ShellProperty<string> RatingText
             {
                 get
                 {
@@ -2438,10 +2438,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2475,7 +2475,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D0C7F054-3F72-4725-8527-129A577CB269}, 100</para>
             /// </summary>
-            public ShellProperty<String> SensitivityText
+            public ShellProperty<string> SensitivityText
             {
                 get
                 {
@@ -2483,10 +2483,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2630,7 +2630,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ImageProperties) {14B81DA1-0135-4D31-96D9-6CBFC9671A99}, 305</para>
             /// </summary>
-            public ShellProperty<String> SoftwareUsed
+            public ShellProperty<string> SoftwareUsed
             {
                 get
                 {
@@ -2638,10 +2638,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2651,7 +2651,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {668CDFA5-7A1B-4323-AE4B-E527393A1D81}, 100</para>
             /// </summary>
-            public ShellProperty<String> SourceItem
+            public ShellProperty<string> SourceItem
             {
                 get
                 {
@@ -2659,10 +2659,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2693,7 +2693,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_IntSite) {000214A1-0000-0000-C000-000000000046}, 9</para>
             /// </summary>
-            public ShellProperty<String> Status
+            public ShellProperty<string> Status
             {
                 get
                 {
@@ -2701,10 +2701,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2715,7 +2715,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 3 (PIDSI_SUBJECT)</para>
             /// </summary>
-            public ShellProperty<String> Subject
+            public ShellProperty<string> Subject
             {
                 get
                 {
@@ -2723,10 +2723,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2804,7 +2804,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)  Legacy code may treat this as VT_LPSTR.</para>
             /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 2 (PIDSI_TITLE)</para>
             /// </summary>
-            public ShellProperty<String> Title
+            public ShellProperty<string> Title
             {
                 get
                 {
@@ -2812,10 +2812,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -2848,7 +2848,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSFMTID_VERSION) {0CEF7D53-FA64-11D1-A203-0000F81FEDEE}, 9 (PIDVSI_Trademarks)</para>
             /// </summary>
-            public ShellProperty<String> Trademarks
+            public ShellProperty<string> Trademarks
             {
                 get
                 {
@@ -2856,10 +2856,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -3339,7 +3339,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}, 5</para>
             /// </summary>
-            public ShellProperty<String> ID
+            public ShellProperty<string> ID
             {
                 get
                 {
@@ -3347,10 +3347,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3402,7 +3402,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}, 2</para>
             /// </summary>
-            public ShellProperty<String> RelaunchCommand
+            public ShellProperty<string> RelaunchCommand
             {
                 get
                 {
@@ -3410,10 +3410,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3423,7 +3423,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}, 4</para>
             /// </summary>
-            public ShellProperty<String> RelaunchDisplayNameResource
+            public ShellProperty<string> RelaunchDisplayNameResource
             {
                 get
                 {
@@ -3431,10 +3431,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3444,7 +3444,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}, 3</para>
             /// </summary>
-            public ShellProperty<String> RelaunchIconResource
+            public ShellProperty<string> RelaunchIconResource
             {
                 get
                 {
@@ -3452,10 +3452,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -3508,7 +3508,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_AudioSummaryInformation) {64440490-4C8B-11D1-8B70-080036B11A03}, 10 (PIDASI_COMPRESSION)</para>
             /// </summary>
-            public ShellProperty<String> Compression
+            public ShellProperty<string> Compression
             {
                 get
                 {
@@ -3516,10 +3516,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3552,7 +3552,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)  Legacy code may treat this as VT_BSTR.</para>
             /// <para>FormatID: (FMTID_AudioSummaryInformation) {64440490-4C8B-11D1-8B70-080036B11A03}, 2 (PIDASI_FORMAT)</para>
             /// </summary>
-            public ShellProperty<String> Format
+            public ShellProperty<string> Format
             {
                 get
                 {
@@ -3560,10 +3560,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3660,7 +3660,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_AudioSummaryInformation) {64440490-4C8B-11D1-8B70-080036B11A03}, 9 (PIDASI_STREAM_NAME)</para>
             /// </summary>
-            public ShellProperty<String> StreamName
+            public ShellProperty<string> StreamName
             {
                 get
                 {
@@ -3668,10 +3668,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3724,7 +3724,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {293CA35A-09AA-4DD2-B180-1FE245728A52}, 100</para>
             /// </summary>
-            public ShellProperty<String> Duration
+            public ShellProperty<string> Duration
             {
                 get
                 {
@@ -3732,10 +3732,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3788,7 +3788,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {F6272D18-CECC-40B1-B26A-3911717AA7BD}, 100</para>
             /// </summary>
-            public ShellProperty<String> Location
+            public ShellProperty<string> Location
             {
                 get
                 {
@@ -3796,10 +3796,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3852,7 +3852,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {744C8242-4DF5-456C-AB9E-014EFB9021E3}, 100</para>
             /// </summary>
-            public ShellProperty<String> OrganizerAddress
+            public ShellProperty<string> OrganizerAddress
             {
                 get
                 {
@@ -3860,10 +3860,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -3874,7 +3874,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {AAA660F9-9865-458E-B484-01BC7FE3973E}, 100</para>
             /// </summary>
-            public ShellProperty<String> OrganizerName
+            public ShellProperty<string> OrganizerName
             {
                 get
                 {
@@ -3882,10 +3882,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4025,7 +4025,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {53DA57CF-62C0-45C4-81DE-7610BCEFD7F5}, 100</para>
             /// </summary>
-            public ShellProperty<String> ShowTimeAsText
+            public ShellProperty<string> ShowTimeAsText
             {
                 get
                 {
@@ -4033,10 +4033,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -4064,7 +4064,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD}, 9</para>
             /// </summary>
-            public ShellProperty<String> AccountName
+            public ShellProperty<string> AccountName
             {
                 get
                 {
@@ -4072,10 +4072,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4152,7 +4152,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {EC0B4191-AB0B-4C66-90B6-C6637CDEBBAB}, 100</para>
             /// </summary>
-            public ShellProperty<String> PolicyTag
+            public ShellProperty<string> PolicyTag
             {
                 get
                 {
@@ -4160,10 +4160,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4195,7 +4195,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {807B653A-9E91-43EF-8F97-11CE04EE20C5}, 100</para>
             /// </summary>
-            public ShellProperty<String> Suffix
+            public ShellProperty<string> Suffix
             {
                 get
                 {
@@ -4203,10 +4203,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4239,7 +4239,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {A6744477-C237-475B-A075-54F34498292A}, 100</para>
             /// </summary>
-            public ShellProperty<String> TaskStatusText
+            public ShellProperty<string> TaskStatusText
             {
                 get
                 {
@@ -4247,10 +4247,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -4343,7 +4343,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CD102C9C-5540-4A88-A6F6-64E4981C8CD1}, 100</para>
             /// </summary>
-            public ShellProperty<String> AssistantName
+            public ShellProperty<string> AssistantName
             {
                 get
                 {
@@ -4351,10 +4351,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4364,7 +4364,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {9A93244D-A7AD-4FF8-9B99-45EE4CC09AF6}, 100</para>
             /// </summary>
-            public ShellProperty<String> AssistantTelephone
+            public ShellProperty<string> AssistantTelephone
             {
                 get
                 {
@@ -4372,10 +4372,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4406,7 +4406,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {730FB6DD-CF7C-426B-A03F-BD166CC9EE24}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessAddress
+            public ShellProperty<string> BusinessAddress
             {
                 get
                 {
@@ -4414,10 +4414,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4427,7 +4427,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {402B5934-EC5A-48C3-93E6-85E86A2D934E}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessAddressCity
+            public ShellProperty<string> BusinessAddressCity
             {
                 get
                 {
@@ -4435,10 +4435,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4448,7 +4448,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {B0B87314-FCF6-4FEB-8DFF-A50DA6AF561C}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessAddressCountry
+            public ShellProperty<string> BusinessAddressCountry
             {
                 get
                 {
@@ -4456,10 +4456,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4469,7 +4469,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E1D4A09E-D758-4CD1-B6EC-34A8B5A73F80}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessAddressPostalCode
+            public ShellProperty<string> BusinessAddressPostalCode
             {
                 get
                 {
@@ -4477,10 +4477,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4490,7 +4490,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {BC4E71CE-17F9-48D5-BEE9-021DF0EA5409}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessAddressPostOfficeBox
+            public ShellProperty<string> BusinessAddressPostOfficeBox
             {
                 get
                 {
@@ -4498,10 +4498,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4511,7 +4511,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {446F787F-10C4-41CB-A6C4-4D0343551597}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessAddressState
+            public ShellProperty<string> BusinessAddressState
             {
                 get
                 {
@@ -4519,10 +4519,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4532,7 +4532,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {DDD1460F-C0BF-4553-8CE4-10433C908FB0}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessAddressStreet
+            public ShellProperty<string> BusinessAddressStreet
             {
                 get
                 {
@@ -4540,10 +4540,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4554,7 +4554,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {91EFF6F3-2E27-42CA-933E-7C999FBE310B}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessFaxNumber
+            public ShellProperty<string> BusinessFaxNumber
             {
                 get
                 {
@@ -4562,10 +4562,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4575,7 +4575,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {56310920-2491-4919-99CE-EADB06FAFDB2}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessHomepage
+            public ShellProperty<string> BusinessHomepage
             {
                 get
                 {
@@ -4583,10 +4583,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4596,7 +4596,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6A15E5A0-0A1E-4CD7-BB8C-D2F1B0C929BC}, 100</para>
             /// </summary>
-            public ShellProperty<String> BusinessTelephone
+            public ShellProperty<string> BusinessTelephone
             {
                 get
                 {
@@ -4604,10 +4604,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4617,7 +4617,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {BF53D1C3-49E0-4F7F-8567-5A821D8AC542}, 100</para>
             /// </summary>
-            public ShellProperty<String> CallbackTelephone
+            public ShellProperty<string> CallbackTelephone
             {
                 get
                 {
@@ -4625,10 +4625,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4638,7 +4638,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {8FDC6DEA-B929-412B-BA90-397A257465FE}, 100</para>
             /// </summary>
-            public ShellProperty<String> CarTelephone
+            public ShellProperty<string> CarTelephone
             {
                 get
                 {
@@ -4646,10 +4646,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4680,7 +4680,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {8589E481-6040-473D-B171-7FA89C2708ED}, 100</para>
             /// </summary>
-            public ShellProperty<String> CompanyMainTelephone
+            public ShellProperty<string> CompanyMainTelephone
             {
                 get
                 {
@@ -4688,10 +4688,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4701,7 +4701,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {FC9F7306-FF8F-4D49-9FB6-3FFE5C0951EC}, 100</para>
             /// </summary>
-            public ShellProperty<String> Department
+            public ShellProperty<string> Department
             {
                 get
                 {
@@ -4709,10 +4709,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4722,7 +4722,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {F8FA7FA3-D12B-4785-8A4E-691A94F7A3E7}, 100</para>
             /// </summary>
-            public ShellProperty<String> EmailAddress
+            public ShellProperty<string> EmailAddress
             {
                 get
                 {
@@ -4730,10 +4730,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4743,7 +4743,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {38965063-EDC8-4268-8491-B7723172CF29}, 100</para>
             /// </summary>
-            public ShellProperty<String> EmailAddress2
+            public ShellProperty<string> EmailAddress2
             {
                 get
                 {
@@ -4751,10 +4751,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4764,7 +4764,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {644D37B4-E1B3-4BAD-B099-7E7C04966ACA}, 100</para>
             /// </summary>
-            public ShellProperty<String> EmailAddress3
+            public ShellProperty<string> EmailAddress3
             {
                 get
                 {
@@ -4772,10 +4772,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4806,7 +4806,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CC6F4F24-6083-4BD4-8754-674D0DE87AB8}, 100</para>
             /// </summary>
-            public ShellProperty<String> EmailName
+            public ShellProperty<string> EmailName
             {
                 get
                 {
@@ -4814,10 +4814,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4827,7 +4827,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {F1A24AA7-9CA7-40F6-89EC-97DEF9FFE8DB}, 100</para>
             /// </summary>
-            public ShellProperty<String> FileAsName
+            public ShellProperty<string> FileAsName
             {
                 get
                 {
@@ -4835,10 +4835,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4848,7 +4848,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {14977844-6B49-4AAD-A714-A4513BF60460}, 100</para>
             /// </summary>
-            public ShellProperty<String> FirstName
+            public ShellProperty<string> FirstName
             {
                 get
                 {
@@ -4856,10 +4856,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4869,7 +4869,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {635E9051-50A5-4BA2-B9DB-4ED056C77296}, 100</para>
             /// </summary>
-            public ShellProperty<String> FullName
+            public ShellProperty<string> FullName
             {
                 get
                 {
@@ -4877,10 +4877,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4890,7 +4890,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {3C8CEE58-D4F0-4CF9-B756-4E5D24447BCD}, 100</para>
             /// </summary>
-            public ShellProperty<String> Gender
+            public ShellProperty<string> Gender
             {
                 get
                 {
@@ -4898,10 +4898,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4953,7 +4953,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {98F98354-617A-46B8-8560-5B1B64BF1F89}, 100</para>
             /// </summary>
-            public ShellProperty<String> HomeAddress
+            public ShellProperty<string> HomeAddress
             {
                 get
                 {
@@ -4961,10 +4961,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4974,7 +4974,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 65</para>
             /// </summary>
-            public ShellProperty<String> HomeAddressCity
+            public ShellProperty<string> HomeAddressCity
             {
                 get
                 {
@@ -4982,10 +4982,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -4995,7 +4995,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {08A65AA1-F4C9-43DD-9DDF-A33D8E7EAD85}, 100</para>
             /// </summary>
-            public ShellProperty<String> HomeAddressCountry
+            public ShellProperty<string> HomeAddressCountry
             {
                 get
                 {
@@ -5003,10 +5003,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5016,7 +5016,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {8AFCC170-8A46-4B53-9EEE-90BAE7151E62}, 100</para>
             /// </summary>
-            public ShellProperty<String> HomeAddressPostalCode
+            public ShellProperty<string> HomeAddressPostalCode
             {
                 get
                 {
@@ -5024,10 +5024,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5037,7 +5037,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7B9F6399-0A3F-4B12-89BD-4ADC51C918AF}, 100</para>
             /// </summary>
-            public ShellProperty<String> HomeAddressPostOfficeBox
+            public ShellProperty<string> HomeAddressPostOfficeBox
             {
                 get
                 {
@@ -5045,10 +5045,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5058,7 +5058,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C89A23D0-7D6D-4EB8-87D4-776A82D493E5}, 100</para>
             /// </summary>
-            public ShellProperty<String> HomeAddressState
+            public ShellProperty<string> HomeAddressState
             {
                 get
                 {
@@ -5066,10 +5066,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5079,7 +5079,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {0ADEF160-DB3F-4308-9A21-06237B16FA2A}, 100</para>
             /// </summary>
-            public ShellProperty<String> HomeAddressStreet
+            public ShellProperty<string> HomeAddressStreet
             {
                 get
                 {
@@ -5087,10 +5087,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5100,7 +5100,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {660E04D6-81AB-4977-A09F-82313113AB26}, 100</para>
             /// </summary>
-            public ShellProperty<String> HomeFaxNumber
+            public ShellProperty<string> HomeFaxNumber
             {
                 get
                 {
@@ -5108,10 +5108,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5121,7 +5121,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 20</para>
             /// </summary>
-            public ShellProperty<String> HomeTelephone
+            public ShellProperty<string> HomeTelephone
             {
                 get
                 {
@@ -5129,10 +5129,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5163,7 +5163,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {F3D8F40D-50CB-44A2-9718-40CB9119495D}, 100</para>
             /// </summary>
-            public ShellProperty<String> Initials
+            public ShellProperty<string> Initials
             {
                 get
                 {
@@ -5171,10 +5171,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5184,7 +5184,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 6</para>
             /// </summary>
-            public ShellProperty<String> JobTitle
+            public ShellProperty<string> JobTitle
             {
                 get
                 {
@@ -5192,10 +5192,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5205,7 +5205,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {97B0AD89-DF49-49CC-834E-660974FD755B}, 100</para>
             /// </summary>
-            public ShellProperty<String> Label
+            public ShellProperty<string> Label
             {
                 get
                 {
@@ -5213,10 +5213,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5226,7 +5226,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {8F367200-C270-457C-B1D4-E07C5BCD90C7}, 100</para>
             /// </summary>
-            public ShellProperty<String> LastName
+            public ShellProperty<string> LastName
             {
                 get
                 {
@@ -5234,10 +5234,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5247,7 +5247,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C0AC206A-827E-4650-95AE-77E2BB74FCC9}, 100</para>
             /// </summary>
-            public ShellProperty<String> MailingAddress
+            public ShellProperty<string> MailingAddress
             {
                 get
                 {
@@ -5255,10 +5255,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5268,7 +5268,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 71</para>
             /// </summary>
-            public ShellProperty<String> MiddleName
+            public ShellProperty<string> MiddleName
             {
                 get
                 {
@@ -5276,10 +5276,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5289,7 +5289,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 35</para>
             /// </summary>
-            public ShellProperty<String> MobileTelephone
+            public ShellProperty<string> MobileTelephone
             {
                 get
                 {
@@ -5297,10 +5297,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5310,7 +5310,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 74</para>
             /// </summary>
-            public ShellProperty<String> Nickname
+            public ShellProperty<string> Nickname
             {
                 get
                 {
@@ -5318,10 +5318,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5331,7 +5331,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 7</para>
             /// </summary>
-            public ShellProperty<String> OfficeLocation
+            public ShellProperty<string> OfficeLocation
             {
                 get
                 {
@@ -5339,10 +5339,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5352,7 +5352,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {508161FA-313B-43D5-83A1-C1ACCF68622C}, 100</para>
             /// </summary>
-            public ShellProperty<String> OtherAddress
+            public ShellProperty<string> OtherAddress
             {
                 get
                 {
@@ -5360,10 +5360,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5373,7 +5373,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6E682923-7F7B-4F0C-A337-CFCA296687BF}, 100</para>
             /// </summary>
-            public ShellProperty<String> OtherAddressCity
+            public ShellProperty<string> OtherAddressCity
             {
                 get
                 {
@@ -5381,10 +5381,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5394,7 +5394,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {8F167568-0AAE-4322-8ED9-6055B7B0E398}, 100</para>
             /// </summary>
-            public ShellProperty<String> OtherAddressCountry
+            public ShellProperty<string> OtherAddressCountry
             {
                 get
                 {
@@ -5402,10 +5402,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5415,7 +5415,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {95C656C1-2ABF-4148-9ED3-9EC602E3B7CD}, 100</para>
             /// </summary>
-            public ShellProperty<String> OtherAddressPostalCode
+            public ShellProperty<string> OtherAddressPostalCode
             {
                 get
                 {
@@ -5423,10 +5423,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5436,7 +5436,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {8B26EA41-058F-43F6-AECC-4035681CE977}, 100</para>
             /// </summary>
-            public ShellProperty<String> OtherAddressPostOfficeBox
+            public ShellProperty<string> OtherAddressPostOfficeBox
             {
                 get
                 {
@@ -5444,10 +5444,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5457,7 +5457,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {71B377D6-E570-425F-A170-809FAE73E54E}, 100</para>
             /// </summary>
-            public ShellProperty<String> OtherAddressState
+            public ShellProperty<string> OtherAddressState
             {
                 get
                 {
@@ -5465,10 +5465,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5478,7 +5478,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {FF962609-B7D6-4999-862D-95180D529AEA}, 100</para>
             /// </summary>
-            public ShellProperty<String> OtherAddressStreet
+            public ShellProperty<string> OtherAddressStreet
             {
                 get
                 {
@@ -5486,10 +5486,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5499,7 +5499,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D6304E01-F8F5-4F45-8B15-D024A6296789}, 100</para>
             /// </summary>
-            public ShellProperty<String> PagerTelephone
+            public ShellProperty<string> PagerTelephone
             {
                 get
                 {
@@ -5507,10 +5507,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5520,7 +5520,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 69</para>
             /// </summary>
-            public ShellProperty<String> PersonalTitle
+            public ShellProperty<string> PersonalTitle
             {
                 get
                 {
@@ -5528,10 +5528,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5541,7 +5541,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C8EA94F0-A9E3-4969-A94B-9C62A95324E0}, 100</para>
             /// </summary>
-            public ShellProperty<String> PrimaryAddressCity
+            public ShellProperty<string> PrimaryAddressCity
             {
                 get
                 {
@@ -5549,10 +5549,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5562,7 +5562,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E53D799D-0F3F-466E-B2FF-74634A3CB7A4}, 100</para>
             /// </summary>
-            public ShellProperty<String> PrimaryAddressCountry
+            public ShellProperty<string> PrimaryAddressCountry
             {
                 get
                 {
@@ -5570,10 +5570,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5583,7 +5583,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {18BBD425-ECFD-46EF-B612-7B4A6034EDA0}, 100</para>
             /// </summary>
-            public ShellProperty<String> PrimaryAddressPostalCode
+            public ShellProperty<string> PrimaryAddressPostalCode
             {
                 get
                 {
@@ -5591,10 +5591,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5604,7 +5604,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {DE5EF3C7-46E1-484E-9999-62C5308394C1}, 100</para>
             /// </summary>
-            public ShellProperty<String> PrimaryAddressPostOfficeBox
+            public ShellProperty<string> PrimaryAddressPostOfficeBox
             {
                 get
                 {
@@ -5612,10 +5612,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5625,7 +5625,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {F1176DFE-7138-4640-8B4C-AE375DC70A6D}, 100</para>
             /// </summary>
-            public ShellProperty<String> PrimaryAddressState
+            public ShellProperty<string> PrimaryAddressState
             {
                 get
                 {
@@ -5633,10 +5633,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5646,7 +5646,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {63C25B20-96BE-488F-8788-C09C407AD812}, 100</para>
             /// </summary>
-            public ShellProperty<String> PrimaryAddressStreet
+            public ShellProperty<string> PrimaryAddressStreet
             {
                 get
                 {
@@ -5654,10 +5654,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5667,7 +5667,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 48</para>
             /// </summary>
-            public ShellProperty<String> PrimaryEmailAddress
+            public ShellProperty<string> PrimaryEmailAddress
             {
                 get
                 {
@@ -5675,10 +5675,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5688,7 +5688,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 25</para>
             /// </summary>
-            public ShellProperty<String> PrimaryTelephone
+            public ShellProperty<string> PrimaryTelephone
             {
                 get
                 {
@@ -5696,10 +5696,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5709,7 +5709,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7268AF55-1CE4-4F6E-A41F-B6E4EF10E4A9}, 100</para>
             /// </summary>
-            public ShellProperty<String> Profession
+            public ShellProperty<string> Profession
             {
                 get
                 {
@@ -5717,10 +5717,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5730,7 +5730,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {9D2408B6-3167-422B-82B0-F583B7A7CFE3}, 100</para>
             /// </summary>
-            public ShellProperty<String> SpouseName
+            public ShellProperty<string> SpouseName
             {
                 get
                 {
@@ -5738,10 +5738,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5751,7 +5751,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {176DC63C-2688-4E89-8143-A347800F25E9}, 73</para>
             /// </summary>
-            public ShellProperty<String> Suffix
+            public ShellProperty<string> Suffix
             {
                 get
                 {
@@ -5759,10 +5759,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5772,7 +5772,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C554493C-C1F7-40C1-A76C-EF8C0614003E}, 100</para>
             /// </summary>
-            public ShellProperty<String> TelexNumber
+            public ShellProperty<string> TelexNumber
             {
                 get
                 {
@@ -5780,10 +5780,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5793,7 +5793,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {AAF16BAC-2B55-45E6-9F6D-415EB94910DF}, 100</para>
             /// </summary>
-            public ShellProperty<String> TTYTDDTelephone
+            public ShellProperty<string> TTYTDDTelephone
             {
                 get
                 {
@@ -5801,10 +5801,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5814,7 +5814,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD}, 18</para>
             /// </summary>
-            public ShellProperty<String> Webpage
+            public ShellProperty<string> Webpage
             {
                 get
                 {
@@ -5822,10 +5822,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -5869,7 +5869,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {897B3694-FE9E-43E6-8066-260F590C0100}, 2</para>
             /// </summary>
-            public ShellProperty<String> CompanyNamePhonetic
+            public ShellProperty<string> CompanyNamePhonetic
             {
                 get
                 {
@@ -5877,10 +5877,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5891,7 +5891,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {897B3694-FE9E-43E6-8066-260F590C0100}, 3</para>
             /// </summary>
-            public ShellProperty<String> FirstNamePhonetic
+            public ShellProperty<string> FirstNamePhonetic
             {
                 get
                 {
@@ -5899,10 +5899,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -5913,7 +5913,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {897B3694-FE9E-43E6-8066-260F590C0100}, 4</para>
             /// </summary>
-            public ShellProperty<String> LastNamePhonetic
+            public ShellProperty<string> LastNamePhonetic
             {
                 get
                 {
@@ -5921,10 +5921,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -5955,7 +5955,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {0B48F35A-BE6E-4F17-B108-3C4073D1669A}, 15</para>
             /// </summary>
-            public ShellProperty<String> PrinterUrl
+            public ShellProperty<string> PrinterUrl
             {
                 get
                 {
@@ -5963,10 +5963,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -5997,7 +5997,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {847C66DE-B8D6-4AF9-ABC3-6F4F926BC039}, 14</para>
             /// </summary>
-            public ShellProperty<String> PrinterDriverDirectory
+            public ShellProperty<string> PrinterDriverDirectory
             {
                 get
                 {
@@ -6005,10 +6005,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6019,7 +6019,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {AFC47170-14F5-498C-8F30-B0D19BE449C6}, 11</para>
             /// </summary>
-            public ShellProperty<String> PrinterDriverName
+            public ShellProperty<string> PrinterDriverName
             {
                 get
                 {
@@ -6027,10 +6027,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6041,7 +6041,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {0A7B84EF-0C27-463F-84EF-06C5070001BE}, 10</para>
             /// </summary>
-            public ShellProperty<String> PrinterName
+            public ShellProperty<string> PrinterName
             {
                 get
                 {
@@ -6049,10 +6049,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6063,7 +6063,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {EEC7B761-6F94-41B1-949F-C729720DD13C}, 12</para>
             /// </summary>
-            public ShellProperty<String> PrinterPortName
+            public ShellProperty<string> PrinterPortName
             {
                 get
                 {
@@ -6071,10 +6071,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -6149,7 +6149,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {49CD1F76-5626-4B17-A4E8-18B4AA1A2213}, 23</para>
             /// </summary>
-            public ShellProperty<String> BatteryPlusChargingText
+            public ShellProperty<string> BatteryPlusChargingText
             {
                 get
                 {
@@ -6157,10 +6157,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6303,7 +6303,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {880F70A2-6082-47AC-8AAB-A739D1A300C3}, 153</para>
             /// </summary>
-            public ShellProperty<String> DefaultTooltip
+            public ShellProperty<string> DefaultTooltip
             {
                 get
                 {
@@ -6311,10 +6311,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6325,7 +6325,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {78C34FC8-104A-4ACA-9EA4-524D52996E57}, 81</para>
             /// </summary>
-            public ShellProperty<String> DeviceDescription1
+            public ShellProperty<string> DeviceDescription1
             {
                 get
                 {
@@ -6333,10 +6333,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6347,7 +6347,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {78C34FC8-104A-4ACA-9EA4-524D52996E57}, 82</para>
             /// </summary>
-            public ShellProperty<String> DeviceDescription2
+            public ShellProperty<string> DeviceDescription2
             {
                 get
                 {
@@ -6355,10 +6355,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6391,7 +6391,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {656A3BB3-ECC0-43FD-8477-4AE0404A96CD}, 12288</para>
             /// </summary>
-            public ShellProperty<String> FriendlyName
+            public ShellProperty<string> FriendlyName
             {
                 get
                 {
@@ -6399,10 +6399,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6589,7 +6589,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {656A3BB3-ECC0-43FD-8477-4AE0404A96CD}, 8192</para>
             /// </summary>
-            public ShellProperty<String> Manufacturer
+            public ShellProperty<string> Manufacturer
             {
                 get
                 {
@@ -6597,10 +6597,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6633,7 +6633,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {656A3BB3-ECC0-43FD-8477-4AE0404A96CD}, 8194</para>
             /// </summary>
-            public ShellProperty<String> ModelName
+            public ShellProperty<string> ModelName
             {
                 get
                 {
@@ -6641,10 +6641,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6655,7 +6655,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {656A3BB3-ECC0-43FD-8477-4AE0404A96CD}, 8195</para>
             /// </summary>
-            public ShellProperty<String> ModelNumber
+            public ShellProperty<string> ModelNumber
             {
                 get
                 {
@@ -6663,10 +6663,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6677,7 +6677,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {880F70A2-6082-47AC-8AAB-A739D1A300C3}, 152</para>
             /// </summary>
-            public ShellProperty<String> NetworkedTooltip
+            public ShellProperty<string> NetworkedTooltip
             {
                 get
                 {
@@ -6685,10 +6685,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6699,7 +6699,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {49CD1F76-5626-4B17-A4E8-18B4AA1A2213}, 7</para>
             /// </summary>
-            public ShellProperty<String> NetworkName
+            public ShellProperty<string> NetworkName
             {
                 get
                 {
@@ -6707,10 +6707,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6721,7 +6721,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {49CD1F76-5626-4B17-A4E8-18B4AA1A2213}, 8</para>
             /// </summary>
-            public ShellProperty<String> NetworkType
+            public ShellProperty<string> NetworkType
             {
                 get
                 {
@@ -6729,10 +6729,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6765,7 +6765,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {06704B0C-E830-4C81-9178-91E4E95A80A0}, 3</para>
             /// </summary>
-            public ShellProperty<String> Notification
+            public ShellProperty<string> Notification
             {
                 get
                 {
@@ -6773,10 +6773,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6853,7 +6853,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D08DD4C0-3A9E-462E-8290-7B636B2576B9}, 10</para>
             /// </summary>
-            public ShellProperty<String> PrimaryCategory
+            public ShellProperty<string> PrimaryCategory
             {
                 get
                 {
@@ -6861,10 +6861,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6919,7 +6919,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {880F70A2-6082-47AC-8AAB-A739D1A300C3}, 151</para>
             /// </summary>
-            public ShellProperty<String> SharedTooltip
+            public ShellProperty<string> SharedTooltip
             {
                 get
                 {
@@ -6927,10 +6927,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6963,7 +6963,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D08DD4C0-3A9E-462E-8290-7B636B2576B9}, 257</para>
             /// </summary>
-            public ShellProperty<String> Status1
+            public ShellProperty<string> Status1
             {
                 get
                 {
@@ -6971,10 +6971,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -6985,7 +6985,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D08DD4C0-3A9E-462E-8290-7B636B2576B9}, 258</para>
             /// </summary>
-            public ShellProperty<String> Status2
+            public ShellProperty<string> Status2
             {
                 get
                 {
@@ -6993,10 +6993,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7345,7 +7345,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {276D7BB0-5B34-4FB0-AA4B-158ED12A1809}, 100</para>
             /// </summary>
-            public ShellProperty<String> ClientID
+            public ShellProperty<string> ClientID
             {
                 get
                 {
@@ -7353,10 +7353,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7453,7 +7453,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {1E005EE6-BF27-428B-B01C-79676ACD2870}, 100</para>
             /// </summary>
-            public ShellProperty<String> Division
+            public ShellProperty<string> Division
             {
                 get
                 {
@@ -7461,10 +7461,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7474,7 +7474,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E08805C8-E395-40DF-80D2-54F0D6C43154}, 100</para>
             /// </summary>
-            public ShellProperty<String> DocumentID
+            public ShellProperty<string> DocumentID
             {
                 get
                 {
@@ -7482,10 +7482,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7518,7 +7518,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 8 (PIDSI_LASTAUTHOR)</para>
             /// </summary>
-            public ShellProperty<String> LastAuthor
+            public ShellProperty<string> LastAuthor
             {
                 get
                 {
@@ -7526,10 +7526,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7562,7 +7562,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_DocumentSummaryInformation) {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 14 (PIDDSI_MANAGER)</para>
             /// </summary>
-            public ShellProperty<String> Manager
+            public ShellProperty<string> Manager
             {
                 get
                 {
@@ -7570,10 +7570,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7672,7 +7672,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_DocumentSummaryInformation) {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 3 (PIDDSI_PRESFORMAT)</para>
             /// </summary>
-            public ShellProperty<String> PresentationFormat
+            public ShellProperty<string> PresentationFormat
             {
                 get
                 {
@@ -7680,10 +7680,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7694,7 +7694,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 9 (PIDSI_REVNUMBER)</para>
             /// </summary>
-            public ShellProperty<String> RevisionNumber
+            public ShellProperty<string> RevisionNumber
             {
                 get
                 {
@@ -7702,10 +7702,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7760,7 +7760,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_SummaryInformation) {F29F85E0-4FF9-1068-AB91-08002B27B3D9}, 7 (PIDSI_TEMPLATE)</para>
             /// </summary>
-            public ShellProperty<String> Template
+            public ShellProperty<string> Template
             {
                 get
                 {
@@ -7768,10 +7768,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7803,7 +7803,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_DocumentSummaryInformation) {D5CDD502-2E9C-101B-9397-08002B2CF9AE}, 29</para>
             /// </summary>
-            public ShellProperty<String> Version
+            public ShellProperty<string> Version
             {
                 get
                 {
@@ -7811,10 +7811,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -7911,7 +7911,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_DRM) {AEAC19E4-89AE-4508-B9B7-BB867ABEE2ED}, 3 (PIDDRSI_DESCRIPTION)</para>
             /// </summary>
-            public ShellProperty<String> Description
+            public ShellProperty<string> Description
             {
                 get
                 {
@@ -7919,10 +7919,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8086,7 +8086,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {972E333E-AC7E-49F1-8ADF-A70D07A9BCAB}, 100</para>
             /// </summary>
-            public ShellProperty<String> AreaInformation
+            public ShellProperty<string> AreaInformation
             {
                 get
                 {
@@ -8094,10 +8094,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8197,7 +8197,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {9AB84393-2A0F-4B75-BB22-7279786977CB}, 100</para>
             /// </summary>
-            public ShellProperty<String> DestinationBearingRef
+            public ShellProperty<string> DestinationBearingRef
             {
                 get
                 {
@@ -8205,10 +8205,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8286,7 +8286,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {ED4DF2D3-8695-450B-856F-F5C1C53ACB66}, 100</para>
             /// </summary>
-            public ShellProperty<String> DestinationDistanceRef
+            public ShellProperty<string> DestinationDistanceRef
             {
                 get
                 {
@@ -8294,10 +8294,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8376,7 +8376,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CEA820B9-CE61-4885-A128-005D9087C192}, 100</para>
             /// </summary>
-            public ShellProperty<String> DestinationLatitudeRef
+            public ShellProperty<string> DestinationLatitudeRef
             {
                 get
                 {
@@ -8384,10 +8384,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8466,7 +8466,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {182C1EA6-7C1C-4083-AB4B-AC6C9F4ED128}, 100</para>
             /// </summary>
-            public ShellProperty<String> DestinationLongitudeRef
+            public ShellProperty<string> DestinationLongitudeRef
             {
                 get
                 {
@@ -8474,10 +8474,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8643,7 +8643,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {A4AAA5B7-1AD0-445F-811A-0F8F6E67F6B5}, 100</para>
             /// </summary>
-            public ShellProperty<String> ImageDirectionRef
+            public ShellProperty<string> ImageDirectionRef
             {
                 get
                 {
@@ -8651,10 +8651,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8732,7 +8732,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {029C0252-5B86-46C7-ACA0-2769FFC8E3D4}, 100</para>
             /// </summary>
-            public ShellProperty<String> LatitudeRef
+            public ShellProperty<string> LatitudeRef
             {
                 get
                 {
@@ -8740,10 +8740,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8821,7 +8821,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {33DCF22B-28D5-464C-8035-1EE9EFD25278}, 100</para>
             /// </summary>
-            public ShellProperty<String> LongitudeRef
+            public ShellProperty<string> LongitudeRef
             {
                 get
                 {
@@ -8829,10 +8829,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8843,7 +8843,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {2CA2DAE6-EDDC-407D-BEF1-773942ABFA95}, 100</para>
             /// </summary>
-            public ShellProperty<String> MapDatum
+            public ShellProperty<string> MapDatum
             {
                 get
                 {
@@ -8851,10 +8851,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8865,7 +8865,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {A015ED5D-AAEA-4D58-8A86-3C586920EA0B}, 100</para>
             /// </summary>
-            public ShellProperty<String> MeasureMode
+            public ShellProperty<string> MeasureMode
             {
                 get
                 {
@@ -8873,10 +8873,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8887,7 +8887,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {59D49E61-840F-4AA9-A939-E2099B7F6399}, 100</para>
             /// </summary>
-            public ShellProperty<String> ProcessingMethod
+            public ShellProperty<string> ProcessingMethod
             {
                 get
                 {
@@ -8895,10 +8895,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8909,7 +8909,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {467EE575-1F25-4557-AD4E-B8B58B0D9C15}, 100</para>
             /// </summary>
-            public ShellProperty<String> Satellites
+            public ShellProperty<string> Satellites
             {
                 get
                 {
@@ -8917,10 +8917,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -8999,7 +8999,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {ECF7F4C9-544F-4D6D-9D98-8AD79ADAF453}, 100</para>
             /// </summary>
-            public ShellProperty<String> SpeedRef
+            public ShellProperty<string> SpeedRef
             {
                 get
                 {
@@ -9007,10 +9007,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9022,7 +9022,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {125491F4-818F-46B2-91B5-D537753617B2}, 100</para>
             /// </summary>
-            public ShellProperty<String> Status
+            public ShellProperty<string> Status
             {
                 get
                 {
@@ -9030,10 +9030,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9111,7 +9111,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {35DBE6FE-44C3-4400-AAAE-D2C799C407E8}, 100</para>
             /// </summary>
-            public ShellProperty<String> TrackRef
+            public ShellProperty<string> TrackRef
             {
                 get
                 {
@@ -9119,10 +9119,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9197,7 +9197,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7D683FC9-D155-45A8-BB1F-89D19BCB792F}, 100</para>
             /// </summary>
-            public ShellProperty<String> DisplayName
+            public ShellProperty<string> DisplayName
             {
                 get
                 {
@@ -9205,10 +9205,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9241,7 +9241,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {FCC16823-BAED-4F24-9B32-A0982117F7FA}, 100</para>
             /// </summary>
-            public ShellProperty<String> PrimaryEmailAddress
+            public ShellProperty<string> PrimaryEmailAddress
             {
                 get
                 {
@@ -9249,10 +9249,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9285,7 +9285,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E55FC3B0-2B60-4220-918E-B21E8BF16016}, 100</para>
             /// </summary>
-            public ShellProperty<String> UniqueID
+            public ShellProperty<string> UniqueID
             {
                 get
                 {
@@ -9293,10 +9293,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9307,7 +9307,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C4322503-78CA-49C6-9ACC-A68E2AFD7B6B}, 100</para>
             /// </summary>
-            public ShellProperty<String> UserName
+            public ShellProperty<string> UserName
             {
                 get
                 {
@@ -9315,10 +9315,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -9349,7 +9349,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {B96EFF7B-35CA-4A35-8607-29E3A54C46EA}, 100</para>
             /// </summary>
-            public ShellProperty<String> Name
+            public ShellProperty<string> Name
             {
                 get
                 {
@@ -9357,10 +9357,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9371,7 +9371,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {2425166F-5642-4864-992F-98FD98F294C3}, 100</para>
             /// </summary>
-            public ShellProperty<String> Picture
+            public ShellProperty<string> Picture
             {
                 get
                 {
@@ -9379,10 +9379,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -9546,7 +9546,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {3F08E66F-2F44-4BB9-A682-AC35D2562322}, 100</para>
             /// </summary>
-            public ShellProperty<String> CompressionText
+            public ShellProperty<string> CompressionText
             {
                 get
                 {
@@ -9554,10 +9554,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9568,7 +9568,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_IMAGESUMMARYINFORMATION) {6444048F-4C8B-11D1-8B70-080036B11A03}, 13 (PIDISI_DIMENSIONS)</para>
             /// </summary>
-            public ShellProperty<String> Dimensions
+            public ShellProperty<string> Dimensions
             {
                 get
                 {
@@ -9576,10 +9576,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9633,7 +9633,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {10DABE05-32AA-4C29-BF1A-63E2D220587F}, 100</para>
             /// </summary>
-            public ShellProperty<String> ImageID
+            public ShellProperty<string> ImageID
             {
                 get
                 {
@@ -9641,10 +9641,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9760,7 +9760,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {95BEB1FC-326D-4644-B396-CD3ED90E6DDF}, 100</para>
             /// </summary>
-            public ShellProperty<String> EntryType
+            public ShellProperty<string> EntryType
             {
                 get
                 {
@@ -9768,10 +9768,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -9803,7 +9803,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 500</para>
             /// </summary>
-            public ShellProperty<String> ContentViewModeForBrowse
+            public ShellProperty<string> ContentViewModeForBrowse
             {
                 get
                 {
@@ -9811,10 +9811,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9826,7 +9826,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 501</para>
             /// </summary>
-            public ShellProperty<String> ContentViewModeForSearch
+            public ShellProperty<string> ContentViewModeForSearch
             {
                 get
                 {
@@ -9834,10 +9834,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -9867,7 +9867,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {436F2667-14E2-4FEB-B30A-146C53B5B674}, 100</para>
             /// </summary>
-            public ShellProperty<String> Arguments
+            public ShellProperty<string> Arguments
             {
                 get
                 {
@@ -9875,10 +9875,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9888,7 +9888,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_LINK) {B9B4B3FC-2B51-4A42-B5D8-324146AFCF25}, 5</para>
             /// </summary>
-            public ShellProperty<String> Comment
+            public ShellProperty<string> Comment
             {
                 get
                 {
@@ -9896,10 +9896,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -9930,7 +9930,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {5CBF2787-48CF-4208-B90E-EE5E5D420294}, 21  (PKEYs relating to URLs.  Used by IE History.)</para>
             /// </summary>
-            public ShellProperty<String> Description
+            public ShellProperty<string> Description
             {
                 get
                 {
@@ -9938,10 +9938,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10001,7 +10001,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_LINK) {B9B4B3FC-2B51-4A42-B5D8-324146AFCF25}, 2 (PID_LINK_TARGET)</para>
             /// </summary>
-            public ShellProperty<String> TargetParsingPath
+            public ShellProperty<string> TargetParsingPath
             {
                 get
                 {
@@ -10009,10 +10009,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10068,7 +10068,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {5CBF2787-48CF-4208-B90E-EE5E5D420294}, 2  (PKEYs relating to URLs.  Used by IE History.)</para>
             /// </summary>
-            public ShellProperty<String> TargetUrl
+            public ShellProperty<string> TargetUrl
             {
                 get
                 {
@@ -10076,10 +10076,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -10110,7 +10110,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 32 (PIDMSI_AUTHOR_URL)</para>
             /// </summary>
-            public ShellProperty<String> AuthorUrl
+            public ShellProperty<string> AuthorUrl
             {
                 get
                 {
@@ -10118,10 +10118,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10153,7 +10153,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 13 (PIDMSI_CLASS_PRIMARY_ID)</para>
             /// </summary>
-            public ShellProperty<String> ClassPrimaryID
+            public ShellProperty<string> ClassPrimaryID
             {
                 get
                 {
@@ -10161,10 +10161,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10175,7 +10175,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 14 (PIDMSI_CLASS_SECONDARY_ID)</para>
             /// </summary>
-            public ShellProperty<String> ClassSecondaryID
+            public ShellProperty<string> ClassSecondaryID
             {
                 get
                 {
@@ -10183,10 +10183,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10197,7 +10197,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 24 (PIDMSI_COLLECTION_GROUP_ID)</para>
             /// </summary>
-            public ShellProperty<String> CollectionGroupID
+            public ShellProperty<string> CollectionGroupID
             {
                 get
                 {
@@ -10205,10 +10205,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10219,7 +10219,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 25 (PIDMSI_COLLECTION_ID)</para>
             /// </summary>
-            public ShellProperty<String> CollectionID
+            public ShellProperty<string> CollectionID
             {
                 get
                 {
@@ -10227,10 +10227,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10241,7 +10241,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 18 (PIDMSI_CONTENTDISTRIBUTOR)</para>
             /// </summary>
-            public ShellProperty<String> ContentDistributor
+            public ShellProperty<string> ContentDistributor
             {
                 get
                 {
@@ -10249,10 +10249,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10263,7 +10263,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 26 (PIDMSI_CONTENT_ID)</para>
             /// </summary>
-            public ShellProperty<String> ContentID
+            public ShellProperty<string> ContentID
             {
                 get
                 {
@@ -10271,10 +10271,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10285,7 +10285,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 27 (PIDMSI_TOOL_NAME)</para>
             /// </summary>
-            public ShellProperty<String> CreatorApplication
+            public ShellProperty<string> CreatorApplication
             {
                 get
                 {
@@ -10293,10 +10293,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10307,7 +10307,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 28 (PIDMSI_TOOL_VERSION)</para>
             /// </summary>
-            public ShellProperty<String> CreatorApplicationVersion
+            public ShellProperty<string> CreatorApplicationVersion
             {
                 get
                 {
@@ -10315,10 +10315,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10350,7 +10350,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {DE41CC29-6971-4290-B472-F59F2E2F31E2}, 100</para>
             /// </summary>
-            public ShellProperty<String> DateReleased
+            public ShellProperty<string> DateReleased
             {
                 get
                 {
@@ -10358,10 +10358,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10394,7 +10394,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 15 (PIDMSI_DVDID)</para>
             /// </summary>
-            public ShellProperty<String> DVDID
+            public ShellProperty<string> DVDID
             {
                 get
                 {
@@ -10402,10 +10402,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10416,7 +10416,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 36 (PIDMSI_ENCODED_BY)</para>
             /// </summary>
-            public ShellProperty<String> EncodedBy
+            public ShellProperty<string> EncodedBy
             {
                 get
                 {
@@ -10424,10 +10424,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10438,7 +10438,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 37 (PIDMSI_ENCODING_SETTINGS)</para>
             /// </summary>
-            public ShellProperty<String> EncodingSettings
+            public ShellProperty<string> EncodingSettings
             {
                 get
                 {
@@ -10446,10 +10446,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10482,7 +10482,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 16 (PIDMSI_MCDI)</para>
             /// </summary>
-            public ShellProperty<String> MCDI
+            public ShellProperty<string> MCDI
             {
                 get
                 {
@@ -10490,10 +10490,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10504,7 +10504,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 17 (PIDMSI_PROVIDER)</para>
             /// </summary>
-            public ShellProperty<String> MetadataContentProvider
+            public ShellProperty<string> MetadataContentProvider
             {
                 get
                 {
@@ -10512,10 +10512,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10548,7 +10548,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 33 (PIDMSI_PROMOTION_URL)</para>
             /// </summary>
-            public ShellProperty<String> PromotionUrl
+            public ShellProperty<string> PromotionUrl
             {
                 get
                 {
@@ -10556,10 +10556,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10570,7 +10570,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 38</para>
             /// </summary>
-            public ShellProperty<String> ProtectionType
+            public ShellProperty<string> ProtectionType
             {
                 get
                 {
@@ -10578,10 +10578,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10592,7 +10592,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 39</para>
             /// </summary>
-            public ShellProperty<String> ProviderRating
+            public ShellProperty<string> ProviderRating
             {
                 get
                 {
@@ -10600,10 +10600,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10614,7 +10614,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 40</para>
             /// </summary>
-            public ShellProperty<String> ProviderStyle
+            public ShellProperty<string> ProviderStyle
             {
                 get
                 {
@@ -10622,10 +10622,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10636,7 +10636,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 30 (PIDMSI_PUBLISHER)</para>
             /// </summary>
-            public ShellProperty<String> Publisher
+            public ShellProperty<string> Publisher
             {
                 get
                 {
@@ -10644,10 +10644,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10657,7 +10657,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {9AEBAE7A-9644-487D-A92C-657585ED751A}, 100</para>
             /// </summary>
-            public ShellProperty<String> SubscriptionContentId
+            public ShellProperty<string> SubscriptionContentId
             {
                 get
                 {
@@ -10665,10 +10665,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10679,7 +10679,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 38 (PIDSI_MUSIC_SUB_TITLE)</para>
             /// </summary>
-            public ShellProperty<String> Subtitle
+            public ShellProperty<string> Subtitle
             {
                 get
                 {
@@ -10687,10 +10687,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10701,7 +10701,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 35 (PIDMSI_UNIQUE_FILE_IDENTIFIER)</para>
             /// </summary>
-            public ShellProperty<String> UniqueFileIdentifier
+            public ShellProperty<string> UniqueFileIdentifier
             {
                 get
                 {
@@ -10709,10 +10709,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10723,7 +10723,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 41</para>
             /// </summary>
-            public ShellProperty<String> UserNoAutoInfo
+            public ShellProperty<string> UserNoAutoInfo
             {
                 get
                 {
@@ -10731,10 +10731,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10745,7 +10745,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 34 (PIDMSI_USER_WEB_URL)</para>
             /// </summary>
-            public ShellProperty<String> UserWebUrl
+            public ShellProperty<string> UserWebUrl
             {
                 get
                 {
@@ -10753,10 +10753,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10830,7 +10830,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {3143BF7C-80A8-4854-8880-E2E40189BDD0}, 100</para>
             /// </summary>
-            public ShellProperty<String> AttachmentContents
+            public ShellProperty<string> AttachmentContents
             {
                 get
                 {
@@ -10838,10 +10838,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -10961,7 +10961,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {DC8F80BD-AF1E-4289-85B6-3DFC1B493992}, 100</para>
             /// </summary>
-            public ShellProperty<String> ConversationID
+            public ShellProperty<string> ConversationID
             {
                 get
                 {
@@ -10969,10 +10969,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11158,7 +11158,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CD9ED458-08CE-418F-A70E-F912C7BB9C5C}, 103</para>
             /// </summary>
-            public ShellProperty<String> MessageClass
+            public ShellProperty<string> MessageClass
             {
                 get
                 {
@@ -11166,10 +11166,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11201,7 +11201,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {0BE1C8E7-1981-4676-AE14-FDD78F05A6E7}, 100</para>
             /// </summary>
-            public ShellProperty<String> SenderAddress
+            public ShellProperty<string> SenderAddress
             {
                 get
                 {
@@ -11209,10 +11209,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11222,7 +11222,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {0DA41CFA-D224-4A18-AE2F-596158DB4B3A}, 100</para>
             /// </summary>
-            public ShellProperty<String> SenderName
+            public ShellProperty<string> SenderName
             {
                 get
                 {
@@ -11230,10 +11230,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11244,7 +11244,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E3E0584C-B788-4A5A-BB20-7F5A44C9ACDD}, 15</para>
             /// </summary>
-            public ShellProperty<String> Store
+            public ShellProperty<string> Store
             {
                 get
                 {
@@ -11252,10 +11252,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11309,7 +11309,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {BCCC8A3C-8CEF-42E5-9B1C-C69079398BC7}, 100</para>
             /// </summary>
-            public ShellProperty<String> ToDoTitle
+            public ShellProperty<string> ToDoTitle
             {
                 get
                 {
@@ -11317,10 +11317,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11373,7 +11373,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 13 (PIDSI_MUSIC_ALBUM_ARTIST)</para>
             /// </summary>
-            public ShellProperty<String> AlbumArtist
+            public ShellProperty<string> AlbumArtist
             {
                 get
                 {
@@ -11381,10 +11381,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11396,7 +11396,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 100</para>
             /// </summary>
-            public ShellProperty<String> AlbumID
+            public ShellProperty<string> AlbumID
             {
                 get
                 {
@@ -11404,10 +11404,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11418,7 +11418,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 4 (PIDSI_MUSIC_ALBUM)</para>
             /// </summary>
-            public ShellProperty<String> AlbumTitle
+            public ShellProperty<string> AlbumTitle
             {
                 get
                 {
@@ -11426,10 +11426,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11462,7 +11462,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 35 (PIDSI_MUSIC_BEATS_PER_MINUTE)</para>
             /// </summary>
-            public ShellProperty<String> BeatsPerMinute
+            public ShellProperty<string> BeatsPerMinute
             {
                 get
                 {
@@ -11470,10 +11470,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11528,7 +11528,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 33 (PIDSI_MUSIC_CONTENT_GROUP_DESCRIPTION)</para>
             /// </summary>
-            public ShellProperty<String> ContentGroupDescription
+            public ShellProperty<string> ContentGroupDescription
             {
                 get
                 {
@@ -11536,10 +11536,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11551,7 +11551,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {FD122953-FA93-4EF7-92C3-04C946B2F7C8}, 100</para>
             /// </summary>
-            public ShellProperty<String> DisplayArtist
+            public ShellProperty<string> DisplayArtist
             {
                 get
                 {
@@ -11559,10 +11559,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11595,7 +11595,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 34 (PIDSI_MUSIC_INITIAL_KEY)</para>
             /// </summary>
-            public ShellProperty<String> InitialKey
+            public ShellProperty<string> InitialKey
             {
                 get
                 {
@@ -11603,10 +11603,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11639,7 +11639,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 12 (PIDSI_MUSIC_LYRICS)</para>
             /// </summary>
-            public ShellProperty<String> Lyrics
+            public ShellProperty<string> Lyrics
             {
                 get
                 {
@@ -11647,10 +11647,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11661,7 +11661,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 39 (PIDSI_MUSIC_MOOD)</para>
             /// </summary>
-            public ShellProperty<String> Mood
+            public ShellProperty<string> Mood
             {
                 get
                 {
@@ -11669,10 +11669,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11683,7 +11683,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_MUSIC) {56A3372E-CE9C-11D2-9F0E-006097C686F6}, 37 (PIDSI_MUSIC_PART_OF_SET)</para>
             /// </summary>
-            public ShellProperty<String> PartOfSet
+            public ShellProperty<string> PartOfSet
             {
                 get
                 {
@@ -11691,10 +11691,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11705,7 +11705,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSGUID_MEDIAFILESUMMARYINFORMATION) {64440492-4C8B-11D1-8B70-080036B11A03}, 31 (PIDMSI_PERIOD)</para>
             /// </summary>
-            public ShellProperty<String> Period
+            public ShellProperty<string> Period
             {
                 get
                 {
@@ -11713,10 +11713,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -11812,7 +11812,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {46B4E8DE-CDB2-440D-885C-1658EB65B914}, 100</para>
             /// </summary>
-            public ShellProperty<String> ColorText
+            public ShellProperty<string> ColorText
             {
                 get
                 {
@@ -11820,10 +11820,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -11991,7 +11991,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ImageProperties) {14B81DA1-0135-4D31-96D9-6CBFC9671A99}, 271 (PropertyTagEquipMake)</para>
             /// </summary>
-            public ShellProperty<String> CameraManufacturer
+            public ShellProperty<string> CameraManufacturer
             {
                 get
                 {
@@ -11999,10 +11999,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12013,7 +12013,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ImageProperties) {14B81DA1-0135-4D31-96D9-6CBFC9671A99}, 272 (PropertyTagEquipModel)</para>
             /// </summary>
-            public ShellProperty<String> CameraModel
+            public ShellProperty<string> CameraModel
             {
                 get
                 {
@@ -12021,10 +12021,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12035,7 +12035,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_ImageProperties) {14B81DA1-0135-4D31-96D9-6CBFC9671A99}, 273</para>
             /// </summary>
-            public ShellProperty<String> CameraSerialNumber
+            public ShellProperty<string> CameraSerialNumber
             {
                 get
                 {
@@ -12043,10 +12043,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12081,7 +12081,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {59DDE9F2-5253-40EA-9A8B-479E96C6249A}, 100</para>
             /// </summary>
-            public ShellProperty<String> ContrastText
+            public ShellProperty<string> ContrastText
             {
                 get
                 {
@@ -12089,10 +12089,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12213,7 +12213,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D35F743A-EB2E-47F2-A286-844132CB1427}, 100</para>
             /// </summary>
-            public ShellProperty<String> EXIFVersion
+            public ShellProperty<string> EXIFVersion
             {
                 get
                 {
@@ -12221,10 +12221,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12390,7 +12390,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {FEC690B7-5F30-4646-AE47-4CAAFBA884A3}, 100</para>
             /// </summary>
-            public ShellProperty<String> ExposureProgramText
+            public ShellProperty<string> ExposureProgramText
             {
                 get
                 {
@@ -12398,10 +12398,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12565,7 +12565,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {AABAF6C9-E0C5-4719-8585-57B103E584FE}, 100</para>
             /// </summary>
-            public ShellProperty<String> FlashManufacturer
+            public ShellProperty<string> FlashManufacturer
             {
                 get
                 {
@@ -12573,10 +12573,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12586,7 +12586,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {FE83BB35-4D1A-42E2-916B-06F3E1AF719E}, 100</para>
             /// </summary>
-            public ShellProperty<String> FlashModel
+            public ShellProperty<string> FlashModel
             {
                 get
                 {
@@ -12594,10 +12594,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12609,7 +12609,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6B8B68F6-200B-47EA-8D25-D8050F57339F}, 100</para>
             /// </summary>
-            public ShellProperty<String> FlashText
+            public ShellProperty<string> FlashText
             {
                 get
                 {
@@ -12617,10 +12617,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -12987,7 +12987,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C06238B2-0BF9-4279-A723-25856715CB9D}, 100</para>
             /// </summary>
-            public ShellProperty<String> GainControlText
+            public ShellProperty<string> GainControlText
             {
                 get
                 {
@@ -12995,10 +12995,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13030,7 +13030,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E6DDCAF7-29C5-4F0A-9A68-D19412EC7090}, 100</para>
             /// </summary>
-            public ShellProperty<String> LensManufacturer
+            public ShellProperty<string> LensManufacturer
             {
                 get
                 {
@@ -13038,10 +13038,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13051,7 +13051,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {E1277516-2B5F-4869-89B1-2E585BD38B7A}, 100</para>
             /// </summary>
-            public ShellProperty<String> LensModel
+            public ShellProperty<string> LensModel
             {
                 get
                 {
@@ -13059,10 +13059,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13226,7 +13226,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {F628FD8C-7BA8-465A-A65B-C5AA79263A9E}, 100</para>
             /// </summary>
-            public ShellProperty<String> MeteringModeText
+            public ShellProperty<string> MeteringModeText
             {
                 get
                 {
@@ -13234,10 +13234,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13271,7 +13271,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {A9EA193C-C511-498A-A06B-58E2776DCC28}, 100</para>
             /// </summary>
-            public ShellProperty<String> OrientationText
+            public ShellProperty<string> OrientationText
             {
                 get
                 {
@@ -13279,10 +13279,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13339,7 +13339,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {821437D6-9EAB-4765-A589-3B1CBBD22A61}, 100</para>
             /// </summary>
-            public ShellProperty<String> PhotometricInterpretationText
+            public ShellProperty<string> PhotometricInterpretationText
             {
                 get
                 {
@@ -13347,10 +13347,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13385,7 +13385,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7FE3AA27-2648-42F3-89B0-454E5CB150C3}, 100</para>
             /// </summary>
-            public ShellProperty<String> ProgramModeText
+            public ShellProperty<string> ProgramModeText
             {
                 get
                 {
@@ -13393,10 +13393,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13406,7 +13406,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {318A6B45-087F-4DC2-B8CC-05359551FC9E}, 100</para>
             /// </summary>
-            public ShellProperty<String> RelatedSoundFile
+            public ShellProperty<string> RelatedSoundFile
             {
                 get
                 {
@@ -13414,10 +13414,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13452,7 +13452,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {61478C08-B600-4A84-BBE4-E99C45F0A072}, 100</para>
             /// </summary>
-            public ShellProperty<String> SaturationText
+            public ShellProperty<string> SaturationText
             {
                 get
                 {
@@ -13460,10 +13460,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13498,7 +13498,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {51EC3F47-DD50-421D-8769-334F50424B1E}, 100</para>
             /// </summary>
-            public ShellProperty<String> SharpnessText
+            public ShellProperty<string> SharpnessText
             {
                 get
                 {
@@ -13506,10 +13506,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -13718,7 +13718,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6336B95E-C7A7-426D-86FD-7AE3D39C84B4}, 100</para>
             /// </summary>
-            public ShellProperty<String> WhiteBalanceText
+            public ShellProperty<string> WhiteBalanceText
             {
                 get
                 {
@@ -13726,10 +13726,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -14180,7 +14180,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 11</para>
             /// </summary>
-            public ShellProperty<String> ConflictPrompt
+            public ShellProperty<string> ConflictPrompt
             {
                 get
                 {
@@ -14188,10 +14188,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14203,7 +14203,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 13</para>
             /// </summary>
-            public ShellProperty<String> ContentViewModeForBrowse
+            public ShellProperty<string> ContentViewModeForBrowse
             {
                 get
                 {
@@ -14211,10 +14211,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14226,7 +14226,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 14</para>
             /// </summary>
-            public ShellProperty<String> ContentViewModeForSearch
+            public ShellProperty<string> ContentViewModeForSearch
             {
                 get
                 {
@@ -14234,10 +14234,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14249,7 +14249,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 9</para>
             /// </summary>
-            public ShellProperty<String> ExtendedTileInfo
+            public ShellProperty<string> ExtendedTileInfo
             {
                 get
                 {
@@ -14257,10 +14257,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14273,7 +14273,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 10</para>
             /// </summary>
-            public ShellProperty<String> FileOperationPrompt
+            public ShellProperty<string> FileOperationPrompt
             {
                 get
                 {
@@ -14281,10 +14281,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14296,7 +14296,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 2</para>
             /// </summary>
-            public ShellProperty<String> FullDetails
+            public ShellProperty<string> FullDetails
             {
                 get
                 {
@@ -14304,10 +14304,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14319,7 +14319,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 4 (PID_PROPLIST_INFOTIP)</para>
             /// </summary>
-            public ShellProperty<String> InfoTip
+            public ShellProperty<string> InfoTip
             {
                 get
                 {
@@ -14327,10 +14327,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14343,7 +14343,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {49D1091F-082E-493F-B23F-D2308AA9668C}, 100</para>
             /// </summary>
-            public ShellProperty<String> NonPersonal
+            public ShellProperty<string> NonPersonal
             {
                 get
                 {
@@ -14351,10 +14351,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14365,7 +14365,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 8</para>
             /// </summary>
-            public ShellProperty<String> PreviewDetails
+            public ShellProperty<string> PreviewDetails
             {
                 get
                 {
@@ -14373,10 +14373,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14388,7 +14388,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 6</para>
             /// </summary>
-            public ShellProperty<String> PreviewTitle
+            public ShellProperty<string> PreviewTitle
             {
                 get
                 {
@@ -14396,10 +14396,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14411,7 +14411,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 5 (PID_PROPLIST_QUICKTIP)</para>
             /// </summary>
-            public ShellProperty<String> QuickTip
+            public ShellProperty<string> QuickTip
             {
                 get
                 {
@@ -14419,10 +14419,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14433,7 +14433,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {C9944A21-A406-48FE-8225-AEC7E24C211B}, 3 (PID_PROPLIST_TILEINFO)</para>
             /// </summary>
-            public ShellProperty<String> TileInfo
+            public ShellProperty<string> TileInfo
             {
                 get
                 {
@@ -14441,10 +14441,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14455,7 +14455,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_WebView) {F2275480-F782-4291-BD94-F13693513AEC}, 0 (PID_DISPLAY_PROPERTIES)</para>
             /// </summary>
-            public ShellProperty<String> XPDetailsPanel
+            public ShellProperty<string> XPDetailsPanel
             {
                 get
                 {
@@ -14463,10 +14463,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -14519,7 +14519,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 4</para>
             /// </summary>
-            public ShellProperty<String> Credits
+            public ShellProperty<string> Credits
             {
                 get
                 {
@@ -14527,10 +14527,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14562,7 +14562,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 2</para>
             /// </summary>
-            public ShellProperty<String> EpisodeName
+            public ShellProperty<string> EpisodeName
             {
                 get
                 {
@@ -14570,10 +14570,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14709,7 +14709,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {2C53C813-FB63-4E22-A1AB-0B331CA1E273}, 100</para>
             /// </summary>
-            public ShellProperty<String> NetworkAffiliation
+            public ShellProperty<string> NetworkAffiliation
             {
                 get
                 {
@@ -14717,10 +14717,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14751,7 +14751,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 3</para>
             /// </summary>
-            public ShellProperty<String> ProgramDescription
+            public ShellProperty<string> ProgramDescription
             {
                 get
                 {
@@ -14759,10 +14759,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14794,7 +14794,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {6D748DE2-8D38-4CC3-AC60-F009B057C557}, 5</para>
             /// </summary>
-            public ShellProperty<String> StationCallSign
+            public ShellProperty<string> StationCallSign
             {
                 get
                 {
@@ -14802,10 +14802,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14815,7 +14815,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {1B5439E7-EBA1-4AF8-BDD7-7AF1D4549493}, 100</para>
             /// </summary>
-            public ShellProperty<String> StationName
+            public ShellProperty<string> StationName
             {
                 get
                 {
@@ -14823,10 +14823,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -14857,7 +14857,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {560C36C0-503A-11CF-BAA1-00004C752A9A}, 2</para>
             /// </summary>
-            public ShellProperty<String> AutoSummary
+            public ShellProperty<string> AutoSummary
             {
                 get
                 {
@@ -14865,10 +14865,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14879,7 +14879,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {BCEEE283-35DF-4D53-826A-F36A3EEFC6BE}, 100</para>
             /// </summary>
-            public ShellProperty<String> ContainerHash
+            public ShellProperty<string> ContainerHash
             {
                 get
                 {
@@ -14887,10 +14887,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -14902,7 +14902,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_Storage) {B725F130-47EF-101A-A5F1-02608C9EEBAC}, 19 (PID_STG_CONTENTS)</para>
             /// </summary>
-            public ShellProperty<String> Contents
+            public ShellProperty<string> Contents
             {
                 get
                 {
@@ -14910,10 +14910,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15057,7 +15057,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {560C36C0-503A-11CF-BAA1-00004C752A9A}, 3</para>
             /// </summary>
-            public ShellProperty<String> QueryFocusedSummary
+            public ShellProperty<string> QueryFocusedSummary
             {
                 get
                 {
@@ -15065,10 +15065,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15079,7 +15079,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {560C36C0-503A-11CF-BAA1-00004C752A9A}, 4</para>
             /// </summary>
-            public ShellProperty<String> QueryFocusedSummaryWithFallback
+            public ShellProperty<string> QueryFocusedSummaryWithFallback
             {
                 get
                 {
@@ -15087,10 +15087,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15123,7 +15123,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {A06992B3-8CAF-4ED7-A547-B259E32AC9FC}, 100</para>
             /// </summary>
-            public ShellProperty<String> Store
+            public ShellProperty<string> Store
             {
                 get
                 {
@@ -15131,10 +15131,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15145,7 +15145,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {0B63E343-9CCC-11D0-BCDB-00805FCCCE04}, 2</para>
             /// </summary>
-            public ShellProperty<String> UrlToIndex
+            public ShellProperty<string> UrlToIndex
             {
                 get
                 {
@@ -15153,10 +15153,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15209,7 +15209,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {DE35258C-C695-4CBC-B982-38B0AD24CED0}, 2</para>
             /// </summary>
-            public ShellProperty<String> OmitFromView
+            public ShellProperty<string> OmitFromView
             {
                 get
                 {
@@ -15217,10 +15217,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15295,7 +15295,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (PSFMTID_VERSION) {0CEF7D53-FA64-11D1-A203-0000F81FEDEE}, 7</para>
             /// </summary>
-            public ShellProperty<String> ProductName
+            public ShellProperty<string> ProductName
             {
                 get
                 {
@@ -15303,10 +15303,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -15336,7 +15336,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7BD5533E-AF15-44DB-B8C8-BD6624E1D032}, 13</para>
             /// </summary>
-            public ShellProperty<String> Comments
+            public ShellProperty<string> Comments
             {
                 get
                 {
@@ -15344,10 +15344,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15357,7 +15357,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CE50C159-2FB8-41FD-BE68-D3E042E274BC}, 4</para>
             /// </summary>
-            public ShellProperty<String> ConflictDescription
+            public ShellProperty<string> ConflictDescription
             {
                 get
                 {
@@ -15365,10 +15365,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15378,7 +15378,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CE50C159-2FB8-41FD-BE68-D3E042E274BC}, 6</para>
             /// </summary>
-            public ShellProperty<String> ConflictFirstLocation
+            public ShellProperty<string> ConflictFirstLocation
             {
                 get
                 {
@@ -15386,10 +15386,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15399,7 +15399,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CE50C159-2FB8-41FD-BE68-D3E042E274BC}, 7</para>
             /// </summary>
-            public ShellProperty<String> ConflictSecondLocation
+            public ShellProperty<string> ConflictSecondLocation
             {
                 get
                 {
@@ -15407,10 +15407,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15441,7 +15441,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7BD5533E-AF15-44DB-B8C8-BD6624E1D032}, 3</para>
             /// </summary>
-            public ShellProperty<String> HandlerID
+            public ShellProperty<string> HandlerID
             {
                 get
                 {
@@ -15449,10 +15449,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15462,7 +15462,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CE50C159-2FB8-41FD-BE68-D3E042E274BC}, 2</para>
             /// </summary>
-            public ShellProperty<String> HandlerName
+            public ShellProperty<string> HandlerName
             {
                 get
                 {
@@ -15470,10 +15470,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15506,7 +15506,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7BD5533E-AF15-44DB-B8C8-BD6624E1D032}, 9</para>
             /// </summary>
-            public ShellProperty<String> HandlerTypeLabel
+            public ShellProperty<string> HandlerTypeLabel
             {
                 get
                 {
@@ -15514,10 +15514,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15527,7 +15527,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7BD5533E-AF15-44DB-B8C8-BD6624E1D032}, 6</para>
             /// </summary>
-            public ShellProperty<String> ItemID
+            public ShellProperty<string> ItemID
             {
                 get
                 {
@@ -15535,10 +15535,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15548,7 +15548,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {CE50C159-2FB8-41FD-BE68-D3E042E274BC}, 3</para>
             /// </summary>
-            public ShellProperty<String> ItemName
+            public ShellProperty<string> ItemName
             {
                 get
                 {
@@ -15556,10 +15556,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15613,7 +15613,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {7BD5533E-AF15-44DB-B8C8-BD6624E1D032}, 10</para>
             /// </summary>
-            public ShellProperty<String> Status
+            public ShellProperty<string> Status
             {
                 get
                 {
@@ -15621,10 +15621,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -15654,7 +15654,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {D37D52C6-261C-4303-82B3-08B926AC6F12}, 100</para>
             /// </summary>
-            public ShellProperty<String> BillingInformation
+            public ShellProperty<string> BillingInformation
             {
                 get
                 {
@@ -15662,10 +15662,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15675,7 +15675,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {084D8A0A-E6D5-40DE-BF1F-C8820E7C877C}, 100</para>
             /// </summary>
-            public ShellProperty<String> CompletionStatus
+            public ShellProperty<string> CompletionStatus
             {
                 get
                 {
@@ -15683,10 +15683,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15696,7 +15696,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: {08C7CC5F-60F2-4494-AD75-55E3E0B5ADD0}, 100</para>
             /// </summary>
-            public ShellProperty<String> Owner
+            public ShellProperty<string> Owner
             {
                 get
                 {
@@ -15704,10 +15704,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
             #endregion
@@ -15738,7 +15738,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_VideoSummaryInformation) {64440491-4C8B-11D1-8B70-080036B11A03}, 10 (PIDVSI_COMPRESSION)</para>
             /// </summary>
-            public ShellProperty<String> Compression
+            public ShellProperty<string> Compression
             {
                 get
                 {
@@ -15746,10 +15746,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -15937,7 +15937,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_VideoSummaryInformation) {64440491-4C8B-11D1-8B70-080036B11A03}, 2 (PIDVSI_STREAM_NAME)</para>
             /// </summary>
-            public ShellProperty<String> StreamName
+            public ShellProperty<string> StreamName
             {
                 get
                 {
@@ -15945,10 +15945,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 
@@ -16067,7 +16067,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             /// <para>Type:     String -- VT_LPWSTR  (For variants: VT_BSTR)</para>
             /// <para>FormatID: (FMTID_Volume) {9B174B35-40FF-11D2-A27E-00C04FC30871}, 4 (PID_VOLUME_FILESYSTEM)  (Filesystem Volume Properties)</para>
             /// </summary>
-            public ShellProperty<String> FileSystem
+            public ShellProperty<string> FileSystem
             {
                 get
                 {
@@ -16075,10 +16075,10 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
 
                     if (!hashtable.ContainsKey(key))
                     {
-                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<String>(key));
+                        hashtable.Add(key, shellObjectParent.Properties.CreateTypedProperty<string>(key));
                     }
 
-                    return hashtable[key] as ShellProperty<String>;
+                    return hashtable[key] as ShellProperty<string>;
                 }
             }
 

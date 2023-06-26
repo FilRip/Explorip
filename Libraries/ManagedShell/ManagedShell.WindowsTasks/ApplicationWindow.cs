@@ -14,6 +14,8 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
+using static ManagedShell.Interop.NativeMethods;
+
 namespace ManagedShell.WindowsTasks
 {
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
@@ -775,6 +777,13 @@ namespace ManagedShell.WindowsTasks
             Hidden,
             Flashing,
             Unknown = 999
+        }
+
+        public IPropertyStore GetJumpList()
+        {
+            Guid guid = typeof(IPropertyStore).GUID;
+            NativeMethods.SHGetPropertyStoreForWindow(Handle == IntPtr.Zero ? _windows[0] : Handle, ref guid, out IPropertyStore result);
+            return result;
         }
     }
 }

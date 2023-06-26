@@ -15,6 +15,8 @@ using Explorip.TaskBar.Utilities;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
+using static ManagedShell.Interop.NativeMethods;
+
 namespace Explorip.TaskBar.Controls
 {
     /// <summary>
@@ -112,6 +114,10 @@ namespace Explorip.TaskBar.Controls
             {
                 return;
             }
+
+            ManagedShell.Interop.NativeMethods.IPropertyStore store = Window.GetJumpList();
+            PropertyKey pk = new();
+            store.GetValue(ref pk, out PropVariant result);
 
             NativeMethods.WindowShowStyle wss = Window.ShowStyle;
             int ws = Window.WindowStyles;
