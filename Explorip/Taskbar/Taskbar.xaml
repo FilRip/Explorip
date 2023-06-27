@@ -125,14 +125,19 @@
         </DockPanel>
     </ContentControl>
     <appbar:AppBarWindow.ContextMenu>
-        <ContextMenu>
+        <ContextMenu Background="{Binding Source={x:Static localization:Colors.BackgroundColorBrush}}" Foreground="{Binding Source={x:Static localization:Colors.ForegroundColorBrush}}" BorderBrush="{Binding Source={x:Static localization:Colors.ForegroundColorBrush}}">
+            <ContextMenu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Margin="-20,0,0,0" Background="Black"/>
+                </ItemsPanelTemplate>
+            </ContextMenu.ItemsPanel>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.TASK_MANAGER}}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick"/>
-            <Separator />
+            <Separator/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.TOOLBAR}}">
                 <MenuItem Header="{Binding Source={x:Static localization:Localization.SHOW_TITLE}}" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
                 <MenuItem Header="{Binding Source={x:Static localization:Localization.LARGE_ICON}}" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
             </MenuItem>
-            <Separator />
+            <Separator/>
             <MenuItem Header="Barre des tâches sur tous les écrans" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.UNLOCK_TASKBAR}}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.NEW_TOOLBAR}}" Name="MenuAjoutToolbar" Click="AddToolbar_Click"/>

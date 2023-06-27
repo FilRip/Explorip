@@ -14,8 +14,6 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
-using static ManagedShell.Interop.NativeMethods;
-
 namespace ManagedShell.WindowsTasks
 {
     [DebuggerDisplay("Title: {Title}, Handle: {Handle}")]
@@ -26,10 +24,10 @@ namespace ManagedShell.WindowsTasks
 
         private bool _iconLoading;
         private ImageSource _icon;
-        private IntPtr _hIcon = IntPtr.Zero;
-        private string _appUserModelId = null;
-        private bool? _isUWP = null;
-        private string _winFileName = "";
+        private IntPtr _hIcon;
+        private string _appUserModelId;
+        private bool? _isUWP;
+        private string _winFileName;
         private uint? _procId;
         private string _category;
         private string _title;
@@ -42,9 +40,15 @@ namespace ManagedShell.WindowsTasks
         private bool? _showInTaskbar;
         private DateTime? _dateStart;
         private readonly List<IntPtr> _windows;
+        private readonly object _lockUpdate;
 
         public ApplicationWindow(TasksService tasksService, IntPtr handle)
         {
+            _hIcon = IntPtr.Zero;
+            _appUserModelId = null;
+            _winFileName = "";
+            _isUWP = null;
+            _lockUpdate = new object();
             _windows = new List<IntPtr>();
             _tasksService = tasksService;
             Handle = handle;
@@ -83,9 +87,9 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (string.IsNullOrEmpty(_appUserModelId) && Handle != IntPtr.Zero)
+                if (string.IsNullOrEmpty(_appUserModelId) && (Handle != IntPtr.Zero || _windows.Count > 0))
                 {
-                    _appUserModelId = ShellHelper.GetAppUserModelIdPropertyForHandle(Handle);
+                    _appUserModelId = ShellHelper.GetAppUserModelIdPropertyForHandle(Handle == IntPtr.Zero ? _windows[0] : Handle);
                 }
 
                 return _appUserModelId;
@@ -330,9 +334,9 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (Handle == IntPtr.Zero)
+                if (Handle == IntPtr.Zero && _windows.Count == 0)
                     return NativeMethods.WindowShowStyle.Hide;
-                return GetWindowShowStyle(Handle);
+                return GetWindowShowStyle(Handle == IntPtr.Zero ? _windows[0] : Handle);
             }
         }
 
@@ -340,9 +344,9 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (Handle == IntPtr.Zero)
+                if (Handle == IntPtr.Zero && _windows.Count == 0)
                     return 0;
-                return NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_STYLE);
+                return NativeMethods.GetWindowLong(Handle == IntPtr.Zero ? _windows[0] : Handle, NativeMethods.GWL_STYLE);
             }
         }
 
@@ -350,9 +354,9 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (Handle == IntPtr.Zero)
+                if (Handle == IntPtr.Zero && _windows.Count == 0)
                     return 0;
-                return NativeMethods.GetWindowLong(Handle, NativeMethods.GWL_EXSTYLE);
+                return NativeMethods.GetWindowLong(Handle == IntPtr.Zero ? _windows[0] : Handle, NativeMethods.GWL_EXSTYLE);
             }
         }
 
@@ -360,15 +364,15 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (Handle == IntPtr.Zero)
+                if (Handle == IntPtr.Zero && _windows.Count == 0)
                     return true;
                 int extendedWindowStyles = ExtendedWindowStyles;
-                bool isWindow = NativeMethods.IsWindow(Handle);
-                bool isVisible = NativeMethods.IsWindowVisible(Handle);
+                bool isWindow = NativeMethods.IsWindow(Handle == IntPtr.Zero ? _windows[0] : Handle);
+                bool isVisible = NativeMethods.IsWindowVisible(Handle == IntPtr.Zero ? _windows[0] : Handle);
                 bool isToolWindow = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
                 bool isAppWindow = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
                 bool isNoActivate = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE) != 0;
-                IntPtr ownerWin = NativeMethods.GetWindow(Handle, NativeMethods.GetWindow_Cmd.GW_OWNER);
+                IntPtr ownerWin = NativeMethods.GetWindow(Handle == IntPtr.Zero ? _windows[0] : Handle, NativeMethods.GetWindow_Cmd.GW_OWNER);
 
                 return isWindow && isVisible && (ownerWin == IntPtr.Zero || isAppWindow) && (!isNoActivate || isAppWindow) && !isToolWindow;
             }
@@ -409,10 +413,10 @@ namespace ManagedShell.WindowsTasks
         private bool GetShowInTaskbar()
         {
             // EnumWindows and ShellHook return UWP app windows that are 'cloaked', which should not be visible in the taskbar.
-            if (EnvironmentHelper.IsWindows8OrBetter && Handle != IntPtr.Zero)
+            if (EnvironmentHelper.IsWindows8OrBetter && (Handle != IntPtr.Zero || _windows.Count > 0))
             {
                 int cbSize = Marshal.SizeOf(typeof(uint));
-                NativeMethods.DwmGetWindowAttribute(Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
+                NativeMethods.DwmGetWindowAttribute(Handle == IntPtr.Zero ? _windows[0] : Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
 
                 if (cloaked > 0)
                 {
@@ -422,7 +426,7 @@ namespace ManagedShell.WindowsTasks
 
                 // UWP shell windows that are not cloaked should be hidden from the taskbar, too.
                 StringBuilder cName = new(256);
-                NativeMethods.GetClassName(Handle, cName, cName.Capacity);
+                NativeMethods.GetClassName(Handle == IntPtr.Zero ? _windows[0] : Handle, cName, cName.Capacity);
                 string className = cName.ToString();
                 if (className == "ApplicationFrameWindow" || className == "Windows.UI.Core.CoreWindow")
                 {
@@ -451,7 +455,7 @@ namespace ManagedShell.WindowsTasks
 
         private void SetIcon()
         {
-            if (!_iconLoading && ShowInTaskbar && Handle != IntPtr.Zero)
+            if (!_iconLoading && ShowInTaskbar && (Handle != IntPtr.Zero || _windows.Count > 0))
             {
                 _iconLoading = true;
 
@@ -490,34 +494,34 @@ namespace ManagedShell.WindowsTasks
 
                         if (sizeSetting == IconSize.Small)
                         {
-                            NativeMethods.SendMessageTimeout(Handle, WM_GETICON, 2, 0, 2, 1000, ref hIco);
+                            NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, WM_GETICON, 2, 0, 2, 1000, ref hIco);
                             if (hIco == IntPtr.Zero)
-                                NativeMethods.SendMessageTimeout(Handle, WM_GETICON, 0, 0, 2, 1000, ref hIco);
+                                NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, WM_GETICON, 0, 0, 2, 1000, ref hIco);
                         }
                         else
                         {
-                            NativeMethods.SendMessageTimeout(Handle, WM_GETICON, 1, 0, 2, 1000, ref hIco);
+                            NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, WM_GETICON, 1, 0, 2, 1000, ref hIco);
                         }
 
                         if (hIco == IntPtr.Zero && sizeSetting == IconSize.Small)
                         {
                             if (!Environment.Is64BitProcess)
-                                hIco = NativeMethods.GetClassLong(Handle, GCL_HICONSM);
+                                hIco = NativeMethods.GetClassLong(Handle == IntPtr.Zero ? _windows[0] : Handle, GCL_HICONSM);
                             else
-                                hIco = NativeMethods.GetClassLongPtr(Handle, GCL_HICONSM);
+                                hIco = NativeMethods.GetClassLongPtr(Handle == IntPtr.Zero ? _windows[0] : Handle, GCL_HICONSM);
                         }
 
-                        if (hIco == IntPtr.Zero)
+                        if (hIco == IntPtr.Zero && (Handle != IntPtr.Zero || _windows.Count > 0))
                         {
                             if (!Environment.Is64BitProcess)
-                                hIco = NativeMethods.GetClassLong(Handle, GCL_HICON);
+                                hIco = NativeMethods.GetClassLong(Handle == IntPtr.Zero ? _windows[0] : Handle, GCL_HICON);
                             else
-                                hIco = NativeMethods.GetClassLongPtr(Handle, GCL_HICON);
+                                hIco = NativeMethods.GetClassLongPtr(Handle == IntPtr.Zero ? _windows[0] : Handle, GCL_HICON);
                         }
 
-                        if (hIco == IntPtr.Zero)
+                        if (hIco == IntPtr.Zero && (Handle != IntPtr.Zero || _windows.Count > 0))
                         {
-                            NativeMethods.SendMessageTimeout(Handle, WM_QUERYDRAGICON, 0, 0, 0, 1000, ref hIco);
+                            NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, WM_QUERYDRAGICON, 0, 0, 0, 1000, ref hIco);
                         }
 
                         if (hIco == IntPtr.Zero && _icon == null && ShellHelper.Exists(WinFileName))
@@ -603,19 +607,25 @@ namespace ManagedShell.WindowsTasks
 
         internal void UpdateProperties(IntPtr handle = default)
         {
-            if (handle != IntPtr.Zero && !_windows.Contains(handle))
+            lock (_lockUpdate)
             {
-                _windows.Add(handle);
-                if (Handle != IntPtr.Zero)
+                if (handle != IntPtr.Zero && !_windows.Contains(handle))
                 {
-                    _windows.Insert(0, Handle);
-                    Handle = IntPtr.Zero;
+                    _windows.Add(handle);
+                    if (Handle != IntPtr.Zero)
+                    {
+                        _windows.Insert(0, Handle);
+                        Handle = IntPtr.Zero;
+                    }
                 }
+                if (_windows.Count > 1)
+                    State = WindowState.Unknown;
+                OnPropertyChanged(nameof(Launched));
+                SetTitle();
+                SetShowInTaskbar();
+                SetIcon();
+                SetClassName();
             }
-            SetTitle();
-            SetShowInTaskbar();
-            SetIcon();
-            SetClassName();
         }
 
         public void BringToFront(IntPtr handle = default)
@@ -629,7 +639,7 @@ namespace ManagedShell.WindowsTasks
             // call restore if window is minimized
             if (IsMinimized(handle))
             {
-                Restore();
+                Restore(handle);
             }
             else
             {
@@ -645,7 +655,7 @@ namespace ManagedShell.WindowsTasks
             if ((WindowStyles & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0)
             {
                 IntPtr retval = IntPtr.Zero;
-                NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
+                NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
             }
         }
 
@@ -663,20 +673,20 @@ namespace ManagedShell.WindowsTasks
 
         public void Maximize()
         {
-            bool maximizeResult = NativeMethods.ShowWindow(Handle, NativeMethods.WindowShowStyle.Maximize);
+            bool maximizeResult = NativeMethods.ShowWindow(Handle == IntPtr.Zero ? _windows[0] : Handle, NativeMethods.WindowShowStyle.Maximize);
             if (!maximizeResult)
             {
                 // we don't have a fallback for elevated windows here since our only hope, SC_MAXIMIZE, doesn't seem to work for them. fall back to restore.
                 IntPtr retval = IntPtr.Zero;
-                NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
+                NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
             }
-            NativeMethods.SetForegroundWindow(Handle);
+            NativeMethods.SetForegroundWindow(Handle == IntPtr.Zero ? _windows[0] : Handle);
         }
 
         internal IntPtr DoClose()
         {
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_CLOSE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_CLOSE, 0, 2, 200, ref retval);
 
             return retval;
         }
@@ -691,7 +701,7 @@ namespace ManagedShell.WindowsTasks
             // move window via arrow keys; must be active window to control
             BringToFront();
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MOVE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MOVE, 0, 2, 200, ref retval);
         }
 
         public void Size()
@@ -699,7 +709,7 @@ namespace ManagedShell.WindowsTasks
             // size window via arrow keys; must be active window to control
             BringToFront();
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(Handle == IntPtr.Zero ? _windows[0] : Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
         }
 
         public DateTime DateStart
@@ -779,11 +789,6 @@ namespace ManagedShell.WindowsTasks
             Unknown = 999
         }
 
-        public IPropertyStore GetJumpList()
-        {
-            Guid guid = typeof(IPropertyStore).GUID;
-            NativeMethods.SHGetPropertyStoreForWindow(Handle == IntPtr.Zero ? _windows[0] : Handle, ref guid, out IPropertyStore result);
-            return result;
-        }
+        public bool IsPinnedApp { get; set; }
     }
 }

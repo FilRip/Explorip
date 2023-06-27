@@ -62,6 +62,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         #region Properties
 
         private JumpListCustomCategoryCollection customCategoriesCollection;
+
         /// <summary>
         /// Adds a collection of custom categories to the Taskbar jump list.
         /// </summary>
@@ -178,7 +179,6 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 
                 knownCategoryOrdinalPosition = value;
             }
-
         }
 
         /// <summary>

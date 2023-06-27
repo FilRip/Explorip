@@ -15,8 +15,6 @@ using Explorip.TaskBar.Utilities;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
-using static ManagedShell.Interop.NativeMethods;
-
 namespace Explorip.TaskBar.Controls
 {
     /// <summary>
@@ -115,10 +113,6 @@ namespace Explorip.TaskBar.Controls
                 return;
             }
 
-            ManagedShell.Interop.NativeMethods.IPropertyStore store = Window.GetJumpList();
-            PropertyKey pk = new();
-            store.GetValue(ref pk, out PropVariant result);
-
             NativeMethods.WindowShowStyle wss = Window.ShowStyle;
             int ws = Window.WindowStyles;
 
@@ -164,18 +158,20 @@ namespace Explorip.TaskBar.Controls
 
         private void AppButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (PressedWindowState == ApplicationWindow.WindowState.Active)
+            if (Window.ListWindows.Count == 1 || Window.Handle != IntPtr.Zero)
             {
-                Window?.Minimize();
+                if (PressedWindowState == ApplicationWindow.WindowState.Active)
+                {
+                    Window?.Minimize();
+                }
+                else if (Window.State != ApplicationWindow.WindowState.Unknown)
+                {
+                    Window?.BringToFront();
+                }
             }
-            else if (Window.State != ApplicationWindow.WindowState.Unknown)
-            {
-                Window?.BringToFront();
-            }
-            else
+            else if (Window.ListWindows.Count == 0)
             {
                 ManagedShell.Common.Helpers.ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
-                // TODO : Update Handle and State
                 Window.OnPropertyChanged(nameof(ApplicationWindow.Handle));
             }
         }
@@ -272,7 +268,7 @@ namespace Explorip.TaskBar.Controls
             Task.Run(() =>
             {
                 Thread.Sleep(200);
-                if (!_thumb.MouseIn)
+                if (_thumb != null && !_thumb.MouseIn)
                     Application.Current.Dispatcher.Invoke(() => { _thumb.Close(); });
             });
         }

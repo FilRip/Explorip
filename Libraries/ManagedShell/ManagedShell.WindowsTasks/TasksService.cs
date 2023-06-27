@@ -262,8 +262,11 @@ namespace ManagedShell.WindowsTasks
                     win.ListWindows.Remove(hWnd);
                     if (win.ListWindows.Count == 0)
                         disposeWindow = true;
+                    else if (win.ListWindows.Count == 1)
+                        win.State = ApplicationWindow.WindowState.Active;
                 }
-                if (disposeWindow)
+                win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
+                if (disposeWindow && !win.IsPinnedApp)
                 {
                     if (win.Handle == IntPtr.Zero)
                         win.Handle = hWnd;

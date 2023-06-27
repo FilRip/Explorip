@@ -149,6 +149,7 @@ namespace Explorip.TaskBar.Controls
                     pinnedApp = Shortcut.ReadFromFile(file);
                     appWin = new ApplicationWindow(MyDesktopApp.MonShellManager.TasksService, IntPtr.Zero);
                     appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
+                    appWin.IsPinnedApp = true;
                     if (pinnedApp.LinkTargetIDList?.Path != null)
                         appWin.WinFileName = Path.GetFullPath(pinnedApp.LinkTargetIDList.Path);
                     else if (pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode != null)

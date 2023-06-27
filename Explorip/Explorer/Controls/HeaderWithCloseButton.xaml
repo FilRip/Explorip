@@ -8,7 +8,7 @@
              mc:Ignorable="d" AllowDrop="True" BorderThickness="2"
              d:DesignHeight="23" d:DesignWidth="81" Margin="0" IsTabStop="False">
     <UserControl.ContextMenu>
-        <ContextMenu Name="TabControlContextualMenu" Background="Black" Foreground="White" BorderBrush="White">
+        <ContextMenu Name="TabControlContextualMenu" Background="{Binding Source={x:Static localization:Colors.BackgroundColorBrush}}" Foreground="{Binding Source={x:Static localization:Colors.ForegroundColorBrush}}" BorderBrush="{Binding Source={x:Static localization:Colors.ForegroundColorBrush}}">
             <ContextMenu.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Margin="-20,0,0,0" Background="Black"/>
