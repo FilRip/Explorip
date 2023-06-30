@@ -413,6 +413,22 @@ namespace ManagedShell.Common.Helpers
             return aumid;
         }
 
+        public static PropVariant GetWindowPropertyKeyStore(IntPtr hwnd, PropertyKey key)
+        {
+            PropVariant propVariant = default;
+            Guid guid = typeof(IPropertyStore).GUID;
+            SHGetPropertyStoreForWindow(hwnd, ref guid, out IPropertyStore propStore);
+            propStore?.GetValue(ref key, out propVariant);
+            return propVariant;
+        }
+
+        public static PropVariant GetWindowPropertyKey(IPropertyStore propertyStore, PropertyKey key)
+        {
+            PropVariant result = default;
+            propertyStore?.GetValue(ref key, out result);
+            return result;
+        }
+
         public static string GetAppUserModelIdForHandle(IntPtr hWnd)
         {
             if (!EnvironmentHelper.IsWindows8OrBetter)
