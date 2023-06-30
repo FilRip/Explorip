@@ -790,5 +790,19 @@ namespace ManagedShell.WindowsTasks
         }
 
         public bool IsPinnedApp { get; set; }
+
+        private NativeMethods.IPropertyStore _propStore;
+        public NativeMethods.IPropertyStore PropertyStore
+        {
+            get
+            {
+                if (_propStore == null && (Handle != IntPtr.Zero || _windows[0] != IntPtr.Zero))
+                {
+                    Guid guid = typeof(NativeMethods.IPropertyStore).GUID;
+                    NativeMethods.SHGetPropertyStoreForWindow(Handle == IntPtr.Zero ? _windows[0] : Handle, ref guid, out _propStore);
+                }
+                return _propStore;
+            }
+        }
     }
 }

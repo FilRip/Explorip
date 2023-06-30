@@ -153,7 +153,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// Gets or sets the strongly-typed value of this property.
         /// The value of the property is cleared if the value is set to null.
         /// </summary>
-        /// <exception cref="System.Runtime.InteropServices.COMException">
+        /// <exception cref="COMException">
         /// If the property value cannot be retrieved or updated in the Property System</exception>
         /// <exception cref="NotSupportedException">If the type of this property is not supported; e.g. writing a binary object.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <see cref="AllowSetTruncatedValue"/> is false, and either 

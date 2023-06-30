@@ -417,7 +417,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExploripCopy\ExploripCopy.csproj">
+    <ProjectReference Include="..\HookFileOperation\ExploripCopy\ExploripCopy.csproj">
       <Project>{3eede2b5-f238-42d0-9666-ed4fe1453e23}</Project>
       <Name>ExploripCopy</Name>
     </ProjectReference>

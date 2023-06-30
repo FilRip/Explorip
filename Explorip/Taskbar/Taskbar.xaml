@@ -134,6 +134,11 @@
             <MenuItem Header="{Binding Source={x:Static localization:Localization.TASK_MANAGER}}" Name="TaskManagerMenuItem" Click="TaskManagerMenuItem_OnClick"/>
             <Separator/>
             <MenuItem Header="{Binding Source={x:Static localization:Localization.TOOLBAR}}">
+                <MenuItem.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Margin="-20,0,0,0" Background="Black"/>
+                    </ItemsPanelTemplate>
+                </MenuItem.ItemsPanel>
                 <MenuItem Header="{Binding Source={x:Static localization:Localization.SHOW_TITLE}}" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
                 <MenuItem Header="{Binding Source={x:Static localization:Localization.LARGE_ICON}}" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
             </MenuItem>
