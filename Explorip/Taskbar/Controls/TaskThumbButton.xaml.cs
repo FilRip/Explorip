@@ -140,7 +140,7 @@ namespace Explorip.TaskBar.Controls
                 // Display the menu
                 Point posMouse = PointToScreen(Mouse.GetPosition(this));
                 uint command = User32.TrackPopupMenuEx(wMenu,
-                    User32.TPM.LEFTBUTTON | User32.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, _handle, IntPtr.Zero);
+                    User32.TPM.RIGHTBUTTON | User32.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, _handle, IntPtr.Zero);
                 if (command != 0)
                     User32.PostMessage(_lastPeek, (uint)Commun.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
             }

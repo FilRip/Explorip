@@ -521,17 +521,17 @@ namespace ManagedShell.WindowsTasks
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 76:
-                        // ThumbBarAddButtons
+                        // TODO : ThumbBarAddButtons
                         ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarAddButtons HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 77:
-                        // ThumbBarUpdateButtons
+                        // TODO : ThumbBarUpdateButtons
                         ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarUpdateButtons HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 78:
-                        // ThumbBarSetImageList
+                        // TODO : ThumbBarSetImageList
                         ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarSetImageList HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
@@ -572,7 +572,7 @@ namespace ManagedShell.WindowsTasks
                         msg.Result = IntPtr.Zero;
                         return;
                     case (int)WM.USER + 87:
-                        // SetTabProperties
+                        // TODO : SetTabProperties
                         ShellLogger.Debug("TasksService: ITaskbarList: SetTabProperties HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;

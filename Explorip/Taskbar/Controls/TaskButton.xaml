@@ -24,7 +24,12 @@
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
                    Style="{DynamicResource TaskIcon}"/>
             <Button.ContextMenu>
-                <ContextMenu BorderThickness="0" BorderBrush="Black">
+                <ContextMenu Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" BorderBrush="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}">
+                    <ContextMenu.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Margin="-20,0,0,0" Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}"/>
+                        </ItemsPanelTemplate>
+                    </ContextMenu.ItemsPanel>
                     <MenuItem Header="{Binding Source={x:Static constants:Localization.RESTORE}}" BorderThickness="0"
                           Click="RestoreMenuItem_OnClick"
                           Background="{x:Static constants:Colors.BackgroundColorBrush}"
