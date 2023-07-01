@@ -14,7 +14,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
     internal enum KnownDestinationCategory
     {
         Frequent = 1,
-        Recent
+        Recent,
     }
 
     internal enum ShellAddToRecentDocs
@@ -34,13 +34,13 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         Indeterminate = 0x1,
         Normal = 0x2,
         Error = 0x4,
-        Paused = 0x8
+        Paused = 0x8,
     }
 
     internal enum TaskbarActiveTabSetting
     {
         UseMdiThumbnail = 0x1,
-        UseMdiLivePreview = 0x2
+        UseMdiLivePreview = 0x2,
     }
 
     [Flags()]
@@ -49,7 +49,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         Bitmap = 0x1,
         Icon = 0x2,
         Tooltip = 0x4,
-        THB_FLAGS = 0x8
+        THB_FLAGS = 0x8,
     }
 
     [Flags()]
@@ -60,7 +60,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         DismissOnClick = 0x00000002,
         NoBackground = 0x00000004,
         Hidden = 0x00000008,
-        NonInteractive = 0x00000010
+        NonInteractive = 0x00000010,
     }
 
     internal enum SetTabPropertiesOption
@@ -69,7 +69,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         UseAppThumbnailAlways = 0x1,
         UseAppThumbnailWhenActive = 0x2,
         UseAppPeekAlways = 0x4,
-        UseAppPeekWhenActive = 0x8
+        UseAppPeekWhenActive = 0x8,
     }
 
     #endregion

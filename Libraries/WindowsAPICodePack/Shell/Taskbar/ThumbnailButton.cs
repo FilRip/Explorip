@@ -354,7 +354,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// Release the native objects.
         /// </summary>
         /// <param name="disposing"></param>
-        public void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {
