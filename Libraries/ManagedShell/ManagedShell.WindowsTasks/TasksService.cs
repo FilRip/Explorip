@@ -458,18 +458,18 @@ namespace ManagedShell.WindowsTasks
 
                 switch (msg.Msg)
                 {
-                    case (int)WM.USER + 50:
+                    case (int)WM.TTM_ADDTOOLW:
                         // ActivateTab
                         // Also sends WM_SHELLHOOK message
                         ShellLogger.Debug("TasksService: ITaskbarList: ActivateTab HWND:" + msg.LParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 60:
+                    case (int)WM.TB_SETMAXTEXTROWS:
                         // MarkFullscreenWindow
                         ShellLogger.Debug("TasksService: ITaskbarList: MarkFullscreenWindow HWND:" + msg.LParam + " Entering? " + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 64:
+                    case (int)WM.TB_SETBUTTONINFOW:
                         // SetProgressValue
                         ShellLogger.Debug("TasksService: ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
 
@@ -482,7 +482,7 @@ namespace ManagedShell.WindowsTasks
 
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 65:
+                    case (int)WM.TB_GETBUTTONINFOA:
                         // SetProgressState
                         ShellLogger.Debug("TasksService: ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
 
@@ -495,47 +495,47 @@ namespace ManagedShell.WindowsTasks
 
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 67:
+                    case (int)WM.TB_INSERTBUTTONW:
                         // RegisterTab
                         ShellLogger.Debug("TasksService: ITaskbarList: RegisterTab MDI HWND:" + msg.LParam + " Tab HWND: " + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 68:
+                    case (int)WM.TB_ADDBUTTONSW:
                         // UnregisterTab
                         ShellLogger.Debug("TasksService: ITaskbarList: UnregisterTab Tab HWND: " + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 71:
+                    case (int)WM.TB_GETHOTITEM:
                         // SetTabOrder
                         ShellLogger.Debug("TasksService: ITaskbarList: SetTabOrder HWND:" + msg.WParam + " Before HWND: " + msg.LParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 72:
+                    case (int)WM.TB_SETHOTITEM:
                         // SetTabActive
                         ShellLogger.Debug("TasksService: ITaskbarList: SetTabActive HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 75:
+                    case (int)WM.TB_GETBUTTONTEXTW:
                         // Unknown
                         ShellLogger.Debug("TasksService: ITaskbarList: Unknown HWND:" + msg.WParam + " LParam: " + msg.LParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 76:
+                    case (int)WM.TB_SAVERESTOREW:
                         // TODO : ThumbBarAddButtons
                         ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarAddButtons HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 77:
+                    case (int)WM.TB_ADDSTRINGW:
                         // TODO : ThumbBarUpdateButtons
                         ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarUpdateButtons HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 78:
+                    case (int)WM.TB_MAPACCELERATORA:
                         // TODO : ThumbBarSetImageList
                         ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarSetImageList HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 79:
+                    case (int)WM.TB_GETINSERTMARK:
                         // SetOverlayIcon - Icon
                         ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
 
@@ -548,17 +548,17 @@ namespace ManagedShell.WindowsTasks
 
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 80:
+                    case (int)WM.TB_SETINSERTMARK:
                         // SetThumbnailTooltip
                         ShellLogger.Debug("TasksService: ITaskbarList: SetThumbnailTooltip HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 81:
+                    case (int)WM.TB_INSERTMARKHITTEST:
                         // SetThumbnailClip
                         ShellLogger.Debug("TasksService: ITaskbarList: SetThumbnailClip HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 85:
+                    case (int)WM.TB_GETEXTENDEDSTYLE:
                         // SetOverlayIcon - Description
                         ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Description HWND:" + msg.WParam);
 
@@ -571,7 +571,7 @@ namespace ManagedShell.WindowsTasks
 
                         msg.Result = IntPtr.Zero;
                         return;
-                    case (int)WM.USER + 87:
+                    case (int)WM.TB_SETPADDING:
                         // TODO : SetTabProperties
                         ShellLogger.Debug("TasksService: ITaskbarList: SetTabProperties HWND:" + msg.WParam);
                         msg.Result = IntPtr.Zero;

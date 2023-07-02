@@ -2870,7 +2870,24 @@ namespace ManagedShell.Interop
             /// <summary>
             /// WM_SYSTIMER is a well-known yet still undocumented message. Windows uses WM_SYSTIMER for internal actions like scrolling.
             /// </summary>
-            SYSTIMER = 0x118
+            SYSTIMER = 0x118,
+            TTM_ADDTOOLW = 0x0432,
+            TB_SETMAXTEXTROWS = 0x043c,
+            TB_SETBUTTONINFOW = 0x0440,
+            TB_GETBUTTONINFOA = 0x0441,
+            TB_INSERTBUTTONW = 0x0443,
+            TB_ADDBUTTONSW = 0x0444,
+            TB_GETHOTITEM = 0x0447,
+            TB_SETHOTITEM = 0x0448,
+            TB_GETBUTTONTEXTW = 0x044b,
+            TB_SAVERESTOREW = 0x044c,
+            TB_ADDSTRINGW = 0x044d,
+            TB_MAPACCELERATORA = 0x044e,
+            TB_GETINSERTMARK = 0x044f,
+            TB_SETINSERTMARK = 0x0450,
+            TB_INSERTMARKHITTEST = 0x0451,
+            TB_GETEXTENDEDSTYLE = 0x0455,
+            TB_SETPADDING = 0x0457,
         }
 
         public enum HSHELL : uint
