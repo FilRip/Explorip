@@ -32,7 +32,6 @@ namespace Explorip.TaskBar.Controls
         {
             InitializeComponent();
             SetStyle();
-            // TODO : https://stackoverflow.com/questions/23619093/wpf-menu-unwanted-borders
         }
 
         private void SetStyle()

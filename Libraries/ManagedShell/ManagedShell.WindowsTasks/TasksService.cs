@@ -586,8 +586,8 @@ namespace ManagedShell.WindowsTasks
         {
             if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && Windows.Any(i => i.Handle == hWnd || i.ListWindows.Contains(hWnd)))
             {
-                ApplicationWindow win = Windows.First(wnd => wnd.Handle == hWnd);
-                win.Uncloak();
+                ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.Handle == hWnd);
+                win?.Uncloak();
             }
         }
 
