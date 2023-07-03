@@ -232,9 +232,15 @@ namespace ManagedShell.WindowsTasks
             if (!EnvironmentHelper.IsServerCore) SendNotifyMessage(hWnd, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
         }
 
-        private ApplicationWindow AddWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
+        private ApplicationWindow AddWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false, string winFileName = null)
         {
-            ApplicationWindow win = new(this, hWnd);
+            ApplicationWindow win;
+            /*if ((win = Windows.FirstOrDefault(w => w.Handle == hWnd || w.ListWindows.Contains(hWnd) || (!string.IsNullOrWhiteSpace(winFileName) && w.WinFileName == winFileName))) != null)
+            {
+                win.UpdateProperties(hWnd);
+                return win;
+            }*/
+            win = new(this, hWnd);
 
             // set window state if a non-default value is provided
             if (initialState != ApplicationWindow.WindowState.Inactive) win.State = initialState;
@@ -297,18 +303,19 @@ namespace ManagedShell.WindowsTasks
                 {
                     lock (_windowsLock)
                     {
+                        string winFileName = ShellHelper.GetPathForHandle(msg.LParam);
+                        ApplicationWindow win;
                         switch ((HSHELL)msg.WParam.ToInt32())
                         {
                             case HSHELL.WINDOWCREATED:
                                 ShellLogger.Debug("TasksService: Created: " + msg.LParam);
-                                string winFileName = ShellHelper.GetPathForHandle(msg.LParam);
                                 if (!Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam) || i.WinFileName == winFileName))
                                 {
                                     AddWindow(msg.LParam);
                                 }
                                 else
                                 {
-                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
+                                    win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
                                     win.UpdateProperties(msg.LParam);
                                 }
                                 break;
@@ -320,9 +327,8 @@ namespace ManagedShell.WindowsTasks
 
                             case HSHELL.WINDOWREPLACING:
                                 ShellLogger.Debug("TasksService: Replacing: " + msg.LParam);
-                                if (Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
+                                if ((win = Windows.FirstOrDefault(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam))) != null)
                                 {
-                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam);
                                     win.State = ApplicationWindow.WindowState.Inactive;
                                     win.SetShowInTaskbar();
                                 }
@@ -348,11 +354,8 @@ namespace ManagedShell.WindowsTasks
 
                                 if (msg.LParam != IntPtr.Zero)
                                 {
-                                    ApplicationWindow win = null;
-
-                                    if (Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
+                                    if ((win = Windows.FirstOrDefault(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam))) != null)
                                     {
-                                        win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam));
                                         win.State = ApplicationWindow.WindowState.Active;
                                         win.SetShowInTaskbar();
                                     }
@@ -374,10 +377,8 @@ namespace ManagedShell.WindowsTasks
 
                             case HSHELL.FLASH:
                                 ShellLogger.Debug("TasksService: Flashing window: " + msg.LParam);
-                                if (Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
+                                if ((win = Windows.FirstOrDefault(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam))) != null)
                                 {
-                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam));
-
                                     if (win.State != ApplicationWindow.WindowState.Active)
                                     {
                                         win.State = ApplicationWindow.WindowState.Flashing;
@@ -410,10 +411,8 @@ namespace ManagedShell.WindowsTasks
 
                             case HSHELL.REDRAW:
                                 ShellLogger.Debug("TasksService: Redraw called: " + msg.LParam);
-                                if (Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam)))
+                                if ((win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName)) != null)
                                 {
-                                    ApplicationWindow win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam));
-
                                     if (win.State == ApplicationWindow.WindowState.Flashing)
                                     {
                                         win.State = ApplicationWindow.WindowState.Inactive;
@@ -473,12 +472,9 @@ namespace ManagedShell.WindowsTasks
                         // SetProgressValue
                         ShellLogger.Debug("TasksService: ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
 
-                        win = new ApplicationWindow(this, msg.WParam);
-                        if (Windows.Contains(win))
-                        {
-                            win = Windows.First(wnd => wnd.Handle == msg.WParam);
+                        win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
+                        if (win != null)
                             win.ProgressValue = (int)msg.LParam;
-                        }
 
                         msg.Result = IntPtr.Zero;
                         return;
@@ -486,12 +482,9 @@ namespace ManagedShell.WindowsTasks
                         // SetProgressState
                         ShellLogger.Debug("TasksService: ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
 
-                        win = new ApplicationWindow(this, msg.WParam);
-                        if (Windows.Contains(win))
-                        {
-                            win = Windows.First(wnd => wnd.Handle == msg.WParam);
+                        win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
+                        if (win != null)
                             win.ProgressState = (TBPFLAG)msg.LParam;
-                        }
 
                         msg.Result = IntPtr.Zero;
                         return;
@@ -539,12 +532,9 @@ namespace ManagedShell.WindowsTasks
                         // SetOverlayIcon - Icon
                         ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
 
-                        win = new ApplicationWindow(this, msg.WParam);
-                        if (Windows.Contains(win))
-                        {
-                            win = Windows.First(wnd => wnd.Handle == msg.WParam);
+                        win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
+                        if (win != null)
                             win.SetOverlayIcon(msg.LParam);
-                        }
 
                         msg.Result = IntPtr.Zero;
                         return;
@@ -562,12 +552,9 @@ namespace ManagedShell.WindowsTasks
                         // SetOverlayIcon - Description
                         ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Description HWND:" + msg.WParam);
 
-                        win = new ApplicationWindow(this, msg.WParam);
-                        if (Windows.Contains(win))
-                        {
-                            win = Windows.First(wnd => wnd.Handle == msg.WParam);
+                        win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
+                        if (win != null)
                             win.SetOverlayIconDescription(msg.LParam);
-                        }
 
                         msg.Result = IntPtr.Zero;
                         return;

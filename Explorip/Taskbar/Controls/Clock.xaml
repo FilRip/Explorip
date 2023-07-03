@@ -16,7 +16,7 @@
                     <StackPanel Margin="-20,0,0,0" Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}"/>
                 </ItemsPanelTemplate>
             </ContextMenu.ItemsPanel>
-            <MenuItem Header="{DynamicResource set_time}" Click="MenuItem_OnClick" />
+            <MenuItem Header="{Binding Source={x:Static constants:Localization.ADJUST_DATE_TIME}}" Click="MenuItem_OnClick" />
         </ContextMenu>
     </UserControl.ContextMenu>
 </UserControl>

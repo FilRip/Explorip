@@ -110,9 +110,9 @@ namespace ManagedShell.WindowsTasks
         {
             get
             {
-                if (string.IsNullOrEmpty(_winFileName) && Handle != IntPtr.Zero)
+                if (string.IsNullOrEmpty(_winFileName) && (Handle != IntPtr.Zero || _windows.Count > 0))
                 {
-                    _winFileName = ShellHelper.GetPathForHandle(Handle);
+                    _winFileName = ShellHelper.GetPathForHandle(Handle == IntPtr.Zero ? _windows[0] : Handle);
                 }
 
                 return _winFileName;
