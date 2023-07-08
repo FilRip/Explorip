@@ -3,6 +3,10 @@
   "Id": "001dcda7-f4c3-4bd6-a86c-c99b35a9798a",
   "Items": [
     {
+      "Id": "cdd07e01-5452-4d7a-890d-b8873caff6a2",
+      "Command": "newinstance"
+    },
+    {
       "Id": "c53fcf05-15c7-49a0-b025-442e5bc08979",
       "Command": "UseOwnCopier"
     },

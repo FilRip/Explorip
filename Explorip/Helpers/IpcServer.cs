@@ -32,9 +32,13 @@ namespace Explorip.Helpers
     {
         internal static void InitChannel()
         {
-            IpcChannel channel = new(IpcServer.IpcServerName);
-            ChannelServices.RegisterChannel(channel, false);
-            RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcServer), IpcServer.IpcSubChannelName, WellKnownObjectMode.Singleton);
+            try
+            {
+                IpcChannel channel = new(IpcServer.IpcServerName);
+                ChannelServices.RegisterChannel(channel, false);
+                RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcServer), IpcServer.IpcSubChannelName, WellKnownObjectMode.Singleton);
+            }
+            catch { /* Ignore errors */ }
         }
 
         internal static void SendMessage(string[] args)
