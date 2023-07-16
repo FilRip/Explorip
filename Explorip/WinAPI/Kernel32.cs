@@ -54,7 +54,10 @@ namespace Explorip.WinAPI
         [DllImport("kernel32.dll", EntryPoint = "FreeConsole", SetLastError = true)]
         internal static extern bool FreeConsole();
 
-        [DllImport("kernel32")]
+        [DllImport("kernel32.dll")]
         internal static extern IntPtr GetStdHandle(StdHandle index);
+
+        [DllImport("kernel32.dll")]
+        internal static extern IntPtr GetConsoleWindow();
     }
 }

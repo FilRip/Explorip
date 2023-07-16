@@ -42,7 +42,7 @@ namespace Explorip.Explorer.Controls
             try
             {
                 _myProcess.Start();
-                while (_myProcess.MainWindowHandle == IntPtr.Zero) { /* Nothing to do, waiting process start */ }
+                while (_myProcess.MainWindowHandle == IntPtr.Zero) { _myProcess.Refresh(); }
                 _srcPtr = _myProcess.MainWindowHandle;
                 return true;
             }
