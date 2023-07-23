@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 using Explorip.Helpers;
 using Explorip.WinAPI;
 
+using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
 namespace Explorip.Explorer.Controls
@@ -47,9 +49,8 @@ namespace Explorip.Explorer.Controls
                 while (_srcPtr == IntPtr.Zero)
                 {
                     List<IntPtr> listWindows = WindowsExtensions.ListWindowsOfProcess((uint)_myProcess.Id);
-                    if (listWindows.Count == 1)
+                    if (listWindows.Count > 0)
                         _srcPtr = listWindows[0];
-                    _myProcess.Refresh();
                 }
                 return true;
             }
@@ -86,7 +87,7 @@ namespace Explorip.Explorer.Controls
         private void InitRedirectWindow()
         {
             User32.SetParent(_srcPtr, _destPtr);
-            User32.SetWindowPos(_srcPtr, IntPtr.Zero, OFFSET_X + (int)this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
+            UserControl_SizeChanged(this, null);
             int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.GWL_STYLE);
             NativeMethods.SetWindowLong(_srcPtr, NativeMethods.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
         }
@@ -115,7 +116,7 @@ namespace Explorip.Explorer.Controls
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (_srcPtr != IntPtr.Zero)
-                User32.SetWindowPos(_srcPtr, IntPtr.Zero, OFFSET_X + (int)this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X, OFFSET_Y, (int)ActualWidth - OFFSET_X, (int)ActualHeight - OFFSET_SIZE_HEIGHT, User32.SWP.SHOWWINDOW);
+                User32.SetWindowPos(_srcPtr, IntPtr.Zero, (int)(OFFSET_X * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)((this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)(OFFSET_Y * VisualTreeHelper.GetDpi(this).DpiScaleY), (int)((ActualWidth - OFFSET_X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)((ActualHeight - OFFSET_SIZE_HEIGHT) * VisualTreeHelper.GetDpi(this).DpiScaleY), User32.SWP.SHOWWINDOW);
         }
 
         public void Show()

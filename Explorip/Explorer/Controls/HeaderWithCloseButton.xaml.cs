@@ -150,13 +150,13 @@ namespace Explorip.Explorer.Controls
 
         private void NewAdminConsoleTab_Click(object sender, RoutedEventArgs e)
         {
-            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "cmd.exe", Verb = "runas", UseShellExecute = true }));
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "conhost.exe", Arguments = "cmd.exe", Verb = "runas", UseShellExecute = true }));
             MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
         }
 
         private void NewAdminPowerShellTab_Click(object sender, RoutedEventArgs e)
         {
-            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "powershell.exe", Verb = "runas", UseShellExecute = true }));
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "conhost.exe", Arguments = "powershell.exe", Verb = "runas", UseShellExecute = true }));
             MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
         }
 
