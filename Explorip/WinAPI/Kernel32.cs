@@ -59,5 +59,8 @@ namespace Explorip.WinAPI
 
         [DllImport("kernel32.dll")]
         internal static extern IntPtr GetConsoleWindow();
+
+        [DllImport("kernel32.dll")]
+        internal static extern uint GetLastError();
     }
 }

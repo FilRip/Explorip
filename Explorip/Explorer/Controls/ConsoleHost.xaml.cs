@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,8 +43,14 @@ namespace Explorip.Explorer.Controls
             try
             {
                 _myProcess.Start();
-                while (_myProcess.MainWindowHandle == IntPtr.Zero) { _myProcess.Refresh(); }
-                _srcPtr = _myProcess.MainWindowHandle;
+                _srcPtr = IntPtr.Zero;
+                while (_srcPtr == IntPtr.Zero)
+                {
+                    List<IntPtr> listWindows = WindowsExtensions.ListWindowsOfProcess((uint)_myProcess.Id);
+                    if (listWindows.Count == 1)
+                        _srcPtr = listWindows[0];
+                    _myProcess.Refresh();
+                }
                 return true;
             }
             catch (Exception) { /* Ignore errors */ }

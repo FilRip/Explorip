@@ -98,12 +98,6 @@ namespace Explorip.Explorer.Controls
                 fenetre.LeftTab.AddNewTab(dir);
         }
 
-        private void NewConsoleTab_Click(object sender, RoutedEventArgs e)
-        {
-            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand("cmd.exe"));
-            MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
-        }
-
         #endregion
 
         private void ButtonClose_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -140,9 +134,17 @@ namespace Explorip.Explorer.Controls
             }
         }
 
+        #region Console contextual menu
+
+        private void NewConsoleTab_Click(object sender, RoutedEventArgs e)
+        {
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "conhost.exe", Arguments = "cmd.exe" }));
+            MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
+        }
+
         private void NewPowerShellTab_Click(object sender, RoutedEventArgs e)
         {
-            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand("powershell.exe"));
+            MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "conhost.exe", Arguments = "powershell.exe" }));
             MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
         }
 
@@ -157,5 +159,7 @@ namespace Explorip.Explorer.Controls
             MyTabControl.Items.Insert(MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "powershell.exe", Verb = "runas", UseShellExecute = true }));
             MyTabControl.SelectedIndex = MyTabControl.Items.Count - 2;
         }
+
+        #endregion
     }
 }
