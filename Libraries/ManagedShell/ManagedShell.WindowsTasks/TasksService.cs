@@ -232,14 +232,9 @@ namespace ManagedShell.WindowsTasks
             if (!EnvironmentHelper.IsServerCore) SendNotifyMessage(hWnd, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
         }
 
-        private ApplicationWindow AddWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false, string winFileName = null)
+        private ApplicationWindow AddWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
         {
             ApplicationWindow win;
-            /*if ((win = Windows.FirstOrDefault(w => w.Handle == hWnd || w.ListWindows.Contains(hWnd) || (!string.IsNullOrWhiteSpace(winFileName) && w.WinFileName == winFileName))) != null)
-            {
-                win.UpdateProperties(hWnd);
-                return win;
-            }*/
             win = new(this, hWnd);
 
             // set window state if a non-default value is provided
@@ -533,8 +528,7 @@ namespace ManagedShell.WindowsTasks
                         ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
 
                         win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
-                        if (win != null)
-                            win.SetOverlayIcon(msg.LParam);
+                        win?.SetOverlayIcon(msg.LParam);
 
                         msg.Result = IntPtr.Zero;
                         return;
@@ -553,8 +547,7 @@ namespace ManagedShell.WindowsTasks
                         ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Description HWND:" + msg.WParam);
 
                         win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
-                        if (win != null)
-                            win.SetOverlayIconDescription(msg.LParam);
+                        win?.SetOverlayIconDescription(msg.LParam);
 
                         msg.Result = IntPtr.Zero;
                         return;

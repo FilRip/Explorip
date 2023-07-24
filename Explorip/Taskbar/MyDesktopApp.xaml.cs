@@ -74,7 +74,7 @@ namespace Explorip.TaskBar
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(taskBar).Handle, true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
-            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbars"))
+            if (ExtensionsCommandLineArguments.ArgumentExists("taskbars"))
                 ShowTaskbarOnAllOthersScreen();
         }
 

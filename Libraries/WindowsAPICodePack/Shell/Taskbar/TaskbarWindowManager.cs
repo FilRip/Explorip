@@ -139,7 +139,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         {
             if (windowsControl == null) { throw new ArgumentNullException("windowsControl"); }
 
-            TaskbarWindow toReturn = _taskbarWindowList.FirstOrDefault(window =>
+            TaskbarWindow toReturn = _taskbarWindowList.Find(window =>
             {
                 return (window.TabbedThumbnail != null && window.TabbedThumbnail.WindowsControl == windowsControl) ||
                     (window.ThumbnailToolbarProxyWindow != null &&
@@ -168,7 +168,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 throw new ArgumentException(LocalizedMessages.CommonFileDialogInvalidHandle, "userWindowHandle");
             }
 
-            TaskbarWindow toReturn = _taskbarWindowList.FirstOrDefault(window => window.UserWindowHandle == userWindowHandle);
+            TaskbarWindow toReturn = _taskbarWindowList.Find(window => window.UserWindowHandle == userWindowHandle);
 
             // If its not in the list, return null so it can be added.            
             if (toReturn != null)

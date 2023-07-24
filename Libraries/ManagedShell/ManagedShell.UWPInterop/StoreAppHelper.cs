@@ -169,12 +169,12 @@ namespace ManagedShell.UWPInterop
             if (!Uri.TryCreate(nameKey, UriKind.Absolute, out Uri nameUri))
                 return nameKey;
 
-            string resourceKey = $"ms-resource://{packageName}/resources/{nameUri.Segments.Last()}";
+            string resourceKey = $"ms-resource://{packageName}/resources/{nameUri.Segments[nameUri.Segments.Length - 1]}";
             string name = ExtractStringFromPRIFile(packagePath + "\\resources.pri", resourceKey);
             if (!string.IsNullOrEmpty(name))
                 return name;
 
-            resourceKey = $"ms-resource://{packageName}/{nameUri.Segments.Last()}";
+            resourceKey = $"ms-resource://{packageName}/{nameUri.Segments[nameUri.Segments.Length - 1]}";
             name = ExtractStringFromPRIFile(packagePath + "\\resources.pri", resourceKey);
             if (!string.IsNullOrEmpty(name))
                 return name;

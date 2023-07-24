@@ -770,7 +770,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 throw new ArgumentNullException("fullPath");
             }
 
-            return ItemsList.Any(folder => string.Equals(fullPath, folder.Path, StringComparison.OrdinalIgnoreCase));
+            return ItemsList.Exists(folder => string.Equals(fullPath, folder.Path, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>
@@ -785,7 +785,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 throw new ArgumentNullException("item");
             }
 
-            return ItemsList.Any(folder => string.Equals(item.Path, folder.Path, StringComparison.OrdinalIgnoreCase));
+            return ItemsList.Exists(folder => string.Equals(item.Path, folder.Path, StringComparison.OrdinalIgnoreCase));
         }
 
         #endregion

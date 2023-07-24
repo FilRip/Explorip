@@ -110,7 +110,7 @@ namespace WindowsDesktop.Interop
                     continue;
                 }
 
-                string interfaceName = interfaceNames.FirstOrDefault(x => typeName == x);
+                string interfaceName = Array.Find(interfaceNames, x => typeName == x);
                 if ((interfaceName == null) || (!iids.ContainsKey(interfaceName)))
                 {
                     continue;

@@ -32,7 +32,7 @@ namespace WindowsDesktop.Interop
                         if (pair.Length != 2) continue;
 
                         string @interface = pair[0];
-                        if (targets.All(x => @interface != x) || known.ContainsKey(@interface)) continue;
+                        if (Array.TrueForAll(targets, x => @interface != x) || known.ContainsKey(@interface)) continue;
 
                         if (!Guid.TryParse(pair[1], out Guid guid)) continue;
 
@@ -65,8 +65,9 @@ namespace WindowsDesktop.Interop
                 using RegistryKey key = interfaceKey.OpenSubKey(name);
                 if (key?.GetValue("") is string value)
                 {
-                    string match = targets.FirstOrDefault(x => x == value);
-                    if (match != null && Guid.TryParse(key.Name.Split('\\').Last(), out Guid guid))
+                    string match = Array.Find(targets, x => x == value);
+                    string[] splitter = key.Name.Split('\\');
+                    if (match != null && Guid.TryParse(splitter[splitter.Length - 1], out Guid guid))
                     {
                         result[match] = guid;
                     }

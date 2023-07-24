@@ -153,7 +153,7 @@ namespace ManagedShell.Common.Helpers
 
         public static bool Exists(string filename)
         {
-            if (Path.GetInvalidPathChars().Any(invalid => filename.Contains(invalid)))
+            if (Array.Exists(Path.GetInvalidPathChars(), invalid => filename.Contains(invalid)))
                 return false;
 
             return !filename.StartsWith("\\\\") && (File.Exists(filename) || Directory.Exists(filename));

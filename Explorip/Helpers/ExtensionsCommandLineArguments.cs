@@ -6,148 +6,156 @@ using System.Text;
 namespace Explorip.Helpers
 {
     /// <summary>
-    /// Classe permettant de consulter plus facilement les aguments de la ligne de commande du processus en cours
+    /// Class to consult more easily command line arguments
     /// </summary>
     public static class ExtensionsCommandLineArguments
     {
         /// <summary>
-        /// Retourne si oui ou non un argument est présent dans la ligne de commande du processus en cours
-        /// Sans tenir compte de la casse
+        /// Return if an argument is present<br/>
+        /// Without case sensitive
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        public static bool ArgumentPresent(string argument)
+        /// <param name="argument">Argument to search</param>
+        public static bool ArgumentExists(string argument)
         {
-            return ArgumentPresent(argument, StringComparer.OrdinalIgnoreCase);
+            return ArgumentExists(argument, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
-        /// Retourne si oui ou non un argument est présent dans la ligne de commande du processus en cours
-        /// En prenant en compte le comparateur de chaine spécifié
+        /// Return if an argument is present<br/>
+        /// With specified string comparer
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        /// <param name="comparateur">Comparateur de chaine</param>
-        public static bool ArgumentPresent(string argument, StringComparer comparateur)
+        /// <param name="argument">Argument to search</param>
+        /// <param name="comparer">String comparer to use</param>
+        public static bool ArgumentExists(string argument, StringComparer comparer)
         {
-            return Environment.GetCommandLineArgs().Contains(argument, comparateur);
+            return Environment.GetCommandLineArgs().Contains(argument, comparer);
         }
 
         /// <summary>
-        /// Retourne si oui ou non un argument avec valeur est présent dans la ligne de commande du processus en cours
-        /// Sans tenir compte de la casse et en supposant que le séparateur entre le nom de l'argument et sa valeur est le signe "=" (égal)
+        /// Return if an argument with value is present<br/>
+        /// Without case sensitive<br/>
+        /// And use equal sign to separate name and value
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        public static bool ArgumentVariablePresent(string argument)
+        /// <param name="argument">Argument to search</param>
+        public static bool ArgumentVariableExists(string argument)
         {
-            return ArgumentVariablePresent(argument, "=", StringComparison.OrdinalIgnoreCase);
+            return ArgumentVariableExists(argument, "=", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
-        /// Retourne si oui ou non un argument avec valeur est présent dans la ligne de commande du processus en cours
-        /// En prenant en compte le comparateur de chaine spécifié et en supposant que le séparateur entre le nom de l'argument et sa valeur est le signe "=" (égal)
+        /// Return if an argument with value is present<br/>
+        /// With use equal sign to separate name and value<br/>
+        /// And use a custom string comparer
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        /// <param name="comparateur">Comparateur de chaine</param>
-        public static bool ArgumentVariablePresent(string argument, StringComparison comparateur)
+        /// <param name="argument">Argument to search</param>
+        /// <param name="comparer">String comparer to use</param>
+        public static bool ArgumentVariableExists(string argument, StringComparison comparer)
         {
-            return ArgumentVariablePresent(argument, "=", comparateur);
+            return ArgumentVariableExists(argument, "=", comparer);
         }
 
         /// <summary>
-        /// Retourne si oui ou non un argument avec valeur est présent dans la ligne de commande du processus en cours
-        /// Sans tenir compte de la casse et en utilisant le séparateur spécifié
+        /// Return if an argument with value is present<br/>
+        /// Without case sensitive<br/>
+        /// And use a custom string separator
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        /// <param name="separateur">Caractère séparateur à utiliser</param>
-        public static bool ArgumentVariablePresent(string argument, string separateur)
+        /// <param name="argument">Argument to search</param>
+        /// <param name="separator">Separator to use</param>
+        public static bool ArgumentVariableExists(string argument, string separator)
         {
-            return ArgumentVariablePresent(argument, separateur, StringComparison.OrdinalIgnoreCase);
+            return ArgumentVariableExists(argument, separator, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
-        /// Retourne si oui ou non un argument avec valeur est présent dans la ligne de commande du processus en cours
-        /// En prenant en compte le comparateur de chaine spécifié et en utilisant le séparateur spécifié
+        /// Return if an argument with value is present<br/>
+        /// With use custom string separator<br/>
+        /// And use a custom string comparer
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        /// <param name="separateur">Caractère séparateur à utiliser</param>
-        /// <param name="comparateur">Comparateur de chaine</param>
-        public static bool ArgumentVariablePresent(string argument, string separateur, StringComparison comparateur)
+        /// <param name="argument">Argument to search</param>
+        /// <param name="separator">Separator to use</param>
+        /// <param name="comparer">String comparer to use</param>
+        public static bool ArgumentVariableExists(string argument, string separator, StringComparison comparer)
         {
-            return Environment.GetCommandLineArgs().Any(a => a.Trim().StartsWith((argument + separateur).RemoveDuplicate(' '), comparateur));
+            return Array.Exists(Environment.GetCommandLineArgs(), a => a.Trim().StartsWith((argument + separator).RemoveDuplicate(' '), comparer));
         }
 
         /// <summary>
-        /// Retourne la valeur d'un argument dans la ligne de commande du processus en cours
-        /// Sans tenir compte de la casse et en supposant que le séparateur entre le nom de l'argument et sa valeur est le signe "=" (égal)
+        /// Return the value of an argument with a special key<br/>
+        /// Without case sensitive<br/>
+        /// And use equal sign to separate name and value
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        public static string ArgumentValeur(string argument)
+        /// <param name="argument">Argument to search</param>
+        public static string ArgumentValue(string argument)
         {
-            return ArgumentValeur(argument, "=", StringComparison.OrdinalIgnoreCase);
+            return ArgumentValue(argument, "=", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
-        /// Retourne la valeur d'un argument dans la ligne de commande du processus en cours
-        /// Sans tenir compte de la casse et en utilisant le séparateur spécifié
+        /// Return the value of an argument with a special key<br/>
+        /// Without case sensitive<br/>
+        /// With use custom string separator<br/>
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        /// <param name="separateur">Caractère séparateur à utiliser</param>
-        public static string ArgumentValeur(string argument, string separateur)
+        /// <param name="argument">Argument to search</param>
+        /// <param name="separator">Separator to use</param>
+        public static string ArgumentValue(string argument, string separator)
         {
-            return ArgumentValeur(argument, separateur, StringComparison.OrdinalIgnoreCase);
+            return ArgumentValue(argument, separator, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
-        /// Retourne la valeur d'un argument dans la ligne de commande du processus en cours
-        /// En prenant en compte le comparateur de chaine spécifié et en supposant que le séparateur entre le nom de l'argument et sa valeur est le signe "=" (égal)
+        /// Return the value of an argument with a special key<br/>
+        /// With use equal sign to separate name and value<br/>
+        /// And use a custom string comparer
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        /// <param name="comparateur">Comparateur de chaine</param>
-        public static string ArgumentValeur(string argument, StringComparison comparateur)
+        /// <param name="argument">Argument to search</param>
+        /// <param name="comparer">String comparer to use</param>
+        public static string ArgumentValue(string argument, StringComparison comparer)
         {
-            return ArgumentValeur(argument, "=", comparateur);
+            return ArgumentValue(argument, "=", comparer);
         }
 
         /// <summary>
-        /// Retourne la valeur d'un argument dans la ligne de commande du processus en cours
-        /// En prenant en compte le comparateur de chaine spécifié et en utilisant le séparateur spécifié
+        /// Return the value of an argument with a special key<br/>
+        /// With use custom string separator<br/>
+        /// And use a custom string comparer
         /// </summary>
-        /// <param name="argument">Argument à rechercher</param>
-        /// <param name="separateur">Caractère séparateur à utiliser</param>
-        /// <param name="comparateur">Comparateur de chaine</param>
-        public static string ArgumentValeur(string argument, string separateur, StringComparison comparateur)
+        /// <param name="argument">Argument to search</param>
+        /// <param name="separator">Separator to use</param>
+        /// <param name="comparer">String comparer to use</param>
+        public static string ArgumentValue(string argument, string separator, StringComparison comparer)
         {
-            string arg = Environment.GetCommandLineArgs().FirstOrDefault(arg => arg.Trim().StartsWith((argument + separateur).RemoveDuplicate(' '), comparateur));
+            string arg = Array.Find(Environment.GetCommandLineArgs(), arg => arg.Trim().StartsWith((argument + separator).RemoveDuplicate(' '), comparer));
             if (arg != null)
-                return arg.Trim().Substring(argument.Length + separateur.Length).RemoveDuplicate(' ').Trim().TrimEnd('"');
+                return arg.Trim().Substring(argument.Length + separator.Length).RemoveDuplicate(' ').Trim().TrimEnd('"');
             return null;
         }
 
         /// <summary>
-        /// Retourne le nom, avec son emplacement, de l'exécutable en cours
+        /// Return the full path and the exe filename with extension of current process
         /// </summary>
-        public static string ArgumentFichierExe()
+        public static string ArgumentFullPathExe()
         {
             return Environment.GetCommandLineArgs()[0];
         }
 
         /// <summary>
-        /// Retourne le nom de l'exécutable en cours (sans le chemin, voir ArgumentFichierExe pour avoir avec le chemin, ou ArgumentRepertoireExe pour n'avoir que le chemin)
+        /// Return the current exe filename (with extension) and without the path
         /// </summary>
-        public static string ArgumentNomExe()
+        public static string ArgumentFileNameExe()
         {
             return Path.GetFileName(Environment.GetCommandLineArgs()[0]);
         }
 
         /// <summary>
-        /// Retourne le répertoire de l'exécutable en cours
+        /// Return the path where the current exe is
         /// </summary>
-        public static string ArgumentRepertoireExe()
+        public static string ArgumentPathExe()
         {
             return Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         }
 
         /// <summary>
-        /// Retourne tous les arguments de la ligne de commande, séparé par un espace, dans une chaine de caractères, comme à l'appel de ce processus
+        /// Return all arguments, separate by space, like they are in current command line
         /// </summary>
         public static string Arguments()
         {

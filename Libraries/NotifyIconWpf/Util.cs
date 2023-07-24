@@ -189,7 +189,7 @@ namespace Hardcodet.Wpf.TaskbarNotification
         {
             if (candidates == null) return false;
 
-            return candidates.Any(item => value.Equals(item));
+            return Array.Exists(candidates, item => value.Equals(item));
         }
 
         #endregion

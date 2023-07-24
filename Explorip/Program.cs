@@ -34,8 +34,8 @@ namespace Explorip
             Constants.Colors.LoadTheme();
 
             mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
-            if (ExtensionsCommandLineArguments.ArgumentPresent("taskbar") ||
-                ExtensionsCommandLineArguments.ArgumentPresent("taskbars"))
+            if (ExtensionsCommandLineArguments.ArgumentExists("taskbar") ||
+                ExtensionsCommandLineArguments.ArgumentExists("taskbars"))
             {
                 if (processNotLaunched)
                 {
@@ -48,7 +48,7 @@ namespace Explorip
                 if (processNotLaunched || args.Contains("newinstance"))
                 {
                     IpcServerManager.InitChannel();
-                    if (!ExtensionsCommandLineArguments.ArgumentPresent("withoutHook"))
+                    if (!ExtensionsCommandLineArguments.ArgumentExists("withoutHook"))
                         HookCopyOperations.GetInstance().InstallHook();
                     _WpfHost = new Explorer.MyExplorerApp();
                     _WpfHost.Run();

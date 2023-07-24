@@ -16,7 +16,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             lock (_registerLock)
             {
                 uint message = 0;
-                RegisteredListener package = _packages.FirstOrDefault(x => x.TryRegister(callback, out message));
+                RegisteredListener package = _packages.Find(x => x.TryRegister(callback, out message));
                 if (package == null)
                 {
                     package = new RegisteredListener();
@@ -37,7 +37,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             lock (_registerLock)
             {
-                RegisteredListener package = _packages.FirstOrDefault(x => x.Listener.WindowHandle == listenerHandle);
+                RegisteredListener package = _packages.Find(x => x.Listener.WindowHandle == listenerHandle);
                 if (package == null || !package.Callbacks.Remove(message))
                 {
                     throw new ArgumentException(LocalizedMessages.MessageListenerFilterUnknownListenerHandle);
