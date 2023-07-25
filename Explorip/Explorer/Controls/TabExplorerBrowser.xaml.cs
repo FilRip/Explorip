@@ -36,6 +36,7 @@ namespace Explorip.Explorer.Controls
             }
         }
 
+#pragma warning disable S3966 // Sonar bug
         public void CloseAllTabs()
         {
             if (MyTabControl.Items.Count > 0)
@@ -43,6 +44,7 @@ namespace Explorip.Explorer.Controls
                     if (MyTabControl.Items[i] is TabItemExplorip tabItem)
                         tabItem.Dispose();
         }
+#pragma warning restore S3966
 
         public void AddNewTab(ShellObject location)
         {

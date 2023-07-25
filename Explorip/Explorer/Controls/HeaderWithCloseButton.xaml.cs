@@ -79,6 +79,7 @@ namespace Explorip.Explorer.Controls
             myTabControl.HideTab();
         }
 
+#pragma warning disable S3966 // Sonar bug
         private void CloseAllTab_Click(object sender, RoutedEventArgs e)
         {
             TabExplorerBrowser myTabControl = MyTabControl;
@@ -87,6 +88,7 @@ namespace Explorip.Explorer.Controls
                     currentTab.Dispose();
             myTabControl.HideTab();
         }
+#pragma warning restore S3966
 
         private void NewTabOther_Click(object sender, RoutedEventArgs e)
         {
