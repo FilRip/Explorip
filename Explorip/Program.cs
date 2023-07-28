@@ -33,10 +33,10 @@ namespace Explorip
             Constants.Localization.LoadTranslation();
             Constants.Colors.LoadTheme();
 
-            mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
             if (ExtensionsCommandLineArguments.ArgumentExists("taskbar") ||
                 ExtensionsCommandLineArguments.ArgumentExists("taskbars"))
             {
+                mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
                 if (processNotLaunched)
                 {
                     _WpfHost = new TaskBar.MyDesktopApp();
@@ -45,6 +45,7 @@ namespace Explorip
             }
             else
             {
+                mutexProcess = new Mutex(true, "ExploripFileExplorer", out bool processNotLaunched);
                 if (processNotLaunched || args.Contains("newinstance"))
                 {
                     IpcServerManager.InitChannel();
