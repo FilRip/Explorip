@@ -6,29 +6,29 @@ using System.Text;
 namespace Explorip.Helpers
 {
     /// <summary>
-    /// Classe contenant des méthodes d'extension de gestion des tableaux
+    /// Class for extensions methods for Array
     /// </summary>
     public static class ExtensionsArray
     {
         /// <summary>
-        /// Supprime une liste d'objet qui se suive d'un tableau
+        /// Remove a list of items who follow each other, from a start index and a number of items to remove
         /// </summary>
-        /// <typeparam name="T">Type de la liste</typeparam>
-        /// <param name="liste">Liste contenant l'index à supprimer</param>
-        /// <param name="index">Numéro du début dans le tableau de(s) objet(s) à supprimer de la liste</param>
-        /// <param name="nb">Nombre d'éléments à supprimer de la liste</param>
-        /// <returns>Un nouveau tableau avec les éléments demandé supprimé</returns>
-        public static T[] RemoveRange<T>(this T[] liste, int index, int nb)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to remove instance</param>
+        /// <param name="index">First index in array where start remove items</param>
+        /// <param name="nb">Number of items to remove</param>
+        /// <returns>A new array without all items specified</returns>
+        public static T[] RemoveRange<T>(this T[] list, int index, int nb)
         {
-            if (liste == null)
-                throw new ArgumentNullException(nameof(liste));
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
 
 #pragma warning disable S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
-            if (index > liste.Length - 1)
+            if (index > list.Length - 1)
                 throw new IndexOutOfRangeException();
 #pragma warning restore S112
 
-            T[] retour = liste;
+            T[] retour = list;
             for (int i = index; i < index + nb; i++)
                 if (i < retour.Length)
                     retour = retour.RemoveAt(index);
@@ -36,286 +36,214 @@ namespace Explorip.Helpers
         }
 
         /// <summary>
-        /// Supprime un objet du tableau, en fonction de sa position
+        /// Remove an item from an Array by it's index in list
         /// </summary>
-        /// <typeparam name="T">Type de la liste</typeparam>
-        /// <param name="liste">Liste contenant l'index à supprimer</param>
-        /// <param name="index">Numéro index dans le tableau de l'objet à supprimer de la liste</param>
-        /// <returns>Un nouveau tableau, sans l'index spécifié</returns>
-        public static T[] RemoveAt<T>(this T[] liste, int index)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to remove instance</param>
+        /// <param name="index">Index of item to remove in Array</param>
+        /// <returns>A new array without item specified</returns>
+        public static T[] RemoveAt<T>(this T[] list, int index)
         {
-            if (liste == null)
-                throw new ArgumentNullException(nameof(liste));
-#pragma warning disable S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
-            if (index >= liste.Length || liste.Length == 0)
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+#pragma warning disable S112 // It's the best exception to use, remove Sonar warning
+            if (index >= list.Length || list.Length == 0)
                 throw new IndexOutOfRangeException();
-#pragma warning restore S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
+#pragma warning restore S112
 
-            T[] newListe = new T[liste.Length - 1];
-            if (liste.Length > 0)
-                for (int i = 0; i < liste.Length; i++)
-                    if (i != index) newListe[(i > index ? i - 1 : i)] = liste[i];
+            T[] newListe = new T[list.Length - 1];
+            if (list.Length > 0)
+                for (int i = 0; i < list.Length; i++)
+                    if (i != index) newListe[(i > index ? i - 1 : i)] = list[i];
 
             return newListe;
         }
 
         /// <summary>
-        /// Supprime un objet spécifié du tableau
+        /// Remove an item of an object from the array
         /// </summary>
-        /// <typeparam name="T">Type du tableau</typeparam>
-        /// <param name="liste">Le tableau</param>
-        /// <param name="objetASupprimer">Objet à supprimer</param>
-        /// <param name="toutesLesOccurences">Vrai pour supprimer toutes les occurences de cet objet du tableau, sinon Faux pour ne supprimer que le premier trouvé</param>
-        /// <returns>Un nouveau tableau, sans l'objet spécifié</returns>
-        public static T[] Remove<T>(this T[] liste, object objetASupprimer, bool toutesLesOccurences = true)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to remove instance</param>
+        /// <param name="itemToRemove">Instance of object to remove</param>
+        /// <param name="allOccurrences">True to remove all iteration from the Array, or False to remove only the first one find</param>
+        /// <returns>Return new Array, without the instance of object to remove</returns>
+        public static T[] Remove<T>(this T[] list, object itemToRemove, bool allOccurrences = true)
         {
-            if (liste == null) throw new ArgumentNullException(nameof(liste));
-            if (objetASupprimer == null) throw new ArgumentNullException(nameof(objetASupprimer));
+            if (list == null) throw new ArgumentNullException(nameof(list));
+            if (itemToRemove == null) throw new ArgumentNullException(nameof(itemToRemove));
 
-            if (liste.Length > 0)
+            if (list.Length > 0)
             {
                 bool trouve = true;
                 while (trouve)
                 {
                     trouve = false;
-                    for (int i = 0; i < liste.Length; i++)
-                        if ((liste[i] != null) && (liste[i].Equals(objetASupprimer)))
+                    for (int i = 0; i < list.Length; i++)
+                        if ((list[i] != null) && (list[i].Equals(itemToRemove)))
                         {
-                            if (toutesLesOccurences) trouve = true;
-                            liste = liste.RemoveAt(i);
+                            if (allOccurrences) trouve = true;
+                            list = list.RemoveAt(i);
                             break;
                         }
                 }
             }
 
-            return liste;
+            return list;
         }
 
         /// <summary>
-        /// Supprime toutes les occurences de null(nothing) du tableau
+        /// Remove all "null" item from an Array
         /// </summary>
-        /// <typeparam name="T">Type du tableau</typeparam>
-        /// <param name="liste">Le tableau</param>
-        /// <returns>Un nouveau tableau, sans les valeurs à null</returns>
-        public static T[] RemoveAllNull<T>(this T[] liste)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to remove instance</param>
+        /// <returns>A new array without null instance</returns>
+        public static T[] RemoveAllNull<T>(this T[] list)
         {
-            if (liste == null) throw new ArgumentNullException(nameof(liste));
+            if (list == null) throw new ArgumentNullException(nameof(list));
 
-            if (liste.Length > 0)
+            if (list.Length > 0)
             {
                 bool trouve = true;
                 while (trouve)
                 {
                     trouve = false;
-                    for (int i = 0; i < liste.Length; i++)
-                        if (liste[i] == null)
+                    for (int i = 0; i < list.Length; i++)
+                        if (list[i] == null)
                         {
                             trouve = true;
-                            liste = liste.RemoveAt(i);
+                            list = list.RemoveAt(i);
                             break;
                         }
                 }
             }
 
-            return liste;
+            return list;
         }
 
         /// <summary>
-        /// Retourne une liste après avoir supprimé tous les éléments de la liste dont la(les) condition(s) du prédicat sont remplies
+        /// Remove all item that response to a predicate from an array
         /// </summary>
-        /// <typeparam name="T">Type d'objet dans la liste</typeparam>
-        /// <param name="liste">Liste à parcourir</param>
-        /// <param name="predicate">Predicat (conditions) à remplir pour que l'élément soit supprimé</param>
-        public static T[] RemoveAll<T>(this T[] liste, Predicate<T> predicate)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to remove instance</param>
+        /// <param name="predicate">Predicat (condition) that item must response to be removed from list</param>
+        public static T[] RemoveAll<T>(this T[] list, Predicate<T> predicate)
         {
-            if (liste == null)
+            if (list == null)
                 return null;
-            if (liste.Length == 0)
-                return liste;
+            if (list.Length == 0)
+                return list;
 
-            for (int i = liste.Length - 1; i >= 0; i--)
-                if (predicate(liste[i]))
-                    liste = liste.RemoveAt(i);
-            return liste;
+            for (int i = list.Length - 1; i >= 0; i--)
+                if (predicate(list[i]))
+                    list = list.RemoveAt(i);
+            return list;
         }
 
         /// <summary>
-        /// Ajoute un élément en fin de tableau
+        /// Add an item at the end of Array
         /// </summary>
-        /// <typeparam name="T">Type d'objet du tableau</typeparam>
-        /// <param name="liste">Le tableau</param>
-        /// <param name="objetAAjouter">L'objet à ajouter au tableau</param>
-        /// <returns>Un nouveau tableau, avec l'objet ajouté</returns>
-        public static T[] Add<T>(this T[] liste, object objetAAjouter)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to add item</param>
+        /// <param name="itemToAdd">Item to add to Array</param>
+        /// <returns>Return a new Array with the item added to the end</returns>
+        public static T[] Add<T>(this T[] list, object itemToAdd)
         {
-            if (objetAAjouter == null)
-                throw new ArgumentNullException(nameof(objetAAjouter));
+            if (itemToAdd == null)
+                throw new ArgumentNullException(nameof(itemToAdd));
 
-            if ((typeof(T) == objetAAjouter.GetType()) || (objetAAjouter.GetType().IsSubclassOf(typeof(T))))
+            if ((typeof(T) == itemToAdd.GetType()) || (itemToAdd.GetType().IsSubclassOf(typeof(T))))
             {
-                Array.Resize(ref liste, liste.Length + 1);
-                liste[liste.Length - 1] = (T)objetAAjouter;
+                Array.Resize(ref list, list.Length + 1);
+                list[list.Length - 1] = (T)itemToAdd;
             }
-            return liste;
+            return list;
         }
 
         /// <summary>
-        /// Ajoute des éléments en fin de tableau
+        /// Add a list of items at the end of Array
         /// </summary>
-        /// <typeparam name="T">Type d'objet du tableau</typeparam>
-        /// <param name="liste">Le tableau</param>
-        /// <param name="objetsAAjouter">Les objets à ajouter au tableau</param>
-        /// <returns>Un nouveau tableau, avec les objets ajoutés</returns>
-        public static T[] AddRange<T>(this T[] liste, object[] objetsAAjouter)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to add items</param>
+        /// <param name="itemsToAdd">List of items to add to Array</param>
+        /// <returns>Return a new Array with the items added to the end</returns>
+        public static T[] AddRange<T>(this T[] list, object[] itemsToAdd)
         {
-            if (objetsAAjouter == null)
-                throw new ArgumentNullException(nameof(objetsAAjouter));
+            if (itemsToAdd == null)
+                throw new ArgumentNullException(nameof(itemsToAdd));
 
-            foreach (T objet in objetsAAjouter.Select(v => (T)v))
-            {
-                if ((typeof(T) == objet.GetType()) || (objet.GetType().IsSubclassOf(typeof(T))))
-                {
-                    Array.Resize(ref liste, liste.Length + 1);
-                    liste[liste.Length - 1] = objet;
-                }
-            }
-            return liste;
-        }
-
-        /// <summary>
-        /// Insère un élément dans le tableau à la position indiquée
-        /// </summary>
-        /// <typeparam name="T">Type d'objet du tableau</typeparam>
-        /// <param name="liste">Le tableau</param>
-        /// <param name="objetAInserer">L'objet à insérer au tableau</param>
-        /// <param name="position">Position dans le tableau ou insérer l'objet (de base zéro). Si la position est supérieur à la taille du tableau, il sera ajouté à la fin</param>
-        /// <returns>Un nouveau tableau, avec l'objet inséré</returns>
-        public static T[] Insert<T>(this T[] liste, object objetAInserer, int position)
-        {
-            if (objetAInserer == null) throw new ArgumentNullException(nameof(objetAInserer));
-
-            if (position > liste.Length - 1) position = liste.Length;
-            if ((typeof(T) == objetAInserer.GetType()) || (objetAInserer.GetType().IsSubclassOf(typeof(T))))
-            {
-                Array.Resize(ref liste, liste.Length + 1);
-                for (int i = liste.Length - 1; i > position; i--)
-                    liste[i] = liste[i - 1];
-                liste[position] = (T)objetAInserer;
-            }
-            return liste;
-        }
-
-        /// <summary>
-        /// Insère des éléments dans le tableau à la position indiquée
-        /// </summary>
-        /// <typeparam name="T">Type d'objet du tableau</typeparam>
-        /// <param name="liste">Le tableau</param>
-        /// <param name="objetsAInserer">Les objets à insérer au tableau</param>
-        /// <param name="position">Position dans le tableau ou insérer les objets (de base zéro). Si la position est supérieur à la taille du tableau, il seront ajouté à la fin</param>
-        /// <returns>Un nouveau tableau, avec les objets insérés</returns>
-        public static T[] InsertRange<T>(this T[] liste, object[] objetsAInserer, int position)
-        {
-            if (objetsAInserer == null)
-                throw new ArgumentNullException(nameof(objetsAInserer));
-
-            if (position > liste.Length - 1) position = liste.Length;
-            foreach (T objet in objetsAInserer.Select(v => (T)v))
+            foreach (T objet in itemsToAdd.Select(v => (T)v))
             {
                 if ((typeof(T) == objet.GetType()) || (objet.GetType().IsSubclassOf(typeof(T))))
                 {
-                    Array.Resize(ref liste, liste.Length + 1);
-                    for (int i = liste.Length - 1; i > position; i--)
-                        liste[i] = liste[i - 1];
-                    liste[position] = objet;
+                    Array.Resize(ref list, list.Length + 1);
+                    list[list.Length - 1] = objet;
                 }
             }
-            return liste;
+            return list;
         }
 
         /// <summary>
-        /// Retourne une suite de valeur hexadecimale du buffer d'octets sous forme d'une chaine de caractère, séparées par une virgule
+        /// Insert an item at a specified index in the Array
         /// </summary>
-        /// <param name="buffer">buffer d'octet (de byte) source</param>
-        public static string HexToString(this byte[] buffer)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to insert item</param>
+        /// <param name="itemToInsert">Item to insert in Array</param>
+        /// <param name="position">Index (of base zero) where to insert item in Array. If position is greater than the size of the Array, the item is added at the end of Array</param>
+        /// <returns>Return a new Array with the item insert at the specified index</returns>
+        public static T[] Insert<T>(this T[] list, object itemToInsert, int position)
         {
-            return HexToString(buffer, ",");
-        }
+            if (itemToInsert == null) throw new ArgumentNullException(nameof(itemToInsert));
 
-        /// <summary>
-        /// Retourne une suite de valeur hexadecimale du buffer d'octets sous forme d'une chaine de caractère
-        /// </summary>
-        /// <param name="buffer">buffer d'octet (de byte) source</param>
-        /// <param name="separateur">Séparateur à inserer entre chaque valeur</param>
-        public static string HexToString(this byte[] buffer, string separateur)
-        {
-            if ((buffer == null) || (buffer.Length == 0))
-                return "";
-            StringBuilder retour = new();
-            foreach (byte octet in buffer)
+            if (position > list.Length - 1) position = list.Length;
+            if ((typeof(T) == itemToInsert.GetType()) || (itemToInsert.GetType().IsSubclassOf(typeof(T))))
             {
-                if (retour.Length > 0)
-                    retour.Append(separateur);
-                retour.Append($"0x{octet:X}");
+                Array.Resize(ref list, list.Length + 1);
+                for (int i = list.Length - 1; i > position; i--)
+                    list[i] = list[i - 1];
+                list[position] = (T)itemToInsert;
             }
-            return retour.ToString();
+            return list;
         }
 
         /// <summary>
-        /// Retourne le contenu du tableau en partant du premier indice donné en paramètre
+        /// Insert a list of items at a specified index in the Array
         /// </summary>
-        /// <typeparam name="T">Type du tableau</typeparam>
-        /// <param name="liste">Tableau source</param>
-        /// <param name="start">Position de départ par rapport à zéro (par rapport au premier élement du tableau=</param>
-        public static T[] FromStart<T>(this T[] liste, int start)
+        /// <typeparam name="T">Type of object in Array</typeparam>
+        /// <param name="list">Array from where to insert items</param>
+        /// <param name="itemsToInsert">Item to insert in Array</param>
+        /// <param name="position">Index (of base zero) where to insert the list of items in Array. If position is greater than the size of the Array, the items will be added at the end of Array</param>
+        /// <returns>Return a new Array with the item insert at the specified index</returns>
+        public static T[] InsertRange<T>(this T[] list, object[] itemsToInsert, int position)
         {
-            T[] nouvelleListe = liste;
-            if (start > 0)
-                for (int i = 1; i <= start; i++)
-                    nouvelleListe = nouvelleListe.RemoveAt(0);
-            return nouvelleListe;
+            if (itemsToInsert == null)
+                throw new ArgumentNullException(nameof(itemsToInsert));
+
+            if (position > list.Length - 1) position = list.Length;
+            foreach (T objet in itemsToInsert.Select(v => (T)v))
+            {
+                if ((typeof(T) == objet.GetType()) || (objet.GetType().IsSubclassOf(typeof(T))))
+                {
+                    Array.Resize(ref list, list.Length + 1);
+                    for (int i = list.Length - 1; i > position; i--)
+                        list[i] = list[i - 1];
+                    list[position] = objet;
+                }
+            }
+            return list;
         }
 
         /// <summary>
-        /// Retourne le contenu du tableau en partant du premier indice jusqu'à la fin moins le nombre spécifié en paramètre
+        /// Return a new Array with a distinct apply by a predicate executed on the array
         /// </summary>
-        /// <typeparam name="T">Type du tableau</typeparam>
-        /// <param name="liste">Tableau source</param>
-        /// <param name="end">Nombre d'élémente du tableau, en partant de la fin, à retourner</param>
-        public static T[] ToEnd<T>(this T[] liste, int end)
-        {
-            T[] nouvelleListe = liste;
-            if (end < liste.Length - 1)
-                Array.Resize(ref nouvelleListe, liste.Length - end);
-            return nouvelleListe;
-        }
-
-        /// <summary>
-        /// Retourne le contenu du tableau en partant de la fin moins le nombre spécifié en paramètre
-        /// </summary>
-        /// <typeparam name="T">Type du tableau</typeparam>
-        /// <param name="liste">Tableau source</param>
-        /// <param name="nb">Nombre d'élémente du tableau, en partant de la fin, à retourner</param>
-        public static T[] FromEnd<T>(this T[] liste, int nb)
-        {
-            T[] nouvelleListe = liste;
-            if (nb < liste.Length)
-                for (int i = 1; i <= liste.Length - nb; i++)
-                    nouvelleListe = nouvelleListe.RemoveAt(0);
-            return nouvelleListe;
-        }
-
-        /// <summary>
-        /// Effectue un distinct sur un tableau d'élément d'après une propriété des l'éléments
-        /// </summary>
-        /// <typeparam name="T1">Type de l'élement</typeparam>
-        /// <typeparam name="T2">Type de la propriété de l'élément à comparer</typeparam>
-        /// <param name="liste">Le tableau d'élément</param>
-        /// <param name="unique">Function retournant la propriété de l'élément à comparer</param>
-        public static T1[] Distinct<T1, T2>(this T1[] liste, Func<T1, T2> unique)
+        /// <typeparam name="T1">Type of Array</typeparam>
+        /// <typeparam name="T2">Type of the member of the item array to use as distinct</typeparam>
+        /// <param name="list">Array where execute the distinct</param>
+        /// <param name="unique">Predicate that return the member of item array where to make the distinct</param>
+        public static T1[] Distinct<T1, T2>(this T1[] list, Func<T1, T2> unique)
         {
             T1[] nouvelleListe = new T1[0] { };
             HashSet<T2> cle = new();
-            foreach (T1 item in liste.Where(i => cle.Add(unique(i))))
+            foreach (T1 item in list.Where(i => cle.Add(unique(i))))
                 nouvelleListe = nouvelleListe.Add(item);
             return nouvelleListe;
         }

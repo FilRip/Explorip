@@ -6,7 +6,7 @@ namespace Explorip.Helpers
     internal static class ExtensionsWpf
     {
         /// <summary>
-        /// Retourne le premier parent de type T de l'objet donné
+        /// Return the first parent of a specified type from a control
         /// </summary>
         public static T FindVisualParent<T>(this DependencyObject child) where T : DependencyObject
         {

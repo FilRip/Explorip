@@ -98,10 +98,9 @@ namespace Explorip.Helpers
         }
 
         /// <summary>
-        /// Retourne un écran, de base 0
+        /// Return a screen, from base zero
         /// </summary>
-        /// <param name="id">Numéro de l'écran</param>
-        /// <returns></returns>
+        /// <param name="id">Number of screen</param>
         public static Screen GetScreen(int id)
         {
             ThrowIfNoScreenConnected();
@@ -117,7 +116,7 @@ namespace Explorip.Helpers
                 SCREEN_POSITION.LEFT => GetLeftScreen(),
                 SCREEN_POSITION.CENTER => GetCenterScreen(),
                 SCREEN_POSITION.RIGHT => GetRightScreen(),
-                _ => throw new ScreenManagerException("Position de l'écran demandé inconnu"),
+                _ => throw new ScreenManagerException("Unknown position of requested screen"),
             };
         }
 
@@ -135,25 +134,25 @@ namespace Explorip.Helpers
             MoveWindowToScreen(window, numScreen, false);
         }
 
-        public static void MoveWindowToScreen(Window window, int numScreen, bool pleinEcran)
+        public static void MoveWindowToScreen(Window window, int numScreen, bool fullScreen)
         {
             if (numScreen > Screen.AllScreens.Count() - 1)
                 throw new ArgumentOutOfRangeException(nameof(numScreen));
-            MoveWindowToScreen(window, Screen.AllScreens.ElementAt(numScreen), pleinEcran);
+            MoveWindowToScreen(window, Screen.AllScreens.ElementAt(numScreen), fullScreen);
         }
 
-        public static void MoveWindowToScreen(Window fenetre, Screen screen)
+        public static void MoveWindowToScreen(Window window, Screen screen)
         {
-            MoveWindowToScreen(fenetre, screen, false);
+            MoveWindowToScreen(window, screen, false);
         }
 
-        public static void MoveWindowToScreen(Window fenetre, Screen screen, bool pleinEcran)
+        public static void MoveWindowToScreen(Window window, Screen screen, bool fullScreen)
         {
-            fenetre.Left = screen.WorkingArea.Location.X;
-            fenetre.Top = screen.WorkingArea.Location.Y;
-            if (fenetre.Width > screen.WorkingArea.Width) fenetre.Width = screen.WorkingArea.Width;
-            if (fenetre.Height > screen.WorkingArea.Height) fenetre.Height = screen.WorkingArea.Height;
-            if (pleinEcran) fenetre.WindowState = WindowState.Maximized;
+            window.Left = screen.WorkingArea.Location.X;
+            window.Top = screen.WorkingArea.Location.Y;
+            if (window.Width > screen.WorkingArea.Width) window.Width = screen.WorkingArea.Width;
+            if (window.Height > screen.WorkingArea.Height) window.Height = screen.WorkingArea.Height;
+            if (fullScreen) window.WindowState = WindowState.Maximized;
         }
 
         public static void MoveWindowToScreen(Window window, SCREEN_POSITION screen)
@@ -168,7 +167,7 @@ namespace Explorip.Helpers
         }
 
         /// <summary>
-        /// Retourne l'écran courant de l'application d'où provient l'appel
+        /// Return the main window of current application
         /// </summary>
         public static Screen GetCurrentScreen()
         {
@@ -183,8 +182,8 @@ namespace Explorip.Helpers
         }
 
         /// <summary>
-        /// Affichage sur l'écran choisi dans le fichier de config puis centrage
-        /// TODO : vérifier avec tous les écrans, s'inspirer de DeplacerSurEcran ?
+        /// Display window on a specified screen and center it on this screen
+        /// </summary>
         public static void CenterOnScreen(Window targetWindow, int numScreen = -1)
         {
             Screen screen;

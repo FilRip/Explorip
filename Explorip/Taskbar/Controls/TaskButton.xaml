@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:constants="clr-namespace:Explorip.Constants"
              Loaded="TaskButton_OnLoaded"
-             Unloaded="TaskButton_OnUnloaded" Background="Black" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave">
+             Unloaded="TaskButton_OnUnloaded" Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
     </UserControl.Resources>

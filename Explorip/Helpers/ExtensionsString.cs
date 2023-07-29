@@ -6,16 +6,17 @@
     public static class ExtensionsString
     {
         /// <summary>
-        /// Supprime tous les doublons, boucle tant qu'ils y en a
-        /// Exemple : supprime 3, 4, 5, ... même caractère spécifié, à la suite jusqu'à ce qu'il n'en reste plus qu'un
+        /// Return a string where remove all contiguous iteration of a specified character from a string<br/>
+        /// Example : remove 3, 4, 5, ... same character, following, until there's no more iteration in string<br/>
+        /// Example string : "0122234" with "2" as specified character return "01234"
         /// </summary>
-        /// <param name="source">Chaine de caractères contenant les doublons à supprimer</param>
-        /// <param name="caractere">Caractère dont il faut supprimer les doulons à la suite</param>
-        public static string RemoveDuplicate(this string source, char caractere)
+        /// <param name="source">Source of string where we want to remove all contiguous specified character</param>
+        /// <param name="character">Character that we want to remove all contiguous iteration</param>
+        public static string RemoveDuplicate(this string source, char character)
         {
             string retour = source;
-            while (retour.IndexOf(caractere.ToString() + caractere.ToString()) >= 0)
-                retour = retour.Replace(caractere.ToString() + caractere.ToString(), caractere.ToString());
+            while (retour.IndexOf(character.ToString() + character.ToString()) >= 0)
+                retour = retour.Replace(character.ToString() + character.ToString(), character.ToString());
             return retour;
         }
     }
