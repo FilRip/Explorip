@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -37,6 +38,10 @@ namespace ManagedShell.WindowsTray
             _notificationArea = notificationArea;
             HWnd = hWnd;
             MissedNotifications = new ObservableCollection<NotificationBalloon>();
+            _lastLClick = new Stopwatch();
+            _lastLClick.Start();
+            _lastRClick = new Stopwatch();
+            _lastRClick.Start();
         }
 
         private ImageSource _icon;
@@ -291,8 +296,8 @@ namespace ManagedShell.WindowsTray
 
         #region Mouse events
 
-        private DateTime _lastLClick = DateTime.Now;
-        private DateTime _lastRClick = DateTime.Now;
+        private readonly Stopwatch _lastLClick;
+        private readonly Stopwatch _lastRClick;
 
         public void IconMouseEnter(uint mouse)
         {
@@ -332,7 +337,7 @@ namespace ManagedShell.WindowsTray
                     return;
                 }
 
-                if (DateTime.Now.Subtract(_lastLClick).TotalMilliseconds <= doubleClickTime)
+                if (_lastLClick.ElapsedMilliseconds <= doubleClickTime)
                 {
                     SendMessage((uint)WM.LBUTTONDBLCLK, mouse);
                 }
@@ -341,11 +346,11 @@ namespace ManagedShell.WindowsTray
                     SendMessage((uint)WM.LBUTTONDOWN, mouse);
                 }
 
-                _lastLClick = DateTime.Now;
+                _lastLClick.Restart();
             }
             else if (button == MouseButton.Right)
             {
-                if (DateTime.Now.Subtract(_lastRClick).TotalMilliseconds <= doubleClickTime)
+                if (_lastRClick.ElapsedMilliseconds <= doubleClickTime)
                 {
                     SendMessage((uint)WM.RBUTTONDBLCLK, mouse);
                 }
@@ -354,7 +359,7 @@ namespace ManagedShell.WindowsTray
                     SendMessage((uint)WM.RBUTTONDOWN, mouse);
                 }
 
-                _lastRClick = DateTime.Now;
+                _lastRClick.Restart();
             }
         }
 
@@ -375,7 +380,7 @@ namespace ManagedShell.WindowsTray
                 // This is documented as version 4, but Explorer does this for version 3 as well
                 if (Version >= 3) SendMessage((uint)NIN.SELECT, mouse);
 
-                _lastLClick = DateTime.Now;
+                _lastLClick.Restart();
             }
             else if (button == MouseButton.Right)
             {
@@ -384,7 +389,7 @@ namespace ManagedShell.WindowsTray
                 // This is documented as version 4, but Explorer does this for version 3 as well
                 if (Version >= 3) SendMessage((uint)WM.CONTEXTMENU, mouse);
 
-                _lastRClick = DateTime.Now;
+                _lastRClick.Restart();
             }
         }
 #pragma warning restore IDE0060

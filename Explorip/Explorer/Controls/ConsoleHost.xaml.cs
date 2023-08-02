@@ -130,6 +130,16 @@ namespace Explorip.Explorer.Controls
             NativeMethods.ShowWindow(_srcPtr, NativeMethods.WindowShowStyle.Hide);
         }
 
+        public IntPtr WindowSource
+        {
+            get { return _srcPtr; }
+        }
+
+        public IntPtr WindowDestination
+        {
+            get { return _destPtr; }
+        }
+
         #region IDisposable
 
         private bool disposedValue;

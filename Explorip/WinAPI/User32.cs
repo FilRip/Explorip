@@ -211,5 +211,9 @@ namespace Explorip.WinAPI
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool EnableWindow(IntPtr hWnd, int bEnable);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool UpdateWindow(IntPtr handle);
     }
 }
