@@ -23,8 +23,6 @@
 
 // ReSharper disable InconsistentNaming
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace Hardcodet.Wpf.TaskbarNotification.Interop
 {
     /// <summary>

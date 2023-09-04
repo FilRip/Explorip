@@ -1,11 +1,9 @@
-﻿using System.Drawing;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 using Explorip.Explorer.Windows;
-using Explorip.Helpers;
 
 using Microsoft.WindowsAPICodePack.Shell;
 

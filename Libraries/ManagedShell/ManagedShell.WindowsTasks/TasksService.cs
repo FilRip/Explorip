@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Interop;
 
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;

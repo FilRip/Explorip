@@ -11,7 +11,6 @@ using System.Windows.Media;
 using Explorip.Helpers;
 using Explorip.WinAPI;
 
-using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
 namespace Explorip.Explorer.Controls
