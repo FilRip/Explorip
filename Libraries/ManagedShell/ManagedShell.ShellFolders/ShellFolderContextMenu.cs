@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
-using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 
 namespace ManagedShell.ShellFolders
