@@ -110,7 +110,6 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
             Bottom = 3
         }
 
-#pragma warning disable S1144, S4487 // Unused private types or members should be removed
         [StructLayout(LayoutKind.Sequential)]
         private struct AppBarData
         {
@@ -121,7 +120,6 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
             public Rect rc;
             public int lParam;
         }
-#pragma warning restore S1144, S4487 // Unused private types or members should be removed
 
         [StructLayout(LayoutKind.Sequential)]
         private struct Rect

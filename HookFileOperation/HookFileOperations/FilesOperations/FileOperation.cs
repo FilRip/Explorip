@@ -145,7 +145,8 @@ namespace Explorip.HookFileOperations
 
         private void ThrowIfDisposed()
         {
-            if (disposedValue) throw new ObjectDisposedException(GetType().Name);
+            if (disposedValue)
+                throw new ObjectDisposedException(GetType().Name);
         }
 
         [DllImport("shell32.dll", SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
