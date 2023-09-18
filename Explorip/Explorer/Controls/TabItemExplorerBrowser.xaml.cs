@@ -192,6 +192,8 @@ namespace Explorip.Explorer.Controls
             {
                 ShellObject previousLocation = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation;
                 string nouvelEmplacement = EditPath.Text;
+                if (nouvelEmplacement.StartsWith("%"))
+                    nouvelEmplacement = Environment.GetEnvironmentVariable(nouvelEmplacement.Replace("%", "")).Split(';')[0];
                 MyDataContext.ModeEdit = false;
                 Task.Run(() =>
                 {
