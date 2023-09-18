@@ -35,7 +35,7 @@ namespace Explorip.TaskBar.Utilities
             DeleteOldLogFiles();
 
             _fileLog = new FileLog(Path.Combine(_logPath, $"{_logName}.{_logExt}"));
-            _fileLog?.Open();
+            _fileLog.Open();
 
             ShellLogger.Attach(_fileLog);
         }

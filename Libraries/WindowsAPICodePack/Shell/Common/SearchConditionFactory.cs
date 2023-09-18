@@ -310,10 +310,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             }
             finally
             {
-                if (nativeConditionFactory != null)
-                {
-                    Marshal.ReleaseComObject(nativeConditionFactory);
-                }
+                Marshal.ReleaseComObject(nativeConditionFactory);
             }
 
             return new SearchCondition(result);
@@ -346,10 +343,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             }
             finally
             {
-                if (nativeConditionFactory != null)
-                {
-                    Marshal.ReleaseComObject(nativeConditionFactory);
-                }
+                Marshal.ReleaseComObject(nativeConditionFactory);
             }
 
             return new SearchCondition(result);
@@ -390,7 +384,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             ICondition result = null;
 
             IEntity mainType = null;
-            SearchCondition searchCondition = null;
+            SearchCondition searchCondition;
             try
             {
                 // First, try to create a new IQueryParser using IQueryParserManager
@@ -432,17 +426,9 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 searchCondition = new SearchCondition(result);
                 return searchCondition;
             }
-            catch
-            {
-                searchCondition?.Dispose();
-                throw;
-            }
             finally
             {
-                if (nativeQueryParserManager != null)
-                {
-                    Marshal.ReleaseComObject(nativeQueryParserManager);
-                }
+                Marshal.ReleaseComObject(nativeQueryParserManager);
 
                 if (queryParser != null)
                 {

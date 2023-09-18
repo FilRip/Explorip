@@ -154,6 +154,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             // The string we pass to PSGetPropertyDescriptionListFromString must
             // start with "prop:", followed a list of canonical names for each 
             // property that is to collected.
+#pragma warning disable S2589 // Boolean expressions should not be gratuitous
             if (propertyList != null && propertyList.Length > 0 && propertyList[0] != null)
             {
                 StringBuilder sb = new("prop:");
@@ -197,6 +198,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                     }
                 }
             }
+#pragma warning restore S2589 // Boolean expressions should not be gratuitous
         }
 
         /// <summary>

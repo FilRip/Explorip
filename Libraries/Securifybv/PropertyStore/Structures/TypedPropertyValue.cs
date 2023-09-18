@@ -80,10 +80,7 @@ namespace Securify.PropertyStore.Structures
             byte[] value = new byte[_Value.Length + 4];
             Buffer.BlockCopy(BitConverter.GetBytes((ushort)Type), 0, value, 0, 2);
             Buffer.BlockCopy(BitConverter.GetBytes(Padding), 0, value, 2, 2);
-            if (_Value != null)
-            {
-                Buffer.BlockCopy(_Value, 0, value, 4, _Value.Length);
-            }
+            Buffer.BlockCopy(_Value, 0, value, 4, _Value.Length);
             return value;
         }
         #endregion // GetBytes

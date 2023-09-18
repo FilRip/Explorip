@@ -161,11 +161,11 @@ namespace Explorip.TaskBar.Controls
             {
                 if (PressedWindowState == ApplicationWindow.WindowState.Active)
                 {
-                    Window?.Minimize();
+                    Window.Minimize();
                 }
                 else if (Window.State != ApplicationWindow.WindowState.Unknown)
                 {
-                    Window?.BringToFront();
+                    Window.BringToFront();
                 }
             }
             else if (Window.ListWindows.Count == 0)

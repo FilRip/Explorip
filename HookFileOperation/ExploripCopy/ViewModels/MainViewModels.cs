@@ -272,7 +272,7 @@ namespace ExploripCopy.ViewModels
             _chronoSpeed.Restart();
             _lastSpeed = 0;
             if (_currentThread?.IsAlive == true)
-                _currentThread?.Abort();
+                _currentThread.Abort();
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
             {
                 CurrentFile = operation.Source;
@@ -380,7 +380,7 @@ namespace ExploripCopy.ViewModels
                     }
                     finally
                     {
-                        fo?.Dispose();
+                        fo.Dispose();
                     }
                     FinishCurrent();
                 }));
@@ -428,7 +428,7 @@ namespace ExploripCopy.ViewModels
         private void IgnoreCurrent()
         {
             if (_currentThread?.IsAlive == true)
-                _currentThread?.Abort();
+                _currentThread.Abort();
             else if (_lastError != null)
                 GetLastError = null;
         }

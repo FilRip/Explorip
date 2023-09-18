@@ -375,7 +375,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     NativePropertyStore?.GetValue(ref propertyKey, propVar);
                 }
 
-                return propVar?.Value;
+                return propVar.Value;
             }
         }
 

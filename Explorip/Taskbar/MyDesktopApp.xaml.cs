@@ -46,11 +46,11 @@ namespace Explorip.TaskBar
             foreach (Taskbar taskbar in _taskbarList)
             {
                 taskbar.AllowClose = true;
-                taskbar?.Close();
+                taskbar.Close();
             }
             MonShellManager.AppBarManager.SignalGracefulShutdown();
             ExitApp();
-            Application.Current.Shutdown();
+            Current.Shutdown();
         }
 
         public void ReopenTaskbar()
@@ -58,7 +58,7 @@ namespace Explorip.TaskBar
             foreach (Taskbar taskbar in _taskbarList)
             {
                 taskbar.AllowClose = true;
-                taskbar?.Close();
+                taskbar.Close();
             }
             OpenTaskbar();
         }

@@ -535,7 +535,6 @@ namespace ManagedShell.ShellFolders
                     int iconPoints = IconHelper.GetSize(size);
                     Size imageSize = new() { cx = (int)(iconPoints * DpiHelper.DpiScale), cy = (int)(iconPoints * DpiHelper.DpiScale) };
 
-                    IntPtr hBitmap = IntPtr.Zero;
                     SIIGBF flags = 0;
 
                     if (size == IconSize.Small)
@@ -544,7 +543,7 @@ namespace ManagedShell.ShellFolders
                         flags = SIIGBF.ICONONLY;
                     }
 
-                    if (imageFactory?.GetImage(imageSize, flags, out hBitmap) == NativeMethods.S_OK && hBitmap != IntPtr.Zero)
+                    if (imageFactory.GetImage(imageSize, flags, out IntPtr hBitmap) == NativeMethods.S_OK && hBitmap != IntPtr.Zero)
                     {
                         icon = IconImageConverter.GetImageFromHBitmap(hBitmap);
                     }

@@ -61,7 +61,7 @@ namespace Explorip
                     IpcServerManager.SendMessage(args);
                 }
             }
-            mutexProcess?.Dispose();
+            mutexProcess.Dispose();
         }
 
         public static Application MonApp

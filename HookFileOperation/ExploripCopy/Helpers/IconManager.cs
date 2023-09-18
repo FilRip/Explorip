@@ -30,7 +30,7 @@ namespace ExploripCopy.Helpers
             {
                 BitmapSource result = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 if (disposeIcon)
-                    icon?.Dispose();
+                    icon.Dispose();
                 return result;
             }
             catch (Exception)

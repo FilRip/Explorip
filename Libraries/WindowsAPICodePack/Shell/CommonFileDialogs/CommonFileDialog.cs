@@ -851,15 +851,13 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
             if (propertyName == "Text")
             {
-                CommonFileDialogTextBox textBox = control as CommonFileDialogTextBox;
-
-                if (textBox != null)
+                if (control is CommonFileDialogTextBox textBox)
                 {
                     customize.SetEditBoxText(control.Id, textBox.Text);
                 }
-                else
+                else if (control is CommonFileDialogControl text)
                 {
-                    customize.SetControlLabel(control.Id, textBox.Text);
+                    customize.SetControlLabel(control.Id, text.Text);
                 }
             }
             else if (propertyName == "Visible" && control is CommonFileDialogControl dialogControl)

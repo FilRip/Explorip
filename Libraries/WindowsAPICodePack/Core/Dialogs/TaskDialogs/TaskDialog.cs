@@ -777,7 +777,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
 
         private void ApplySupplementalSettings(NativeTaskDialogSettings settings)
         {
-            if (progressBar != null && progressBar?.State != TaskDialogProgressBarState.Marquee)
+            if (progressBar != null && progressBar.State != TaskDialogProgressBarState.Marquee)
             {
                 settings.ProgressBarMinimum = progressBar.Minimum;
                 settings.ProgressBarMaximum = progressBar.Maximum;

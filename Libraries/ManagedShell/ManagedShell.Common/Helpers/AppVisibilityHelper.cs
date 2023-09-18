@@ -29,12 +29,6 @@ namespace ManagedShell.Common.Helpers
             _appVis = (IAppVisibility)new AppVisibility();
             _useEvents = useEvents;
 
-            if (_appVis == null)
-            {
-                ShellLogger.Debug("AppVisibilityHelper: Unable create IAppVisibility");
-                return;
-            }
-
             if (!_useEvents)
             {
                 return;

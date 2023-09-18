@@ -718,10 +718,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
                 list.Add(new ShellFileSystemFolder(shellItem as IShellItem2));
             }
 
-            if (itemArray != null)
-            {
-                Marshal.ReleaseComObject(itemArray);
-            }
+            Marshal.ReleaseComObject(itemArray);
 
             return list;
         }

@@ -484,10 +484,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                     // Only set the peek bitmap if it's not null. 
                     // If it's null (either we didn't get the bitmap or size was 0),
                     // let DWM handle it
-                    if (hBitmap != null)
-                    {
-                        TabbedThumbnailNativeMethods.SetPeekBitmap(taskbarWindow.WindowToTellTaskbarAbout, hBitmap, taskbarWindow.TabbedThumbnail.DisplayFrameAroundBitmap);
-                    }
+                    TabbedThumbnailNativeMethods.SetPeekBitmap(taskbarWindow.WindowToTellTaskbarAbout, hBitmap, taskbarWindow.TabbedThumbnail.DisplayFrameAroundBitmap);
 
                     // If the bitmap we have is not coming from the user (i.e. we created it here),
                     // then make sure we delete it as we don't need it now.
@@ -654,7 +651,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 {
                     using Image img = Image.FromHbitmap(taskbarWindow.TabbedThumbnail.CurrentHBitmap);
                     using Bitmap bmp = new(img, requestedSize);
-                    hBitmap = bmp != null ? bmp.GetHbitmap() : IntPtr.Zero;
+                    hBitmap = bmp.GetHbitmap();
                 }
             }
             else if (taskbarWindow.TabbedThumbnail.WindowsControl != null)
@@ -676,7 +673,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                     using Image img = Image.FromHbitmap(taskbarWindow.TabbedThumbnail.CurrentHBitmap);
                     using Bitmap bmp = new(img, requestedSize);
 
-                    hBitmap = bmp != null ? bmp.GetHbitmap() : IntPtr.Zero;
+                    hBitmap = bmp.GetHbitmap();
                 }
             }
 
