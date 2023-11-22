@@ -8,7 +8,7 @@ You can manage explorer with tabs, and 2 explorer in same screen to more easily 
 
 You can open command prompt or powershell too in any tabs
 
-Launch explorir with "useowncopier" in command line argument to intercept copy/paste with an icon in notification zone (like SuperCopier/UltraCopier/TeraCopy/...)
+Launch explorip with "useowncopier" in command line argument to intercept copy/paste with an icon in notification zone (like SuperCopier/UltraCopier/TeraCopy/...)
 
 
 
