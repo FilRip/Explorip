@@ -88,7 +88,7 @@ namespace ManagedShell.Interop
 
             this.ApartmentState = apartmentState;
             this._cancellationToken = new CancellationTokenSource();
-            this._tasks = new BlockingCollection<Task>();
+            this._tasks = [];
             this._initAction = initAction ?? (() => { });
 
             this._thread = new Thread(this.ThreadStart)

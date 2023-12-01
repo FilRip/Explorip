@@ -179,7 +179,7 @@ namespace Explorip.TaskBar.Controls
                 return false;
             }
 
-            _ = new ShellItemContextMenu(new ShellItem[] { file }, Folder, IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
+            _ = new ShellItemContextMenu([file], Folder, IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
             return true;
         }
 

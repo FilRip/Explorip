@@ -7,7 +7,7 @@ namespace WindowsDesktop.Interop
 {
     public abstract class ComInterfaceWrapperBase
     {
-        private readonly Dictionary<string, MethodInfo> _methods = new();
+        private readonly Dictionary<string, MethodInfo> _methods = [];
 
         private protected ComInterfaceAssembly ComInterfaceAssembly { get; }
 

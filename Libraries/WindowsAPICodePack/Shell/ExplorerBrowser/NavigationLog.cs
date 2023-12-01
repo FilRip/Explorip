@@ -72,7 +72,7 @@ namespace Microsoft.WindowsAPICodePack.Controls
         {
             get { foreach (ShellObject obj in _locations) { yield return obj; } }
         }
-        private readonly List<ShellObject> _locations = new();
+        private readonly List<ShellObject> _locations = [];
 
         /// <summary>
         /// An index into the Locations collection. The ShellObject pointed to 

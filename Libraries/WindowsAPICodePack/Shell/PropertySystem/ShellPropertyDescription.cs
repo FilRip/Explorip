@@ -231,7 +231,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
             {
                 if (NativePropertyDescription != null && propertyEnumTypes == null)
                 {
-                    List<ShellPropertyEnumType> propEnumTypeList = new();
+                    List<ShellPropertyEnumType> propEnumTypeList = [];
 
                     Guid guid = new(ShellIidGuid.IPropertyEnumTypeList);
                     HResult hr = NativePropertyDescription.GetEnumTypeList(ref guid, out IPropertyEnumTypeList nativeList);

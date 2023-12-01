@@ -322,7 +322,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
             if (internalUpdate || !AddedToTaskbar) { return; }
 
             // Get the array of thumbnail buttons in native format
-            ThumbButton[] nativeButtons = { Win32ThumbButton };
+            ThumbButton[] nativeButtons = [Win32ThumbButton];
 
             HResult hr = TaskbarList.Instance.ThumbBarUpdateButtons(WindowHandle, 1, nativeButtons);
 

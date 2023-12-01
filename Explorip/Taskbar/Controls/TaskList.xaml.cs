@@ -101,7 +101,7 @@ namespace Explorip.TaskBar.Controls
                     }
                     else
                     {
-                        MyDesktopApp.MonShellManager.TasksService.Windows = new ObservableCollection<ApplicationWindow>();
+                        MyDesktopApp.MonShellManager.TasksService.Windows = [];
                     }
 
                     WinAPI.User32.EnumWindows((hwnd, lParam) =>

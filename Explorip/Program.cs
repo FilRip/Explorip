@@ -56,7 +56,7 @@ namespace Explorip
                 }
                 else
                 {
-                    args ??= new string[0] { };
+                    args ??= [];
                     args = args.Remove("explorer");
                     IpcServerManager.SendMessage(args);
                 }

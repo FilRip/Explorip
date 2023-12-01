@@ -40,7 +40,7 @@ namespace ManagedShell.Common.Common
             }
             else
             {
-                object[] e = new object[] { index, item };
+                object[] e = [index, item];
                 _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { InsertItemImpl(e); }, e);
             }
         }
@@ -67,7 +67,7 @@ namespace ManagedShell.Common.Common
             }
             else
             {
-                object[] e = new object[] { oldIndex, newIndex };
+                object[] e = [oldIndex, newIndex];
                 _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { MoveItemImpl(e); }, e);
             }
         }
@@ -107,7 +107,7 @@ namespace ManagedShell.Common.Common
             }
             else
             {
-                object[] e = new object[] { index, item };
+                object[] e = [index, item];
                 _dispatcher.Invoke(DispatcherPriority.Background, (SendOrPostCallback)delegate { SetItemImpl(e); }, e);
             }
         }

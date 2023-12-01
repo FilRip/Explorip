@@ -80,6 +80,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DesktopWindowManager\GlassWindow.cs" />
+    <Compile Include="Exceptions\WindowsApiCodePackException.cs" />
     <Compile Include="ExplorerBrowser\CommonControlException.cs" />
     <Compile Include="ExplorerBrowser\ExplorerBrowser.cs">
       <SubType>UserControl</SubType>

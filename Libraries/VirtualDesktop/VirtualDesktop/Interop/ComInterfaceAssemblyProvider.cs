@@ -22,7 +22,7 @@ namespace WindowsDesktop.Interop
         private static readonly Regex _assemblyRegex = new(@"VirtualDesktop\.(?<build>\d{5}?)(\.\w*|)\.dll");
         private static readonly string _defaultAssemblyDirectoryPath = Path.Combine(ProductInfo.LocalAppData.FullName, "assemblies");
         private static readonly Version _requireVersion = new("1.0");
-        private static readonly int[] _interfaceVersions = new[] { 10240, 20231, 21313, 21359, 22449 };
+        private static readonly int[] _interfaceVersions = [10240, 20231, 21313, 21359, 22449];
 
         private readonly string _assemblyDirectoryPath;
 
@@ -41,13 +41,13 @@ namespace WindowsDesktop.Interop
 
         private Assembly GetExistingAssembly()
         {
-            string[] searchTargets = new[]
-            {
+            string[] searchTargets =
+            [
                 _assemblyDirectoryPath,
                 Environment.CurrentDirectory,
                 Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                 _defaultAssemblyDirectoryPath,
-            };
+            ];
 
             foreach (string searchPath in searchTargets)
             {
@@ -86,7 +86,7 @@ namespace WindowsDesktop.Interop
                 .Where(x => x != null)
                 .ToArray();
             Dictionary<string, Guid> iids = IiD.GetIIDs(interfaceNames);
-            List<string> compileTargets = new();
+            List<string> compileTargets = [];
 
             string assemblyInfo = executingAssembly.GetManifestResourceNames().Single(x => x.Contains("AssemblyInfo"));
             Stream sr = executingAssembly.GetManifestResourceStream(assemblyInfo);

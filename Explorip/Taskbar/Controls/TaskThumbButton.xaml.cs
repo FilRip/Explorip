@@ -29,7 +29,7 @@ namespace Explorip.TaskBar.Controls
         public TaskThumbButton(TaskButton parent)
         {
             InitializeComponent();
-            _thumbPtr = new List<IntPtr>();
+            _thumbPtr = [];
             Width = ThumbWidth;
             TitleFirst.Width = ThumbWidth;
             if (parent.ApplicationWindow.Handle == IntPtr.Zero && parent.ApplicationWindow.ListWindows.Count > 0)

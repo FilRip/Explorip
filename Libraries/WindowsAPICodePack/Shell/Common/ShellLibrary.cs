@@ -26,13 +26,13 @@ namespace Microsoft.WindowsAPICodePack.Shell
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
 
         private static readonly Guid[] FolderTypesGuids =
-        {
+        [
             new Guid(ShellKfidGuid.GenericLibrary),
             new Guid(ShellKfidGuid.DocumentsLibrary),
             new Guid(ShellKfidGuid.MusicLibrary),
             new Guid(ShellKfidGuid.PicturesLibrary),
             new Guid(ShellKfidGuid.VideosLibrary)
-        };
+        ];
 
         #endregion
 
@@ -702,7 +702,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         private List<ShellFileSystemFolder> GetFolders()
         {
-            List<ShellFileSystemFolder> list = new();
+            List<ShellFileSystemFolder> list = [];
 
             Guid shellItemArrayGuid = new(ShellIidGuid.IShellItemArray);
 

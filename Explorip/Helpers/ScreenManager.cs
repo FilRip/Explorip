@@ -38,7 +38,7 @@ namespace Explorip.Helpers
             List<Screen> result = null;
             if (NumberOfScreen() > 1)
             {
-                result = new List<Screen>();
+                result = [];
                 foreach (Screen ecran in Screen.AllScreens)
                 {
                     if (!ecran.Primary)

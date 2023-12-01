@@ -27,9 +27,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
         // Main current native dialog.
         private NativeTaskDialog nativeDialog;
 
-        private List<TaskDialogButtonBase> buttons = new();
-        private List<TaskDialogButtonBase> radioButtons = new();
-        private List<TaskDialogButtonBase> commandLinks = new();
+        private List<TaskDialogButtonBase> buttons = [];
+        private List<TaskDialogButtonBase> radioButtons = [];
+        private List<TaskDialogButtonBase> commandLinks = [];
         private IntPtr ownerWindow;
 
         #region Public Properties
@@ -769,7 +769,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             {
                 if (control.UseElevationIcon)
                 {
-                    settings.ElevatedButtons ??= new List<int>();
+                    settings.ElevatedButtons ??= [];
                     settings.ElevatedButtons.Add(control.Id);
                 }
             }
@@ -811,12 +811,12 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 }
                 else if (control is TaskDialogRadioButton radButton)
                 {
-                    radioButtons ??= new List<TaskDialogButtonBase>();
+                    radioButtons ??= [];
                     radioButtons.Add(radButton);
                 }
                 else if (buttonBase != null)
                 {
-                    buttons ??= new List<TaskDialogButtonBase>();
+                    buttons ??= [];
                     buttons.Add(buttonBase);
                 }
                 else if (control is TaskDialogProgressBar progBar)

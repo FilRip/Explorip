@@ -293,7 +293,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
             try
             {
-                List<ICondition> conditionList = new();
+                List<ICondition> conditionList = [];
                 if (conditionNodes != null)
                 {
                     foreach (SearchCondition c in conditionNodes)

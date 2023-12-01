@@ -123,17 +123,16 @@ namespace Explorip.TaskBar.Utilities
 
         public List<string> GetLanguages()
         {
-            List<string> languages = new()
-            {
-                LANG_DEFAULT
-            };
-            languages.AddRange(GetDictionaries(LANG_FALLBACK, LANG_FOLDER, LANG_EXT));
+            List<string> languages =
+            [
+                LANG_DEFAULT, .. GetDictionaries(LANG_FALLBACK, LANG_FOLDER, LANG_EXT)
+            ];
             return languages;
         }
 
         private List<string> GetDictionaries(string dictDefault, string dictFolder, string dictExtension)
         {
-            List<string> dictionaries = new() { dictDefault };
+            List<string> dictionaries = [dictDefault];
 
             foreach (string subStr in Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dictFolder))
                                                .Where(s => Path.GetExtension(s).Contains(dictExtension)))

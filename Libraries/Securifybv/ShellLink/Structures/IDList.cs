@@ -16,13 +16,13 @@ namespace Securify.ShellLink.Structures
         /// TerminalID (2 bytes): A 16-bit, unsigned integer that indicates the end of the item IDs.
         /// This value MUST be zero.
         /// </summary>
-        public readonly byte[] TerminalID = new byte[] { 0x00, 0x00 };
+        public readonly byte[] TerminalID = [0x00, 0x00];
 
         #region Constructor
         /// <summary>
         /// Constructor
         /// </summary>
-        public IDList() : this(new List<ItemID>()) { }
+        public IDList() : this([]) { }
 
         /// <summary>
         /// Constructor

@@ -45,9 +45,9 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
             ExplorerBrowserControl = new WindowsForms.ExplorerBrowser();
 
             // back the dependency collection properties with instances
-            SelectedItems = selectedItems = new ObservableCollection<ShellObject>();
-            Items = items = new ObservableCollection<ShellObject>();
-            NavigationLog = navigationLog = new ObservableCollection<ShellObject>();
+            SelectedItems = selectedItems = [];
+            Items = items = [];
+            NavigationLog = navigationLog = [];
 
             // hook up events for collection synchronization
             ExplorerBrowserControl.ItemsChanged += new EventHandler(ItemsChanged);

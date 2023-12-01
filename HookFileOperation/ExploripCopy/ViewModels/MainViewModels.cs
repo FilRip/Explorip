@@ -37,7 +37,7 @@ namespace ExploripCopy.ViewModels
         internal MainViewModels() : base()
         {
             _lockOperation = new object();
-            _listWait = new();
+            _listWait = [];
             _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
             _mainThread.Start();
             _chronoSpeed = new Stopwatch();

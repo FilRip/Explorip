@@ -10,7 +10,7 @@ namespace Explorip.HookFileOperations.Helpers
     {
         public static void RechercheComInterface(IntPtr iUnknown, out Dictionary<Guid, string> guid)
         {
-            guid = new Dictionary<Guid, string>();
+            guid = [];
             RegistryKey racineInterface = Registry.ClassesRoot.OpenSubKey("Interface");
             foreach (string @interface in racineInterface.GetSubKeyNames())
             {

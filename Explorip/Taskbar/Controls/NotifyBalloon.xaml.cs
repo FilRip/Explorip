@@ -58,7 +58,7 @@ namespace Explorip.TaskBar.Controls
                             (popupSize.Height * -1) + (offset.Y * dpiScale.DpiScaleY)),
                             PopupPrimaryAxis.Horizontal),// bottom or right taskbar
             };
-            return new CustomPopupPlacement[] { placement };
+            return [placement];
         }
 
         private void PlaySound(NotificationBalloon balloonInfo)

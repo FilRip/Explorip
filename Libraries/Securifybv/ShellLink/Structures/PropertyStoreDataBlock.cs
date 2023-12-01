@@ -19,7 +19,7 @@ namespace Securify.ShellLink.Structures
         /// </summary>
         public PropertyStoreDataBlock() : base()
         {
-            PropertyStore = new List<SerializedPropertyStorage>();
+            PropertyStore = [];
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace ManagedShell.Common.SupportingClasses
     public class StartupRunner
     {
         static readonly StartupLocation[] StartupEntries =
-        {
+        [
             new StartupLocation { Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Microsoft\Windows\CurrentVersion\Run",
                 ApprovedLocation = @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run",
@@ -51,7 +51,7 @@ namespace ManagedShell.Common.SupportingClasses
                 Location = @"%appdata%\Microsoft\Windows\Start Menu\Programs\Startup",
                 ApprovedLocation = @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder",
                 Scope = StartupEntryScope.User },
-        };
+        ];
 
         public void Run()
         {
@@ -89,7 +89,7 @@ namespace ManagedShell.Common.SupportingClasses
 
         private List<StartupEntry> GetStartupApps()
         {
-            List<StartupEntry> startupApps = new();
+            List<StartupEntry> startupApps = [];
 
             foreach (StartupLocation entry in StartupEntries)
             {
@@ -101,7 +101,7 @@ namespace ManagedShell.Common.SupportingClasses
 
         private List<string> GetDisallowedItems(StartupLocation location, StartupEntryScope? overrideScope = null)
         {
-            List<string> disallowedApps = new();
+            List<string> disallowedApps = [];
 
             if (!string.IsNullOrEmpty(location.ApprovedLocation))
             {
@@ -153,12 +153,12 @@ namespace ManagedShell.Common.SupportingClasses
                     break;
             }
 
-            return new List<StartupEntry>();
+            return [];
         }
 
         private List<StartupEntry> GetAppsFromDirectory(StartupLocation location)
         {
-            List<StartupEntry> startupApps = new();
+            List<StartupEntry> startupApps = [];
             List<string> disallowedItems = GetDisallowedItems(location);
             string locationExpanded = Environment.ExpandEnvironmentVariables(location.Location);
 
@@ -197,7 +197,7 @@ namespace ManagedShell.Common.SupportingClasses
         private List<StartupEntry> GetAppsFromRegistryKey(StartupLocation location)
         {
             RegistryKey[] roots = ScopeToRoots(location.Scope);
-            List<StartupEntry> startupApps = new();
+            List<StartupEntry> startupApps = [];
 
             foreach (RegistryKey root in roots)
             {
@@ -258,18 +258,18 @@ namespace ManagedShell.Common.SupportingClasses
 
         private RegistryKey[] ScopeToRoots(StartupEntryScope scope)
         {
-            RegistryKey[] roots = { };
+            RegistryKey[] roots = [];
 
             switch (scope)
             {
                 case StartupEntryScope.All:
-                    roots = new[] { Registry.LocalMachine, Registry.CurrentUser };
+                    roots = [Registry.LocalMachine, Registry.CurrentUser];
                     break;
                 case StartupEntryScope.Machine:
-                    roots = new[] { Registry.LocalMachine };
+                    roots = [Registry.LocalMachine];
                     break;
                 case StartupEntryScope.User:
-                    roots = new[] { Registry.CurrentUser };
+                    roots = [Registry.CurrentUser];
                     break;
             }
 

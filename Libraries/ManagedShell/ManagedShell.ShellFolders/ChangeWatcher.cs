@@ -12,7 +12,7 @@ namespace ManagedShell.ShellFolders
         private readonly FileSystemEventHandler _createdEventHandler;
         private readonly FileSystemEventHandler _deletedEventHandler;
         private readonly RenamedEventHandler _renamedEventHandler;
-        private List<FileSystemWatcher> _watchers = new();
+        private List<FileSystemWatcher> _watchers = [];
 
         public ChangeWatcher(List<string> pathList, FileSystemEventHandler changedEventHandler, FileSystemEventHandler createdEventHandler, FileSystemEventHandler deletedEventHandler, RenamedEventHandler renamedEventHandler)
         {

@@ -21,7 +21,7 @@ namespace Explorip.TaskBar.Controls
         private bool isLoaded;
         private CollectionViewSource allNotifyIconsSource;
         private CollectionViewSource pinnedNotifyIconsSource;
-        private readonly ObservableCollection<ManagedShell.WindowsTray.NotifyIcon> promotedIcons = new();
+        private readonly ObservableCollection<ManagedShell.WindowsTray.NotifyIcon> promotedIcons = [];
 
         public readonly static DependencyProperty NotificationAreaProperty = DependencyProperty.Register("NotificationArea", typeof(NotificationArea), typeof(NotifyIconList));
 
@@ -61,18 +61,18 @@ namespace Explorip.TaskBar.Controls
         {
             if (!isLoaded && NotificationArea != null)
             {
-                CompositeCollection allNotifyIcons = new()
-                {
+                CompositeCollection allNotifyIcons =
+                [
                     new CollectionContainer { Collection = NotificationArea.UnpinnedIcons },
                     new CollectionContainer { Collection = NotificationArea.PinnedIcons }
-                };
+                ];
                 allNotifyIconsSource = new CollectionViewSource { Source = allNotifyIcons };
 
-                CompositeCollection pinnedNotifyIcons = new()
-                {
+                CompositeCollection pinnedNotifyIcons =
+                [
                     new CollectionContainer { Collection = promotedIcons },
                     new CollectionContainer { Collection = NotificationArea.PinnedIcons }
-                };
+                ];
                 pinnedNotifyIconsSource = new CollectionViewSource { Source = pinnedNotifyIcons };
 
                 NotificationArea.UnpinnedIcons.CollectionChanged += UnpinnedIcons_CollectionChanged;

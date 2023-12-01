@@ -65,7 +65,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
         /// </summary>
         internal class PowerRegWindow : Form
         {
-            private readonly Hashtable eventList = new();
+            private readonly Hashtable eventList = [];
             private readonly ReaderWriterLock readerWriterLock = new();
 
             internal PowerRegWindow()
@@ -89,10 +89,10 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
                 if (!eventList.Contains(eventId))
                 {
                     Power.RegisterPowerSettingNotification(Handle, eventId);
-                    ArrayList newList = new()
-                    {
+                    ArrayList newList =
+                    [
                         eventToRegister
-                    };
+                    ];
                     eventList.Add(eventId, newList);
                 }
                 else

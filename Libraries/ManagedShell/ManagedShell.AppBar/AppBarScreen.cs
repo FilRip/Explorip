@@ -86,7 +86,7 @@ namespace ManagedShell.AppBar
 
         public static List<AppBarScreen> FromAllOthersScreen()
         {
-            List<AppBarScreen> screens = new();
+            List<AppBarScreen> screens = [];
             int i = 0;
 
             foreach (Screen screen in Screen.AllScreens)
@@ -100,7 +100,7 @@ namespace ManagedShell.AppBar
 
         public static List<AppBarScreen> FromAllScreens()
         {
-            List<AppBarScreen> screens = new();
+            List<AppBarScreen> screens = [];
             int i = 0;
 
             foreach (Screen screen in Screen.AllScreens)

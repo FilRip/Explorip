@@ -15,7 +15,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         private string moduleName;
         private string referencePath;
-        private static readonly char[] commaSeparator = new char[] { ',' };
+        private static readonly char[] commaSeparator = [','];
 
         #endregion
 

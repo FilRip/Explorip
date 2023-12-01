@@ -23,7 +23,7 @@ namespace ManagedShell.UWPInterop
 
         internal static List<StoreApp> GetStoreApps()
         {
-            List<StoreApp> apps = new();
+            List<StoreApp> apps = [];
 
             try
             {
@@ -145,7 +145,7 @@ namespace ManagedShell.UWPInterop
             if (node == null && nodeText.Contains("uap:"))
             {
                 int i = 0;
-                string[] namespaces = { "uap:", "uap2:", "uap3:", "uap4:", "uap5:" };
+                string[] namespaces = ["uap:", "uap2:", "uap3:", "uap4:", "uap5:"];
                 while (node == null && i <= 3)
                 {
                     nodeText = nodeText.Replace(namespaces[i], namespaces[i + 1]);
@@ -197,7 +197,7 @@ namespace ManagedShell.UWPInterop
 
         private static Dictionary<IconSize, string> GetIcons(string path, XmlNode app, XmlNamespaceManager xmlnsManager)
         {
-            Dictionary<IconSize, string> icons = new();
+            Dictionary<IconSize, string> icons = [];
             XmlNode iconNode = GetXmlnsNode("uap:VisualElements/@Square44x44Logo", app, xmlnsManager);
 
             if (iconNode == null)
@@ -220,7 +220,7 @@ namespace ManagedShell.UWPInterop
 
         private static string GetIconPath(string[] files, string baseName, IconSize size)
         {
-            List<string> iconAssets = new() {
+            List<string> iconAssets = [
                 ".targetsize-32_altform-unplated.png",
                 ".targetsize-32_altform-unplated_contrast-black.png",
                 ".targetsize-36_altform-unplated.png",
@@ -257,7 +257,7 @@ namespace ManagedShell.UWPInterop
                 ".scale-100_contrast-black.png",
                 ".targetsize-256.png",
                 ".targetsize-256_contrast-black.png"
-            };
+            ];
 
             // do some sorting based on DPI for prettiness
             if (scale == 0)

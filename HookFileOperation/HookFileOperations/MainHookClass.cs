@@ -58,16 +58,16 @@ namespace Explorip.HookFileOperations
                 _newItemHook = LocalHook.Create(copyItemsCom.MethodPointers[9], new DelegateNewItem(NewItemHooked), this);
                 //_setOperationFlagsHook = LocalHook.Create(copyItemsCom.MethodPointers[10], new DelegateSetOperationFlags(NewSetOperationFlags), this);
 
-                _copyItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _copyItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _moveItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _moveItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _deleteItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _deleteItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _renameItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _renameItemsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _performOperationsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
-                _newItemHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
+                _copyItemHook.ThreadACL.SetExclusiveACL([0]);
+                _copyItemsHook.ThreadACL.SetExclusiveACL([0]);
+                _moveItemHook.ThreadACL.SetExclusiveACL([0]);
+                _moveItemsHook.ThreadACL.SetExclusiveACL([0]);
+                _deleteItemHook.ThreadACL.SetExclusiveACL([0]);
+                _deleteItemsHook.ThreadACL.SetExclusiveACL([0]);
+                _renameItemHook.ThreadACL.SetExclusiveACL([0]);
+                _renameItemsHook.ThreadACL.SetExclusiveACL([0]);
+                _performOperationsHook.ThreadACL.SetExclusiveACL([0]);
+                _newItemHook.ThreadACL.SetExclusiveACL([0]);
                 //_setOperationFlagsHook.ThreadACL.SetExclusiveACL(new int[] { 0 });
             }
             catch (Exception ex)

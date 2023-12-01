@@ -7,7 +7,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     internal class ChangeNotifyEventManager
     {
         #region Change order
-        private static readonly ShellObjectChangeTypes[] _changeOrder = {
+        private static readonly ShellObjectChangeTypes[] _changeOrder = [
             ShellObjectChangeTypes.ItemCreate,
             ShellObjectChangeTypes.ItemRename,
             ShellObjectChangeTypes.ItemDelete,
@@ -37,10 +37,10 @@ namespace Microsoft.WindowsAPICodePack.Shell
             ShellObjectChangeTypes.DiskEventsMask,
             ShellObjectChangeTypes.GlobalEventsMask,
             ShellObjectChangeTypes.AllEventsMask
-        };
+        ];
         #endregion
 
-        private readonly Dictionary<ShellObjectChangeTypes, Delegate> _events = new();
+        private readonly Dictionary<ShellObjectChangeTypes, Delegate> _events = [];
 
         public void Register(ShellObjectChangeTypes changeType, Delegate handler)
         {

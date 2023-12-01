@@ -9,7 +9,7 @@ namespace Explorip.Helpers
     {
         internal static List<IntPtr> ListWindowsOfProcess(uint processId)
         {
-            List<IntPtr> windows = new();
+            List<IntPtr> windows = [];
             NativeMethods.EnumWindows(new NativeMethods.CallBackPtr((handle, param) =>
             {
                 NativeMethods.GetWindowThreadProcessId(handle, out uint id);

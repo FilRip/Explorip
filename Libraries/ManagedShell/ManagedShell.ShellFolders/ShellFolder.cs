@@ -51,7 +51,7 @@ namespace ManagedShell.ShellFolders
                     return _files;
                 }
 
-                _files = new ThreadSafeObservableCollection<ShellFile>();
+                _files = [];
                 Initialize();
 
                 return _files;
@@ -82,10 +82,10 @@ namespace ManagedShell.ShellFolders
 
             if (_shellItem != null && IsFileSystem && IsFolder)
             {
-                List<string> watchList = new()
-                {
+                List<string> watchList =
+                [
                     Path
-                };
+                ];
 
                 if (IsDesktop)
                 {

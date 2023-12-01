@@ -142,7 +142,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         public void SetStacks(params string[] canonicalNames)
         {
             if (canonicalNames == null) { throw new ArgumentNullException("canonicalNames"); }
-            List<PropertyKey> propertyKeyList = new();
+            List<PropertyKey> propertyKeyList = [];
 
             foreach (string prop in canonicalNames)
             {

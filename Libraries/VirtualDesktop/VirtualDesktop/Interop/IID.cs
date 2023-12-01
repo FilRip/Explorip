@@ -19,7 +19,7 @@ namespace WindowsDesktop.Interop
         // ReSharper disable once InconsistentNaming
         public static Dictionary<string, Guid> GetIIDs(string[] targets)
         {
-            Dictionary<string, Guid> known = new();
+            Dictionary<string, Guid> known = [];
 
             foreach (string prop in Settings.Default.Properties.OfType<SettingsProperty>().Select(item => item.Name))
             {
@@ -57,7 +57,7 @@ namespace WindowsDesktop.Interop
         private static Dictionary<string, Guid> GetIIDsFromRegistry(string[] targets)
         {
             using RegistryKey interfaceKey = Registry.ClassesRoot.OpenSubKey("Interface") ?? throw new VirtualDesktopException(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");
-            Dictionary<string, Guid> result = new();
+            Dictionary<string, Guid> result = [];
             string[] names = interfaceKey.GetSubKeyNames();
 
             foreach (string name in names)

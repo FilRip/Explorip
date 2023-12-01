@@ -17,7 +17,7 @@ namespace ManagedShell.AppBar
         private readonly ExplorerHelper _explorerHelper;
         private int uCallBack;
 
-        public List<AppBarWindow> AppBars { get; } = new List<AppBarWindow>();
+        public List<AppBarWindow> AppBars { get; } = [];
         public EventHandler<AppBarEventArgs> AppBarEvent { get; set; }
 
         public AppBarManager(ExplorerHelper explorerHelper)

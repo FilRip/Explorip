@@ -15,7 +15,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
     [ContentProperty("Items")]
     public class CommonFileDialogRadioButtonList : CommonFileDialogControl, ICommonFileDialogIndexedControls
     {
-        private readonly Collection<CommonFileDialogRadioButtonListItem> items = new();
+        private readonly Collection<CommonFileDialogRadioButtonListItem> items = [];
         /// <summary>
         /// Gets the collection of CommonFileDialogRadioButtonListItem objects
         /// </summary>

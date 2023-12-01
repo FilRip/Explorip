@@ -29,7 +29,7 @@ namespace Explorip.TaskBar
 
         public MyDesktopApp()
         {
-            _taskbarList = new List<Taskbar>();
+            _taskbarList = [];
             MonShellManager = SetupManagedShell();
 
             _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));

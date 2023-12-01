@@ -297,7 +297,7 @@ namespace WpfScreenHelper
             /// </summary>
             public MonitorEnumCallback()
             {
-                this.Screens = new ArrayList();
+                this.Screens = [];
             }
 
             /// <summary>

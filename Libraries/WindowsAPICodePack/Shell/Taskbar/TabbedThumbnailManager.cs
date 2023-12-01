@@ -31,8 +31,8 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// </summary>
         internal TabbedThumbnailManager()
         {
-            _tabbedThumbnailCache = new Dictionary<IntPtr, TabbedThumbnail>();
-            _tabbedThumbnailCacheWPF = new Dictionary<UIElement, TabbedThumbnail>();
+            _tabbedThumbnailCache = [];
+            _tabbedThumbnailCacheWPF = [];
         }
 
         /// <summary>

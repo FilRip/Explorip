@@ -15,7 +15,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.Controls
     [ContentProperty("Items")]
     public class CommonFileDialogComboBox : CommonFileDialogProminentControl, ICommonFileDialogIndexedControls
     {
-        private readonly Collection<CommonFileDialogComboBoxItem> items = new();
+        private readonly Collection<CommonFileDialogComboBoxItem> items = [];
         /// <summary>
         /// Gets the collection of CommonFileDialogComboBoxItem objects.
         /// </summary>

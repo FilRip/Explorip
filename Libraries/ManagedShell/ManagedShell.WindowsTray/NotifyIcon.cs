@@ -37,7 +37,7 @@ namespace ManagedShell.WindowsTray
         {
             _notificationArea = notificationArea;
             HWnd = hWnd;
-            MissedNotifications = new ObservableCollection<NotificationBalloon>();
+            MissedNotifications = [];
             _lastLClick = new Stopwatch();
             _lastLClick.Start();
             _lastRClick = new Stopwatch();

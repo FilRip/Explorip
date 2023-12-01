@@ -105,7 +105,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         public IEnumerable<SearchCondition> GetSubConditions()
         {
             // Our list that we'll return
-            List<SearchCondition> subConditionsList = new();
+            List<SearchCondition> subConditionsList = [];
 
             // Get the sub-conditions from the native API
             Guid guid = new(ShellIidGuid.IEnumUnknown);

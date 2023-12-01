@@ -23,19 +23,19 @@ namespace ManagedShell.WindowsTray
         const string POWER_GUID = "7820ae75-23e3-4229-82c1-e41cb67d5b9c";
         const string VOLUME_GUID = "7820ae73-23e3-4229-82c1-e41cb67d5b9c";
 
-        public static readonly string[] DEFAULT_PINNED = {
+        public static readonly string[] DEFAULT_PINNED = [
             HEALTH_GUID,
             POWER_GUID,
             NETWORK_GUID,
             VOLUME_GUID
-        };
+        ];
 
-        internal static readonly List<string> Win11ActionCenterIcons = new()
-        {
+        internal static readonly List<string> Win11ActionCenterIcons =
+        [
             NETWORK_GUID,
             POWER_GUID,
             VOLUME_GUID
-        };
+        ];
 
         readonly NativeMethods.Rect defaultPlacement = new()
         {

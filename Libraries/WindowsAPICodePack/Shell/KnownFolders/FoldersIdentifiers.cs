@@ -17,7 +17,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
         private static void InitFolders()
         {
-            folders = new Dictionary<Guid, string>();
+            folders = [];
             Type folderIDs = typeof(FolderIdentifiers);
 
 #pragma warning disable S3011
@@ -65,7 +65,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
             // are mutable.
             ICollection<Guid> keys = folders.Keys;
 
-            SortedList<string, Guid> slist = new();
+            SortedList<string, Guid> slist = [];
             foreach (Guid g in keys)
             {
                 slist.Add(folders[g], g);

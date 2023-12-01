@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 
+using Microsoft.WindowsAPICodePack.Shell.Exceptions;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
 using MS.WindowsAPICodePack.Internal;
@@ -165,7 +166,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
                     throw new ArgumentException(LocalizedMessages.PropertyCollectionNullCanonicalName, "canonicalName");
                 }
 
-                IShellProperty prop = Items.FirstOrDefault(p => p.CanonicalName == canonicalName) ?? throw new IndexOutOfRangeException(LocalizedMessages.PropertyCollectionCanonicalInvalidIndex);
+                IShellProperty prop = Items.FirstOrDefault(p => p.CanonicalName == canonicalName) ?? throw new WindowsApiCodePackException(LocalizedMessages.PropertyCollectionCanonicalInvalidIndex);
                 return prop;
             }
         }

@@ -174,7 +174,7 @@ namespace MS.WindowsAPICodePack.Internal
         }
 
         // A dictionary and lock to contain compiled expression trees for constructors
-        private static readonly Dictionary<Type, Func<object, PropVariant>> _cache = new();
+        private static readonly Dictionary<Type, Func<object, PropVariant>> _cache = [];
         private static readonly object _padlock = new();
 
         // Retrieves a cached constructor expression.
@@ -190,7 +190,7 @@ namespace MS.WindowsAPICodePack.Internal
                 {
                     // iterates through all constructors
                     ConstructorInfo constructor = typeof(PropVariant)
-                        .GetConstructor(new Type[] { type });
+                        .GetConstructor([type]);
 
                     if (constructor == null)
                     { // if the method was not found, throw.

@@ -240,8 +240,8 @@ namespace Explorip.Helpers
         /// <param name="unique">Predicate that return the member of item array where to make the distinct</param>
         public static T1[] Distinct<T1, T2>(this T1[] list, Func<T1, T2> unique)
         {
-            T1[] nouvelleListe = new T1[0] { };
-            HashSet<T2> cle = new();
+            T1[] nouvelleListe = [];
+            HashSet<T2> cle = [];
             foreach (T1 item in list.Where(i => cle.Add(unique(i))))
                 nouvelleListe = nouvelleListe.Add(item);
             return nouvelleListe;

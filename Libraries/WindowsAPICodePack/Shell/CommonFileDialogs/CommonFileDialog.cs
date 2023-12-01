@@ -67,9 +67,9 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
                 throw new PlatformNotSupportedException(LocalizedMessages.CommonFileDialogRequiresVista);
             }
 
-            filenames = new Collection<string>();
-            filters = new CommonFileDialogFilterCollection();
-            items = new Collection<IShellItem>();
+            filenames = [];
+            filters = [];
+            items = [];
             controls = new CommonFileDialogControlCollection<CommonFileDialogControl>(this);
         }
 

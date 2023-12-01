@@ -256,7 +256,7 @@ namespace Explorip.TaskBar.Utilities
             {
                 string providerName = "LocalFileSettingsProvider";
 
-                SettingsAttributeDictionary attributes = new();
+                SettingsAttributeDictionary attributes = [];
                 UserScopedSettingAttribute attr = new();
                 attributes.Add(attr.TypeId, attr);
 

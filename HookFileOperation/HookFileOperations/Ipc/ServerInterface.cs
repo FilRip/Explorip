@@ -14,7 +14,7 @@ namespace Explorip.HookFileOperations.Ipc
     /// </summary>
     public class ServerInterface : MarshalByRefObject
     {
-        private readonly List<OneFileOperation> _listOperations = new();
+        private readonly List<OneFileOperation> _listOperations = [];
 
         public void IsInstalled(int clientPID)
         {

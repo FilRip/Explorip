@@ -16,7 +16,7 @@ namespace ManagedShell.ShellFolders
     public abstract class ShellContextMenu : NativeWindow
     {
         // Properties
-        protected List<ShellNewMenuCommand> ShellNewMenus = new();
+        protected List<ShellNewMenuCommand> ShellNewMenus = [];
 
         internal IContextMenu iContextMenu;
         internal IContextMenu2 iContextMenu2;

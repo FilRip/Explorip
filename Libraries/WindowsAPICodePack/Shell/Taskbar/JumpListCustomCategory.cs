@@ -65,7 +65,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         {
             Name = categoryName;
 
-            JumpListItems = new JumpListItemCollection<IJumpListItem>();
+            JumpListItems = [];
             JumpListItems.CollectionChanged += OnJumpListCollectionChanged;
         }
 

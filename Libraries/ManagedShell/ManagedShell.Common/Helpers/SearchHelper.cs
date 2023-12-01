@@ -63,7 +63,7 @@ namespace ManagedShell.Common.Helpers
 
             string query;
             OleDbConnection cConnection;
-            List<SearchResult> results = new();
+            List<SearchResult> results = [];
 
             if (EnvironmentHelper.IsWindows81OrBetter)
             {
@@ -184,7 +184,7 @@ namespace ManagedShell.Common.Helpers
             set { SetValue(SearchTextProperty, value); }
         }
 
-        static readonly ThreadSafeObservableCollection<SearchResult> m_results = new();
+        static readonly ThreadSafeObservableCollection<SearchResult> m_results = [];
 
         public ReadOnlyObservableCollection<SearchResult> Results
         {

@@ -15,7 +15,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 {
     internal static class TaskbarWindowManager
     {
-        internal static readonly List<TaskbarWindow> _taskbarWindowList = new();
+        internal static readonly List<TaskbarWindow> _taskbarWindowList = [];
 
         private static bool _buttonsAdded;
 

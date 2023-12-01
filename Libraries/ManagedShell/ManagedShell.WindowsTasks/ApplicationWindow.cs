@@ -49,7 +49,7 @@ namespace ManagedShell.WindowsTasks
             _winFileName = "";
             _isUWP = null;
             _lockUpdate = new object();
-            _windows = new List<IntPtr>();
+            _windows = [];
             _tasksService = tasksService;
             Handle = handle;
             State = WindowState.Inactive;

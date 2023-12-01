@@ -8,7 +8,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
     internal static class MessageListenerFilter
     {
         private static readonly object _registerLock = new();
-        private static readonly List<RegisteredListener> _packages = new();
+        private static readonly List<RegisteredListener> _packages = [];
 
         public static MessageListenerFilterRegistrationResult Register(Action<WindowMessageEventArgs> callback)
         {
@@ -58,7 +58,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 
             public RegisteredListener()
             {
-                Callbacks = new Dictionary<uint, Action<WindowMessageEventArgs>>();
+                Callbacks = [];
                 Listener = new MessageListener();
                 Listener.MessageReceived += MessageReceived;
             }

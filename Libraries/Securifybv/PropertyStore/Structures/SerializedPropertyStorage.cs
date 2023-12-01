@@ -18,7 +18,7 @@ namespace Securify.PropertyStore.Structures
         /// </summary>
         public SerializedPropertyStorage() : base()
         {
-            this.PropertyStorage = new List<SerializedPropertyValue>();
+            this.PropertyStorage = [];
         }
 
         /// <summary>

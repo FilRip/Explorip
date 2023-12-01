@@ -71,7 +71,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         {
             lock (syncLock)
             {
-                customCategoriesCollection ??= new JumpListCustomCategoryCollection();
+                customCategoriesCollection ??= [];
             }
 
             if (customCategories != null)
@@ -97,7 +97,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
                 // of this object
                 lock (syncLock)
                 {
-                    userTasks ??= new JumpListItemCollection<JumpListTask>();
+                    userTasks ??= [];
                 }
             }
 
@@ -357,7 +357,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 
         private IEnumerable<string> ProcessDeletedItems(IObjectArray removedItems)
         {
-            List<string> removedItemsArray = new();
+            List<string> removedItemsArray = [];
 
             removedItems.GetCount(out uint count);
 

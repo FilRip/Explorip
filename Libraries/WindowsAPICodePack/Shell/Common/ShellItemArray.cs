@@ -11,7 +11,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
 {
     internal class ShellItemArray : IShellItemArray
     {
-        readonly List<IShellItem> shellItemsList = new();
+        readonly List<IShellItem> shellItemsList = [];
 
         internal ShellItemArray(IShellItem[] shellItems)
         {
