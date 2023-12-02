@@ -17,40 +17,70 @@ namespace ManagedShell.Common.SupportingClasses
     {
         static readonly StartupLocation[] StartupEntries =
         [
-            new StartupLocation { Type = StartupEntryType.RegistryKey,
+            new StartupLocation
+            {
+                Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Microsoft\Windows\CurrentVersion\Run",
                 ApprovedLocation = @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run",
-                Scope = StartupEntryScope.All },
-            new StartupLocation { Type = StartupEntryType.RegistryKey,
+                Scope = StartupEntryScope.All
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Run",
                 ApprovedLocation = @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run32",
-                Scope = StartupEntryScope.All },
-            new StartupLocation { Type = StartupEntryType.RegistryKey,
+                Scope = StartupEntryScope.All
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run",
-                Scope = StartupEntryScope.All },
-            new StartupLocation { Type = StartupEntryType.RegistryKey,
+                Scope = StartupEntryScope.All
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Policies\Explorer\Run",
-                Scope = StartupEntryScope.All },
-            new StartupLocation { Type = StartupEntryType.RegistryKey,
+                Scope = StartupEntryScope.All
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Microsoft\Windows\CurrentVersion\RunOnce",
-                Scope = StartupEntryScope.All },
-            new StartupLocation { Type = StartupEntryType.RegistryKey,
+                Scope = StartupEntryScope.All
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\RunOnce",
-                Scope = StartupEntryScope.All },
-            new StartupLocation { Type = StartupEntryType.RegistryKey,
+                Scope = StartupEntryScope.All
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Microsoft\Windows\CurrentVersion\RunOnceEx",
-                Scope = StartupEntryScope.All },
-            new StartupLocation { Type = StartupEntryType.RegistryKey,
+                Scope = StartupEntryScope.All
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.RegistryKey,
                 Location = @"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\RunOnceEx",
-                Scope = StartupEntryScope.All },
-            new StartupLocation { Type = StartupEntryType.Directory,
+                Scope = StartupEntryScope.All
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.Directory,
                 Location = @"%programdata%\Microsoft\Windows\Start Menu\Programs\Startup",
                 ApprovedLocation = @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder",
-                Scope = StartupEntryScope.Machine },
-            new StartupLocation { Type = StartupEntryType.Directory,
+                Scope = StartupEntryScope.Machine
+            },
+            new StartupLocation
+            {
+                Type = StartupEntryType.Directory,
                 Location = @"%appdata%\Microsoft\Windows\Start Menu\Programs\Startup",
                 ApprovedLocation = @"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\StartupFolder",
-                Scope = StartupEntryScope.User },
+                Scope = StartupEntryScope.User
+            },
         ];
 
         public void Run()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,7 +23,7 @@ namespace WindowsDesktop.Interop
         private static readonly Regex _assemblyRegex = new(@"VirtualDesktop\.(?<build>\d{5}?)(\.\w*|)\.dll");
         private static readonly string _defaultAssemblyDirectoryPath = Path.Combine(ProductInfo.LocalAppData.FullName, "assemblies");
         private static readonly Version _requireVersion = new("1.0");
-        private static readonly int[] _interfaceVersions = [10240, 20231, 21313, 21359, 22449];
+        private static readonly int[] _interfaceVersions = [10240, 20231, 21313, 21359, 22449/*, 22621*/];
 
         private readonly string _assemblyDirectoryPath;
 
@@ -33,8 +34,12 @@ namespace WindowsDesktop.Interop
 
         public Assembly GetAssembly()
         {
-            Assembly assembly = GetExistingAssembly();
-            if (assembly != null) return assembly;
+            if (!Debugger.IsAttached)
+            {
+                Assembly assembly = GetExistingAssembly();
+                if (assembly != null)
+                    return assembly;
+            }
 
             return CreateAssembly();
         }
@@ -52,7 +57,8 @@ namespace WindowsDesktop.Interop
             foreach (string searchPath in searchTargets)
             {
                 DirectoryInfo dir = new(searchPath);
-                if (!dir.Exists) continue;
+                if (!dir.Exists)
+                    continue;
 
                 foreach (FileInfo file in dir.GetFiles())
                 {
@@ -62,7 +68,7 @@ namespace WindowsDesktop.Interop
                         AssemblyName name = AssemblyName.GetAssemblyName(file.FullName);
                         if (name.Version >= _requireVersion)
                         {
-                            System.Diagnostics.Debug.WriteLine($"Assembly found: {file.FullName}");
+                            Debug.WriteLine($"Assembly found: {file.FullName}");
 #pragma warning disable S3885 // "Assembly.Load" should be used
                             return Assembly.LoadFile(file.FullName);
 #pragma warning restore S3885 // "Assembly.Load" should be used
@@ -103,7 +109,8 @@ namespace WindowsDesktop.Interop
             {
                 string[] texts = Path.GetFileNameWithoutExtension(name)?.Split('.');
                 string typeName = texts.LastOrDefault();
-                if (typeName == null) continue;
+                if (typeName == null)
+                    continue;
 
                 if (texts != null && int.TryParse(string.Concat(texts[texts.Length - 2].Skip(1)), out int build) && build != interfaceVersion)
                 {
@@ -156,7 +163,7 @@ namespace WindowsDesktop.Interop
                 throw new VirtualDesktopException(message);
             }
 
-            System.Diagnostics.Debug.WriteLine($"Assembly compiled: {path}");
+            Debug.WriteLine($"Assembly compiled: {path}");
             return result.CompiledAssembly;
         }
     }

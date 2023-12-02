@@ -30,7 +30,7 @@ namespace WindowsDesktop.Internal
             Source?.RemoveHook(WndProc);
             // Source could have been created on a different thread, which means we 
             // have to Dispose of it on the UI thread or it will crash.
-            Source?.Dispatcher?.BeginInvoke(DispatcherPriority.Send, (Action)(() => Source?.Dispose()));
+            Source?.Dispatcher?.BeginInvoke(DispatcherPriority.Send, () => Source?.Dispose());
             Source = null;
 
             NativeMethods.CloseWindow(Handle);

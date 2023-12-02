@@ -1,123 +1,41 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2E1FB0DF-F9BB-4909-9F32-2D9D022A8E57}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.WindowsAPICodePack</RootNamespace>
     <AssemblyName>Microsoft.WindowsAPICodePack</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net481</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <TargetFrameworkProfile />
+    <AssemblyTitle>Microsoft.WindowsAPICodePack</AssemblyTitle>
+    <Company>Microsoft</Company>
+    <Product>Microsoft Windows API Code Pack for .NET Framework</Product>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Description>WindowsAPICodePack Core</Description>
+    <Copyright>Copyright © Microsoft 2010</Copyright>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <NoWarn>IDE0251</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppRestartRecovery\ApplicationRestartRecoveryManager.cs" />
-    <Compile Include="AppRestartRecovery\ApplicationRecoveryException.cs" />
-    <Compile Include="AppRestartRecovery\RecoveryData.cs" />
-    <Compile Include="AppRestartRecovery\RecoverySettings.cs" />
-    <Compile Include="AppRestartRecovery\RestartRestrictions.cs" />
-    <Compile Include="AppRestartRecovery\RestartSettings.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Interop\WindowMessage.cs" />
-    <Compile Include="PowerManagement\PowerManagerException.cs" />
-    <Compile Include="Dialogs\Common\DialogControl.cs" />
-    <Compile Include="Dialogs\Common\DialogControlCollection.cs" />
-    <Compile Include="Dialogs\Common\DialogsDefaults.cs" />
-    <Compile Include="Dialogs\Common\IDialogControlHost.cs" />
-    <Compile Include="Interop\AppRestartRecovery\AppRestartRecoveryNativeMethods.cs" />
-    <Compile Include="Interop\CoreErrorHelper.cs" />
-    <Compile Include="Interop\CoreHelpers.cs" />
-    <Compile Include="Interop\CoreNativeMethods.cs" />
-    <Compile Include="Interop\Dialogs\DialogShowState.cs" />
-    <Compile Include="Interop\NetworkList\INetwork.cs" />
-    <Compile Include="Interop\NetworkList\INetworkConnection.cs" />
-    <Compile Include="Interop\NetworkList\INetworkListManager.cs" />
-    <Compile Include="Interop\NetworkList\NetworkListManagerClass.cs" />
-    <Compile Include="Interop\PowerManagement\PowerManagementNativeMethods.cs" />
-    <Compile Include="Interop\TaskDialogs\NativeTaskDialog.cs" />
-    <Compile Include="Interop\TaskDialogs\NativeTaskDialogSettings.cs" />
-    <Compile Include="Interop\TaskDialogs\TaskDialogNativeMethods.cs" />
-    <Compile Include="NetworkList\Network.cs" />
-    <Compile Include="NetworkList\NetworkCollection.cs" />
-    <Compile Include="NetworkList\NetworkConnection.cs" />
-    <Compile Include="NetworkList\NetworkConnectionCollection.cs" />
-    <Compile Include="NetworkList\NetworkListEnums.cs" />
-    <Compile Include="NetworkList\NetworkListManager.cs" />
-    <Compile Include="PowerManagement\BatteryState.cs" />
-    <Compile Include="PowerManagement\EventManager.cs" />
-    <Compile Include="PowerManagement\ExecutionState.cs" />
-    <Compile Include="PowerManagement\MessageManager.cs">
-    </Compile>
-    <Compile Include="PowerManagement\PersonalityGuids.cs" />
-    <Compile Include="PowerManagement\Power.cs" />
-    <Compile Include="PowerManagement\PowerManager.cs" />
-    <Compile Include="PowerManagement\PowerPersonality.cs" />
-    <Compile Include="PowerManagement\PowerSource.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PropertySystem\PropertyKey.cs" />
-    <Compile Include="PropertySystem\PropVariant.cs" />
-    <Compile Include="PropertySystem\PropVariantNativeMethods.cs" />
-    <Compile Include="Resources\LocalizedMessages.Designer.cs">
+    <Compile Update="Resources\LocalizedMessages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>LocalizedMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="SafeHandles\ZeroInvalidHandle.cs" />
-    <Compile Include="SafeHandles\SafeIconHandle.cs" />
-    <Compile Include="SafeHandles\SafeRegionHandle.cs" />
-    <Compile Include="SafeHandles\SafeWindowHandle.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialog.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogBar.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogButton.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogButtonBase.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogClosingEventArgs.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogCommandLink.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogControl.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogDefaults.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogExpandedInfoMode.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogHyperlinkClickedEventArgs.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogProgressBar.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogProgressBarState.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogRadioButton.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogResult.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogStandardButton.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogStandardIcon.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogStartupLocation.cs" />
-    <Compile Include="Dialogs\TaskDialogs\TaskDialogTickEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\LocalizedMessages.resx">
+    <EmbeddedResource Update="Resources\LocalizedMessages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LocalizedMessages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
@@ -128,12 +46,4 @@
       <SubType>Designer</SubType>
     </CodeAnalysisDictionary>
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

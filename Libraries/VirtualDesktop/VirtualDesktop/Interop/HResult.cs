@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-// ReSharper disable InconsistentNaming
 
 namespace WindowsDesktop.Interop
 {

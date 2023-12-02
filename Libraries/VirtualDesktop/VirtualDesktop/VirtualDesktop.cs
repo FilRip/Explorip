@@ -60,7 +60,7 @@ namespace WindowsDesktop
             get => _wallpaperPath;
             set
             {
-                if (ProductInfo.OSBuild < 21313) throw new PlatformNotSupportedException("This Windows 10 version is not supported.");
+                if (ProductInfo.OSBuild < 10240) throw new PlatformNotSupportedException("This Windows 10 version is not supported.");
 
                 ComInterface.VirtualDesktopManagerInternal.SetDesktopWallpaper(this, value);
                 _wallpaperPath = value;

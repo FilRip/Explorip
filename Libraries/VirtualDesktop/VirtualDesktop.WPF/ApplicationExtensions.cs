@@ -12,7 +12,8 @@ namespace WindowsDesktop
         public static bool IsPinned(this Application app)
         {
             string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
-            if (appId == null) return false;
+            if (appId == null)
+                return false;
 
             return VirtualDesktop.IsPinnedApplication(appId);
         }
@@ -23,7 +24,8 @@ namespace WindowsDesktop
         public static void Pin(this Application app)
         {
             string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
-            if (appId == null) return;
+            if (appId == null)
+                return;
 
             VirtualDesktop.PinApplication(appId);
         }
@@ -34,7 +36,8 @@ namespace WindowsDesktop
         public static void Unpin(this Application app)
         {
             string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
-            if (appId == null) return;
+            if (appId == null)
+                return;
 
             VirtualDesktop.UnpinApplication(appId);
         }
@@ -45,7 +48,8 @@ namespace WindowsDesktop
         public static void TogglePin(this Application app)
         {
             string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
-            if (appId == null) return;
+            if (appId == null)
+                return;
 
             if (VirtualDesktop.IsPinnedApplication(appId))
             {

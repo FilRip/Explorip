@@ -1,157 +1,46 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ExploripCopy</RootNamespace>
-    <AssemblyName>ExploripCopy</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net481</TargetFramework>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
     <LangVersion>latest</LangVersion>
+    <AssemblyTitle>ExploripCopy</AssemblyTitle>
+    <Company>APRR</Company>
+    <Product>ExploripCopy</Product>
+    <Copyright>Copyright © APRR 2023</Copyright>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Constants\Colors.cs" />
-    <Compile Include="Constants\Icons.cs" />
-    <Compile Include="Constants\Localization.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Exceptions\ExploripCopyException.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="GUI\ChoiceConflictFiles.xaml.cs">
-      <DependentUpon>ChoiceConflictFiles.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Helpers\CopyHelper.cs" />
-    <Compile Include="Helpers\IconManager.cs" />
-    <Compile Include="Helpers\IpcServer.cs" />
-    <Compile Include="Helpers\RelayCommand.cs" />
-    <Compile Include="Helpers\WindowsSettings.cs" />
-    <Compile Include="Models\EChoiceFileOperation.cs" />
-    <Compile Include="Models\InteractionMainProcess.cs" />
-    <Compile Include="ViewModels\ChoiceOnCollisionViewModel.cs" />
-    <Compile Include="ViewModels\MainViewModels.cs" />
-    <Compile Include="ViewModels\NotifyIconViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Page Include="GUI\ChoiceConflictFiles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="GUI\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GUI\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Styles\StyleBrush.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Styles\StyleWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Styles\SystrayIcon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icone.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj">
-      <Project>{1fd71282-00d6-44d4-9857-1d26030662b2}</Project>
-      <Name>HookFileOperations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj">
-      <Project>{b5afdc3a-12d6-44bb-8b03-d4a3d6cdce0d}</Project>
-      <Name>ManagedShell.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj">
-      <Project>{70c88862-47d9-4706-8c9a-2c9c8cfd4abd}</Project>
-      <Name>ManagedShell.Interop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\NotifyIconWpf\NotifyIconWpf.csproj">
-      <Project>{315a774e-e59d-4b34-be47-16b408d42e66}</Project>
-      <Name>NotifyIconWpf</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj" />
+    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
+    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj" />
+    <ProjectReference Include="..\..\Libraries\NotifyIconWpf\NotifyIconWpf.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\SystrayIconG.ico" />
@@ -159,5 +48,4 @@
   <ItemGroup>
     <Resource Include="Resources\SystrayIconR.ico" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

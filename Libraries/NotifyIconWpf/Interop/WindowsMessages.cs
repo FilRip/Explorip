@@ -21,8 +21,6 @@
 //
 // THIS COPYRIGHT NOTICE MAY NOT BE REMOVED FROM THIS FILE
 
-// ReSharper disable InconsistentNaming
-
 namespace Hardcodet.Wpf.TaskbarNotification.Interop
 {
     /// <summary>

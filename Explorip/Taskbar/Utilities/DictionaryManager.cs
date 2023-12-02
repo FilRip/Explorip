@@ -125,7 +125,8 @@ namespace Explorip.TaskBar.Utilities
         {
             List<string> languages =
             [
-                LANG_DEFAULT, .. GetDictionaries(LANG_FALLBACK, LANG_FOLDER, LANG_EXT)
+                LANG_DEFAULT,
+                .. GetDictionaries(LANG_FALLBACK, LANG_FOLDER, LANG_EXT)
             ];
             return languages;
         }

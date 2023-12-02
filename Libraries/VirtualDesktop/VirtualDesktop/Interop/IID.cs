@@ -16,7 +16,6 @@ namespace WindowsDesktop.Interop
     {
         private static readonly Regex _osBuildRegex = new(@"v_(?<build>\d{5}?)");
 
-        // ReSharper disable once InconsistentNaming
         public static Dictionary<string, Guid> GetIIDs(string[] targets)
         {
             Dictionary<string, Guid> known = [];
@@ -29,12 +28,15 @@ namespace WindowsDesktop.Interop
                     foreach (string str in (StringCollection)Settings.Default[prop])
                     {
                         string[] pair = str.Split(',');
-                        if (pair.Length != 2) continue;
+                        if (pair.Length != 2)
+                            continue;
 
                         string @interface = pair[0];
-                        if (Array.TrueForAll(targets, x => @interface != x) || known.ContainsKey(@interface)) continue;
+                        if (Array.TrueForAll(targets, x => @interface != x) || known.ContainsKey(@interface))
+                            continue;
 
-                        if (!Guid.TryParse(pair[1], out Guid guid)) continue;
+                        if (!Guid.TryParse(pair[1], out Guid guid))
+                            continue;
 
                         known.Add(@interface, guid);
                     }
@@ -47,13 +49,13 @@ namespace WindowsDesktop.Interop
             if (except.Length > 0)
             {
                 Dictionary<string, Guid> fromRegistry = GetIIDsFromRegistry(except);
-                foreach (KeyValuePair<string, Guid> kvp in fromRegistry) known.Add(kvp.Key, kvp.Value);
+                foreach (KeyValuePair<string, Guid> kvp in fromRegistry)
+                    known.Add(kvp.Key, kvp.Value);
             }
 
             return known;
         }
 
-        // ReSharper disable once InconsistentNaming
         private static Dictionary<string, Guid> GetIIDsFromRegistry(string[] targets)
         {
             using RegistryKey interfaceKey = Registry.ClassesRoot.OpenSubKey("Interface") ?? throw new VirtualDesktopException(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");

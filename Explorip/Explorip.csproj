@@ -1,45 +1,25 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{001DCDA7-F4C3-4BD6-A86C-C99B35A9798A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Explorip</RootNamespace>
-    <AssemblyName>Explorip</AssemblyName>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <FileUpgradeFlags />
+    <UpgradeBackupLocation />
+    <TargetFramework>net481</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <AssemblyTitle>Explorip</AssemblyTitle>
+    <Company>CoolBytes</Company>
+    <Product>Explorip</Product>
+    <Description>Shell for Windows 10 and 11</Description>
+    <Copyright>Copyright © 2021</Copyright>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Explorip.Program</StartupObject>
@@ -47,229 +27,120 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
     <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Design" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants\Colors.cs" />
-    <Compile Include="Explorer\Controls\ConsoleHost.xaml.cs">
+    <Compile Update="Explorer\Controls\ConsoleHost.xaml.cs">
       <DependentUpon>ConsoleHost.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\Controls\HeaderWithCloseButton.xaml.cs">
+    <Compile Update="Explorer\Controls\HeaderWithCloseButton.xaml.cs">
       <DependentUpon>HeaderWithCloseButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Constants\Localization.cs" />
-    <Compile Include="Exceptions\ExploripException.cs" />
-    <Compile Include="Exceptions\ScreenManagerException.cs" />
-    <Compile Include="Exceptions\GestionFenetresException.cs" />
-    <Compile Include="Explorer\Controls\TabItemConsoleCommand.xaml.cs">
+    <Compile Update="Explorer\Controls\TabItemConsoleCommand.xaml.cs">
       <DependentUpon>TabItemConsoleCommand.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\Controls\TabItemExplorerBrowser.xaml.cs">
+    <Compile Update="Explorer\Controls\TabItemExplorerBrowser.xaml.cs">
       <DependentUpon>TabItemExplorerBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\Controls\TabItemExplorip.cs" />
-    <Compile Include="Explorer\Controls\TabItemPlusExplorerBrowser.xaml.cs">
+    <Compile Update="Explorer\Controls\TabItemPlusExplorerBrowser.xaml.cs">
       <DependentUpon>TabItemPlusExplorerBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Explorer\ViewModels\TabItemConsoleCommandViewModel.cs" />
-    <Compile Include="Explorer\ViewModels\TabItemExplorerBrowserViewModel.cs" />
-    <Compile Include="Explorer\ViewModels\TabItemExploripViewModel.cs" />
-    <Compile Include="Explorer\ViewModels\WpfExplorerBrowserViewModel.cs" />
-    <Compile Include="Exceptions\ShellContextMenuException.cs" />
-    <Compile Include="FilesOperations\FileOperation.cs" />
-    <Compile Include="FilesOperations\FileOperationProgressSink.cs" />
-    <Compile Include="FilesOperations\Interfaces\CopyEngineResult.cs" />
-    <Compile Include="FilesOperations\Interfaces\EFileOperation.cs" />
-    <Compile Include="FilesOperations\Interfaces\IFileOperation.cs" />
-    <Compile Include="FilesOperations\Interfaces\IFileOperationProgressSink.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Helpers\ComReleaser.cs" />
-    <Compile Include="Helpers\ExtensionsArray.cs" />
-    <Compile Include="Helpers\ExtensionsCommandLineArguments.cs" />
-    <Compile Include="Helpers\ExtensionsDirectory.cs" />
-    <Compile Include="Helpers\ExtensionsInt.cs" />
-    <Compile Include="Helpers\ExtensionsString.cs" />
-    <Compile Include="Helpers\ExtensionsWpf.cs" />
-    <Compile Include="Helpers\IconManager.cs" />
-    <Compile Include="Helpers\IpcServer.cs" />
-    <Compile Include="Helpers\ScreenManager.cs" />
-    <Compile Include="Helpers\HookCopyOperations.cs" />
-    <Compile Include="Helpers\ShellContextMenuHelper.cs" />
-    <Compile Include="Helpers\ViewModelBase.cs" />
-    <Compile Include="Helpers\WindowsExtensions.cs" />
-    <Compile Include="Helpers\WindowsSettings.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TaskBar\Controls\NotificationButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\NotificationButton.xaml.cs">
       <DependentUpon>NotificationButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\TabTipButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\TabTipButton.xaml.cs">
       <DependentUpon>TabTipButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\WidgetsButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\WidgetsButton.xaml.cs">
       <DependentUpon>WidgetsButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\TaskManButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\TaskManButton.xaml.cs">
       <DependentUpon>TaskManButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\SearchButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\SearchButton.xaml.cs">
       <DependentUpon>SearchButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\TaskThumbButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\TaskThumbButton.xaml.cs">
       <DependentUpon>TaskThumbButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\ToolbarBigButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\ToolbarBigButton.xaml.cs">
       <DependentUpon>ToolbarBigButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\MyDesktopApp.xaml.cs">
+    <Compile Update="TaskBar\MyDesktopApp.xaml.cs">
       <DependentUpon>MyDesktopApp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\Clock.xaml.cs">
+    <Compile Update="TaskBar\Controls\Clock.xaml.cs">
       <DependentUpon>Clock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\NotifyBalloon.xaml.cs">
+    <Compile Update="TaskBar\Controls\NotifyBalloon.xaml.cs">
       <DependentUpon>NotifyBalloon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\NotifyIcon.xaml.cs">
+    <Compile Update="TaskBar\Controls\NotifyIcon.xaml.cs">
       <DependentUpon>NotifyIcon.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\NotifyIconList.xaml.cs">
+    <Compile Update="TaskBar\Controls\NotifyIconList.xaml.cs">
       <DependentUpon>NotifyIconList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\StartButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\StartButton.xaml.cs">
       <DependentUpon>StartButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\TaskButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\TaskButton.xaml.cs">
       <DependentUpon>TaskButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\TaskList.xaml.cs">
+    <Compile Update="TaskBar\Controls\TaskList.xaml.cs">
       <DependentUpon>TaskList.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\Toolbar.xaml.cs">
+    <Compile Update="TaskBar\Controls\Toolbar.xaml.cs">
       <DependentUpon>Toolbar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Controls\ToolbarButton.xaml.cs">
+    <Compile Update="TaskBar\Controls\ToolbarButton.xaml.cs">
       <DependentUpon>ToolbarButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Converters\DockOrientationConverter.cs" />
-    <Compile Include="TaskBar\Converters\EdgeOrientationConverter.cs" />
-    <Compile Include="TaskBar\Converters\TaskButtonStyleConverter.cs" />
-    <Compile Include="TaskBar\PropertiesWindow.xaml.cs">
+    <Compile Update="TaskBar\PropertiesWindow.xaml.cs">
       <DependentUpon>PropertiesWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Taskbar.xaml.cs">
+    <Compile Update="TaskBar\Taskbar.xaml.cs">
       <DependentUpon>Taskbar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TaskBar\Utilities\DictionaryManager.cs" />
-    <Compile Include="TaskBar\Utilities\ExePath.cs" />
-    <Compile Include="TaskBar\Utilities\ManagedShellLogger.cs" />
-    <Compile Include="TaskBar\Utilities\Settings.cs" />
-    <Compile Include="TaskBar\Utilities\StartMenuMonitor.cs" />
-    <Compile Include="TaskBar\Utilities\TaskCategoryProvider.cs" />
-    <Compile Include="TaskBar\ViewModels\TaskbarViewModel.cs" />
-    <Compile Include="WinAPI\Commun.cs" />
-    <Compile Include="WinAPI\Dwmapi.cs" />
-    <Compile Include="WinAPI\Modeles\ControlKeyState.cs" />
-    <Compile Include="WinAPI\Modeles\Coord.cs" />
-    <Compile Include="WinAPI\Modeles\EventType.cs" />
-    <Compile Include="WinAPI\Modeles\FocusEventRecord.cs" />
-    <Compile Include="WinAPI\Modeles\DwmColorizationParams.cs" />
-    <Compile Include="WinAPI\Modeles\InputRecord.cs" />
-    <Compile Include="WinAPI\Modeles\ITipInvocation.cs" />
-    <Compile Include="WinAPI\Modeles\KeyEventRecord.cs" />
-    <Compile Include="WinAPI\Modeles\MenuEventRecord.cs" />
-    <Compile Include="WinAPI\Modeles\MouseButtonState.cs" />
-    <Compile Include="WinAPI\Modeles\MouseEvent.cs" />
-    <Compile Include="WinAPI\Modeles\MouseEventRecord.cs" />
-    <Compile Include="WinAPI\Modeles\StdHandle.cs" />
-    <Compile Include="WinAPI\Modeles\UIHostNoLaunch.cs" />
-    <Compile Include="WinAPI\Modeles\WindowBufferSizeRecord.cs" />
-    <Compile Include="WinAPI\Uxtheme.cs" />
-    <Compile Include="Exceptions\Win32Error.cs" />
-    <Compile Include="WinAPI\Gdi32.cs" />
-    <Compile Include="WinAPI\Kernel32.cs" />
-    <Compile Include="WinAPI\Modeles\BrowseInfo.cs" />
-    <Compile Include="WinAPI\Modeles\CmInvokeCommandInfoEx.cs" />
-    <Compile Include="WinAPI\Modeles\DwmThumbnailProperties.cs" />
-    <Compile Include="WinAPI\Modeles\IContextMenu.cs" />
-    <Compile Include="WinAPI\Modeles\IContextMenu2.cs" />
-    <Compile Include="WinAPI\Modeles\IContextMenu3.cs" />
-    <Compile Include="WinAPI\Modeles\IEnumIDList.cs" />
-    <Compile Include="WinAPI\Modeles\IImageList.cs" />
-    <Compile Include="WinAPI\Modeles\ImageInfo.cs" />
-    <Compile Include="WinAPI\Modeles\ImageListDrawParams.cs" />
-    <Compile Include="WinAPI\Modeles\IOleWindow.cs" />
-    <Compile Include="WinAPI\Modeles\IShellFolder.cs" />
-    <Compile Include="WinAPI\Modeles\IShellItem.cs" />
-    <Compile Include="WinAPI\Modeles\IShellView.cs" />
-    <Compile Include="WinAPI\Modeles\LocalWindowsHook.cs" />
-    <Compile Include="WinAPI\Modeles\MenuItemInfo.cs" />
-    <Compile Include="WinAPI\Modeles\NetreSource.cs" />
-    <Compile Include="WinAPI\Modeles\NativePoint.cs" />
-    <Compile Include="WinAPI\Modeles\ProcessBasicInformation.cs" />
-    <Compile Include="WinAPI\Modeles\Rect.cs" />
-    <Compile Include="WinAPI\Modeles\ShFileInfo.cs" />
-    <Compile Include="WinAPI\Modeles\ShItemId.cs" />
-    <Compile Include="WinAPI\Modeles\UniversalNameInfo.cs" />
-    <Compile Include="WinAPI\Modeles\WindowPlacement.cs" />
-    <Compile Include="WinAPI\Mpr.cs" />
-    <Compile Include="WinAPI\Ntdll.cs" />
-    <Compile Include="WinAPI\Shlwapi.cs" />
-    <Compile Include="WinAPI\User32.cs" />
-    <Compile Include="Explorer\Controls\TabExplorerBrowser.xaml.cs">
+    <Compile Update="Explorer\Controls\TabExplorerBrowser.xaml.cs">
       <DependentUpon>TabExplorerBrowser.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\MyExplorerApp.xaml.cs">
+    <Compile Update="Explorer\MyExplorerApp.xaml.cs">
       <DependentUpon>MyExplorerApp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Explorer\Windows\WpfExplorerBrowser.xaml.cs">
+    <Compile Update="Explorer\Windows\WpfExplorerBrowser.xaml.cs">
       <DependentUpon>WpfExplorerBrowser.xaml</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
+    <Compile Update="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
     <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Compile Include="Properties\Settings.Designer.cs">
+    <Compile Update="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="WinAPI\Shell32.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Explorer\Controls\ConsoleHost.xaml">
@@ -418,66 +289,21 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HookFileOperation\ExploripCopy\ExploripCopy.csproj">
-      <Project>{3eede2b5-f238-42d0-9666-ed4fe1453e23}</Project>
-      <Name>ExploripCopy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HookFileOperation\HookFileOperationsManager\HookFileOperationsManager.csproj">
-      <Project>{30e52dc9-89e9-40b7-8785-ac13479751b0}</Project>
-      <Name>HookFileOperationsManager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\HookFileOperation\HookFileOperations\HookFileOperations.csproj">
-      <Project>{1fd71282-00d6-44d4-9857-1d26030662b2}</Project>
-      <Name>HookFileOperations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj">
-      <Project>{faed8422-bac8-4909-a199-e16595a1f448}</Project>
-      <Name>ManagedShell.AppBar</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj">
-      <Project>{b5afdc3a-12d6-44bb-8b03-d4a3d6cdce0d}</Project>
-      <Name>ManagedShell.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj">
-      <Project>{70c88862-47d9-4706-8c9a-2c9c8cfd4abd}</Project>
-      <Name>ManagedShell.Interop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj">
-      <Project>{08ca72ae-748c-45e3-88f1-0236d1ac679e}</Project>
-      <Name>ManagedShell.ShellFolders</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.WindowsTasks\ManagedShell.WindowsTasks.csproj">
-      <Project>{ddc9d4fa-8457-4d65-a776-32f84227c2d8}</Project>
-      <Name>ManagedShell.WindowsTasks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj">
-      <Project>{b469bd3c-8790-4262-ab02-0195aecb9ce6}</Project>
-      <Name>ManagedShell.WindowsTray</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell\ManagedShell.csproj">
-      <Project>{78f2ad9f-f689-4f84-ad24-fce54b23c6e6}</Project>
-      <Name>ManagedShell</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\Securifybv\ShellLink\Securify.ShellLink.csproj">
-      <Project>{c9341443-36d5-4309-ab3d-d3d2612d5609}</Project>
-      <Name>Securify.ShellLink</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop.WPF\VirtualDesktop.WPF.csproj">
-      <Project>{8977acaf-eded-45e3-be03-0c4e26f28d81}</Project>
-      <Name>VirtualDesktop.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj">
-      <Project>{4a2d2831-b4d0-403f-a749-9e9143798c8d}</Project>
-      <Name>VirtualDesktop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\WindowsAPICodePack\Shell\Shell.csproj">
-      <Project>{aa0c00cb-8699-4f37-bfae-40ca87acc06d}</Project>
-      <Name>Shell</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj">
-      <Project>{3f507334-f494-4d80-b698-de4798cf5c8c}</Project>
-      <Name>WpfScreenHelper</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\HookFileOperation\ExploripCopy\ExploripCopy.csproj" />
+    <ProjectReference Include="..\HookFileOperation\HookFileOperationsManager\HookFileOperationsManager.csproj" />
+    <ProjectReference Include="..\HookFileOperation\HookFileOperations\HookFileOperations.csproj" />
+    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj" />
+    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
+    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj" />
+    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
+    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.WindowsTasks\ManagedShell.WindowsTasks.csproj" />
+    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj" />
+    <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell\ManagedShell.csproj" />
+    <ProjectReference Include="..\Libraries\Securifybv\ShellLink\Securify.ShellLink.csproj" />
+    <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop.WPF\VirtualDesktop.WPF.csproj" />
+    <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj" />
+    <ProjectReference Include="..\Libraries\WindowsAPICodePack\Shell\Shell.csproj" />
+    <ProjectReference Include="..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TaskBar\Resources\notification10.png" />
@@ -498,9 +324,6 @@
     <None Include="Ressources\PreviousButton.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Desktop\" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="TaskBar\Resources\tabtip.png" />
   </ItemGroup>
   <ItemGroup>
@@ -511,12 +334,4 @@
     <Resource Include="TaskBar\Resources\start11.png" />
     <Resource Include="TaskBar\Resources\taskman11.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
