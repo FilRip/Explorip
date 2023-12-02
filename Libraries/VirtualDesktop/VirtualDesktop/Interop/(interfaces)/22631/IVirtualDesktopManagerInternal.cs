@@ -8,7 +8,7 @@ namespace WindowsDesktop.Interop
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     internal interface IVirtualDesktopManagerInternal
     {
-        int GetCount(IntPtr hWndOrMon);
+        int GetCount();
 
         void MoveViewToDesktop(IApplicationView pView, IVirtualDesktop pDesktop);
 
@@ -19,6 +19,7 @@ namespace WindowsDesktop.Interop
 
         void GetDesktops(out IObjectArray hWndOrMon);
 
+        [PreserveSig()]
         int GetAdjacentDesktop(IVirtualDesktop pDesktopReference, int uDirection, out IVirtualDesktop pAdjacentDesktop);
 
         void SwitchDesktop(IVirtualDesktop pDesktop);

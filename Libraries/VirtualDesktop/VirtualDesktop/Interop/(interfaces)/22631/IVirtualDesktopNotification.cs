@@ -16,17 +16,19 @@ namespace WindowsDesktop.Interop
 
         void VirtualDesktopDestroyed(IVirtualDesktop pDesktopDestroyed, IVirtualDesktop pDesktopFallback);
 
-        void Unknown1(int nNumber);
-
         void VirtualDesktopMoved(IVirtualDesktop pDesktop, int nFromIndex, int nToIndex);
 
         void VirtualDesktopRenamed(IVirtualDesktop pDesktop, [MarshalAs(UnmanagedType.HString)] string chName);
 
         void ViewVirtualDesktopChanged(IApplicationView pView);
 
-        void CurrentVirtualDesktopChanged(IObjectArray p0, IVirtualDesktop pDesktopOld, IVirtualDesktop pDesktopNew);
+        void CurrentVirtualDesktopChanged(IVirtualDesktop pDesktopOld, IVirtualDesktop pDesktopNew);
 
         void VirtualDesktopWallpaperChanged(IVirtualDesktop pDesktop, [MarshalAs(UnmanagedType.HString)] string chPath);
+
+        void VirtualDesktopSwitched(IVirtualDesktop pDesktop);
+
+        void RemoteVirtualDesktopConnected(IVirtualDesktop pDesktop);
     }
 
     public class VirtualDesktopNotificationListener : VirtualDesktopNotification, IVirtualDesktopNotification
@@ -51,10 +53,6 @@ namespace WindowsDesktop.Interop
             this.VirtualDesktopDestroyedCore(pDesktopDestroyed, pDesktopFallback);
         }
 
-        public void Unknown1(int nNumber)
-        {
-        }
-
         public void VirtualDesktopMoved(IVirtualDesktop pDesktop, int nFromIndex, int nToIndex)
         {
             this.VirtualDesktopMovedCore(pDesktop, nFromIndex, nToIndex);
@@ -70,7 +68,7 @@ namespace WindowsDesktop.Interop
             this.ViewVirtualDesktopChangedCore(pView);
         }
 
-        public void CurrentVirtualDesktopChanged(IObjectArray p0, IVirtualDesktop pDesktopOld, IVirtualDesktop pDesktopNew)
+        public void CurrentVirtualDesktopChanged(IVirtualDesktop pDesktopOld, IVirtualDesktop pDesktopNew)
         {
             this.CurrentVirtualDesktopChangedCore(pDesktopOld, pDesktopNew);
         }
@@ -78,6 +76,16 @@ namespace WindowsDesktop.Interop
         public void VirtualDesktopWallpaperChanged(IVirtualDesktop pDesktop, [MarshalAs(UnmanagedType.HString)] string chName)
         {
             this.VirtualDesktopWallpaperChangedCore(pDesktop, chName);
+        }
+
+        public void VirtualDesktopSwitched(IVirtualDesktop pDesktop)
+        {
+            this.VirtualDesktopSwitchedCore(pDesktop);
+        }
+
+        public void RemoteVirtualDesktopConnected(IVirtualDesktop pDesktop)
+        {
+            this.RemoteVirtualDesktopConnectedCore(pDesktop);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace WindowsDesktop.Interop
 
     public class VirtualDesktopCacheImpl : IVirtualDesktopCache
     {
-        private readonly ConcurrentDictionary<Guid, VirtualDesktop> _wrappers = new();
+        private readonly ConcurrentDictionary<Guid, VirtualDesktop> _wrappers = new ConcurrentDictionary<Guid, VirtualDesktop>();
 
         public Func<Guid, object, VirtualDesktop> Factory { get; set; }
 
