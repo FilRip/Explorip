@@ -32,7 +32,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem
         /// <param name="value">The value to set for the property</param>
         public static void SetWindowProperty(Window window, PropertyKey propKey, string value)
         {
-            TaskbarNativeMethods.SetWindowProperty((new WindowInteropHelper(window)).Handle, propKey, value);
+            TaskbarNativeMethods.SetWindowProperty((new WindowInteropHelper(window)).EnsureHandle(), propKey, value);
         }
     }
 }

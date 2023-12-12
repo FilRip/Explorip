@@ -132,7 +132,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
 
             WindowsControl = windowsControl ?? throw new ArgumentNullException(nameof(windowsControl));
             WindowsControlParentWindow = parentWindow ?? throw new ArgumentNullException(nameof(parentWindow));
-            ParentWindowHandle = (new WindowInteropHelper(parentWindow)).Handle;
+            ParentWindowHandle = (new WindowInteropHelper(parentWindow)).EnsureHandle();
             PeekOffset = peekOffset;
         }
 

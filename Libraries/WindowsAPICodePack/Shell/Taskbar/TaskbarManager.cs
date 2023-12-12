@@ -80,7 +80,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         public void SetOverlayIcon(System.Windows.Window window, System.Drawing.Icon icon, string accessibilityText)
         {
             TaskbarList.Instance.SetOverlayIcon(
-                (new WindowInteropHelper(window)).Handle,
+                (new WindowInteropHelper(window)).EnsureHandle(),
                 icon != null ? icon.Handle : IntPtr.Zero,
                 accessibilityText);
         }
@@ -126,7 +126,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         public void SetProgressValue(int currentValue, int maximumValue, System.Windows.Window window)
         {
             TaskbarList.Instance.SetProgressValue(
-                (new WindowInteropHelper(window)).Handle,
+                (new WindowInteropHelper(window)).EnsureHandle(),
                 Convert.ToUInt32(currentValue),
                 Convert.ToUInt32(maximumValue));
         }
@@ -162,7 +162,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         public void SetProgressState(TaskbarProgressBarState state, System.Windows.Window window)
         {
             TaskbarList.Instance.SetProgressState(
-                (new WindowInteropHelper(window)).Handle,
+                (new WindowInteropHelper(window)).EnsureHandle(),
                 (TaskbarProgressBarStatus)state);
         }
 
@@ -267,7 +267,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         public void SetApplicationIdForSpecificWindow(System.Windows.Window window, string appId)
         {
             // Left as instance method, to follow singleton pattern.
-            TaskbarNativeMethods.SetWindowAppId((new WindowInteropHelper(window)).Handle, appId);
+            TaskbarNativeMethods.SetWindowAppId((new WindowInteropHelper(window)).EnsureHandle(), appId);
         }
 
         /// <summary>

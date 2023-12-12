@@ -174,7 +174,7 @@ namespace Explorip.Helpers
             Screen currentScreen = Application.Current.Dispatcher.Invoke(() =>
             {
                 Window currentWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault();
-                Screen ecran = Screen.FromHandle(new WindowInteropHelper(currentWindow).Handle);
+                Screen ecran = Screen.FromHandle(new WindowInteropHelper(currentWindow).EnsureHandle());
                 return ecran;
             });
 

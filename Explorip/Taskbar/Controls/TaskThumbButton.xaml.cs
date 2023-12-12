@@ -66,7 +66,7 @@ namespace Explorip.TaskBar.Controls
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            _handle = new WindowInteropHelper(this).Handle;
+            _handle = new WindowInteropHelper(this).EnsureHandle();
             WindowHelper.ExcludeWindowFromPeek(_handle);
             if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
             {

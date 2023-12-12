@@ -23,8 +23,8 @@ namespace WpfScreenHelper
         {
             // The first move puts it on the correct monitor, which triggers WM_DPICHANGED
             // The +1/-1 coerces WPF to update Window.Top/Left/Width/Height in the second move
-            NativeMethods.MoveWindow(new WindowInteropHelper(window).Handle, x - 1, y, width + 1, height, false);
-            NativeMethods.MoveWindow(new WindowInteropHelper(window).Handle, x, y, width, height, true);
+            NativeMethods.MoveWindow(new WindowInteropHelper(window).EnsureHandle(), x - 1, y, width + 1, height, false);
+            NativeMethods.MoveWindow(new WindowInteropHelper(window).EnsureHandle(), x, y, width, height, true);
         }
 
         /// <summary>

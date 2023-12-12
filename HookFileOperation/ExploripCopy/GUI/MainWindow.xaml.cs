@@ -79,7 +79,7 @@ namespace ExploripCopy.GUI
 
         private void TitleBar_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            IntPtr hWnd = new WindowInteropHelper(this).Handle;
+            IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
             IntPtr hMenu = NativeMethods.GetSystemMenu(hWnd, false);
             Point posMouse = PointToScreen(Mouse.GetPosition(this));
             int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);

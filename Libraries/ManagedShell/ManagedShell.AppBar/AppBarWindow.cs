@@ -93,7 +93,7 @@ namespace ManagedShell.AppBar
         {
             // set up helper and get handle
             windowInteropHelper = new WindowInteropHelper(this);
-            Handle = windowInteropHelper.Handle;
+            Handle = windowInteropHelper.EnsureHandle();
 
             // set up window procedure
             HwndSource source = HwndSource.FromHwnd(Handle);

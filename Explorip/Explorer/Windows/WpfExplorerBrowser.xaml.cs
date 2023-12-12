@@ -59,7 +59,7 @@ namespace Explorip.Explorer.Windows
             // TODO : https://stackoverflow.com/questions/69097246/how-to-support-for-windows-11-snap-layout-to-the-custom-maximize-restore-butto
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
-                WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);
+                WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
         }
@@ -144,7 +144,7 @@ namespace Explorip.Explorer.Windows
                         HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
                         if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
                         {
-                            IntPtr hWnd = new WindowInteropHelper(this).Handle;
+                            IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
                             IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
                             Point posMouse = PointToScreen(Mouse.GetPosition(this));
                             int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);

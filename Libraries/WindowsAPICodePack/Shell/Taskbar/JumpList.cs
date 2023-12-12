@@ -205,7 +205,7 @@ namespace Microsoft.WindowsAPICodePack.Taskbar
         /// <param name="appID">Application Id to use for this instance.</param>
         /// <param name="window">WPF Window that is associated with this JumpList</param>
         internal JumpList(string appID, System.Windows.Window window)
-            : this(appID, (new System.Windows.Interop.WindowInteropHelper(window)).Handle)
+            : this(appID, (new System.Windows.Interop.WindowInteropHelper(window)).EnsureHandle())
         {
         }
 

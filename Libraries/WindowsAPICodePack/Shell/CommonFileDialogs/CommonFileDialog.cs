@@ -556,7 +556,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             }
 
             // Set the parent / owner window
-            parentWindow = (new WindowInteropHelper(window)).Handle;
+            parentWindow = (new WindowInteropHelper(window)).EnsureHandle();
 
             // Show the modal dialog
             return ShowDialog();
@@ -653,7 +653,7 @@ namespace Microsoft.WindowsAPICodePack.Dialogs
             {
                 if (Application.Current != null && Application.Current.MainWindow != null)
                 {
-                    parentWindow = new WindowInteropHelper(Application.Current.MainWindow).Handle;
+                    parentWindow = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
                 }
                 else if (System.Windows.Forms.Application.OpenForms.Count > 0)
                 {

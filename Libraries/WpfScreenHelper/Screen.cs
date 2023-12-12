@@ -260,7 +260,7 @@ namespace WpfScreenHelper
         /// </returns>
         public static Screen FromWindow(Window window)
         {
-            return FromHandle(new WindowInteropHelper(window).Handle);
+            return FromHandle(new WindowInteropHelper(window).EnsureHandle());
         }
 
         /// <summary>

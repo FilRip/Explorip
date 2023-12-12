@@ -132,7 +132,7 @@ namespace Microsoft.WindowsAPICodePack.Shell
         {
             base.OnSourceInitialized(e);
             WindowInteropHelper interopHelper = new(this);
-            windowHandle = interopHelper.Handle;
+            windowHandle = interopHelper.EnsureHandle();
 
             // add Window Proc hook to capture DWM messages
             HwndSource source = HwndSource.FromHwnd(windowHandle);
