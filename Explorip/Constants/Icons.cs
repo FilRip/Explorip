@@ -8,11 +8,13 @@ namespace Explorip.Constants
     {
         public static ImageSource CancelImage { get; set; }
         public static ImageSource OkImage { get; set; }
+        public static ImageSource Folder { get; set; }
 
         internal static void Init()
         {
             CancelImage = IconManager.GetIconFromFile("imageres.dll", 100);
             OkImage = IconManager.GetIconFromFile("imageres.dll", 101);
+            Folder = IconManager.GetIconFromFile("shell32.dll", 4);
         }
     }
 }

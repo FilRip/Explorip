@@ -29,7 +29,10 @@ namespace Explorip.Helpers
         {
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                InputBoxWindow input = new();
+                InputBoxWindow input = new()
+                {
+                    CheckValidPathName = true,
+                };
                 input.TxtQuestion.Text = path;
                 input.TxtUserEdit.Text = name;
                 if (input.ShowDialog() == true)

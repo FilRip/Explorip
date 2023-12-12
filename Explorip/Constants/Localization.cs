@@ -38,6 +38,7 @@ namespace Explorip.Constants
         public static string CANCEL { get; private set; }
         public static string OK { get; private set; }
         public static string CONTINUE { get; private set; }
+        public static string CREATE_FOLDER { get; private set; }
 
         public static void LoadTranslation()
         {
@@ -70,8 +71,9 @@ namespace Explorip.Constants
             DETACH_FROM_TASKBAR = Load("starttiledata.dll", 1010, "Detach from taskbar");
             ADJUST_DATE_TIME = Load("shell32.dll", 24135, "Modify date and hour");
             CANCEL = Load("shell32.dll", 33228, "Cancel");
-            CONTINUE = Load("shell32.dll", 33229, "Continue");
+            CONTINUE = Load("shell32.dll", 33229, "Continue").Replace("_", "");
             OK = Load("shell32.dll", 33225, "Ok");
+            CREATE_FOLDER = Load("shell32.dll", 31237, "Create a new folder").Replace(".", "");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:constants="clr-namespace:Explorip.Constants"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Icon="{x:Static constants:Icons.Folder}"
         Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
         Height="160" Width="400" ShowActivated="True" FocusManager.FocusedElement="{Binding ElementName=TxtUserEdit}" Loaded="Window_Loaded">
+
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -16,7 +17,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Name="TxtQuestion"/>
-        <TextBox Grid.Row="1" Name="TxtUserEdit" IsReadOnly="False" IsEnabled="True" Focusable="True" IsTabStop="True" TabIndex="0" PreviewKeyUp="TxtUserEdit_PreviewKeyUp" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Name="TxtUserEdit" IsReadOnly="False" IsEnabled="True" Focusable="True" IsTabStop="True" TabIndex="0" PreviewKeyUp="TxtUserEdit_PreviewKeyUp" VerticalAlignment="Center" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

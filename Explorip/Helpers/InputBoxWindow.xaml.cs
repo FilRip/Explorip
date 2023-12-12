@@ -18,9 +18,10 @@ namespace Explorip.Helpers
             InitializeComponent();
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
-                WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).Handle, true);
+                WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
+            Title = Constants.Localization.CREATE_FOLDER;
         }
 
         private void CommonInit(string title, string question)
