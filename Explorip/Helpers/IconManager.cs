@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using ManagedShell.Interop;
@@ -37,6 +38,14 @@ namespace Explorip.Helpers
             {
                 return null;
             }
+        }
+
+        internal static ImageSource GetIconFromFile(string filename, int index)
+        {
+            Icon icon = Extract(filename, index, true);
+            if (icon != null)
+                return Convert(icon);
+            return null;
         }
     }
 }

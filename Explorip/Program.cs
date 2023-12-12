@@ -6,6 +6,8 @@ using System.Windows;
 
 using Explorip.Helpers;
 
+using ExploripApi;
+
 namespace Explorip
 {
     public static class Program
@@ -32,6 +34,7 @@ namespace Explorip
 
             Constants.Localization.LoadTranslation();
             Constants.Colors.LoadTheme();
+            Constants.Icons.Init();
 
             if (ExtensionsCommandLineArguments.ArgumentExists("taskbar") ||
                 ExtensionsCommandLineArguments.ArgumentExists("taskbars"))
@@ -48,7 +51,7 @@ namespace Explorip
                 mutexProcess = new Mutex(true, "ExploripFileExplorer", out bool processNotLaunched);
                 if (processNotLaunched || args.Contains("newinstance"))
                 {
-                    IpcServerManager.InitChannel();
+                    IpcServerManager.InitChannel(new IpcServer());
                     if (!ExtensionsCommandLineArguments.ArgumentExists("withoutHook"))
                         HookCopyOperations.GetInstance().InstallHook();
                     _WpfHost = new Explorer.MyExplorerApp();
@@ -58,7 +61,7 @@ namespace Explorip
                 {
                     args ??= [];
                     args = args.Remove("explorer");
-                    IpcServerManager.SendMessage(args);
+                    IpcServerManager.SendNewWindow(args);
                 }
             }
             mutexProcess.Dispose();

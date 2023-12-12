@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Ipc;
+using System.IO;
 using System.Windows;
 
 using Explorip.Explorer.Windows;
+
+using ExploripApi;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Helpers
 {
-    internal sealed class IpcServer : MarshalByRefObject
+    [Serializable()]
+    public sealed class IpcServer : IServerIpc
     {
-        internal static readonly string IpcServerName = "ExploripIpcServer";
-        internal static readonly string IpcSubChannelName = "RemoteServer";
-
         public void ReceivedNewWindow(string[] args)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -26,27 +24,19 @@ namespace Explorip.Helpers
                 newExplorerWindow.Show();
             });
         }
-    }
 
-    internal static class IpcServerManager
-    {
-        internal static void InitChannel()
+        public void CreateFolder(string path, string name)
         {
-            try
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                IpcChannel channel = new(IpcServer.IpcServerName);
-                ChannelServices.RegisterChannel(channel, false);
-                RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcServer), IpcServer.IpcSubChannelName, WellKnownObjectMode.Singleton);
-            }
-            catch { /* Ignore errors */ }
-        }
-
-        internal static void SendMessage(string[] args)
-        {
-            IpcChannel channel = new();
-            ChannelServices.RegisterChannel(channel, false);
-            IpcServer serverInstance = (IpcServer)Activator.GetObject(typeof(IpcServer), $"ipc://{IpcServer.IpcServerName}/{IpcServer.IpcSubChannelName}");
-            serverInstance.ReceivedNewWindow(args);
+                InputBoxWindow input = new();
+                input.TxtQuestion.Text = path;
+                input.TxtUserEdit.Text = name;
+                if (input.ShowDialog() == true)
+                {
+                    Directory.CreateDirectory(Path.Combine(path, input.TxtUserEdit.Text));
+                }
+            });
         }
     }
 }

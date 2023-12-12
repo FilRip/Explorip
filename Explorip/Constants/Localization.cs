@@ -35,6 +35,9 @@ namespace Explorip.Constants
         public static string ATTACH_TO_TASKBAR { get; private set; }
         public static string DETACH_FROM_TASKBAR { get; private set; }
         public static string ADJUST_DATE_TIME { get; private set; }
+        public static string CANCEL { get; private set; }
+        public static string OK { get; private set; }
+        public static string CONTINUE { get; private set; }
 
         public static void LoadTranslation()
         {
@@ -66,6 +69,9 @@ namespace Explorip.Constants
             ATTACH_TO_TASKBAR = Load("starttiledata.dll", 1009, "Attach to taskbar");
             DETACH_FROM_TASKBAR = Load("starttiledata.dll", 1010, "Detach from taskbar");
             ADJUST_DATE_TIME = Load("shell32.dll", 24135, "Modify date and hour");
+            CANCEL = Load("shell32.dll", 33228, "Cancel");
+            CONTINUE = Load("shell32.dll", 33229, "Continue");
+            OK = Load("shell32.dll", 33225, "Ok");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

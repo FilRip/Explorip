@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ProjectGuid>{86B574DF-0076-4A7B-8082-4F0185953737}</ProjectGuid>
+    <TargetFramework>net481</TargetFramework>
+    <AssemblyTitle>ExploripApi</AssemblyTitle>
+    <Company>CoolBytes</Company>
+    <Product>ExploripApi</Product>
+    <Copyright>Copyright © CoolBytes 2023</Copyright>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+	<LangVersion>latest</LangVersion>
+	<Authors>FilRip</Authors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Remoting" />
+  </ItemGroup>
+</Project>

@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
 using Explorip.HookFileOperations.Helpers;
+
+using ExploripApi;
 
 namespace Explorip.HookFileOperations
 {
@@ -129,6 +132,11 @@ namespace Explorip.HookFileOperations
         public void NewItem(string folderName, string name, FileAttributes attrs)
         {
             ThrowIfDisposed();
+            if (attrs.HasFlag(FileAttributes.Directory))
+            {
+                IpcServerManager.CreateFolder(folderName, name);
+                return;
+            }
             using ComReleaser<IShellItem> folderItem = CreateShellItem(folderName);
             _fileOperation.NewItem(folderItem.Item, attrs, name, string.Empty, _callbackSink);
         }
