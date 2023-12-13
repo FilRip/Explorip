@@ -5,19 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:constants="clr-namespace:Explorip.Constants"
         mc:Ignorable="d" KeyDown="Window_KeyDown"
-        Height="450" Width="800"
+        Height="160" Width="400"
         Icon="{x:Static constants:Icons.Shortcut}"
         Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
     <Grid Margin="5">
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="5"/>
-            <RowDefinition/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="5"/>
-            <RowDefinition/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="5"/>
-            <RowDefinition/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="5"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -30,7 +30,7 @@
         <TextBox Grid.Row="2" Name="TxtTarget" VerticalAlignment="Center" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
         <Button Grid.Row="2" Grid.Column="2" Content="{x:Static constants:Localization.BROWSE}" Name="BtnBrowseTarget" Click="BtnBrowseTarget_Click"/>
         <TextBlock Grid.Row="4" Text="{x:Static constants:Localization.CREATE_SHORTCUT_Q2}"/>
-        <TextBox Grid.Row="6" Name="TxtName" VerticalAlignment="Center" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
+        <TextBox Grid.Row="6" Grid.ColumnSpan="3" Name="TxtName" VerticalAlignment="Center" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
         <Grid Grid.Row="8" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

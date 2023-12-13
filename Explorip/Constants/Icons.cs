@@ -16,7 +16,7 @@ namespace Explorip.Constants
             CancelImage = IconManager.GetIconFromFile("imageres.dll", 100);
             OkImage = IconManager.GetIconFromFile("imageres.dll", 101);
             Folder = IconManager.GetIconFromFile("shell32.dll", 4);
-            Shortcut = IconManager.GetIconFromFile("shell32.dll", 16769);
+            Shortcut = IconManager.GetIconFromFile("shell32.dll", 146);
         }
     }
 }

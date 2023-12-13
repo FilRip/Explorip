@@ -81,7 +81,7 @@ namespace Explorip.Constants
             CREATE_FOLDER = Load("shell32.dll", 31237, "Create a new folder").Replace(".", "");
             CREATE_SHORTCUT = Load("appwiz.cpl", 2200, "Create a shortcut");
             CREATE_SHORTCUT_Q1 = Load("appwiz.cpl", 2201, "On which element do you want to create shortcut ?");
-            BROWSE = Load("shell32.cpl", 9015, "Browse");
+            BROWSE = Load("shell32.dll", 9015, "Browse");
             LOCATE = Load("appwiz.cpl", 12808, "Location");
             CREATE_SHORTCUT_Q2 = Load("appwiz.cpl", 2203, "Which name do you want to use for this shortcut ?");
         }
