@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
@@ -135,6 +134,11 @@ namespace Explorip.HookFileOperations
             if (attrs.HasFlag(FileAttributes.Directory))
             {
                 IpcServerManager.CreateFolder(folderName, name);
+                return;
+            }
+            if (Path.GetExtension(name).ToLower() == ".lnk")
+            {
+                IpcServerManager.CreateShortcut(folderName, name);
                 return;
             }
             using ComReleaser<IShellItem> folderItem = CreateShellItem(folderName);

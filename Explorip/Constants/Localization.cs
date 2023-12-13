@@ -39,6 +39,11 @@ namespace Explorip.Constants
         public static string OK { get; private set; }
         public static string CONTINUE { get; private set; }
         public static string CREATE_FOLDER { get; private set; }
+        public static string CREATE_SHORTCUT { get; private set; }
+        public static string CREATE_SHORTCUT_Q1 { get; private set; }
+        public static string CREATE_SHORTCUT_Q2 { get; private set; }
+        public static string BROWSE { get; private set; }
+        public static string LOCATE { get; private set; }
 
         public static void LoadTranslation()
         {
@@ -74,6 +79,10 @@ namespace Explorip.Constants
             CONTINUE = Load("shell32.dll", 33229, "Continue").Replace("_", "");
             OK = Load("shell32.dll", 33225, "Ok");
             CREATE_FOLDER = Load("shell32.dll", 31237, "Create a new folder").Replace(".", "");
+            CREATE_SHORTCUT = Load("appwiz.cpl", 2200, "Create a shortcut");
+            CREATE_SHORTCUT_Q1 = Load("appwiz.cpl", 2201, "On witch element do you want to create shortcut ?");
+            BROWSE = Load("shell32.cpl", 9015, "Browse");
+            LOCATE = Load("appwiz.cpl", 12808, "Location");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

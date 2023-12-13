@@ -41,5 +41,13 @@ namespace Explorip.Helpers
                 }
             });
         }
+
+        public void CreateShortcut(string path, string name)
+        {
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+
+            });
+        }
     }
 }

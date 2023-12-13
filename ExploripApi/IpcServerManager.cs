@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
 
 namespace ExploripApi
@@ -22,6 +22,11 @@ namespace ExploripApi
         public void ReceivedNewWindow(string[] args)
         {
             _serverInstance?.ReceivedNewWindow(args);
+        }
+
+        public void CreateShortcut(string folderPath, string name)
+        {
+            _serverInstance?.CreateShortcut(folderPath, name);
         }
     }
 
@@ -52,13 +57,19 @@ namespace ExploripApi
         public static void SendNewWindow(string[] args)
         {
             IpcServerGateway channel = GetChannel();
-            channel.ReceivedNewWindow(args);
+            channel?.ReceivedNewWindow(args);
         }
 
         public static void CreateFolder(string path, string name)
         {
             IpcServerGateway channel = GetChannel();
-            channel.CreateFolder(path, name);
+            channel?.CreateFolder(path, name);
+        }
+
+        public static void CreateShortcut(string path, string name)
+        {
+            IpcServerGateway channel = GetChannel();
+            channel?.CreateShortcut(path, name);
         }
     }
 }
