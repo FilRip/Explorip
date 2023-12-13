@@ -205,7 +205,11 @@ namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation
         // Synchronize ItemsCollection to dependency collection
         private void ItemsChanged(object sender, EventArgs e)
         {
-            itemsChanged.Set();
+            try
+            {
+                itemsChanged.Set();
+            }
+            catch (Exception) { /* ignore errors */ }
         }
 
         /// <summary>

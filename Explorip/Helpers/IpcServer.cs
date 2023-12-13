@@ -2,11 +2,14 @@
 using System.IO;
 using System.Windows;
 
+using Explorip.Explorer.Controls;
 using Explorip.Explorer.Windows;
 
 using ExploripApi;
 
 using Microsoft.WindowsAPICodePack.Shell;
+
+using Securify.ShellLink;
 
 namespace Explorip.Helpers
 {
@@ -46,7 +49,12 @@ namespace Explorip.Helpers
         {
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-
+                CreateShortcutWindow win = new();
+                if (win.ShowDialog() == true)
+                {
+                    Shortcut sc = Shortcut.CreateShortcut(win.TxtTarget.Text);
+                    sc.WriteToFile(Path.Combine(path, win.TxtName.Text + ".lnk"));
+                }
             });
         }
     }

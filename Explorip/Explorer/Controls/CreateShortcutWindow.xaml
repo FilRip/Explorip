@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:constants="clr-namespace:Explorip.Constants"
-        mc:Ignorable="d"
+        mc:Ignorable="d" KeyDown="Window_KeyDown"
         Height="450" Width="800"
+        Icon="{x:Static constants:Icons.Shortcut}"
         Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
     <Grid Margin="5">
@@ -16,6 +17,40 @@
             <RowDefinition Height="5"/>
             <RowDefinition/>
             <RowDefinition Height="5"/>
+            <RowDefinition/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Text="{x:Static constants:Localization.CREATE_SHORTCUT_Q1}"/>
+        <TextBox Grid.Row="2" Name="TxtTarget"/>
+        <Button Grid.Row="2" Grid.Column="2" Content="{x:Static constants:Localization.BROWSE}" Name="BtnBrowseTarget" Click="BtnBrowseTarget_Click"/>
+        <TextBlock Grid.Row="4" Text="{x:Static constants:Localization.CREATE_SHORTCUT_Q2}"/>
+        <TextBox Grid.Row="6" Name="TxtName"/>
+        <Grid Grid.Row="8" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="5"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BtnCancel_Click" HorizontalAlignment="Center" TabIndex="2">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static constants:Localization.CANCEL}" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                    <Image Source="{x:Static constants:Icons.CancelImage}" Height="16" Width="16"/>
+                </StackPanel>
+            </Button>
+            <Button Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BtnOk_Click" HorizontalAlignment="Center" TabIndex="2">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static constants:Localization.CONTINUE}" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                    <Image Source="{x:Static constants:Icons.OkImage}" Height="16" Width="16"/>
+                </StackPanel>
+            </Button>
+        </Grid>
     </Grid>
 </Window>
