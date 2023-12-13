@@ -27,10 +27,10 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Text="{x:Static constants:Localization.CREATE_SHORTCUT_Q1}"/>
-        <TextBox Grid.Row="2" Name="TxtTarget"/>
+        <TextBox Grid.Row="2" Name="TxtTarget" VerticalAlignment="Center" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
         <Button Grid.Row="2" Grid.Column="2" Content="{x:Static constants:Localization.BROWSE}" Name="BtnBrowseTarget" Click="BtnBrowseTarget_Click"/>
         <TextBlock Grid.Row="4" Text="{x:Static constants:Localization.CREATE_SHORTCUT_Q2}"/>
-        <TextBox Grid.Row="6" Name="TxtName"/>
+        <TextBox Grid.Row="6" Name="TxtName" VerticalAlignment="Center" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
         <Grid Grid.Row="8" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
