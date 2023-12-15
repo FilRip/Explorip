@@ -19,3 +19,9 @@ Launch Explorip with "taskbars" as command line arguments to use the new Taskbar
 Ideal to Windows 11 users to have a taskbar like Windows 10 and with toolbar
 
 Support multi desktop too
+
+
+
+Last news : Warning :
+---------------------
+Latest Windows 11 release 23H2 build 22621 ; Integrated Windows Defender doesn't like Explorer with hooking copy. Autorize it in Settings of Windows Defender to fully use it.
