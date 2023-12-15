@@ -1,7 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <ProductVersion>8.0.50727</ProductVersion>
     <ProjectGuid>{001DCDA7-F4C3-4BD6-A86C-C99B35A9798A}</ProjectGuid>
+	<ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <OutputType>WinExe</OutputType>
     <FileUpgradeFlags />
     <UpgradeBackupLocation />
@@ -13,6 +15,7 @@
     <Description>Shell for Windows 10 and 11</Description>
     <Copyright>Copyright © 2021</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -38,269 +41,6 @@
     <Reference Include="System.Windows" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Explorer\Controls\ConsoleHost.xaml.cs">
-      <DependentUpon>ConsoleHost.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Explorer\Controls\HeaderWithCloseButton.xaml.cs">
-      <DependentUpon>HeaderWithCloseButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Explorer\Controls\TabItemConsoleCommand.xaml.cs">
-      <DependentUpon>TabItemConsoleCommand.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Explorer\Controls\TabItemExplorerBrowser.xaml.cs">
-      <DependentUpon>TabItemExplorerBrowser.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Explorer\Controls\TabItemPlusExplorerBrowser.xaml.cs">
-      <DependentUpon>TabItemPlusExplorerBrowser.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\NotificationButton.xaml.cs">
-      <DependentUpon>NotificationButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\TabTipButton.xaml.cs">
-      <DependentUpon>TabTipButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\WidgetsButton.xaml.cs">
-      <DependentUpon>WidgetsButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\TaskManButton.xaml.cs">
-      <DependentUpon>TaskManButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\SearchButton.xaml.cs">
-      <DependentUpon>SearchButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\TaskThumbButton.xaml.cs">
-      <DependentUpon>TaskThumbButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\ToolbarBigButton.xaml.cs">
-      <DependentUpon>ToolbarBigButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\MyDesktopApp.xaml.cs">
-      <DependentUpon>MyDesktopApp.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\Clock.xaml.cs">
-      <DependentUpon>Clock.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\NotifyBalloon.xaml.cs">
-      <DependentUpon>NotifyBalloon.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\NotifyIcon.xaml.cs">
-      <DependentUpon>NotifyIcon.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\NotifyIconList.xaml.cs">
-      <DependentUpon>NotifyIconList.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\StartButton.xaml.cs">
-      <DependentUpon>StartButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\TaskButton.xaml.cs">
-      <DependentUpon>TaskButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\TaskList.xaml.cs">
-      <DependentUpon>TaskList.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\Toolbar.xaml.cs">
-      <DependentUpon>Toolbar.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Controls\ToolbarButton.xaml.cs">
-      <DependentUpon>ToolbarButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\PropertiesWindow.xaml.cs">
-      <DependentUpon>PropertiesWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TaskBar\Taskbar.xaml.cs">
-      <DependentUpon>Taskbar.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Explorer\Controls\TabExplorerBrowser.xaml.cs">
-      <DependentUpon>TabExplorerBrowser.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Explorer\MyExplorerApp.xaml.cs">
-      <DependentUpon>MyExplorerApp.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Explorer\Windows\WpfExplorerBrowser.xaml.cs">
-      <DependentUpon>WpfExplorerBrowser.xaml</DependentUpon>
-    </Compile>
-	<Compile Update="Helpers\InputBoxWindow.xaml.cs">
-	  <DependentUpon>InputBoxWindow.xaml</DependentUpon>
-	</Compile>
-	<Compile Update="Explorer\Controls\CreateShortcutWindow.xaml.cs">
-	  <DependentUpon>CreateShortcutWindow.xaml</DependentUpon>
-	</Compile>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Explorer\Controls\ConsoleHost.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Controls\HeaderWithCloseButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Explorer\Controls\TabItemConsoleCommand.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Controls\TabItemExplorerBrowser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Controls\TabItemPlusExplorerBrowser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Styles\StyleBrush.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Styles\StyleButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Styles\StyleComboBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Styles\StyleTabItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Styles\StyleContextMenuItem.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Styles\StyleTabControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Styles\StyleWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TaskBar\Controls\NotificationButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\TabTipButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\WidgetsButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\TaskManButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\SearchButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\TaskThumbButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TaskBar\Controls\ToolbarBigButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Languages\francais.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\MyDesktopApp.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\Clock.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\NotifyBalloon.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\NotifyIcon.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\NotifyIconList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\StartButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\TaskButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\TaskList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\Toolbar.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Controls\ToolbarButton.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\PropertiesWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Taskbar.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskBar\Themes\System.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Explorer\Controls\TabExplorerBrowser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\MyExplorerApp.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Explorer\Windows\WpfExplorerBrowser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Helpers\InputBoxWindow.xaml">
-	  <SubType>Designer</SubType>
-	  <Generator>MSBuild:Compile</Generator>
-	</Page>
-	<Page Include="Explorer\Controls\CreateShortcutWindow.xaml">
-	  <SubType>Designer</SubType>
-	  <Generator>MSBuild:Compile</Generator>
-	</Page>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExploripApi\ExploripApi.csproj" />
@@ -339,6 +79,9 @@
     <None Include="Ressources\PreviousButton.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="TaskBar\Resources\tabtip.png" />
   </ItemGroup>
   <ItemGroup>
@@ -348,5 +91,10 @@
     <Resource Include="TaskBar\Resources\search11.png" />
     <Resource Include="TaskBar\Resources\start11.png" />
     <Resource Include="TaskBar\Resources\taskman11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </None>
   </ItemGroup>
 </Project>

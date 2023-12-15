@@ -3,84 +3,39 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace Explorip.Explorer.ViewModels
 {
-    public class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
+    public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
     {
         public TabItemExplorerBrowserViewModel() : base()
         {
             _lastFolder = "";
         }
 
-        private string _path;
-        public string TabTitle
-        {
-            get { return _path; }
-            set
-            {
-                _path = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty()]
+        private string _tabTitle;
 
+        [ObservableProperty()]
         private bool _modeEdit;
-        public bool ModeEdit
+        partial void OnModeEditChanged(bool value)
         {
-            get { return _modeEdit; }
-            set
-            {
-                _lastFolder = "";
-                _modeEdit = value;
-                OnPropertyChanged();
-            }
+            _lastFolder = "";
         }
 
-        private bool _previous, _next;
-        public bool AllowNavigatePrevious
-        {
-            get { return _previous; }
-            set
-            {
-                _previous = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(ForegroundPrevious));
-                OnPropertyChanged(nameof(ForegroundNext));
-            }
-        }
-        public bool AllowNavigateNext
-        {
-            get { return _next; }
-            set
-            {
-                _next = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(ForegroundNext));
-                OnPropertyChanged(nameof(ForegroundPrevious));
-            }
-        }
+        [ObservableProperty(), NotifyPropertyChangedFor(nameof(ForegroundPrevious), nameof(ForegroundNext))]
+        private bool _allowNavigatePrevious, _allowNavigateNext;
 
+        [ObservableProperty()]
         private string _editPath;
-        public string EditPath
+        partial void OnEditPathChanged(string value)
         {
-            get { return _editPath; }
-            set
-            {
-                _editPath = value;
-                OnPropertyChanged();
-                SearchSubFolder();
-            }
+            SearchSubFolder();
         }
 
-        private string[] _listEditPath;
-        public string[] ComboBoxEditPath
-        {
-            get { return _listEditPath; }
-            set
-            {
-                _listEditPath = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty()]
+        private string[] _comboBoxEditPath;
 
         public Brush ForegroundPrevious
         {
@@ -143,26 +98,10 @@ namespace Explorip.Explorer.ViewModels
             catch (Exception) { /* Ignoring errors */ }
         }
 
+        [ObservableProperty()]
         private bool _modeSearch;
-        public bool ModeSearch
-        {
-            get { return _modeSearch; }
-            set
-            {
-                _modeSearch = value;
-                OnPropertyChanged();
-            }
-        }
 
-        private string _whatToSearch;
-        public string SearchTo
-        {
-            get { return _whatToSearch; }
-            set
-            {
-                _whatToSearch = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty()]
+        private string _searchTo;
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Windows.Media;
 
-using Explorip.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Explorip.Explorer.ViewModels
 {
-    public abstract class TabItemExploripViewModel : ViewModelBase
+    public abstract partial class TabItemExploripViewModel : ObservableObject
     {
         private readonly SolidColorBrush _disabledColor;
 

@@ -7,9 +7,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <LangVersion>latest</LangVersion>
     <AssemblyTitle>ExploripCopy</AssemblyTitle>
-    <Company>APRR</Company>
+    <Company>CoolBytes</Company>
     <Product>ExploripCopy</Product>
-    <Copyright>Copyright © APRR 2023</Copyright>
+    <Copyright>Copyright © CoolBytes 2023</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
