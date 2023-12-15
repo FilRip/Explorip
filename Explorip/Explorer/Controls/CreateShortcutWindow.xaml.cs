@@ -17,6 +17,7 @@ namespace Explorip.Explorer.Controls
         public CreateShortcutWindow()
         {
             InitializeComponent();
+            Owner = Application.Current.GetCurrentWindow();
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);

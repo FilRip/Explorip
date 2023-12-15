@@ -7,6 +7,7 @@
         mc:Ignorable="d" Icon="{x:Static constants:Icons.Folder}"
         Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
+        Topmost="True" WindowStartupLocation="CenterOwner"
         Height="160" Width="400" ShowActivated="True" FocusManager.FocusedElement="{Binding ElementName=TxtUserEdit}" Loaded="Window_Loaded">
 
     <Grid Margin="5">

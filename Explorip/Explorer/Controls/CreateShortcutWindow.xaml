@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:constants="clr-namespace:Explorip.Constants"
         mc:Ignorable="d" KeyDown="Window_KeyDown"
-        Height="160" Width="400"
+        Height="160" Width="400" Topmost="True" WindowStartupLocation="CenterOwner"
         Icon="{x:Static constants:Icons.Shortcut}"
         Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
