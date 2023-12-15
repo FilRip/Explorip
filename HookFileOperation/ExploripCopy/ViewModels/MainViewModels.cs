@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using System.Windows.Input;
 using System.Windows.Media;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Explorip.HookFileOperations;
 using Explorip.HookFileOperations.Models;
@@ -20,7 +22,7 @@ using ManagedShell.Interop;
 
 namespace ExploripCopy.ViewModels
 {
-    internal class MainViewModels : ViewModelBase
+    public partial class MainViewModels : ObservableObject, IDisposable
     {
         private static MainViewModels _instance;
         private readonly Thread _mainThread;
@@ -37,94 +39,35 @@ namespace ExploripCopy.ViewModels
         internal MainViewModels() : base()
         {
             _lockOperation = new object();
-            _listWait = [];
+            _listWaiting = [];
             _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
             _mainThread.Start();
             _chronoSpeed = new Stopwatch();
-            CmdRemoveLine = new RelayCommand(new Action<object>((param) => RemoveLine()));
-            BtnIgnoreCurrent = new RelayCommand(new Action<object>((param) => IgnoreCurrent()));
-            BtnPause = new RelayCommand(new Action<object>((param) => DoPause()));
         }
 
-        private bool _isMaximized;
-        public bool WindowMaximized
-        {
-            get { return _isMaximized; }
-            set
-            {
-                if (value != _isMaximized)
-                {
-                    _isMaximized = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+        [ObservableProperty()]
+        private bool _windowMaximized;
 
+        [ObservableProperty()]
         private string _currentFile;
-        public string CurrentFile
-        {
-            get { return _currentFile; }
-            set
-            {
-                _currentFile = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty(), NotifyPropertyChangedFor(nameof(ColorGlobalReport))]
         private string _globalReport;
-        public string GlobalReport
-        {
-            get { return _globalReport; }
-            set
-            {
-                _globalReport = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(ColorGlobalReport));
-            }
-        }
 
-        private double _reportProgress;
-        public double CurrentProgress
-        {
-            get { return _reportProgress; }
-            set
-            {
-                _reportProgress = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty()]
+        private double _currentProgress;
 
+        [ObservableProperty()]
         private double _maxGlobalProgress;
-        public double MaxGlobalProgress
-        {
-            get { return _maxGlobalProgress; }
-            set
-            {
-                if (_maxGlobalProgress != value)
-                {
-                    _maxGlobalProgress = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
 
+        [ObservableProperty(), NotifyPropertyChangedFor(nameof(TxtGlobalReport))]
         private double _globalProgress;
-        public double GlobalProgress
-        {
-            get { return _globalProgress; }
-            set
-            {
-                _globalProgress = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(TxtGlobalReport));
-            }
-        }
 
         public string TxtGlobalReport
         {
             get
             {
-                return CopyHelper.SizeInText(_globalProgress, Localization.TOTAL);
+                return CopyHelper.SizeInText(GlobalProgress, Localization.TOTAL);
             }
         }
 
@@ -139,16 +82,9 @@ namespace ExploripCopy.ViewModels
             }
         }
 
-        private List<OneFileOperation> _listWait;
-        public List<OneFileOperation> ListWaiting
-        {
-            get { return _listWait; }
-            set
-            {
-                _listWait = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty()]
+        private List<OneFileOperation> _listWaiting;
+
         public void ForceUpdateWaitingList()
         {
             OnPropertyChanged(nameof(ListWaiting));
@@ -173,26 +109,14 @@ namespace ExploripCopy.ViewModels
             }
         }
 
-        public double _lastSpeed;
+        [ObservableProperty(), NotifyPropertyChangedFor(nameof(TxtCurrentSpeed))]
+        private double _lastSpeed;
+
         public string TxtCurrentSpeed
         {
             get
             {
-                return CopyHelper.SizeInText(_lastSpeed, Localization.SPEED_COPY);
-            }
-        }
-
-        public double LastSpeed
-        {
-            get { return _lastSpeed; }
-            set
-            {
-                if (_lastSpeed != value)
-                {
-                    _lastSpeed = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(TxtCurrentSpeed));
-                }
+                return CopyHelper.SizeInText(LastSpeed, Localization.SPEED_COPY);
             }
         }
 
@@ -218,7 +142,7 @@ namespace ExploripCopy.ViewModels
         {
             NotifyIconViewModel.Instance.SetSystrayIcon(false);
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
-            _listWait.RemoveAt(0);
+            ListWaiting.RemoveAt(0);
             if (_lastError == null)
             {
                 _currentOperation = null;
@@ -263,6 +187,8 @@ namespace ExploripCopy.ViewModels
             NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, BalloonIcon.Info);
         }
         private OneFileOperation _currentOperation;
+        private bool disposedValue;
+
         private void Treatment(OneFileOperation operation)
         {
             _currentOperation = operation;
@@ -270,7 +196,7 @@ namespace ExploripCopy.ViewModels
             GlobalProgress = 0;
             UpdateGlobalReport();
             _chronoSpeed.Restart();
-            _lastSpeed = 0;
+            LastSpeed = 0;
             if (_currentThread?.IsAlive == true)
                 _currentThread.Abort();
             if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
@@ -394,11 +320,11 @@ namespace ExploripCopy.ViewModels
             {
                 try
                 {
-                    if (_currentOperation == null && _listWait.Count > 0 && _lastError == null)
+                    if (_currentOperation == null && ListWaiting.Count > 0 && GetLastError == null)
                     {
                         lock (_lockOperation)
                         {
-                            Treatment(_listWait[0]);
+                            Treatment(ListWaiting[0]);
                         }
                     }
                     Thread.Sleep(100);
@@ -408,8 +334,7 @@ namespace ExploripCopy.ViewModels
             }
         }
 
-        public ICommand CmdRemoveLine { get; private set; }
-
+        [RelayCommand()]
         private void RemoveLine()
         {
             try
@@ -424,7 +349,7 @@ namespace ExploripCopy.ViewModels
             catch (Exception) { /* Ignore errors */ }
         }
 
-        public ICommand BtnIgnoreCurrent { get; private set; }
+        [RelayCommand()]
         private void IgnoreCurrent()
         {
             if (_currentThread?.IsAlive == true)
@@ -433,17 +358,30 @@ namespace ExploripCopy.ViewModels
                 GetLastError = null;
         }
 
-        public ICommand BtnPause { get; private set; }
+        [RelayCommand()]
         private void DoPause()
         {
-            if (_currentFile != null && _lastError == null)
+            if (CurrentFile != null && _lastError == null)
                 CopyHelper.Pause = !CopyHelper.Pause;
         }
 
-        protected override void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
-            _mainThread?.Abort();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _mainThread?.Abort();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

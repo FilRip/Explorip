@@ -1,35 +1,32 @@
-﻿using System;
-using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using ExploripCopy.GUI;
-using ExploripCopy.Helpers;
 
 using Hardcodet.Wpf.TaskbarNotification;
 
 namespace ExploripCopy.ViewModels
 {
-    internal class NotifyIconViewModel : ViewModelBase
+    internal partial class NotifyIconViewModel : ObservableObject
     {
         public static NotifyIconViewModel Instance { get; private set; }
 
         private TaskbarIcon _notifyIcon;
-        public ICommand ExitApplicationCommand { get; private set; }
-        public ICommand ShowWindowCommand { get; private set; }
 
         public NotifyIconViewModel() : base()
         {
             Instance = this;
             SetSystrayIcon(false);
-            ExitApplicationCommand = new RelayCommand(new Action<object>((param) => Exit()));
-            ShowWindowCommand = new RelayCommand(new Action<object>((param) => Show()));
         }
 
-        private void Exit()
+        [RelayCommand()]
+        private void ExitApplication()
         {
             MainWindow.Instance.IconInSystray_Exit();
         }
 
-        private void Show()
+        [RelayCommand()]
+        private void ShowWindow()
         {
             MainWindow.Instance.ShowWindow();
         }
@@ -39,19 +36,8 @@ namespace ExploripCopy.ViewModels
             SystrayIcon = (working ? "/Resources/SystrayIconR.ico" : "/Resources/SystrayIconG.ico");
         }
 
-        private string _currentIcon;
-        public string SystrayIcon
-        {
-            get { return _currentIcon; }
-            set
-            {
-                if (_currentIcon != value)
-                {
-                    _currentIcon = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
+        [ObservableProperty()]
+        private string _systrayIcon;
 
         public TaskbarIcon SystrayControl
         {

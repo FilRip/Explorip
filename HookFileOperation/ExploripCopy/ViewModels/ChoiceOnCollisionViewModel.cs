@@ -1,8 +1,10 @@
-﻿using ExploripCopy.Models;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using ExploripCopy.Models;
 
 namespace ExploripCopy.ViewModels
 {
-    public class ChoiceOnCollisionViewModel : ViewModelBase
+    public partial class ChoiceOnCollisionViewModel : ObservableObject
     {
         public ChoiceOnCollisionViewModel() : base()
         {
@@ -10,27 +12,11 @@ namespace ExploripCopy.ViewModels
             DoSameForAllFiles = true;
         }
 
+        [ObservableProperty()]
         private EChoiceFileOperation _choice;
-        public EChoiceFileOperation Choice
-        {
-            get { return _choice; }
-            set
-            {
-                _choice = value;
-                OnPropertyChanged();
-            }
-        }
 
-        private bool _sameForAllFiles;
-        public bool DoSameForAllFiles
-        {
-            get { return _sameForAllFiles; }
-            set
-            {
-                _sameForAllFiles = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty()]
+        private bool _doSameForAllFiles;
 
         private string _conflictFile;
         public string ConflictFile
