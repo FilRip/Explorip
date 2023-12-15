@@ -115,7 +115,7 @@
 
         </Grid>
 
-        <explorer:ExplorerBrowser Grid.Row="1" Name="ExplorerBrowser" NavigationPane="Show" CommandsPane="Hide" IsTabStop="False" AllowDrop="True" Focusable="True"/>
+        <explorer:ExplorerBrowser Grid.Row="1" Name="ExplorerBrowser" NavigationPane="Show" CommandsPane="Hide" IsTabStop="True" AllowDrop="True" Focusable="True"/>
         
     </Grid>
 </local:TabItemExplorip>
