@@ -25,3 +25,5 @@ Support multi desktop too
 Last news : Warning :
 ---------------------
 Latest Windows 11 release 23H2 build 22621 ; Integrated Windows Defender doesn't like Explorer with hooking copy. Autorize it in Settings of Windows Defender to fully use it.
+
+(or launch Explorer with "withouthook" arguments command line to use Explorip File Explorer, but without hooking copy (so use explorer original windows copy)
