@@ -2,6 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:constants="clr-namespace:Explorip.Constants"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:windowstask="clr-namespace:ManagedShell.WindowsTasks;assembly=ManagedShell.WindowsTasks"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
              Loaded="TaskButton_OnLoaded"
              Unloaded="TaskButton_OnUnloaded" Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave">
     <UserControl.Resources>

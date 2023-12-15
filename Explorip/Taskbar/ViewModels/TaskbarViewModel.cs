@@ -1,10 +1,10 @@
 ﻿using System.Windows;
 
-using Explorip.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Explorip.TaskBar.ViewModels
 {
-    public class TaskbarViewModel : ViewModelBase
+    public partial class TaskbarViewModel : ObservableObject
     {
         private static TaskbarViewModel _instance;
 
@@ -22,17 +22,9 @@ namespace Explorip.TaskBar.ViewModels
             ShowTabTip = Visibility.Hidden;
         }
 
-        private bool _resizeMode;
-        public bool ResizeOn
-        {
-            get { return _resizeMode; }
-            set
-            {
-                _resizeMode = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(LabelUnlock));
-            }
-        }
+        [ObservableProperty(), NotifyPropertyChangedFor(nameof(LabelUnlock))]
+        private bool _resizeOn;
+
         public string LabelUnlock
         {
             get
@@ -44,15 +36,7 @@ namespace Explorip.TaskBar.ViewModels
             }
         }
 
-        private Visibility _showKeyboard;
-        public Visibility ShowTabTip
-        {
-            get { return _showKeyboard; }
-            set
-            {
-                _showKeyboard = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty()]
+        private Visibility _showTabTip;
     }
 }
