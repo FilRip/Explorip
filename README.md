@@ -1,5 +1,7 @@
 Windows Shell/Explorer Replacement. All languages supported.
 
+100% in C#
+
 Explorer
 --------
 Launch Explorip without command line arguments (or a path to a folder) to use the new file explorer
