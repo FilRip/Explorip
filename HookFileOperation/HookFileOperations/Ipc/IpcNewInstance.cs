@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using Explorip.HookFileOperations.Interfaces;
 using Explorip.HookFileOperations.Models;
+
+using ExploripApi;
 
 namespace Explorip.HookFileOperations.Ipc
 {
@@ -31,13 +35,37 @@ namespace Explorip.HookFileOperations.Ipc
             {
                 if (_interactionWithMainProcess == null)
                 {
-                    Console.WriteLine("PerformOperation in dedicated process");
-                    FileOperation currentFileOperation = new(GetDesktopWindow());
-                    foreach (OneFileOperation ope in listOperations)
-                        ope.WriteOperation(currentFileOperation);
-                    currentFileOperation.PerformOperations();
-                    Console.WriteLine("End operation");
-                    Environment.Exit(0);
+                    try
+                    {
+                        if (listOperations.Count == 1 && listOperations[0].FileOperation == EFileOperation.Create)
+                        {
+                            if (listOperations[0].Attributes.HasFlag(FileAttributes.Directory))
+                            {
+                                IpcServerManager.CreateFolder(listOperations[0].Destination, listOperations[0].NewName);
+                                return;
+                            }
+                            if (Path.GetExtension(listOperations[0].NewName).ToLower() == ".lnk")
+                            {
+                                IpcServerManager.CreateShortcut(listOperations[0].Destination, listOperations[0].NewName);
+                                return;
+                            }
+                        }
+                        Console.WriteLine("PerformOperation in dedicated process");
+                        FileOperation currentFileOperation = new(GetDesktopWindow());
+                        foreach (OneFileOperation ope in listOperations)
+                            ope.WriteOperation(currentFileOperation);
+                        currentFileOperation.PerformOperations();
+                        Console.WriteLine("End operation");
+                        currentFileOperation.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error during HookCopy : {ex.Message}{Environment.NewLine}{ex.StackTrace}");
+                    }
+                    finally
+                    {
+                        Environment.Exit(0);
+                    }
                 }
                 else
                 {

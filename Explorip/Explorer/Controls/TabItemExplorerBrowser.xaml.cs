@@ -90,9 +90,11 @@ namespace Explorip.Explorer.Controls
 
                     string pathLink;
                     bool splitPath = true;
+                    bool network = false;
                     try
                     {
                         pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                        network = pathLink.StartsWith($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
                     }
                     catch (Exception)
                     {
@@ -109,6 +111,8 @@ namespace Explorip.Explorer.Controls
                             StringBuilder partialPath = new();
                             foreach (string path in pathLink.Split(new char[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries))
                             {
+                                if (network && CurrentPath.Inlines.Count == 0)
+                                    partialPath.Append($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
                                 partialPath.Append(path + Path.DirectorySeparatorChar);
                                 Hyperlink lb = new()
                                 {

@@ -133,6 +133,7 @@ namespace ManagedShell.Interop
 
             this._tasks.CompleteAdding();
             this._cancellationToken.Cancel();
+            _cancellationToken.Dispose();
         }
 
         protected override void QueueTask(Task task)

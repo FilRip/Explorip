@@ -7,9 +7,7 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices
     /// Enumeration of execution states.
     /// </summary>
     [Flags()]
-#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     public enum ExecutionStates
-#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     {
         /// <summary>
         /// No state configured.
