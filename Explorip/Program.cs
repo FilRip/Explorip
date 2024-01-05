@@ -52,6 +52,7 @@ namespace Explorip
                 if (processNotLaunched || args.Contains("newinstance"))
                 {
                     IpcServerManager.InitChannel(new IpcServer());
+                    AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
                     if (!ExtensionsCommandLineArguments.ArgumentExists("withoutHook"))
                         HookCopyOperations.GetInstance().InstallHook();
                     _WpfHost = new Explorer.MyExplorerApp();
@@ -65,6 +66,11 @@ namespace Explorip
                 }
             }
             mutexProcess.Dispose();
+        }
+
+        private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            IpcServerManager.Shutdown();
         }
 
         public static Application MonApp

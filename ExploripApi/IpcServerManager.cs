@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
+using System.Threading;
 
 namespace ExploripApi
 {
@@ -28,12 +30,18 @@ namespace ExploripApi
         {
             _serverInstance?.CreateShortcut(folderPath, name);
         }
+
+        public void Ping()
+        {
+            _serverInstance?.Ping();
+        }
     }
 
     public static class IpcServerManager
     {
         internal const string IpcServerName = "ExploripIpcServer";
         internal const string IpcSubChannelName = "RemoteServer";
+        private static Thread _keepAlive;
 
         public static void InitChannel(IServerIpc serverInstance)
         {
@@ -44,8 +52,34 @@ namespace ExploripApi
                 RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcServerGateway), IpcSubChannelName, WellKnownObjectMode.Singleton);
                 IpcServerGateway ipcServer = GetChannel();
                 ipcServer.SetInstance(serverInstance);
+                _keepAlive = new Thread(new ThreadStart(KeepAliveThread))
+                {
+                    IsBackground = true,
+                };
+                _keepAlive.Start();
             }
             catch { /* Ignore errors */ }
+        }
+
+        public static void Shutdown()
+        {
+            _keepAlive?.Abort();
+        }
+
+        private static void KeepAliveThread()
+        {
+            while (true)
+            {
+                try
+                {
+                    GetChannel().Ping();
+                    Thread.Sleep(1000);
+                }
+                catch (ThreadAbortException)
+                {
+                    break;
+                }
+            }
         }
 
         private static IpcServerGateway GetChannel()

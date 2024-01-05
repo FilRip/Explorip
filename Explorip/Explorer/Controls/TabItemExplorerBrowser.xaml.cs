@@ -93,7 +93,10 @@ namespace Explorip.Explorer.Controls
                     bool network = false;
                     try
                     {
-                        pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                        if (e.NewLocation.IsFileSystemObject)
+                            pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                        else
+                            pathLink = e.NewLocation.Name;
                         network = pathLink.StartsWith($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
                     }
                     catch (Exception)

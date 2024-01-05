@@ -57,5 +57,10 @@ namespace Explorip.Helpers
                 }
             });
         }
+
+        public void Ping()
+        {
+            // Nothing to do here, just keep ipc channel on line
+        }
     }
 }
