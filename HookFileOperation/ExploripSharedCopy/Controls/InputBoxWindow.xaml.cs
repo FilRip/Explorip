@@ -3,10 +3,12 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
-using Explorip.WinAPI;
+using ExploripSharedCopy.Helpers;
+using ExploripSharedCopy.WinAPI;
 
-namespace Explorip.Helpers
+namespace ExploripSharedCopy.Controls
 {
     /// <summary>
     /// Logique d'interaction pour InputBoxWindow.xaml
@@ -22,7 +24,6 @@ namespace Explorip.Helpers
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
-            Title = Constants.Localization.CREATE_FOLDER;
         }
 
         private void CommonInit(string title, string question)
@@ -31,9 +32,33 @@ namespace Explorip.Helpers
             TxtQuestion.Text = question.Replace(@"\r\n", Environment.NewLine).Replace(@"\r", Environment.NewLine).Replace(@"\n", Environment.NewLine);
         }
 
-        internal bool CheckValidPathName { get; set; }
+        public bool CheckValidPathName { get; set; }
 
-        internal void ShowModal(string title, string question, string defaultValue = "")
+        public string Question
+        {
+            get { return TxtQuestion.Text; }
+            set { TxtQuestion.Text = value; }
+        }
+
+        public string UserEdit
+        {
+            get { return TxtUserEdit.Text; }
+            set { TxtUserEdit.Text = value; }
+        }
+
+        public void SetOk(string text, ImageSource image)
+        {
+            TextOk.Text = text;
+            ImageOk.Source = image;
+        }
+
+        public void SetCancel(string text, ImageSource image)
+        {
+            TextCancel.Text = text;
+            ImageCancel.Source = image;
+        }
+
+        public void ShowModal(string title, string question, string defaultValue = "")
         {
             CommonInit(title, question);
             TxtUserEdit.Text = defaultValue;

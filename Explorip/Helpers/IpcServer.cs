@@ -2,14 +2,17 @@
 using System.IO;
 using System.Windows;
 
-using Explorip.Explorer.Controls;
 using Explorip.Explorer.Windows;
 
 using ExploripApi;
 
+using ExploripSharedCopy.Controls;
+
 using Microsoft.WindowsAPICodePack.Shell;
 
 using Securify.ShellLink;
+
+using static ManagedShell.Interop.NativeMethods;
 
 namespace Explorip.Helpers
 {
@@ -35,12 +38,18 @@ namespace Explorip.Helpers
                 InputBoxWindow input = new()
                 {
                     CheckValidPathName = true,
+                    Title = Constants.Localization.CREATE_FOLDER,
+                    Question = path,
+                    UserEdit = name,
+                    Icon = Constants.Icons.Folder,
+                    Background = Constants.Colors.BackgroundColorBrush,
+                    Foreground = Constants.Colors.ForegroundColorBrush,
                 };
-                input.TxtQuestion.Text = path;
-                input.TxtUserEdit.Text = name;
+                input.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
+                input.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
                 if (input.ShowDialog() == true)
                 {
-                    Directory.CreateDirectory(Path.Combine(path, input.TxtUserEdit.Text));
+                    Directory.CreateDirectory(Path.Combine(path, input.UserEdit));
                 }
             });
         }
@@ -49,11 +58,21 @@ namespace Explorip.Helpers
         {
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                CreateShortcutWindow win = new();
+                CreateShortcutWindow win = new()
+                {
+                    Title = Constants.Localization.CREATE_SHORTCUT,
+                    Icon = Constants.Icons.Shortcut,
+                    Background = Constants.Colors.BackgroundColorBrush,
+                    Foreground = Constants.Colors.ForegroundColorBrush,
+                };
+                win.SetQuestions(Constants.Localization.CREATE_SHORTCUT_Q1, Constants.Localization.CREATE_SHORTCUT_Q2);
+                win.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
+                win.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
+                win.SetBrowse(Constants.Localization.BROWSE);
                 if (win.ShowDialog() == true)
                 {
-                    Shortcut sc = Shortcut.CreateShortcut(win.TxtTarget.Text);
-                    sc.WriteToFile(Path.Combine(path, win.TxtName.Text + ".lnk"));
+                    Shortcut sc = Shortcut.CreateShortcut(win.Target);
+                    sc.WriteToFile(Path.Combine(path, win.ShortcutName + ".lnk"));
                 }
             });
         }

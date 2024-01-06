@@ -1,13 +1,15 @@
 ﻿using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
-using Explorip.Helpers;
-using Explorip.WinAPI;
+using ExploripSharedCopy.Helpers;
+using ExploripSharedCopy.WinAPI;
 
 using Microsoft.Win32;
 
-namespace Explorip.Explorer.Controls
+namespace ExploripSharedCopy.Controls
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -23,7 +25,41 @@ namespace Explorip.Explorer.Controls
                 WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
-            Title = Constants.Localization.CREATE_SHORTCUT;
+        }
+
+        public string Target
+        {
+            get { return TxtTarget.Text; }
+            set { TxtTarget.Text = value; }
+        }
+
+        public string ShortcutName
+        {
+            get { return TxtName.Text; }
+            set { TxtName.Text = value; }
+        }
+
+        public void SetQuestions(string q1, string q2)
+        {
+            QuestionOne.Text = q1;
+            QuestionTwo.Text = q2;
+        }
+
+        public void SetOk(string text, ImageSource image)
+        {
+            TextOk.Text = text;
+            ImageOk.Source = image;
+        }
+
+        public void SetCancel(string text, ImageSource image)
+        {
+            TextCancel.Text = text;
+            ImageCancel.Source = image;
+        }
+
+        public void SetBrowse(string text)
+        {
+            BtnBrowseTarget.Content = text;
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
@@ -38,9 +74,9 @@ namespace Explorip.Explorer.Controls
             Close();
         }
 
-        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Escape)
+            if (e.Key == Key.Escape)
                 BtnCancel_Click(sender, e);
         }
 

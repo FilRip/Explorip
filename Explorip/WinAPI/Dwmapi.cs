@@ -8,9 +8,6 @@ namespace Explorip.WinAPI
     public static class Dwmapi
     {
         [DllImport("dwmapi.dll")]
-        internal static extern bool DwmSetWindowAttribute(IntPtr hwnd, int attribut, ref int attrValeur, int attrSize);
-
-        [DllImport("dwmapi.dll")]
         internal static extern int DwmRegisterThumbnail(IntPtr dest, IntPtr src, out IntPtr thumb);
 
         [DllImport("dwmapi.dll")]

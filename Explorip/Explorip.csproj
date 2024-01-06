@@ -45,6 +45,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ExploripApi\ExploripApi.csproj" />
     <ProjectReference Include="..\HookFileOperation\ExploripCopy\ExploripCopy.csproj" />
+    <ProjectReference Include="..\HookFileOperation\ExploripSharedCopy\ExploripSharedCopy.csproj" />
     <ProjectReference Include="..\HookFileOperation\HookFileOperationsManager\HookFileOperationsManager.csproj" />
     <ProjectReference Include="..\HookFileOperation\HookFileOperations\HookFileOperations.csproj" />
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj" />

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-using Explorip.Helpers;
+using ExploripSharedCopy.Helpers;
 
 namespace Explorip.Constants
 {

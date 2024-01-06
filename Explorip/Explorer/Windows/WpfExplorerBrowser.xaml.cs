@@ -12,10 +12,11 @@ using System.Windows.Media.Imaging;
 
 using Explorip.Explorer.Controls;
 using Explorip.Explorer.ViewModels;
-using Explorip.Helpers;
+using ExploripSharedCopy.Helpers;
 using Explorip.WinAPI;
 
 using Microsoft.WindowsAPICodePack.Shell;
+using ExploripSharedCopy.WinAPI;
 
 namespace Explorip.Explorer.Windows
 {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 using Explorip.HookFileOperations.Interfaces;
 using Explorip.HookFileOperations.Models;
@@ -50,12 +49,10 @@ namespace Explorip.HookFileOperations.Ipc
                                 return;
                             }
                         }
-                        Console.WriteLine("PerformOperation in dedicated process");
                         FileOperation currentFileOperation = new(GetDesktopWindow());
                         foreach (OneFileOperation ope in listOperations)
                             ope.WriteOperation(currentFileOperation);
                         currentFileOperation.PerformOperations();
-                        Console.WriteLine("End operation");
                         currentFileOperation.Dispose();
                     }
                     catch (Exception ex)

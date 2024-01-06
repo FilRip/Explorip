@@ -14,11 +14,9 @@ namespace ExploripCopy.Helpers
 
         internal static void CreateIpcServer()
         {
-            Console.WriteLine("Create channel");
             _channel = new("ExploripCopy");
             ChannelServices.RegisterChannel(_channel, false);
             RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
-            Console.WriteLine("Channel created");
             _ni = (IpcNewInstance)Activator.GetObject(typeof(IpcNewInstance), $"ipc://ExploripCopy/HookManagerRemoteServer");
             _ni.SetMainProcess(new Models.InteractionMainProcess());
         }

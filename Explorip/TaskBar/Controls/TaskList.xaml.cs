@@ -78,7 +78,6 @@ namespace Explorip.TaskBar.Controls
                 if (MyDesktopApp.MonShellManager.Tasks.GroupedWindows != null)
                     MyDesktopApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
 
-                Console.WriteLine("Abonnement changement VirtualDesktop");
                 VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
 
                 isLoaded = true;
@@ -93,7 +92,6 @@ namespace Explorip.TaskBar.Controls
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    Console.WriteLine("Change bureau");
                     if (MyDesktopApp.MonShellManager.TasksService.Windows != null)
                     {
                         MyDesktopApp.MonShellManager.TasksService.Windows.Clear();
@@ -188,7 +186,6 @@ namespace Explorip.TaskBar.Controls
             if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                 return;
             MyDesktopApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
-            Console.WriteLine("Désabonnement changement VirtualDesktop");
             VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
             isLoaded = false;
         }

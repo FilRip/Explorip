@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Controls;
-using System.Linq;
+using System.Windows.Media;
 
 namespace Explorip.Helpers
 {
@@ -61,40 +60,6 @@ namespace Explorip.Helpers
                 return parent;
             else
                 return FindControlParent<T>(parentObject);
-        }
-
-        internal static Window GetCurrentWindow(this Application application)
-        {
-            Window ret = null;
-            Application.Current.Dispatcher.Invoke(new Action(() =>
-            {
-                ret = null;
-                foreach (Window win in application.Windows)
-                    if (win.IsActive)
-                    {
-                        ret = win;
-                        break;
-                    }
-                ret ??= Application.Current.MainWindow;
-            }));
-            return ret;
-        }
-
-        internal static T GetCurrentWindow<T>(this Application application) where T : Window
-        {
-            T ret = null;
-            Application.Current.Dispatcher.Invoke(new Action(() =>
-            {
-                ret = null;
-                foreach (T win in application.Windows.OfType<T>())
-                    if (win.IsActive)
-                    {
-                        ret = win;
-                        break;
-                    }
-                ret ??= application.Windows.OfType<T>().FirstOrDefault();
-            }));
-            return ret;
         }
 
         internal static ScrollViewer GetScrollViewer(this Control control)

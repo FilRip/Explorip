@@ -20,11 +20,9 @@ namespace Explorip.HookFileOperationsManager
 
             if (Environment.GetCommandLineArgs()[1] == "NI")
             {
-                Console.WriteLine("Create channel");
                 IpcChannel canal = new("HookFileOperation_" + Process.GetCurrentProcess().Id.ToString());
                 ChannelServices.RegisterChannel(canal, false);
                 RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
-                Console.WriteLine("Channel created");
                 while (true)
                 {
                     Thread.Sleep(100);

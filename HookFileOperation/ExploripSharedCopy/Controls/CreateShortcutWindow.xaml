@@ -1,14 +1,10 @@
-﻿<Window x:Class="Explorip.Explorer.Controls.CreateShortcutWindow"
+﻿<Window x:Class="ExploripSharedCopy.Controls.CreateShortcutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:constants="clr-namespace:Explorip.Constants"
-        mc:Ignorable="d" KeyDown="Window_KeyDown"
-        Height="160" Width="400" Topmost="True" WindowStartupLocation="CenterOwner"
-        Icon="{x:Static constants:Icons.Shortcut}"
-        Background="{x:Static constants:Colors.BackgroundColorBrush}"
-        Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
+        mc:Ignorable="d" KeyDown="Window_KeyDown" Name="MainCreateShortcut"
+        Height="160" Width="400" Topmost="True" WindowStartupLocation="CenterOwner">
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -26,11 +22,11 @@
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Text="{x:Static constants:Localization.CREATE_SHORTCUT_Q1}"/>
-        <TextBox Grid.Row="2" Name="TxtTarget" VerticalAlignment="Center" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
-        <Button Grid.Row="2" Grid.Column="2" Content="{x:Static constants:Localization.BROWSE}" Name="BtnBrowseTarget" Click="BtnBrowseTarget_Click"/>
-        <TextBlock Grid.Row="4" Text="{x:Static constants:Localization.CREATE_SHORTCUT_Q2}"/>
-        <TextBox Grid.Row="6" Grid.ColumnSpan="3" Name="TxtName" VerticalAlignment="Center" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
+        <TextBlock Grid.Row="0" Name="QuestionOne"/>
+        <TextBox Grid.Row="2" Name="TxtTarget" VerticalAlignment="Center" Background="{Binding ElementName=MainCreateShortcut, Path=Background}" Foreground="{Binding ElementName=MainCreateShortcut, Path=Foreground}"/>
+        <Button Grid.Row="2" Grid.Column="2" Name="BtnBrowseTarget" Click="BtnBrowseTarget_Click"/>
+        <TextBlock Grid.Row="4" Name="QuestionTwo"/>
+        <TextBox Grid.Row="6" Grid.ColumnSpan="3" Name="TxtName" VerticalAlignment="Center" Background="{Binding ElementName=MainCreateShortcut, Path=Background}" Foreground="{Binding ElementName=MainCreateShortcut, Path=Foreground}"/>
         <Grid Grid.Row="8" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -41,14 +37,14 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BtnCancel_Click" HorizontalAlignment="Center" TabIndex="2">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Static constants:Localization.CANCEL}" VerticalAlignment="Center" Margin="0 0 5 0"/>
-                    <Image Source="{x:Static constants:Icons.CancelImage}" Height="16" Width="16"/>
+                    <TextBlock Name="TextCancel" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                    <Image Name="ImageCancel" Height="16" Width="16"/>
                 </StackPanel>
             </Button>
             <Button Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="BtnOk_Click" HorizontalAlignment="Center" TabIndex="2">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Static constants:Localization.CONTINUE}" VerticalAlignment="Center" Margin="0 0 5 0"/>
-                    <Image Source="{x:Static constants:Icons.OkImage}" Height="16" Width="16"/>
+                    <TextBlock Name="TextOk" VerticalAlignment="Center" Margin="0 0 5 0"/>
+                    <Image Name="ImageOk" Height="16" Width="16"/>
                 </StackPanel>
             </Button>
         </Grid>

@@ -57,13 +57,11 @@ namespace Explorip.HookFileOperations.Ipc
 
         public void CopyItem(string src, string dest, string destName)
         {
-            Console.WriteLine("Add CopyItem");
             _listOperations.Add(new OneFileOperation(EFileOperation.Copy) { Source = src, Destination = dest, NewName = destName });
         }
 
         public void MoveItem(string src, string dest, string destName)
         {
-            Console.WriteLine("Add MoveItem");
             _listOperations.Add(new OneFileOperation(EFileOperation.Move) { Source = src, Destination = dest, NewName = destName });
         }
 
@@ -71,7 +69,6 @@ namespace Explorip.HookFileOperations.Ipc
         private static extern short GetKeyState(int nVirtKey);
         public void DeleteItem(string src)
         {
-            Console.WriteLine("Add DeleteItem");
             bool forceDelete = true;
             short ret = GetKeyState(0x10);
             if (ret == 0 || ret == 1)
@@ -81,13 +78,11 @@ namespace Explorip.HookFileOperations.Ipc
 
         public void RenameItem(string src, string dest)
         {
-            Console.WriteLine("Add RenameItem");
             _listOperations.Add(new OneFileOperation(EFileOperation.Rename) { Source = src, NewName = dest });
         }
 
         public void PerformOperations()
         {
-            Console.WriteLine("PerformOperation");
             if (_listOperations.Count > 0)
             {
                 IpcNewInstance ni;
@@ -103,10 +98,8 @@ namespace Explorip.HookFileOperations.Ipc
                 }
                 if (ni == null)
                 {
-                    Console.WriteLine("Create process");
                     Process newProcess = Process.Start("HookFileOperationsManager.exe", "NI");
                     Thread.Sleep(100);
-                    Console.WriteLine("Wait for Ipc channel");
                     while (ni == null)
                     {
                         Thread.Sleep(10);
@@ -117,7 +110,6 @@ namespace Explorip.HookFileOperations.Ipc
                         catch (Exception) { /* Ignore errors */ }
                     }
                 }
-                Console.WriteLine("Wait for process ready");
                 while (true)
                 {
                     try
@@ -131,7 +123,6 @@ namespace Explorip.HookFileOperations.Ipc
                     }
                     catch (Exception) { /* Ignore errors */ }
                 }
-                Console.WriteLine("Send Operation" + Environment.NewLine);
                 ni.StartNewFileOperation(_listOperations);
                 _listOperations.Clear();
             }
@@ -139,49 +130,41 @@ namespace Explorip.HookFileOperations.Ipc
 
         public void NewItem(string destFolder, FileAttributes dwFileAttributes, string filename)
         {
-            Console.WriteLine("Add NewItem");
             _listOperations.Add(new OneFileOperation(EFileOperation.Create) { Destination = destFolder, Attributes = dwFileAttributes, NewName = filename });
         }
 
         public void SetOperationFlags(FilesOperations.Interfaces.EFileOperation operationFlag)
         {
-            Console.WriteLine("Add SetOperationFlag");
             _listOperations.Add(new OneFileOperation(EFileOperation.ChangeOperationFlags) { OperationsFlags = operationFlag });
         }
 
         public void ApplyPropertiesToItem(string src)
         {
-            Console.WriteLine("Add ApplyProperties");
             _listOperations.Add(new OneFileOperation(EFileOperation.ApplyProperties) { Source = src });
         }
 
         public void Advice()
         {
-            Console.WriteLine("Add Advice");
             _listOperations.Add(new OneFileOperation(EFileOperation.Advice));
         }
 
         public void Unadvice()
         {
-            Console.WriteLine("Add Unadvice");
             _listOperations.Add(new OneFileOperation(EFileOperation.Unadvice));
         }
 
         public void SetProperties(object properties)
         {
-            Console.WriteLine("Add SetProperties");
             _listOperations.Add(new OneFileOperation(EFileOperation.SetProperties) { Properties = properties });
         }
 
         public void SetProgressDialog()
         {
-            Console.WriteLine("Add SetProgressDialog");
             _listOperations.Add(new OneFileOperation(EFileOperation.ProgressDialog));
         }
 
         public void SetProgressMessage()
         {
-            Console.WriteLine("Add SetProgressMessage");
             _listOperations.Add(new OneFileOperation(EFileOperation.ProgressMessage));
         }
     }

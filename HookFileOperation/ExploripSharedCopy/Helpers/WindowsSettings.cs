@@ -3,7 +3,7 @@ using System.Drawing;
 
 using Microsoft.Win32;
 
-namespace Explorip.Helpers
+namespace ExploripSharedCopy.Helpers
 {
     public static class WindowsSettings
     {

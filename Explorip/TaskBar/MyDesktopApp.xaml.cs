@@ -8,6 +8,9 @@ using Explorip.Helpers;
 using Explorip.TaskBar.Utilities;
 using Explorip.WinAPI;
 
+using ExploripSharedCopy.Helpers;
+using ExploripSharedCopy.WinAPI;
+
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
