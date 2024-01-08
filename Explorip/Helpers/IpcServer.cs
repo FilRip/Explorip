@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 
 using Explorip.Explorer.Windows;
@@ -9,10 +8,6 @@ using ExploripApi;
 using ExploripSharedCopy.Controls;
 
 using Microsoft.WindowsAPICodePack.Shell;
-
-using Securify.ShellLink;
-
-using static ManagedShell.Interop.NativeMethods;
 
 namespace Explorip.Helpers
 {
@@ -33,48 +28,34 @@ namespace Explorip.Helpers
 
         public void CreateFolder(string path, string name)
         {
-            Application.Current.Dispatcher.BeginInvoke(() =>
+            static void SetConstants(InputBoxWindow win)
             {
-                InputBoxWindow input = new()
-                {
-                    CheckValidPathName = true,
-                    Title = Constants.Localization.CREATE_FOLDER,
-                    Question = path,
-                    UserEdit = name,
-                    Icon = Constants.Icons.Folder,
-                    Background = Constants.Colors.BackgroundColorBrush,
-                    Foreground = Constants.Colors.ForegroundColorBrush,
-                };
-                input.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
-                input.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
-                if (input.ShowDialog() == true)
-                {
-                    Directory.CreateDirectory(Path.Combine(path, input.UserEdit));
-                }
-            });
+                win.Title = Constants.Localization.CREATE_FOLDER;
+                win.Icon = Constants.Icons.Folder;
+                win.Background = Constants.Colors.BackgroundColorBrush;
+                win.Foreground = Constants.Colors.ForegroundColorBrush;
+                win.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
+                win.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
+            }
+
+            ExploripSharedCopy.Helpers.CreateOperations.CreateFolder(path, name, SetConstants);
         }
 
         public void CreateShortcut(string path, string name)
         {
-            Application.Current.Dispatcher.BeginInvoke(() =>
+            static void SetConstants(CreateShortcutWindow win)
             {
-                CreateShortcutWindow win = new()
-                {
-                    Title = Constants.Localization.CREATE_SHORTCUT,
-                    Icon = Constants.Icons.Shortcut,
-                    Background = Constants.Colors.BackgroundColorBrush,
-                    Foreground = Constants.Colors.ForegroundColorBrush,
-                };
+                win.Title = Constants.Localization.CREATE_SHORTCUT;
+                win.Icon = Constants.Icons.Shortcut;
+                win.Background = Constants.Colors.BackgroundColorBrush;
+                win.Foreground = Constants.Colors.ForegroundColorBrush;
                 win.SetQuestions(Constants.Localization.CREATE_SHORTCUT_Q1, Constants.Localization.CREATE_SHORTCUT_Q2);
                 win.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
                 win.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
                 win.SetBrowse(Constants.Localization.BROWSE);
-                if (win.ShowDialog() == true)
-                {
-                    Shortcut sc = Shortcut.CreateShortcut(win.Target);
-                    sc.WriteToFile(Path.Combine(path, win.ShortcutName + ".lnk"));
-                }
-            });
+            }
+
+            ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(path, name, SetConstants);
         }
 
         public void Ping()

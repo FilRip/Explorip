@@ -39,6 +39,13 @@ namespace ExploripCopy.Constants
         public static string REMOVE { get; private set; }
         public static string PAUSE { get; private set; }
         public static string STOP { get; private set; }
+        public static string OK { get; private set; }
+        public static string CREATE_FOLDER { get; private set; }
+        public static string CREATE_SHORTCUT { get; private set; }
+        public static string CREATE_SHORTCUT_Q1 { get; private set; }
+        public static string CREATE_SHORTCUT_Q2 { get; private set; }
+        public static string BROWSE { get; private set; }
+        public static string LOCATE { get; private set; }
 
         internal static void LoadTranslation()
         {
@@ -75,6 +82,13 @@ namespace ExploripCopy.Constants
             REMOVE = Load("shell32.dll", 33230, "Remove");
             PAUSE = Load("dinput.dll", 709, "Pause");
             STOP = Load("dinput.dll", 661, "Stop");
+            OK = Load("shell32.dll", 33225, "Ok");
+            CREATE_FOLDER = Load("shell32.dll", 31237, "Create a new folder").Replace(".", "");
+            CREATE_SHORTCUT = Load("appwiz.cpl", 2200, "Create a shortcut");
+            CREATE_SHORTCUT_Q1 = Load("appwiz.cpl", 2201, "On which element do you want to create shortcut ?");
+            BROWSE = Load("shell32.dll", 9015, "Browse");
+            LOCATE = Load("appwiz.cpl", 12808, "Location");
+            CREATE_SHORTCUT_Q2 = Load("appwiz.cpl", 2203, "Which name do you want to use for this shortcut ?");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

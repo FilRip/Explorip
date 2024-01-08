@@ -18,6 +18,9 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Securifybv\ShellLink\Securify.ShellLink.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />

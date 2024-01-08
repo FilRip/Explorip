@@ -16,6 +16,8 @@ using ExploripCopy.Constants;
 using ExploripCopy.Helpers;
 using ExploripCopy.Models;
 
+using ExploripSharedCopy.Controls;
+
 using Hardcodet.Wpf.TaskbarNotification;
 
 using ManagedShell.Interop;
@@ -293,6 +295,40 @@ namespace ExploripCopy.ViewModels
                             fo.RenameItem(operation.Source, operation.NewName);
                             break;
                         case EFileOperation.Create:
+                            if (operation.Attributes.HasFlag(FileAttributes.Directory))
+                            {
+                                static void SetConstants(InputBoxWindow win)
+                                {
+                                    win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+                                    win.Title = Localization.CREATE_FOLDER;
+                                    win.Icon = Icons.Folder;
+                                    win.Background = Constants.Colors.BackgroundColorBrush;
+                                    win.Foreground = Constants.Colors.ForegroundColorBrush;
+                                    win.SetOk(Localization.CONTINUE, Icons.OkImage);
+                                    win.SetCancel(Localization.CANCEL, Icons.CancelImage);
+                                }
+
+                                ExploripSharedCopy.Helpers.CreateOperations.CreateFolder(operation.Destination, operation.NewName, SetConstants);
+                                break;
+                            }
+                            if (Path.GetExtension(operation.NewName).ToLower() == ".lnk")
+                            {
+                                static void SetConstants(CreateShortcutWindow win)
+                                {
+                                    win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+                                    win.Title = Localization.CREATE_SHORTCUT;
+                                    win.Icon = Icons.Shortcut;
+                                    win.Background = Constants.Colors.BackgroundColorBrush;
+                                    win.Foreground = Constants.Colors.ForegroundColorBrush;
+                                    win.SetQuestions(Localization.CREATE_SHORTCUT_Q1, Localization.CREATE_SHORTCUT_Q2);
+                                    win.SetOk(Localization.CONTINUE, Icons.OkImage);
+                                    win.SetCancel(Localization.CANCEL, Icons.CancelImage);
+                                    win.SetBrowse(Localization.BROWSE);
+                                }
+
+                                ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(operation.Destination, operation.NewName, SetConstants);
+                                break;
+                            }
                             fo.NewItem(operation.Destination, operation.NewName, operation.Attributes);
                             break;
                     }
