@@ -304,8 +304,8 @@ namespace ExploripCopy.ViewModels
                                     win.Icon = Icons.Folder;
                                     win.Background = Constants.Colors.BackgroundColorBrush;
                                     win.Foreground = Constants.Colors.ForegroundColorBrush;
-                                    win.SetOk(Localization.CONTINUE, Icons.OkImage);
-                                    win.SetCancel(Localization.CANCEL, Icons.CancelImage);
+                                    win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
+                                    win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);
                                 }
 
                                 ExploripSharedCopy.Helpers.CreateOperations.CreateFolder(operation.Destination, operation.NewName, SetConstants);
@@ -321,9 +321,9 @@ namespace ExploripCopy.ViewModels
                                     win.Background = Constants.Colors.BackgroundColorBrush;
                                     win.Foreground = Constants.Colors.ForegroundColorBrush;
                                     win.SetQuestions(Localization.CREATE_SHORTCUT_Q1, Localization.CREATE_SHORTCUT_Q2);
-                                    win.SetOk(Localization.CONTINUE, Icons.OkImage);
-                                    win.SetCancel(Localization.CANCEL, Icons.CancelImage);
-                                    win.SetBrowse(Localization.BROWSE);
+                                    win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
+                                    win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);
+                                    win.SetBrowse(Localization.BROWSE.Replace("_", ""));
                                 }
 
                                 ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(operation.Destination, operation.NewName, SetConstants);
