@@ -59,8 +59,8 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="1" Content="{Binding TxtCurrentSpeed, UpdateSourceTrigger=PropertyChanged}" Name="ShowCurrentSpeed" Background="Transparent" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Padding="0" Margin="0 0 5 0"/>
-                <Button Grid.Column="2" Content="{Binding Source={x:Static constants:Localization.STOP}}" HorizontalAlignment="Right" Name="BtnStop" Command="{Binding BtnIgnoreCurrent}"/>
-                <Button Grid.Column="3" Content="{Binding Source={x:Static constants:Localization.PAUSE}}" HorizontalAlignment="Right" Name="BtnPause" Command="{Binding BtnPause}"/>
+                <Button Grid.Column="2" Content="{Binding Source={x:Static constants:Localization.STOP}}" HorizontalAlignment="Right" Name="BtnStop" Command="{Binding IgnoreCurrentCommand}"/>
+                <Button Grid.Column="3" Content="{Binding Source={x:Static constants:Localization.PAUSE}}" HorizontalAlignment="Right" Name="BtnPause" Command="{Binding DoPauseCommand}"/>
             </Grid>
             
             <!-- List operations are waiting -->
@@ -99,7 +99,7 @@
 
                     <DataGrid.ContextMenu>
                         <ContextMenu Name="ListOperationMenu">
-                            <MenuItem Header="{Binding Source={x:Static constants:Localization.REMOVE}}" Command="{Binding CmdRemoveLine}"/>
+                            <MenuItem Header="{Binding Source={x:Static constants:Localization.REMOVE}}" Command="{Binding RemoveLineCommand}"/>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                 </DataGrid>
