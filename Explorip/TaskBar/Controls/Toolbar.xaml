@@ -25,7 +25,7 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Label Name="Title" Width="auto" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Grid.Column="0">
+        <Label Name="Title" Width="auto" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Grid.Column="0">
             <Label.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Show/Hide title" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ExploripCopy.Constants;
 using ExploripCopy.GUI;
 
 using Hardcodet.Wpf.TaskbarNotification;
@@ -12,11 +13,19 @@ namespace ExploripCopy.ViewModels
         public static NotifyIconViewModel Instance { get; private set; }
 
         private TaskbarIcon _notifyIcon;
+        [ObservableProperty()]
+        private bool _activeShowNotification;
 
         public NotifyIconViewModel() : base()
         {
             Instance = this;
             SetSystrayIcon(false);
+            ActiveShowNotification = Settings.ShowBalloon;
+        }
+
+        partial void OnActiveShowNotificationChanged(bool value)
+        {
+            Settings.ShowBalloon = value;
         }
 
         [RelayCommand()]
@@ -29,6 +38,12 @@ namespace ExploripCopy.ViewModels
         private void ShowWindow()
         {
             MainWindow.Instance.ShowWindow();
+        }
+
+        [RelayCommand()]
+        private void ShowNotification()
+        {
+            ActiveShowNotification = !ActiveShowNotification;
         }
 
         public void SetSystrayIcon(bool working)

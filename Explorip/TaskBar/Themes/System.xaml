@@ -469,7 +469,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Border x:Name="MainBorder" Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}">
+                    <Border x:Name="MainBorder" Background="{x:Static constants:Colors.BackgroundColorBrush}">
                         <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -477,7 +477,7 @@
                                  Value="True">
                             <Setter TargetName="MainBorder"
                                     Property="Background"
-                                    Value="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
+                                    Value="{x:Static constants:Colors.AccentColorBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

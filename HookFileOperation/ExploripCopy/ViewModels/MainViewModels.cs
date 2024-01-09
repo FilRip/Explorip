@@ -143,17 +143,20 @@ namespace ExploripCopy.ViewModels
         private void FinishCurrent()
         {
             NotifyIconViewModel.Instance.SetSystrayIcon(false);
-            NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
+            if (Settings.ShowBalloon)
+                NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
             ListWaiting.RemoveAt(0);
             if (_lastError == null)
             {
                 _currentOperation = null;
-                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.FINISH, GlobalReport, BalloonIcon.Info);
+                if (Settings.ShowBalloon)
+                    NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.FINISH, GlobalReport, BalloonIcon.Info);
                 GlobalReport = Localization.FINISH;
             }
             else
             {
-                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.ERROR, GlobalReport, BalloonIcon.Error);
+                if (Settings.ShowBalloon)
+                    NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.ERROR, GlobalReport, BalloonIcon.Error);
                 GlobalReport = _lastError.Message;
             }
             ForceUpdateWaitingList();
@@ -185,8 +188,11 @@ namespace ExploripCopy.ViewModels
             sb = sb.Replace("%s2", _currentOperation.NewName);
             sb = sb.Replace("%s", Path.GetFileName(_currentOperation.Source));
             GlobalReport = sb.ToString();
-            NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
-            NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, BalloonIcon.Info);
+            if (Settings.ShowBalloon)
+            {
+                NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
+                NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, BalloonIcon.Info);
+            }
         }
         private OneFileOperation _currentOperation;
         private bool disposedValue;

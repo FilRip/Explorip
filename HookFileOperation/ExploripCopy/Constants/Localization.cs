@@ -46,6 +46,8 @@ namespace ExploripCopy.Constants
         public static string CREATE_SHORTCUT_Q2 { get; private set; }
         public static string BROWSE { get; private set; }
         public static string LOCATE { get; private set; }
+        public static string SHOW_NOTIFICATION { get; private set; }
+        public static string SHOW_MAIN_WINDOW { get; private set; }
 
         internal static void LoadTranslation()
         {
@@ -89,6 +91,8 @@ namespace ExploripCopy.Constants
             BROWSE = Load("shell32.dll", 9015, "Browse");
             LOCATE = Load("appwiz.cpl", 12808, "Location");
             CREATE_SHORTCUT_Q2 = Load("appwiz.cpl", 2203, "Which name do you want to use for this shortcut ?");
+            SHOW_NOTIFICATION = Load("twinui.dll", 5592, "Show notifications");
+            SHOW_MAIN_WINDOW = Load("oleaccrc.dll", 146, "Show main window");
         }
 
         private static string Load(string libraryName, uint Ident, string DefaultText)

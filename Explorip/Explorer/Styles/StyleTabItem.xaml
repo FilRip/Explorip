@@ -17,7 +17,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="TabBorder" Property="Background" Value="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
+                            <Setter TargetName="TabBorder" Property="Background" Value="{x:Static constants:Colors.AccentColorBrush}"/>
                             <Setter Property="FontWeight" Value="Bold"/>
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">

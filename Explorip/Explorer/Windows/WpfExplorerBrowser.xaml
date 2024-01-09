@@ -11,6 +11,11 @@
         UseLayoutRounding="True" Focusable="True" MouseDown="Window_MouseDown" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
         ResizeMode="CanResizeWithGrip" Activated="Window_Activated" StateChanged="Window_StateChanged"
         Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibility"/>
+        <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
+    </Window.Resources>
     
     <Window.DataContext>
         <viewmodels:WpfExplorerBrowserViewModel/>
@@ -70,8 +75,8 @@
         <controls:TabExplorerBrowser Grid.Column="2" Grid.ColumnSpan="4" AllowCloseLastTab="True" x:Name="RightTab"/>
 
         <Button Grid.Column="3" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" Click="MinimizeWindow_Click" IsTabStop="False"/>
-        <Button Grid.Column="4" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Click="MaximizeWindow_Click" Visibility="{Binding WindowMaximized, Converter={converters:InverseBoolToVisibilityConverter}}" IsTabStop="False"/>
-        <Button Grid.Column="4" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Click="RestoreWindow_Click" Visibility="{Binding WindowMaximized, Converter={converters:BoolToVisibilityConverter}}" IsTabStop="False"/>
+        <Button Grid.Column="4" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Click="MaximizeWindow_Click" Visibility="{Binding WindowMaximized, Converter={StaticResource inverseBoolToVisibility}}" IsTabStop="False"/>
+        <Button Grid.Column="4" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Click="RestoreWindow_Click" Visibility="{Binding WindowMaximized, Converter={StaticResource boolToVisibility}}" IsTabStop="False"/>
         <Button Grid.Column="5" Style="{DynamicResource CloseButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="CloseWindow" Click="CloseWindow_Click" IsTabStop="False"/>
 
     </Grid>

@@ -14,8 +14,8 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="True">
-                <Setter Property="Foreground" Value="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
-                <Setter Property="BorderBrush" Value="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
+                <Setter Property="Foreground" Value="{x:Static constants:Colors.AccentColorBrush}"/>
+                <Setter Property="BorderBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="#FF404040"/>
@@ -43,7 +43,7 @@
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="True">
                 <Setter Property="Foreground" Value="Red"/>
-                <Setter Property="BorderBrush" Value="{Binding Source={x:Static constants:Colors.AccentColorBrush}}"/>
+                <Setter Property="BorderBrush" Value="{x:Static constants:Colors.AccentColorBrush}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="#FF404040"/>

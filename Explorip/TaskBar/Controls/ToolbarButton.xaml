@@ -7,7 +7,7 @@
              xmlns:shellfolders="clr-namespace:ManagedShell.ShellFolders;assembly=ManagedShell.ShellFolders"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=shellfolders:ShellFile}"
-             Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}">
+             Background="{x:Static constants:Colors.BackgroundColorBrush}">
     <Button ToolTip="{Binding Path=DisplayName}"
             Style="{DynamicResource ToolbarButton}">
         <Image Source="{Binding Path=SmallIcon, Mode=OneWay}"

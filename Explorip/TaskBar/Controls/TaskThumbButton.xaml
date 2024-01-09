@@ -18,13 +18,13 @@
         MouseLeftButtonUp="Window_MouseLeftButtonUp"
         MouseRightButtonDown="Window_MouseRightButtonDown"
         ContentRendered="Window_ContentRendered"
-        Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}"
+        Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Height="150" Width="250" Margin="0" Padding="0">
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="16"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Background="{Binding Source={x:Static constants:Colors.BackgroundColorBrush}}" Foreground="{Binding Source={x:Static constants:Colors.ForegroundColorBrush}}" Name="TitleFirst" Width="250" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Row="0" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="TitleFirst" Width="250" HorizontalAlignment="Left"/>
     </Grid>
 </Window>
