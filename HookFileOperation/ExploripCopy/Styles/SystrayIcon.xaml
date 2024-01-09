@@ -4,7 +4,7 @@
                     xmlns:viewmodels="clr-namespace:ExploripCopy.ViewModels"
                     xmlns:constants="clr-namespace:ExploripCopy.Constants">
     <ContextMenu x:Shared="false" x:Key="SysTrayMenu">
-        <MenuItem Header="{x:Static constants:Localization.SHOW_MAIN_WINDOW}" Command="{Binding ShowMainWindowCommand}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="1"/>
+        <MenuItem Header="{x:Static constants:Localization.SHOW_MAIN_WINDOW}" Command="{Binding ShowWindowCommand}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="1"/>
         <MenuItem Header="{x:Static constants:Localization.SHOW_NOTIFICATION}" IsChecked="{Binding ActiveShowNotification}" Command="{Binding ShowNotificationCommand}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="1"/>
         <Separator/>
         <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding ExitApplicationCommand}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="1"/>
