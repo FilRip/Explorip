@@ -35,23 +35,15 @@ namespace Explorip.Helpers
 
         public static Screen[] ListScreenExceptPrimary()
         {
-            List<Screen> result = null;
-            if (NumberOfScreen() > 1)
-            {
-                result = [];
-                foreach (Screen ecran in Screen.AllScreens)
-                {
-                    if (!ecran.Primary)
-                        result.Add(ecran);
-                }
-            }
-            return result?.ToArray();
+            IEnumerable<Screen> result = Screen.AllScreens.Where(s => !s.Primary);
+            return result.ToArray();
         }
 
         public static Screen GetLeftScreen()
         {
             ThrowIfNoScreenConnected();
-            if (Screen.AllScreens.Count() == 1) return Screen.AllScreens.ElementAt(0);
+            if (Screen.AllScreens.Count() == 1)
+                return Screen.AllScreens.ElementAt(0);
             int posX = int.MaxValue;
             Screen last = null;
             foreach (Screen s in Screen.AllScreens)
@@ -66,7 +58,8 @@ namespace Explorip.Helpers
         public static Screen GetRightScreen()
         {
             ThrowIfNoScreenConnected();
-            if (Screen.AllScreens.Count() == 1) return Screen.AllScreens.ElementAt(0);
+            if (Screen.AllScreens.Count() == 1)
+                return Screen.AllScreens.ElementAt(0);
             int posX = -1;
             Screen last = null;
             foreach (Screen s in Screen.AllScreens)
@@ -86,7 +79,8 @@ namespace Explorip.Helpers
             if (Screen.AllScreens.Count() == 2)
                 return Screen.PrimaryScreen;
             Math.DivRem(Screen.AllScreens.Count(), 2, out int nbEvenScreen);
-            if (nbEvenScreen == 0) return Screen.PrimaryScreen; // A voir si on retourne une exception ou l'écran principal quand il n'y a pas d'écran central (nombre paire d'écran)
+            if (nbEvenScreen == 0)
+                return Screen.PrimaryScreen; // A voir si on retourne une exception ou l'écran principal quand il n'y a pas d'écran central (nombre paire d'écran)
             List<Screen> OrderedScreen;
             OrderedScreen = Screen.AllScreens.OrderBy(item => item.WorkingArea.Location.X).ToList();
             while (OrderedScreen.Count > 1)
