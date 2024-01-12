@@ -6,7 +6,6 @@ using System.Windows.Interop;
 
 using Explorip.Helpers;
 using Explorip.TaskBar.Utilities;
-using Explorip.WinAPI;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
@@ -21,19 +20,19 @@ namespace Explorip.TaskBar
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class MyDesktopApp : Application
+    public partial class MyTaskbarApp : Application
     {
         public DictionaryManager DictionaryManager { get; }
 
         private ManagedShellLogger _logger;
         private readonly List<Taskbar> _taskbarList;
         private readonly StartMenuMonitor _startMenuMonitor;
-        public static ShellManager MonShellManager { get; private set; }
+        public static ShellManager MyShellManager { get; private set; }
 
-        public MyDesktopApp()
+        public MyTaskbarApp()
         {
             _taskbarList = [];
-            MonShellManager = SetupManagedShell();
+            MyShellManager = SetupManagedShell();
 
             _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
             DictionaryManager = new DictionaryManager();
@@ -51,7 +50,7 @@ namespace Explorip.TaskBar
                 taskbar.AllowClose = true;
                 taskbar.Close();
             }
-            MonShellManager.AppBarManager.SignalGracefulShutdown();
+            MyShellManager.AppBarManager.SignalGracefulShutdown();
             ExitApp();
             Current.Shutdown();
         }
@@ -128,9 +127,9 @@ namespace Explorip.TaskBar
 
         private void ExitApp()
         {
-            MonShellManager.ExplorerHelper.HideExplorerTaskbar = false;
+            MyShellManager.ExplorerHelper.HideExplorerTaskbar = false;
             DictionaryManager.Dispose();
-            MonShellManager.Dispose();
+            MyShellManager.Dispose();
             _startMenuMonitor.Dispose();
             _logger.Dispose();
         }

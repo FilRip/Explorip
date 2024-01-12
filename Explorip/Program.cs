@@ -8,14 +8,14 @@ using Explorip.Helpers;
 
 using ExploripApi;
 
+using static Explorip.Helpers.ExtensionsCommandLineArguments;
+
 namespace Explorip
 {
     public static class Program
     {
         private static Application _WpfHost;
-#pragma warning disable S2223 // Non-constant static fields should not be visible
-        internal static bool ModeShell;
-#pragma warning restore S2223 // Non-constant static fields should not be visible
+        internal static bool ModeShell { get; private set; }
 
         /// <summary>
         /// The main entry point for the application.
@@ -36,13 +36,22 @@ namespace Explorip
             Constants.Colors.LoadTheme();
             Constants.Icons.Init();
 
-            if (ExtensionsCommandLineArguments.ArgumentExists("taskbar") ||
-                ExtensionsCommandLineArguments.ArgumentExists("taskbars"))
+            if (ArgumentExists("desktop"))
+            {
+                mutexProcess = new Mutex(true, "ExploripDesktop", out bool processNotLaunched);
+                if (processNotLaunched)
+                {
+                    _WpfHost = new Desktop.MyDesktopApp();
+                    _WpfHost.Run();
+                }
+            }
+            else if (ArgumentExists("taskbar") ||
+                ArgumentExists("taskbars"))
             {
                 mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
                 if (processNotLaunched)
                 {
-                    _WpfHost = new TaskBar.MyDesktopApp();
+                    _WpfHost = new TaskBar.MyTaskbarApp();
                     _WpfHost.Run();
                 }
             }
@@ -51,9 +60,12 @@ namespace Explorip
                 mutexProcess = new Mutex(true, "ExploripFileExplorer", out bool processNotLaunched);
                 if (processNotLaunched || args.Contains("newinstance"))
                 {
-                    IpcServerManager.InitChannel(new IpcServer());
-                    AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-                    if (!ExtensionsCommandLineArguments.ArgumentExists("withoutHook"))
+                    if (processNotLaunched)
+                    {
+                        IpcServerManager.InitChannel(new IpcServer());
+                        AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+                    }
+                    if (!ArgumentExists("withoutHook"))
                         HookCopyOperations.GetInstance().InstallHook();
                     _WpfHost = new Explorer.MyExplorerApp();
                     _WpfHost.Run();
@@ -73,7 +85,7 @@ namespace Explorip
             IpcServerManager.Shutdown();
         }
 
-        public static Application MonApp
+        public static Application MyCurrentApp
         {
             get { return _WpfHost; }
         }

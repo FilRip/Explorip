@@ -27,13 +27,13 @@ namespace Explorip.TaskBar
         private readonly bool _mainScreen;
 
         public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
-            : base(MyDesktopApp.MonShellManager.AppBarManager, MyDesktopApp.MonShellManager.ExplorerHelper, MyDesktopApp.MonShellManager.FullScreenHelper, screen, edge, 0)
+            : base(MyTaskbarApp.MyShellManager.AppBarManager, MyTaskbarApp.MyShellManager.ExplorerHelper, MyTaskbarApp.MyShellManager.FullScreenHelper, screen, edge, 0)
         {
             _ = TaskbarViewModel.Instance;
             InitializeComponent();
 
             _mainScreen = screen.Primary;
-            DataContext = MyDesktopApp.MonShellManager;
+            DataContext = MyTaskbarApp.MyShellManager;
             StartButton.StartMenuMonitor = startMenuMonitor;
 
             DesiredHeight = Application.Current.FindResource("TaskbarHeight") as double? ?? 0;
@@ -82,7 +82,7 @@ namespace Explorip.TaskBar
                 handled = true;
 
                 // If the color scheme changes, re-apply the current theme to get updated colors.
-                ((MyDesktopApp)Application.Current).DictionaryManager.SetThemeFromSettings();
+                ((MyTaskbarApp)Application.Current).DictionaryManager.SetThemeFromSettings();
             }
 
             return IntPtr.Zero;
@@ -92,7 +92,7 @@ namespace Explorip.TaskBar
         {
             base.SetPosition();
 
-            MyDesktopApp.MonShellManager.NotificationArea.SetTrayHostSizeData(new TrayHostSizeData()
+            MyTaskbarApp.MyShellManager.NotificationArea.SetTrayHostSizeData(new TrayHostSizeData()
             {
                 edge = (NativeMethods.ABEdge)AppBarEdge,
                 rc = new NativeMethods.Rect()
@@ -124,7 +124,7 @@ namespace Explorip.TaskBar
                 {
                     // Transparency cannot be changed on an open window.
                     _isReopening = true;
-                    ((MyDesktopApp)Application.Current).ReopenTaskbar();
+                    ((MyTaskbarApp)Application.Current).ReopenTaskbar();
                     return;
                 }
 
@@ -204,12 +204,12 @@ namespace Explorip.TaskBar
 
         private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            ((MyDesktopApp)Application.Current).ExitGracefully();
+            ((MyTaskbarApp)Application.Current).ExitGracefully();
         }
 
         private void TaskbarAllScreenMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
-            ((MyDesktopApp)Program.MonApp).ShowTaskbarOnAllOthersScreen();
+            ((MyTaskbarApp)Program.MyCurrentApp).ShowTaskbarOnAllOthersScreen();
         }
 
         private void MenuShowTabTip_Click(object sender, RoutedEventArgs e)
@@ -237,7 +237,7 @@ namespace Explorip.TaskBar
         {
             if (_mainScreen)
                 WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
-            MyDesktopApp.MonShellManager.Tasks.Initialize(new TaskCategoryProvider());
+            MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
         }
 
         #region Move/stretch

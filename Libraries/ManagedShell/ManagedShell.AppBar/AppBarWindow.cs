@@ -48,7 +48,7 @@ namespace ManagedShell.AppBar
             {
                 _appBarEdge = value;
                 OnPropertyChanged();
-                OnPropertyChanged("Orientation");
+                OnPropertyChanged(nameof(Orientation));
             }
         }
         protected internal bool EnableAppBar = true;

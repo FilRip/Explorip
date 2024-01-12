@@ -37,7 +37,7 @@ namespace ManagedShell.Common.SupportingClasses
             set
             {
                 MonIcone = value;
-                OnPropertyChanged("Icon");
+                OnPropertyChanged(nameof(Icon));
             }
         }
 

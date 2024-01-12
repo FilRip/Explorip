@@ -70,13 +70,13 @@ namespace Explorip.TaskBar.Controls
             if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                 return;
 
-            if (!isLoaded && MyDesktopApp.MonShellManager.Tasks != null)
+            if (!isLoaded && MyTaskbarApp.MyShellManager.Tasks != null)
             {
                 InsertPinnedApp();
 
-                TasksList.ItemsSource = MyDesktopApp.MonShellManager.Tasks.GroupedWindows;
-                if (MyDesktopApp.MonShellManager.Tasks.GroupedWindows != null)
-                    MyDesktopApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
+                TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
+                if (MyTaskbarApp.MyShellManager.Tasks.GroupedWindows != null)
+                    MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
 
                 VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
 
@@ -92,25 +92,25 @@ namespace Explorip.TaskBar.Controls
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    if (MyDesktopApp.MonShellManager.TasksService.Windows != null)
+                    if (MyTaskbarApp.MyShellManager.TasksService.Windows != null)
                     {
-                        MyDesktopApp.MonShellManager.TasksService.Windows.Clear();
+                        MyTaskbarApp.MyShellManager.TasksService.Windows.Clear();
                     }
                     else
                     {
-                        MyDesktopApp.MonShellManager.TasksService.Windows = [];
+                        MyTaskbarApp.MyShellManager.TasksService.Windows = [];
                     }
 
                     WinAPI.User32.EnumWindows((hwnd, lParam) =>
                     {
                         if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
                         {
-                            ApplicationWindow win = new(MyDesktopApp.MonShellManager.TasksService, hwnd);
+                            ApplicationWindow win = new(MyTaskbarApp.MyShellManager.TasksService, hwnd);
 
-                            if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyDesktopApp.MonShellManager.TasksService.Windows.Contains(win))
+                            if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyTaskbarApp.MyShellManager.TasksService.Windows.Contains(win))
                             {
-                                MyDesktopApp.MonShellManager.TasksService.Windows.Add(win);
-                                MyDesktopApp.MonShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
+                                MyTaskbarApp.MyShellManager.TasksService.Windows.Add(win);
+                                MyTaskbarApp.MyShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
                             }
                         }
                         return true;
@@ -119,16 +119,16 @@ namespace Explorip.TaskBar.Controls
                     InsertPinnedApp();
 
                     IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
-                    if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(i => (i.Handle == hWndForeground || i.ListWindows.Contains(hWndForeground)) && i.ShowInTaskbar))
+                    if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(i => (i.Handle == hWndForeground || i.ListWindows.Contains(hWndForeground)) && i.ShowInTaskbar))
                     {
-                        ApplicationWindow win = MyDesktopApp.MonShellManager.TasksService.Windows.First(wnd => (wnd.Handle == hWndForeground || wnd.ListWindows.Contains(hWndForeground)));
+                        ApplicationWindow win = MyTaskbarApp.MyShellManager.TasksService.Windows.First(wnd => (wnd.Handle == hWndForeground || wnd.ListWindows.Contains(hWndForeground)));
                         win.State = ApplicationWindow.WindowState.Active;
                         win.SetShowInTaskbar();
                     }
 
-                    System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyDesktopApp.MonShellManager.TasksService.Windows);
-                    MyDesktopApp.MonShellManager.Tasks.GroupedWindows = nouvelleListeGroupedWindows;
-                    TasksList.ItemsSource = MyDesktopApp.MonShellManager.Tasks.GroupedWindows;
+                    System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
+                    MyTaskbarApp.MyShellManager.Tasks.GroupedWindows = nouvelleListeGroupedWindows;
+                    TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
                 }));
             }
         }
@@ -141,10 +141,10 @@ namespace Explorip.TaskBar.Controls
                 int numPinnedApp = 0;
                 Shortcut pinnedApp;
                 ApplicationWindow appWin;
-                foreach (string file in Directory.GetFiles(path, "*.lnk").Where(file => !MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
+                foreach (string file in Directory.GetFiles(path, "*.lnk").Where(file => !MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
                 {
                     pinnedApp = Shortcut.ReadFromFile(file);
-                    appWin = new ApplicationWindow(MyDesktopApp.MonShellManager.TasksService, IntPtr.Zero);
+                    appWin = new ApplicationWindow(MyTaskbarApp.MyShellManager.TasksService, IntPtr.Zero);
                     appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
                     appWin.IsPinnedApp = true;
                     if (pinnedApp.LinkTargetIDList?.Path != null)
@@ -161,14 +161,14 @@ namespace Explorip.TaskBar.Controls
                     else
                         appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
                     appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
-                    MyDesktopApp.MonShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
-                    if (MyDesktopApp.MonShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
+                    MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
+                    if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
                     {
-                        foreach (ApplicationWindow win in MyDesktopApp.MonShellManager.TasksService.Windows.Where(aw => aw.WinFileName == appWin.WinFileName).ToList())
+                        foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw.WinFileName == appWin.WinFileName).ToList())
                         {
                             if (win != appWin)
                             {
-                                MyDesktopApp.MonShellManager.TasksService.Windows.Remove(win);
+                                MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
                                 appWin.ListWindows.Add(win.Handle);
                                 if (appWin.ListWindows.Count > 1)
                                     appWin.State = ApplicationWindow.WindowState.Unknown;
@@ -185,7 +185,7 @@ namespace Explorip.TaskBar.Controls
         {
             if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                 return;
-            MyDesktopApp.MonShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
+            MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
             VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
             isLoaded = false;
         }
