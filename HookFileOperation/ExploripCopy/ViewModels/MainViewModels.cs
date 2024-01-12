@@ -160,7 +160,6 @@ namespace ExploripCopy.ViewModels
                 GlobalReport = _lastError.Message;
             }
             ForceUpdateWaitingList();
-            CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
             _chronoSpeed.Stop();
         }
 
@@ -369,6 +368,8 @@ namespace ExploripCopy.ViewModels
                             Treatment(ListWaiting[0]);
                         }
                     }
+                    else
+                        CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
                     Thread.Sleep(100);
                 }
                 catch (ThreadAbortException) { break; }
