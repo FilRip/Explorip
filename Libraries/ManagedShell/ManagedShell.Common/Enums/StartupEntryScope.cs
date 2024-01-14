@@ -1,9 +1,8 @@
-﻿namespace ManagedShell.Common.Enums
+﻿namespace ManagedShell.Common.Enums;
+
+enum StartupEntryScope
 {
-    enum StartupEntryScope
-    {
-        User,
-        Machine,
-        All
-    }
+    User,
+    Machine,
+    All
 }

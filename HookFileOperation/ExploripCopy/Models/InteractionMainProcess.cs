@@ -6,15 +6,14 @@ using Explorip.HookFileOperations.Models;
 
 using ExploripCopy.ViewModels;
 
-namespace ExploripCopy.Models
+namespace ExploripCopy.Models;
+
+[Serializable()]
+internal class InteractionMainProcess : IInteractionMainProcess
 {
-    [Serializable()]
-    internal class InteractionMainProcess : IInteractionMainProcess
+    public void StartNewFileOperation(List<OneFileOperation> listOperations)
     {
-        public void StartNewFileOperation(List<OneFileOperation> listOperations)
-        {
-            MainViewModels.Instance.ListWaiting.AddRange(listOperations);
-            MainViewModels.Instance.ForceUpdateWaitingList();
-        }
+        MainViewModels.Instance.ListWaiting.AddRange(listOperations);
+        MainViewModels.Instance.ForceUpdateWaitingList();
     }
 }

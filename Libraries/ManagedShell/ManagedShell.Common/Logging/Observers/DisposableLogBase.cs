@@ -1,13 +1,12 @@
-﻿namespace ManagedShell.Common.Logging.Observers
+﻿namespace ManagedShell.Common.Logging.Observers;
+
+public abstract class DisposableLogBase : DisposableObject, ILog
 {
-    public abstract class DisposableLogBase : DisposableObject, ILog
+    #region ILog Members
+
+    public virtual void Log(object sender, LogEventArgs e)
     {
-        #region ILog Members
-
-        public virtual void Log(object sender, LogEventArgs e)
-        {
-        }
-
-        #endregion
     }
+
+    #endregion
 }

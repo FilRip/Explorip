@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace ManagedShell.AppBar
+namespace ManagedShell.AppBar;
+
+public class AppBarEventArgs : EventArgs
 {
-    public class AppBarEventArgs : EventArgs
-    {
-        public AppBarEventReason Reason { get; set; }
-    }
+    public AppBarEventReason Reason { get; set; }
 }

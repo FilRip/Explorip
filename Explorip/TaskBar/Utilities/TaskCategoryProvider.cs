@@ -2,43 +2,42 @@
 
 using ManagedShell.WindowsTasks;
 
-namespace Explorip.TaskBar.Utilities
+namespace Explorip.TaskBar.Utilities;
+
+public class TaskCategoryProvider : ITaskCategoryProvider
 {
-    public class TaskCategoryProvider : ITaskCategoryProvider
+    private bool disposedValue;
+
+    public string GetCategory(ApplicationWindow window)
     {
-        private bool disposedValue;
+        return "";
+    }
 
-        public string GetCategory(ApplicationWindow window)
-        {
-            return "";
-        }
+    public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
+    {
+        Console.WriteLine("SetCategoryChangeDelegate");
+    }
 
-        public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
         {
-            Console.WriteLine("SetCategoryChangeDelegate");
-        }
-
-        public bool IsDisposed
-        {
-            get { return disposedValue; }
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    // Nothing to do here ?!
-                }
-
-                disposedValue = true;
+                // Nothing to do here ?!
             }
-        }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            disposedValue = true;
         }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

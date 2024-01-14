@@ -6,49 +6,48 @@ using Explorip.TaskBar.Utilities;
 
 using ManagedShell.AppBar;
 
-namespace Explorip.TaskBar.Converters
+namespace Explorip.TaskBar.Converters;
+
+[ValueConversion(typeof(bool), typeof(Orientation))]
+public class DockOrientationConverter : IValueConverter
 {
-    [ValueConversion(typeof(bool), typeof(Orientation))]
-    public class DockOrientationConverter : IValueConverter
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        bool vertical = Settings.Instance.Edge == (int)AppBarEdge.Left || Settings.Instance.Edge == (int)AppBarEdge.Right;
+
+        // parameter is a string "leading" or "trailing"
+
+        if (parameter is string position)
         {
-            bool vertical = Settings.Instance.Edge == (int)AppBarEdge.Left || Settings.Instance.Edge == (int)AppBarEdge.Right;
-
-            // parameter is a string "leading" or "trailing"
-
-            if (parameter is string position)
+            if (vertical)
             {
-                if (vertical)
+                if (position == "leading")
                 {
-                    if (position == "leading")
-                    {
-                        return Dock.Top;
-                    }
-                    else
-                    {
-                        return Dock.Bottom;
-                    }
+                    return Dock.Top;
                 }
                 else
                 {
-                    if (position == "leading")
-                    {
-                        return Dock.Left;
-                    }
-                    else
-                    {
-                        return Dock.Right;
-                    }
+                    return Dock.Bottom;
                 }
             }
-
-            return Dock.Left;
+            else
+            {
+                if (position == "leading")
+                {
+                    return Dock.Left;
+                }
+                else
+                {
+                    return Dock.Right;
+                }
+            }
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        return Dock.Left;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Explorip.WinAPI.Modeles
+namespace Explorip.WinAPI.Modeles;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct MenuEventRecord
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MenuEventRecord
-    {
-        public uint dwCommandId;
-    }
+    public uint dwCommandId;
 }

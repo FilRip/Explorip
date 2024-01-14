@@ -1,7 +1,6 @@
-﻿namespace ExploripCopy.Constants
+﻿namespace ExploripCopy.Constants;
+
+internal static class Settings
 {
-    internal static class Settings
-    {
-        internal static bool ShowBalloon { get; set; } = true;
-    }
+    internal static bool ShowBalloon { get; set; } = true;
 }

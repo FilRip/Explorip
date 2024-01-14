@@ -1,4 +1,3 @@
-﻿namespace ManagedShell.WindowsTasks
-{
-    public delegate void TaskCategoryChangeDelegate();
-}
+﻿namespace ManagedShell.WindowsTasks;
+
+public delegate void TaskCategoryChangeDelegate();

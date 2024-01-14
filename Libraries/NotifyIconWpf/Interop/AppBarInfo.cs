@@ -6,128 +6,127 @@ using System.Runtime.InteropServices;
 
 using Hardcodet.Wpf.TaskbarNotification.Exceptions;
 
-namespace Hardcodet.Wpf.TaskbarNotification.Interop
+namespace Hardcodet.Wpf.TaskbarNotification.Interop;
+
+/// <summary>
+/// This contains the logic to access the location of the app bar and communicate with it.
+/// </summary>
+public class AppBarInfo
 {
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+    [DllImport("shell32.dll")]
+    private static extern uint SHAppBarMessage(uint dwMessage, ref AppBarData data);
+
+    [DllImport("user32.dll")]
+    private static extern int SystemParametersInfo(uint uiAction, uint uiParam,
+        IntPtr pvParam, uint fWinIni);
+
+    private const int ABM_GETTASKBARPOS = 0x00000005;
+
+    private AppBarData m_data;
+
     /// <summary>
-    /// This contains the logic to access the location of the app bar and communicate with it.
+    /// Get on which edge the app bar is located
     /// </summary>
-    public class AppBarInfo
+    public ScreenEdge Edge
     {
-        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        get { return (ScreenEdge)m_data.uEdge; }
+    }
 
-        [DllImport("shell32.dll")]
-        private static extern uint SHAppBarMessage(uint dwMessage, ref AppBarData data);
+    /// <summary>
+    /// Get the working area
+    /// </summary>
+    public Rectangle WorkArea
+    {
+        get { return GetRectangle(m_data.rc); }
+    }
 
-        [DllImport("user32.dll")]
-        private static extern int SystemParametersInfo(uint uiAction, uint uiParam,
-            IntPtr pvParam, uint fWinIni);
+    private Rectangle GetRectangle(Rect rc)
+    {
+        return new Rectangle(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
+    }
 
-        private const int ABM_GETTASKBARPOS = 0x00000005;
+    /// <summary>
+    /// Update the location of the appbar with the specified classname and window name.
+    /// </summary>
+    /// <param name="strClassName">string</param>
+    /// <param name="strWindowName">string</param>
+    private void GetPosition(string strClassName, string strWindowName)
+    {
+        m_data = new AppBarData();
+        m_data.cbSize = (uint)Marshal.SizeOf(m_data.GetType());
 
-        private AppBarData m_data;
+        IntPtr hWnd = FindWindow(strClassName, strWindowName);
 
-        /// <summary>
-        /// Get on which edge the app bar is located
-        /// </summary>
-        public ScreenEdge Edge
+        if (hWnd != IntPtr.Zero)
         {
-            get { return (ScreenEdge)m_data.uEdge; }
-        }
+            uint uResult = SHAppBarMessage(ABM_GETTASKBARPOS, ref m_data);
 
-        /// <summary>
-        /// Get the working area
-        /// </summary>
-        public Rectangle WorkArea
-        {
-            get { return GetRectangle(m_data.rc); }
-        }
-
-        private Rectangle GetRectangle(Rect rc)
-        {
-            return new Rectangle(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
-        }
-
-        /// <summary>
-        /// Update the location of the appbar with the specified classname and window name.
-        /// </summary>
-        /// <param name="strClassName">string</param>
-        /// <param name="strWindowName">string</param>
-        private void GetPosition(string strClassName, string strWindowName)
-        {
-            m_data = new AppBarData();
-            m_data.cbSize = (uint)Marshal.SizeOf(m_data.GetType());
-
-            IntPtr hWnd = FindWindow(strClassName, strWindowName);
-
-            if (hWnd != IntPtr.Zero)
+            if (uResult != 1)
             {
-                uint uResult = SHAppBarMessage(ABM_GETTASKBARPOS, ref m_data);
-
-                if (uResult != 1)
-                {
-                    throw new NotifyIconWpfException("Failed to communicate with the given AppBar");
-                }
-            }
-            else
-            {
-                throw new NotifyIconWpfException("Failed to find an AppBar that matched the given criteria");
+                throw new NotifyIconWpfException("Failed to communicate with the given AppBar");
             }
         }
+        else
+        {
+            throw new NotifyIconWpfException("Failed to find an AppBar that matched the given criteria");
+        }
+    }
 
+    /// <summary>
+    /// Updates the system taskbar position
+    /// </summary>
+    public void GetSystemTaskBarPosition()
+    {
+        GetPosition("Shell_TrayWnd", null);
+    }
+
+    /// <summary>
+    /// A value that specifies an edge of the screen.
+    /// </summary>
+    public enum ScreenEdge
+    {
         /// <summary>
-        /// Updates the system taskbar position
+        /// Undefined
         /// </summary>
-        public void GetSystemTaskBarPosition()
-        {
-            GetPosition("Shell_TrayWnd", null);
-        }
-
+        Undefined = -1,
         /// <summary>
-        /// A value that specifies an edge of the screen.
+        /// Left edge.
         /// </summary>
-        public enum ScreenEdge
-        {
-            /// <summary>
-            /// Undefined
-            /// </summary>
-            Undefined = -1,
-            /// <summary>
-            /// Left edge.
-            /// </summary>
-            Left = 0,
-            /// <summary>
-            /// Top edge.
-            /// </summary>
-            Top = 1,
-            /// <summary>
-            /// Right edge.
-            /// </summary>
-            Right = 2,
-            /// <summary>
-            /// Bottom edge.
-            /// </summary>
-            Bottom = 3
-        }
+        Left = 0,
+        /// <summary>
+        /// Top edge.
+        /// </summary>
+        Top = 1,
+        /// <summary>
+        /// Right edge.
+        /// </summary>
+        Right = 2,
+        /// <summary>
+        /// Bottom edge.
+        /// </summary>
+        Bottom = 3
+    }
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct AppBarData
-        {
-            public uint cbSize;
-            public IntPtr hWnd;
-            public uint uCallbackMessage;
-            public uint uEdge;
-            public Rect rc;
-            public int lParam;
-        }
+    [StructLayout(LayoutKind.Sequential)]
+    private struct AppBarData
+    {
+        public uint cbSize;
+        public IntPtr hWnd;
+        public uint uCallbackMessage;
+        public uint uEdge;
+        public Rect rc;
+        public int lParam;
+    }
 
-        [StructLayout(LayoutKind.Sequential)]
-        private struct Rect
-        {
-            public int left;
-            public int top;
-            public int right;
-            public int bottom;
-        }
+    [StructLayout(LayoutKind.Sequential)]
+    private struct Rect
+    {
+        public int left;
+        public int top;
+        public int right;
+        public int bottom;
     }
 }

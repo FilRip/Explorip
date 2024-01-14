@@ -1,16 +1,15 @@
-﻿namespace WpfScreenHelper.Enum
+﻿namespace WpfScreenHelper.Enum;
+
+public enum WindowPositions
 {
-    public enum WindowPositions
-    {
-        Center,
-        Left,
-        Top,
-        Right,
-        Bottom,
-        TopLeft,
-        TopRight,
-        BottomRight,
-        BottomLeft,
-        Maximize
-    }
+    Center,
+    Left,
+    Top,
+    Right,
+    Bottom,
+    TopLeft,
+    TopRight,
+    BottomRight,
+    BottomLeft,
+    Maximize
 }

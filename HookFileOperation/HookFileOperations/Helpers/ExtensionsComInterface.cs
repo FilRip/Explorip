@@ -4,27 +4,26 @@ using System.Runtime.InteropServices;
 
 using Microsoft.Win32;
 
-namespace Explorip.HookFileOperations.Helpers
+namespace Explorip.HookFileOperations.Helpers;
+
+public static class ExtensionsComInterface
 {
-    public static class ExtensionsComInterface
+    public static void RechercheComInterface(IntPtr iUnknown, out Dictionary<Guid, string> guid)
     {
-        public static void RechercheComInterface(IntPtr iUnknown, out Dictionary<Guid, string> guid)
+        guid = [];
+        RegistryKey racineInterface = Registry.ClassesRoot.OpenSubKey("Interface");
+        foreach (string @interface in racineInterface.GetSubKeyNames())
         {
-            guid = [];
-            RegistryKey racineInterface = Registry.ClassesRoot.OpenSubKey("Interface");
-            foreach (string @interface in racineInterface.GetSubKeyNames())
+            string nomInterface = racineInterface.OpenSubKey(@interface).GetValue("")?.ToString() ?? "Inconnu";
+            Guid myGuid = new(@interface);
+            try
             {
-                string nomInterface = racineInterface.OpenSubKey(@interface).GetValue("")?.ToString() ?? "Inconnu";
-                Guid myGuid = new(@interface);
-                try
+                if (Marshal.QueryInterface(iUnknown, ref myGuid, out _) == 0)
                 {
-                    if (Marshal.QueryInterface(iUnknown, ref myGuid, out _) == 0)
-                    {
-                        guid.Add(myGuid, nomInterface);
-                    }
+                    guid.Add(myGuid, nomInterface);
                 }
-                catch (Exception) { /* Ignore cast error */ }
             }
+            catch (Exception) { /* Ignore cast error */ }
         }
     }
 }

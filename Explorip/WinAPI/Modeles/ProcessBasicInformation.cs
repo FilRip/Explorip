@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Explorip.WinAPI.Modeles
+namespace Explorip.WinAPI.Modeles;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct ProcessBasicInformation
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ProcessBasicInformation
-    {
-        public IntPtr Reserved1;
-        public IntPtr PebAddress;
-        public IntPtr Reserved2_0;
-        public IntPtr Reserved2_1;
-        public IntPtr UniquePid;
-        public IntPtr InheritedFromUniqueProcessId;
-    }
+    public IntPtr Reserved1;
+    public IntPtr PebAddress;
+    public IntPtr Reserved2_0;
+    public IntPtr Reserved2_1;
+    public IntPtr UniquePid;
+    public IntPtr InheritedFromUniqueProcessId;
 }

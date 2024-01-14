@@ -2,69 +2,68 @@
 using System.Linq;
 using System.Windows;
 
-namespace WindowsDesktop
+namespace WindowsDesktop;
+
+public static class ApplicationExtensions
 {
-    public static class ApplicationExtensions
+    /// <summary>
+    /// Determines whether this application is pinned.
+    /// </summary>
+    public static bool IsPinned(this Application app)
     {
-        /// <summary>
-        /// Determines whether this application is pinned.
-        /// </summary>
-        public static bool IsPinned(this Application app)
+        string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
+        if (appId == null)
+            return false;
+
+        return VirtualDesktop.IsPinnedApplication(appId);
+    }
+
+    /// <summary>
+    /// Pins an application, showing it on all virtual desktops.
+    /// </summary>
+    public static void Pin(this Application app)
+    {
+        string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
+        if (appId == null)
+            return;
+
+        VirtualDesktop.PinApplication(appId);
+    }
+
+    /// <summary>
+    /// Unpins an application.
+    /// </summary>
+    public static void Unpin(this Application app)
+    {
+        string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
+        if (appId == null)
+            return;
+
+        VirtualDesktop.UnpinApplication(appId);
+    }
+
+    /// <summary>
+    /// Toggles an application between being pinned and unpinned.
+    /// </summary>
+    public static void TogglePin(this Application app)
+    {
+        string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
+        if (appId == null)
+            return;
+
+        if (VirtualDesktop.IsPinnedApplication(appId))
         {
-            string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
-            if (appId == null)
-                return false;
-
-            return VirtualDesktop.IsPinnedApplication(appId);
-        }
-
-        /// <summary>
-        /// Pins an application, showing it on all virtual desktops.
-        /// </summary>
-        public static void Pin(this Application app)
-        {
-            string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
-            if (appId == null)
-                return;
-
-            VirtualDesktop.PinApplication(appId);
-        }
-
-        /// <summary>
-        /// Unpins an application.
-        /// </summary>
-        public static void Unpin(this Application app)
-        {
-            string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
-            if (appId == null)
-                return;
-
             VirtualDesktop.UnpinApplication(appId);
         }
-
-        /// <summary>
-        /// Toggles an application between being pinned and unpinned.
-        /// </summary>
-        public static void TogglePin(this Application app)
+        else
         {
-            string appId = ApplicationHelper.GetAppId(app.GetWindowHandle());
-            if (appId == null)
-                return;
-
-            if (VirtualDesktop.IsPinnedApplication(appId))
-            {
-                VirtualDesktop.UnpinApplication(appId);
-            }
-            else
-            {
-                VirtualDesktop.PinApplication(appId);
-            }
+            VirtualDesktop.PinApplication(appId);
         }
+    }
 
-        private static IntPtr GetWindowHandle(this Application app)
-        {
-            Window window = app.Windows.OfType<Window>().FirstOrDefault() ?? throw new InvalidOperationException();
-            return window.GetHandle();
-        }
+    private static IntPtr GetWindowHandle(this Application app)
+    {
+        Window window = app.Windows.OfType<Window>().FirstOrDefault() ?? throw new InvalidOperationException();
+        return window.GetHandle();
     }
 }

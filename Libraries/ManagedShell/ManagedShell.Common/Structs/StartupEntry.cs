@@ -1,8 +1,7 @@
-﻿namespace ManagedShell.Common.Structs
+﻿namespace ManagedShell.Common.Structs;
+
+struct StartupEntry
 {
-    struct StartupEntry
-    {
-        internal StartupLocation Location;
-        internal string Path;
-    }
+    internal StartupLocation Location;
+    internal string Path;
 }

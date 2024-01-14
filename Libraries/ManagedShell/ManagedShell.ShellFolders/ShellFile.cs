@@ -3,39 +3,38 @@ using System.IO;
 
 using ManagedShell.ShellFolders.Interfaces;
 
-namespace ManagedShell.ShellFolders
+namespace ManagedShell.ShellFolders;
+
+public class ShellFile : ShellItem
 {
-    public class ShellFile : ShellItem
+    private long _fileSize;
+    public long FileSize
     {
-        private long _fileSize;
-        public long FileSize
+        get
         {
-            get
+            if (_fileSize == 0)
             {
-                if (_fileSize == 0)
-                {
-                    _fileSize = GetFileSize();
-                }
-
-                return _fileSize;
+                _fileSize = GetFileSize();
             }
-        }
 
-        public ShellFile(ShellFolder parentFolder, string parsingName) : base(parsingName)
-        {
-            _parentItem = parentFolder;
+            return _fileSize;
         }
+    }
 
-        public ShellFile(ShellFolder parentFolder, IShellFolder parentShellFolder, IntPtr relativePidl, bool isAsync = false) : base(parentFolder.AbsolutePidl, parentShellFolder, relativePidl, isAsync)
-        {
-            _parentItem = parentFolder;
-        }
+    public ShellFile(ShellFolder parentFolder, string parsingName) : base(parsingName)
+    {
+        _parentItem = parentFolder;
+    }
 
-        private long GetFileSize()
-        {
-            // TODO: Replace this using properties via IShellItem2
-            using FileStream file = new(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            return file.Length;
-        }
+    public ShellFile(ShellFolder parentFolder, IShellFolder parentShellFolder, IntPtr relativePidl, bool isAsync = false) : base(parentFolder.AbsolutePidl, parentShellFolder, relativePidl, isAsync)
+    {
+        _parentItem = parentFolder;
+    }
+
+    private long GetFileSize()
+    {
+        // TODO: Replace this using properties via IShellItem2
+        using FileStream file = new(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        return file.Length;
     }
 }

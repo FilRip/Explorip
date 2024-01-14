@@ -1,28 +1,27 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Explorip.Exceptions
+namespace Explorip.Exceptions;
+
+/// <summary>
+/// Exception levée si erreur dans une méthode de gestionFenetres
+/// </summary>
+[Serializable()]
+public class GestionFenetresException : Exception
 {
-    /// <summary>
-    /// Exception levée si erreur dans une méthode de gestionFenetres
-    /// </summary>
-    [Serializable()]
-    public class GestionFenetresException : Exception
+    private readonly string _erreur;
+
+    public GestionFenetresException(string erreur)
     {
-        private readonly string _erreur;
+        _erreur = erreur;
+    }
 
-        public GestionFenetresException(string erreur)
+    protected GestionFenetresException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    public override string Message
+    {
+        get
         {
-            _erreur = erreur;
-        }
-
-        protected GestionFenetresException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-        public override string Message
-        {
-            get
-            {
-                return _erreur;
-            }
+            return _erreur;
         }
     }
 }

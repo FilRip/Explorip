@@ -1,50 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace ManagedShell.UWPInterop
+namespace ManagedShell.UWPInterop;
+
+public class StoreAppList : IEnumerable<StoreApp>
 {
-    public class StoreAppList : IEnumerable<StoreApp>
+    private readonly List<StoreApp> _appList = [];
+
+    public void FetchApps()
     {
-        private readonly List<StoreApp> _appList = [];
+        _appList.Clear();
+        _appList.AddRange(StoreAppHelper.GetStoreApps());
+    }
 
-        public void FetchApps()
+    public StoreApp GetAppByAumid(string appUserModelId)
+    {
+        // first attempt to get an app in our list already
+        foreach (StoreApp storeApp in _appList)
         {
-            _appList.Clear();
-            _appList.AddRange(StoreAppHelper.GetStoreApps());
-        }
-
-        public StoreApp GetAppByAumid(string appUserModelId)
-        {
-            // first attempt to get an app in our list already
-            foreach (StoreApp storeApp in _appList)
+            if (storeApp.AppUserModelId == appUserModelId)
             {
-                if (storeApp.AppUserModelId == appUserModelId)
-                {
-                    return storeApp;
-                }
+                return storeApp;
             }
-
-            // not in list, get from StoreAppHelper
-            StoreApp app = StoreAppHelper.GetStoreApp(appUserModelId);
-
-            if (app != null)
-            {
-                _appList.Add(app);
-                return app;
-            }
-
-            // no app found for given AUMID
-            return null;
         }
 
-        public IEnumerator<StoreApp> GetEnumerator()
+        // not in list, get from StoreAppHelper
+        StoreApp app = StoreAppHelper.GetStoreApp(appUserModelId);
+
+        if (app != null)
         {
-            return ((IEnumerable<StoreApp>)_appList).GetEnumerator();
+            _appList.Add(app);
+            return app;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)_appList).GetEnumerator();
-        }
+        // no app found for given AUMID
+        return null;
+    }
+
+    public IEnumerator<StoreApp> GetEnumerator()
+    {
+        return ((IEnumerable<StoreApp>)_appList).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return ((IEnumerable)_appList).GetEnumerator();
     }
 }

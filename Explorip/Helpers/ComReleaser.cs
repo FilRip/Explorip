@@ -1,44 +1,43 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Explorip.Helpers
+namespace Explorip.Helpers;
+
+public class ComReleaser<T> : IDisposable where T : class
 {
-    public class ComReleaser<T> : IDisposable where T : class
+    private T _obj;
+    private bool disposedValue;
+
+    public ComReleaser(T obj)
     {
-        private T _obj;
-        private bool disposedValue;
+        if (obj == null) throw new ArgumentNullException("obj");
+        if (!obj.GetType().IsCOMObject) throw new ArgumentOutOfRangeException("obj");
+        _obj = obj;
+    }
 
-        public ComReleaser(T obj)
-        {
-            if (obj == null) throw new ArgumentNullException("obj");
-            if (!obj.GetType().IsCOMObject) throw new ArgumentOutOfRangeException("obj");
-            _obj = obj;
-        }
+    public T Item { get { return _obj; } }
 
-        public T Item { get { return _obj; } }
-
-        public bool IsDisposed
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
         {
-            get { return disposedValue; }
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+            if (disposing && _obj != null)
             {
-                if (disposing && _obj != null)
-                {
-                    Marshal.FinalReleaseComObject(_obj);
-                    _obj = null;
-                }
-
-                disposedValue = true;
+                Marshal.FinalReleaseComObject(_obj);
+                _obj = null;
             }
-        }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            disposedValue = true;
         }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace ManagedShell.WindowsTray
+namespace ManagedShell.WindowsTray;
+
+public class NotificationBalloonEventArgs : HandledEventArgs
 {
-    public class NotificationBalloonEventArgs : HandledEventArgs
-    {
-        public NotificationBalloon Balloon { get; set; }
-    }
+    public NotificationBalloon Balloon { get; set; }
 }

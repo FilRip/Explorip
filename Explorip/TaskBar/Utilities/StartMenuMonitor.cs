@@ -6,125 +6,124 @@ using ManagedShell.Common.Logging;
 using ManagedShell.Common.SupportingClasses;
 using ManagedShell.Interop;
 
-namespace Explorip.TaskBar.Utilities
+namespace Explorip.TaskBar.Utilities;
+
+public class StartMenuMonitor : IDisposable
 {
-    public class StartMenuMonitor : IDisposable
+    private readonly AppVisibilityHelper _appVisibilityHelper;
+    private DispatcherTimer _poller;
+    private bool _isVisible;
+    private bool disposedValue;
+
+    public event EventHandler<LauncherVisibilityEventArgs> StartMenuVisibilityChanged;
+
+    public StartMenuMonitor(AppVisibilityHelper appVisibilityHelper)
     {
-        private readonly AppVisibilityHelper _appVisibilityHelper;
-        private DispatcherTimer _poller;
-        private bool _isVisible;
-        private bool disposedValue;
+        _appVisibilityHelper = appVisibilityHelper;
+        SetupPoller();
+    }
 
-        public event EventHandler<LauncherVisibilityEventArgs> StartMenuVisibilityChanged;
-
-        public StartMenuMonitor(AppVisibilityHelper appVisibilityHelper)
+    private void SetupPoller()
+    {
+        if (_poller == null)
         {
-            _appVisibilityHelper = appVisibilityHelper;
-            SetupPoller();
-        }
-
-        private void SetupPoller()
-        {
-            if (_poller == null)
+            _poller = new DispatcherTimer
             {
-                _poller = new DispatcherTimer
-                {
-                    Interval = TimeSpan.FromMilliseconds(100)
-                };
-
-                _poller.Tick += Poller_Tick;
-            }
-
-            _poller.Start();
-        }
-
-        private void Poller_Tick(object sender, EventArgs e)
-        {
-            if (EnvironmentHelper.IsWindows8OrBetter)
-            {
-                // Windows 8+
-                SetVisibility(IsModernStartMenuOpen());
-            }
-
-            if (!EnvironmentHelper.IsWindows8OrBetter || !_isVisible)
-            {
-                // Windows 7, StartIsBack, Start8+
-                SetVisibility(IsClassicStartMenuOpen());
-            }
-
-            if (!_isVisible)
-            {
-                // Open Shell Menu
-                SetVisibility(IsOpenShellMenuOpen());
-            }
-        }
-
-        private void SetVisibility(bool isVisible)
-        {
-            if (isVisible == _isVisible)
-            {
-                return;
-            }
-
-            _isVisible = isVisible;
-
-            LauncherVisibilityEventArgs args = new()
-            {
-                Visible = _isVisible
+                Interval = TimeSpan.FromMilliseconds(100)
             };
 
-            StartMenuVisibilityChanged?.Invoke(this, args);
+            _poller.Tick += Poller_Tick;
         }
 
-        private bool IsModernStartMenuOpen()
+        _poller.Start();
+    }
+
+    private void Poller_Tick(object sender, EventArgs e)
+    {
+        if (EnvironmentHelper.IsWindows8OrBetter)
         {
-            if (_appVisibilityHelper == null)
+            // Windows 8+
+            SetVisibility(IsModernStartMenuOpen());
+        }
+
+        if (!EnvironmentHelper.IsWindows8OrBetter || !_isVisible)
+        {
+            // Windows 7, StartIsBack, Start8+
+            SetVisibility(IsClassicStartMenuOpen());
+        }
+
+        if (!_isVisible)
+        {
+            // Open Shell Menu
+            SetVisibility(IsOpenShellMenuOpen());
+        }
+    }
+
+    private void SetVisibility(bool isVisible)
+    {
+        if (isVisible == _isVisible)
+        {
+            return;
+        }
+
+        _isVisible = isVisible;
+
+        LauncherVisibilityEventArgs args = new()
+        {
+            Visible = _isVisible
+        };
+
+        StartMenuVisibilityChanged?.Invoke(this, args);
+    }
+
+    private bool IsModernStartMenuOpen()
+    {
+        if (_appVisibilityHelper == null)
+        {
+            ShellLogger.Error("StartMenuMonitor: AppVisibilityHelper is null");
+            return false;
+        }
+
+        return _appVisibilityHelper.IsLauncherVisible();
+    }
+
+    private bool IsClassicStartMenuOpen()
+    {
+        return IsVisibleByClass("DV2ControlHost");
+    }
+
+    private bool IsOpenShellMenuOpen()
+    {
+        return IsVisibleByClass("OpenShell.CMenuContainer");
+    }
+
+    private bool IsVisibleByClass(string className)
+    {
+        IntPtr hStartMenu = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, className, IntPtr.Zero);
+
+        return hStartMenu != IntPtr.Zero && NativeMethods.IsWindowVisible(hStartMenu);
+    }
+
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
             {
-                ShellLogger.Error("StartMenuMonitor: AppVisibilityHelper is null");
-                return false;
+                _poller?.Stop();
             }
 
-            return _appVisibilityHelper.IsLauncherVisible();
+            disposedValue = true;
         }
+    }
 
-        private bool IsClassicStartMenuOpen()
-        {
-            return IsVisibleByClass("DV2ControlHost");
-        }
-
-        private bool IsOpenShellMenuOpen()
-        {
-            return IsVisibleByClass("OpenShell.CMenuContainer");
-        }
-
-        private bool IsVisibleByClass(string className)
-        {
-            IntPtr hStartMenu = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, className, IntPtr.Zero);
-
-            return hStartMenu != IntPtr.Zero && NativeMethods.IsWindowVisible(hStartMenu);
-        }
-
-        public bool IsDisposed
-        {
-            get { return disposedValue; }
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    _poller?.Stop();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

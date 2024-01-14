@@ -10,48 +10,47 @@ using EasyHook;
 using Explorip.HookFileOperations;
 using Explorip.HookFileOperations.Ipc;
 
-namespace Explorip.HookFileOperationsManager
-{
-    public static class Program
-    {
-        public static void Main()
-        {
-            string channelName = null;
+namespace Explorip.HookFileOperationsManager;
 
-            if (Environment.GetCommandLineArgs()[1] == "NI")
+public static class Program
+{
+    public static void Main()
+    {
+        string channelName = null;
+
+        if (Environment.GetCommandLineArgs()[1] == "NI")
+        {
+            IpcChannel canal = new("HookFileOperation_" + Process.GetCurrentProcess().Id.ToString());
+            ChannelServices.RegisterChannel(canal, false);
+            RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
+            while (true)
             {
-                IpcChannel canal = new("HookFileOperation_" + Process.GetCurrentProcess().Id.ToString());
-                ChannelServices.RegisterChannel(canal, false);
-                RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
+                Thread.Sleep(100);
+            }
+        }
+        else
+        {
+            int processId = int.Parse(Environment.GetCommandLineArgs()[1]);
+
+            RemoteHooking.IpcCreateServer<ServerInterface>(ref channelName, WellKnownObjectMode.Singleton);
+            RemoteHooking.Inject(processId,
+                InjectionOptions.Default,
+                typeof(MainHookClass).Assembly.Location,
+                typeof(MainHookClass).Assembly.Location,
+                channelName);
+
+            try
+            {
                 while (true)
                 {
+                    if (Process.GetProcessById(processId) == null)
+                        break;
                     Thread.Sleep(100);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                int processId = int.Parse(Environment.GetCommandLineArgs()[1]);
-
-                RemoteHooking.IpcCreateServer<ServerInterface>(ref channelName, WellKnownObjectMode.Singleton);
-                RemoteHooking.Inject(processId,
-                    InjectionOptions.Default,
-                    typeof(MainHookClass).Assembly.Location,
-                    typeof(MainHookClass).Assembly.Location,
-                    channelName);
-
-                try
-                {
-                    while (true)
-                    {
-                        if (Process.GetProcessById(processId) == null)
-                            break;
-                        Thread.Sleep(100);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
+                Console.WriteLine(ex.ToString());
             }
         }
     }

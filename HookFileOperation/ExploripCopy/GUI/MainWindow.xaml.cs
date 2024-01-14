@@ -8,138 +8,137 @@ using ExploripCopy.ViewModels;
 
 using ManagedShell.Interop;
 
-namespace ExploripCopy.GUI
+namespace ExploripCopy.GUI;
+
+/// <summary>
+/// Logique d'interaction pour MainWindow.xaml
+/// </summary>
+public partial class MainWindow : Window
 {
-    /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    private bool _forceClose;
+
+    public static MainWindow Instance { get; private set; }
+
+    public MainWindow()
     {
-        private bool _forceClose;
+        InitializeComponent();
 
-        public static MainWindow Instance { get; private set; }
+        Instance = this;
+        DataContext = MainViewModels.Instance;
+        MyDataContext.ForceRefreshList += ForceRefresh;
+        _forceClose = false;
 
-        public MainWindow()
-        {
-            InitializeComponent();
+        IpcServer.CreateIpcServer();
 
-            Instance = this;
-            DataContext = MainViewModels.Instance;
-            MyDataContext.ForceRefreshList += ForceRefresh;
-            _forceClose = false;
+        Icon = Constants.Icons.MainIconSource;
+    }
 
-            IpcServer.CreateIpcServer();
+    public void IconInSystray_Exit()
+    {
+        MainViewModels.Instance.Dispose();
+        _forceClose = true;
+        Close();
+    }
 
-            Icon = Constants.Icons.MainIconSource;
-        }
+    private MainViewModels MyDataContext
+    {
+        get { return (MainViewModels)DataContext; }
+    }
 
-        public void IconInSystray_Exit()
-        {
-            MainViewModels.Instance.Dispose();
-            _forceClose = true;
-            Close();
-        }
+    #region Window manager
 
-        private MainViewModels MyDataContext
-        {
-            get { return (MainViewModels)DataContext; }
-        }
+    public void ShowWindow()
+    {
+        Visibility = Visibility.Visible;
+        WindowState = WindowState.Normal;
+        Activate();
+    }
 
-        #region Window manager
+    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        Visibility = Visibility.Hidden;
+        e.Cancel = !_forceClose;
+    }
 
-        public void ShowWindow()
-        {
-            Visibility = Visibility.Visible;
-            WindowState = WindowState.Normal;
-            Activate();
-        }
+    private void CloseWindow_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            Visibility = Visibility.Hidden;
-            e.Cancel = !_forceClose;
-        }
+    private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Maximized;
+        MyDataContext.WindowMaximized = true;
+    }
 
-        private void CloseWindow_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+    private void RestoreWindow_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Normal;
+        MyDataContext.WindowMaximized = false;
+    }
 
-        private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Maximized;
-            MyDataContext.WindowMaximized = true;
-        }
+    private void TitleBar_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
+        IntPtr hMenu = NativeMethods.GetSystemMenu(hWnd, false);
+        Point posMouse = PointToScreen(Mouse.GetPosition(this));
+        int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
+        if (cmd > 0)
+            NativeMethods.SendMessage(hWnd, NativeMethods.WM.SYSCOMMAND, (uint)cmd, 0);
+    }
 
-        private void RestoreWindow_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Normal;
-            MyDataContext.WindowMaximized = false;
-        }
+    private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
 
-        private void TitleBar_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
-            IntPtr hMenu = NativeMethods.GetSystemMenu(hWnd, false);
-            Point posMouse = PointToScreen(Mouse.GetPosition(this));
-            int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
-            if (cmd > 0)
-                NativeMethods.SendMessage(hWnd, NativeMethods.WM.SYSCOMMAND, (uint)cmd, 0);
-        }
+    #endregion
 
-        private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
+    #region Drag Window
 
-        #endregion
-
-        #region Drag Window
-
-        private bool _startDrag;
-        private void Window_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (_startDrag && WindowState != WindowState.Minimized && IsVisible && IsActive)
-            {
-                _startDrag = false;
-                if (WindowState == WindowState.Maximized)
-                    Top = Mouse.GetPosition(Application.Current.MainWindow).Y;
-                if (e.LeftButton == MouseButtonState.Pressed)
-                {
-                    RestoreWindow_Click(sender, null);
-                    DragMove();
-                }
-            }
-        }
-
-        private void TitleBar_MouseUp(object sender, MouseButtonEventArgs e)
+    private bool _startDrag;
+    private void Window_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (_startDrag && WindowState != WindowState.Minimized && IsVisible && IsActive)
         {
             _startDrag = false;
-        }
-
-        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            _startDrag = true;
-        }
-
-        #endregion
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            IpcServer.ShutdownIpcServer();
-        }
-
-        private void ForceRefresh(object sender, EventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
+            if (WindowState == WindowState.Maximized)
+                Top = Mouse.GetPosition(Application.Current.MainWindow).Y;
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                DgListWaiting.Items.Refresh();
-            });
+                RestoreWindow_Click(sender, null);
+                DragMove();
+            }
         }
+    }
 
-        private void Window_StateChanged(object sender, EventArgs e)
+    private void TitleBar_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        _startDrag = false;
+    }
+
+    private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        _startDrag = true;
+    }
+
+    #endregion
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        IpcServer.ShutdownIpcServer();
+    }
+
+    private void ForceRefresh(object sender, EventArgs e)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            MyDataContext.WindowMaximized = WindowState == WindowState.Maximized;
-        }
+            DgListWaiting.Items.Refresh();
+        });
+    }
+
+    private void Window_StateChanged(object sender, EventArgs e)
+    {
+        MyDataContext.WindowMaximized = WindowState == WindowState.Maximized;
     }
 }

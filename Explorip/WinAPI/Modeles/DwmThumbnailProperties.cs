@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Explorip.WinAPI.Modeles
-{
-    [Flags()]
-    public enum DWM_TNP
-    {
-        RECTDESTINATION = 0x00000001,
-        RECTSOURCE = 0x00000002,
-        OPACITY = 0x00000004,
-        VISIBLE = 0x00000008,
-        SOURCECLIENTAREAONLY = 0x00000010,
-    }
+namespace Explorip.WinAPI.Modeles;
 
-    [StructLayout(LayoutKind.Sequential)]
-    public struct DwmThumbnailProperties
-    {
-        public DWM_TNP dwFlags;
-        public Rect rcDestination;
-        public Rect rcSource;
-        public byte opacity;
-        public bool fVisible;
-        public bool fSourceClientAreaOnly;
-    }
+[Flags()]
+public enum DWM_TNP
+{
+    RECTDESTINATION = 0x00000001,
+    RECTSOURCE = 0x00000002,
+    OPACITY = 0x00000004,
+    VISIBLE = 0x00000008,
+    SOURCECLIENTAREAONLY = 0x00000010,
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct DwmThumbnailProperties
+{
+    public DWM_TNP dwFlags;
+    public Rect rcDestination;
+    public Rect rcSource;
+    public byte opacity;
+    public bool fVisible;
+    public bool fSourceClientAreaOnly;
 }

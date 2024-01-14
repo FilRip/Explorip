@@ -1,13 +1,12 @@
-﻿namespace ExploripApi
+﻿namespace ExploripApi;
+
+public interface IServerIpc
 {
-    public interface IServerIpc
-    {
-        void ReceivedNewWindow(string[] args);
+    void ReceivedNewWindow(string[] args);
 
-        void CreateFolder(string path, string name);
+    void CreateFolder(string path, string name);
 
-        void CreateShortcut(string path, string name);
+    void CreateShortcut(string path, string name);
 
-        void Ping();
-    }
+    void Ping();
 }

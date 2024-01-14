@@ -1,10 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Explorip.WinAPI.Modeles
+namespace Explorip.WinAPI.Modeles;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct Rect
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Rect
-    {
-        public int left, top, right, bottom;
-    }
+    public int left, top, right, bottom;
 }

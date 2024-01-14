@@ -14,212 +14,211 @@ using Securify.ShellLink;
 
 using WindowsDesktop;
 
-namespace Explorip.TaskBar.Controls
+namespace Explorip.TaskBar.Controls;
+
+/// <summary>
+/// Interaction logic for TaskList.xaml
+/// </summary>
+public partial class TaskList : UserControl
 {
-    /// <summary>
-    /// Interaction logic for TaskList.xaml
-    /// </summary>
-    public partial class TaskList : UserControl
+    private bool isLoaded;
+    private double DefaultButtonWidth;
+    private double TaskButtonLeftMargin;
+    private double TaskButtonRightMargin;
+    private readonly object _lockChangeDesktop;
+
+    public readonly static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
+    public readonly static DependencyProperty MainScreenProperty = DependencyProperty.Register(nameof(MainScreen), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
+    public readonly static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
+
+    public TaskList()
     {
-        private bool isLoaded;
-        private double DefaultButtonWidth;
-        private double TaskButtonLeftMargin;
-        private double TaskButtonRightMargin;
-        private readonly object _lockChangeDesktop;
+        InitializeComponent();
+        _lockChangeDesktop = new object();
+    }
 
-        public readonly static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
-        public readonly static DependencyProperty MainScreenProperty = DependencyProperty.Register(nameof(MainScreen), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
-        public readonly static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
+    public double ButtonWidth
+    {
+        get { return (double)GetValue(ButtonWidthProperty); }
+        set { SetValue(ButtonWidthProperty, value); }
+    }
 
-        public TaskList()
+    public bool MainScreen { get; set; }
+
+    public Taskbar TaskbarParent { get; set; }
+
+    private void SetStyles()
+    {
+        DefaultButtonWidth = Application.Current.FindResource("TaskButtonWidth") as double? ?? 0;
+        Thickness buttonMargin;
+
+        if (Settings.Instance.Edge == (int)AppBarEdge.Left || Settings.Instance.Edge == (int)AppBarEdge.Right)
         {
-            InitializeComponent();
-            _lockChangeDesktop = new object();
+            buttonMargin = Application.Current.FindResource("TaskButtonVerticalMargin") as Thickness? ?? new Thickness();
+        }
+        else
+        {
+            buttonMargin = Application.Current.FindResource("TaskButtonMargin") as Thickness? ?? new Thickness();
         }
 
-        public double ButtonWidth
+        TaskButtonLeftMargin = buttonMargin.Left;
+        TaskButtonRightMargin = buttonMargin.Right;
+    }
+
+    private void TaskList_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            return;
+
+        if (!isLoaded && MyTaskbarApp.MyShellManager.Tasks != null)
         {
-            get { return (double)GetValue(ButtonWidthProperty); }
-            set { SetValue(ButtonWidthProperty, value); }
+            InsertPinnedApp();
+
+            TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
+            if (MyTaskbarApp.MyShellManager.Tasks.GroupedWindows != null)
+                MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
+
+            VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
+
+            isLoaded = true;
         }
 
-        public bool MainScreen { get; set; }
+        SetStyles();
+    }
 
-        public Taskbar TaskbarParent { get; set; }
-
-        private void SetStyles()
+    private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
+    {
+        lock (_lockChangeDesktop)
         {
-            DefaultButtonWidth = Application.Current.FindResource("TaskButtonWidth") as double? ?? 0;
-            Thickness buttonMargin;
-
-            if (Settings.Instance.Edge == (int)AppBarEdge.Left || Settings.Instance.Edge == (int)AppBarEdge.Right)
+            Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                buttonMargin = Application.Current.FindResource("TaskButtonVerticalMargin") as Thickness? ?? new Thickness();
-            }
-            else
-            {
-                buttonMargin = Application.Current.FindResource("TaskButtonMargin") as Thickness? ?? new Thickness();
-            }
+                if (MyTaskbarApp.MyShellManager.TasksService.Windows != null)
+                {
+                    MyTaskbarApp.MyShellManager.TasksService.Windows.Clear();
+                }
+                else
+                {
+                    MyTaskbarApp.MyShellManager.TasksService.Windows = [];
+                }
 
-            TaskButtonLeftMargin = buttonMargin.Left;
-            TaskButtonRightMargin = buttonMargin.Right;
-        }
+                WinAPI.User32.EnumWindows((hwnd, lParam) =>
+                {
+                    if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
+                    {
+                        ApplicationWindow win = new(MyTaskbarApp.MyShellManager.TasksService, hwnd);
 
-        private void TaskList_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
-                return;
+                        if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyTaskbarApp.MyShellManager.TasksService.Windows.Contains(win))
+                        {
+                            MyTaskbarApp.MyShellManager.TasksService.Windows.Add(win);
+                            MyTaskbarApp.MyShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
+                        }
+                    }
+                    return true;
+                }, 0);
 
-            if (!isLoaded && MyTaskbarApp.MyShellManager.Tasks != null)
-            {
                 InsertPinnedApp();
 
+                IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
+                if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(i => (i.Handle == hWndForeground || i.ListWindows.Contains(hWndForeground)) && i.ShowInTaskbar))
+                {
+                    ApplicationWindow win = MyTaskbarApp.MyShellManager.TasksService.Windows.First(wnd => (wnd.Handle == hWndForeground || wnd.ListWindows.Contains(hWndForeground)));
+                    win.State = ApplicationWindow.WindowState.Active;
+                    win.SetShowInTaskbar();
+                }
+
+                System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
+                MyTaskbarApp.MyShellManager.Tasks.GroupedWindows = nouvelleListeGroupedWindows;
                 TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
-                if (MyTaskbarApp.MyShellManager.Tasks.GroupedWindows != null)
-                    MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
-
-                VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
-
-                isLoaded = true;
-            }
-
-            SetStyles();
+            }));
         }
+    }
 
-        private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
+    private void InsertPinnedApp()
+    {
+        string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
+        if (Directory.Exists(path))
         {
-            lock (_lockChangeDesktop)
+            int numPinnedApp = 0;
+            Shortcut pinnedApp;
+            ApplicationWindow appWin;
+            foreach (string file in Directory.GetFiles(path, "*.lnk").Where(file => !MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
             {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+                pinnedApp = Shortcut.ReadFromFile(file);
+                appWin = new ApplicationWindow(MyTaskbarApp.MyShellManager.TasksService, IntPtr.Zero);
+                appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
+                appWin.IsPinnedApp = true;
+                if (pinnedApp.LinkTargetIDList?.Path != null)
+                    appWin.WinFileName = Path.GetFullPath(pinnedApp.LinkTargetIDList.Path);
+                else if (pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode != null)
+                    appWin.WinFileName = Path.GetFullPath(pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode);
+                else
                 {
-                    if (MyTaskbarApp.MyShellManager.TasksService.Windows != null)
-                    {
-                        MyTaskbarApp.MyShellManager.TasksService.Windows.Clear();
-                    }
-                    else
-                    {
-                        MyTaskbarApp.MyShellManager.TasksService.Windows = [];
-                    }
-
-                    WinAPI.User32.EnumWindows((hwnd, lParam) =>
-                    {
-                        if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
-                        {
-                            ApplicationWindow win = new(MyTaskbarApp.MyShellManager.TasksService, hwnd);
-
-                            if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyTaskbarApp.MyShellManager.TasksService.Windows.Contains(win))
-                            {
-                                MyTaskbarApp.MyShellManager.TasksService.Windows.Add(win);
-                                MyTaskbarApp.MyShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
-                            }
-                        }
-                        return true;
-                    }, 0);
-
-                    InsertPinnedApp();
-
-                    IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
-                    if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(i => (i.Handle == hWndForeground || i.ListWindows.Contains(hWndForeground)) && i.ShowInTaskbar))
-                    {
-                        ApplicationWindow win = MyTaskbarApp.MyShellManager.TasksService.Windows.First(wnd => (wnd.Handle == hWndForeground || wnd.ListWindows.Contains(hWndForeground)));
-                        win.State = ApplicationWindow.WindowState.Active;
-                        win.SetShowInTaskbar();
-                    }
-
-                    System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
-                    MyTaskbarApp.MyShellManager.Tasks.GroupedWindows = nouvelleListeGroupedWindows;
-                    TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
-                }));
-            }
-        }
-
-        private void InsertPinnedApp()
-        {
-            string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
-            if (Directory.Exists(path))
-            {
-                int numPinnedApp = 0;
-                Shortcut pinnedApp;
-                ApplicationWindow appWin;
-                foreach (string file in Directory.GetFiles(path, "*.lnk").Where(file => !MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
+                    Console.WriteLine($"Unable to add {file} as pinned app");
+                    continue;
+                }
+                if (string.IsNullOrWhiteSpace(pinnedApp.StringData.IconLocation))
+                    appWin.Icon = IconManager.Convert(IconManager.Extract(appWin.WinFileName, 0, true));
+                else
+                    appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
+                appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
+                MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
+                if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
                 {
-                    pinnedApp = Shortcut.ReadFromFile(file);
-                    appWin = new ApplicationWindow(MyTaskbarApp.MyShellManager.TasksService, IntPtr.Zero);
-                    appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
-                    appWin.IsPinnedApp = true;
-                    if (pinnedApp.LinkTargetIDList?.Path != null)
-                        appWin.WinFileName = Path.GetFullPath(pinnedApp.LinkTargetIDList.Path);
-                    else if (pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode != null)
-                        appWin.WinFileName = Path.GetFullPath(pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode);
-                    else
+                    foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw.WinFileName == appWin.WinFileName).ToList())
                     {
-                        Console.WriteLine($"Unable to add {file} as pinned app");
-                        continue;
-                    }
-                    if (string.IsNullOrWhiteSpace(pinnedApp.StringData.IconLocation))
-                        appWin.Icon = IconManager.Convert(IconManager.Extract(appWin.WinFileName, 0, true));
-                    else
-                        appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
-                    appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
-                    MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
-                    if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
-                    {
-                        foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw.WinFileName == appWin.WinFileName).ToList())
+                        if (win != appWin)
                         {
-                            if (win != appWin)
-                            {
-                                MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
-                                appWin.ListWindows.Add(win.Handle);
-                                if (appWin.ListWindows.Count > 1)
-                                    appWin.State = ApplicationWindow.WindowState.Unknown;
-                                else
-                                    appWin.State = win.State;
-                            }
+                            MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
+                            appWin.ListWindows.Add(win.Handle);
+                            if (appWin.ListWindows.Count > 1)
+                                appWin.State = ApplicationWindow.WindowState.Unknown;
+                            else
+                                appWin.State = win.State;
                         }
                     }
                 }
             }
         }
+    }
 
-        private void TaskList_OnUnloaded(object sender, RoutedEventArgs e)
+    private void TaskList_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            return;
+        MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
+        VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
+        isLoaded = false;
+    }
+
+    private void GroupedWindows_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        SetTaskButtonWidth();
+    }
+
+    private void TaskList_OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        SetTaskButtonWidth();
+    }
+
+    private void SetTaskButtonWidth()
+    {
+        if (Settings.Instance.Edge == (int)AppBarEdge.Left || Settings.Instance.Edge == (int)AppBarEdge.Right)
         {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
-                return;
-            MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
-            VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
-            isLoaded = false;
+            ButtonWidth = ActualWidth;
+            return;
         }
 
-        private void GroupedWindows_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        double margin = TaskButtonLeftMargin + TaskButtonRightMargin;
+        double maxWidth = TasksList.ActualWidth / TasksList.Items.Count;
+        double defaultWidth = DefaultButtonWidth + margin;
+
+        if (maxWidth > defaultWidth)
         {
-            SetTaskButtonWidth();
+            ButtonWidth = DefaultButtonWidth;
         }
-
-        private void TaskList_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        else
         {
-            SetTaskButtonWidth();
-        }
-
-        private void SetTaskButtonWidth()
-        {
-            if (Settings.Instance.Edge == (int)AppBarEdge.Left || Settings.Instance.Edge == (int)AppBarEdge.Right)
-            {
-                ButtonWidth = ActualWidth;
-                return;
-            }
-
-            double margin = TaskButtonLeftMargin + TaskButtonRightMargin;
-            double maxWidth = TasksList.ActualWidth / TasksList.Items.Count;
-            double defaultWidth = DefaultButtonWidth + margin;
-
-            if (maxWidth > defaultWidth)
-            {
-                ButtonWidth = DefaultButtonWidth;
-            }
-            else
-            {
-                ButtonWidth = Math.Floor(maxWidth);
-            }
+            ButtonWidth = Math.Floor(maxWidth);
         }
     }
 }

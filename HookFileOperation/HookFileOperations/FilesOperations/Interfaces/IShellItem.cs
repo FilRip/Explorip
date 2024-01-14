@@ -2,23 +2,22 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-namespace Explorip.HookFileOperations.FilesOperations.Interfaces
+namespace Explorip.HookFileOperations.FilesOperations.Interfaces;
+
+[ComImport()]
+[Guid("43826d1e-e718-42ee-bc55-a1e261c37bfe")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface IShellItem
 {
-    [ComImport()]
-    [Guid("43826d1e-e718-42ee-bc55-a1e261c37bfe")]
-    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    public interface IShellItem
-    {
-        [return: MarshalAs(UnmanagedType.Interface)]
-        object BindToHandler(IBindCtx pbc, ref Guid bhid, ref Guid riid);
+    [return: MarshalAs(UnmanagedType.Interface)]
+    object BindToHandler(IBindCtx pbc, ref Guid bhid, ref Guid riid);
 
-        IShellItem GetParent();
+    IShellItem GetParent();
 
-        [return: MarshalAs(UnmanagedType.LPWStr)]
-        string GetDisplayName(SIGDN sigdnName);
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string GetDisplayName(SIGDN sigdnName);
 
-        uint GetAttributes(uint sfgaoMask);
+    uint GetAttributes(uint sfgaoMask);
 
-        int Compare(IShellItem psi, uint hint);
-    }
+    int Compare(IShellItem psi, uint hint);
 }

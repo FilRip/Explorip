@@ -7,45 +7,44 @@ using System.Windows.Media.Imaging;
 
 using ManagedShell.Interop;
 
-namespace Explorip.Helpers
+namespace Explorip.Helpers;
+
+internal static class IconManager
 {
-    internal static class IconManager
+    internal static Icon Extract(string file, int number, bool largeIcon)
     {
-        internal static Icon Extract(string file, int number, bool largeIcon)
+        try
         {
-            try
-            {
-                NativeMethods.ExtractIconEx(file, number, out IntPtr large, out IntPtr small, 1);
-                Icon icon = Icon.FromHandle(largeIcon ? large : small);
-                return icon;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            NativeMethods.ExtractIconEx(file, number, out IntPtr large, out IntPtr small, 1);
+            Icon icon = Icon.FromHandle(largeIcon ? large : small);
+            return icon;
         }
-
-        internal static BitmapSource Convert(Icon icon, bool disposeIcon = true)
+        catch (Exception)
         {
-            try
-            {
-                BitmapSource result = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                if (disposeIcon)
-                    icon.Dispose();
-                return result;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        internal static ImageSource GetIconFromFile(string filename, int index)
-        {
-            Icon icon = Extract(filename, index, true);
-            if (icon != null)
-                return Convert(icon);
             return null;
         }
+    }
+
+    internal static BitmapSource Convert(Icon icon, bool disposeIcon = true)
+    {
+        try
+        {
+            BitmapSource result = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            if (disposeIcon)
+                icon.Dispose();
+            return result;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    internal static ImageSource GetIconFromFile(string filename, int index)
+    {
+        Icon icon = Extract(filename, index, true);
+        if (icon != null)
+            return Convert(icon);
+        return null;
     }
 }

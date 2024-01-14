@@ -1,9 +1,8 @@
-﻿namespace ManagedShell.WindowsTray
+﻿namespace ManagedShell.WindowsTray;
+
+public enum BalloonVisibility
 {
-    public enum BalloonVisibility
-    {
-        Visible,
-        Hidden,
-        TimedOut
-    }
+    Visible,
+    Hidden,
+    TimedOut
 }

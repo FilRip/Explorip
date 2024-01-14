@@ -3,79 +3,78 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Data;
 
-namespace ManagedShell.WindowsTasks
+namespace ManagedShell.WindowsTasks;
+
+public class Tasks : IDisposable
 {
-    public class Tasks : IDisposable
+    private readonly TasksService _tasksService;
+
+    public ICollectionView GroupedWindows { get; set; }
+
+    public Tasks(TasksService tasksService)
     {
-        private readonly TasksService _tasksService;
+        _tasksService = tasksService;
+        // prepare collections
+        GroupedWindows = CollectionViewSource.GetDefaultView(_tasksService.Windows);
+        GroupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+        GroupedWindows.CollectionChanged += GroupedWindows_Changed;
+        GroupedWindows.Filter = GroupedWindows_Filter;
 
-        public ICollectionView GroupedWindows { get; set; }
-
-        public Tasks(TasksService tasksService)
+        if (GroupedWindows is ICollectionViewLiveShaping taskbarItemsView)
         {
-            _tasksService = tasksService;
-            // prepare collections
-            GroupedWindows = CollectionViewSource.GetDefaultView(_tasksService.Windows);
-            GroupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
-            GroupedWindows.CollectionChanged += GroupedWindows_Changed;
-            GroupedWindows.Filter = GroupedWindows_Filter;
+            taskbarItemsView.IsLiveFiltering = true;
+            taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
+            taskbarItemsView.IsLiveGrouping = true;
+            taskbarItemsView.LiveGroupingProperties.Add("Category");
+        }
+    }
 
-            if (GroupedWindows is ICollectionViewLiveShaping taskbarItemsView)
+    public void Initialize(ITaskCategoryProvider taskCategoryProvider)
+    {
+        if (!_tasksService.IsInitialized)
+        {
+            _tasksService.SetTaskCategoryProvider(taskCategoryProvider);
+            Initialize();
+        }
+    }
+
+    public void Initialize()
+    {
+        _tasksService.Initialize();
+    }
+
+    private void GroupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        // yup, do nothing. helps prevent a NRE
+    }
+
+    private bool GroupedWindows_Filter(object item)
+    {
+        if (item is ApplicationWindow window && window.ShowInTaskbar)
+            return true;
+
+        return false;
+    }
+
+    private bool _isDisposed;
+    public bool IsDisposed
+    {
+        get { return _isDisposed; }
+    }
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_isDisposed)
+        {
+            if (disposing)
             {
-                taskbarItemsView.IsLiveFiltering = true;
-                taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
-                taskbarItemsView.IsLiveGrouping = true;
-                taskbarItemsView.LiveGroupingProperties.Add("Category");
+                _tasksService.Dispose();
             }
-        }
-
-        public void Initialize(ITaskCategoryProvider taskCategoryProvider)
-        {
-            if (!_tasksService.IsInitialized)
-            {
-                _tasksService.SetTaskCategoryProvider(taskCategoryProvider);
-                Initialize();
-            }
-        }
-
-        public void Initialize()
-        {
-            _tasksService.Initialize();
-        }
-
-        private void GroupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // yup, do nothing. helps prevent a NRE
-        }
-
-        private bool GroupedWindows_Filter(object item)
-        {
-            if (item is ApplicationWindow window && window.ShowInTaskbar)
-                return true;
-
-            return false;
-        }
-
-        private bool _isDisposed;
-        public bool IsDisposed
-        {
-            get { return _isDisposed; }
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_isDisposed)
-            {
-                if (disposing)
-                {
-                    _tasksService.Dispose();
-                }
-                _isDisposed = true;
-            }
+            _isDisposed = true;
         }
     }
 }

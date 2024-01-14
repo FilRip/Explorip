@@ -4,166 +4,165 @@ using System;
 
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Shell
+namespace Microsoft.WindowsAPICodePack.Shell;
+
+/// <summary>
+/// A refence to an icon resource 
+/// </summary>    
+public struct IconReference
 {
+    #region Private members
+
+    private string moduleName;
+    private string referencePath;
+    private static readonly char[] commaSeparator = [','];
+
+    #endregion
+
     /// <summary>
-    /// A refence to an icon resource 
-    /// </summary>    
-    public struct IconReference
+    /// Overloaded constructor takes in the module name and resource id for the icon reference.
+    /// </summary>
+    /// <param name="moduleName">String specifying the name of an executable file, DLL, or icon file</param>
+    /// <param name="resourceId">Zero-based index of the icon</param>
+    public IconReference(string moduleName, int resourceId)
+        : this()
     {
-        #region Private members
-
-        private string moduleName;
-        private string referencePath;
-        private static readonly char[] commaSeparator = [','];
-
-        #endregion
-
-        /// <summary>
-        /// Overloaded constructor takes in the module name and resource id for the icon reference.
-        /// </summary>
-        /// <param name="moduleName">String specifying the name of an executable file, DLL, or icon file</param>
-        /// <param name="resourceId">Zero-based index of the icon</param>
-        public IconReference(string moduleName, int resourceId)
-            : this()
+        if (string.IsNullOrEmpty(moduleName))
         {
-            if (string.IsNullOrEmpty(moduleName))
-            {
-                throw new ArgumentNullException("moduleName");
-            }
-
-            this.moduleName = moduleName;
-            ResourceId = resourceId;
-            referencePath = string.Format(System.Globalization.CultureInfo.InvariantCulture,
-                "{0},{1}", moduleName, resourceId);
+            throw new ArgumentNullException("moduleName");
         }
 
-        /// <summary>
-        /// Overloaded constructor takes in the module name and resource id separated by a comma.
-        /// </summary>
-        /// <param name="refPath">Reference path for the icon consiting of the module name and resource id.</param>
-        public IconReference(string refPath)
-            : this()
+        this.moduleName = moduleName;
+        ResourceId = resourceId;
+        referencePath = string.Format(System.Globalization.CultureInfo.InvariantCulture,
+            "{0},{1}", moduleName, resourceId);
+    }
+
+    /// <summary>
+    /// Overloaded constructor takes in the module name and resource id separated by a comma.
+    /// </summary>
+    /// <param name="refPath">Reference path for the icon consiting of the module name and resource id.</param>
+    public IconReference(string refPath)
+        : this()
+    {
+        if (string.IsNullOrEmpty(refPath))
         {
-            if (string.IsNullOrEmpty(refPath))
+            throw new ArgumentNullException("refPath");
+        }
+
+        string[] refParams = refPath.Split(commaSeparator);
+
+        if (refParams.Length != 2 || string.IsNullOrEmpty(refParams[0]) || string.IsNullOrEmpty(refParams[1]))
+        {
+            throw new ArgumentException(LocalizedMessages.InvalidReferencePath, "refPath");
+        }
+
+        moduleName = refParams[0];
+        ResourceId = int.Parse(refParams[1], System.Globalization.CultureInfo.InvariantCulture);
+
+        referencePath = refPath;
+    }
+
+    /// <summary>
+    /// String specifying the name of an executable file, DLL, or icon file
+    /// </summary>
+    public string ModuleName
+    {
+        get
+        {
+            return moduleName;
+        }
+        set
+        {
+            if (string.IsNullOrEmpty(value))
             {
-                throw new ArgumentNullException("refPath");
+                throw new ArgumentNullException("value");
+            }
+            moduleName = value;
+        }
+    }
+
+    /// <summary>
+    /// Zero-based index of the icon
+    /// </summary>
+    public int ResourceId { get; set; }
+
+    /// <summary>
+    /// Reference to a specific icon within a EXE, DLL or icon file.
+    /// </summary>
+    public string ReferencePath
+    {
+        get
+        {
+            return referencePath;
+        }
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException("value");
             }
 
-            string[] refParams = refPath.Split(commaSeparator);
+            string[] refParams = value.Split(commaSeparator);
 
             if (refParams.Length != 2 || string.IsNullOrEmpty(refParams[0]) || string.IsNullOrEmpty(refParams[1]))
             {
-                throw new ArgumentException(LocalizedMessages.InvalidReferencePath, "refPath");
+                throw new ArgumentException(LocalizedMessages.InvalidReferencePath, "value");
             }
 
-            moduleName = refParams[0];
+            ModuleName = refParams[0];
             ResourceId = int.Parse(refParams[1], System.Globalization.CultureInfo.InvariantCulture);
 
-            referencePath = refPath;
+            referencePath = value;
         }
-
-        /// <summary>
-        /// String specifying the name of an executable file, DLL, or icon file
-        /// </summary>
-        public string ModuleName
-        {
-            get
-            {
-                return moduleName;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentNullException("value");
-                }
-                moduleName = value;
-            }
-        }
-
-        /// <summary>
-        /// Zero-based index of the icon
-        /// </summary>
-        public int ResourceId { get; set; }
-
-        /// <summary>
-        /// Reference to a specific icon within a EXE, DLL or icon file.
-        /// </summary>
-        public string ReferencePath
-        {
-            get
-            {
-                return referencePath;
-            }
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentNullException("value");
-                }
-
-                string[] refParams = value.Split(commaSeparator);
-
-                if (refParams.Length != 2 || string.IsNullOrEmpty(refParams[0]) || string.IsNullOrEmpty(refParams[1]))
-                {
-                    throw new ArgumentException(LocalizedMessages.InvalidReferencePath, "value");
-                }
-
-                ModuleName = refParams[0];
-                ResourceId = int.Parse(refParams[1], System.Globalization.CultureInfo.InvariantCulture);
-
-                referencePath = value;
-            }
-        }
-
-        /// <summary>
-        /// Implements the == (equality) operator.
-        /// </summary>
-        /// <param name="icon1">First object to compare.</param>
-        /// <param name="icon2">Second object to compare.</param>
-        /// <returns>True if icon1 equals icon1; false otherwise.</returns>
-        public static bool operator ==(IconReference icon1, IconReference icon2)
-        {
-            return (icon1.moduleName == icon2.moduleName) &&
-                (icon1.referencePath == icon2.referencePath) &&
-                (icon1.ResourceId == icon2.ResourceId);
-        }
-
-        /// <summary>
-        /// Implements the != (unequality) operator.
-        /// </summary>
-        /// <param name="icon1">First object to compare.</param>
-        /// <param name="icon2">Second object to compare.</param>
-        /// <returns>True if icon1 does not equals icon1; false otherwise.</returns>
-        public static bool operator !=(IconReference icon1, IconReference icon2)
-        {
-            return !(icon1 == icon2);
-        }
-
-        /// <summary>
-        /// Determines if this object is equal to another.
-        /// </summary>
-        /// <param name="obj">The object to compare</param>
-        /// <returns>Returns true if the objects are equal; false otherwise.</returns>
-        public override bool Equals(object obj)
-        {
-            if (obj is not IconReference) { return false; }
-            return this == (IconReference)obj;
-        }
-
-        /// <summary>
-        /// Generates a nearly unique hashcode for this structure.
-        /// </summary>
-        /// <returns>A hash code.</returns>
-#pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
-        public override int GetHashCode()
-        {
-            int hash = moduleName.GetHashCode();
-            hash = hash * 31 + referencePath.GetHashCode();
-            hash = hash * 31 + ResourceId.GetHashCode();
-            return hash;
-        }
-#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
     }
+
+    /// <summary>
+    /// Implements the == (equality) operator.
+    /// </summary>
+    /// <param name="icon1">First object to compare.</param>
+    /// <param name="icon2">Second object to compare.</param>
+    /// <returns>True if icon1 equals icon1; false otherwise.</returns>
+    public static bool operator ==(IconReference icon1, IconReference icon2)
+    {
+        return (icon1.moduleName == icon2.moduleName) &&
+            (icon1.referencePath == icon2.referencePath) &&
+            (icon1.ResourceId == icon2.ResourceId);
+    }
+
+    /// <summary>
+    /// Implements the != (unequality) operator.
+    /// </summary>
+    /// <param name="icon1">First object to compare.</param>
+    /// <param name="icon2">Second object to compare.</param>
+    /// <returns>True if icon1 does not equals icon1; false otherwise.</returns>
+    public static bool operator !=(IconReference icon1, IconReference icon2)
+    {
+        return !(icon1 == icon2);
+    }
+
+    /// <summary>
+    /// Determines if this object is equal to another.
+    /// </summary>
+    /// <param name="obj">The object to compare</param>
+    /// <returns>Returns true if the objects are equal; false otherwise.</returns>
+    public override bool Equals(object obj)
+    {
+        if (obj is not IconReference) { return false; }
+        return this == (IconReference)obj;
+    }
+
+    /// <summary>
+    /// Generates a nearly unique hashcode for this structure.
+    /// </summary>
+    /// <returns>A hash code.</returns>
+#pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
+    public override int GetHashCode()
+    {
+        int hash = moduleName.GetHashCode();
+        hash = hash * 31 + referencePath.GetHashCode();
+        hash = hash * 31 + ResourceId.GetHashCode();
+        return hash;
+    }
+#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
 }

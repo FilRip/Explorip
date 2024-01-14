@@ -1,9 +1,8 @@
-﻿namespace Explorip.WinAPI.Modeles
+﻿namespace Explorip.WinAPI.Modeles;
+
+public enum StdHandle
 {
-    public enum StdHandle
-    {
-        OutputHandle = -11,
-        InputHandle = -10,
-        ErrorHandle = -12
-    }
+    OutputHandle = -11,
+    InputHandle = -10,
+    ErrorHandle = -12
 }

@@ -2,24 +2,23 @@
 
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar
+namespace Microsoft.WindowsAPICodePack.Taskbar;
+
+/// <summary>
+/// Interface for jump list items
+/// </summary>
+public interface IJumpListItem
 {
     /// <summary>
-    /// Interface for jump list items
+    /// Gets or sets this item's path
     /// </summary>
-    public interface IJumpListItem
-    {
-        /// <summary>
-        /// Gets or sets this item's path
-        /// </summary>
-        string Path { get; set; }
-    }
+    string Path { get; set; }
+}
 
-    /// <summary>
-    /// Interface for jump list tasks
-    /// </summary>
-    public abstract class JumpListTask
-    {
-        internal abstract IShellLinkW NativeShellLink { get; }
-    }
+/// <summary>
+/// Interface for jump list tasks
+/// </summary>
+public abstract class JumpListTask
+{
+    internal abstract IShellLinkW NativeShellLink { get; }
 }

@@ -1,15 +1,14 @@
 ﻿using System.Windows;
 
-namespace Explorip.Explorer
+namespace Explorip.Explorer;
+
+/// <summary>
+/// Logique d'interaction pour MyApp.xaml
+/// </summary>
+public partial class MyExplorerApp : Application
 {
-    /// <summary>
-    /// Logique d'interaction pour MyApp.xaml
-    /// </summary>
-    public partial class MyExplorerApp : Application
+    public MyExplorerApp()
     {
-        public MyExplorerApp()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

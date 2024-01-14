@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Microsoft.WindowsAPICodePack.Shell.Exceptions
-{
-    [Serializable()]
-    public class WindowsApiCodePackException : Exception
-    {
-        public WindowsApiCodePackException(string message) : base(message) { }
+namespace Microsoft.WindowsAPICodePack.Shell.Exceptions;
 
-        protected WindowsApiCodePackException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-    }
+[Serializable()]
+public class WindowsApiCodePackException : Exception
+{
+    public WindowsApiCodePackException(string message) : base(message) { }
+
+    protected WindowsApiCodePackException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 }

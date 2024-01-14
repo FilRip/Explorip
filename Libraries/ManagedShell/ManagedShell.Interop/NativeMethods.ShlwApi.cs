@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace ManagedShell.Interop
+namespace ManagedShell.Interop;
+
+public partial class NativeMethods
 {
-    public partial class NativeMethods
-    {
-        const string ShlwApi_DllName = "shlwapi.dll";
+    const string ShlwApi_DllName = "shlwapi.dll";
 
-        [DllImport(ShlwApi_DllName)]
-        internal static extern IntPtr SHLockShared(IntPtr hData, uint dwProcessId);
+    [DllImport(ShlwApi_DllName)]
+    internal static extern IntPtr SHLockShared(IntPtr hData, uint dwProcessId);
 
-        [DllImport(ShlwApi_DllName, SetLastError = true)]
-        internal static extern bool SHUnlockShared(IntPtr pvData);
-    }
+    [DllImport(ShlwApi_DllName, SetLastError = true)]
+    internal static extern bool SHUnlockShared(IntPtr pvData);
 }

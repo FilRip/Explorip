@@ -3,27 +3,26 @@
 using System;
 using System.Collections;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar
+namespace Microsoft.WindowsAPICodePack.Taskbar;
+
+/// <summary>
+/// Event arguments for when the user is notified of items
+/// that have been removed from the taskbar destination list
+/// </summary>
+public class UserRemovedJumpListItemsEventArgs : EventArgs
 {
-    /// <summary>
-    /// Event arguments for when the user is notified of items
-    /// that have been removed from the taskbar destination list
-    /// </summary>
-    public class UserRemovedJumpListItemsEventArgs : EventArgs
+    private readonly IEnumerable _removedItems;
+
+    internal UserRemovedJumpListItemsEventArgs(IEnumerable RemovedItems)
     {
-        private readonly IEnumerable _removedItems;
+        _removedItems = RemovedItems;
+    }
 
-        internal UserRemovedJumpListItemsEventArgs(IEnumerable RemovedItems)
-        {
-            _removedItems = RemovedItems;
-        }
-
-        /// <summary>
-        /// The collection of removed items based on path.
-        /// </summary>
-        public IEnumerable RemovedItems
-        {
-            get { return _removedItems; }
-        }
+    /// <summary>
+    /// The collection of removed items based on path.
+    /// </summary>
+    public IEnumerable RemovedItems
+    {
+        get { return _removedItems; }
     }
 }

@@ -1,41 +1,40 @@
 ﻿using Microsoft.Win32;
 
-namespace ManagedShell.Common.Extensions
+namespace ManagedShell.Common.Extensions;
+
+public static class RegistryKeyExtensions
 {
-    public static class RegistryKeyExtensions
+    public static T GetValue<T>(this RegistryKey key, string valueName, T defaultValue = default)
     {
-        public static T GetValue<T>(this RegistryKey key, string valueName, T defaultValue = default)
-        {
-            if (key == null)
-                return defaultValue;
-
-            if (string.IsNullOrWhiteSpace(valueName))
-                return defaultValue;
-
-            object val = key.GetValue(valueName, defaultValue);
-            if (val is T value)
-                return value;
-
+        if (key == null)
             return defaultValue;
-        }
 
-        public static T GetSubKeyValue<T>(this RegistryKey key, string subKey, string valueName, T defaultValue = default)
-        {
-            if (key == null)
-                return defaultValue;
+        if (string.IsNullOrWhiteSpace(valueName))
+            return defaultValue;
 
-            if (string.IsNullOrWhiteSpace(subKey))
-                return defaultValue;
+        object val = key.GetValue(valueName, defaultValue);
+        if (val is T value)
+            return value;
 
-            if (string.IsNullOrWhiteSpace(valueName))
-                return defaultValue;
+        return defaultValue;
+    }
 
-            RegistryKey reg = key.OpenSubKey(subKey);
+    public static T GetSubKeyValue<T>(this RegistryKey key, string subKey, string valueName, T defaultValue = default)
+    {
+        if (key == null)
+            return defaultValue;
 
-            if (reg == null)
-                return defaultValue;
+        if (string.IsNullOrWhiteSpace(subKey))
+            return defaultValue;
 
-            return reg.GetValue<T>(valueName, defaultValue);
-        }
+        if (string.IsNullOrWhiteSpace(valueName))
+            return defaultValue;
+
+        RegistryKey reg = key.OpenSubKey(subKey);
+
+        if (reg == null)
+            return defaultValue;
+
+        return reg.GetValue<T>(valueName, defaultValue);
     }
 }

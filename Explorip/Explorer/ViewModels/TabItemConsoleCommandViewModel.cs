@@ -1,9 +1,8 @@
-﻿namespace Explorip.Explorer.ViewModels
+﻿namespace Explorip.Explorer.ViewModels;
+
+public partial class TabItemConsoleCommandViewModel : TabItemExploripViewModel
 {
-    public partial class TabItemConsoleCommandViewModel : TabItemExploripViewModel
+    public TabItemConsoleCommandViewModel() : base()
     {
-        public TabItemConsoleCommandViewModel() : base()
-        {
-        }
     }
 }

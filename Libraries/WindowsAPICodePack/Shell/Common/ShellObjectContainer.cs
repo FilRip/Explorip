@@ -6,119 +6,118 @@ using System.Runtime.InteropServices;
 
 using MS.WindowsAPICodePack.Internal;
 
-namespace Microsoft.WindowsAPICodePack.Shell
+namespace Microsoft.WindowsAPICodePack.Shell;
+
+/// <summary>
+/// Represents the base class for all types of Shell "containers". Any class deriving from this class
+/// can contain other ShellObjects (e.g. ShellFolder, FileSystemKnownFolder, ShellLibrary, etc)
+/// </summary>
+public abstract class ShellContainer : ShellObject, IEnumerable<ShellObject>
 {
-    /// <summary>
-    /// Represents the base class for all types of Shell "containers". Any class deriving from this class
-    /// can contain other ShellObjects (e.g. ShellFolder, FileSystemKnownFolder, ShellLibrary, etc)
-    /// </summary>
-    public abstract class ShellContainer : ShellObject, IEnumerable<ShellObject>
+
+    #region Private Fields
+
+    private IShellFolder desktopFolderEnumeration;
+    private IShellFolder nativeShellFolder;
+
+    #endregion
+
+    #region Internal Properties
+
+    internal IShellFolder NativeShellFolder
     {
-
-        #region Private Fields
-
-        private IShellFolder desktopFolderEnumeration;
-        private IShellFolder nativeShellFolder;
-
-        #endregion
-
-        #region Internal Properties
-
-        internal IShellFolder NativeShellFolder
+        get
         {
-            get
+            if (nativeShellFolder == null)
             {
-                if (nativeShellFolder == null)
+                Guid guid = new(ShellIidGuid.IShellFolder);
+                Guid handler = new(ShellBhidGuid.ShellFolderObject);
+
+                HResult hr = NativeShellItem.BindToHandler(
+                    IntPtr.Zero, ref handler, ref guid, out nativeShellFolder);
+
+                if (CoreErrorHelper.Failed(hr))
                 {
-                    Guid guid = new(ShellIidGuid.IShellFolder);
-                    Guid handler = new(ShellBhidGuid.ShellFolderObject);
-
-                    HResult hr = NativeShellItem.BindToHandler(
-                        IntPtr.Zero, ref handler, ref guid, out nativeShellFolder);
-
-                    if (CoreErrorHelper.Failed(hr))
+                    string str = ShellHelper.GetParsingName(NativeShellItem);
+                    if (str != null && str != Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
                     {
-                        string str = ShellHelper.GetParsingName(NativeShellItem);
-                        if (str != null && str != Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
-                        {
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
-                            throw new ShellException(hr);
+                        throw new ShellException(hr);
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
-                        }
                     }
                 }
-
-                return nativeShellFolder;
             }
+
+            return nativeShellFolder;
         }
+    }
 
-        #endregion
+    #endregion
 
-        #region Internal Constructor
+    #region Internal Constructor
 
 #pragma warning disable S3442 // "abstract" classes should not have "public" constructors
-        internal ShellContainer() { }
+    internal ShellContainer() { }
 
-        internal ShellContainer(IShellItem2 shellItem) : base(shellItem) { }
+    internal ShellContainer(IShellItem2 shellItem) : base(shellItem) { }
 #pragma warning restore S3442 // "abstract" classes should not have "public" constructors
 
-        #endregion
+    #endregion
 
-        #region Disposable Pattern
+    #region Disposable Pattern
 
-        /// <summary>
-        /// Release resources
-        /// </summary>
-        /// <param name="disposing"><B>True</B> indicates that this is being called from Dispose(), rather than the finalizer.</param>
-        protected override void Dispose(bool disposing)
+    /// <summary>
+    /// Release resources
+    /// </summary>
+    /// <param name="disposing"><B>True</B> indicates that this is being called from Dispose(), rather than the finalizer.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (nativeShellFolder != null)
         {
-            if (nativeShellFolder != null)
-            {
-                Marshal.ReleaseComObject(nativeShellFolder);
-                nativeShellFolder = null;
-            }
-
-            if (desktopFolderEnumeration != null)
-            {
-                Marshal.ReleaseComObject(desktopFolderEnumeration);
-                desktopFolderEnumeration = null;
-            }
-
-            base.Dispose(disposing);
+            Marshal.ReleaseComObject(nativeShellFolder);
+            nativeShellFolder = null;
         }
 
-        #endregion
-
-        #region IEnumerable<ShellObject> Members
-
-        /// <summary>
-        /// Enumerates through contents of the ShellObjectContainer
-        /// </summary>
-        /// <returns>Enumerated contents</returns>
-        public IEnumerator<ShellObject> GetEnumerator()
+        if (desktopFolderEnumeration != null)
         {
-            if (NativeShellFolder == null)
-            {
-                if (desktopFolderEnumeration == null)
-                {
-                    ShellNativeMethods.SHGetDesktopFolder(out desktopFolderEnumeration);
-                }
-
-                nativeShellFolder = desktopFolderEnumeration;
-            }
-
-            return new ShellFolderItems(this);
+            Marshal.ReleaseComObject(desktopFolderEnumeration);
+            desktopFolderEnumeration = null;
         }
 
-        #endregion
-
-        #region IEnumerable Members
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return new ShellFolderItems(this);
-        }
-
-        #endregion
+        base.Dispose(disposing);
     }
+
+    #endregion
+
+    #region IEnumerable<ShellObject> Members
+
+    /// <summary>
+    /// Enumerates through contents of the ShellObjectContainer
+    /// </summary>
+    /// <returns>Enumerated contents</returns>
+    public IEnumerator<ShellObject> GetEnumerator()
+    {
+        if (NativeShellFolder == null)
+        {
+            if (desktopFolderEnumeration == null)
+            {
+                ShellNativeMethods.SHGetDesktopFolder(out desktopFolderEnumeration);
+            }
+
+            nativeShellFolder = desktopFolderEnumeration;
+        }
+
+        return new ShellFolderItems(this);
+    }
+
+    #endregion
+
+    #region IEnumerable Members
+
+    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    {
+        return new ShellFolderItems(this);
+    }
+
+    #endregion
 }

@@ -1,12 +1,11 @@
-﻿namespace ManagedShell.AppBar
+﻿namespace ManagedShell.AppBar;
+
+public enum ScreenSetupReason
 {
-    public enum ScreenSetupReason
-    {
-        DeviceChange,
-        DisplayChange,
-        DpiChange,
-        DwmChange,
-        FirstRun,
-        Reconciliation
-    }
+    DeviceChange,
+    DisplayChange,
+    DpiChange,
+    DwmChange,
+    FirstRun,
+    Reconciliation
 }

@@ -1,8 +1,7 @@
-﻿namespace ManagedShell.Common.Enums
+﻿namespace ManagedShell.Common.Enums;
+
+enum StartupEntryType
 {
-    enum StartupEntryType
-    {
-        RegistryKey,
-        Directory
-    }
+    RegistryKey,
+    Directory
 }

@@ -1,8 +1,7 @@
-﻿namespace ManagedShell.AppBar
+﻿namespace ManagedShell.AppBar;
+
+public enum AppBarEventReason
 {
-    public enum AppBarEventReason
-    {
-        MouseEnter,
-        MouseLeave
-    }
+    MouseEnter,
+    MouseLeave
 }

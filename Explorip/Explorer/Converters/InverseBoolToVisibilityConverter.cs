@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace ExploripCopy.Converters;
+namespace Explorip.Explorer.Converters;
 
 public class InverseBoolToVisibilityConverter : MarkupExtension, IValueConverter
 {

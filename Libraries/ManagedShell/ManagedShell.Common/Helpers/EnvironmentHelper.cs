@@ -5,263 +5,262 @@ using ManagedShell.Interop;
 
 using Microsoft.Win32;
 
-namespace ManagedShell.Common.Helpers
+namespace ManagedShell.Common.Helpers;
+
+public static class EnvironmentHelper
 {
-    public static class EnvironmentHelper
+    private static int osVersionMajor = 0;
+    private static int osVersionMinor = 0;
+    private static int osVersionBuild = 0;
+
+    private static void GetOSVersion()
     {
-        private static int osVersionMajor = 0;
-        private static int osVersionMinor = 0;
-        private static int osVersionBuild = 0;
+        osVersionMajor = Environment.OSVersion.Version.Major;
+        osVersionMinor = Environment.OSVersion.Version.Minor;
+        osVersionBuild = Environment.OSVersion.Version.Build;
+    }
 
-        private static void GetOSVersion()
+    public static bool IsWindows2kOrBetter
+    {
+        get
         {
-            osVersionMajor = Environment.OSVersion.Version.Major;
-            osVersionMinor = Environment.OSVersion.Version.Minor;
-            osVersionBuild = Environment.OSVersion.Version.Build;
-        }
-
-        public static bool IsWindows2kOrBetter
-        {
-            get
+            if (osVersionMajor == 0)
             {
-                if (osVersionMajor == 0)
-                {
-                    GetOSVersion();
-                }
-
-                return osVersionMajor >= 5;
+                GetOSVersion();
             }
+
+            return osVersionMajor >= 5;
         }
+    }
 
-        public static bool IsWindowsVistaOrBetter
+    public static bool IsWindowsVistaOrBetter
+    {
+        get
         {
-            get
+            if (osVersionMajor == 0)
             {
-                if (osVersionMajor == 0)
-                {
-                    GetOSVersion();
-                }
-
-                return osVersionMajor >= 6;
+                GetOSVersion();
             }
+
+            return osVersionMajor >= 6;
         }
+    }
 
-        public static bool IsWindows8OrBetter
+    public static bool IsWindows8OrBetter
+    {
+        get
         {
-            get
+            if (osVersionMajor == 0)
             {
-                if (osVersionMajor == 0)
-                {
-                    GetOSVersion();
-                }
-
-                return osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2);
+                GetOSVersion();
             }
+
+            return osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2);
         }
+    }
 
-        public static bool IsWindows81OrBetter
+    public static bool IsWindows81OrBetter
+    {
+        get
         {
-            get
+            if (osVersionMajor == 0)
             {
-                if (osVersionMajor == 0)
-                {
-                    GetOSVersion();
-                }
-
-                return osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2 && osVersionBuild >= 9600);
+                GetOSVersion();
             }
+
+            return osVersionMajor > 6 || (osVersionMajor == 6 && osVersionMinor >= 2 && osVersionBuild >= 9600);
         }
+    }
 
-        public static bool IsWindows10OrBetter
+    public static bool IsWindows10OrBetter
+    {
+        get
         {
-            get
+            if (osVersionMajor == 0)
             {
-                if (osVersionMajor == 0)
-                {
-                    GetOSVersion();
-                }
-
-                return osVersionMajor >= 10;
+                GetOSVersion();
             }
+
+            return osVersionMajor >= 10;
         }
+    }
 
-        public static bool IsWindows10RS4OrBetter
+    public static bool IsWindows10RS4OrBetter
+    {
+        get
         {
-            get
+            if (osVersionMajor == 0)
             {
-                if (osVersionMajor == 0)
-                {
-                    GetOSVersion();
-                }
-
-                return osVersionMajor >= 10 && osVersionBuild >= 16353;
+                GetOSVersion();
             }
+
+            return osVersionMajor >= 10 && osVersionBuild >= 16353;
         }
+    }
 
-        public static bool IsWindows11OrBetter
+    public static bool IsWindows11OrBetter
+    {
+        get
         {
-            get
+            if (osVersionMajor == 0)
             {
-                if (osVersionMajor == 0)
-                {
-                    GetOSVersion();
-                }
-
-                return osVersionMajor >= 10 && osVersionBuild >= 22000;
+                GetOSVersion();
             }
+
+            return osVersionMajor >= 10 && osVersionBuild >= 22000;
         }
+    }
 
-        public static bool IsWindows10DarkModeSupported
+    public static bool IsWindows10DarkModeSupported
+    {
+        get
         {
-            get
+            if (IsServerCore)
             {
-                if (IsServerCore)
-                {
-                    return false;
-                }
-
-                if (osVersionMajor == 0)
-                {
-                    GetOSVersion();
-                }
-
-                // This has an upper-bound due to the volatility of the undocumented dark mode API
-                return osVersionMajor >= 10 && osVersionBuild >= 18362 && osVersionBuild <= 22000;
+                return false;
             }
-        }
 
-        private static bool? isAppConfiguredAsShell;
-
-        /// <summary>
-        /// Checks the currently configured shell, NOT the currently running shell! Use IsAppRunningAsShell for that.
-        /// </summary>
-        public static bool IsAppConfiguredAsShell
-        {
-            get
+            if (osVersionMajor == 0)
             {
-                if (isAppConfiguredAsShell == null)
+                GetOSVersion();
+            }
+
+            // This has an upper-bound due to the volatility of the undocumented dark mode API
+            return osVersionMajor >= 10 && osVersionBuild >= 18362 && osVersionBuild <= 22000;
+        }
+    }
+
+    private static bool? isAppConfiguredAsShell;
+
+    /// <summary>
+    /// Checks the currently configured shell, NOT the currently running shell! Use IsAppRunningAsShell for that.
+    /// </summary>
+    public static bool IsAppConfiguredAsShell
+    {
+        get
+        {
+            if (isAppConfiguredAsShell == null)
+            {
+                // first check if we are the current user's shell
+                RegistryKey userShellKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false);
+                if (userShellKey?.GetValue("Shell") is string userShell)
                 {
-                    // first check if we are the current user's shell
-                    RegistryKey userShellKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false);
-                    if (userShellKey?.GetValue("Shell") is string userShell)
+                    isAppConfiguredAsShell = userShell.ToLower().Contains(AppDomain.CurrentDomain.FriendlyName.ToLower());
+                }
+                else
+                {
+                    // check if we are the current system's shell
+                    RegistryKey systemShellKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false);
+                    if (systemShellKey?.GetValue("Shell") is string systemShell)
                     {
-                        isAppConfiguredAsShell = userShell.ToLower().Contains(AppDomain.CurrentDomain.FriendlyName.ToLower());
+                        isAppConfiguredAsShell = systemShell.ToLower().Contains(AppDomain.CurrentDomain.FriendlyName.ToLower());
                     }
                     else
                     {
-                        // check if we are the current system's shell
-                        RegistryKey systemShellKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false);
-                        if (systemShellKey?.GetValue("Shell") is string systemShell)
-                        {
-                            isAppConfiguredAsShell = systemShell.ToLower().Contains(AppDomain.CurrentDomain.FriendlyName.ToLower());
-                        }
-                        else
-                        {
-                            isAppConfiguredAsShell = false;
-                        }
+                        isAppConfiguredAsShell = false;
+                    }
+                }
+            }
+
+            return (bool)isAppConfiguredAsShell;
+        }
+        set
+        {
+            if (value != IsAppConfiguredAsShell)
+            {
+                RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", true);
+
+                if (value)
+                {
+                    // set as the user's shell
+                    regKey.SetValue("Shell", AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName);
+                }
+                else
+                {
+                    // reset user's shell to system default
+                    object userShell = regKey.GetValue("Shell");
+
+                    if (userShell != null)
+                    {
+                        regKey.DeleteValue("Shell");
                     }
                 }
 
-                return (bool)isAppConfiguredAsShell;
-            }
-            set
-            {
-                if (value != IsAppConfiguredAsShell)
-                {
-                    RegistryKey regKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", true);
-
-                    if (value)
-                    {
-                        // set as the user's shell
-                        regKey.SetValue("Shell", AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName);
-                    }
-                    else
-                    {
-                        // reset user's shell to system default
-                        object userShell = regKey.GetValue("Shell");
-
-                        if (userShell != null)
-                        {
-                            regKey.DeleteValue("Shell");
-                        }
-                    }
-
-                    isAppConfiguredAsShell = value;
-                }
+                isAppConfiguredAsShell = value;
             }
         }
+    }
 
-        public static bool IsAppRunningAsShell { get; set; }
+    public static bool IsAppRunningAsShell { get; set; }
 
-        private static bool? isServerCore;
+    private static bool? isServerCore;
 
-        public static bool IsServerCore
+    public static bool IsServerCore
+    {
+        get
         {
-            get
+            if (isServerCore == null)
             {
-                if (isServerCore == null)
-                {
-                    RegistryKey installationTypeKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
-                    string installationType = installationTypeKey?.GetValue("InstallationType") as string;
+                RegistryKey installationTypeKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
+                string installationType = installationTypeKey?.GetValue("InstallationType") as string;
 
-                    isServerCore = installationType == "Server Core";
-                }
-
-                return (bool)isServerCore;
+                isServerCore = installationType == "Server Core";
             }
+
+            return (bool)isServerCore;
         }
+    }
 
-        private static string windowsProductName;
+    private static string windowsProductName;
 
-        public static string WindowsProductName
+    public static string WindowsProductName
+    {
+        get
         {
-            get
+            if (string.IsNullOrEmpty(windowsProductName))
             {
-                if (string.IsNullOrEmpty(windowsProductName))
-                {
-                    RegistryKey versionKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
-                    windowsProductName = versionKey?.GetValue("ProductName") as string;
-                }
-
-                return windowsProductName;
+                RegistryKey versionKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
+                windowsProductName = versionKey?.GetValue("ProductName") as string;
             }
+
+            return windowsProductName;
         }
+    }
 
-        private static bool? isWow64;
+    private static bool? isWow64;
 
-        public static bool IsWow64
+    public static bool IsWow64
+    {
+        get
         {
-            get
+            if (isWow64 == null)
             {
-                if (isWow64 == null)
+                if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 6)
                 {
-                    if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) || Environment.OSVersion.Version.Major >= 6)
+                    using Process p = Process.GetCurrentProcess();
+                    try
                     {
-                        using Process p = Process.GetCurrentProcess();
-                        try
-                        {
-                            if (!NativeMethods.IsWow64Process(p.Handle, out bool retVal))
-                            {
-                                isWow64 = false;
-                            }
-                            else
-                            {
-                                isWow64 = retVal;
-                            }
-                        }
-                        catch (Exception)
+                        if (!NativeMethods.IsWow64Process(p.Handle, out bool retVal))
                         {
                             isWow64 = false;
                         }
+                        else
+                        {
+                            isWow64 = retVal;
+                        }
                     }
-                    else
+                    catch (Exception)
                     {
                         isWow64 = false;
                     }
                 }
-
-                return (bool)isWow64;
+                else
+                {
+                    isWow64 = false;
+                }
             }
+
+            return (bool)isWow64;
         }
     }
 }

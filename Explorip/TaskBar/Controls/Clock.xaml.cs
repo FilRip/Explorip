@@ -6,52 +6,51 @@ using Explorip.TaskBar.ViewModels;
 
 using ManagedShell.Common.Helpers;
 
-namespace Explorip.TaskBar.Controls
+namespace Explorip.TaskBar.Controls;
+
+/// <summary>
+/// Interaction logic for Clock.xaml
+/// </summary>
+public partial class Clock : UserControl
 {
-    /// <summary>
-    /// Interaction logic for Clock.xaml
-    /// </summary>
-    public partial class Clock : UserControl
+    public Clock()
     {
-        public Clock()
-        {
-            InitializeComponent();
-            MyDataContext.SetDispatcher(Dispatcher);
-        }
+        InitializeComponent();
+        MyDataContext.SetDispatcher(Dispatcher);
+    }
 
-        private ClockViewModel MyDataContext
-        {
-            get { return (ClockViewModel)DataContext; }
-        }
+    private ClockViewModel MyDataContext
+    {
+        get { return (ClockViewModel)DataContext; }
+    }
 
-        private void OpenDateTimeCpl()
-        {
-            ShellHelper.StartProcess("timedate.cpl");
-        }
+    private void OpenDateTimeCpl()
+    {
+        ShellHelper.StartProcess("timedate.cpl");
+    }
 
-        private void Clock_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private void Clock_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (EnvironmentHelper.IsWindows11OrBetter)
         {
-            if (EnvironmentHelper.IsWindows11OrBetter)
-            {
-                ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.KEY_A);
-            }
-            else
-            {
-                ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.LMENU, ManagedShell.Interop.NativeMethods.VK.KEY_D);
-            }
+            ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.KEY_A);
         }
-
-        private void Clock_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        else
         {
-            MyDataContext.SingleClickStop();
-            OpenDateTimeCpl();
-
-            e.Handled = true;
+            ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.LMENU, ManagedShell.Interop.NativeMethods.VK.KEY_D);
         }
+    }
 
-        private void MenuItem_OnClick(object sender, RoutedEventArgs e)
-        {
-            OpenDateTimeCpl();
-        }
+    private void Clock_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        MyDataContext.SingleClickStop();
+        OpenDateTimeCpl();
+
+        e.Handled = true;
+    }
+
+    private void MenuItem_OnClick(object sender, RoutedEventArgs e)
+    {
+        OpenDateTimeCpl();
     }
 }

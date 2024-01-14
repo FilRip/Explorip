@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Explorip.WinAPI
+namespace Explorip.WinAPI;
+
+public static class Gdi32
 {
-    public static class Gdi32
-    {
-        [DllImport("gdi32.dll")]
-        internal static extern bool DeleteObject(IntPtr hObject);
-    }
+    [DllImport("gdi32.dll")]
+    internal static extern bool DeleteObject(IntPtr hObject);
 }

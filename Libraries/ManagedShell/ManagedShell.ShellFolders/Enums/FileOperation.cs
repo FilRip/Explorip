@@ -1,8 +1,7 @@
-﻿namespace ManagedShell.ShellFolders.Enums
+﻿namespace ManagedShell.ShellFolders.Enums;
+
+public enum FileOperation
 {
-    public enum FileOperation
-    {
-        Copy,
-        Move
-    }
+    Copy,
+    Move
 }

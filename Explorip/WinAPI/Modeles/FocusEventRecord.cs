@@ -1,10 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Explorip.WinAPI.Modeles
+namespace Explorip.WinAPI.Modeles;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct FocusEventRecord
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct FocusEventRecord
-    {
-        public uint bSetFocus;
-    }
+    public uint bSetFocus;
 }

@@ -8,366 +8,365 @@ using ManagedShell.Common.Logging;
 
 using static ManagedShell.Interop.NativeMethods;
 
-namespace ManagedShell.AppBar
+namespace ManagedShell.AppBar;
+
+public class AppBarManager : IDisposable
 {
-    public class AppBarManager : IDisposable
+    private static readonly object appBarLock = new();
+
+    private readonly ExplorerHelper _explorerHelper;
+    private int uCallBack;
+
+    public List<AppBarWindow> AppBars { get; } = [];
+    public EventHandler<AppBarEventArgs> AppBarEvent { get; set; }
+
+    public AppBarManager(ExplorerHelper explorerHelper)
     {
-        private static readonly object appBarLock = new();
+        _explorerHelper = explorerHelper;
+    }
 
-        private readonly ExplorerHelper _explorerHelper;
-        private int uCallBack;
-
-        public List<AppBarWindow> AppBars { get; } = [];
-        public EventHandler<AppBarEventArgs> AppBarEvent { get; set; }
-
-        public AppBarManager(ExplorerHelper explorerHelper)
+    public void SignalGracefulShutdown()
+    {
+        foreach (AppBarWindow window in AppBars)
         {
-            _explorerHelper = explorerHelper;
+            window.AllowClose = true;
         }
+    }
 
-        public void SignalGracefulShutdown()
-        {
-            foreach (AppBarWindow window in AppBars)
-            {
-                window.AllowClose = true;
-            }
-        }
+    public void NotifyAppBarEvent(AppBarWindow sender, AppBarEventReason reason)
+    {
+        AppBarEventArgs args = new() { Reason = reason };
+        AppBarEvent?.Invoke(sender, args);
+    }
 
-        public void NotifyAppBarEvent(AppBarWindow sender, AppBarEventReason reason)
-        {
-            AppBarEventArgs args = new() { Reason = reason };
-            AppBarEvent?.Invoke(sender, args);
-        }
-
-        #region AppBar message helpers
-        public int RegisterBar(AppBarWindow abWindow, double width, double height, AppBarEdge edge = AppBarEdge.Top)
-        {
-            lock (appBarLock)
-            {
-                AppBarData abd = new()
-                {
-                    cbSize = Marshal.SizeOf(typeof(AppBarData)),
-                    hWnd = abWindow.Handle
-                };
-
-                if (!AppBars.Contains(abWindow))
-                {
-                    if (!EnvironmentHelper.IsAppRunningAsShell)
-                    {
-                        uCallBack = RegisterWindowMessage("AppBarMessage");
-                        abd.uCallbackMessage = uCallBack;
-
-                        SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
-                    }
-
-                    AppBars.Add(abWindow);
-
-                    ShellLogger.Debug($"AppBarManager: Created AppBar for handle {abWindow.Handle}");
-
-                    if (!EnvironmentHelper.IsAppRunningAsShell)
-                    {
-                        ABSetPos(abWindow, width, height, edge, true);
-                    }
-                    else
-                    {
-                        SetWorkArea(abWindow.Screen);
-                    }
-                }
-                else
-                {
-                    if (!EnvironmentHelper.IsAppRunningAsShell)
-                    {
-                        SHAppBarMessage((int)ABMsg.ABM_REMOVE, ref abd);
-                    }
-
-                    AppBars.Remove(abWindow);
-                    ShellLogger.Debug($"AppBarManager: Removed AppBar for handle {abWindow.Handle}");
-
-                    if (EnvironmentHelper.IsAppRunningAsShell)
-                    {
-                        SetWorkArea(abWindow.Screen);
-                    }
-
-                    return 0;
-                }
-            }
-
-            return uCallBack;
-        }
-
-        public void AppBarActivate(IntPtr hwnd)
+    #region AppBar message helpers
+    public int RegisterBar(AppBarWindow abWindow, double width, double height, AppBarEdge edge = AppBarEdge.Top)
+    {
+        lock (appBarLock)
         {
             AppBarData abd = new()
             {
                 cbSize = Marshal.SizeOf(typeof(AppBarData)),
-                hWnd = hwnd,
-                lParam = (IntPtr)Convert.ToInt32(true)
+                hWnd = abWindow.Handle
             };
 
-            SHAppBarMessage((int)ABMsg.ABM_ACTIVATE, ref abd);
-
-            // apparently the TaskBars like to pop up when AppBars change
-            if (_explorerHelper.HideExplorerTaskbar)
+            if (!AppBars.Contains(abWindow))
             {
-                _explorerHelper.SetSecondaryTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
+                if (!EnvironmentHelper.IsAppRunningAsShell)
+                {
+                    uCallBack = RegisterWindowMessage("AppBarMessage");
+                    abd.uCallbackMessage = uCallBack;
+
+                    SHAppBarMessage((int)ABMsg.ABM_NEW, ref abd);
+                }
+
+                AppBars.Add(abWindow);
+
+                ShellLogger.Debug($"AppBarManager: Created AppBar for handle {abWindow.Handle}");
+
+                if (!EnvironmentHelper.IsAppRunningAsShell)
+                {
+                    ABSetPos(abWindow, width, height, edge, true);
+                }
+                else
+                {
+                    SetWorkArea(abWindow.Screen);
+                }
+            }
+            else
+            {
+                if (!EnvironmentHelper.IsAppRunningAsShell)
+                {
+                    SHAppBarMessage((int)ABMsg.ABM_REMOVE, ref abd);
+                }
+
+                AppBars.Remove(abWindow);
+                ShellLogger.Debug($"AppBarManager: Removed AppBar for handle {abWindow.Handle}");
+
+                if (EnvironmentHelper.IsAppRunningAsShell)
+                {
+                    SetWorkArea(abWindow.Screen);
+                }
+
+                return 0;
             }
         }
 
-        public void AppBarWindowPosChanged(IntPtr hwnd)
+        return uCallBack;
+    }
+
+    public void AppBarActivate(IntPtr hwnd)
+    {
+        AppBarData abd = new()
+        {
+            cbSize = Marshal.SizeOf(typeof(AppBarData)),
+            hWnd = hwnd,
+            lParam = (IntPtr)Convert.ToInt32(true)
+        };
+
+        SHAppBarMessage((int)ABMsg.ABM_ACTIVATE, ref abd);
+
+        // apparently the TaskBars like to pop up when AppBars change
+        if (_explorerHelper.HideExplorerTaskbar)
+        {
+            _explorerHelper.SetSecondaryTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
+        }
+    }
+
+    public void AppBarWindowPosChanged(IntPtr hwnd)
+    {
+        AppBarData abd = new()
+        {
+            cbSize = Marshal.SizeOf(typeof(AppBarData)),
+            hWnd = hwnd
+        };
+
+        SHAppBarMessage((int)ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
+
+        // apparently the TaskBars like to pop up when AppBars change
+        if (_explorerHelper.HideExplorerTaskbar)
+        {
+            _explorerHelper.SetSecondaryTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
+        }
+    }
+
+    public void ABSetPos(AppBarWindow abWindow, double width, double height, AppBarEdge edge, bool isCreate = false)
+    {
+        lock (appBarLock)
         {
             AppBarData abd = new()
             {
                 cbSize = Marshal.SizeOf(typeof(AppBarData)),
-                hWnd = hwnd
+                hWnd = abWindow.Handle,
+                uEdge = (int)edge
             };
 
-            SHAppBarMessage((int)ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
+            int sWidth = (int)width;
+            int sHeight = (int)height;
 
-            // apparently the TaskBars like to pop up when AppBars change
-            if (_explorerHelper.HideExplorerTaskbar)
+            int top = 0;
+            int left = 0;
+            int right = ScreenHelper.PrimaryMonitorDeviceSize.Width;
+            int bottom = ScreenHelper.PrimaryMonitorDeviceSize.Height;
+
+            int edgeOffset = 0;
+
+            if (abWindow.Screen != null)
             {
-                _explorerHelper.SetSecondaryTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
+                top = abWindow.Screen.Bounds.Y;
+                left = abWindow.Screen.Bounds.X;
+                right = abWindow.Screen.Bounds.Right;
+                bottom = abWindow.Screen.Bounds.Bottom;
             }
-        }
 
-        public void ABSetPos(AppBarWindow abWindow, double width, double height, AppBarEdge edge, bool isCreate = false)
-        {
-            lock (appBarLock)
+            if (!abWindow.RequiresScreenEdge)
             {
-                AppBarData abd = new()
+                edgeOffset = Convert.ToInt32(GetAppBarEdgeWindowsHeight((AppBarEdge)abd.uEdge, abWindow.Screen));
+            }
+
+            if (abd.uEdge == (int)AppBarEdge.Left || abd.uEdge == (int)AppBarEdge.Right)
+            {
+                abd.rc.Top = top;
+                abd.rc.Bottom = bottom;
+                if (abd.uEdge == (int)AppBarEdge.Left)
                 {
-                    cbSize = Marshal.SizeOf(typeof(AppBarData)),
-                    hWnd = abWindow.Handle,
-                    uEdge = (int)edge
-                };
-
-                int sWidth = (int)width;
-                int sHeight = (int)height;
-
-                int top = 0;
-                int left = 0;
-                int right = ScreenHelper.PrimaryMonitorDeviceSize.Width;
-                int bottom = ScreenHelper.PrimaryMonitorDeviceSize.Height;
-
-                int edgeOffset = 0;
-
-                if (abWindow.Screen != null)
-                {
-                    top = abWindow.Screen.Bounds.Y;
-                    left = abWindow.Screen.Bounds.X;
-                    right = abWindow.Screen.Bounds.Right;
-                    bottom = abWindow.Screen.Bounds.Bottom;
-                }
-
-                if (!abWindow.RequiresScreenEdge)
-                {
-                    edgeOffset = Convert.ToInt32(GetAppBarEdgeWindowsHeight((AppBarEdge)abd.uEdge, abWindow.Screen));
-                }
-
-                if (abd.uEdge == (int)AppBarEdge.Left || abd.uEdge == (int)AppBarEdge.Right)
-                {
-                    abd.rc.Top = top;
-                    abd.rc.Bottom = bottom;
-                    if (abd.uEdge == (int)AppBarEdge.Left)
-                    {
-                        abd.rc.Left = left + edgeOffset;
-                        abd.rc.Right = abd.rc.Left + sWidth;
-                    }
-                    else
-                    {
-                        abd.rc.Right = right - edgeOffset;
-                        abd.rc.Left = abd.rc.Right - sWidth;
-                    }
+                    abd.rc.Left = left + edgeOffset;
+                    abd.rc.Right = abd.rc.Left + sWidth;
                 }
                 else
                 {
-                    abd.rc.Left = left;
-                    abd.rc.Right = right;
-                    if (abd.uEdge == (int)AppBarEdge.Top)
+                    abd.rc.Right = right - edgeOffset;
+                    abd.rc.Left = abd.rc.Right - sWidth;
+                }
+            }
+            else
+            {
+                abd.rc.Left = left;
+                abd.rc.Right = right;
+                if (abd.uEdge == (int)AppBarEdge.Top)
+                {
+                    abd.rc.Top = top + edgeOffset;
+                    abd.rc.Bottom = abd.rc.Top + sHeight;
+                }
+                else
+                {
+                    abd.rc.Bottom = bottom - edgeOffset;
+                    abd.rc.Top = abd.rc.Bottom - sHeight;
+                }
+            }
+
+            _explorerHelper.SuspendTrayService();
+            SHAppBarMessage((int)ABMsg.ABM_QUERYPOS, ref abd);
+            _explorerHelper.ResumeTrayService();
+
+            // system doesn't adjust all edges for us, do some adjustments
+            switch (abd.uEdge)
+            {
+                case (int)AppBarEdge.Left:
+                    abd.rc.Right = abd.rc.Left + sWidth;
+                    break;
+                case (int)AppBarEdge.Right:
+                    abd.rc.Left = abd.rc.Right - sWidth;
+                    break;
+                case (int)AppBarEdge.Top:
+                    abd.rc.Bottom = abd.rc.Top + sHeight;
+                    break;
+                case (int)AppBarEdge.Bottom:
+                    abd.rc.Top = abd.rc.Bottom - sHeight;
+                    break;
+            }
+
+            _explorerHelper.SuspendTrayService();
+            SHAppBarMessage((int)ABMsg.ABM_SETPOS, ref abd);
+            _explorerHelper.ResumeTrayService();
+
+            // check if new coords
+            bool isSameCoords = false;
+            if (!isCreate)
+            {
+                bool topUnchanged = abd.rc.Top == (abWindow.Top * abWindow.DpiScale);
+                bool leftUnchanged = abd.rc.Left == (abWindow.Left * abWindow.DpiScale);
+                bool bottomUnchanged = abd.rc.Bottom == (abWindow.Top * abWindow.DpiScale) + sHeight;
+                bool rightUnchanged = abd.rc.Right == (abWindow.Left * abWindow.DpiScale) + sWidth;
+
+                isSameCoords = topUnchanged
+                               && leftUnchanged
+                               && bottomUnchanged
+                               && rightUnchanged;
+            }
+
+            if (!isSameCoords)
+            {
+                ShellLogger.Debug($"AppBarManager: {abWindow.Name} changing position (TxLxBxR) to {abd.rc.Top}x{abd.rc.Left}x{abd.rc.Bottom}x{abd.rc.Right} from {abWindow.Top * abWindow.DpiScale}x{abWindow.Left * abWindow.DpiScale}x{(abWindow.Top * abWindow.DpiScale) + sHeight}x{(abWindow.Left * abWindow.DpiScale) + sWidth}");
+                abWindow.SetAppBarPosition(abd.rc);
+            }
+
+            abWindow.AfterAppBarPos(isSameCoords, abd.rc);
+
+            if (abd.rc.Bottom - abd.rc.Top < sHeight)
+            {
+                ABSetPos(abWindow, width, height, edge);
+            }
+        }
+    }
+    #endregion
+
+    #region Work area
+    public double GetAppBarEdgeWindowsHeight(AppBarEdge edge, AppBarScreen screen)
+    {
+        double edgeHeight = 0;
+        double dpiScale = 1;
+        Rect workAreaRect = GetWorkArea(ref dpiScale, screen, true, true);
+
+        switch (edge)
+        {
+            case AppBarEdge.Top:
+                edgeHeight += workAreaRect.Top / dpiScale;
+                break;
+            case AppBarEdge.Bottom:
+                edgeHeight += (screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
+                break;
+            case AppBarEdge.Left:
+                edgeHeight += workAreaRect.Left / dpiScale;
+                break;
+            case AppBarEdge.Right:
+                edgeHeight += (screen.Bounds.Right - workAreaRect.Right) / dpiScale;
+                break;
+        }
+
+        return edgeHeight;
+    }
+
+    public Rect GetWorkArea(ref double dpiScale, AppBarScreen screen, bool edgeBarsOnly, bool enabledBarsOnly)
+    {
+        double topEdgeWindowHeight = 0;
+        double bottomEdgeWindowHeight = 0;
+        double leftEdgeWindowWidth = 0;
+        double rightEdgeWindowWidth = 0;
+        Rect rc;
+
+        // get appropriate windows for this display
+        foreach (AppBarWindow window in AppBars)
+        {
+            if (window.Screen.DeviceName == screen.DeviceName)
+            {
+                if ((window.EnableAppBar || !enabledBarsOnly) && (window.RequiresScreenEdge || !edgeBarsOnly))
+                {
+                    if (window.AppBarEdge == AppBarEdge.Top)
                     {
-                        abd.rc.Top = top + edgeOffset;
-                        abd.rc.Bottom = abd.rc.Top + sHeight;
+                        topEdgeWindowHeight += window.ActualHeight;
                     }
-                    else
+                    else if (window.AppBarEdge == AppBarEdge.Bottom)
                     {
-                        abd.rc.Bottom = bottom - edgeOffset;
-                        abd.rc.Top = abd.rc.Bottom - sHeight;
+                        bottomEdgeWindowHeight += window.ActualHeight;
                     }
-                }
-
-                _explorerHelper.SuspendTrayService();
-                SHAppBarMessage((int)ABMsg.ABM_QUERYPOS, ref abd);
-                _explorerHelper.ResumeTrayService();
-
-                // system doesn't adjust all edges for us, do some adjustments
-                switch (abd.uEdge)
-                {
-                    case (int)AppBarEdge.Left:
-                        abd.rc.Right = abd.rc.Left + sWidth;
-                        break;
-                    case (int)AppBarEdge.Right:
-                        abd.rc.Left = abd.rc.Right - sWidth;
-                        break;
-                    case (int)AppBarEdge.Top:
-                        abd.rc.Bottom = abd.rc.Top + sHeight;
-                        break;
-                    case (int)AppBarEdge.Bottom:
-                        abd.rc.Top = abd.rc.Bottom - sHeight;
-                        break;
-                }
-
-                _explorerHelper.SuspendTrayService();
-                SHAppBarMessage((int)ABMsg.ABM_SETPOS, ref abd);
-                _explorerHelper.ResumeTrayService();
-
-                // check if new coords
-                bool isSameCoords = false;
-                if (!isCreate)
-                {
-                    bool topUnchanged = abd.rc.Top == (abWindow.Top * abWindow.DpiScale);
-                    bool leftUnchanged = abd.rc.Left == (abWindow.Left * abWindow.DpiScale);
-                    bool bottomUnchanged = abd.rc.Bottom == (abWindow.Top * abWindow.DpiScale) + sHeight;
-                    bool rightUnchanged = abd.rc.Right == (abWindow.Left * abWindow.DpiScale) + sWidth;
-
-                    isSameCoords = topUnchanged
-                                   && leftUnchanged
-                                   && bottomUnchanged
-                                   && rightUnchanged;
-                }
-
-                if (!isSameCoords)
-                {
-                    ShellLogger.Debug($"AppBarManager: {abWindow.Name} changing position (TxLxBxR) to {abd.rc.Top}x{abd.rc.Left}x{abd.rc.Bottom}x{abd.rc.Right} from {abWindow.Top * abWindow.DpiScale}x{abWindow.Left * abWindow.DpiScale}x{(abWindow.Top * abWindow.DpiScale) + sHeight}x{(abWindow.Left * abWindow.DpiScale) + sWidth}");
-                    abWindow.SetAppBarPosition(abd.rc);
-                }
-
-                abWindow.AfterAppBarPos(isSameCoords, abd.rc);
-
-                if (abd.rc.Bottom - abd.rc.Top < sHeight)
-                {
-                    ABSetPos(abWindow, width, height, edge);
-                }
-            }
-        }
-        #endregion
-
-        #region Work area
-        public double GetAppBarEdgeWindowsHeight(AppBarEdge edge, AppBarScreen screen)
-        {
-            double edgeHeight = 0;
-            double dpiScale = 1;
-            Rect workAreaRect = GetWorkArea(ref dpiScale, screen, true, true);
-
-            switch (edge)
-            {
-                case AppBarEdge.Top:
-                    edgeHeight += workAreaRect.Top / dpiScale;
-                    break;
-                case AppBarEdge.Bottom:
-                    edgeHeight += (screen.Bounds.Bottom - workAreaRect.Bottom) / dpiScale;
-                    break;
-                case AppBarEdge.Left:
-                    edgeHeight += workAreaRect.Left / dpiScale;
-                    break;
-                case AppBarEdge.Right:
-                    edgeHeight += (screen.Bounds.Right - workAreaRect.Right) / dpiScale;
-                    break;
-            }
-
-            return edgeHeight;
-        }
-
-        public Rect GetWorkArea(ref double dpiScale, AppBarScreen screen, bool edgeBarsOnly, bool enabledBarsOnly)
-        {
-            double topEdgeWindowHeight = 0;
-            double bottomEdgeWindowHeight = 0;
-            double leftEdgeWindowWidth = 0;
-            double rightEdgeWindowWidth = 0;
-            Rect rc;
-
-            // get appropriate windows for this display
-            foreach (AppBarWindow window in AppBars)
-            {
-                if (window.Screen.DeviceName == screen.DeviceName)
-                {
-                    if ((window.EnableAppBar || !enabledBarsOnly) && (window.RequiresScreenEdge || !edgeBarsOnly))
+                    else if (window.AppBarEdge == AppBarEdge.Left)
                     {
-                        if (window.AppBarEdge == AppBarEdge.Top)
-                        {
-                            topEdgeWindowHeight += window.ActualHeight;
-                        }
-                        else if (window.AppBarEdge == AppBarEdge.Bottom)
-                        {
-                            bottomEdgeWindowHeight += window.ActualHeight;
-                        }
-                        else if (window.AppBarEdge == AppBarEdge.Left)
-                        {
-                            leftEdgeWindowWidth += window.ActualWidth;
-                        }
-                        else if (window.AppBarEdge == AppBarEdge.Right)
-                        {
-                            rightEdgeWindowWidth += window.ActualWidth;
-                        }
+                        leftEdgeWindowWidth += window.ActualWidth;
                     }
-
-                    dpiScale = window.DpiScale;
+                    else if (window.AppBarEdge == AppBarEdge.Right)
+                    {
+                        rightEdgeWindowWidth += window.ActualWidth;
+                    }
                 }
+
+                dpiScale = window.DpiScale;
             }
-
-            rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
-            rc.Bottom = screen.Bounds.Bottom - (int)(bottomEdgeWindowHeight * dpiScale);
-            rc.Left = screen.Bounds.Left + (int)(leftEdgeWindowWidth * dpiScale);
-            rc.Right = screen.Bounds.Right - (int)(rightEdgeWindowWidth * dpiScale);
-
-            return rc;
         }
 
-        public void SetWorkArea(AppBarScreen screen)
-        {
-            double dpiScale = 1;
-            Rect rc = GetWorkArea(ref dpiScale, screen, false, true);
+        rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
+        rc.Bottom = screen.Bounds.Bottom - (int)(bottomEdgeWindowHeight * dpiScale);
+        rc.Left = screen.Bounds.Left + (int)(leftEdgeWindowWidth * dpiScale);
+        rc.Right = screen.Bounds.Right - (int)(rightEdgeWindowWidth * dpiScale);
 
-            SystemParametersInfo((int)SPI.SETWORKAREA, 1, ref rc, (uint)(SPIF.UPDATEINIFILE | SPIF.SENDWININICHANGE));
+        return rc;
+    }
+
+    public void SetWorkArea(AppBarScreen screen)
+    {
+        double dpiScale = 1;
+        Rect rc = GetWorkArea(ref dpiScale, screen, false, true);
+
+        SystemParametersInfo((int)SPI.SETWORKAREA, 1, ref rc, (uint)(SPIF.UPDATEINIFILE | SPIF.SENDWININICHANGE));
+    }
+
+    public static void ResetWorkArea()
+    {
+        if (EnvironmentHelper.IsAppRunningAsShell)
+        {
+            // TODO this is wrong for multi-display
+            // set work area back to full screen size. we can't assume what pieces of the old work area may or may not be still used
+            Rect oldWorkArea;
+            oldWorkArea.Left = SystemInformation.VirtualScreen.Left;
+            oldWorkArea.Top = SystemInformation.VirtualScreen.Top;
+            oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
+            oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
+
+            SystemParametersInfo((int)SPI.SETWORKAREA, 1, ref oldWorkArea,
+                (uint)(SPIF.UPDATEINIFILE | SPIF.SENDWININICHANGE));
         }
+    }
+    #endregion
 
-        public static void ResetWorkArea()
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    private bool _isDisposed;
+    public bool IsDisposed
+    {
+        get { return _isDisposed; }
+    }
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_isDisposed)
         {
-            if (EnvironmentHelper.IsAppRunningAsShell)
+            if (disposing)
             {
-                // TODO this is wrong for multi-display
-                // set work area back to full screen size. we can't assume what pieces of the old work area may or may not be still used
-                Rect oldWorkArea;
-                oldWorkArea.Left = SystemInformation.VirtualScreen.Left;
-                oldWorkArea.Top = SystemInformation.VirtualScreen.Top;
-                oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
-                oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
-
-                SystemParametersInfo((int)SPI.SETWORKAREA, 1, ref oldWorkArea,
-                    (uint)(SPIF.UPDATEINIFILE | SPIF.SENDWININICHANGE));
+                ResetWorkArea();
             }
-        }
-        #endregion
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        private bool _isDisposed;
-        public bool IsDisposed
-        {
-            get { return _isDisposed; }
-        }
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_isDisposed)
-            {
-                if (disposing)
-                {
-                    ResetWorkArea();
-                }
-                _isDisposed = true;
-            }
+            _isDisposed = true;
         }
     }
 }

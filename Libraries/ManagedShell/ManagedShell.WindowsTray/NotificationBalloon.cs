@@ -9,122 +9,121 @@ using ManagedShell.Common.Logging;
 
 using static ManagedShell.Interop.NativeMethods;
 
-namespace ManagedShell.WindowsTray
+namespace ManagedShell.WindowsTray;
+
+public class NotificationBalloon
 {
-    public class NotificationBalloon
+    public string Info { get; internal set; }
+
+    public string Title { get; internal set; }
+
+    public NIIF Flags { get; internal set; }
+
+    public ImageSource Icon { get; internal set; }
+
+    public int Timeout { get; internal set; }
+
+    public DateTime Received { get; internal set; }
+
+    public readonly NotifyIcon NotifyIcon;
+
+    public NotificationBalloon() { }
+
+    public NotificationBalloon(SafeNotifyIconData nicData, NotifyIcon notifyIcon)
     {
-        public string Info { get; internal set; }
+        NotifyIcon = notifyIcon;
 
-        public string Title { get; internal set; }
+        Title = nicData.szInfoTitle;
+        Info = nicData.szInfo;
+        Flags = nicData.dwInfoFlags;
+        Timeout = (int)nicData.uVersion;
+        Received = DateTime.Now;
 
-        public NIIF Flags { get; internal set; }
-
-        public ImageSource Icon { get; internal set; }
-
-        public int Timeout { get; internal set; }
-
-        public DateTime Received { get; internal set; }
-
-        public readonly NotifyIcon NotifyIcon;
-
-        public NotificationBalloon() { }
-
-        public NotificationBalloon(SafeNotifyIconData nicData, NotifyIcon notifyIcon)
+        if (Flags.HasFlag(NIIF.ERROR))
         {
-            NotifyIcon = notifyIcon;
-
-            Title = nicData.szInfoTitle;
-            Info = nicData.szInfo;
-            Flags = nicData.dwInfoFlags;
-            Timeout = (int)nicData.uVersion;
-            Received = DateTime.Now;
-
-            if (Flags.HasFlag(NIIF.ERROR))
+            Icon = GetSystemIcon(SystemIcons.Error.Handle);
+        }
+        else if (Flags.HasFlag(NIIF.INFO))
+        {
+            Icon = GetSystemIcon(SystemIcons.Information.Handle);
+        }
+        else if (Flags.HasFlag(NIIF.WARNING))
+        {
+            Icon = GetSystemIcon(SystemIcons.Warning.Handle);
+        }
+        else if (Flags.HasFlag(NIIF.USER))
+        {
+            if (nicData.hBalloonIcon != 0)
             {
-                Icon = GetSystemIcon(SystemIcons.Error.Handle);
+                SetIconFromHIcon((IntPtr)nicData.hBalloonIcon);
             }
-            else if (Flags.HasFlag(NIIF.INFO))
+            else if (nicData.hIcon != IntPtr.Zero)
             {
-                Icon = GetSystemIcon(SystemIcons.Information.Handle);
-            }
-            else if (Flags.HasFlag(NIIF.WARNING))
-            {
-                Icon = GetSystemIcon(SystemIcons.Warning.Handle);
-            }
-            else if (Flags.HasFlag(NIIF.USER))
-            {
-                if (nicData.hBalloonIcon != 0)
-                {
-                    SetIconFromHIcon((IntPtr)nicData.hBalloonIcon);
-                }
-                else if (nicData.hIcon != IntPtr.Zero)
-                {
-                    SetIconFromHIcon(nicData.hIcon);
-                }
+                SetIconFromHIcon(nicData.hIcon);
             }
         }
+    }
 
-        public void SetVisibility(BalloonVisibility visibility)
+    public void SetVisibility(BalloonVisibility visibility)
+    {
+        if (NotifyIcon == null)
         {
-            if (NotifyIcon == null)
-            {
-                ShellLogger.Error("NotificationBalloon: NotifyIcon is null");
-                return;
-            }
-
-            switch (visibility)
-            {
-                case BalloonVisibility.Visible:
-                    NotifyIcon.SendMessage((uint)NIN.BALLOONSHOW, 0);
-                    break;
-                case BalloonVisibility.Hidden:
-                    NotifyIcon.SendMessage((uint)NIN.BALLOONHIDE, 0);
-                    break;
-                case BalloonVisibility.TimedOut:
-                    NotifyIcon.SendMessage((uint)NIN.BALLOONTIMEOUT, 0);
-                    break;
-                default:
-                    break;
-            }
+            ShellLogger.Error("NotificationBalloon: NotifyIcon is null");
+            return;
         }
 
-        public void Click()
+        switch (visibility)
         {
-            if (NotifyIcon == null)
-            {
-                ShellLogger.Error("NotificationBalloon: NotifyIcon is null");
-                return;
-            }
+            case BalloonVisibility.Visible:
+                NotifyIcon.SendMessage((uint)NIN.BALLOONSHOW, 0);
+                break;
+            case BalloonVisibility.Hidden:
+                NotifyIcon.SendMessage((uint)NIN.BALLOONHIDE, 0);
+                break;
+            case BalloonVisibility.TimedOut:
+                NotifyIcon.SendMessage((uint)NIN.BALLOONTIMEOUT, 0);
+                break;
+            default:
+                break;
+        }
+    }
 
-            NotifyIcon.SendMessage((uint)NIN.BALLOONUSERCLICK, 0);
+    public void Click()
+    {
+        if (NotifyIcon == null)
+        {
+            ShellLogger.Error("NotificationBalloon: NotifyIcon is null");
+            return;
         }
 
-        private void SetIconFromHIcon(IntPtr hIcon)
+        NotifyIcon.SendMessage((uint)NIN.BALLOONUSERCLICK, 0);
+    }
+
+    private void SetIconFromHIcon(IntPtr hIcon)
+    {
+        if (hIcon == IntPtr.Zero)
         {
-            if (hIcon == IntPtr.Zero)
-            {
-                // Use default only if we don't have a valid icon already
-                Icon ??= IconImageConverter.GetDefaultIcon();
+            // Use default only if we don't have a valid icon already
+            Icon ??= IconImageConverter.GetDefaultIcon();
 
-                return;
-            }
-
-            ImageSource icon = IconImageConverter.GetImageFromHIcon(hIcon, false);
-
-            if (icon != null)
-            {
-                Icon = icon;
-            }
-            else                 // Use default only if we don't have a valid icon already
-                Icon ??= IconImageConverter.GetDefaultIcon();
+            return;
         }
 
-        private BitmapSource GetSystemIcon(IntPtr hIcon)
-        {
-            BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            bs.Freeze();
+        ImageSource icon = IconImageConverter.GetImageFromHIcon(hIcon, false);
 
-            return bs;
+        if (icon != null)
+        {
+            Icon = icon;
         }
+        else                 // Use default only if we don't have a valid icon already
+            Icon ??= IconImageConverter.GetDefaultIcon();
+    }
+
+    private BitmapSource GetSystemIcon(IntPtr hIcon)
+    {
+        BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+        bs.Freeze();
+
+        return bs;
     }
 }

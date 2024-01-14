@@ -1,32 +1,31 @@
-﻿namespace Microsoft.WindowsAPICodePack.Taskbar
-{
-    /// <summary>
-    /// Provides internal access to the functions provided by the ITaskbarList4 interface,
-    /// without being forced to refer to it through another singleton.
-    /// </summary>
-    internal static class TaskbarList
-    {
-        private static readonly object _syncLock = new();
+﻿namespace Microsoft.WindowsAPICodePack.Taskbar;
 
-        private static ITaskbarList4 _taskbarList;
-        internal static ITaskbarList4 Instance
+/// <summary>
+/// Provides internal access to the functions provided by the ITaskbarList4 interface,
+/// without being forced to refer to it through another singleton.
+/// </summary>
+internal static class TaskbarList
+{
+    private static readonly object _syncLock = new();
+
+    private static ITaskbarList4 _taskbarList;
+    internal static ITaskbarList4 Instance
+    {
+        get
         {
-            get
+            if (_taskbarList == null)
             {
-                if (_taskbarList == null)
+                lock (_syncLock)
                 {
-                    lock (_syncLock)
+                    if (_taskbarList == null)
                     {
-                        if (_taskbarList == null)
-                        {
-                            _taskbarList = (ITaskbarList4)new CTaskbarList();
-                            _taskbarList.HrInit();
-                        }
+                        _taskbarList = (ITaskbarList4)new CTaskbarList();
+                        _taskbarList.HrInit();
                     }
                 }
-
-                return _taskbarList;
             }
+
+            return _taskbarList;
         }
     }
 }

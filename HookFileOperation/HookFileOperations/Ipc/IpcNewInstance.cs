@@ -9,73 +9,72 @@ using Explorip.HookFileOperations.Models;
 
 using ExploripApi;
 
-namespace Explorip.HookFileOperations.Ipc
+namespace Explorip.HookFileOperations.Ipc;
+
+public class IpcNewInstance : MarshalByRefObject
 {
-    public class IpcNewInstance : MarshalByRefObject
+    private IInteractionMainProcess _interactionWithMainProcess;
+
+    public void SetMainProcess(IInteractionMainProcess interactionWithMainProcess)
     {
-        private IInteractionMainProcess _interactionWithMainProcess;
+        _interactionWithMainProcess = interactionWithMainProcess;
+    }
 
-        public void SetMainProcess(IInteractionMainProcess interactionWithMainProcess)
+    public bool ExploripCopyLaunched()
+    {
+        return _interactionWithMainProcess != null;
+    }
+
+    [DllImport("USER32.DLL")]
+    private static extern IntPtr GetDesktopWindow();
+
+    public void StartNewFileOperation(List<OneFileOperation> listOperations)
+    {
+        Task.Run(() =>
         {
-            _interactionWithMainProcess = interactionWithMainProcess;
-        }
-
-        public bool ExploripCopyLaunched()
-        {
-            return _interactionWithMainProcess != null;
-        }
-
-        [DllImport("USER32.DLL")]
-        private static extern IntPtr GetDesktopWindow();
-
-        public void StartNewFileOperation(List<OneFileOperation> listOperations)
-        {
-            Task.Run(() =>
+            if (_interactionWithMainProcess == null)
             {
-                if (_interactionWithMainProcess == null)
+                try
                 {
-                    try
+                    if (listOperations.Count == 1 && listOperations[0].FileOperation == EFileOperation.Create)
                     {
-                        if (listOperations.Count == 1 && listOperations[0].FileOperation == EFileOperation.Create)
+                        if (listOperations[0].Attributes.HasFlag(FileAttributes.Directory))
                         {
-                            if (listOperations[0].Attributes.HasFlag(FileAttributes.Directory))
-                            {
-                                IpcServerManager.CreateFolder(listOperations[0].Destination, listOperations[0].NewName);
-                                return;
-                            }
-                            if (Path.GetExtension(listOperations[0].NewName).ToLower() == ".lnk")
-                            {
-                                IpcServerManager.CreateShortcut(listOperations[0].Destination, listOperations[0].NewName);
-                                return;
-                            }
+                            IpcServerManager.CreateFolder(listOperations[0].Destination, listOperations[0].NewName);
+                            return;
                         }
-                        FileOperation currentFileOperation = new(GetDesktopWindow());
-                        foreach (OneFileOperation ope in listOperations)
-                            ope.WriteOperation(currentFileOperation);
-                        currentFileOperation.PerformOperations();
-                        currentFileOperation.Dispose();
+                        if (Path.GetExtension(listOperations[0].NewName).ToLower() == ".lnk")
+                        {
+                            IpcServerManager.CreateShortcut(listOperations[0].Destination, listOperations[0].NewName);
+                            return;
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error during HookCopy : {ex.Message}{Environment.NewLine}{ex.StackTrace}");
-                    }
-                    finally
-                    {
-                        Environment.Exit(0);
-                    }
+                    FileOperation currentFileOperation = new(GetDesktopWindow());
+                    foreach (OneFileOperation ope in listOperations)
+                        ope.WriteOperation(currentFileOperation);
+                    currentFileOperation.PerformOperations();
+                    currentFileOperation.Dispose();
                 }
-                else
+                catch (Exception ex)
                 {
-                    _interactionWithMainProcess.StartNewFileOperation(listOperations);
+                    Console.WriteLine($"Error during HookCopy : {ex.Message}{Environment.NewLine}{ex.StackTrace}");
                 }
-            });
-        }
+                finally
+                {
+                    Environment.Exit(0);
+                }
+            }
+            else
+            {
+                _interactionWithMainProcess.StartNewFileOperation(listOperations);
+            }
+        });
+    }
 
 #pragma warning disable S3400 // Methods should not return constants
-        public bool IsReady()
-        {
-            return true;
-        }
-#pragma warning restore S3400 // Methods should not return constants
+    public bool IsReady()
+    {
+        return true;
     }
+#pragma warning restore S3400 // Methods should not return constants
 }

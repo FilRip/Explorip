@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Explorip.Helpers
+namespace Explorip.Helpers;
+
+public static class ExtensionsInt
 {
-    public static class ExtensionsInt
+    public static bool BitState(this int integer, int position)
     {
-        public static bool BitState(this int integer, int position)
-        {
-            int bit = (int)Math.Pow(2, (position - 1));
-            return (integer & bit) == bit;
-        }
+        int bit = (int)Math.Pow(2, (position - 1));
+        return (integer & bit) == bit;
     }
 }

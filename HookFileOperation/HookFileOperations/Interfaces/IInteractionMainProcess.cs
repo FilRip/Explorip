@@ -2,10 +2,9 @@
 
 using Explorip.HookFileOperations.Models;
 
-namespace Explorip.HookFileOperations.Interfaces
+namespace Explorip.HookFileOperations.Interfaces;
+
+public interface IInteractionMainProcess
 {
-    public interface IInteractionMainProcess
-    {
-        void StartNewFileOperation(List<OneFileOperation> listOperations);
-    }
+    void StartNewFileOperation(List<OneFileOperation> listOperations);
 }

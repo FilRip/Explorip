@@ -1,10 +1,9 @@
-﻿namespace ManagedShell.AppBar
+﻿namespace ManagedShell.AppBar;
+
+public enum AppBarEdge
 {
-    public enum AppBarEdge
-    {
-        Left = 0,
-        Top,
-        Right,
-        Bottom
-    }
+    Left = 0,
+    Top,
+    Right,
+    Bottom
 }

@@ -2,39 +2,38 @@
 
 using MS.WindowsAPICodePack.Internal;
 
-namespace Microsoft.WindowsAPICodePack.Shell
+namespace Microsoft.WindowsAPICodePack.Shell;
+
+/// <summary>
+/// A Serch Connector folder in the Shell Namespace
+/// </summary>
+public sealed class ShellSearchConnector : ShellSearchCollection
 {
-    /// <summary>
-    /// A Serch Connector folder in the Shell Namespace
-    /// </summary>
-    public sealed class ShellSearchConnector : ShellSearchCollection
+
+    #region Internal Constructor
+
+    internal ShellSearchConnector()
     {
+        CoreHelpers.ThrowIfNotWin7();
+    }
 
-        #region Internal Constructor
+    internal ShellSearchConnector(IShellItem2 shellItem)
+        : this()
+    {
+        nativeShellItem = shellItem;
+    }
 
-        internal ShellSearchConnector()
+    #endregion
+
+    /// <summary>
+    /// Indicates whether this feature is supported on the current platform.
+    /// </summary>
+    new public static bool IsPlatformSupported
+    {
+        get
         {
-            CoreHelpers.ThrowIfNotWin7();
-        }
-
-        internal ShellSearchConnector(IShellItem2 shellItem)
-            : this()
-        {
-            nativeShellItem = shellItem;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Indicates whether this feature is supported on the current platform.
-        /// </summary>
-        new public static bool IsPlatformSupported
-        {
-            get
-            {
-                // We need Windows 7 onwards ...
-                return CoreHelpers.RunningOnWin7;
-            }
+            // We need Windows 7 onwards ...
+            return CoreHelpers.RunningOnWin7;
         }
     }
 }

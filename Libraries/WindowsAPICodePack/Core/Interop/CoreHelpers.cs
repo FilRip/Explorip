@@ -6,114 +6,113 @@ using System.Text;
 
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace MS.WindowsAPICodePack.Internal
+namespace MS.WindowsAPICodePack.Internal;
+
+/// <summary>
+/// Common Helper methods
+/// </summary>
+public static class CoreHelpers
 {
     /// <summary>
-    /// Common Helper methods
+    /// Determines if the application is running on XP
     /// </summary>
-    public static class CoreHelpers
+    public static bool RunningOnXP
     {
-        /// <summary>
-        /// Determines if the application is running on XP
-        /// </summary>
-        public static bool RunningOnXP
+        get
         {
-            get
-            {
-                return Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                    Environment.OSVersion.Version.Major >= 5;
-            }
+            return Environment.OSVersion.Platform == PlatformID.Win32NT &&
+                Environment.OSVersion.Version.Major >= 5;
         }
+    }
 
-        /// <summary>
-        /// Throws PlatformNotSupportedException if the application is not running on Windows XP
-        /// </summary>
-        public static void ThrowIfNotXP()
+    /// <summary>
+    /// Throws PlatformNotSupportedException if the application is not running on Windows XP
+    /// </summary>
+    public static void ThrowIfNotXP()
+    {
+        if (!CoreHelpers.RunningOnXP)
         {
-            if (!CoreHelpers.RunningOnXP)
-            {
-                throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOnXp);
-            }
+            throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOnXp);
         }
+    }
 
-        /// <summary>
-        /// Determines if the application is running on Vista
-        /// </summary>
-        public static bool RunningOnVista
+    /// <summary>
+    /// Determines if the application is running on Vista
+    /// </summary>
+    public static bool RunningOnVista
+    {
+        get
         {
-            get
-            {
-                return Environment.OSVersion.Version.Major >= 6;
-            }
+            return Environment.OSVersion.Version.Major >= 6;
         }
+    }
 
-        /// <summary>
-        /// Throws PlatformNotSupportedException if the application is not running on Windows Vista
-        /// </summary>
-        public static void ThrowIfNotVista()
+    /// <summary>
+    /// Throws PlatformNotSupportedException if the application is not running on Windows Vista
+    /// </summary>
+    public static void ThrowIfNotVista()
+    {
+        if (!CoreHelpers.RunningOnVista)
         {
-            if (!CoreHelpers.RunningOnVista)
-            {
-                throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOnVista);
-            }
+            throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOnVista);
         }
+    }
 
-        /// <summary>
-        /// Determines if the application is running on Windows 7
-        /// </summary>
-        public static bool RunningOnWin7
+    /// <summary>
+    /// Determines if the application is running on Windows 7
+    /// </summary>
+    public static bool RunningOnWin7
+    {
+        get
         {
-            get
-            {
-                // Verifies that OS version is 6.1 or greater, and the Platform is WinNT.
-                return Environment.OSVersion.Platform == PlatformID.Win32NT &&
-                    Environment.OSVersion.Version.CompareTo(new Version(6, 1)) >= 0;
-            }
+            // Verifies that OS version is 6.1 or greater, and the Platform is WinNT.
+            return Environment.OSVersion.Platform == PlatformID.Win32NT &&
+                Environment.OSVersion.Version.CompareTo(new Version(6, 1)) >= 0;
         }
+    }
 
-        /// <summary>
-        /// Throws PlatformNotSupportedException if the application is not running on Windows 7
-        /// </summary>
-        public static void ThrowIfNotWin7()
+    /// <summary>
+    /// Throws PlatformNotSupportedException if the application is not running on Windows 7
+    /// </summary>
+    public static void ThrowIfNotWin7()
+    {
+        if (!CoreHelpers.RunningOnWin7)
         {
-            if (!CoreHelpers.RunningOnWin7)
-            {
-                throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOn7);
-            }
+            throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOn7);
         }
+    }
 
-        /// <summary>
-        /// Get a string resource given a resource Id
-        /// </summary>
-        /// <param name="resourceId">The resource Id</param>
-        /// <returns>The string resource corresponding to the given resource Id. Returns null if the resource id
-        /// is invalid or the string cannot be retrieved for any other reason.</returns>
-        public static string GetStringResource(string resourceId)
-        {
-            string[] parts;
-            string library;
-            int index;
+    /// <summary>
+    /// Get a string resource given a resource Id
+    /// </summary>
+    /// <param name="resourceId">The resource Id</param>
+    /// <returns>The string resource corresponding to the given resource Id. Returns null if the resource id
+    /// is invalid or the string cannot be retrieved for any other reason.</returns>
+    public static string GetStringResource(string resourceId)
+    {
+        string[] parts;
+        string library;
+        int index;
 
-            if (string.IsNullOrEmpty(resourceId)) { return string.Empty; }
+        if (string.IsNullOrEmpty(resourceId)) { return string.Empty; }
 
-            // Known folder "Recent" has a malformed resource id
-            // for its tooltip. This causes the resource id to
-            // parse into 3 parts instead of 2 parts if we don't fix.
-            resourceId = resourceId.Replace("shell32,dll", "shell32.dll");
-            parts = resourceId.Split(',');
+        // Known folder "Recent" has a malformed resource id
+        // for its tooltip. This causes the resource id to
+        // parse into 3 parts instead of 2 parts if we don't fix.
+        resourceId = resourceId.Replace("shell32,dll", "shell32.dll");
+        parts = resourceId.Split(',');
 
-            library = parts[0];
-            library = library.Replace(@"@", string.Empty);
-            library = Environment.ExpandEnvironmentVariables(library);
-            IntPtr handle = CoreNativeMethods.LoadLibrary(library);
+        library = parts[0];
+        library = library.Replace(@"@", string.Empty);
+        library = Environment.ExpandEnvironmentVariables(library);
+        IntPtr handle = CoreNativeMethods.LoadLibrary(library);
 
-            parts[1] = parts[1].Replace("-", string.Empty);
-            index = int.Parse(parts[1], CultureInfo.InvariantCulture);
+        parts[1] = parts[1].Replace("-", string.Empty);
+        index = int.Parse(parts[1], CultureInfo.InvariantCulture);
 
-            StringBuilder stringValue = new(255);
-            int retval = CoreNativeMethods.LoadString(handle, index, stringValue, 255);
+        StringBuilder stringValue = new(255);
+        int retval = CoreNativeMethods.LoadString(handle, index, stringValue, 255);
 
-            return retval != 0 ? stringValue.ToString() : null;
-        }
+        return retval != 0 ? stringValue.ToString() : null;
     }
 }

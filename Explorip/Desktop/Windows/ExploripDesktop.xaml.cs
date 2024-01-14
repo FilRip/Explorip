@@ -4,26 +4,25 @@ using System.Windows.Interop;
 
 using ExploripCopy;
 
-namespace Explorip.Desktop.Windows
+namespace Explorip.Desktop.Windows;
+
+/// <summary>
+/// Logique d'interaction pour ExploripDesktop.xaml
+/// </summary>
+public partial class ExploripDesktop : Window
 {
-    /// <summary>
-    /// Logique d'interaction pour ExploripDesktop.xaml
-    /// </summary>
-    public partial class ExploripDesktop : Window
+    public ExploripDesktop()
     {
-        public ExploripDesktop()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public IntPtr GetHandle()
-        {
-            return new WindowInteropHelper(this).EnsureHandle();
-        }
+    public IntPtr GetHandle()
+    {
+        return new WindowInteropHelper(this).EnsureHandle();
+    }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Program.MyCurrentApp.Shutdown();
-        }
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        Program.MyCurrentApp.Shutdown();
     }
 }

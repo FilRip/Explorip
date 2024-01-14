@@ -1,8 +1,7 @@
-﻿namespace ManagedShell.ShellFolders.Enums
+﻿namespace ManagedShell.ShellFolders.Enums;
+
+public enum CommonContextMenuItem : uint
 {
-    public enum CommonContextMenuItem : uint
-    {
-        Paste = Interop.CMD_LAST + 1,
-        Properties
-    }
+    Paste = Interop.CMD_LAST + 1,
+    Properties
 }
