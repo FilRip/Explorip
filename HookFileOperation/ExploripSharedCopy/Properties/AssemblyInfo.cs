@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Resources;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -27,3 +25,6 @@ using System.Windows;
                                       //(utilisé si une ressource est introuvable dans la page,
                                       // dans l'application ou dans l'un des dictionnaires de ressources spécifiques à un thème)
 )]
+[assembly: InternalsVisibleTo("Explorip")]
+[assembly: InternalsVisibleTo("HookFileOperations")]
+[assembly: InternalsVisibleTo("ExploripCopy")]

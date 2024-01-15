@@ -14,12 +14,5 @@ public static class Uxtheme
     }
 
     [DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true, CharSet = CharSet.Unicode)]
-    private static extern int PrivateSetPreferredAppMode(PreferredAppMode preferredAppMode);
-
-#pragma warning disable S4200 // Native methods should be wrapped
-    public static int SetPreferredAppMode(PreferredAppMode preferredAppMode)
-    {
-        return PrivateSetPreferredAppMode(preferredAppMode);
-    }
-#pragma warning restore S4200 // Native methods should be wrapped
+    internal static extern int SetPreferredAppMode(PreferredAppMode preferredAppMode);
 }

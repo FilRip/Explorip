@@ -288,8 +288,14 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 switch (operation.FileOperation)
                 {
                     case EFileOperation.Delete:
-                        if (operation.ForceDeleteNoRecycled)
+                        if (operation.ForceDeleteNoRecycled || !ExploripSharedCopy.WinAPI.Shell32.RecycledEnabledOnDrive(operation.Source.Substring(0, 2)))
+                        {
+                            if (CopyHelper.ChoiceOnCollision == EChoiceFileOperation.ConfirmDelete)
+                                fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_NOCONFIRMATION);
+                            else
+                                CopyHelper.ChoiceOnCollision = EChoiceFileOperation.ConfirmDelete;
                             fo.DeleteItem(operation.Source);
+                        }
                         else
                         {
                             fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOFX_RECYCLEONDELETE);
@@ -357,6 +363,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     private void ThreadFileOpWaiting()
     {
+        EFileOperation lastOp = EFileOperation.None;
         while (true)
         {
             try
@@ -365,11 +372,15 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 {
                     lock (_lockOperation)
                     {
+                        lastOp = ListWaiting[0].FileOperation;
                         Treatment(ListWaiting[0]);
                     }
                 }
                 else
-                    CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
+                {
+                    if (ListWaiting.Count == 0 || lastOp != EFileOperation.Delete)
+                        CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
+                }
                 Thread.Sleep(100);
             }
             catch (ThreadAbortException) { break; }

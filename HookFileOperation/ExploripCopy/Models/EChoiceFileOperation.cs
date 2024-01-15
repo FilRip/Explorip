@@ -6,4 +6,5 @@ public enum EChoiceFileOperation
     KeepExisting = 1,
     ReplaceAll = 2,
     KeepMostRecent = 3,
+    ConfirmDelete = 4,
 }
