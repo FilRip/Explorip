@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 using Explorip.Desktop.Windows;
 
-using ManagedShell.Common.Helpers;
-
 using WpfScreenHelper;
+
+using static Explorip.Helpers.ExtensionsCommandLineArguments;
 
 namespace Explorip.Desktop;
 
@@ -14,6 +16,8 @@ namespace Explorip.Desktop;
 /// </summary>
 public partial class MyDesktopApp : Application
 {
+    private readonly List<ExploripDesktop> _listDesktop = [];
+
     public MyDesktopApp()
     {
         InitializeComponent();
@@ -21,16 +25,33 @@ public partial class MyDesktopApp : Application
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
+        AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         ExploripDesktop desktop = new()
         {
             AssociateScreen = Screen.PrimaryScreen,
         };
         desktop.InitDesktopWindow();
-        AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+        _listDesktop.Add(desktop);
+        if (ArgumentExists("desktops"))
+        {
+            foreach (Screen screen in Screen.AllScreens.Where(s => !s.Primary))
+            {
+                ExploripDesktop ed = new()
+                {
+                    AssociateScreen = screen,
+                };
+                ed.InitDesktopWindow();
+                _listDesktop.Add(ed);
+            }
+        }
     }
 
     private void CurrentDomain_ProcessExit(object sender, EventArgs e)
     {
-        // TODO : Close my window desktop(s)
+        foreach (ExploripDesktop desktop in _listDesktop)
+            desktop.Dispatcher.Invoke(() =>
+            {
+                desktop.Close();
+            });
     }
 }

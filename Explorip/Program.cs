@@ -36,7 +36,7 @@ public static class Program
         Constants.Colors.LoadTheme();
         Constants.Icons.Init();
 
-        if (ArgumentExists("desktop"))
+        if (ArgumentExists("desktop") || ArgumentExists("desktops"))
         {
             mutexProcess = new Mutex(true, "ExploripDesktop", out bool processNotLaunched);
             if (processNotLaunched)

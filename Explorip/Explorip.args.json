@@ -7,6 +7,10 @@
       "Command": "desktop"
     },
     {
+      "Id": "d3d8a63c-8900-4549-a3d1-530bcf5876ba",
+      "Command": "desktops"
+    },
+    {
       "Id": "cdd07e01-5452-4d7a-890d-b8873caff6a2",
       "Command": "newinstance"
     },

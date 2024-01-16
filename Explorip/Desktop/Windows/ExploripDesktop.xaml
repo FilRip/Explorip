@@ -3,17 +3,60 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
+        xmlns:constants="clr-namespace:Explorip.Constants"
         mc:Ignorable="d"
         Topmost="False"
         ShowInTaskbar="False"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="Black"
+        Background="{x:Static constants:Colors.BackgroundColorBrush}"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
         AllowDrop="True"
         Title="" Height="450" Width="800"
-        ShowActivated="False">
-    <Grid Name="MainGrid">
-    </Grid>
+        ShowActivated="False" BorderThickness="0" Margin="0" Padding="0">
+    <Window.DataContext>
+        <viewmodels:ExploripDesktopViewModel/>
+    </Window.DataContext>
+    <Window.ContextMenu>
+        <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
+            <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding QuitCommand}"/>
+        </ContextMenu>
+    </Window.ContextMenu>
+    <ListView ItemsSource="{Binding ListDesktopFolder}" Background="Transparent" BorderThickness="0"
+              ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
+              SelectedItem="{Binding SelectedItem}">
+        <ListView.ItemContainerStyle>
+            <Style TargetType="{x:Type ListViewItem}">
+                <Setter Property="Margin" Value="5"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                            <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <Border BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="2.5"/>
+                                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <ContentPresenter/>
+                                </StackPanel>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ListView.ItemContainerStyle>
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <WrapPanel/>
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <DockPanel>
+                    <Image Source="{Binding Icon}" Height="48" Width="48"/>
+                    <TextBlock Text="{Binding Name}" Background="Transparent" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" DockPanel.Dock="Bottom" TextWrapping="Wrap" TextAlignment="Center"/>
+                </DockPanel>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
 </Window>
