@@ -2,11 +2,10 @@
 using System.Windows;
 
 using Explorip.Desktop.Windows;
-using Explorip.WinAPI;
+
+using ManagedShell.Common.Helpers;
 
 using WpfScreenHelper;
-
-using static WpfScreenHelper.Screen;
 
 namespace Explorip.Desktop;
 
@@ -22,10 +21,11 @@ public partial class MyDesktopApp : Application
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
-        ExploripDesktop desktop = new();
-        desktop.Show();
-        User32.SetParent(desktop.GetHandle(), ManagedShell.Common.Helpers.WindowHelper.GetLowestDesktopChildHwnd());
-        desktop.SetWindowPosition((int)PrimaryScreen.WorkingArea.X, (int)PrimaryScreen.WorkingArea.Y, (int)PrimaryScreen.WorkingArea.Width, (int)PrimaryScreen.WorkingArea.Height);
+        ExploripDesktop desktop = new()
+        {
+            AssociateScreen = Screen.PrimaryScreen,
+        };
+        desktop.InitDesktopWindow();
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
     }
 

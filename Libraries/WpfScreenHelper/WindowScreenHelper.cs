@@ -9,7 +9,7 @@ namespace WpfScreenHelper;
 /// <summary>
 /// Provides helper functions for window class.
 /// </summary>
-public static class WindowHelper
+public static class WindowScreenHelper
 {
     /// <summary>
     /// Moves window to desired position on screen.

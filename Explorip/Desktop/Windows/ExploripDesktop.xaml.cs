@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
-using ExploripCopy;
+using ManagedShell.Common.Helpers;
+
+using WpfScreenHelper;
 
 namespace Explorip.Desktop.Windows;
 
@@ -11,18 +14,27 @@ namespace Explorip.Desktop.Windows;
 /// </summary>
 public partial class ExploripDesktop : Window
 {
+    private IntPtr _handle;
+
     public ExploripDesktop()
     {
         InitializeComponent();
     }
 
+    public Screen AssociateScreen { get; set; }
+
     public IntPtr GetHandle()
     {
-        return new WindowInteropHelper(this).EnsureHandle();
+        if (_handle == IntPtr.Zero)
+            _handle = new WindowInteropHelper(this).EnsureHandle();
+        return _handle;
     }
 
-    private void Button_Click(object sender, RoutedEventArgs e)
+    internal void InitDesktopWindow()
     {
-        Program.MyCurrentApp.Shutdown();
+        Show();
+        this.SetWindowPosition((int)AssociateScreen.WorkingArea.X, (int)AssociateScreen.WorkingArea.Y, (int)AssociateScreen.WorkingArea.Width, (int)AssociateScreen.WorkingArea.Height);
+        WindowHelper.HideWindowFromTasks(GetHandle());
+        WindowHelper.ShowWindowDesktop(GetHandle());
     }
 }

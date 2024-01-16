@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Topmost="True"
+        Topmost="False"
         ShowInTaskbar="False"
         WindowStyle="None"
         AllowsTransparency="True"
@@ -12,8 +12,8 @@
         ResizeMode="NoResize"
         UseLayoutRounding="True"
         AllowDrop="True"
-        Title="" Height="450" Width="800">
+        Title="" Height="450" Width="800"
+        ShowActivated="False">
     <Grid Name="MainGrid">
-        <Button Content="Quit" Click="Button_Click"/>
     </Grid>
 </Window>
