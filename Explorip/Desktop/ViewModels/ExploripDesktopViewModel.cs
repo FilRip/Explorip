@@ -7,6 +7,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.Constants;
 using Explorip.Desktop.Models;
 using Explorip.Helpers;
 
@@ -48,25 +49,31 @@ internal partial class ExploripDesktopViewModel : ObservableObject
                 item = new()
                 {
                     Name = filename.Name,
-                    Icon = IconManager.GetIconFromFile(filename.ParsingName, 0),
                 };
-                if (Path.GetExtension(filename.ParsingName) == ".lnk")
+                try
                 {
-                    Shortcut shortcut = Shortcut.ReadFromFile(filename.ParsingName);
-                    string iconLocation = shortcut.StringData.IconLocation;
-                    if (string.IsNullOrWhiteSpace(iconLocation))
-                        iconLocation = shortcut.StringData.RelativePath;
-                    if (!string.IsNullOrWhiteSpace(iconLocation))
+                    if (filename is ShellFolder)
+                        item.Icon = Icons.Folder;
+                    else
+                        item.Icon = IconManager.GetIconFromFile(filename.ParsingName, 0);
+                    if (Path.GetExtension(filename.ParsingName) == ".lnk")
                     {
-                        if (iconLocation.StartsWith(".") || iconLocation.StartsWith(Path.DirectorySeparatorChar.ToString()))
-                            iconLocation = Path.GetFullPath(Environment.SpecialFolder.Desktop.FullPath() + Path.DirectorySeparatorChar + iconLocation);
-                        if (!File.Exists(iconLocation))
-                            iconLocation = shortcut.LinkInfo.LocalBasePath;
-                        item.Icon = IconManager.GetIconFromFile(iconLocation, shortcut.IconIndex);
+                        Shortcut shortcut = Shortcut.ReadFromFile(filename.ParsingName);
+                        string iconLocation = shortcut.StringData?.IconLocation;
+                        if (string.IsNullOrWhiteSpace(iconLocation))
+                            iconLocation = shortcut.StringData?.RelativePath;
+                        if (!string.IsNullOrWhiteSpace(iconLocation))
+                        {
+                            if (iconLocation.StartsWith(".") || iconLocation.StartsWith(Path.DirectorySeparatorChar.ToString()))
+                                iconLocation = Path.GetFullPath(Environment.SpecialFolder.Desktop.FullPath() + Path.DirectorySeparatorChar + iconLocation);
+                            if (!File.Exists(iconLocation))
+                                iconLocation = shortcut.LinkInfo?.LocalBasePath;
+                            item.Icon = IconManager.GetIconFromFile(iconLocation, shortcut.IconIndex);
+                        }
                     }
-                }
-                else
                     item.Icon ??= IconManager.Convert(Icon.ExtractAssociatedIcon(filename.ParsingName));
+                }
+                catch (Exception) { /* Ignore errors, can't get icon */ }
                 newList.Add(item);
             }
         ListDesktopFolder = newList;

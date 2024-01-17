@@ -52,10 +52,14 @@
         </ListView.ItemsPanel>
         <ListView.ItemTemplate>
             <DataTemplate>
-                <DockPanel>
-                    <Image Source="{Binding Icon}" Height="48" Width="48"/>
-                    <TextBlock Text="{Binding Name}" Background="Transparent" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" DockPanel.Dock="Bottom" TextWrapping="Wrap" TextAlignment="Center"/>
-                </DockPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0" Source="{Binding Icon}" Height="48" Width="48"/>
+                    <TextBlock Grid.Row="1" Text="{Binding Name}" Background="Transparent" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" DockPanel.Dock="Bottom" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Grid>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>
