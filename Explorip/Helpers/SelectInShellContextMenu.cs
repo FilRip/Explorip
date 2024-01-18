@@ -2,7 +2,7 @@
 
 namespace Explorip.Helpers;
 
-internal static class ShellContextMenuHelper
+internal static class SelectInShellContextMenu
 {
     internal static void AddSelectAll()
     {

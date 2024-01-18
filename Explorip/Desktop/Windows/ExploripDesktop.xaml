@@ -15,7 +15,8 @@
         UseLayoutRounding="True"
         AllowDrop="True"
         Title="" Height="450" Width="800"
-        ShowActivated="False" BorderThickness="0" Margin="0" Padding="0">
+        ShowActivated="False" BorderThickness="0" Margin="0" Padding="0"
+        PreviewMouseRightButtonUp="Window_PreviewMouseRightButtonUp">
     <Window.DataContext>
         <viewmodels:ExploripDesktopViewModel/>
     </Window.DataContext>
@@ -26,7 +27,7 @@
     </Window.ContextMenu>
     <ListView ItemsSource="{Binding ListDesktopFolder}" Background="Transparent" BorderThickness="0"
               ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
-              SelectedItem="{Binding SelectedItem}">
+              SelectedItem="{Binding SelectedItem}" SelectionMode="Extended">
         <ListView.ItemContainerStyle>
             <Style TargetType="{x:Type ListViewItem}">
                 <Setter Property="Margin" Value="5"/>

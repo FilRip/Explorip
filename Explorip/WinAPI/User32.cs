@@ -41,9 +41,6 @@ public static class User32
     [DllImport("User32.dll")]
     internal static extern int DestroyIcon(IntPtr hIcon);
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    internal static extern bool GetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, ref MenuItemInfo lpmii);
-
     [DllImport("user32.dll")]
     internal static extern IntPtr GetSubMenu(IntPtr hMenu, int nPos);
 

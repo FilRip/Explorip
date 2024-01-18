@@ -13,7 +13,7 @@ public interface IShellFolder
     // Translates a file object's or folder's display name into an item identifier list.
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 ParseDisplayName(
+    int ParseDisplayName(
         IntPtr hwnd,
         IntPtr pbc,
         [MarshalAs(UnmanagedType.LPWStr)]
@@ -26,7 +26,7 @@ public interface IShellFolder
     // identifier enumeration object and returning its IEnumIDList interface.
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 EnumObjects(
+    int EnumObjects(
         IntPtr hwnd,
         SHCONTF grfFlags,
         out IntPtr enumIDList);
@@ -34,7 +34,7 @@ public interface IShellFolder
     // Retrieves an IShellFolder object for a subfolder.
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 BindToObject(
+    int BindToObject(
         IntPtr pidl,
         IntPtr pbc,
         ref Guid riid,
@@ -43,7 +43,7 @@ public interface IShellFolder
     // Requests a pointer to an object's storage interface. 
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 BindToStorage(
+    int BindToStorage(
         IntPtr pidl,
         IntPtr pbc,
         ref Guid riid,
@@ -60,7 +60,7 @@ public interface IShellFolder
     // follow the second (pidl1 > pidl2).  Zero A return value of zero
     // indicates that the two items are the same (pidl1 = pidl2). 
     [PreserveSig()]
-    Int32 CompareIDs(
+    int CompareIDs(
         IntPtr lParam,
         IntPtr pidl1,
         IntPtr pidl2);
@@ -69,7 +69,7 @@ public interface IShellFolder
     // with a folder object.
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 CreateViewObject(
+    int CreateViewObject(
         IntPtr hwndOwner,
         Guid riid,
         out IntPtr ppv);
@@ -77,7 +77,7 @@ public interface IShellFolder
     // Retrieves the attributes of one or more file objects or subfolders. 
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 GetAttributesOf(
+    int GetAttributesOf(
         uint cidl,
         [MarshalAs(UnmanagedType.LPArray)]
         IntPtr[] apidl,
@@ -87,7 +87,7 @@ public interface IShellFolder
     // specified file objects or folders.
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 GetUIObjectOf(
+    int GetUIObjectOf(
         IntPtr hwndOwner,
         uint cidl,
         [MarshalAs(UnmanagedType.LPArray)]
@@ -99,7 +99,7 @@ public interface IShellFolder
     // Retrieves the display name for the specified file object or subfolder. 
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 GetDisplayNameOf(
+    int GetDisplayNameOf(
         IntPtr pidl,
         SHGDN uFlags,
         IntPtr lpName);
@@ -108,7 +108,7 @@ public interface IShellFolder
     // identifier in the process.
     // Return value: error code, if any
     [PreserveSig()]
-    Int32 SetNameOf(
+    int SetNameOf(
         IntPtr hwnd,
         IntPtr pidl,
         [MarshalAs(UnmanagedType.LPWStr)]
