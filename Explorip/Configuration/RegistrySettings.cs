@@ -1,15 +1,14 @@
 ﻿using System;
-
 using Microsoft.Win32;
 
-namespace Explorip.Constants;
+namespace Explorip.Configuration;
 
 internal static class RegistrySettings
 {
     private static bool? _showVersion;
     private static string _currentVersion;
 
-    public static bool ShowVersion()
+    public static bool DrawWindowsVersionOnDesktop()
     {
         if (!_showVersion.HasValue)
         {
@@ -19,7 +18,7 @@ internal static class RegistrySettings
             {
                 object value = key.GetValue("PaintDesktopVersion");
                 if (value != null)
-                    _showVersion = (value.ToString() == "1");
+                    _showVersion = value.ToString() == "1";
             }
         }
         return _showVersion.Value;
@@ -38,5 +37,11 @@ internal static class RegistrySettings
             }
         }
         return _currentVersion;
+    }
+
+    public static string GetCurrentShell()
+    {
+        RegistryKey key = Registry.LocalMachine.OpenSubKey("Software/Microsoft/Windows NT/CurrentVersion/Winlogon", false);
+        return key.GetValue("Shell").ToString();
     }
 }

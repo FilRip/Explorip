@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace Explorip.Helpers;
+namespace Explorip.Configuration;
 
 internal static class SelectInShellContextMenu
 {
