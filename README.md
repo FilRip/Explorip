@@ -24,6 +24,14 @@ Support multi desktop too
 
 
 
+Desktop
+-------
+Launch Explorip with "desktops" as command line arguments to use the new desktop background
+
+(Not finished, currently working on it)
+
+
+
 Last news : Warning :
 ---------------------
 Latest Windows 11 release 23H2 build 22621 ; Integrated Windows Defender doesn't like Explorer with hooking copy (report as a virus/trojan). Autorize it in Settings of Windows Defender to fully use it. Of course, it's NOT a virus (compile it yourself if you want to be sure)
