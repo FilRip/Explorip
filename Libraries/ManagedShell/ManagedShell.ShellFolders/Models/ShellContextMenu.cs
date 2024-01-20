@@ -55,7 +55,6 @@ namespace ManagedShell.ShellFolders.Models
             if (nResult == S_OK)
             {
                 _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
-
                 return true;
             }
             else
@@ -145,9 +144,8 @@ namespace ManagedShell.ShellFolders.Models
                 // Get desktop IShellFolder
                 int nResult = NativeMethods.SHGetDesktopFolder(out IntPtr pUnkownDesktopFolder);
                 if (nResult != S_OK)
-                {
                     throw new Exceptions.ShellContextMenuException("Failed to get the desktop shell folder");
-                }
+
                 _oDesktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnkownDesktopFolder, typeof(IShellFolder));
             }
 
@@ -327,9 +325,7 @@ namespace ManagedShell.ShellFolders.Models
             finally
             {
                 if (pMenu != IntPtr.Zero)
-                {
                     NativeMethods.DestroyMenu(pMenu);
-                }
 
                 if (iContextMenuPtr != IntPtr.Zero)
                     Marshal.Release(iContextMenuPtr);
