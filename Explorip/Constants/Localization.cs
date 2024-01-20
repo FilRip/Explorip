@@ -86,7 +86,7 @@ public static class Localization
         CREATE_SHORTCUT_Q2 = Load("appwiz.cpl", 2203, "Which name do you want to use for this shortcut ?");
     }
 
-    private static string Load(string libraryName, uint Ident, string DefaultText)
+    internal static string Load(string libraryName, uint Ident, string DefaultText)
     {
         IntPtr libraryHandle = Kernel32.GetModuleHandle(libraryName);
         if (libraryHandle == IntPtr.Zero)

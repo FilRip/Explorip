@@ -6,6 +6,9 @@ using System.Windows.Interop;
 
 using Explorip.Helpers;
 
+using ExploripSharedCopy.Helpers;
+using ExploripSharedCopy.WinAPI;
+
 using ManagedShell.Common.Helpers;
 
 using WpfScreenHelper;
@@ -22,6 +25,11 @@ public partial class ExploripDesktop : Window
     public ExploripDesktop()
     {
         InitializeComponent();
+        if (WindowsSettings.IsWindowsApplicationInDarkMode())
+        {
+            WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
+            Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
+        }
     }
 
     public Screen AssociateScreen { get; set; }
@@ -44,7 +52,7 @@ public partial class ExploripDesktop : Window
     private void Window_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
         ManagedShell.ShellFolders.Models.ShellContextMenu contextMenu = new();
-        System.Drawing.Point position = new((int)Mouse.GetPosition(this).X, (int)Mouse.GetPosition(this).Y);
+        Point position = PointToScreen(Mouse.GetPosition(this));
         contextMenu.ShowContextMenu(new DirectoryInfo[1] { new(Environment.SpecialFolder.Desktop.FullPath()) }, position);
     }
 }

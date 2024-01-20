@@ -1,8 +1,8 @@
 using System;
-using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows;
 using System.Windows.Forms;
 
 using ManagedShell.Interop;
@@ -96,7 +96,7 @@ namespace ManagedShell.ShellFolders.Models
                 fMask = CMIC.UNICODE | CMIC.PTINVOKE |
                 ((Control.ModifierKeys & Keys.Control) != 0 ? CMIC.CONTROL_DOWN : 0) |
                 ((Control.ModifierKeys & Keys.Shift) != 0 ? CMIC.SHIFT_DOWN : 0),
-                ptInvoke = new NativeMethods.Point(pointInvoke.X, pointInvoke.Y),
+                ptInvoke = new NativeMethods.Point((long)pointInvoke.X, (long)pointInvoke.Y),
                 nShow = NativeMethods.WindowShowStyle.ShowNormal,
             };
 
@@ -311,8 +311,8 @@ namespace ManagedShell.ShellFolders.Models
                 uint nSelected = NativeMethods.TrackPopupMenuEx(
                     pMenu,
                     NativeMethods.TPM.RETURNCMD,
-                    pointScreen.X,
-                    pointScreen.Y,
+                    (int)pointScreen.X,
+                    (int)pointScreen.Y,
                     this.Handle,
                     IntPtr.Zero);
 

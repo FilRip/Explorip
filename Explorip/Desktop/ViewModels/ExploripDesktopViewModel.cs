@@ -20,9 +20,9 @@ namespace Explorip.Desktop.ViewModels;
 internal partial class ExploripDesktopViewModel : ObservableObject
 {
     [ObservableProperty()]
-    private ObservableCollection<OneItem> _listDesktopFolder;
+    private ObservableCollection<OneDesktopShellItem> _listDesktopFolder;
     [ObservableProperty()]
-    private OneItem _selectedItem;
+    private OneDesktopShellItem _selectedItem;
 
     private readonly FileSystemWatcher _watcher;
 
@@ -40,15 +40,17 @@ internal partial class ExploripDesktopViewModel : ObservableObject
 
     private void RefreshDesktopContent()
     {
-        ObservableCollection<OneItem> newList = [];
+        ObservableCollection<OneDesktopShellItem> newList = [];
         ShellFolder desktop = (ShellFolder)ShellObject.FromParsingName(Environment.SpecialFolder.DesktopDirectory.FullPath());
-        OneItem item;
+        OneDesktopShellItem item;
         foreach (ShellObject filename in desktop)
             if (filename.Name.ToLower() != "desktop.ini")
             {
                 item = new()
                 {
                     Name = filename.Name,
+                    FullPath = filename.ParsingName,
+                    CurrentShellObject = filename,
                 };
                 try
                 {
@@ -99,7 +101,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
 
     private void Watcher_Created(object sender, FileSystemEventArgs e)
     {
-        OneItem item = new()
+        OneDesktopShellItem item = new()
         {
             Name = e.Name,
         };
