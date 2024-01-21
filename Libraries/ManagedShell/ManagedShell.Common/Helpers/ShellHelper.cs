@@ -111,7 +111,7 @@ public static class ShellHelper
             {
                 UseShellExecute = true,
                 FileName = filename,
-                Arguments = args
+                Arguments = args,
             };
 
             Process.Start(psi);
@@ -230,8 +230,7 @@ public static class ShellHelper
         Process owProc = new();
         owProc.StartInfo.UseShellExecute = true;
         owProc.StartInfo.FileName = Environment.GetEnvironmentVariable("WINDIR") + @"\system32\rundll32.exe";
-        owProc.StartInfo.Arguments =
-            @"C:\WINDOWS\system32\shell32.dll,OpenAs_RunDLL " + fileName;
+        owProc.StartInfo.Arguments = @"C:\WINDOWS\system32\shell32.dll,OpenAs_RunDLL " + fileName;
         owProc.Start();
     }
 
@@ -258,9 +257,7 @@ public static class ShellHelper
     public static void ShowNotificationCenter()
     {
         if (!EnvironmentHelper.IsWindows11OrBetter)
-        {
             return;
-        }
 
         ShellKeyCombo(VK.LWIN, VK.KEY_N);
     }
@@ -323,8 +320,7 @@ public static class ShellHelper
         if (!EnvironmentHelper.IsAppRunningAsShell)
         {
             IntPtr toggleDesktopCommand = new(0x7402);
-            IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView",
-                "");
+            IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", "");
 
             if (hWnd == IntPtr.Zero)
             {

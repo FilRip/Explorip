@@ -44,7 +44,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
         ShellFolder desktop = (ShellFolder)ShellObject.FromParsingName(Environment.SpecialFolder.DesktopDirectory.FullPath());
         OneDesktopShellItem item;
         foreach (ShellObject filename in desktop)
-            if (filename.Name.ToLower() != "desktop.ini")
+            if (filename.Name.Trim().ToLower() != "desktop.ini")
             {
                 item = new()
                 {
