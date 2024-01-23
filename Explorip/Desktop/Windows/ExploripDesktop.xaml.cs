@@ -1,10 +1,11 @@
 ﻿using System;
-using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 
-using Explorip.Helpers;
+using Explorip.Desktop.Models;
+using Explorip.Desktop.ViewModels;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
@@ -32,9 +33,14 @@ public partial class ExploripDesktop : Window
         }
     }
 
-    public Screen AssociateScreen { get; set; }
+    internal Screen AssociateScreen { get; set; }
 
-    public IntPtr GetHandle()
+    internal ExploripDesktopViewModel MyDataContext
+    {
+        get { return (ExploripDesktopViewModel)DataContext; }
+    }
+
+    internal IntPtr GetHandle()
     {
         if (_handle == IntPtr.Zero)
             _handle = new WindowInteropHelper(this).EnsureHandle();
@@ -51,8 +57,28 @@ public partial class ExploripDesktop : Window
 
     private void Window_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
+        if (Mouse.DirectlyOver is FrameworkElement element && element.DataContext is OneDesktopShellItem item)
+        {
+            if (!item.IsSelected)
+            {
+                MyDataContext.UnselectAll();
+                item.IsSelected = true;
+            }
+        }
+        else
+            MyDataContext.UnselectAll();
+
         ManagedShell.ShellFolders.Models.ShellContextMenu contextMenu = new();
         Point position = PointToScreen(Mouse.GetPosition(this));
-        contextMenu.ShowContextMenu(new DirectoryInfo[1] { new(Environment.SpecialFolder.Desktop.FullPath()) }, position);
+        contextMenu.ShowContextMenu(MyDataContext.ListSelectedItem().ToArray(), position);
+    }
+
+    private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (Mouse.DirectlyOver is FrameworkElement element && element.DataContext is OneDesktopShellItem)
+            return;
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            return;
+        MyDataContext.UnselectAll();
     }
 }

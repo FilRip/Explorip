@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
@@ -40,8 +41,15 @@ internal partial class ExploripDesktopViewModel : ObservableObject
 
     private void RefreshDesktopContent()
     {
-        ObservableCollection<OneDesktopShellItem> newList = [];
-        ShellFolder desktop = (ShellFolder)ShellObject.FromParsingName(Environment.SpecialFolder.DesktopDirectory.FullPath());
+        ListDesktopFolder = [];
+        // TODO : Add system icons
+        RefreshDesktopContent(Environment.SpecialFolder.DesktopDirectory.FullPath());
+        RefreshDesktopContent(Environment.SpecialFolder.CommonDesktopDirectory.FullPath());
+    }
+
+    private void RefreshDesktopContent(string desktopPath)
+    {
+        ShellFolder desktop = (ShellFolder)ShellObject.FromParsingName(desktopPath);
         OneDesktopShellItem item;
         foreach (ShellObject filename in desktop)
             if (filename.Name.Trim().ToLower() != "desktop.ini")
@@ -51,11 +59,15 @@ internal partial class ExploripDesktopViewModel : ObservableObject
                     Name = filename.Name,
                     FullPath = filename.ParsingName,
                     CurrentShellObject = filename,
+                    CurrentDesktop = this,
                 };
                 try
                 {
                     if (filename is ShellFolder)
+                    {
                         item.Icon = Icons.Folder;
+                        item.IsDirectory = true;
+                    }
                     else
                         item.Icon = IconManager.GetIconFromFile(filename.ParsingName, 0);
                     if (Path.GetExtension(filename.ParsingName) == ".lnk")
@@ -76,9 +88,8 @@ internal partial class ExploripDesktopViewModel : ObservableObject
                     item.Icon ??= IconManager.Convert(Icon.ExtractAssociatedIcon(filename.ParsingName));
                 }
                 catch (Exception) { /* Ignore errors, can't get icon */ }
-                newList.Add(item);
+                ListDesktopFolder.Add(item);
             }
-        ListDesktopFolder = newList;
     }
 
     private void Watcher_Deleted(object sender, FileSystemEventArgs e)
@@ -112,5 +123,25 @@ internal partial class ExploripDesktopViewModel : ObservableObject
     private void Quit()
     {
         Environment.Exit(0);
+    }
+
+    internal void UnselectAll()
+    {
+        foreach (OneDesktopShellItem item in ListDesktopFolder)
+            item.IsSelected = false;
+    }
+
+    internal FileSystemInfo[] ListSelectedItem()
+    {
+        List<FileSystemInfo> listItems = [];
+        if (ListDesktopFolder.Any(item => item.IsSelected))
+            foreach (OneDesktopShellItem selectedItem in ListDesktopFolder.Where(i => i.IsSelected))
+                if (selectedItem.IsDirectory)
+                    listItems.Add(new DirectoryInfo(selectedItem.FullPath));
+                else
+                    listItems.Add(new FileInfo(selectedItem.FullPath));
+        else
+            listItems.Add(new DirectoryInfo(Environment.SpecialFolder.Desktop.FullPath()));
+        return listItems.ToArray();
     }
 }

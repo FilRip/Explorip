@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
+using Explorip.Desktop.ViewModels;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
@@ -13,7 +16,9 @@ internal partial class OneDesktopShellItem : ObservableObject
 {
     internal string FullPath { get; set; }
     internal Environment.SpecialFolder SpecialFolder { get; set; }
-
+    internal bool IsDirectory { get; set; }
+    internal ExploripDesktopViewModel CurrentDesktop { get; set; }
+    
     [ObservableProperty()]
     private string _name;
 
@@ -27,9 +32,7 @@ internal partial class OneDesktopShellItem : ObservableObject
     {
         get
         {
-            if (IsSelected)
-                return new SolidColorBrush(Color.FromArgb(255, System.Drawing.Color.Gray.R, System.Drawing.Color.Gray.G, System.Drawing.Color.Gray.B));
-            return new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            return (IsSelected ? Constants.Colors.SelectedBackgroundShellObject : Constants.Colors.TransparentColorBrush);
         }
     }
 
@@ -51,5 +54,13 @@ internal partial class OneDesktopShellItem : ObservableObject
     private void Execute()
     {
         Process.Start(FullPath);
+    }
+
+    [RelayCommand()]
+    private void SelectIt()
+    {
+        if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
+            CurrentDesktop.UnselectAll();
+        IsSelected = !IsSelected;
     }
 }

@@ -178,7 +178,4 @@ public static class Shell32
         JUMBO = 4,
         LAST
     }
-
-    [DllImport("shell32.dll", EntryPoint = "#727")]
-    internal extern static int SHGetImageList(SHIL iImageList, ref Guid riid, out IImageList ppv);
 }

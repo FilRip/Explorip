@@ -16,7 +16,8 @@
         AllowDrop="True"
         Title="" Height="450" Width="800"
         ShowActivated="False" BorderThickness="0" Margin="0" Padding="0"
-        PreviewMouseRightButtonUp="Window_PreviewMouseRightButtonUp">
+        PreviewMouseRightButtonUp="Window_PreviewMouseRightButtonUp"
+        PreviewMouseLeftButtonUp="Window_PreviewMouseLeftButtonUp">
     <Window.DataContext>
         <viewmodels:ExploripDesktopViewModel/>
     </Window.DataContext>
@@ -25,13 +26,14 @@
             <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding QuitCommand}"/>
         </ContextMenu>
     </Window.ContextMenu>
-    <ListView ItemsSource="{Binding ListDesktopFolder}" Background="Transparent" BorderThickness="0"
+    <ListView ItemsSource="{Binding ListDesktopFolder}" Background="Transparent" BorderThickness="0" AllowDrop="True"
               ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
               SelectedItem="{Binding SelectedItem}" SelectionMode="Extended">
         <ListView.ItemContainerStyle>
             <Style TargetType="{x:Type ListViewItem}">
                 <Setter Property="Margin" Value="5"/>
                 <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="AllowDrop" Value="True"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -60,7 +62,24 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="96"/>
                     </Grid.ColumnDefinitions>
-                    <Button Background="Transparent" BorderThickness="0">
+                    <Button Background="{Binding BackgroundBrush}" BorderThickness="0" Command="{Binding SelectItCommand}">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <ContentPresenter/>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
                         <Button.InputBindings>
                             <MouseBinding Command="{Binding ExecuteCommand}" Gesture="LeftDoubleClick"/>
                         </Button.InputBindings>

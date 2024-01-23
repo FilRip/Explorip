@@ -11,7 +11,7 @@ using ManagedShell.ShellFolders.Interfaces;
 
 namespace ManagedShell.ShellFolders.Models
 {
-    public class ShellContextMenu : NativeWindow
+    internal class ShellContextMenu : NativeWindow
     {
         private IContextMenu _oContextMenu;
         private IContextMenu2 _oContextMenu2;
@@ -21,20 +21,15 @@ namespace ManagedShell.ShellFolders.Models
         private IntPtr[] _arrPIDLs;
         private string _strParentFolder;
 
-        private static Guid IID_IShellFolder = new("{000214E6-0000-0000-C000-000000000046}");
-        private static Guid IID_IContextMenu = new("{000214e4-0000-0000-c000-000000000046}");
-        private static Guid IID_IContextMenu2 = new("{000214f4-0000-0000-c000-000000000046}");
-        private static Guid IID_IContextMenu3 = new("{bcfce0a0-ec17-11d0-8d10-00a0c90f2719}");
-
         private const int MAX_PATH = 260;
         private const uint CMD_FIRST = 1;
         private const uint CMD_LAST = 30000;
 
         private const int S_OK = 0;
 
-        public ShellContextMenu()
+        internal ShellContextMenu()
         {
-            this.CreateHandle(new CreateParams());
+            CreateHandle(new CreateParams());
         }
 
         ~ShellContextMenu()
@@ -44,11 +39,12 @@ namespace ManagedShell.ShellFolders.Models
 
         private bool GetContextMenuInterfaces(IShellFolder oParentFolder, IntPtr[] arrPIDLs, out IntPtr ctxMenuPtr)
         {
+            Guid cmGuid = typeof(IContextMenu).GUID;
             int nResult = oParentFolder.GetUIObjectOf(
                 IntPtr.Zero,
                 (uint)arrPIDLs.Length,
                 arrPIDLs,
-                ref IID_IContextMenu,
+                ref cmGuid,
                 IntPtr.Zero,
                 out ctxMenuPtr);
 
@@ -162,7 +158,7 @@ namespace ManagedShell.ShellFolders.Models
 
                 // Get the PIDL for the folder file is in
                 uint pchEaten = 0;
-                Enums.SFGAO pdwAttributes = 0;
+                SFGAO pdwAttributes = 0;
                 int nResult = oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 if (nResult != S_OK)
                     return null;
@@ -176,7 +172,8 @@ namespace ManagedShell.ShellFolders.Models
                 _strParentFolder = strFolder.ToString();
 
                 // Get the IShellFolder for folder
-                nResult = oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref IID_IShellFolder, out IntPtr pUnknownParentFolder);
+                Guid sfGuid = typeof(IShellFolder).GUID;
+                nResult = oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref sfGuid, out IntPtr pUnknownParentFolder);
                 // Free the PIDL first
                 Marshal.FreeCoTaskMem(pPIDL);
                 if (nResult != S_OK)
@@ -188,50 +185,22 @@ namespace ManagedShell.ShellFolders.Models
             return _oParentFolder;
         }
 
-        protected IntPtr[] GetPIDLs(FileInfo[] arrFI)
-        {
-            if (arrFI == null || arrFI.Length == 0)
-                return null;
-
-            IShellFolder oParentFolder = GetParentFolder(arrFI[0].DirectoryName);
-            if (oParentFolder == null)
-                return null;
-
-            IntPtr[] arrPIDLs = new IntPtr[arrFI.Length];
-            int n = 0;
-            foreach (FileInfo fi in arrFI)
-            {
-                uint pchEaten = 0;
-                Enums.SFGAO pdwAttributes = 0;
-                int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
-                if (nResult != S_OK)
-                {
-                    FreePIDLs(arrPIDLs);
-                    return null;
-                }
-                arrPIDLs[n] = pPIDL;
-                n++;
-            }
-
-            return arrPIDLs;
-        }
-
-        protected IntPtr[] GetPIDLs(DirectoryInfo[] arrFI)
+        private IntPtr[] GetPIDLs(FileSystemInfo[] arrFI)
         {
             if (null == arrFI || 0 == arrFI.Length)
                 return null;
 
-            IShellFolder oParentFolder = GetParentFolder(arrFI[0].Parent.FullName);
+            IShellFolder oParentFolder = GetParentFolder(Directory.GetParent(arrFI[0].FullName).FullName);
             if (oParentFolder == null)
                 return null;
 
             IntPtr[] arrPIDLs = new IntPtr[arrFI.Length];
             int n = 0;
-            foreach (DirectoryInfo fi in arrFI)
+            foreach (FileSystemInfo fi in arrFI)
             {
                 // Get the file relative to folder
                 uint pchEaten = 0;
-                Enums.SFGAO pdwAttributes = 0;
+                SFGAO pdwAttributes = 0;
                 int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 if (nResult != S_OK)
                 {
@@ -245,9 +214,9 @@ namespace ManagedShell.ShellFolders.Models
             return arrPIDLs;
         }
 
-        protected void FreePIDLs(IntPtr[] arrPIDLs)
+        private void FreePIDLs(IntPtr[] arrPIDLs)
         {
-            if (null != arrPIDLs)
+            if (arrPIDLs != null)
                 for (int n = 0; n < arrPIDLs.Length; n++)
                     if (arrPIDLs[n] != IntPtr.Zero)
                     {
@@ -256,18 +225,11 @@ namespace ManagedShell.ShellFolders.Models
                     }
         }
 
-        public void ShowContextMenu(FileInfo[] files, Point pointScreen)
+        internal void ShowContextMenu(FileSystemInfo[] filesAndDirs, Point pointScreen)
         {
             ReleaseAll();
-            _arrPIDLs = GetPIDLs(files);
-            this.ShowContextMenu(pointScreen);
-        }
-
-        public void ShowContextMenu(DirectoryInfo[] dirs, Point pointScreen)
-        {
-            ReleaseAll();
-            _arrPIDLs = GetPIDLs(dirs);
-            this.ShowContextMenu(pointScreen);
+            _arrPIDLs = GetPIDLs(filesAndDirs);
+            ShowContextMenu(pointScreen);
         }
 
         private void ShowContextMenu(Point pointScreen)
@@ -302,8 +264,10 @@ namespace ManagedShell.ShellFolders.Models
                     CMF.NORMAL |
                     ((Control.ModifierKeys & Keys.Shift) != 0 ? CMF.EXTENDEDVERBS : 0));
 
-                Marshal.QueryInterface(iContextMenuPtr, ref IID_IContextMenu2, out iContextMenuPtr2);
-                Marshal.QueryInterface(iContextMenuPtr, ref IID_IContextMenu3, out iContextMenuPtr3);
+                Guid cm2Guid = typeof(IContextMenu2).GUID;
+                Guid cm3Guid = typeof(IContextMenu3).GUID;
+                Marshal.QueryInterface(iContextMenuPtr, ref cm2Guid, out iContextMenuPtr2);
+                Marshal.QueryInterface(iContextMenuPtr, ref cm3Guid, out iContextMenuPtr3);
 
                 _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
                 _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
