@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
         xmlns:constants="clr-namespace:Explorip.Constants"
+        xmlns:dd="urn:gong-wpf-dragdrop"
         mc:Ignorable="d"
         Topmost="False"
         ShowInTaskbar="False"
@@ -28,7 +29,7 @@
     </Window.ContextMenu>
     <ListView ItemsSource="{Binding ListDesktopFolder}" Background="Transparent" BorderThickness="0" AllowDrop="True"
               ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
-              SelectedItem="{Binding SelectedItem}" SelectionMode="Extended">
+              SelectedItem="{Binding SelectedItem}" SelectionMode="Extended" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
         <ListView.ItemContainerStyle>
             <Style TargetType="{x:Type ListViewItem}">
                 <Setter Property="Margin" Value="5"/>
