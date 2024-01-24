@@ -409,7 +409,10 @@ public partial class MainViewModels : ObservableObject, IDisposable
         if (_currentThread?.IsAlive == true)
             _currentThread.Abort();
         else if (_lastError != null)
+        {
             GetLastError = null;
+            _currentOperation = null;
+        }
     }
 
     [RelayCommand()]
