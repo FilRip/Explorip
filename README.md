@@ -1,6 +1,8 @@
 Windows Shell/Explorer Replacement. All languages supported.
 
-100% in C#
+100% in C# and User mode (no administrator privilege required)
+
+------------
 
 Explorer
 --------
