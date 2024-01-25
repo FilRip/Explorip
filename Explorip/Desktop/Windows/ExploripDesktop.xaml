@@ -22,12 +22,7 @@
     <Window.DataContext>
         <viewmodels:ExploripDesktopViewModel/>
     </Window.DataContext>
-    <Window.ContextMenu>
-        <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
-            <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding QuitCommand}"/>
-        </ContextMenu>
-    </Window.ContextMenu>
-    <ListView ItemsSource="{Binding ListDesktopFolder}" Background="Transparent" BorderThickness="0" AllowDrop="True"
+    <ListView ItemsSource="{Binding ListDesktopFolder}" Background="Transparent" BorderThickness="0" AllowDrop="True" Name="MainListView"
               ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
               SelectedItem="{Binding SelectedItem}" SelectionMode="Extended" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
         <ListView.ItemContainerStyle>
