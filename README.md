@@ -22,7 +22,7 @@ Launch Explorip with "taskbars" as command line arguments to use the new Taskbar
 
 Ideal to Windows 11 users to have a taskbar like Windows 10 and with toolbar
 
-Support multi desktop too
+Support multi virtual desktop too
 
 
 
