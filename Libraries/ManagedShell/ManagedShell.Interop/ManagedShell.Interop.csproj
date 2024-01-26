@@ -6,16 +6,20 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;IDE0251</NoWarn>
+    <NoWarn></NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;IDE0251</NoWarn>
+    <NoWarn></NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Runtime" Version="4.3.1" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
   </ItemGroup>
 
 </Project>

@@ -66,21 +66,21 @@ public class ExplorerHelper
         _notificationArea?.Resume();
     }
 
-    public void SetTaskbarVisibility(int swp)
+    public void SetTaskbarVisibility(SWP swp)
     {
         // only run this if our TaskBar is enabled, or if we are showing the Windows TaskBar
-        if (swp != (int)SWP.SWP_HIDEWINDOW || HideExplorerTaskbar)
+        if (swp != SWP.SWP_HIDEWINDOW || HideExplorerTaskbar)
         {
             IntPtr taskbarHwnd = WindowHelper.FindWindowsTray(_notificationArea.Handle);
             IntPtr startButtonHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, (IntPtr)0xC017, null);
 
             if (taskbarHwnd != IntPtr.Zero
-                && swp == (int)SWP.SWP_HIDEWINDOW == IsWindowVisible(taskbarHwnd))
+                && swp == SWP.SWP_HIDEWINDOW == IsWindowVisible(taskbarHwnd))
             {
-                SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOACTIVATE);
+                SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | SWP.SWP_NOMOVE | SWP.SWP_NOSIZE | SWP.SWP_NOACTIVATE);
                 if (startButtonHwnd != IntPtr.Zero)
                 {
-                    SetWindowPos(startButtonHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOACTIVATE);
+                    SetWindowPos(startButtonHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | SWP.SWP_NOMOVE | SWP.SWP_NOSIZE | SWP.SWP_NOACTIVATE);
                 }
             }
 
@@ -89,16 +89,16 @@ public class ExplorerHelper
         }
     }
 
-    public void SetSecondaryTaskbarVisibility(int swp)
+    public void SetSecondaryTaskbarVisibility(SWP swp)
     {
         IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
 
         // if we have 3+ monitors there may be multiple secondary TaskBars
         while (secTaskbarHwnd != IntPtr.Zero)
         {
-            if (swp == (int)SWP.SWP_HIDEWINDOW == IsWindowVisible(secTaskbarHwnd))
+            if (swp == SWP.SWP_HIDEWINDOW == IsWindowVisible(secTaskbarHwnd))
             {
-                SetWindowPos(secTaskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOACTIVATE);
+                SetWindowPos(secTaskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | SWP.SWP_NOMOVE | SWP.SWP_NOSIZE | SWP.SWP_NOACTIVATE);
             }
 
             secTaskbarHwnd = FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
@@ -158,7 +158,7 @@ public class ExplorerHelper
     private void DoHideTaskbar()
     {
         SetTaskbarState(TaskbarState.AutoHide);
-        SetTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
+        SetTaskbarVisibility(SWP.SWP_HIDEWINDOW);
     }
 
     private void ShowTaskbar()
@@ -166,7 +166,7 @@ public class ExplorerHelper
         if (!EnvironmentHelper.IsAppRunningAsShell)
         {
             SetTaskbarState(startupTaskbarState ?? TaskbarState.OnTop);
-            SetTaskbarVisibility((int)SWP.SWP_SHOWWINDOW);
+            SetTaskbarVisibility(SWP.SWP_SHOWWINDOW);
             taskbarMonitor.Stop();
         }
     }

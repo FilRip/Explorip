@@ -12,10 +12,11 @@ using System.Windows.Media.Imaging;
 
 using Explorip.Explorer.Controls;
 using Explorip.Explorer.ViewModels;
-using Explorip.WinAPI;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
+
+using ManagedShell.Interop;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
@@ -51,9 +52,9 @@ public partial class WpfExplorerBrowser : Window
             }
 
             if (string.IsNullOrWhiteSpace(dir))
-                LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)KnownFolders.Desktop);
+                LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
 
-            RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)KnownFolders.Desktop);
+            RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
         }
 
         Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
@@ -147,11 +148,11 @@ public partial class WpfExplorerBrowser : Window
                     if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
                     {
                         IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
-                        IntPtr hMenu = User32.GetSystemMenu(hWnd, false);
+                        IntPtr hMenu = NativeMethods.GetSystemMenu(hWnd, false);
                         Point posMouse = PointToScreen(Mouse.GetPosition(this));
-                        int cmd = User32.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
+                        int cmd = NativeMethods.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
                         if (cmd > 0)
-                            User32.SendMessage(hWnd, 0x112, (uint)cmd, 0);
+                            NativeMethods.SendMessage(hWnd, 0x112, (uint)cmd, 0);
                     }
                 }
             }
@@ -186,7 +187,7 @@ public partial class WpfExplorerBrowser : Window
         string destination = tabDestination.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
         Task.Run(() =>
         {
-            FilesOperations.FileOperation fileOperation = new(User32.GetDesktopWindow());
+            FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
             if (listeItems?.Length > 0)
             {
                 string fichier;
@@ -229,7 +230,7 @@ public partial class WpfExplorerBrowser : Window
         ShellObject[] listeItems = tab.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
         Task.Run(() =>
         {
-            FilesOperations.FileOperation fileOperation = new(User32.GetDesktopWindow());
+            FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
             if (listeItems?.Length > 0)
             {
                 foreach (ShellObject file in listeItems)

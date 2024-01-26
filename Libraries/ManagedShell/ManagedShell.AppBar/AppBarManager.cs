@@ -109,7 +109,7 @@ public class AppBarManager : IDisposable
         // apparently the TaskBars like to pop up when AppBars change
         if (_explorerHelper.HideExplorerTaskbar)
         {
-            _explorerHelper.SetSecondaryTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
+            _explorerHelper.SetSecondaryTaskbarVisibility(SWP.SWP_HIDEWINDOW);
         }
     }
 
@@ -126,7 +126,7 @@ public class AppBarManager : IDisposable
         // apparently the TaskBars like to pop up when AppBars change
         if (_explorerHelper.HideExplorerTaskbar)
         {
-            _explorerHelper.SetSecondaryTaskbarVisibility((int)SWP.SWP_HIDEWINDOW);
+            _explorerHelper.SetSecondaryTaskbarVisibility(SWP.SWP_HIDEWINDOW);
         }
     }
 

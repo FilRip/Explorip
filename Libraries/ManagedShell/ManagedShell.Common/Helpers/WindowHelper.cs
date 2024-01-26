@@ -18,7 +18,7 @@ public static class WindowHelper
             0,
             0,
             0,
-            (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+            SWP.SWP_NOSIZE | SWP.SWP_NOMOVE | SWP.SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
     }
 
     public static void ShowWindowTopMost(IntPtr handle)
@@ -30,7 +30,7 @@ public static class WindowHelper
             0,
             0,
             0,
-            (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_SHOWWINDOW/* | (int)SetWindowPosFlags.SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+            SWP.SWP_NOSIZE | SWP.SWP_NOMOVE | SWP.SWP_SHOWWINDOW/* | (int)SetWindowPosFlags.SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
     }
 
     public static void ShowWindowDesktop(IntPtr hwnd)
@@ -47,7 +47,7 @@ public static class WindowHelper
                 0,
                 0,
                 0,
-                (int)SWP.SWP_NOSIZE | (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOACTIVATE);
+                SWP.SWP_NOSIZE | SWP.SWP_NOMOVE | SWP.SWP_NOACTIVATE);
         }
         else
         {
@@ -103,7 +103,7 @@ public static class WindowHelper
 
     public static void HideWindowFromTasks(IntPtr hWnd)
     {
-        SetWindowLong(hWnd, GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW);
+        SetWindowLong(hWnd, GWL.GWL_EXSTYLE, GetWindowLong(hWnd, GWL.GWL_EXSTYLE) | (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW);
 
         ExcludeWindowFromPeek(hWnd);
     }

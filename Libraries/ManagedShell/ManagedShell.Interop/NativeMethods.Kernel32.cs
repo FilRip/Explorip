@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Input;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -168,4 +169,175 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern int GetApplicationUserModelId(IntPtr hProcess, ref uint applicationUserModelIdLength, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder sbAppUserModelID);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Coord
+    {
+        public short X;
+        public short Y;
+
+        public Coord(short X, short Y)
+        {
+            this.X = X;
+            this.Y = Y;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct WindowBufferSizeRecord
+    {
+        public Coord dwSize;
+
+        public WindowBufferSizeRecord(short x, short y)
+        {
+            dwSize = new Coord(x, y);
+        }
+    }
+
+    public enum EventType : ushort
+    {
+        KEY_EVENT = 0x1,
+        MOUSE_EVENT = 0x2,
+    }
+
+    [Flags()]
+    public enum ControlKeyState
+    {
+        RIGHT_ALT_PRESSED = 0x1,
+        LEFT_ALT_PRESSED = 0x2,
+        RIGHT_CTRL_PRESSED = 0x4,
+        LEFT_CTRL_PRESSED = 0x8,
+        SHIFT_PRESSED = 0x10,
+        NUMLOCK_ON = 0x20,
+        SCROLLLOCK_ON = 0x40,
+        CAPSLOCK_ON = 0x80,
+        ENHANCED_KEY = 0x100
+    }
+
+    [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
+    public struct KeyEventRecord
+    {
+        [FieldOffset(0), MarshalAs(UnmanagedType.Bool)]
+        public bool bKeyDown;
+        [FieldOffset(4), MarshalAs(UnmanagedType.U2)]
+        public ushort wRepeatCount;
+        [FieldOffset(6), MarshalAs(UnmanagedType.U2)]
+        public VK wVirtualKeyCode;
+        [FieldOffset(8), MarshalAs(UnmanagedType.U2)]
+        public ushort wVirtualScanCode;
+        [FieldOffset(10)]
+        public char UnicodeChar;
+        [FieldOffset(12), MarshalAs(UnmanagedType.U4)]
+        public ControlKeyState dwControlKeyState;
+    }
+
+    [Flags()]
+    public enum MouseEvent
+    {
+        MOUSE_MOVED = 0x1,
+        DOUBLE_CLICK = 0x2,
+        MOUSE_WHEELED = 0x4,
+        MOUSE_HWHEELED = 0x8
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MouseEventRecord
+    {
+        public Coord dwMousePosition;
+        public MouseButtonState dwButtonState;
+        public ControlKeyState dwControlKeyState;
+        public MouseEvent dwEventFlags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MenuEventRecord
+    {
+        public uint dwCommandId;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct FocusEventRecord
+    {
+        public uint bSetFocus;
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct InputRecord
+    {
+        [FieldOffset(0)]
+        public EventType EventType;
+        [FieldOffset(4)]
+        public KeyEventRecord KeyEvent;
+        [FieldOffset(4)]
+        public MouseEventRecord MouseEvent;
+        [FieldOffset(4)]
+        public WindowBufferSizeRecord WindowBufferSizeEvent;
+        [FieldOffset(4)]
+        public MenuEventRecord MenuEvent;
+        [FieldOffset(4)]
+        public FocusEventRecord FocusEvent;
+    }
+
+    [DllImport(Kernel32_DllName, EntryPoint = "WriteConsoleInputW", CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern bool WriteConsoleInput(
+            IntPtr hConsoleInput,
+            InputRecord[] lpBuffer,
+            uint nLength,
+            out uint lpNumberOfEventsWritten);
+
+    [DllImport(Kernel32_DllName, CharSet = CharSet.Auto)]
+    internal static extern IntPtr GetModuleHandle(string lpModuleName);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern bool GetExitCodeProcess(IntPtr hProcess, out uint lpExitCode);
+
+    [DllImport(Kernel32_DllName, SetLastError = true, CharSet = CharSet.Unicode)]
+    internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPTStr)] string lpFileName);
+
+    [Flags()]
+    internal enum ELoadLibrary : uint
+    {
+        None = 0,
+        DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
+        LOAD_IGNORE_CODE_AUTHZ_LEVEL = 0x00000010,
+        LOAD_LIBRARY_AS_DATAFILE = 0x00000002,
+        LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE = 0x00000040,
+        LOAD_LIBRARY_AS_IMAGE_RESOURCE = 0x00000020,
+        LOAD_LIBRARY_SEARCH_APPLICATION_DIR = 0x00000200,
+        LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000,
+        LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR = 0x00000100,
+        LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800,
+        LOAD_LIBRARY_SEARCH_USER_DIRS = 0x00000400,
+        LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008,
+        LOAD_LIBRARY_REQUIRE_SIGNED_TARGET = 0x00000080,
+        LOAD_LIBRARY_SAFE_CURRENT_DIRS = 0x00002000,
+    }
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, ELoadLibrary dwFlags);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern bool FreeLibrary(IntPtr hModule);
+
+    [DllImport(Kernel32_DllName, EntryPoint = "AttachConsole", SetLastError = true)]
+    internal static extern bool AttachConsole(int IdProcessus);
+
+    [DllImport(Kernel32_DllName, EntryPoint = "FreeConsole", SetLastError = true)]
+    internal static extern bool FreeConsole();
+
+    public enum StdHandle
+    {
+        OutputHandle = -11,
+        InputHandle = -10,
+        ErrorHandle = -12
+    }
+
+    [DllImport(Kernel32_DllName)]
+    internal static extern IntPtr GetStdHandle(StdHandle index);
+
+    [DllImport(Kernel32_DllName)]
+    internal static extern IntPtr GetConsoleWindow();
+
+    [DllImport(Kernel32_DllName)]
+    internal static extern uint GetLastError();
 }

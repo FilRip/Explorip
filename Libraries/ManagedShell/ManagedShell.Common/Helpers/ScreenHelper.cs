@@ -6,5 +6,5 @@ namespace ManagedShell.Common.Helpers;
 
 public static class ScreenHelper
 {
-    public static Size PrimaryMonitorDeviceSize => new(NativeMethods.GetSystemMetrics(0), NativeMethods.GetSystemMetrics(1));
+    public static Size PrimaryMonitorDeviceSize => new(NativeMethods.GetSystemMetrics(NativeMethods.SM.CXSCREEN), NativeMethods.GetSystemMetrics(NativeMethods.SM.CYSCREEN));
 }

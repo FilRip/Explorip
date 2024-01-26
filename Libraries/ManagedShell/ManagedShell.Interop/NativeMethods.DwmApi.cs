@@ -46,6 +46,21 @@ public partial class NativeMethods
     internal static extern int DwmDefWindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, out IntPtr result);
 
     [StructLayout(LayoutKind.Sequential)]
+    public struct DwmColorizationParams
+    {
+        public uint clrColor;
+        public uint clrAfterGlow;
+        public uint nIntensity;
+        public uint clrAfterGlowBalance;
+        public uint clrBlurBalance;
+        public uint clrGlassReflectionIntensity;
+        public bool fOpaque;
+    }
+
+    [DllImport(DwmApi_DllName, EntryPoint = "#127")]
+    internal static extern void DwmGetColorizationParameters(ref DwmColorizationParams colors);
+
+    [StructLayout(LayoutKind.Sequential)]
     internal struct PaintStruct
     {
         internal IntPtr hdc;
@@ -72,17 +87,27 @@ public partial class NativeMethods
         public int cyBottomHeight;
         public Margins(int Left, int Right, int Top, int Bottom)
         {
-            this.cxLeftWidth = Left;
-            this.cxRightWidth = Right;
-            this.cyTopHeight = Top;
-            this.cyBottomHeight = Bottom;
+            cxLeftWidth = Left;
+            cxRightWidth = Right;
+            cyTopHeight = Top;
+            cyBottomHeight = Bottom;
         }
+    }
+
+    [Flags()]
+    public enum DWM_TNP
+    {
+        RECTDESTINATION = 0x00000001,
+        RECTSOURCE = 0x00000002,
+        OPACITY = 0x00000004,
+        VISIBLE = 0x00000008,
+        SOURCECLIENTAREAONLY = 0x00000010,
     }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct DwmThumbnailProperties
     {
-        public int dwFlags;
+        public DWM_TNP dwFlags;
         public Rect rcDestination;
         public Rect rcSource;
         public byte opacity;

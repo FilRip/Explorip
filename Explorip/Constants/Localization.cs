@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-using Explorip.WinAPI;
+using ManagedShell.Interop;
 
 namespace Explorip.Constants;
 
@@ -44,6 +44,7 @@ public static class Localization
     public static string CREATE_SHORTCUT_Q2 { get; private set; }
     public static string BROWSE { get; private set; }
     public static string LOCATE { get; private set; }
+    public static string SELECT { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -84,20 +85,21 @@ public static class Localization
         BROWSE = Load("shell32.dll", 9015, "Browse");
         LOCATE = Load("appwiz.cpl", 12808, "Location");
         CREATE_SHORTCUT_Q2 = Load("appwiz.cpl", 2203, "Which name do you want to use for this shortcut ?");
+        SELECT = Load("dinput.dll", 5248, "Select");
     }
 
     internal static string Load(string libraryName, uint Ident, string DefaultText)
     {
-        IntPtr libraryHandle = Kernel32.GetModuleHandle(libraryName);
+        IntPtr libraryHandle = NativeMethods.GetModuleHandle(libraryName);
         if (libraryHandle == IntPtr.Zero)
         {
-            Kernel32.LoadLibrary(libraryName);
-            libraryHandle = Kernel32.GetModuleHandle(libraryName);
+            NativeMethods.LoadLibrary(libraryName);
+            libraryHandle = NativeMethods.GetModuleHandle(libraryName);
         }
         if (libraryHandle != IntPtr.Zero)
         {
             StringBuilder sb = new(1024);
-            int size = User32.LoadString(libraryHandle, Ident, sb, 1024);
+            int size = NativeMethods.LoadString(libraryHandle, Ident, sb, 1024);
             if (size > 0)
                 return sb.ToString().Replace("&", "_");
             else

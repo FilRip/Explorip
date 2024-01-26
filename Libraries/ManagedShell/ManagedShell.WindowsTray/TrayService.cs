@@ -4,6 +4,7 @@ using System.Windows.Threading;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -83,8 +84,8 @@ public class TrayService : IDisposable
         {
             trayMonitor.Stop();
             SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
-                (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOACTIVATE |
-                (int)SWP.SWP_NOSIZE);
+                SWP.SWP_NOMOVE | SWP.SWP_NOACTIVATE |
+                SWP.SWP_NOSIZE);
         }
     }
 
@@ -103,12 +104,12 @@ public class TrayService : IDisposable
     {
         if (HwndTray != IntPtr.Zero)
         {
-            SetWindowPos(HwndTray, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, (int)SWP.SWP_NOACTIVATE | (int)SWP.SWP_NOZORDER);
+            SetWindowPos(HwndTray, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, SWP.SWP_NOACTIVATE | SWP.SWP_NOZORDER);
         }
 
         if (HwndNotify != IntPtr.Zero)
         {
-            SetWindowPos(HwndNotify, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, (int)SWP.SWP_NOACTIVATE | (int)SWP.SWP_NOZORDER);
+            SetWindowPos(HwndNotify, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, SWP.SWP_NOACTIVATE | SWP.SWP_NOZORDER);
         }
     }
 
@@ -249,8 +250,8 @@ public class TrayService : IDisposable
 
                 if ((wndPos.flags & SWP.SWP_SHOWWINDOW) != 0)
                 {
-                    SetWindowLong(HwndTray, GWL_STYLE,
-                        GetWindowLong(HwndTray, GWL_STYLE) &
+                    SetWindowLong(HwndTray, GWL.GWL_STYLE,
+                        GetWindowLong(HwndTray, GWL.GWL_STYLE) &
                         ~(int)WindowStyles.WS_VISIBLE);
 
                     ShellLogger.Debug($"TrayService: {WindowHelper.TrayWndClass} became visible; hiding");
@@ -404,8 +405,8 @@ public class TrayService : IDisposable
         if (taskbarHwnd != IntPtr.Zero)
         {
             SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
-                (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOSIZE |
-                (int)SWP.SWP_NOACTIVATE);
+                SWP.SWP_NOMOVE | SWP.SWP_NOSIZE |
+                SWP.SWP_NOACTIVATE);
         }
     }
 
@@ -414,8 +415,8 @@ public class TrayService : IDisposable
         if (HwndTray != IntPtr.Zero)
         {
             SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0,
-                (int)SWP.SWP_NOMOVE | (int)SWP.SWP_NOACTIVATE |
-                (int)SWP.SWP_NOSIZE);
+                SWP.SWP_NOMOVE | SWP.SWP_NOACTIVATE |
+                SWP.SWP_NOSIZE);
         }
     }
     #endregion

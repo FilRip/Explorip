@@ -9,7 +9,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 
 using Explorip.Helpers;
-using Explorip.WinAPI;
 
 using ManagedShell.Interop;
 
@@ -85,10 +84,10 @@ public partial class ConsoleHost : UserControl, IDisposable
 
     private void InitRedirectWindow()
     {
-        User32.SetParent(_srcPtr, _destPtr);
+        NativeMethods.SetParent(_srcPtr, _destPtr);
         UserControl_SizeChanged(this, null);
-        int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.GWL_STYLE);
-        NativeMethods.SetWindowLong(_srcPtr, NativeMethods.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
+        int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.GWL.GWL_STYLE);
+        NativeMethods.SetWindowLong(_srcPtr, NativeMethods.GWL.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
     }
 
     private void MyProcess_Exited(object sender, EventArgs e)
@@ -105,17 +104,17 @@ public partial class ConsoleHost : UserControl, IDisposable
         {
             Thread.Sleep(100);
             NativeMethods.SetForegroundWindow(_srcPtr);
-            User32.SetCapture(_srcPtr);
-            User32.SetFocus(_srcPtr);
-            User32.SetActiveWindow(_srcPtr);
-            User32.EnableWindow(_srcPtr, 1);
+            NativeMethods.SetCapture(_srcPtr);
+            NativeMethods.SetFocus(_srcPtr);
+            NativeMethods.SetActiveWindow(_srcPtr);
+            NativeMethods.EnableWindow(_srcPtr, 1);
         });
     }
 
     private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (_srcPtr != IntPtr.Zero)
-            User32.SetWindowPos(_srcPtr, IntPtr.Zero, (int)(OFFSET_X * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)((this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)(OFFSET_Y * VisualTreeHelper.GetDpi(this).DpiScaleY), (int)((ActualWidth - OFFSET_X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)((ActualHeight - OFFSET_SIZE_HEIGHT) * VisualTreeHelper.GetDpi(this).DpiScaleY), User32.SWP.SHOWWINDOW | User32.SWP.NOACTIVATE);
+            NativeMethods.SetWindowPos(_srcPtr, IntPtr.Zero, (int)(OFFSET_X * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)((this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)(OFFSET_Y * VisualTreeHelper.GetDpi(this).DpiScaleY), (int)((ActualWidth - OFFSET_X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)((ActualHeight - OFFSET_SIZE_HEIGHT) * VisualTreeHelper.GetDpi(this).DpiScaleY), NativeMethods.SWP.SWP_SHOWWINDOW | NativeMethods.SWP.SWP_NOACTIVATE);
     }
 
     public void Show()

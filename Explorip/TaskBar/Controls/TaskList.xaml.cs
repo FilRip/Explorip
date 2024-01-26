@@ -8,6 +8,7 @@ using Explorip.Helpers;
 using Explorip.TaskBar.Utilities;
 
 using ManagedShell.AppBar;
+using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
 using Securify.ShellLink;
@@ -101,7 +102,7 @@ public partial class TaskList : UserControl
                     MyTaskbarApp.MyShellManager.TasksService.Windows = [];
                 }
 
-                WinAPI.User32.EnumWindows((hwnd, lParam) =>
+                NativeMethods.EnumWindows((hwnd, lParam) =>
                 {
                     if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
                     {
@@ -118,7 +119,7 @@ public partial class TaskList : UserControl
 
                 InsertPinnedApp();
 
-                IntPtr hWndForeground = WinAPI.User32.GetForegroundWindow();
+                IntPtr hWndForeground = NativeMethods.GetForegroundWindow();
                 if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(i => (i.Handle == hWndForeground || i.ListWindows.Contains(hWndForeground)) && i.ShowInTaskbar))
                 {
                     ApplicationWindow win = MyTaskbarApp.MyShellManager.TasksService.Windows.First(wnd => (wnd.Handle == hWndForeground || wnd.ListWindows.Contains(hWndForeground)));

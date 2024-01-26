@@ -99,9 +99,6 @@ public partial class NativeMethods
     internal static extern bool DestroyMenu(IntPtr hMenu);
 
     [DllImport(User32_DllName)]
-    internal static extern int EnumWindows(CallBackPtr callPtr, int lPar);
-
-    [DllImport(User32_DllName)]
     internal static extern int EnumChildWindows(IntPtr hParent, CallBackPtr callPtr, int lPar);
 
     [DllImport(User32_DllName, CharSet = CharSet.Unicode)]
@@ -118,9 +115,6 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     internal static extern int SetShellWindow(IntPtr hWnd);
-
-    [DllImport(User32_DllName)]
-    internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, int uFlags);
 
     [DllImport(User32_DllName)]
     internal static extern IntPtr BeginPaint(IntPtr hWnd, ref PaintStruct ps);
@@ -202,6 +196,7 @@ public partial class NativeMethods
         // parameter of a WM_WINDOWPOSCHANGING or WM_WINDOWPSCHANGING message
         // with this one, so that the native window will be able to see any
         // changes that we have made to its values.
+#pragma warning disable IDE0251 // Définir comme membre 'readonly'
         public void UpdateMessage(IntPtr lParam)
         {
             // Marshal this updated structure back to lParam so the native
@@ -209,6 +204,7 @@ public partial class NativeMethods
             // The old structure that it points to should be deleted, too.
             Marshal.StructureToPtr(this, lParam, true);
         }
+#pragma warning restore IDE0251 // Définir comme membre 'readonly'
     }
 
     public enum ExitWindows : uint
@@ -243,9 +239,6 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName, CharSet = CharSet.Auto)]
     internal static extern int RegisterWindowMessage(string msg);
-
-    [DllImport(User32_DllName)]
-    internal static extern int GetSystemMetrics(int Index);
 
     [DllImport(User32_DllName)]
     internal static extern int DestroyIcon(IntPtr hIcon);
@@ -380,9 +373,6 @@ public partial class NativeMethods
 
     public delegate IntPtr WndProcDelegate(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
-    [DllImport(User32_DllName, SetLastError = true)]
-    internal static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
     [return: MarshalAs(UnmanagedType.Bool)]
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern bool GetWindowInfo(IntPtr hwnd, ref WindowInfo pwi);
@@ -440,7 +430,8 @@ public partial class NativeMethods
     [DllImport(User32_DllName)]
     internal static extern IntPtr GetParent(IntPtr handle);
 
-#pragma warning disable S1104 // Fields should not have public accessibility
+    [Serializable()]
+    [StructLayout(LayoutKind.Sequential)]
     public struct WindowPlacement
     {
         public int length;
@@ -450,7 +441,6 @@ public partial class NativeMethods
         public System.Drawing.Point ptMaxPosition;
         public Rectangle rcNormalPosition;
     }
-#pragma warning restore S1104 // Fields should not have public accessibility
 
     [DllImport(User32_DllName)]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -1800,7 +1790,7 @@ public partial class NativeMethods
     internal static extern bool IsWindowVisible(IntPtr hWnd);
 
     [DllImport(User32_DllName)]
-    internal static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+    internal static extern IntPtr SetWindowLong(IntPtr hWnd, GWL nIndex, int dwNewLong);
 
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
@@ -1968,6 +1958,8 @@ public partial class NativeMethods
     /// <returns>a handle to the desired hook</returns>
     [DllImport(User32_DllName)]
     internal static extern IntPtr SetWindowsHookEx(HookType idHook, keyboardHookProc callback, IntPtr hInstance, uint threadId);
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr SetWindowsHookEx(HookType code, LocalWindowsHook.HookProc func, IntPtr hInstance, int threadID);
 
     /// <summary>
     /// defines the callback type for the hook
@@ -2003,6 +1995,9 @@ public partial class NativeMethods
     /// <returns></returns>
     [DllImport(User32_DllName)]
     internal static extern int CallNextHookEx(IntPtr idHook, int nCode, int wParam, ref KeyboardHookStruct lParam);
+
+    [DllImport(User32_DllName)]
+    internal static extern int CallNextHookEx(IntPtr hhook, int code, IntPtr wParam, IntPtr lParam);
 
     /// <summary>
     /// The SetProp function adds a new entry or changes an existing entry in the property list of the specified window. The function adds a new entry to the list if the specified character string does not exist already in the list. The new entry contains the string and the handle. Otherwise, the function replaces the string's current handle with the specified handle.
@@ -3882,5 +3877,265 @@ public partial class NativeMethods
         ///Clear key
         ///</summary>
         OEM_CLEAR = 0xFE
+    }
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr GetSubMenu(IntPtr hMenu, int nPos);
+
+    [DllImport(User32_DllName, CharSet = CharSet.Auto)]
+    internal static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);
+
+    // Define the callback delegate's type.
+    public delegate bool EnumWindowDelegate(IntPtr hWnd, int lParam);
+
+    [DllImport(User32_DllName, EntryPoint = "EnumDesktopWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
+    internal static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumWindowDelegate lpEnumCallbackFunction, int lParam);
+
+    [DllImport(User32_DllName, EntryPoint = "EnumWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
+    internal static extern int EnumWindows(EnumWindowDelegate callPtr, int lParam);
+
+    public enum GWL
+    {
+        GWL_WNDPROC = (-4),
+        GWL_HINSTANCE = (-6),
+        GWL_HWNDPARENT = (-8),
+        GWL_STYLE = (-16),
+        GWL_EXSTYLE = (-20),
+        GWL_USERDATA = (-21),
+        GWL_ID = (-12)
+    }
+
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern int GetWindowLong(IntPtr hWnd, GWL gwl);
+
+    [DllImport(User32_DllName, EntryPoint = "GetWindowLongPtr")]
+    private static extern IntPtr GetWindowLongPtr(IntPtr hWnd, GWL gwl);
+
+    public delegate bool EnumDesktopsDelegate(string desktop, IntPtr lParam);
+    [DllImport(User32_DllName)]
+    internal static extern bool EnumDesktops(IntPtr hwinsta, EnumDesktopsDelegate lpEnumFunc, IntPtr lParam);
+
+    [return: MarshalAs(UnmanagedType.Bool)]
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern bool PostMessage(IntPtr hWnd, WM Msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SWP uFlags);
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern bool SetWindowPos(IntPtr hWnd, int X, int Y, int cx, int cy, SWP uFlags);
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr SetFocus(IntPtr hWnd);
+
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr SetCapture(IntPtr hWnd);
+
+    [DllImport(User32_DllName)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool EnableWindow(IntPtr hWnd, int bEnable);
+
+    [DllImport(User32_DllName)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool UpdateWindow(IntPtr handle);
+
+    public enum SM
+    {
+        ARRANGE = 56,
+        CLEANBOOT = 67,
+        CMONITORS = 80,
+        CMOUSEBUTTONS = 43,
+        CONVERTIBLESLATEMODE = 0x2003,
+        CXBORDER = 5,
+        CXCURSOR = 13,
+        CXDLGFRAME = 7,
+        CXDOUBLECLK = 36,
+        CXDRAG = 68,
+        CXEDGE = 45,
+        CXFIXEDFRAME = 7,
+        CXFOCUSBORDER = 83,
+        CXFRAME = 32,
+        CXFULLSCREEN = 16,
+        CXHSCROLL = 21,
+        CXHTHUMB = 10,
+        CXICON = 11,
+        CXICONSPACING = 38,
+        CXMAXIMIZED = 61,
+        CXMAXTRACK = 59,
+        CXMENUCHECK = 71,
+        CXMENUSIZE = 54,
+        CXMIN = 28,
+        CXMINIMIZED = 57,
+        CXMINSPACING = 47,
+        CXMINTRACK = 34,
+        CXPADDEDBORDER = 92,
+        CXSCREEN = 0,
+        CXSIZE = 30,
+        CXSIZEFRAME = 32,
+        CXSMICON = 49,
+        CXSMSIZE = 52,
+        CXVIRTUALSCREEN = 78,
+        CXVSCROLL = 2,
+        CYBORDER = 6,
+        CYCAPTION = 4,
+        CYCURSOR = 14,
+        CYDLGFRAME = 8,
+        CYDOUBLECLK = 37,
+        CYDRAG = 69,
+        CYEDGE = 46,
+        CYFIXEDFRAME = 8,
+        CYFOCUSBORDER = 84,
+        CYFRAME = 33,
+        CYFULLSCREEN = 17,
+        CYHSCROLL = 3,
+        CYICON = 12,
+        CYICONSPACING = 39,
+        CYKANJIWINDOW = 18,
+        CYMAXIMIZED = 62,
+        CYMAXTRACK = 60,
+        CYMENU = 15,
+        CYMENUCHECK = 72,
+        CYMENUSIZE = 55,
+        CYMIN = 29,
+        CYMINIMIZED = 58,
+        CYMINSPACING = 48,
+        CYMINTRACK = 35,
+        CYSCREEN = 1,
+        CYSIZE = 31,
+        CYSIZEFRAME = 33,
+        CYSMCAPTION = 51,
+        CYSMICON = 50,
+        CYSMSIZE = 53,
+        CYVIRTUALSCREEN = 79,
+        CYVSCROLL = 20,
+        CYVTHUMB = 9,
+        DBCSENABLED = 42,
+        DEBUG = 22,
+        DIGITIZER = 94,
+        IMMENABLED = 82,
+        MAXIMUMTOUCHES = 95,
+        MEDIACENTER = 87,
+        MENUDROPALIGNMENT = 40,
+        MIDEASTENABLED = 74,
+        MOUSEPRESENT = 19,
+        MOUSEHORIZONTALWHEELPRESENT = 91,
+        MOUSEWHEELPRESENT = 75,
+        NETWORK = 63,
+        PENWINDOWS = 41,
+        REMOTECONTROL = 0x2001,
+        REMOTESESSION = 0x1000,
+        SAMEDISPLAYFORMAT = 81,
+        SECURE = 44,
+        SERVERR2 = 89,
+        SHOWSOUNDS = 70,
+        SHUTTINGDOWN = 0x2000,
+        SLOWMACHINE = 73,
+        STARTER = 88,
+        SWAPBUTTON = 23,
+        SYSTEMDOCKED = 0x2004,
+        TABLETPC = 86,
+        XVIRTUALSCREEN = 76,
+        YVIRTUALSCREEN = 77,
+    }
+    [DllImport(User32_DllName)]
+    internal static extern int GetSystemMetrics(SM Index);
+
+    [DllImport(User32_DllName)]
+    internal static extern int GetMenuItemCount(IntPtr hMenu);
+
+    [DllImport(User32_DllName)]
+    internal static extern int GetMenuItemID(IntPtr hMenu, int nPos);
+
+    public class HookEventArgs : EventArgs
+    {
+        public int HookCode { get; set; }   // Hook code
+        public IntPtr WParam { get; set; }  // WPARAM argument
+        public IntPtr LParam { get; set; }  // LPARAM argument
+    }
+
+    public class LocalWindowsHook
+    {
+        // ************************************************************************
+        // Filter function delegate
+        public delegate int HookProc(int code, IntPtr wParam, IntPtr lParam);
+        // ************************************************************************
+
+        // ************************************************************************
+        // Internal properties
+        protected IntPtr m_hhook = IntPtr.Zero;
+        protected HookProc m_filterFunc = null;
+        protected HookType m_hookType;
+        // ************************************************************************
+
+        // ************************************************************************
+        // Event delegate
+        public delegate void HookEventHandler(object sender, HookEventArgs e);
+        // ************************************************************************
+
+        // ************************************************************************
+        // Event: HookInvoked 
+        public event HookEventHandler HookInvoked;
+        protected void OnHookInvoked(HookEventArgs e)
+        {
+            HookInvoked?.Invoke(this, e);
+        }
+        // ************************************************************************
+
+        // ************************************************************************
+        // Class constructor(s)
+        public LocalWindowsHook(HookType hook)
+        {
+            m_hookType = hook;
+            m_filterFunc = new HookProc(CoreHookProc);
+        }
+        public LocalWindowsHook(HookType hook, HookProc func)
+        {
+            m_hookType = hook;
+            m_filterFunc = func;
+        }
+        // ************************************************************************
+
+        // ************************************************************************
+        // Default filter function
+        protected int CoreHookProc(int code, IntPtr wParam, IntPtr lParam)
+        {
+            if (code < 0)
+                return CallNextHookEx(m_hhook, code, wParam, lParam);
+
+            // Let clients determine what to do
+            HookEventArgs e = new()
+            {
+                HookCode = code,
+                WParam = wParam,
+                LParam = lParam
+            };
+            OnHookInvoked(e);
+
+            // Yield to the next hook in the chain
+            return CallNextHookEx(m_hhook, code, wParam, lParam);
+        }
+        // ************************************************************************
+
+        // ************************************************************************
+        // Install the hook
+        public void Install()
+        {
+            m_hhook = SetWindowsHookEx(
+                m_hookType,
+                m_filterFunc,
+                IntPtr.Zero,
+                System.Threading.Thread.CurrentThread.ManagedThreadId);
+        }
+        // ************************************************************************
+
+        // ************************************************************************
+        // Uninstall the hook
+        public void Uninstall()
+        {
+            UnhookWindowsHookEx(m_hhook);
+        }
+        // ************************************************************************
     }
 }

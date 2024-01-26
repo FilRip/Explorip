@@ -56,7 +56,7 @@ public static class ApplicationRestartRecoveryManager
     /// <summary>
     /// Removes an application's recovery registration.
     /// </summary>
-    /// <exception cref="Microsoft.WindowsAPICodePack.ApplicationServices.ApplicationRecoveryException">
+    /// <exception cref="ApplicationRecoveryException">
     /// The attempt to unregister for recovery failed.</exception>
     public static void UnregisterApplicationRecovery()
     {

@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 
-using Explorip.WinAPI.Modeles;
-
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Interfaces;
+using ManagedShell.Common.SupportingClasses;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -34,7 +34,7 @@ public partial class TabTipButton : UserControl
             try
             {
                 UIHostNoLaunch uiHostNoLaunch = new();
-                ((ITipInvocation)uiHostNoLaunch).Toggle(WinAPI.User32.GetDesktopWindow());
+                ((ITipInvocation)uiHostNoLaunch).Toggle(GetDesktopWindow());
                 Marshal.ReleaseComObject(uiHostNoLaunch);
             }
             catch (Exception ex)

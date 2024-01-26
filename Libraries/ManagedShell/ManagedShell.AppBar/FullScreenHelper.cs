@@ -8,6 +8,7 @@ using System.Windows.Threading;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -79,7 +80,7 @@ public sealed class FullScreenHelper : IDisposable
 
     private FullScreenApp GetFullScreenApp(IntPtr hWnd)
     {
-        int style = GetWindowLong(hWnd, GWL_STYLE);
+        int style = GetWindowLong(hWnd, GWL.GWL_STYLE);
         Rect rect;
 
         if ((((int)WindowStyles.WS_CAPTION | (int)WindowStyles.WS_THICKFRAME) & style) == ((int)WindowStyles.WS_CAPTION | (int)WindowStyles.WS_THICKFRAME))

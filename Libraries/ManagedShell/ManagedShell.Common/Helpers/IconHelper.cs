@@ -104,11 +104,11 @@ public static class IconHelper
 
                 if (!filename.StartsWith("\\") && (File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
                 {
-                    SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL | FILE_ATTRIBUTE_DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.SysIconIndex));
+                    SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL | FILE_ATTRIBUTE.DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.SysIconIndex);
                 }
                 else
                 {
-                    SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.UseFileAttributes | SHGFI.SysIconIndex));
+                    SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.UseFileAttributes | SHGFI.SysIconIndex);
                 }
 
                 return GetFromImageList(shinfo.iIcon, size);
@@ -132,7 +132,7 @@ public static class IconHelper
                     szTypeName = string.Empty
                 };
 
-                SHGetFileInfo(pidl, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.PIDL | SHGFI.SysIconIndex));
+                SHGetFileInfo(pidl, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.PIDL | SHGFI.SysIconIndex);
 
                 return GetFromImageList(shinfo.iIcon, size);
             }

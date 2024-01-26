@@ -1,7 +1,8 @@
 ﻿using System.Windows.Media;
 
 using Explorip.Helpers;
-using Explorip.WinAPI;
+
+using ManagedShell.Interop;
 
 namespace Explorip.Constants;
 
@@ -20,7 +21,7 @@ internal static class Icons
         OkImage = IconManager.GetIconFromFile("imageres.dll", 101);
         Folder = IconManager.GetIconFromFile("shell32.dll", 4);
         Shortcut = IconManager.GetIconFromFile("shell32.dll", 146);
-        IconXSize = User32.GetSystemMetrics(User32.SM.CXICON);
-        IconYSize = User32.GetSystemMetrics(User32.SM.CYICON);
+        IconXSize = NativeMethods.GetSystemMetrics(NativeMethods.SM.CXICON);
+        IconYSize = NativeMethods.GetSystemMetrics(NativeMethods.SM.CYICON);
     }
 }

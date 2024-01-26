@@ -10,7 +10,7 @@ internal static class WindowsExtensions
     internal static List<IntPtr> ListWindowsOfProcess(uint processId)
     {
         List<IntPtr> windows = [];
-        NativeMethods.EnumWindows(new NativeMethods.CallBackPtr((handle, param) =>
+        NativeMethods.EnumWindows(new NativeMethods.EnumWindowDelegate((handle, param) =>
         {
             NativeMethods.GetWindowThreadProcessId(handle, out uint id);
             if (id == processId)

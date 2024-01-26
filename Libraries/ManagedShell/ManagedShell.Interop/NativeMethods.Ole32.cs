@@ -5,7 +5,7 @@ namespace ManagedShell.Interop;
 
 public partial class NativeMethods
 {
-    const string Ole32_DllName = "ole32.dll";
+    private const string Ole32_DllName = "ole32.dll";
 
     /// <summary>
     /// Represents the OLE struct PROPVARIANT.
@@ -171,10 +171,12 @@ public partial class NativeMethods
         /// <summary>
         /// Gets the variant type.
         /// </summary>
+#pragma warning disable IDE0251 // Définir comme membre 'readonly'
         public VarEnum Type
         {
             get { return (VarEnum)vt; }
         }
+#pragma warning restore IDE0251 // Définir comme membre 'readonly'
 
         /// <summary>
         /// Gets the variant value.

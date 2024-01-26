@@ -24,9 +24,17 @@ public partial class NativeMethods
         public int Right;
         public int Bottom;
 
-        public int Width => Right - Left;
+#pragma warning disable IDE0251 // Définir comme membre 'readonly'
+        public int Width
+        {
+            get { return Right - Left; }
+        }
 
-        public int Height => Bottom - Top;
+        public int Height
+        {
+            get { return Bottom - Top; }
+        }
+#pragma warning restore IDE0251 // Définir comme membre 'readonly'
     }
 
     [StructLayout(LayoutKind.Sequential)]

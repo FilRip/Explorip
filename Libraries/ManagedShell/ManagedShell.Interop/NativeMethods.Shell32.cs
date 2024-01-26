@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace ManagedShell.Interop;
 
@@ -124,12 +126,6 @@ public partial class NativeMethods
         /// <summary>Get the index of the overlay in the upper 8 bits of the iIcon</summary>
         OverlayIndex = 0x000000040,
     }
-
-    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-    internal static extern IntPtr SHGetFileInfo(string pszPath, uint dwFileAttributes, ref ShFileInfo psfi, uint cbSizeFileInfo, uint uFlags);
-
-    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-    internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, uint dwFileAttributes, ref ShFileInfo psfi, uint cbSizeFileInfo, uint uFlags);
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
     internal static extern bool ShellExecuteEx(ref ShellExecuteInfo lpExecInfo);
@@ -678,6 +674,9 @@ public partial class NativeMethods
         [MarshalAs(UnmanagedType.LPStruct)] Guid rfid, uint dwFlags, IntPtr hToken,
         out IntPtr ppszPath);
 
+    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
+    internal extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolder flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
+
     [Flags()]
     public enum KnownFolder : uint
     {
@@ -699,4 +698,41 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName)]
     internal static extern int SHGetDesktopFolder(out IntPtr ppshf);
+
+    [DllImport(Shell32_DllName)]
+    internal static extern int SHGetFolderLocation(IntPtr hwndOwner, CSIDL nFolder, IntPtr hToken, uint dwReserved, out IntPtr ppidl);
+
+    [DllImport(Shell32_DllName, SetLastError = true)]
+    internal static extern void ILFree(IntPtr pidl);
+
+    [DllImport(Shell32_DllName, SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
+    [return: MarshalAs(UnmanagedType.Interface)]
+    internal static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
+
+    [DllImport(Shell32_DllName, ExactSpelling = true, PreserveSig = false)]
+    internal static extern void SHBindToParent(
+        IntPtr pidl,
+        ref Guid riid,
+        out IntPtr ppv,
+        IntPtr ppidlLast);
+
+    [DllImport(Shell32_DllName, SetLastError = true, CharSet = CharSet.Unicode)]
+    internal static extern IntPtr ILCreateFromPath([MarshalAs(UnmanagedType.LPWStr)] string pszPath);
+
+    [DllImport(Shell32_DllName, SetLastError = true, CharSet = CharSet.Unicode)]
+    internal static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, CSIDL nFolder, ref IntPtr ppidl);
+
+    [Flags()]
+    public enum FILE_ATTRIBUTE : uint
+    {
+        NULL = 0x0000000,
+        NORMAL = 0x00000080,
+        DIRECTORY = 0x00000010,
+    }
+
+    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
+    internal static extern IntPtr SHGetFileInfo(string pszPath, FILE_ATTRIBUTE dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, SHGFI uFlags);
+
+    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
+    internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, SHGFI uFlags);
 }

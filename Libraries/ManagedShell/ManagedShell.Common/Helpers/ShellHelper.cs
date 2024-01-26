@@ -25,7 +25,7 @@ public static class ShellHelper
             szDisplayName = string.Empty,
             szTypeName = string.Empty
         };
-        SHGetFileInfo(filename, FILE_ATTRIBUTE_NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGFI.DisplayName));
+        SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.DisplayName);
 
         return shinfo.szDisplayName;
     }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using Explorip.Constants;
+
+using Microsoft.Win32;
 
 namespace Explorip.Configuration;
 
@@ -18,7 +20,7 @@ internal static class SelectInShellContextMenu
 
         static void WriteValues(RegistryKey currentKey, bool onlySelectAll = false)
         {
-            currentKey.SetValue("MUIVerb", "Select");
+            currentKey.SetValue("MUIVerb", Localization.SELECT);
             currentKey.SetValue("icon", "imageres.dll,-5308");
             currentKey.SetValue("SubCommands", "Windows.selectall" + (onlySelectAll ? "" : ";Windows.selectnone;Windows.invertselection"));
         }
