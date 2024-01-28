@@ -6,13 +6,11 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Desktop.ViewModels;
-
 using Microsoft.WindowsAPICodePack.Shell;
 
-namespace Explorip.Desktop.Models;
+namespace Explorip.Desktop.ViewModels;
 
-internal partial class OneDesktopShellItem : ObservableObject
+internal partial class OneDesktopItemViewModel : ObservableObject
 {
     internal string FullPath { get; set; }
     internal Environment.SpecialFolder SpecialFolder { get; set; }

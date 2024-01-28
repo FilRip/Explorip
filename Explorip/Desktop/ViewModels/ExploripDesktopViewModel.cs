@@ -9,7 +9,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Constants;
-using Explorip.Desktop.Models;
 using Explorip.Helpers;
 
 using Microsoft.WindowsAPICodePack.Shell;
@@ -21,9 +20,9 @@ namespace Explorip.Desktop.ViewModels;
 internal partial class ExploripDesktopViewModel : ObservableObject
 {
     [ObservableProperty()]
-    private ObservableCollection<OneDesktopShellItem> _listDesktopFolder;
+    private ObservableCollection<OneDesktopItemViewModel> _listDesktopFolder;
     [ObservableProperty()]
-    private OneDesktopShellItem _selectedItem;
+    private OneDesktopItemViewModel _selectedItem;
 
     private readonly FileSystemWatcher _watcher;
 
@@ -50,7 +49,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
     private void RefreshDesktopContent(string desktopPath)
     {
         ShellFolder desktop = (ShellFolder)ShellObject.FromParsingName(desktopPath);
-        OneDesktopShellItem item;
+        OneDesktopItemViewModel item;
         foreach (ShellObject filename in desktop)
             if (filename.Name.Trim().ToLower() != "desktop.ini")
             {
@@ -112,7 +111,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
 
     private void Watcher_Created(object sender, FileSystemEventArgs e)
     {
-        OneDesktopShellItem item = new()
+        OneDesktopItemViewModel item = new()
         {
             Name = e.Name,
         };
@@ -127,7 +126,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
 
     internal void UnselectAll()
     {
-        foreach (OneDesktopShellItem item in ListDesktopFolder)
+        foreach (OneDesktopItemViewModel item in ListDesktopFolder)
             item.IsSelected = false;
     }
 
@@ -135,7 +134,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
     {
         List<FileSystemInfo> listItems = [];
         if (ListDesktopFolder.Any(item => item.IsSelected))
-            foreach (OneDesktopShellItem selectedItem in ListDesktopFolder.Where(i => i.IsSelected))
+            foreach (OneDesktopItemViewModel selectedItem in ListDesktopFolder.Where(i => i.IsSelected))
                 if (selectedItem.IsDirectory)
                     listItems.Add(new DirectoryInfo(selectedItem.FullPath));
                 else

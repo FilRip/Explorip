@@ -14,78 +14,12 @@
         Background="{x:Static constants:Colors.BackgroundColorBrush}"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
-        AllowDrop="True"
+        AllowDrop="True" d:DataContext="{d:DesignInstance Type=viewmodels:ExploripDesktopViewModel}"
         Title="" Height="450" Width="800"
         ShowActivated="False" BorderThickness="0" Margin="0" Padding="0"
         PreviewMouseRightButtonUp="Window_PreviewMouseRightButtonUp"
         PreviewMouseLeftButtonUp="Window_PreviewMouseLeftButtonUp">
-    <Window.DataContext>
-        <viewmodels:ExploripDesktopViewModel/>
-    </Window.DataContext>
-    <ListView ItemsSource="{Binding ListDesktopFolder}" Background="Transparent" BorderThickness="0" AllowDrop="True" Name="MainListView"
-              ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
-              SelectedItem="{Binding SelectedItem}" SelectionMode="Extended" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True">
-        <ListView.ItemContainerStyle>
-            <Style TargetType="{x:Type ListViewItem}">
-                <Setter Property="Margin" Value="5"/>
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="AllowDrop" Value="True"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ListViewItem}">
-                            <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
-                                <Border BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" CornerRadius="2.5"/>
-                                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <ContentPresenter/>
-                                </StackPanel>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.ItemsPanel>
-            <ItemsPanelTemplate>
-                <WrapPanel/>
-            </ItemsPanelTemplate>
-        </ListView.ItemsPanel>
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="96"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="96"/>
-                    </Grid.ColumnDefinitions>
-                    <Button Background="{Binding BackgroundBrush}" BorderThickness="0" Command="{Binding SelectItCommand}">
-                        <Button.Style>
-                            <Style TargetType="{x:Type Button}">
-                                <Setter Property="OverridesDefaultStyle" Value="True"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type Button}">
-                                            <ContentPresenter/>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="{x:Static constants:Colors.BackgroundColorBrush}"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </Button.Style>
-                        <Button.InputBindings>
-                            <MouseBinding Command="{Binding ExecuteCommand}" Gesture="LeftDoubleClick"/>
-                        </Button.InputBindings>
-                        <StackPanel>
-                            <Image Source="{Binding Icon}" Height="48" Width="48" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                            <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="{Binding BackgroundBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </Grid>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+    <Grid Name="MainGrid">
+        
+    </Grid>
 </Window>

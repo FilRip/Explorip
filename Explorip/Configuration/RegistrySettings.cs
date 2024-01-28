@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Media;
 
 using Explorip.Constants;
-using Explorip.Desktop.Models;
+using Explorip.Desktop.ViewModels;
 using Explorip.Helpers;
 
 using Microsoft.Win32;
@@ -54,9 +54,9 @@ internal static class RegistrySettings
         return key.GetValue("Shell").ToString();
     }
 
-    public static List<OneDesktopShellItem> ListDesktopSystemIcons()
+    public static List<OneDesktopItemViewModel> ListDesktopSystemIcons()
     {
-        List<OneDesktopShellItem> result = [];
+        List<OneDesktopItemViewModel> result = [];
         RegistryKey key = Registry.LocalMachine.OpenSubKey("Software/Microsoft/Windows/CurrentVersion/Explorer/HideDesktopIcons/NewStartPanel", false);
         foreach (string name in key.GetValueNames())
             if (key.GetValue(name).ToString() != "0")
@@ -114,7 +114,7 @@ internal static class RegistrySettings
                     }
                     catch { /* Can't get icon, ignore errors */ }
                 }
-                OneDesktopShellItem item = new()
+                OneDesktopItemViewModel item = new()
                 {
                     Name = label,
                     Icon = icon,

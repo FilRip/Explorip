@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Explorip.Desktop.Controls.OneDesktopItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
+             xmlns:constants="clr-namespace:Explorip.Constants"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <viewmodels:OneDesktopItemViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="96"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="96"/>
+        </Grid.ColumnDefinitions>
+        <Button Background="{Binding BackgroundBrush}" BorderThickness="0" Command="{Binding SelectItCommand}">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="OverridesDefaultStyle" Value="True"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <ContentPresenter/>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Button.Style>
+            <Button.InputBindings>
+                <MouseBinding Command="{Binding ExecuteCommand}" Gesture="LeftDoubleClick"/>
+            </Button.InputBindings>
+            <StackPanel>
+                <Image Source="{Binding Icon}" Height="48" Width="48" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="{Binding BackgroundBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Center"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>
