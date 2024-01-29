@@ -14,12 +14,12 @@
         Background="{x:Static constants:Colors.BackgroundColorBrush}"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
-        AllowDrop="True" d:DataContext="{d:DesignInstance Type=viewmodels:ExploripDesktopViewModel}"
+        d:DataContext="{d:DesignInstance Type=viewmodels:ExploripDesktopViewModel}"
         Title="" Height="450" Width="800"
         ShowActivated="False" BorderThickness="0" Margin="0" Padding="0"
         PreviewMouseRightButtonUp="Window_PreviewMouseRightButtonUp"
-        PreviewMouseLeftButtonUp="Window_PreviewMouseLeftButtonUp">
+        PreviewMouseLeftButtonUp="Window_PreviewMouseLeftButtonUp"
+        dd:DragDrop.IsDragSource="False" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
     <Grid Name="MainGrid">
-        
     </Grid>
 </Window>

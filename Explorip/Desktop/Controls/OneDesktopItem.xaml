@@ -5,17 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
              xmlns:constants="clr-namespace:Explorip.Constants"
+             xmlns:dd="urn:gong-wpf-dragdrop"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="96" d:DesignWidth="96"
+             dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.UseDefaultDragAdorner="True" dd:DragDrop.DropHandler="{Binding}">
     <UserControl.DataContext>
         <viewmodels:OneDesktopItemViewModel/>
     </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="96"/>
+            <RowDefinition Height="{x:Static constants:Desktop.ITEM_SIZE_Y}"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="96"/>
+            <ColumnDefinition Width="{x:Static constants:Desktop.ITEM_SIZE_X}"/>
         </Grid.ColumnDefinitions>
         <Button Background="{Binding BackgroundBrush}" BorderThickness="0" Command="{Binding SelectItCommand}">
             <Button.Style>
@@ -38,7 +40,7 @@
             <Button.InputBindings>
                 <MouseBinding Command="{Binding ExecuteCommand}" Gesture="LeftDoubleClick"/>
             </Button.InputBindings>
-            <StackPanel>
+            <StackPanel Background="{Binding BackgroundBrush}">
                 <Image Source="{Binding Icon}" Height="48" Width="48" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                 <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="{Binding BackgroundBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Center"/>
             </StackPanel>

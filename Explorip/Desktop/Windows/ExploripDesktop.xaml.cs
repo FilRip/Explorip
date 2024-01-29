@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,6 +8,7 @@ using System.Windows.Interop;
 
 using Explorip.Desktop.Controls;
 using Explorip.Desktop.ViewModels;
+using Explorip.Helpers;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
@@ -23,13 +25,13 @@ namespace Explorip.Desktop.Windows;
 public partial class ExploripDesktop : Window
 {
     private IntPtr _handle;
-    private const int NB_COLUMNS = 20;
-    private const int NB_ROWS = 10;
+    private int _nbColumns;
+    private int _nbRows;
 
     public ExploripDesktop()
     {
         InitializeComponent();
-        DataContext = new ExploripDesktopViewModel();
+        DataContext = new ExploripDesktopViewModel(this);
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
         {
             WindowsSettings.UseImmersiveDarkMode(GetHandle(), true);
@@ -39,27 +41,42 @@ public partial class ExploripDesktop : Window
 
     internal void RefreshGrid()
     {
-        GridLength gridWidth, gridHeight;
+        _nbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(Constants.Desktop.ITEM_SIZE_X.Value * AssociateScreen.ScaleFactor);
+        _nbRows = (int)AssociateScreen.WorkingArea.Height / (int)(Constants.Desktop.ITEM_SIZE_Y.Value * AssociateScreen.ScaleFactor);
 
-        gridWidth = new GridLength(AssociateScreen.WorkingArea.Width / NB_COLUMNS, GridUnitType.Pixel);
-        gridHeight = new GridLength(AssociateScreen.WorkingArea.Height / NB_ROWS, GridUnitType.Pixel);
-
-        for (int i = 0; i < NB_COLUMNS; i++)
+        for (int i = 0; i < _nbColumns; i++)
             MainGrid.ColumnDefinitions.Add(new ColumnDefinition()
             {
-                Width = gridWidth,
+                Width = Constants.Desktop.ITEM_SIZE_X,
             });
 
-        for (int i = 0; i < NB_ROWS; i++)
+        for (int i = 0; i < _nbRows; i++)
             MainGrid.RowDefinitions.Add(new RowDefinition()
             {
-                Height = gridHeight,
+                Height = Constants.Desktop.ITEM_SIZE_Y,
             });
     }
 
-    internal void AddObject(OneDesktopItem item)
+    internal void AddItem(OneDesktopItem item)
     {
-        // TODO : Search grid cell to add item on it
+        int nbColumn = 0, nbRow = -1;
+        bool findEmptyPlace = false;
+        while (!findEmptyPlace)
+        {
+            nbRow++;
+            if (nbRow == _nbRows)
+            {
+                nbRow = 0;
+                nbColumn++;
+                if (nbColumn == _nbColumns)
+                    break;
+            }
+            findEmptyPlace = !MainGrid.Children.OfType<OneDesktopItem>().Any(c => Grid.GetRow(c) == nbRow && Grid.GetColumn(c) == nbColumn);
+        }
+        if (findEmptyPlace)
+            MainGrid.Children.Add(item);
+        Grid.SetColumn(item, nbColumn);
+        Grid.SetRow(item, nbRow);
     }
 
     internal Screen AssociateScreen { get; set; }
@@ -83,6 +100,7 @@ public partial class ExploripDesktop : Window
         this.SetWindowPosition((int)AssociateScreen.WorkingArea.X, (int)AssociateScreen.WorkingArea.Y, (int)AssociateScreen.WorkingArea.Width, (int)AssociateScreen.WorkingArea.Height);
         WindowHelper.HideWindowFromTasks(GetHandle());
         WindowHelper.ShowWindowDesktop(GetHandle());
+        MyDataContext.RefreshDesktopContent();
     }
 
     private void Window_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -100,7 +118,10 @@ public partial class ExploripDesktop : Window
 
         ManagedShell.ShellFolders.Models.ShellContextMenu contextMenu = new();
         Point position = PointToScreen(Mouse.GetPosition(this));
-        contextMenu.ShowContextMenu(MyDataContext.ListSelectedItem().ToArray(), position);
+        FileSystemInfo[] listItems = MyDataContext.ListSelectedItem();
+        if (listItems.Length == 0)
+            listItems = listItems.Add(new DirectoryInfo(Environment.SpecialFolder.DesktopDirectory.FullPath()));
+        contextMenu.ShowContextMenu(listItems, position);
     }
 
     private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)

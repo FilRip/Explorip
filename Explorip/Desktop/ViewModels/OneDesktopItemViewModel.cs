@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Input;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using GongSolutions.Wpf.DragDrop;
+
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Desktop.ViewModels;
 
-internal partial class OneDesktopItemViewModel : ObservableObject
+internal partial class OneDesktopItemViewModel : ObservableObject, IDropTarget
 {
     internal string FullPath { get; set; }
     internal Environment.SpecialFolder SpecialFolder { get; set; }
     internal bool IsDirectory { get; set; }
     internal ExploripDesktopViewModel CurrentDesktop { get; set; }
-    
+    internal FileSystemInfo _fileSystemInfo;
+
     [ObservableProperty()]
     private string _name;
 
@@ -61,4 +65,37 @@ internal partial class OneDesktopItemViewModel : ObservableObject
             CurrentDesktop.UnselectAll();
         IsSelected = !IsSelected;
     }
+
+    internal FileSystemInfo FileSystemIO
+    {
+        get
+        {
+            _fileSystemInfo ??= (IsDirectory ? new DirectoryInfo(FullPath) : new FileInfo(FullPath));
+            return _fileSystemInfo;
+        }
+    }
+
+    #region Drag's drop
+
+    public void DragEnter(IDropInfo dropInfo)
+    {
+
+    }
+
+    public void DragOver(IDropInfo dropInfo)
+    {
+        dropInfo.Effects = System.Windows.DragDropEffects.Move;
+    }
+
+    public void DragLeave(IDropInfo dropInfo)
+    {
+
+    }
+
+    public void Drop(IDropInfo dropInfo)
+    {
+
+    }
+
+    #endregion
 }
