@@ -7,13 +7,11 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using GongSolutions.Wpf.DragDrop;
-
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Desktop.ViewModels;
 
-internal partial class OneDesktopItemViewModel : ObservableObject, IDropTarget
+internal partial class OneDesktopItemViewModel : ObservableObject
 {
     internal string FullPath { get; set; }
     internal Environment.SpecialFolder SpecialFolder { get; set; }
@@ -53,9 +51,9 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDropTarget
     }
 
     [RelayCommand()]
-    private void Execute()
+    private void Execute(object args)
     {
-        Process.Start(FullPath);
+        Process.Start(FullPath, args.ToString());
     }
 
     [RelayCommand()]
@@ -74,28 +72,4 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDropTarget
             return _fileSystemInfo;
         }
     }
-
-    #region Drag's drop
-
-    public void DragEnter(IDropInfo dropInfo)
-    {
-
-    }
-
-    public void DragOver(IDropInfo dropInfo)
-    {
-        dropInfo.Effects = System.Windows.DragDropEffects.Move;
-    }
-
-    public void DragLeave(IDropInfo dropInfo)
-    {
-
-    }
-
-    public void Drop(IDropInfo dropInfo)
-    {
-
-    }
-
-    #endregion
 }

@@ -15,6 +15,8 @@ using Explorip.Helpers;
 
 using GongSolutions.Wpf.DragDrop;
 
+using ManagedShell.Interop;
+
 using Microsoft.WindowsAPICodePack.Shell;
 
 using Securify.ShellLink;
@@ -166,11 +168,28 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
         double dpi = _parentDesktop.AssociateScreen.ScaleFactor;
         int x = (int)(dropInfo.DropPosition.X / (Constants.Desktop.ITEM_SIZE_X.Value * dpi));
         int y = (int)(dropInfo.DropPosition.Y / (Constants.Desktop.ITEM_SIZE_Y.Value * dpi));
-        OneDesktopItem item = ListItems().Find(i => i.MyDataContext == (OneDesktopItemViewModel)dropInfo.Data);
+        List<OneDesktopItem> listItems = ListItems();
+        OneDesktopItem item = listItems.Find(i => i.MyDataContext == (OneDesktopItemViewModel)dropInfo.Data);
+        OneDesktopItem dest = listItems.Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
         if (item != null)
         {
-            Grid.SetColumn(item, x);
-            Grid.SetRow(item, y);
+            if (dest == null)
+            {
+                Grid.SetColumn(item, x);
+                Grid.SetRow(item, y);
+            }
+            else
+            {
+                if (dest.MyDataContext.IsDirectory)
+                {
+                    FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
+                    fileOperation.MoveItem(item.MyDataContext.FullPath, dest.MyDataContext.FullPath, Path.GetFileName(item.MyDataContext.FullPath));
+                    fileOperation.PerformOperations();
+                    fileOperation.Dispose();
+                }
+                else
+                    dest.MyDataContext.ExecuteCommand.Execute(item);
+            }
         }
     }
 
