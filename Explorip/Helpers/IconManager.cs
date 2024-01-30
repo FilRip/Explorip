@@ -16,7 +16,12 @@ internal static class IconManager
         try
         {
             NativeMethods.ExtractIconEx(file, number, out IntPtr large, out IntPtr small, 1);
-            Icon icon = Icon.FromHandle(largeIcon ? large : small);
+            Icon icon = null;
+            if ((largeIcon && large != IntPtr.Zero) ||
+                (!largeIcon && small != IntPtr.Zero))
+            {
+                icon = Icon.FromHandle(largeIcon ? large : small);
+            }
             return icon;
         }
         catch (Exception)

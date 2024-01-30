@@ -10,6 +10,7 @@
         Topmost="False"
         ShowInTaskbar="False"
         WindowStyle="None"
+        Left="0" Top="0"
         AllowsTransparency="True"
         Background="{x:Static constants:Colors.BackgroundColorBrush}"
         ResizeMode="NoResize"

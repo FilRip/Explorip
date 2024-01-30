@@ -14,6 +14,8 @@ using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.SupportingClasses;
+using ManagedShell.Interop;
 
 using WpfScreenHelper;
 
@@ -41,6 +43,9 @@ public partial class ExploripDesktop : Window
 
     internal void RefreshGrid()
     {
+        MainGrid.ColumnDefinitions.Clear();
+        MainGrid.RowDefinitions.Clear();
+
         _nbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(Constants.Desktop.ITEM_SIZE_X.Value * AssociateScreen.ScaleFactor);
         _nbRows = (int)AssociateScreen.WorkingArea.Height / (int)(Constants.Desktop.ITEM_SIZE_Y.Value * AssociateScreen.ScaleFactor);
 
@@ -89,8 +94,38 @@ public partial class ExploripDesktop : Window
     internal IntPtr GetHandle()
     {
         if (_handle == IntPtr.Zero)
+        {
             _handle = new WindowInteropHelper(this).EnsureHandle();
+            HwndSource.FromHwnd(_handle).AddHook(WndProc);
+        }
         return _handle;
+    }
+
+    private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
+        {
+            NativeMethods.WindowPos wndPos = NativeMethods.WindowPos.FromMessage(lParam);
+
+            if (!wndPos.flags.HasFlag(NativeMethods.SWP.SWP_NOZORDER))
+            {
+                IntPtr lowestHwnd = WindowHelper.GetLowestDesktopParentHwnd();
+
+                if (lowestHwnd != IntPtr.Zero)
+                    wndPos.hwndInsertAfter = NativeMethods.GetWindow(lowestHwnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
+                else
+                    wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_BOTTOM;
+
+                wndPos.UpdateMessage(lParam);
+            }
+        }
+        else if ((msg == (int)NativeMethods.WM.SETTINGCHANGE && wParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA) ||
+            (msg == (int)NativeMethods.WM.DPICHANGED))
+        {
+            RefreshGrid();
+        }
+
+        return IntPtr.Zero;
     }
 
     internal void InitDesktopWindow()

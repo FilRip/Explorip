@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
@@ -262,7 +263,7 @@ namespace ManagedShell.ShellFolders.Models
                     CMD_LAST,
                     CMF.EXPLORE |
                     CMF.NORMAL |
-                    ((Control.ModifierKeys & Keys.Shift) != 0 ? CMF.EXTENDEDVERBS : 0));
+                    ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? CMF.EXTENDEDVERBS : 0));
 
                 Guid cm2Guid = typeof(IContextMenu2).GUID;
                 Guid cm3Guid = typeof(IContextMenu3).GUID;

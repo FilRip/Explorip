@@ -86,7 +86,12 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
                             item.Icon = IconManager.GetIconFromFile(iconLocation, shortcut.IconIndex);
                         }
                     }
-                    item.Icon ??= IconManager.Convert(System.Drawing.Icon.ExtractAssociatedIcon(filename.ParsingName));
+                    if (item.Icon == null)
+                    {
+                        System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filename.ParsingName);
+                        if (icon != null)
+                            item.Icon = IconManager.Convert(icon);
+                    }
                 }
                 catch (Exception) { /* Ignore errors, can't get icon */ }
                 OneDesktopItem ctrl = new()
@@ -99,13 +104,16 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     private void Watcher_Deleted(object sender, FileSystemEventArgs e)
     {
-        try
+        Application.Current.Dispatcher.BeginInvoke(() =>
         {
-            OneDesktopItem item = ListItems().Find(i => i.MyDataContext.Name == e.Name);
-            if (item != null)
-                _parentDesktop.MainGrid.Children.Remove(item);
-        }
-        catch (Exception) { /* Ignore errors, file not found/already removed from list */ }
+            try
+            {
+                OneDesktopItem item = ListItems().Find(i => i.MyDataContext.Name == e.Name);
+                if (item != null)
+                    _parentDesktop.MainGrid.Children.Remove(item);
+            }
+            catch (Exception) { /* Ignore errors, file not found/already removed from list */ }
+        });
     }
 
     private void Watcher_Renamed(object sender, RenamedEventArgs e)
@@ -119,9 +127,16 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     private void Watcher_Created(object sender, FileSystemEventArgs e)
     {
-        OneDesktopItem item = new();
-        item.MyDataContext.Name = e.Name;
-        _parentDesktop.AddItem(item);
+        Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            try
+            {
+                OneDesktopItem item = new();
+                item.MyDataContext.Name = e.Name;
+                _parentDesktop.AddItem(item);
+            }
+            catch (Exception) { /* Unable to add item ??? So what to do */ }
+        });
     }
 
     [RelayCommand()]
@@ -150,7 +165,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     public void DragEnter(IDropInfo dropInfo)
     {
-        // Nothing to to here, atm
+        // Nothing to do. Not yet.
     }
 
     public void DragOver(IDropInfo dropInfo)
@@ -160,7 +175,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     public void DragLeave(IDropInfo dropInfo)
     {
-        // Nothing to to here, atm
+        // Nothing to do. Not yet.
     }
 
     public void Drop(IDropInfo dropInfo)
@@ -169,26 +184,44 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
         int x = (int)(dropInfo.DropPosition.X / (Constants.Desktop.ITEM_SIZE_X.Value * dpi));
         int y = (int)(dropInfo.DropPosition.Y / (Constants.Desktop.ITEM_SIZE_Y.Value * dpi));
         List<OneDesktopItem> listItems = ListItems();
-        OneDesktopItem item = listItems.Find(i => i.MyDataContext == (OneDesktopItemViewModel)dropInfo.Data);
         OneDesktopItem dest = listItems.Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
-        if (item != null)
+        if (dropInfo.Data is OneDesktopItemViewModel itemToDrop)
         {
-            if (dest == null)
+            OneDesktopItem item = listItems.Find(i => i.MyDataContext == itemToDrop);
+            if (item != null)
             {
-                Grid.SetColumn(item, x);
-                Grid.SetRow(item, y);
-            }
-            else
-            {
-                if (dest.MyDataContext.IsDirectory)
+                if (dest == null)
                 {
-                    FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
-                    fileOperation.MoveItem(item.MyDataContext.FullPath, dest.MyDataContext.FullPath, Path.GetFileName(item.MyDataContext.FullPath));
-                    fileOperation.PerformOperations();
-                    fileOperation.Dispose();
+                    Grid.SetColumn(item, x);
+                    Grid.SetRow(item, y);
                 }
                 else
-                    dest.MyDataContext.ExecuteCommand.Execute(item);
+                {
+                    if (dest.MyDataContext.IsDirectory)
+                    {
+                        FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
+                        fileOperation.MoveItem(item.MyDataContext.FullPath, dest.MyDataContext.FullPath, Path.GetFileName(item.MyDataContext.FullPath));
+                        fileOperation.PerformOperations();
+                        fileOperation.Dispose();
+                    }
+                    else
+                        dest.MyDataContext.ExecuteCommand.Execute(item);
+                }
+            }
+        }
+        else if (dropInfo.Data is DataObject)
+        {
+            string[] itemsFromExplorer = (string[])((IDataObject)dropInfo.Data).GetData("FileDrop");
+            string destination = (dest == null ? Environment.SpecialFolder.DesktopDirectory.FullPath() : dest.MyDataContext.FullPath);
+            foreach (string file in itemsFromExplorer)
+            {
+                FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
+                if (dropInfo.Effects == DragDropEffects.Copy)
+                    fileOperation.CopyItem(file, destination, Path.GetFileName(file));
+                else if (dropInfo.Effects == DragDropEffects.Move)
+                    fileOperation.MoveItem(file, destination, Path.GetFileName(file));
+                fileOperation.PerformOperations();
+                fileOperation.Dispose();
             }
         }
     }
