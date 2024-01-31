@@ -8,6 +8,7 @@
              xmlns:dd="urn:gong-wpf-dragdrop"
              mc:Ignorable="d" Focusable="True"
              d:DesignHeight="96" d:DesignWidth="96"
+             KeyDown="UserControl_KeyDown"
              dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.UseDefaultDragAdorner="True">
     <UserControl.DataContext>
         <viewmodels:OneDesktopItemViewModel/>

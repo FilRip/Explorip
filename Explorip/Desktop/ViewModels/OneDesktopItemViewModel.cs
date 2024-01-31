@@ -85,31 +85,37 @@ internal partial class OneDesktopItemViewModel : ObservableObject
         Debug.WriteLine($"Select {Name}, previous={previousSelected}, DateTime.UtcNow={DateTime.UtcNow}, LastClicked={_lastClicked}, Difference in milliseconds={DateTime.UtcNow.Subtract(_lastClicked).TotalMilliseconds}");
         if (previousSelected && DateTime.UtcNow.Subtract(_lastClicked).TotalMilliseconds > 1000 && CurrentDesktop.ListSelectedItem().Length == 1)
         {
-            InputBoxWindow input = new()
-            {
-                Icon = Icon,
-                Background = Constants.Colors.BackgroundColorBrush,
-                Foreground = Constants.Colors.ForegroundColorBrush,
-            };
-            input.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
-            input.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
-            if (input.ShowModal(IsDirectory ? Constants.Localization.RENAME_FOLDER : Constants.Localization.RENAME_FILE, Constants.Localization.NEW_NAME, Name) == true)
-            {
-                try
-                {
-                    string newName = Path.Combine(Path.GetDirectoryName(FullPath), input.TxtUserEdit.Text);
-                    if (IsDirectory)
-                        Directory.Move(FullPath, newName);
-                    else
-                        File.Move(FullPath, newName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(Constants.Localization.ERROR, string.Format(Constants.Localization.ERROR_DURING_RENAME, Name, ex.Message), MessageBoxButton.OK);
-                }
-            }
+            Rename();
         }
         _lastClicked = DateTime.UtcNow;
+    }
+
+    [RelayCommand()]
+    private void Rename()
+    {
+        InputBoxWindow input = new()
+        {
+            Icon = Icon,
+            Background = Constants.Colors.BackgroundColorBrush,
+            Foreground = Constants.Colors.ForegroundColorBrush,
+        };
+        input.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
+        input.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
+        if (input.ShowModal(IsDirectory ? Constants.Localization.RENAME_FOLDER : Constants.Localization.RENAME_FILE, Constants.Localization.NEW_NAME, Name) == true)
+        {
+            try
+            {
+                string newName = Path.Combine(Path.GetDirectoryName(FullPath), input.TxtUserEdit.Text);
+                if (IsDirectory)
+                    Directory.Move(FullPath, newName);
+                else
+                    File.Move(FullPath, newName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(Constants.Localization.ERROR, string.Format(Constants.Localization.ERROR_DURING_RENAME, Name, ex.Message), MessageBoxButton.OK);
+            }
+        }
     }
 
     internal FileSystemInfo FileSystemIO

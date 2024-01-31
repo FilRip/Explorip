@@ -27,8 +27,6 @@ namespace Explorip.Desktop.Windows;
 public partial class ExploripDesktop : Window
 {
     private IntPtr _handle;
-    private int _nbColumns;
-    private int _nbRows;
 
     public ExploripDesktop()
     {
@@ -46,16 +44,16 @@ public partial class ExploripDesktop : Window
         MainGrid.ColumnDefinitions.Clear();
         MainGrid.RowDefinitions.Clear();
 
-        _nbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(Constants.Desktop.ITEM_SIZE_X.Value * AssociateScreen.ScaleFactor);
-        _nbRows = (int)AssociateScreen.WorkingArea.Height / (int)(Constants.Desktop.ITEM_SIZE_Y.Value * AssociateScreen.ScaleFactor);
+        MyDataContext.NbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(Constants.Desktop.ITEM_SIZE_X.Value * AssociateScreen.ScaleFactor);
+        MyDataContext.NbRows = (int)AssociateScreen.WorkingArea.Height / (int)(Constants.Desktop.ITEM_SIZE_Y.Value * AssociateScreen.ScaleFactor);
 
-        for (int i = 0; i < _nbColumns; i++)
+        for (int i = 0; i < MyDataContext.NbColumns; i++)
             MainGrid.ColumnDefinitions.Add(new ColumnDefinition()
             {
                 Width = Constants.Desktop.ITEM_SIZE_X,
             });
 
-        for (int i = 0; i < _nbRows; i++)
+        for (int i = 0; i < MyDataContext.NbRows; i++)
             MainGrid.RowDefinitions.Add(new RowDefinition()
             {
                 Height = Constants.Desktop.ITEM_SIZE_Y,
@@ -69,11 +67,11 @@ public partial class ExploripDesktop : Window
         while (!findEmptyPlace)
         {
             nbRow++;
-            if (nbRow == _nbRows)
+            if (nbRow == MyDataContext.NbRows)
             {
                 nbRow = 0;
                 nbColumn++;
-                if (nbColumn == _nbColumns)
+                if (nbColumn == MyDataContext.NbColumns)
                     break;
             }
             findEmptyPlace = !MainGrid.Children.OfType<OneDesktopItem>().Any(c => Grid.GetRow(c) == nbRow && Grid.GetColumn(c) == nbColumn);
@@ -145,23 +143,7 @@ public partial class ExploripDesktop : Window
 
     private void Window_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (Mouse.DirectlyOver is FrameworkElement element && element.DataContext is OneDesktopItemViewModel item)
-        {
-            if (!item.IsSelected)
-            {
-                MyDataContext.UnSelectAll();
-                item.IsSelected = true;
-            }
-        }
-        else
-            MyDataContext.UnSelectAll();
-
-        ManagedShell.ShellFolders.Models.ShellContextMenu contextMenu = new();
-        Point position = PointToScreen(Mouse.GetPosition(this));
-        FileSystemInfo[] listItems = MyDataContext.ListSelectedItem();
-        if (listItems.Length == 0)
-            listItems = listItems.Add(new DirectoryInfo(Environment.SpecialFolder.DesktopDirectory.FullPath()));
-        contextMenu.ShowContextMenu(listItems, position);
+        MyDataContext.ActionRightClickCommand.Execute(e);
     }
 
     #region Rectangle selection
@@ -229,34 +211,8 @@ public partial class ExploripDesktop : Window
 
     #endregion
 
-    private int _currentCellX, _currentCellY;
     private void Window_KeyDown(object sender, KeyEventArgs e)
     {
-        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-        {
-            if (e.Key == Key.A)
-                MyDataContext.UnSelectAll(true);
-            return;
-        }
-        int x = _currentCellX, y = _currentCellY;
-        if (e.Key == Key.Up && y > 0)
-            y--;
-        else if (e.Key == Key.Down && y < _nbRows - 1)
-            y++;
-        else if (e.Key == Key.Left && x > 0)
-            x--;
-        else if (e.Key == Key.Right && x < _nbColumns - 1)
-            x++;
-        if (x != _currentCellX || y != _currentCellY)
-        {
-            OneDesktopItem item = MyDataContext.ListItems().Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
-            if (item != null)
-            {
-                _currentCellX = x;
-                _currentCellY = y;
-                item.Focus();
-                Keyboard.Focus(item);
-            }
-        }
+        MyDataContext.ActionOnKeyCommand.Execute(e);
     }
 }

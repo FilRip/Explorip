@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -24,6 +26,9 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 {
     private readonly ExploripDesktop _parentDesktop;
     private readonly FileSystemWatcher _watcher;
+    private int _currentCellX, _currentCellY;
+    [ObservableProperty()]
+    private int _nbColumns, _nbRows;
 
     public ExploripDesktopViewModel(ExploripDesktop parent) : base()
     {
@@ -132,6 +137,65 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
     internal FileSystemInfo[] ListSelectedItem()
     {
         return ListItems().Where(i => i.MyDataContext.IsSelected).Select(i => i.MyDataContext.FileSystemIO).ToArray();
+    }
+
+    [RelayCommand()]
+    private void ActionRightClick(object args)
+    {
+        if (args is MouseButtonEventArgs)
+        {
+            if (Mouse.DirectlyOver is FrameworkElement element && element.DataContext is OneDesktopItemViewModel item)
+            {
+                if (!item.IsSelected)
+                {
+                    UnSelectAll();
+                    item.IsSelected = true;
+                }
+            }
+            else
+                UnSelectAll();
+
+            ManagedShell.ShellFolders.Models.ShellContextMenu contextMenu = new();
+            Point position = _parentDesktop.PointToScreen(Mouse.GetPosition(_parentDesktop));
+            FileSystemInfo[] listItems = ListSelectedItem();
+            if (listItems.Length == 0)
+                listItems = listItems.Add(new DirectoryInfo(Environment.SpecialFolder.DesktopDirectory.FullPath()));
+            contextMenu.ShowContextMenu(listItems, position);
+        }
+    }
+
+    [RelayCommand()]
+    internal void ActionOnKey(object args)
+    {
+        if (args is KeyEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                if (e.Key == Key.A)
+                    UnSelectAll(true);
+                return;
+            }
+            int x = _currentCellX, y = _currentCellY;
+            if (e.Key == Key.Up && y > 0)
+                y--;
+            else if (e.Key == Key.Down && y < NbRows - 1)
+                y++;
+            else if (e.Key == Key.Left && x > 0)
+                x--;
+            else if (e.Key == Key.Right && x < NbColumns - 1)
+                x++;
+            if (x != _currentCellX || y != _currentCellY)
+            {
+                OneDesktopItem item = ListItems().Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
+                if (item != null)
+                {
+                    _currentCellX = x;
+                    _currentCellY = y;
+                    item.Focus();
+                    Keyboard.Focus(item);
+                }
+            }
+        }
     }
 
     #region Drag'n drop
