@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 using Explorip.Desktop.Controls;
 using Explorip.Desktop.ViewModels;
@@ -14,7 +15,6 @@ using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
 using ManagedShell.Common.Helpers;
-using ManagedShell.Common.SupportingClasses;
 using ManagedShell.Interop;
 
 using WpfScreenHelper;
@@ -79,9 +79,12 @@ public partial class ExploripDesktop : Window
             findEmptyPlace = !MainGrid.Children.OfType<OneDesktopItem>().Any(c => Grid.GetRow(c) == nbRow && Grid.GetColumn(c) == nbColumn);
         }
         if (findEmptyPlace)
-            MainGrid.Children.Add(item);
-        Grid.SetColumn(item, nbColumn);
-        Grid.SetRow(item, nbRow);
+        {
+            if (!MainGrid.Children.Contains(item))
+                MainGrid.Children.Add(item);
+            Grid.SetColumn(item, nbColumn);
+            Grid.SetRow(item, nbRow);
+        }
     }
 
     internal Screen AssociateScreen { get; set; }
@@ -123,6 +126,8 @@ public partial class ExploripDesktop : Window
             (msg == (int)NativeMethods.WM.DPICHANGED))
         {
             RefreshGrid();
+            foreach (OneDesktopItem item in MyDataContext.ListItems())
+                AddItem(item);
         }
 
         return IntPtr.Zero;
@@ -161,10 +166,66 @@ public partial class ExploripDesktop : Window
 
     private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
+        if (_selection && SelectInRectangle())
+            return;
+
         if (Mouse.DirectlyOver is FrameworkElement element && element.DataContext is OneDesktopItemViewModel)
             return;
         if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             return;
         MyDataContext.UnselectAll();
     }
+
+    #region Rectangle selection
+
+    private bool _selection;
+    private Point _selectionStart;
+    private readonly Pen _selectionPen = new(Brushes.Transparent, 0);
+
+    private bool SelectInRectangle()
+    {
+        _selection = false;
+        InvalidateVisual();
+        Rect rect = new(PointToScreen(_selectionStart), PointToScreen(Mouse.GetPosition(this)));
+        if (rect.Width == 0 && rect.Height == 0)
+            return false;
+        if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
+            MyDataContext.UnselectAll();
+        foreach (OneDesktopItem item in MyDataContext.ListItems().Where(i => rect.IntersectsWith(i.GetAbsoluteRectangle())))
+            item.MyDataContext.IsSelected = true;
+        return true;
+    }
+
+    protected override void OnRender(DrawingContext drawingContext)
+    {
+        base.OnRender(drawingContext);
+        if (_selection)
+            drawingContext.DrawRectangle(Constants.Colors.SelectedBackgroundShellObject, _selectionPen, new Rect(_selectionStart, Mouse.GetPosition(this)));
+    }
+
+    private void Window_PreviewMouseMove(object sender, MouseEventArgs e)
+    {
+        if (_selection)
+            InvalidateVisual();
+    }
+
+    private void Window_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (!_selection)
+        {
+            _selection = true;
+            _selectionStart = e.GetPosition(this);
+        }
+    }
+
+    private void Window_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (_selection)
+        {
+            _selection = false;
+            InvalidateVisual();
+        }
+    }
+
+    #endregion
 }

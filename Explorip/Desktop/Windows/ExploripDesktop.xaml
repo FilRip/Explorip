@@ -12,7 +12,7 @@
         WindowStyle="None"
         Left="0" Top="0"
         AllowsTransparency="True"
-        Background="{x:Static constants:Colors.BackgroundColorBrush}"
+        Background="#01000000"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
         d:DataContext="{d:DesignInstance Type=viewmodels:ExploripDesktopViewModel}"
@@ -20,6 +20,9 @@
         ShowActivated="False" BorderThickness="0" Margin="0" Padding="0"
         PreviewMouseRightButtonUp="Window_PreviewMouseRightButtonUp"
         PreviewMouseLeftButtonUp="Window_PreviewMouseLeftButtonUp"
+        PreviewMouseMove="Window_PreviewMouseMove"
+        PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
+        MouseLeave="Window_MouseLeave"
         dd:DragDrop.IsDragSource="False" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
     <Grid Name="MainGrid">
     </Grid>

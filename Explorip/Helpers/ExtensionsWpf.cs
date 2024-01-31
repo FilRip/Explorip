@@ -78,4 +78,10 @@ internal static class ExtensionsWpf
         foreach (T item in toAdd)
             source.Add(item);
     }
+
+    internal static Rect GetAbsoluteRectangle(this Control control)
+    {
+        Point location = control.PointToScreen(new Point(0, 0));
+        return new Rect(location, control.RenderSize);
+    }
 }
