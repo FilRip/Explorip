@@ -149,12 +149,12 @@ public partial class ExploripDesktop : Window
         {
             if (!item.IsSelected)
             {
-                MyDataContext.UnselectAll();
+                MyDataContext.UnSelectAll();
                 item.IsSelected = true;
             }
         }
         else
-            MyDataContext.UnselectAll();
+            MyDataContext.UnSelectAll();
 
         ManagedShell.ShellFolders.Models.ShellContextMenu contextMenu = new();
         Point position = PointToScreen(Mouse.GetPosition(this));
@@ -175,7 +175,7 @@ public partial class ExploripDesktop : Window
             return;
         if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             return;
-        MyDataContext.UnselectAll();
+        MyDataContext.UnSelectAll();
     }
 
     private bool _selection;
@@ -190,7 +190,7 @@ public partial class ExploripDesktop : Window
         if (rect.Width == 0 && rect.Height == 0)
             return false;
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
-            MyDataContext.UnselectAll();
+            MyDataContext.UnSelectAll();
         foreach (OneDesktopItem item in MyDataContext.ListItems().Where(i => rect.IntersectsWith(i.GetAbsoluteRectangle())))
             item.MyDataContext.IsSelected = true;
         return true;
@@ -228,4 +228,35 @@ public partial class ExploripDesktop : Window
     }
 
     #endregion
+
+    private int _currentCellX, _currentCellY;
+    private void Window_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+        {
+            if (e.Key == Key.A)
+                MyDataContext.UnSelectAll(true);
+            return;
+        }
+        int x = _currentCellX, y = _currentCellY;
+        if (e.Key == Key.Up && y > 0)
+            y--;
+        else if (e.Key == Key.Down && y < _nbRows - 1)
+            y++;
+        else if (e.Key == Key.Left && x > 0)
+            x--;
+        else if (e.Key == Key.Right && x < _nbColumns - 1)
+            x++;
+        if (x != _currentCellX || y != _currentCellY)
+        {
+            OneDesktopItem item = MyDataContext.ListItems().Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
+            if (item != null)
+            {
+                _currentCellX = x;
+                _currentCellY = y;
+                item.Focus();
+                Keyboard.Focus(item);
+            }
+        }
+    }
 }

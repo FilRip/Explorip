@@ -6,7 +6,7 @@
              xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
              xmlns:constants="clr-namespace:Explorip.Constants"
              xmlns:dd="urn:gong-wpf-dragdrop"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" Focusable="True"
              d:DesignHeight="96" d:DesignWidth="96"
              dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.UseDefaultDragAdorner="True">
     <UserControl.DataContext>
@@ -19,17 +19,24 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{x:Static constants:Desktop.ITEM_SIZE_X}"/>
         </Grid.ColumnDefinitions>
-        <Button Background="{Binding BackgroundBrush}" BorderThickness="0" Command="{Binding SelectItCommand}">
+        <Button MouseDoubleClick="Button_MouseDoubleClick" Click="Button_Click">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
-                    <Setter Property="OverridesDefaultStyle" Value="True"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type Button}">
-                                <ContentPresenter/>
+                                <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Focusable="False">
+                                    <ContentPresenter/>
+                                </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Background" Value="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsFocused" Value="True">
+                                        <Setter Property="BorderBrush" Value="{x:Static constants:Colors.ForegroundColorBrush}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsFocused" Value="False">
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -37,9 +44,6 @@
                     </Setter>
                 </Style>
             </Button.Style>
-            <Button.InputBindings>
-                <MouseBinding Command="{Binding ExecuteCommand}" Gesture="LeftDoubleClick"/>
-            </Button.InputBindings>
             <StackPanel Background="{Binding BackgroundBrush}">
                 <Image Source="{Binding Icon}" Height="48" Width="48" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                 <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="{Binding BackgroundBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Center"/>

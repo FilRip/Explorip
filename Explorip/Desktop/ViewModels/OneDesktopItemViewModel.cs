@@ -16,8 +16,6 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 using Securify.ShellLink;
 
-using static ManagedShell.Interop.NativeMethods;
-
 namespace Explorip.Desktop.ViewModels;
 
 internal partial class OneDesktopItemViewModel : ObservableObject
@@ -27,7 +25,7 @@ internal partial class OneDesktopItemViewModel : ObservableObject
     internal bool IsDirectory { get; set; }
     internal ExploripDesktopViewModel CurrentDesktop { get; set; }
     private FileSystemInfo _fileSystemInfo;
-    private DateTime? _lastClicked;
+    private DateTime _lastClicked = DateTime.UtcNow.AddSeconds(-2);
 
     [ObservableProperty()]
     private string _name;
@@ -72,12 +70,20 @@ internal partial class OneDesktopItemViewModel : ObservableObject
     [RelayCommand()]
     private void SelectIt()
     {
+        bool previousSelected = IsSelected;
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
-            CurrentDesktop.UnselectAll();
-        IsSelected = true;
-        if (!_lastClicked.HasValue)
-            _lastClicked = DateTime.UtcNow;
-        else if (DateTime.UtcNow.Subtract(_lastClicked.Value).TotalMilliseconds >= 1500 && CurrentDesktop.ListSelectedItem().Length == 1)
+        {
+            CurrentDesktop.UnSelectAll();
+            IsSelected = true;
+        }
+        else
+        {
+            IsSelected = !previousSelected;
+            Debug.WriteLine($"During multi select, {Name} going IsSelected={IsSelected}");
+            previousSelected = false;
+        }
+        Debug.WriteLine($"Select {Name}, previous={previousSelected}, DateTime.UtcNow={DateTime.UtcNow}, LastClicked={_lastClicked}, Difference in milliseconds={DateTime.UtcNow.Subtract(_lastClicked).TotalMilliseconds}");
+        if (previousSelected && DateTime.UtcNow.Subtract(_lastClicked).TotalMilliseconds > 1000 && CurrentDesktop.ListSelectedItem().Length == 1)
         {
             InputBoxWindow input = new()
             {

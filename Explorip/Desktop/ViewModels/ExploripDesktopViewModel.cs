@@ -118,10 +118,10 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
         Environment.Exit(0);
     }
 
-    internal void UnselectAll()
+    internal void UnSelectAll(bool select = false)
     {
         foreach (OneDesktopItem item in _parentDesktop.MainGrid.Children.OfType<OneDesktopItem>())
-            item.MyDataContext.IsSelected = false;
+            item.MyDataContext.IsSelected = select;
     }
 
     internal List<OneDesktopItem> ListItems()

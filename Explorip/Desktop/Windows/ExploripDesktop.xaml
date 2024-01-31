@@ -22,6 +22,7 @@
         PreviewMouseMove="Window_PreviewMouseMove"
         PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
         MouseLeave="Window_MouseLeave"
+        KeyDown="Window_KeyDown"
         dd:DragDrop.IsDragSource="False" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
     <Grid Name="MainGrid">
     </Grid>
