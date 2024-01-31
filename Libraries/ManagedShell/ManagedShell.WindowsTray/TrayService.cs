@@ -4,7 +4,6 @@ using System.Windows.Threading;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
-using ManagedShell.Interop;
 
 using static ManagedShell.Interop.NativeMethods;
 
