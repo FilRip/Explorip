@@ -8,7 +8,6 @@ using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Constants;
 using Explorip.Desktop.Controls;
 using Explorip.Desktop.Windows;
 using Explorip.Helpers;
@@ -18,8 +17,6 @@ using GongSolutions.Wpf.DragDrop;
 using ManagedShell.Interop;
 
 using Microsoft.WindowsAPICodePack.Shell;
-
-using Securify.ShellLink;
 
 namespace Explorip.Desktop.ViewModels;
 
@@ -62,38 +59,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
                     CurrentShellObject = filename,
                     CurrentDesktop = this,
                 };
-                try
-                {
-                    if (filename is ShellFolder)
-                    {
-                        item.Icon = Icons.Folder;
-                        item.IsDirectory = true;
-                    }
-                    else
-                        item.Icon = IconManager.GetIconFromFile(filename.ParsingName, 0);
-                    if (Path.GetExtension(filename.ParsingName) == ".lnk")
-                    {
-                        Shortcut shortcut = Shortcut.ReadFromFile(filename.ParsingName);
-                        string iconLocation = shortcut.StringData?.IconLocation;
-                        if (string.IsNullOrWhiteSpace(iconLocation))
-                            iconLocation = shortcut.StringData?.RelativePath;
-                        if (!string.IsNullOrWhiteSpace(iconLocation))
-                        {
-                            if (iconLocation.StartsWith(".") || iconLocation.StartsWith(Path.DirectorySeparatorChar.ToString()))
-                                iconLocation = Path.GetFullPath(Environment.SpecialFolder.Desktop.FullPath() + Path.DirectorySeparatorChar + iconLocation);
-                            if (!File.Exists(iconLocation))
-                                iconLocation = shortcut.LinkInfo?.LocalBasePath;
-                            item.Icon = IconManager.GetIconFromFile(iconLocation, shortcut.IconIndex);
-                        }
-                    }
-                    if (item.Icon == null)
-                    {
-                        System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(filename.ParsingName);
-                        if (icon != null)
-                            item.Icon = IconManager.Convert(icon);
-                    }
-                }
-                catch (Exception) { /* Ignore errors, can't get icon */ }
+                item.GetIcon();
                 OneDesktopItem ctrl = new()
                 {
                     MyDataContext = item,
@@ -118,11 +84,14 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     private void Watcher_Renamed(object sender, RenamedEventArgs e)
     {
-        try
+        Application.Current.Dispatcher.BeginInvoke(() =>
         {
-            ListItems().First(item => item.MyDataContext.Name == e.OldName).MyDataContext.Name = e.Name;
-        }
-        catch (Exception) { /* Ignore errors, file (old name) not found ? Must add ? */ }
+            try
+            {
+                ListItems().First(item => item.MyDataContext.Name == e.OldName).MyDataContext.Name = e.Name;
+            }
+            catch (Exception) { /* Ignore errors, file (old name) not found ? Must add ? */ }
+        });
     }
 
     private void Watcher_Created(object sender, FileSystemEventArgs e)
@@ -133,6 +102,10 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
             {
                 OneDesktopItem item = new();
                 item.MyDataContext.Name = e.Name;
+                item.MyDataContext.FullPath = e.FullPath;
+                item.MyDataContext.GetIcon();
+                item.MyDataContext.CurrentDesktop = this;
+                item.MyDataContext.CurrentShellObject = ShellObject.FromParsingName(e.FullPath);
                 _parentDesktop.AddItem(item);
             }
             catch (Exception) { /* Unable to add item ??? So what to do */ }

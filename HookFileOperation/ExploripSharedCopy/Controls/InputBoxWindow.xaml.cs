@@ -58,11 +58,11 @@ public partial class InputBoxWindow : Window
         ImageCancel.Source = image;
     }
 
-    public void ShowModal(string title, string question, string defaultValue = "")
+    public bool? ShowModal(string title, string question, string defaultValue = "")
     {
         CommonInit(title, question);
         TxtUserEdit.Text = defaultValue;
-        ShowDialog();
+        return ShowDialog();
     }
     private void BtnCancel_Click(object sender, RoutedEventArgs e)
     {

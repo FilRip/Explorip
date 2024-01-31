@@ -45,6 +45,11 @@ public static class Localization
     public static string BROWSE { get; private set; }
     public static string LOCATE { get; private set; }
     public static string SELECT { get; private set; }
+    public static string RENAME_FOLDER { get; private set; }
+    public static string RENAME_FILE { get; private set; }
+    public static string NEW_NAME { get; private set; }
+    public static string ERROR_DURING_RENAME { get; private set; }
+    public static string ERROR { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -86,6 +91,11 @@ public static class Localization
         LOCATE = Load("appwiz.cpl", 12808, "Location");
         CREATE_SHORTCUT_Q2 = Load("appwiz.cpl", 2203, "Which name do you want to use for this shortcut ?");
         SELECT = Load("dinput.dll", 5248, "Select");
+        RENAME_FOLDER = Load("shell32.dll", 16885, "Rename folder");
+        RENAME_FILE = Load("shell32.dll", 16878, "Rename file");
+        NEW_NAME = Load("spacecontrol.dll", 306, "New name");
+        ERROR_DURING_RENAME = Load("shell32.dll", 6020, "Error during rename {0} : {1}").Replace("%2!ls!", "{0}").Replace("%1!ls!", "{1}");
+        ERROR = Load("shell32.dll", 51248, "Error");
     }
 
     internal static string Load(string libraryName, uint Ident, string DefaultText)
