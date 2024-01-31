@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
-        xmlns:constants="clr-namespace:Explorip.Constants"
         xmlns:dd="urn:gong-wpf-dragdrop"
         mc:Ignorable="d"
         Topmost="False"

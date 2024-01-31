@@ -53,7 +53,10 @@ internal partial class OneDesktopItemViewModel : ObservableObject
     [RelayCommand()]
     private void Execute(object args)
     {
-        Process.Start(FullPath, args.ToString());
+        if (args == null)
+            Process.Start(FullPath);
+        else
+            Process.Start(FullPath, "\"" + args.ToString() + "\"");
     }
 
     [RelayCommand()]

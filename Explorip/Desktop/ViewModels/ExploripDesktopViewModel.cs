@@ -165,7 +165,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     public void DragEnter(IDropInfo dropInfo)
     {
-        // Nothing to do. Not yet.
+        // Nothing to do here. Not yet.
     }
 
     public void DragOver(IDropInfo dropInfo)
@@ -175,7 +175,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     public void DragLeave(IDropInfo dropInfo)
     {
-        // Nothing to do. Not yet.
+        // Nothing to do here. Not yet.
     }
 
     public void Drop(IDropInfo dropInfo)
@@ -205,7 +205,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
                         fileOperation.Dispose();
                     }
                     else
-                        dest.MyDataContext.ExecuteCommand.Execute(item);
+                        dest.MyDataContext.ExecuteCommand.Execute(item.MyDataContext.FullPath);
                 }
             }
         }

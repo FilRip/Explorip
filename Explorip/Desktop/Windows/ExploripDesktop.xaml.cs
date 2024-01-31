@@ -164,6 +164,8 @@ public partial class ExploripDesktop : Window
         contextMenu.ShowContextMenu(listItems, position);
     }
 
+    #region Rectangle selection
+
     private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
         if (_selection && SelectInRectangle())
@@ -175,8 +177,6 @@ public partial class ExploripDesktop : Window
             return;
         MyDataContext.UnselectAll();
     }
-
-    #region Rectangle selection
 
     private bool _selection;
     private Point _selectionStart;
