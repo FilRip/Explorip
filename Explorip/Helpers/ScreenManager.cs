@@ -146,7 +146,8 @@ public static class ScreenManager
         window.Top = screen.WorkingArea.Location.Y;
         if (window.Width > screen.WorkingArea.Width) window.Width = screen.WorkingArea.Width;
         if (window.Height > screen.WorkingArea.Height) window.Height = screen.WorkingArea.Height;
-        if (fullScreen) window.WindowState = WindowState.Maximized;
+        if (fullScreen)
+            window.WindowState = WindowState.Maximized;
     }
 
     public static void MoveWindowToScreen(Window window, SCREEN_POSITION screen)

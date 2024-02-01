@@ -100,10 +100,11 @@ internal enum ExplorerBrowserOptions
     AlwaysNavigate = 0x00000004,
     NoTravelLog = 0x00000008,
     NoWrapperWindow = 0x00000010,
-    HtmlSharepointView = 0x00000020
+    HtmlSharepointView = 0x00000020,
+    NoBorder = 0x00000040,
 }
 
-internal enum CommDlgBrowserStateChange
+internal enum CommDlgBrowserStateChange : uint
 {
     SetFocus = 0,
     KillFocus = 1,
@@ -157,7 +158,7 @@ internal class ExplorerBrowserClass : IExplorerBrowser
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    public virtual extern HResult SetFolderSettings(FolderSettings pfs);
+    public virtual extern HResult SetFolderSettings(ref FolderSettings pfs);
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -254,7 +255,7 @@ internal interface IExplorerBrowser
     /// <returns></returns>
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    HResult SetFolderSettings(FolderSettings pfs);
+    HResult SetFolderSettings(ref FolderSettings pfs);
 
     /// <summary>
     /// Initiates a connection with IExplorerBrowser for event callbacks.
@@ -666,13 +667,13 @@ internal interface ICommDlgBrowser3
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     HResult GetDefaultMenuText(
         IShellView shellView,
-        IntPtr buffer, //A pointer to a buffer that is used by the Shell browser to return the default shortcut menu text.
+        [MarshalAs(UnmanagedType.LPWStr)] string buffer, //A pointer to a buffer that is used by the Shell browser to return the default shortcut menu text.
         int bufferMaxLength); //should be max size = 260?
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     HResult GetViewFlags(
-        [Out()] out uint pdwFlags); // CommDlgBrowser2ViewFlags 
+        ref CommDlgBrowser2View pdwFlags); // CommDlgBrowser2ViewFlags 
 
 
     [PreserveSig()]

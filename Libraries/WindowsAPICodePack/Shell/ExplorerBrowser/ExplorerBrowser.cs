@@ -241,6 +241,13 @@ public sealed class ExplorerBrowser :
         NavigationOptions = new ExplorerBrowserNavigationOptions(this);
         ContentOptions = new ExplorerBrowserContentOptions(this);
         NavigationLog = new ExplorerBrowserNavigationLog(this);
+        PreviewKeyDown += ExplorerBrowser_PreviewKeyDown;
+    }
+
+    private void ExplorerBrowser_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+    {
+        if (e.KeyCode == Keys.Up)
+            e.IsInputKey = true;
     }
 
     #endregion
@@ -587,7 +594,7 @@ public sealed class ExplorerBrowser :
     // interface.  This is logged as a bug, but moved to less of a priority, as it only affects being
     // able to change the default action text for remapping the default action.
 
-    HResult ICommDlgBrowser3.GetDefaultMenuText(IShellView shellView, IntPtr buffer, int bufferMaxLength)
+    HResult ICommDlgBrowser3.GetDefaultMenuText(IShellView shellView, [MarshalAs(UnmanagedType.LPWStr)] string buffer, int bufferMaxLength)
     {
         return HResult.False;
         //OK if new
@@ -596,11 +603,11 @@ public sealed class ExplorerBrowser :
     }
 
 #pragma warning disable S125 // Sections of code should not be commented out
-    HResult ICommDlgBrowser3.GetViewFlags(out uint pdwFlags)
+    HResult ICommDlgBrowser3.GetViewFlags(ref CommDlgBrowser2View pdwFlags)
     {
         //var flags = CommDlgBrowser2ViewFlags.NoSelectVerb;
         //Marshal.WriteInt32(pdwFlags, 0);
-        pdwFlags = (uint)CommDlgBrowser2View.ShowAllFiles;
+        pdwFlags = CommDlgBrowser2View.ShowAllFiles;
         return HResult.Ok;
     }
 #pragma warning restore S125 // Sections of code should not be commented out

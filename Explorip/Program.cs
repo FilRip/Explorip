@@ -8,6 +8,8 @@ using Explorip.Helpers;
 
 using ExploripApi;
 
+using Microsoft.Win32;
+
 using static Explorip.Helpers.ExtensionsCommandLineArguments;
 
 namespace Explorip;
@@ -41,6 +43,7 @@ public static class Program
             mutexProcess = new Mutex(true, "ExploripDesktop", out bool processNotLaunched);
             if (processNotLaunched)
             {
+                RegisterSystemEvents();
                 _WpfHost = new Desktop.MyDesktopApp();
                 _WpfHost.Run();
             }
@@ -51,6 +54,7 @@ public static class Program
             mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
             if (processNotLaunched)
             {
+                RegisterSystemEvents();
                 _WpfHost = new TaskBar.MyTaskbarApp();
                 _WpfHost.Run();
             }
@@ -88,5 +92,16 @@ public static class Program
     public static Application MyCurrentApp
     {
         get { return _WpfHost; }
+    }
+
+    private static void RegisterSystemEvents()
+    {
+        SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
+        SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+    }
+
+    private static void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+    {
+        // TODO : Warn taskbar and/or dekstop
     }
 }

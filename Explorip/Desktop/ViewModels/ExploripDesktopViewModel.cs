@@ -201,7 +201,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     public void DragEnter(IDropInfo dropInfo)
     {
-        // Nothing to do here. Not yet.
+        System.Diagnostics.Debug.WriteLine("DragEnter");
     }
 
     public void DragOver(IDropInfo dropInfo)
@@ -211,7 +211,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     public void DragLeave(IDropInfo dropInfo)
     {
-        // Nothing to do here. Not yet.
+        System.Diagnostics.Debug.WriteLine("DragLeave");
     }
 
     public void Drop(IDropInfo dropInfo)

@@ -1,12 +1,10 @@
 ﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
 using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
-using System.Windows.Threading;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
@@ -25,14 +23,12 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private readonly ObservableCollection<ShellObject> selectedItems;
     private readonly ObservableCollection<ShellObject> items;
     private readonly ObservableCollection<ShellObject> navigationLog;
-    private readonly DispatcherTimer dtCLRUpdater = new();
 
     private ShellObject initialNavigationTarget;
     private ExplorerBrowserViewMode? initialViewMode;
 
     private readonly AutoResetEvent itemsChanged = new(false);
     private readonly AutoResetEvent selectionChanged = new(false);
-    private int selectionChangeWaitCount;
 
     /// <summary>
     /// Hosts the ExplorerBrowser WinForms wrapper in this control
@@ -94,11 +90,6 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     /// <param name="e"></param>
     private void ExplorerBrowser_Loaded(object sender, RoutedEventArgs e)
     {
-        // setup timer to update dependency properties from CLR properties of WinForms ExplorerBrowser object
-        dtCLRUpdater.Tick += new EventHandler(UpdateDependencyPropertiesFromCLRPRoperties);
-        dtCLRUpdater.Interval = new TimeSpan(100 * 10000); // 100ms
-        dtCLRUpdater.Start();
-
         if (initialNavigationTarget != null)
         {
             ExplorerBrowserControl.Navigate(initialNavigationTarget);
@@ -109,71 +100,6 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         {
             ExplorerBrowserControl.ContentOptions.ViewMode = (ExplorerBrowserViewMode)initialViewMode;
             initialViewMode = null;
-        }
-    }
-
-    /// <summary>
-    /// Map changes to the CLR flags to the dependency properties
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void UpdateDependencyPropertiesFromCLRPRoperties(object sender, EventArgs e)
-    {
-        AlignLeft = ExplorerBrowserControl.ContentOptions.AlignLeft;
-        AutoArrange = ExplorerBrowserControl.ContentOptions.AutoArrange;
-        CheckSelect = ExplorerBrowserControl.ContentOptions.CheckSelect;
-        ExtendedTiles = ExplorerBrowserControl.ContentOptions.ExtendedTiles;
-        FullRowSelect = ExplorerBrowserControl.ContentOptions.FullRowSelect;
-        HideFileNames = ExplorerBrowserControl.ContentOptions.HideFileNames;
-        NoBrowserViewState = ExplorerBrowserControl.ContentOptions.NoBrowserViewState;
-        NoColumnHeader = ExplorerBrowserControl.ContentOptions.NoColumnHeader;
-        NoHeaderInAllViews = ExplorerBrowserControl.ContentOptions.NoHeaderInAllViews;
-        NoIcons = ExplorerBrowserControl.ContentOptions.NoIcons;
-        NoSubfolders = ExplorerBrowserControl.ContentOptions.NoSubfolders;
-        SingleClickActivate = ExplorerBrowserControl.ContentOptions.SingleClickActivate;
-        SingleSelection = ExplorerBrowserControl.ContentOptions.SingleSelection;
-        ThumbnailSize = ExplorerBrowserControl.ContentOptions.ThumbnailSize;
-        ViewMode = ExplorerBrowserControl.ContentOptions.ViewMode;
-        AlwaysNavigate = ExplorerBrowserControl.NavigationOptions.AlwaysNavigate;
-        NavigateOnce = ExplorerBrowserControl.NavigationOptions.NavigateOnce;
-        AdvancedQueryPane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.AdvancedQuery;
-        CommandsPane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.Commands;
-        CommandsOrganizePane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.CommandsOrganize;
-        CommandsViewPane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.CommandsView;
-        DetailsPane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.Details;
-        NavigationPane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.Navigation;
-        PreviewPane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.Preview;
-        QueryPane = ExplorerBrowserControl.NavigationOptions.PaneVisibility.Query;
-        NavigationLogIndex = ExplorerBrowserControl.NavigationLog.CurrentLocationIndex;
-
-        if (disposedValue)
-            return;
-
-        if (itemsChanged.WaitOne(1, false))
-        {
-            items.Clear();
-            foreach (ShellObject obj in ExplorerBrowserControl.Items.OfType<ShellObject>())
-            {
-                items.Add(obj);
-            }
-        }
-
-        if (selectionChanged.WaitOne(1, false))
-        {
-            selectionChangeWaitCount = 4;
-        }
-        else if (selectionChangeWaitCount > 0)
-        {
-            selectionChangeWaitCount--;
-
-            if (selectionChangeWaitCount == 0)
-            {
-                selectedItems.Clear();
-                foreach (ShellObject obj in ExplorerBrowserControl.SelectedItems.OfType<ShellObject>())
-                {
-                    selectedItems.Add(obj);
-                }
-            }
         }
     }
 
@@ -999,8 +925,6 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         {
             itemsChanged?.Close();
             selectionChanged?.Close();
-            if (dtCLRUpdater != null && dtCLRUpdater.IsEnabled)
-                dtCLRUpdater.Stop();
             disposedValue = true;
         }
     }
