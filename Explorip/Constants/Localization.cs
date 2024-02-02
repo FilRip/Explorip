@@ -20,6 +20,7 @@ public static class Localization
     public static string NEW_TOOLBAR { get; private set; }
     public static string SHOW_VISUAL_KEYBOARD { get; private set; }
     public static string CLOSE_TAB { get; private set; }
+    public static string CLOSE_TAB_WITHOUT_SHORTCUT { get; private set; }
     public static string CLOSE_OTHER_TAB { get; private set; }
     public static string OPEN_NEW_TAB { get; private set; }
     public static string NO_MONITOR_CONNECTED { get; private set; }
@@ -66,6 +67,7 @@ public static class Localization
         NEW_TOOLBAR = Load("ieframe.dll", 12388, "New toolbar...");
         SHOW_VISUAL_KEYBOARD = Load("shell32.dll", 24088, "Activate or desactivate visual keyboard");
         CLOSE_TAB = Load("ieframe.dll", 18160, "Close this tab").Split((char)9)[0];
+        CLOSE_TAB_WITHOUT_SHORTCUT = CLOSE_TAB.Replace("_", "");
         CLOSE_OTHER_TAB = Load("ieframe.dll", 18161, "Close all others tabs");
         OPEN_NEW_TAB = Load("ieframe.dll", 13170, "New tab");
         NO_MONITOR_CONNECTED = Load("mblctr.exe", 130, "No monitor connected");

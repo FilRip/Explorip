@@ -10,7 +10,7 @@ public static class Uxtheme
         APPMODE_ALLOWDARK = 1,
         APPMODE_FORCEDARK = 2,
         APPMODE_FORCELIGHT = 3,
-        APPMODE_MAX = 4
+        APPMODE_MAX = 4,
     }
 
     [DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true, CharSet = CharSet.Unicode)]
