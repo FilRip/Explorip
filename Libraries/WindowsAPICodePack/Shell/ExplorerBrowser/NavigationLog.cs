@@ -74,6 +74,12 @@ public class ExplorerBrowserNavigationLog
     }
     private readonly List<ShellObject> _locations = [];
 
+    public void RemoveAt(int index)
+    {
+        if (index < _locations.Count)
+            _locations.RemoveAt(index);
+    }
+
     /// <summary>
     /// An index into the Locations collection. The ShellObject pointed to 
     /// by this index is the current location of the ExplorerBrowser.

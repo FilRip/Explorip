@@ -61,7 +61,7 @@ public class ShellSearchFolder : ShellSearchCollection
 
     private SearchCondition searchCondition;
     /// <summary>
-    /// Gets the <see cref="Microsoft.WindowsAPICodePack.Shell.SearchCondition"/> of the search. 
+    /// Gets the <see cref="Shell.SearchCondition"/> of the search. 
     /// When this property is not set, the resulting search will have no filters applied.
     /// </summary>
     public SearchCondition SearchCondition

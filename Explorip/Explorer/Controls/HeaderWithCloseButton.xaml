@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
-             xmlns:localization="clr-namespace:Explorip.Constants"
+             xmlns:constants="clr-namespace:Explorip.Constants"
              xmlns:local="clr-namespace:Explorip.Explorer.Controls"
              mc:Ignorable="d" AllowDrop="True" BorderThickness="2"
              d:DataContext="{d:DesignInstance Type=local:HeaderWithCloseButton}"
@@ -16,29 +16,29 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <UserControl.ContextMenu>
-        <ContextMenu Name="TabControlContextualMenu" Background="{x:Static localization:Colors.BackgroundColorBrush}" Foreground="{x:Static localization:Colors.ForegroundColorBrush}" BorderBrush="{x:Static localization:Colors.ForegroundColorBrush}">
+        <ContextMenu Name="TabControlContextualMenu" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" BorderBrush="{x:Static constants:Colors.ForegroundColorBrush}">
             <ContextMenu.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Margin="-20,0,0,0" Background="{x:Static localization:Colors.BackgroundColorBrush}"/>
+                    <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
                 </ItemsPanelTemplate>
             </ContextMenu.ItemsPanel>
-            <MenuItem Header="{x:Static localization:Localization.OPEN_NEW_TAB}" Name="NewTab" Click="NewTab_Click"/>
-            <MenuItem Header="{x:Static localization:Localization.CLOSE_TAB}" Name="CloseTab" Click="CloseTab_Click"/>
+            <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_TAB}" Name="NewTab" Click="NewTab_Click"/>
+            <MenuItem Header="{x:Static constants:Localization.CLOSE_TAB}" Name="CloseTab" Click="CloseTab_Click"/>
             <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Click="NewTabOther_Click"/>
-            <MenuItem Header="{x:Static localization:Localization.CLOSE_OTHER_TAB}" Name="CloseAllTab" Click="CloseAllTab_Click"/>
+            <MenuItem Header="{x:Static constants:Localization.CLOSE_OTHER_TAB}" Name="CloseAllTab" Click="CloseAllTab_Click"/>
             <Separator/>
-            <MenuItem Header="{x:Static localization:Localization.COMMANDLINE}" Name="NewConsoleTab" Click="NewConsoleTab_Click"/>
-            <MenuItem Header="{x:Static localization:Localization.POWER_SHELL}" Name="NewPowerShellTab" Click="NewPowerShellTab_Click"/>
+            <MenuItem Header="{x:Static constants:Localization.COMMANDLINE}" Name="NewConsoleTab" Click="NewConsoleTab_Click"/>
+            <MenuItem Header="{x:Static constants:Localization.POWER_SHELL}" Name="NewPowerShellTab" Click="NewPowerShellTab_Click"/>
             <Separator/>
-            <MenuItem Header="{x:Static localization:Localization.COMMANDLINE_ADMIN}" Name="NewAdminConsoleTab" Click="NewAdminConsoleTab_Click"/>
-            <MenuItem Header="{x:Static localization:Localization.POWER_SHELL_ADMIN}" Name="NewAdminPowerShellTab" Click="NewAdminPowerShellTab_Click"/>
+            <MenuItem Header="{x:Static constants:Localization.COMMANDLINE_ADMIN}" Name="NewAdminConsoleTab" Click="NewAdminConsoleTab_Click"/>
+            <MenuItem Header="{x:Static constants:Localization.POWER_SHELL_ADMIN}" Name="NewAdminPowerShellTab" Click="NewAdminPowerShellTab_Click"/>
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid Margin="0">
-        <Button Content="x" Height="19" HorizontalAlignment="Right" Margin="0,3,0,0" Name="ButtonClose" VerticalAlignment="Top" Width="20" FontFamily="Courier" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" FontSize="14" Padding="0" ToolTip="Close" IsTabStop="False" Visibility="{Binding PlusButton, Converter={StaticResource inverseBoolToVisibility}}"
+        <Button Content="x" Height="19" HorizontalAlignment="Right" Margin="0,3,0,0" Name="ButtonClose" VerticalAlignment="Top" Width="20" FontFamily="Courier" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" FontSize="14" Padding="0" ToolTip="{x:Static constants:Localization.CLOSE_TAB}" IsTabStop="False" Visibility="{Binding PlusButton, Converter={StaticResource inverseBoolToVisibility}}"
                 MouseEnter="ButtonClose_MouseEnter" MouseLeave="ButtonClose_MouseLeave" Click="ButtonClose_Click"/>
-        <Button Content="+" Height="19" HorizontalAlignment="Right" Margin="0,3,0,0" Name="ButtonNewTab" VerticalAlignment="Top" Width="20" FontFamily="Courier" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" FontSize="14" Padding="0" ToolTip="New tab" IsTabStop="False" Visibility="{Binding PlusButton, Converter={StaticResource boolToVisibility}}"
+        <Button Content="+" Height="19" HorizontalAlignment="Right" Margin="0,3,0,0" Name="ButtonNewTab" VerticalAlignment="Top" Width="20" FontFamily="Courier" FontWeight="Bold" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" FontStretch="Normal" FontSize="14" Padding="0" ToolTip="{x:Static constants:Localization.OPEN_NEW_TAB}" IsTabStop="False" Visibility="{Binding PlusButton, Converter={StaticResource boolToVisibility}}"
                 MouseEnter="ButtonClose_MouseEnter" MouseLeave="ButtonClose_MouseLeave" Click="ButtonClose_Click" Foreground="White"/>
-        <Label Content="" Height="23" HorizontalAlignment="Left" Margin="0,1,0,0" Name="Label_TabTitle" VerticalAlignment="Top" FontFamily="Courier" FontSize="12" IsTabStop="False" Foreground="{x:Static localization:Colors.ForegroundColorBrush}" Visibility="{Binding PlusButton, Converter={StaticResource inverseBoolToVisibility}}"/>
+        <Label Content="" Height="23" HorizontalAlignment="Left" Margin="0,1,0,0" Name="Label_TabTitle" VerticalAlignment="Top" FontFamily="Courier" FontSize="12" IsTabStop="False" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding PlusButton, Converter={StaticResource inverseBoolToVisibility}}"/>
     </Grid>
 </UserControl>

@@ -184,7 +184,7 @@ public partial class WpfExplorerBrowser : Window
     private void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
     {
         ShellObject[] listeItems = tabSource.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
-        string destination = tabDestination.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+        string destination = tabDestination.CurrentTabExplorer.ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
         Task.Run(() =>
         {
             FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());

@@ -20,15 +20,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     /// </summary>
     public WindowsForms.ExplorerBrowser ExplorerBrowserControl { get; set; }
 
-    private readonly ObservableCollection<ShellObject> selectedItems;
-    private readonly ObservableCollection<ShellObject> items;
-    private readonly ObservableCollection<ShellObject> navigationLog;
-
     private ShellObject initialNavigationTarget;
     private ExplorerBrowserViewMode? initialViewMode;
-
-    private readonly AutoResetEvent itemsChanged = new(false);
-    private readonly AutoResetEvent selectionChanged = new(false);
 
     /// <summary>
     /// Hosts the ExplorerBrowser WinForms wrapper in this control
@@ -39,18 +32,6 @@ public partial class ExplorerBrowser : UserControl, IDisposable
 
         // the ExplorerBrowser WinForms control
         ExplorerBrowserControl = new WindowsForms.ExplorerBrowser();
-
-        // back the dependency collection properties with instances
-        SelectedItems = selectedItems = [];
-        Items = items = [];
-        NavigationLog = navigationLog = [];
-
-        // hook up events for collection synchronization
-        ExplorerBrowserControl.ItemsChanged += new EventHandler(ItemsChanged);
-        ExplorerBrowserControl.SelectionChanged += new EventHandler(SelectionChanged);
-        ExplorerBrowserControl.ViewEnumerationComplete += new EventHandler(ExplorerBrowserControl_ViewEnumerationComplete);
-        ExplorerBrowserControl.ViewSelectedItemChanged += new EventHandler(ExplorerBrowserControl_ViewSelectedItemChanged);
-        ExplorerBrowserControl.NavigationLog.NavigationLogChanged += new EventHandler<NavigationLogEventArgs>(NavigationLogChanged);
 
         // host the control           
         WindowsFormsHost host = new()
@@ -69,17 +50,6 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         }
 
         Loaded += new RoutedEventHandler(ExplorerBrowser_Loaded);
-    }
-
-    private void ExplorerBrowserControl_ViewSelectedItemChanged(object sender, EventArgs e)
-    {
-        // Empty method ?!
-    }
-
-    private void ExplorerBrowserControl_ViewEnumerationComplete(object sender, EventArgs e)
-    {
-        itemsChanged.Set();
-        selectionChanged.Set();
     }
 
     /// <summary>
@@ -103,156 +73,7 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         }
     }
 
-    /// <summary>
-    /// Synchronize NavigationLog collection to dependency collection
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="args"></param>
-    private void NavigationLogChanged(object sender, NavigationLogEventArgs args)
-    {
-        navigationLog.Clear();
-        foreach (ShellObject obj in ExplorerBrowserControl.NavigationLog.Locations)
-        {
-            navigationLog.Add(obj);
-        }
-    }
-
-    /// <summary>
-    /// Synchronize SelectedItems collection to dependency collection
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void SelectionChanged(object sender, EventArgs e)
-    {
-        selectionChanged.Set();
-    }
-
-    // Synchronize ItemsCollection to dependency collection
-    private void ItemsChanged(object sender, EventArgs e)
-    {
-        try
-        {
-            itemsChanged.Set();
-        }
-        catch (Exception) { /* ignore errors */ }
-    }
-
-    /// <summary>
-    /// The items in the ExplorerBrowser window
-    /// </summary>
-    public ObservableCollection<ShellObject> Items
-    {
-        get
-        {
-            return (ObservableCollection<ShellObject>)GetValue(ItemsProperty);
-        }
-        set
-        {
-            SetValue(ItemsPropertyKey, value);
-        }
-    }
-
-    private static readonly DependencyPropertyKey ItemsPropertyKey =
-                DependencyProperty.RegisterReadOnly(
-                    "Items", typeof(ObservableCollection<ShellObject>),
-                    typeof(ExplorerBrowser),
-                    new PropertyMetadata(null));
-
-    /// <summary>
-    /// The items in the ExplorerBrowser window
-    /// </summary>
-    public static readonly DependencyProperty ItemsProperty = ItemsPropertyKey.DependencyProperty;
-
-    /// <summary>
-    /// The selected items in the ExplorerBrowser window
-    /// </summary>
-    public ObservableCollection<ShellObject> SelectedItems
-    {
-        get
-        {
-            return (ObservableCollection<ShellObject>)GetValue(SelectedItemsProperty);
-        }
-        internal set
-        {
-            SetValue(SelectedItemsPropertyKey, value);
-        }
-    }
-
-    private static readonly DependencyPropertyKey SelectedItemsPropertyKey =
-                DependencyProperty.RegisterReadOnly(
-                    "SelectedItems", typeof(ObservableCollection<ShellObject>),
-                    typeof(ExplorerBrowser),
-                    new PropertyMetadata(null));
-
-    /// <summary>
-    /// The selected items in the ExplorerBrowser window
-    /// </summary>
-    public ObservableCollection<ShellObject> NavigationLog
-    {
-        get
-        {
-            return (ObservableCollection<ShellObject>)GetValue(NavigationLogProperty);
-        }
-        internal set
-        {
-            SetValue(NavigationLogPropertyKey, value);
-        }
-    }
-
-    private static readonly DependencyPropertyKey NavigationLogPropertyKey =
-                DependencyProperty.RegisterReadOnly(
-                    "NavigationLog", typeof(ObservableCollection<ShellObject>),
-                    typeof(ExplorerBrowser),
-                    new PropertyMetadata(null));
-
-    /// <summary>
-    /// The NavigationLog
-    /// </summary>
-    public static readonly DependencyProperty NavigationLogProperty = NavigationLogPropertyKey.DependencyProperty;
-
-    /// <summary>
-    /// The selected items in the ExplorerBrowser window
-    /// </summary>
-    public static readonly DependencyProperty SelectedItemsProperty = SelectedItemsPropertyKey.DependencyProperty;
-
-
-    /// <summary>
-    /// The location the explorer browser is navigating to
-    /// </summary>
-    public ShellObject NavigationTarget
-    {
-        get
-        {
-            return (ShellObject)GetValue(NavigationTargetProperty);
-        }
-        set
-        {
-            SetValue(NavigationTargetProperty, value);
-        }
-    }
-
-    /// <summary>
-    /// The DependencyProperty for the NavigationTarget property
-    /// </summary>
-    public static readonly DependencyProperty NavigationTargetProperty =
-                DependencyProperty.Register(
-                    "NavigationTarget", typeof(ShellObject),
-                    typeof(ExplorerBrowser),
-                    new PropertyMetadata(null, NavigationTargetChanged));
-
-    private static void NavigationTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        ExplorerBrowser instance = d as ExplorerBrowser;
-
-        if (instance.ExplorerBrowserControl.explorerBrowserControl != null)
-        {
-            instance.ExplorerBrowserControl.Navigate((ShellObject)e.NewValue);
-        }
-        else
-        {
-            instance.initialNavigationTarget = (ShellObject)e.NewValue;
-        }
-    }
+    #region Content options
 
     /// <summary>
     /// The view should be left-aligned. 
@@ -617,6 +438,9 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         }
     }
 
+    #endregion
+
+    #region Navigation options
 
     /// <summary>
     /// Always navigate, even if you are attempting to navigate to the current folder.
@@ -665,6 +489,10 @@ public partial class ExplorerBrowser : UserControl, IDisposable
             instance.ExplorerBrowserControl.NavigationOptions.NavigateOnce = (bool)e.NewValue;
         }
     }
+
+    #endregion
+
+    #region Pane visibility
 
     /// <summary>
     /// Show/Hide the AdvancedQuery pane on subsequent navigation
@@ -860,6 +688,10 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         }
     }
 
+    #endregion
+
+    #region Navigation
+
     public void Navigate(ShellObject destination)
     {
         ExplorerBrowserControl.Navigate(destination);
@@ -896,6 +728,12 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         instance.ExplorerBrowserControl?.NavigationLog.NavigateLog((int)e.NewValue);
     }
 
+    public ExplorerBrowserNavigationLog NavigationLog
+    {
+        get { return ExplorerBrowserControl.NavigationLog; }
+    }
+
+    #endregion
 
     #region IDisposable Members
 
@@ -923,8 +761,6 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     {
         if (disposed)
         {
-            itemsChanged?.Close();
-            selectionChanged?.Close();
             disposedValue = true;
         }
     }

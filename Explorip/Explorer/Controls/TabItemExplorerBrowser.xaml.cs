@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,7 +50,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     public ShellObject CurrentDirectory
     {
-        get { return ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation; }
+        get { return ExplorerBrowser.NavigationLog.CurrentLocation; }
     }
 
     #region Navigation file explorer
@@ -134,8 +135,8 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                     }
                 }
 
-                MyDataContext.AllowNavigatePrevious = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CanNavigateBackward;
-                MyDataContext.AllowNavigateNext = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CanNavigateForward;
+                MyDataContext.AllowNavigatePrevious = ExplorerBrowser.NavigationLog.CanNavigateBackward;
+                MyDataContext.AllowNavigateNext = ExplorerBrowser.NavigationLog.CanNavigateForward;
             }
         }
         catch (Exception)
@@ -191,13 +192,13 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             else
             {
                 MyDataContext.ModeEdit = false;
-                MyDataContext.EditPath = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                MyDataContext.EditPath = ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
                 ExplorerBrowser.SetFocus();
             }
         }
         else if (e.Key is Key.Enter or Key.Return)
         {
-            ShellObject previousLocation = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation;
+            ShellObject previousLocation = ExplorerBrowser.NavigationLog.CurrentLocation;
             string nouvelEmplacement = EditPath.Text;
             if (nouvelEmplacement.StartsWith("%"))
                 nouvelEmplacement = Environment.GetEnvironmentVariable(nouvelEmplacement.Replace("%", "")).Split(';')[0];
@@ -279,15 +280,15 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 if (!_allowSearch)
                     return;
 
-                if (MyDataContext.ModeSearch && ExplorerBrowser?.ExplorerBrowserControl?.NavigationLog?.CurrentLocation != null)
+                if (MyDataContext.ModeSearch && ExplorerBrowser?.NavigationLog?.CurrentLocation != null)
                 {
                     _allowSearch = false;
                     string previousFile = null;
 
                     if (string.IsNullOrWhiteSpace(_searchDirectory))
-                        _searchDirectory = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                        _searchDirectory = ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
                     else
-                        previousFile = ExplorerBrowser.ExplorerBrowserControl.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                        previousFile = ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
 
                     string dir = _searchDirectory;
                     string xmlContent = $"<?xml version=\"1.0\"?><persistedQuery version=\"1.0\"><query><conditions><condition type=\"leafCondition\" property=\"System.Generic.String\" operator=\"wordmatch\" propertyType=\"string\" value=\"{SearchText.Text}\" localeName=\"{System.Globalization.CultureInfo.CurrentCulture.Name}\"/></conditions><kindList><kind name=\"item\"/></kindList><scope><include path=\"::{{20D04FE0-3AEA-1069-A2D8-08002B30309D}}\\{dir}\"/></scope></query></persistedQuery>";
@@ -301,7 +302,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                     if (!string.IsNullOrWhiteSpace(previousFile))
                     {
                         File.Delete(previousFile);
-                        ExplorerBrowser.NavigationLog.RemoveAt(ExplorerBrowser.NavigationLog.Count - 1);
+                        ExplorerBrowser.NavigationLog.RemoveAt(ExplorerBrowser.NavigationLog.Locations.Count() - 1);
                     }
                 }
             }

@@ -67,7 +67,7 @@ public partial class HeaderWithCloseButton : UserControl, INotifyPropertyChanged
         if (CurrentTabExplorer == null)
             MyTabControl.AddNewTab((ShellObject)KnownFolders.Desktop);
         else
-            MyTabControl.AddNewTab(CurrentTabExplorer.ExplorerBrowser.NavigationLog[CurrentTabExplorer.ExplorerBrowser.NavigationLogIndex]);
+            MyTabControl.AddNewTab(CurrentTabExplorer.ExplorerBrowser.NavigationLog.CurrentLocation);
     }
 
     private void CloseTab_Click(object sender, RoutedEventArgs e)
@@ -93,7 +93,7 @@ public partial class HeaderWithCloseButton : UserControl, INotifyPropertyChanged
     private void NewTabOther_Click(object sender, RoutedEventArgs e)
     {
         WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
-        ShellObject dir = CurrentTabExplorer?.ExplorerBrowser?.NavigationLog[CurrentTabExplorer.ExplorerBrowser.NavigationLogIndex] ?? (ShellObject)KnownFolders.Desktop;
+        ShellObject dir = CurrentTabExplorer?.ExplorerBrowser?.NavigationLog?.CurrentLocation ?? (ShellObject)KnownFolders.Desktop;
         if (fenetre.LeftTab == MyTabControl)
             fenetre.RightTab.AddNewTab(dir);
         else
