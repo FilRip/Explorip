@@ -15,4 +15,7 @@ public static class Uxtheme
 
     [DllImport("uxtheme.dll", EntryPoint = "#135", SetLastError = true, CharSet = CharSet.Unicode)]
     internal static extern int SetPreferredAppMode(PreferredAppMode preferredAppMode);
+
+    [DllImport("uxtheme.dll", EntryPoint = "#136", SetLastError = true, CharSet = CharSet.Unicode)]
+    internal static extern void FlushMenuThemes();
 }

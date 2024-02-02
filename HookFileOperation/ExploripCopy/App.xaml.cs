@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Windows;
 
 using ExploripCopy.ViewModels;
@@ -32,6 +33,11 @@ namespace ExploripCopy
 
                 notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
                 NotifyIconViewModel.Instance.SetControl(notifyIcon);
+            }
+            else
+            {
+                Current.Exit -= Application_Exit;
+                Environment.Exit(-1);
             }
         }
     }
