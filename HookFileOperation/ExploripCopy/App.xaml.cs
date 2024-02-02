@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading;
+using System.Windows;
 
 using ExploripCopy.ViewModels;
 
@@ -12,20 +13,26 @@ namespace ExploripCopy
     public partial class App : Application
     {
         private TaskbarIcon notifyIcon;
+        private Mutex _mutexProcess;
 
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             notifyIcon.Dispose();
+            _mutexProcess?.Dispose();
         }
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            Constants.Colors.LoadTheme();
-            Constants.Localization.LoadTranslation();
-            Constants.Icons.LoadIcons();
+            _mutexProcess = new Mutex(true, "ExploripCopy", out bool processNotLaunched);
+            if (processNotLaunched)
+            {
+                Constants.Colors.LoadTheme();
+                Constants.Localization.LoadTranslation();
+                Constants.Icons.LoadIcons();
 
-            notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
-            NotifyIconViewModel.Instance.SetControl(notifyIcon);
+                notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
+                NotifyIconViewModel.Instance.SetControl(notifyIcon);
+            }
         }
     }
 }
