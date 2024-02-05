@@ -10,8 +10,8 @@ public class ComReleaser<T> : IDisposable where T : class
 
     public ComReleaser(T obj)
     {
-        if (obj == null) throw new ArgumentNullException("obj");
-        if (!obj.GetType().IsCOMObject) throw new ArgumentOutOfRangeException("obj");
+        if (obj == null) throw new ArgumentNullException(nameof(obj));
+        if (!obj.GetType().IsCOMObject) throw new ArgumentOutOfRangeException(nameof(obj));
         _obj = obj;
     }
 

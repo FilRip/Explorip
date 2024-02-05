@@ -306,7 +306,8 @@ public static class SearchConditionFactory
 
             HResult hr = nativeConditionFactory.MakeAndOr(conditionType, subConditions, simplify, out result);
 
-            if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+            if (!CoreErrorHelper.Succeeded(hr))
+                throw new ShellException(hr);
         }
         finally
         {
@@ -339,7 +340,8 @@ public static class SearchConditionFactory
         {
             HResult hr = nativeConditionFactory.MakeNot(conditionToBeNegated.NativeSearchCondition, simplify, out result);
 
-            if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+            if (!CoreErrorHelper.Succeeded(hr))
+                throw new ShellException(hr);
         }
         finally
         {
@@ -375,7 +377,7 @@ public static class SearchConditionFactory
     {
         if (string.IsNullOrEmpty(query))
         {
-            throw new ArgumentNullException("query");
+            throw new ArgumentNullException(nameof(query));
         }
 
         IQueryParserManager nativeQueryParserManager = (IQueryParserManager)new QueryParserManagerCoClass();
@@ -395,7 +397,8 @@ public static class SearchConditionFactory
                 ref guid,
                 out queryParser);
 
-            if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+            if (!CoreErrorHelper.Succeeded(hr))
+                throw new ShellException(hr);
 
             if (queryParser != null)
             {
@@ -405,21 +408,24 @@ public static class SearchConditionFactory
                     hr = queryParser.SetOption(StructuredQuerySingleOption.NaturalSyntax, optionValue);
                 }
 
-                if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+                if (!CoreErrorHelper.Succeeded(hr))
+                    throw new ShellException(hr);
 
                 // Next, try to parse the query.
                 // Result would be IQuerySolution that we can use for getting the ICondition and other
                 // details about the parsed query.
                 hr = queryParser.Parse(query, null, out querySolution);
 
-                if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+                if (!CoreErrorHelper.Succeeded(hr))
+                    throw new ShellException(hr);
 
                 if (querySolution != null)
                 {
                     // Lastly, try to get the ICondition from this parsed query
                     hr = querySolution.GetQuery(out result, out mainType);
 
-                    if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+                    if (!CoreErrorHelper.Succeeded(hr))
+                        throw new ShellException(hr);
                 }
             }
 

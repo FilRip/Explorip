@@ -15,6 +15,7 @@ using Explorip.Helpers;
 
 using Microsoft.WindowsAPICodePack.Controls;
 using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace Explorip.Explorer.Controls;
 
@@ -23,10 +24,11 @@ namespace Explorip.Explorer.Controls;
 /// </summary>
 public partial class TabItemExplorerBrowser : TabItemExplorip
 {
-    private string _searchDirectory;
-    private string _lastFile;
     private readonly object _lockSearchText;
-    private bool _allowSearch;
+
+    private SearchCondition _searchQuery;
+    private ShellSearchFolder _searchShell;
+    private string _searchDirectory;
 
     public TabItemExplorerBrowser() : base()
     {
@@ -34,7 +36,6 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         InitializeExplorip();
 
         _lockSearchText = new object();
-        _allowSearch = true;
 
         ExplorerBrowser.ExplorerBrowserControl.NavigationComplete += ExplorerBrowserControl_NavigationComplete;
         ExplorerBrowser.ExplorerBrowserControl.NavigationFailed += ExplorerBrowserControl_NavigationFailed;
@@ -58,7 +59,6 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     private void ExplorerBrowserControl_NavigationFailed(object sender, NavigationFailedEventArgs e)
     {
         ExplorerBrowser.SetFocus();
-        _allowSearch = true;
     }
 
     private void ExplorerBrowserControl_SelectionChanged(object sender, EventArgs e)
@@ -75,19 +75,13 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         {
             lock (_lockSearchText)
             {
+                if (e.NewLocation.Name.Contains(Constants.Localization.SEARCH_RESULT.Replace("{0}", "")))
+                    return;
+
+                MyDataContext.ModeSearch = false;
+                DisposeSearch();
                 MyDataContext.ModeEdit = false;
-                if (!SearchText.IsFocused || !e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath).StartsWith(Environment.SpecialFolder.UserProfile.FullPath() + $"\\Searches"))
-                {
-                    SetTitle(e.NewLocation.Name);
-                    MyDataContext.ModeSearch = false;
-                    _searchDirectory = null;
-                    if (!string.IsNullOrWhiteSpace(_lastFile))
-                    {
-                        File.Delete(_lastFile);
-                        _lastFile = null;
-                    }
-                    SearchText.Text = "";
-                }
+                SetTitle(e.NewLocation.Name);
 
                 string pathLink;
                 bool splitPath = true;
@@ -106,33 +100,30 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                     splitPath = false;
                 }
 
-                if (!MyDataContext.ModeSearch)
+                CurrentPath.Inlines?.Clear();
+                if (splitPath)
                 {
-                    CurrentPath.Inlines?.Clear();
-                    if (splitPath)
+                    MyDataContext.EditPath = pathLink;
+                    StringBuilder partialPath = new();
+                    foreach (string path in pathLink.Split(new char[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        MyDataContext.EditPath = pathLink;
-                        StringBuilder partialPath = new();
-                        foreach (string path in pathLink.Split(new char[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries))
+                        if (network && CurrentPath.Inlines.Count == 0)
+                            partialPath.Append($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
+                        partialPath.Append(path + Path.DirectorySeparatorChar);
+                        Hyperlink lb = new()
                         {
-                            if (network && CurrentPath.Inlines.Count == 0)
-                                partialPath.Append($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
-                            partialPath.Append(path + Path.DirectorySeparatorChar);
-                            Hyperlink lb = new()
-                            {
-                                Foreground = Brushes.Yellow,
-                                NavigateUri = new Uri(partialPath.ToString()),
-                            };
-                            lb.RequestNavigate += Lb_RequestNavigate;
-                            lb.Inlines.Add(path);
-                            CurrentPath.Inlines.Add(lb);
-                            CurrentPath.Inlines.Add($" {Path.DirectorySeparatorChar} ");
-                        }
+                            Foreground = Brushes.Yellow,
+                            NavigateUri = new Uri(partialPath.ToString()),
+                        };
+                        lb.RequestNavigate += Lb_RequestNavigate;
+                        lb.Inlines.Add(path);
+                        CurrentPath.Inlines.Add(lb);
+                        CurrentPath.Inlines.Add($" {Path.DirectorySeparatorChar} ");
                     }
-                    else
-                    {
-                        CurrentPath.Inlines.Add(e.NewLocation.Name);
-                    }
+                }
+                else
+                {
+                    CurrentPath.Inlines.Add(e.NewLocation.Name);
                 }
 
                 MyDataContext.AllowNavigatePrevious = ExplorerBrowser.NavigationLog.CanNavigateBackward;
@@ -143,10 +134,6 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         {
             if (System.Diagnostics.Debugger.IsAttached)
                 System.Diagnostics.Debugger.Break();
-        }
-        finally
-        {
-            _allowSearch = true;
         }
     }
 
@@ -261,57 +248,38 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     #region Search file/folder
 
+    private void DisposeSearch()
+    {
+        _searchQuery?.Dispose();
+        _searchShell?.Dispose();
+        if (CurrentDirectory.Name.Contains(Constants.Localization.SEARCH_RESULT.Replace("{0}", "")))
+        {
+            CurrentDirectory.Dispose();
+            Navigation(_searchDirectory);
+        }
+    }
+
+    private void CreateSearch()
+    {
+        DisposeSearch();
+        _searchQuery = SearchConditionFactory.CreateLeafCondition(SystemProperties.System.ItemName, SearchText.Text, SearchConditionOperation.ValueContains);
+        _searchShell = new ShellSearchFolder(_searchQuery, _searchDirectory);
+        _searchShell.SetDisplayName(string.Format(Constants.Localization.SEARCH_RESULT, _searchDirectory));
+        ExplorerBrowser.ExplorerBrowserControl.ExplorerBrowserInterface.BrowseToObject(_searchShell.NativeShellItem, 0);
+    }
+
     private void SearchButton_Click(object sender, RoutedEventArgs e)
     {
         MyDataContext.ModeEdit = false;
         MyDataContext.ModeSearch = !MyDataContext.ModeSearch;
+        SearchText.Text = "";
         if (MyDataContext.ModeSearch)
+        {
+            _searchDirectory = CurrentDirectory.ParsingName;
             SearchText.Focus();
-        else if (!string.IsNullOrWhiteSpace(_searchDirectory))
+        }
+        else
             Navigation(_searchDirectory);
-    }
-
-    private void SearchText_TextChanged(object sender, TextChangedEventArgs e)
-    {
-        try
-        {
-            lock (_lockSearchText)
-            {
-                if (!_allowSearch)
-                    return;
-
-                if (MyDataContext.ModeSearch && ExplorerBrowser?.NavigationLog?.CurrentLocation != null)
-                {
-                    _allowSearch = false;
-                    string previousFile = null;
-
-                    if (string.IsNullOrWhiteSpace(_searchDirectory))
-                        _searchDirectory = ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
-                    else
-                        previousFile = ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
-
-                    string dir = _searchDirectory;
-                    string xmlContent = $"<?xml version=\"1.0\"?><persistedQuery version=\"1.0\"><query><conditions><condition type=\"leafCondition\" property=\"System.Generic.String\" operator=\"wordmatch\" propertyType=\"string\" value=\"{SearchText.Text}\" localeName=\"{System.Globalization.CultureInfo.CurrentCulture.Name}\"/></conditions><kindList><kind name=\"item\"/></kindList><scope><include path=\"::{{20D04FE0-3AEA-1069-A2D8-08002B30309D}}\\{dir}\"/></scope></query></persistedQuery>";
-                    string filename = Environment.SpecialFolder.UserProfile.FullPath() + $"\\Searches\\{DateTime.Now.Year:0000}{DateTime.Now.Month:00}{DateTime.Now.Hour:00}{DateTime.Now.Minute:00}{DateTime.Now.Second:00}{DateTime.Now.Millisecond:000}.search-ms";
-                    File.AppendAllText(filename, xmlContent);
-
-                    Navigation(filename);
-
-                    _lastFile = filename;
-
-                    if (!string.IsNullOrWhiteSpace(previousFile))
-                    {
-                        File.Delete(previousFile);
-                        ExplorerBrowser.NavigationLog.RemoveAt(ExplorerBrowser.NavigationLog.Locations.Count() - 1);
-                    }
-                }
-            }
-        }
-        catch (Exception)
-        {
-            if (System.Diagnostics.Debugger.IsAttached)
-                System.Diagnostics.Debugger.Break();
-        }
     }
 
     private void SearchText_KeyDown(object sender, KeyEventArgs e)
@@ -322,23 +290,24 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             if (!string.IsNullOrWhiteSpace(_searchDirectory))
                 Navigation(_searchDirectory);
         }
+        else if ((e.Key == Key.Enter || e.Key == Key.Return) && !string.IsNullOrWhiteSpace(SearchText.Text))
+        {
+            lock (_lockSearchText)
+            {
+                CreateSearch();
+            }
+        }
     }
 
     #endregion
-
-    private void TabItem_Unloaded(object sender, RoutedEventArgs e)
-    {
-        if (!string.IsNullOrWhiteSpace(_lastFile))
-            File.Delete(_lastFile);
-    }
 
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
         if (disposing)
         {
+            DisposeSearch();
             ExplorerBrowser.Dispose();
-            TabItem_Unloaded(null, null);
         }
     }
 }

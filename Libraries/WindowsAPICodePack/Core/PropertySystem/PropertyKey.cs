@@ -35,7 +35,7 @@ public struct PropertyKey : IEquatable<PropertyKey>
     /// <summary>
     ///  Property identifier (PID)
     /// </summary>
-    public Int32 PropertyId
+    public int PropertyId
     {
         get
         {
@@ -52,7 +52,7 @@ public struct PropertyKey : IEquatable<PropertyKey>
     /// </summary>
     /// <param name="formatId">A unique GUID for the property</param>
     /// <param name="propertyId">Property identifier (PID)</param>
-    public PropertyKey(Guid formatId, Int32 propertyId)
+    public PropertyKey(Guid formatId, int propertyId)
     {
         this.formatId = formatId;
         this.propertyId = propertyId;
@@ -63,7 +63,7 @@ public struct PropertyKey : IEquatable<PropertyKey>
     /// </summary>
     /// <param name="formatId">A string represenstion of a GUID for the property</param>
     /// <param name="propertyId">Property identifier (PID)</param>
-    public PropertyKey(string formatId, Int32 propertyId)
+    public PropertyKey(string formatId, int propertyId)
     {
         this.formatId = new Guid(formatId);
         this.propertyId = propertyId;
@@ -110,10 +110,10 @@ public struct PropertyKey : IEquatable<PropertyKey>
     /// <returns></returns>
 #pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
     public override int GetHashCode()
-#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
     {
         return formatId.GetHashCode() ^ propertyId;
     }
+#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
 
     /// <summary>
     /// Implements the == (equality) operator.

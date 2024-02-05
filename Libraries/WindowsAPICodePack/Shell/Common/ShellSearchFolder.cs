@@ -17,20 +17,21 @@ namespace Microsoft.WindowsAPICodePack.Shell;
 /// </summary>
 public class ShellSearchFolder : ShellSearchCollection
 {
+    private ShellSearchFolder(SearchCondition searchCondition)
+    {
+        CoreHelpers.ThrowIfNotVista();
+        NativeSearchFolderItemFactory = (ISearchFolderItemFactory)new SearchFolderItemFactoryCoClass();
+        SearchCondition = searchCondition;
+    }
+
     /// <summary>
     /// Create a simple search folder. Once the appropriate parameters are set, 
     /// the search folder can be enumerated to get the search results.
     /// </summary>
     /// <param name="searchCondition">Specific condition on which to perform the search (property and expected value)</param>
     /// <param name="searchScopePath">List of folders/paths to perform the search on. These locations need to be indexed by the system.</param>
-    public ShellSearchFolder(SearchCondition searchCondition, params ShellContainer[] searchScopePath)
+    public ShellSearchFolder(SearchCondition searchCondition, params ShellContainer[] searchScopePath) : this(searchCondition)
     {
-        CoreHelpers.ThrowIfNotVista();
-
-        NativeSearchFolderItemFactory = (ISearchFolderItemFactory)new SearchFolderItemFactoryCoClass();
-
-        SearchCondition = searchCondition;
-
         if (searchScopePath != null && searchScopePath.Length > 0 && searchScopePath[0] != null)
         {
             SearchScopePaths = searchScopePath.Select(cont => cont.ParsingName);
@@ -43,18 +44,12 @@ public class ShellSearchFolder : ShellSearchCollection
     /// </summary>
     /// <param name="searchCondition">Specific condition on which to perform the search (property and expected value)</param>
     /// <param name="searchScopePath">List of folders/paths to perform the search on. These locations need to be indexed by the system.</param>
-    public ShellSearchFolder(SearchCondition searchCondition, params string[] searchScopePath)
+    public ShellSearchFolder(SearchCondition searchCondition, params string[] searchScopePath) : this(searchCondition)
     {
-        CoreHelpers.ThrowIfNotVista();
-
-        NativeSearchFolderItemFactory = (ISearchFolderItemFactory)new SearchFolderItemFactoryCoClass();
-
         if (searchScopePath != null && searchScopePath.Length > 0 && searchScopePath[0] != null)
         {
             SearchScopePaths = searchScopePath;
         }
-
-        SearchCondition = searchCondition;
     }
 
     internal ISearchFolderItemFactory NativeSearchFolderItemFactory { get; set; }
@@ -102,7 +97,8 @@ public class ShellSearchFolder : ShellSearchCollection
 
                 int hr = ShellNativeMethods.SHCreateItemFromParsingName(path, IntPtr.Zero, ref shellItemGuid, out IShellItem scopeShellItem);
 
-                if (CoreErrorHelper.Succeeded(hr)) { shellItems.Add(scopeShellItem); }
+                if (CoreErrorHelper.Succeeded(hr))
+                    shellItems.Add(scopeShellItem);
             }
 
             // Create a new IShellItemArray
@@ -111,7 +107,8 @@ public class ShellSearchFolder : ShellSearchCollection
             // Set the scope on the native ISearchFolderItemFactory
             HResult hResult = NativeSearchFolderItemFactory.SetScope(scopeShellItemArray);
 
-            if (!CoreErrorHelper.Succeeded((int)hResult)) { throw new ShellException((int)hResult); }
+            if (!CoreErrorHelper.Succeeded((int)hResult))
+                throw new ShellException((int)hResult);
         }
     }
 
@@ -122,11 +119,13 @@ public class ShellSearchFolder : ShellSearchCollection
         {
             Guid guid = new(ShellIidGuid.IShellItem);
 
-            if (NativeSearchFolderItemFactory == null) { return null; }
+            if (NativeSearchFolderItemFactory == null)
+                return null;
 
             int hr = NativeSearchFolderItemFactory.GetShellItem(ref guid, out IShellItem shellItem);
 
-            if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+            if (!CoreErrorHelper.Succeeded(hr))
+                throw new ShellException(hr);
 
             return shellItem;
         }
@@ -183,7 +182,8 @@ public class ShellSearchFolder : ShellSearchCollection
     {
         HResult hr = NativeSearchFolderItemFactory.SetDisplayName(displayName);
 
-        if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+        if (!CoreErrorHelper.Succeeded(hr))
+            throw new ShellException(hr);
     }
 
 
@@ -197,7 +197,8 @@ public class ShellSearchFolder : ShellSearchCollection
     {
         HResult hr = NativeSearchFolderItemFactory.SetIconSize(value);
 
-        if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+        if (!CoreErrorHelper.Succeeded(hr))
+            throw new ShellException(hr);
     }
 
     /// <summary>
@@ -207,7 +208,8 @@ public class ShellSearchFolder : ShellSearchCollection
     {
         HResult hr = NativeSearchFolderItemFactory.SetFolderTypeID(value);
 
-        if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+        if (!CoreErrorHelper.Succeeded(hr))
+            throw new ShellException(hr);
     }
 
     /// <summary>
@@ -219,7 +221,8 @@ public class ShellSearchFolder : ShellSearchCollection
     {
         HResult hr = NativeSearchFolderItemFactory.SetFolderLogicalViewMode(mode);
 
-        if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+        if (!CoreErrorHelper.Succeeded(hr))
+            throw new ShellException(hr);
     }
 
     /// <summary>
@@ -259,6 +262,14 @@ public class ShellSearchFolder : ShellSearchCollection
     {
         HResult hr = NativeSearchFolderItemFactory.SetGroupColumn(ref propertyKey);
 
-        if (!CoreErrorHelper.Succeeded(hr)) { throw new ShellException(hr); }
+        if (!CoreErrorHelper.Succeeded(hr))
+            throw new ShellException(hr);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (nativeShellItem != null)
+            Marshal.ReleaseComObject(NativeSearchFolderItemFactory);
+        base.Dispose(disposing);
     }
 }

@@ -14,7 +14,6 @@ namespace Microsoft.WindowsAPICodePack.Shell;
 /// </summary>
 public abstract class ShellContainer : ShellObject, IEnumerable<ShellObject>
 {
-
     #region Private Fields
 
     private IShellFolder desktopFolderEnumeration;

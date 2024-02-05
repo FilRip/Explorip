@@ -76,15 +76,15 @@ public class SearchCondition : IDisposable
     }
 
     /// <summary>
-    /// A value (in <see cref="System.String"/> format) to which the property is compared. 
+    /// A value (in <see cref="string"/> format) to which the property is compared. 
     /// </summary>
     public string PropertyValue { get; internal set; }
 
     private readonly SearchConditionOperation conditionOperation = SearchConditionOperation.Implicit;
     /// <summary>
     /// Search condition operation to be performed on the property/value combination.
-    /// See <see cref="Microsoft.WindowsAPICodePack.Shell.SearchConditionOperation"/> for more details.
-    /// </summary>        
+    /// See <see cref="SearchConditionOperation"/> for more details.
+    /// </summary>
     public SearchConditionOperation ConditionOperation
     {
         get { return conditionOperation; }

@@ -250,6 +250,11 @@ public sealed class ExplorerBrowser :
             e.IsInputKey = true;
     }
 
+    internal IExplorerBrowser ExplorerBrowserInterface
+    {
+        get { return explorerBrowserControl; }
+    }
+
     #endregion
 
     #region message handlers
