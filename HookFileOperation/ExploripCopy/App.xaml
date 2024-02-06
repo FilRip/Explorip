@@ -7,6 +7,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/StyleWindow.xaml"/>
                 <ResourceDictionary Source="Styles/StyleBrush.xaml"/>
+                <ResourceDictionary Source="Styles/StyleMenuItem.xaml"/>
                 <ResourceDictionary Source="Styles/SystrayIcon.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
