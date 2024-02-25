@@ -17,7 +17,7 @@ public class ItemID : Structure
     /// <summary>
     /// Constructor
     /// </summary>
-    public ItemID() : this(new byte[0]) { }
+    public ItemID() : this([]) { }
 
     /// <summary>
     /// Constructor

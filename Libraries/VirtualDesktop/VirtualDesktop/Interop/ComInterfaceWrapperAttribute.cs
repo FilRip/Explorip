@@ -65,6 +65,8 @@ namespace WindowsDesktop.Interop
             string baseName = attr != null
                 ? attr.InterfaceName ?? $"I{type.Name}"
                 : null;
+
+#pragma warning disable IDE0301 // Simplifier l'initialisation des collections
             if (string.IsNullOrEmpty(baseName))
                 return Enumerable.Empty<string>();
             if (targetBuild != -1 && attr != null && attr.BuildVersion != -1 && attr.BuildVersion != targetBuild)
@@ -75,6 +77,7 @@ namespace WindowsDesktop.Interop
                     .Select(v => v == 1 ? baseName : $"{baseName}{v}");
             else
                 return Enumerable.Empty<string>();
+#pragma warning restore IDE0301 // Simplifier l'initialisation des collections
         }
     }
 }

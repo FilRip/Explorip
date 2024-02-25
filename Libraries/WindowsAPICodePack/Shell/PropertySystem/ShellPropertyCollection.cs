@@ -25,7 +25,7 @@ public class ShellPropertyCollection : ReadOnlyCollection<IShellProperty>, IDisp
     /// </summary>
     /// <param name="nativePropertyStore">IPropertyStore</param>
     internal ShellPropertyCollection(IPropertyStore nativePropertyStore)
-        : base(new List<IShellProperty>())
+        : base([])
     {
         NativePropertyStore = nativePropertyStore;
         AddProperties(nativePropertyStore);
@@ -40,7 +40,7 @@ public class ShellPropertyCollection : ReadOnlyCollection<IShellProperty>, IDisp
     /// </summary>
     /// <param name="parent">Parent ShellObject</param>
     public ShellPropertyCollection(ShellObject parent)
-        : base(new List<IShellProperty>())
+        : base([])
     {
         ParentShellObject = parent;
         IPropertyStore nativePropertyStore = null;

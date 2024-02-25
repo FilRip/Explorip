@@ -9,3 +9,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags")]
 [assembly: SuppressMessage("Info Code Smell", "S1133:Deprecated code should be removed")]
 [assembly: SuppressMessage("Style", "IDE0290:Utiliser le constructeur principal")]
+[assembly: SuppressMessage("Style", "IDE0305:Simplifier l'initialisation des collections")]

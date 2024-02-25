@@ -294,6 +294,7 @@ public static class StoreAppHelper
         return string.Empty;
     }
 
+#pragma warning disable IDE0301 // Simplifier l'initialisation des collections
     private static IEnumerable<Windows.ApplicationModel.Package> GetPackages(Windows.Management.Deployment.PackageManager pman, string packageFamilyName)
     {
         userSID ??= System.Security.Principal.WindowsIdentity.GetCurrent().User?.ToString();
@@ -317,6 +318,7 @@ public static class StoreAppHelper
             return Enumerable.Empty<Windows.ApplicationModel.Package>();
         }
     }
+#pragma warning restore IDE0301 // Simplifier l'initialisation des collections
 
     private static string GetPackagePath(Windows.ApplicationModel.Package package)
     {

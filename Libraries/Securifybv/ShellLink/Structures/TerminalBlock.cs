@@ -18,7 +18,7 @@ public class TerminalBlock : Structure
 
     #region GetBytes
     /// <inheritdoc />
-    public override byte[] GetBytes() => new byte[] { 0x00, 0x00, 0x00, 0x00 };
+    public override byte[] GetBytes() => [0x00, 0x00, 0x00, 0x00];
     #endregion // GetBytes
 
     #region ToString

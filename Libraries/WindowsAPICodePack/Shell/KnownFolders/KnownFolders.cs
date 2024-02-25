@@ -31,7 +31,9 @@ public static class KnownFolders
         // to get a list of all the known folders, create the managed wrapper
         // and return the read-only collection.
 
+#pragma warning disable IDE0028 // Simplifier l'initialisation des collections
         IList<IKnownFolder> foldersList = new List<IKnownFolder>();
+#pragma warning restore IDE0028 // Simplifier l'initialisation des collections
         IntPtr folders = IntPtr.Zero;
 
         try

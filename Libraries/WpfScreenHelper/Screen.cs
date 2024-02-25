@@ -118,7 +118,7 @@ public class Screen
                 }
             }
 
-            return new[] { new Screen((IntPtr)PRIMARY_MONITOR) };
+            return [new Screen((IntPtr)PRIMARY_MONITOR)];
         }
     }
 

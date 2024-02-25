@@ -69,7 +69,7 @@ public sealed class CommonOpenFileDialog : CommonFileDialog
             CheckFileItemsAvailable();
 
             // temp collection to hold our shellobjects
-            ICollection<ShellObject> resultItems = new Collection<ShellObject>();
+            Collection<ShellObject> resultItems = [];
 
             // Loop through our existing list of filenames, and try to create a concrete type of
             // ShellObject (e.g. ShellLibrary, FileSystemFolder, ShellFile, etc)
