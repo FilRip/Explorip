@@ -201,17 +201,34 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     public void DragEnter(IDropInfo dropInfo)
     {
-        System.Diagnostics.Debug.WriteLine("DragEnter");
+        if (dropInfo?.Data != null && dropInfo.Data is DataObject datas)
+        {
+            try
+            {
+                string[] listFiles = (string[])datas.GetData("FileDrop");
+            }
+            catch (Exception)
+            {
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debugger.Break();
+            }
+        }
     }
 
     public void DragOver(IDropInfo dropInfo)
     {
-        dropInfo.Effects = DragDropEffects.Move;
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            dropInfo.Effects = DragDropEffects.Copy;
+        else
+            dropInfo.Effects = DragDropEffects.Move;
     }
 
     public void DragLeave(IDropInfo dropInfo)
     {
-        System.Diagnostics.Debug.WriteLine("DragLeave");
+        if (dropInfo.Data is OneDesktopItemViewModel itemToDrop)
+        {
+            ((IDataObject)dropInfo.Data).SetData("FileDrop", itemToDrop.FullPath);
+        }
     }
 
     public void Drop(IDropInfo dropInfo)
