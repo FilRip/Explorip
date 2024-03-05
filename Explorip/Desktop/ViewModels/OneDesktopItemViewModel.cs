@@ -163,4 +163,9 @@ internal partial class OneDesktopItemViewModel : ObservableObject
         }
         catch (Exception) { /* Ignore errors, can't get icon */ }
     }
+
+    public override string ToString()
+    {
+        return FullPath;
+    }
 }

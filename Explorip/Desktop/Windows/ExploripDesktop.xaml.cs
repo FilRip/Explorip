@@ -192,10 +192,19 @@ public partial class ExploripDesktop : Window
 
     private void Window_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (!_selection)
+        if ((Mouse.DirectlyOver is not FrameworkElement element || element.DataContext is not OneDesktopItemViewModel item))
         {
-            _selection = true;
-            _selectionStart = e.GetPosition(this);
+            if (!_selection)
+            {
+                _selection = true;
+                _selectionStart = e.GetPosition(this);
+            }
+        }
+        else
+        {
+            DataObject data = new();
+            data.SetData("FileDrop", item.ToString());
+            DragDrop.DoDragDrop(this, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
         }
     }
 
@@ -213,5 +222,30 @@ public partial class ExploripDesktop : Window
     private void Window_KeyDown(object sender, KeyEventArgs e)
     {
         MyDataContext.ActionOnKeyCommand.Execute(e);
+    }
+
+    private void Window_DragLeave(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void Window_DragEnter(object sender, DragEventArgs e)
+    {
+
+    }
+
+    private void Window_Drop(object sender, DragEventArgs e)
+    {
+        MyDataContext.Drop(e);
+    }
+
+    private void Window_MouseMove(object sender, MouseEventArgs e)
+    {
+
+    }
+
+    private void Window_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+
     }
 }

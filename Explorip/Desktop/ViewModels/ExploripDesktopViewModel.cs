@@ -13,15 +13,13 @@ using Explorip.Desktop.Controls;
 using Explorip.Desktop.Windows;
 using Explorip.Helpers;
 
-using GongSolutions.Wpf.DragDrop;
-
 using ManagedShell.Interop;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Desktop.ViewModels;
 
-internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
+internal partial class ExploripDesktopViewModel : ObservableObject
 {
     private readonly ExploripDesktop _parentDesktop;
     private readonly FileSystemWatcher _watcher;
@@ -199,7 +197,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
 
     #region Drag'n drop
 
-    public void DragEnter(IDropInfo dropInfo)
+    /*public void DragEnter(IDropInfo dropInfo)
     {
         if (dropInfo?.Data != null && dropInfo.Data is DataObject datas)
         {
@@ -213,32 +211,17 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
                     System.Diagnostics.Debugger.Break();
             }
         }
-    }
+    }*/
 
-    public void DragOver(IDropInfo dropInfo)
-    {
-        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-            dropInfo.Effects = DragDropEffects.Copy;
-        else
-            dropInfo.Effects = DragDropEffects.Move;
-    }
 
-    public void DragLeave(IDropInfo dropInfo)
-    {
-        if (dropInfo.Data is OneDesktopItemViewModel itemToDrop)
-        {
-            ((IDataObject)dropInfo.Data).SetData("FileDrop", itemToDrop.FullPath);
-        }
-    }
-
-    public void Drop(IDropInfo dropInfo)
+    public void Drop(DragEventArgs e)
     {
         double dpi = _parentDesktop.AssociateScreen.ScaleFactor;
-        int x = (int)(dropInfo.DropPosition.X / (Constants.Desktop.ITEM_SIZE_X.Value * dpi));
-        int y = (int)(dropInfo.DropPosition.Y / (Constants.Desktop.ITEM_SIZE_Y.Value * dpi));
+        int x = (int)(e.GetPosition(_parentDesktop).X / (Constants.Desktop.ITEM_SIZE_X.Value * dpi));
+        int y = (int)(e.GetPosition(_parentDesktop).Y / (Constants.Desktop.ITEM_SIZE_Y.Value * dpi));
         List<OneDesktopItem> listItems = ListItems();
         OneDesktopItem dest = listItems.Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
-        if (dropInfo.Data is OneDesktopItemViewModel itemToDrop)
+        if (e.Data is OneDesktopItemViewModel itemToDrop)
         {
             OneDesktopItem item = listItems.Find(i => i.MyDataContext == itemToDrop);
             if (item != null)
@@ -262,17 +245,18 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDropTarget
                 }
             }
         }
-        else if (dropInfo.Data is DataObject)
+        else if (e.Data is DataObject)
         {
-            string[] itemsFromExplorer = (string[])((IDataObject)dropInfo.Data).GetData("FileDrop");
+            string[] itemsFromExplorer = (string[])(e.Data.GetData("FileDrop"));
             string destination = (dest == null ? Environment.SpecialFolder.DesktopDirectory.FullPath() : dest.MyDataContext.FullPath);
             foreach (string file in itemsFromExplorer)
             {
                 FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
-                if (dropInfo.Effects == DragDropEffects.Copy)
+                if (e.Effects == DragDropEffects.Copy)
                     fileOperation.CopyItem(file, destination, Path.GetFileName(file));
-                else if (dropInfo.Effects == DragDropEffects.Move)
+                else if (e.Effects == DragDropEffects.Move)
                     fileOperation.MoveItem(file, destination, Path.GetFileName(file));
+                // TODO : Make link
                 fileOperation.PerformOperations();
                 fileOperation.Dispose();
             }

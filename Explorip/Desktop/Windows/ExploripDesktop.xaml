@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
-        xmlns:dd="urn:gong-wpf-dragdrop"
         mc:Ignorable="d"
         Topmost="False"
         ShowInTaskbar="False"
@@ -23,7 +22,12 @@
         PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
         MouseLeave="Window_MouseLeave"
         KeyDown="Window_KeyDown"
-        dd:DragDrop.IsDragSource="False" dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}">
+        AllowDrop="True"
+        MouseUp="Window_MouseUp"
+        MouseMove="Window_MouseMove"
+        Drop="Window_Drop"
+        DragEnter="Window_DragEnter"
+        DragLeave="Window_DragLeave">
     <Grid Name="MainGrid">
     </Grid>
 </Window>

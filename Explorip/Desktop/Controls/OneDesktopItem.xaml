@@ -5,11 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
              xmlns:constants="clr-namespace:Explorip.Constants"
-             xmlns:dd="urn:gong-wpf-dragdrop"
              mc:Ignorable="d" Focusable="True"
              d:DesignHeight="96" d:DesignWidth="96"
-             KeyDown="UserControl_KeyDown"
-             dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.UseDefaultDragAdorner="True">
+             KeyDown="UserControl_KeyDown">
     <UserControl.DataContext>
         <viewmodels:OneDesktopItemViewModel/>
     </UserControl.DataContext>
