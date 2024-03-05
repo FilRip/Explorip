@@ -190,7 +190,7 @@
                 <Setter Property="Visibility" TargetName="Icon" Value="Collapsed"/>
             </Trigger>
             <Trigger Property="IsHighlighted" Value="True">
-                <Setter Property="Background" TargetName="templateRoot" Value="{StaticResource MenuItem.Highlight.Background}"/>
+                <Setter Property="Background" TargetName="templateRoot" Value="{x:Static constants:Colors.AccentColorBrush}"/>
                 <Setter Property="BorderBrush" TargetName="templateRoot" Value="{StaticResource MenuItem.Highlight.Border}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
