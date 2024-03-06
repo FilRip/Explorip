@@ -8,6 +8,8 @@ using Explorip.Constants;
 using Explorip.Desktop.ViewModels;
 using Explorip.Helpers;
 
+using ManagedShell.Interop;
+
 using Microsoft.Win32;
 
 namespace Explorip.Configuration;
@@ -22,7 +24,7 @@ internal static class RegistrySettings
         if (!_showVersion.HasValue)
         {
             _showVersion = false;
-            RegistryKey key = Registry.CurrentUser.OpenSubKey("Control Panel/Desktop", false);
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", false);
             if (key != null)
             {
                 object value = key.GetValue("PaintDesktopVersion");
@@ -37,7 +39,7 @@ internal static class RegistrySettings
     {
         if (string.IsNullOrWhiteSpace(_currentVersion))
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey("Software/Microsoft/Windows NT/CurrentVersion", false);
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion", false);
             if (key != null)
             {
                 object name = key.GetValue("ProductName");
@@ -50,23 +52,33 @@ internal static class RegistrySettings
 
     public static string GetCurrentShell()
     {
-        RegistryKey key = Registry.LocalMachine.OpenSubKey("Software/Microsoft/Windows NT/CurrentVersion/Winlogon", false);
-        return key.GetValue("Shell").ToString();
+        string shell = null;
+        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", false);
+        if (key != null && key.GetValueNames().Contains("Shell"))
+            shell = key.GetValue("Shell").ToString();
+        if (string.IsNullOrWhiteSpace(shell))
+        {
+            key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", false);
+            if (key != null && key.GetValueNames().Contains("Shell"))
+                shell = key.GetValue("Shell").ToString();
+        }
+        return shell;
     }
 
     public static List<OneDesktopItemViewModel> ListDesktopSystemIcons()
     {
         List<OneDesktopItemViewModel> result = [];
-        RegistryKey key = Registry.LocalMachine.OpenSubKey("Software/Microsoft/Windows/CurrentVersion/Explorer/HideDesktopIcons/NewStartPanel", false);
+        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel", false);
         foreach (string name in key.GetValueNames())
-            if (key.GetValue(name).ToString() != "0")
+            if (key.GetValue(name).ToString() != "1")
             {
-                string label = "";
+                string label = "", originalLabel = "";
                 ImageSource icon = null;
-                RegistryKey clSidKey = Registry.ClassesRoot.OpenSubKey($"CLSID/{name}", false);
+                RegistryKey clSidKey = Registry.ClassesRoot.OpenSubKey(@$"CLSID\{name}", false);
                 if (clSidKey != null)
                 {
                     label = clSidKey.GetValue("").ToString();
+                    originalLabel = label;
                     try
                     {
                         if (clSidKey.GetValueNames().Contains("LocalizedString"))
@@ -79,7 +91,7 @@ internal static class RegistrySettings
                                 if (fullIconString.IndexOf(',') >= 0)
                                 {
                                     res = fullIconString.Substring(0, fullIconString.LastIndexOf(','));
-                                    stringIndex = uint.Parse(fullIconString.Substring(fullIconString.LastIndexOf(',') + 1));
+                                    stringIndex = uint.Parse(fullIconString.Substring(fullIconString.LastIndexOf(',') + 1).Replace("-", ""));
                                 }
                                 else
                                     res = fullIconString;
@@ -118,6 +130,7 @@ internal static class RegistrySettings
                 {
                     Name = label,
                     Icon = icon,
+                    FullPath = originalLabel,
                 };
                 result.Add(item);
             }

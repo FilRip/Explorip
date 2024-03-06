@@ -49,11 +49,11 @@ public partial class MyDesktopApp : Application
 
     private void CurrentDomain_ProcessExit(object sender, EventArgs e)
     {
+        ManagedShell.Common.Helpers.ShellHelper.ToggleDesktopIcons(true);
         foreach (ExploripDesktop desktop in _listDesktop)
             desktop.Dispatcher.Invoke(() =>
             {
                 desktop.Close();
             });
-        ManagedShell.Common.Helpers.ShellHelper.ToggleDesktopIcons(true);
     }
 }

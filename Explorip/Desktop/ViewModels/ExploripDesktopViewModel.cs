@@ -42,9 +42,23 @@ internal partial class ExploripDesktopViewModel : ObservableObject
     internal void RefreshDesktopContent()
     {
         _parentDesktop.MainGrid.Children.Clear();
-        // TODO : Add system icons
+        RefreshSystemIcons();
         RefreshDesktopContent(Environment.SpecialFolder.DesktopDirectory.FullPath());
         RefreshDesktopContent(Environment.SpecialFolder.CommonDesktopDirectory.FullPath());
+    }
+
+    private void RefreshSystemIcons()
+    {
+        foreach (OneDesktopItemViewModel vm in Configuration.RegistrySettings.ListDesktopSystemIcons())
+        {
+            if (vm.Icon == null)
+                vm.GetIcon();
+            OneDesktopItem ctrl = new()
+            {
+                MyDataContext = vm,
+            };
+            _parentDesktop.AddItem(ctrl);
+        }
     }
 
     private void RefreshDesktopContent(string desktopPath)
@@ -167,6 +181,8 @@ internal partial class ExploripDesktopViewModel : ObservableObject
     {
         if (args is KeyEventArgs e)
         {
+            if (e.Key == Key.PageDown && Keyboard.IsKeyDown(Key.RightCtrl))
+                Quit();
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 if (e.Key == Key.A)
