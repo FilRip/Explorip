@@ -51,9 +51,8 @@ public static class ExtensionsArray
 #pragma warning restore S112
 
         T[] newListe = new T[list.Length - 1];
-        if (list.Length > 0)
-            for (int i = 0; i < list.Length; i++)
-                if (i != index) newListe[(i > index ? i - 1 : i)] = list[i];
+        for (int i = 0; i < list.Length; i++)
+            if (i != index) newListe[(i > index ? i - 1 : i)] = list[i];
 
         return newListe;
     }

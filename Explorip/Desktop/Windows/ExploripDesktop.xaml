@@ -23,11 +23,8 @@
         MouseLeave="Window_MouseLeave"
         KeyDown="Window_KeyDown"
         AllowDrop="True"
-        MouseUp="Window_MouseUp"
-        MouseMove="Window_MouseMove"
-        Drop="Window_Drop"
-        DragEnter="Window_DragEnter"
-        DragLeave="Window_DragLeave">
+        DragOver="Window_DragOver"
+        Drop="Window_Drop">
     <Grid Name="MainGrid">
     </Grid>
 </Window>

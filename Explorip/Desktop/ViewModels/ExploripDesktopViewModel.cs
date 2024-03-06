@@ -198,22 +198,17 @@ internal partial class ExploripDesktopViewModel : ObservableObject
 
     #region Drag'n drop
 
-    /*public void DragEnter(IDropInfo dropInfo)
+    public void StartDrag(OneDesktopItemViewModel item)
     {
-        if (dropInfo?.Data != null && dropInfo.Data is DataObject datas)
-        {
-            try
-            {
-                string[] listFiles = (string[])datas.GetData("FileDrop");
-            }
-            catch (Exception)
-            {
-                if (System.Diagnostics.Debugger.IsAttached)
-                    System.Diagnostics.Debugger.Break();
-            }
-        }
-    }*/
-
+        DataObject data = new();
+        List<string> listDrag = [];
+        foreach (FileSystemInfo fs in ListSelectedItem())
+            listDrag.Add(fs.FullName);
+        if (listDrag.Count == 0)
+            listDrag.Add(item.FullPath);
+        data.SetData("FileDrop", listDrag.ToArray());
+        DragDrop.DoDragDrop(_parentDesktop, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
+    }
 
     public void Drop(DragEventArgs e)
     {
@@ -222,46 +217,76 @@ internal partial class ExploripDesktopViewModel : ObservableObject
         int y = (int)(e.GetPosition(_parentDesktop).Y / (Constants.Desktop.ITEM_SIZE_Y.Value * dpi));
         List<OneDesktopItem> listItems = ListItems();
         OneDesktopItem dest = listItems.Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
-        if (e.Data is OneDesktopItemViewModel itemToDrop)
-        {
-            OneDesktopItem item = listItems.Find(i => i.MyDataContext == itemToDrop);
-            if (item != null)
-            {
-                if (dest == null)
-                {
-                    Grid.SetColumn(item, x);
-                    Grid.SetRow(item, y);
-                }
-                else
-                {
-                    if (dest.MyDataContext.IsDirectory)
-                    {
-                        FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
-                        fileOperation.MoveItem(item.MyDataContext.FullPath, dest.MyDataContext.FullPath, Path.GetFileName(item.MyDataContext.FullPath));
-                        fileOperation.PerformOperations();
-                        fileOperation.Dispose();
-                    }
-                    else
-                        dest.MyDataContext.ExecuteCommand.Execute(item.MyDataContext.FullPath);
-                }
-            }
-        }
-        else if (e.Data is DataObject)
+        if (e.Data is DataObject && e.Data.GetDataPresent("FileDrop"))
         {
             string[] itemsFromExplorer = (string[])(e.Data.GetData("FileDrop"));
             string destination = (dest == null ? Environment.SpecialFolder.DesktopDirectory.FullPath() : dest.MyDataContext.FullPath);
-            foreach (string file in itemsFromExplorer)
+            string repSource = Path.GetDirectoryName(itemsFromExplorer[0]);
+            bool sameDrive = repSource[0] == Environment.SpecialFolder.DesktopDirectory.FullPath()[0];
+            foreach (string fs in itemsFromExplorer)
             {
-                FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
-                if (e.Effects == DragDropEffects.Copy)
-                    fileOperation.CopyItem(file, destination, Path.GetFileName(file));
-                else if (e.Effects == DragDropEffects.Move)
-                    fileOperation.MoveItem(file, destination, Path.GetFileName(file));
-                // TODO : Make link
-                fileOperation.PerformOperations();
-                fileOperation.Dispose();
+                OneDesktopItem item = listItems.Find(i => i.MyDataContext.FullPath == fs);
+                if (item != null)
+                {
+                    if (item == dest)
+                        break;
+                    if (dest == null)
+                    {
+                        if (e.KeyStates == DragDropKeyStates.ControlKey)
+                        {
+                            FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
+                            fileOperation.ChangeOperationFlags(FilesOperations.Interfaces.EFileOperation.FOF_RENAMEONCOLLISION);
+                            fileOperation.CopyItem(fs, destination, Path.GetFileName(fs));
+                            fileOperation.PerformOperations();
+                            fileOperation.Dispose();
+                        }
+                        else
+                        {
+                            Grid.SetColumn(item, x);
+                            Grid.SetRow(item, y);
+                        }
+                    }
+                    else
+                    {
+                        if (dest.MyDataContext.IsDirectory)
+                        {
+                            FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
+                            fileOperation.MoveItem(item.MyDataContext.FullPath, dest.MyDataContext.FullPath, Path.GetFileName(item.MyDataContext.FullPath));
+                            fileOperation.PerformOperations();
+                            fileOperation.Dispose();
+                        }
+                        else
+                            dest.MyDataContext.ExecuteCommand.Execute(item.MyDataContext.FullPath);
+                    }
+                    break;
+                }
+                else
+                {
+                    // TODO : Copy/Move/Execute to folder in desktop if drop on it (dest != null)
+                    FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
+                    if (e.Effects.HasFlag(DragDropEffects.Copy) && (e.KeyStates == DragDropKeyStates.ControlKey || !sameDrive))
+                        fileOperation.CopyItem(fs, destination, Path.GetFileName(fs));
+                    else if (e.Effects.HasFlag(DragDropEffects.Move) && (e.KeyStates == DragDropKeyStates.ShiftKey || sameDrive))
+                        fileOperation.MoveItem(fs, destination, Path.GetFileName(fs));
+                    else
+                    {
+                        // TODO : Operation seems impossible
+                    }
+                    fileOperation.PerformOperations();
+                    fileOperation.Dispose();
+                }
             }
         }
+    }
+
+    public void DragOver(DragEventArgs e)
+    {
+        if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            e.Effects = DragDropEffects.Copy;
+        else if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+            e.Effects = DragDropEffects.Link;
+        else
+            e.Effects = DragDropEffects.Move;
     }
 
     #endregion

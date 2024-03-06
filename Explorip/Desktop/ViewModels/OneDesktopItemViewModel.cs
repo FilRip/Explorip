@@ -79,10 +79,8 @@ internal partial class OneDesktopItemViewModel : ObservableObject
         else
         {
             IsSelected = !previousSelected;
-            Debug.WriteLine($"During multi select, {Name} going IsSelected={IsSelected}");
             previousSelected = false;
         }
-        Debug.WriteLine($"Select {Name}, previous={previousSelected}, DateTime.UtcNow={DateTime.UtcNow}, LastClicked={_lastClicked}, Difference in milliseconds={DateTime.UtcNow.Subtract(_lastClicked).TotalMilliseconds}");
         if (previousSelected && DateTime.UtcNow.Subtract(_lastClicked).TotalMilliseconds > 1000 && CurrentDesktop.ListSelectedItem().Length == 1)
         {
             Rename();

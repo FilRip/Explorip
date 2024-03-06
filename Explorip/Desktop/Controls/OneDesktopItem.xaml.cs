@@ -24,8 +24,7 @@ namespace Explorip.Desktop.Controls
 
         private void Button_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed && e.RightButton == MouseButtonState.Released)
-                MyDataContext.ExecuteCommand.Execute(null);
+            MyDataContext.ExecuteCommand.Execute(null);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

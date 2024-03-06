@@ -149,6 +149,7 @@ public partial class ExploripDesktop : Window
 
     private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
+        _isDragging = false;
         if (_selection && SelectInRectangle())
             return;
 
@@ -188,11 +189,22 @@ public partial class ExploripDesktop : Window
     {
         if (_selection)
             InvalidateVisual();
+        else if (_isDragging)
+        {
+            Point diffPos = e.GetPosition(this).GetDelta(_startDragging);
+            if (diffPos.X > 16 || diffPos.Y > 16)
+            {
+                _isDragging = false;
+                MyDataContext.StartDrag((OneDesktopItemViewModel)((FrameworkElement)Mouse.DirectlyOver).DataContext);
+            }
+        }
     }
 
+    private bool _isDragging;
+    private Point _startDragging;
     private void Window_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if ((Mouse.DirectlyOver is not FrameworkElement element || element.DataContext is not OneDesktopItemViewModel item))
+        if ((Mouse.DirectlyOver is not FrameworkElement element || element.DataContext is not OneDesktopItemViewModel))
         {
             if (!_selection)
             {
@@ -202,9 +214,8 @@ public partial class ExploripDesktop : Window
         }
         else
         {
-            DataObject data = new();
-            data.SetData("FileDrop", item.ToString());
-            DragDrop.DoDragDrop(this, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
+            _isDragging = true;
+            _startDragging = e.GetPosition(this);
         }
     }
 
@@ -215,6 +226,7 @@ public partial class ExploripDesktop : Window
             _selection = false;
             InvalidateVisual();
         }
+        _isDragging = false;
     }
 
     #endregion
@@ -224,28 +236,13 @@ public partial class ExploripDesktop : Window
         MyDataContext.ActionOnKeyCommand.Execute(e);
     }
 
-    private void Window_DragLeave(object sender, DragEventArgs e)
-    {
-
-    }
-
-    private void Window_DragEnter(object sender, DragEventArgs e)
-    {
-
-    }
-
     private void Window_Drop(object sender, DragEventArgs e)
     {
         MyDataContext.Drop(e);
     }
 
-    private void Window_MouseMove(object sender, MouseEventArgs e)
+    private void Window_DragOver(object sender, DragEventArgs e)
     {
-
-    }
-
-    private void Window_MouseUp(object sender, MouseButtonEventArgs e)
-    {
-
+        MyDataContext.DragOver(e);
     }
 }
