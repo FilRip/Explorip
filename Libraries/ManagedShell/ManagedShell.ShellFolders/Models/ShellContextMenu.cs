@@ -186,10 +186,21 @@ namespace ManagedShell.ShellFolders.Models
             return _oParentFolder;
         }
 
-        private IntPtr[] GetPIDLs(FileSystemInfo[] arrFI)
+        private IntPtr[] GetPIDLs(FileSystemInfo[] arrFI, bool background = false)
         {
             if (null == arrFI || 0 == arrFI.Length)
                 return null;
+
+            if (background)
+            {
+                IntPtr pItemIDL = NativeMethods.ILCreateFromPath(arrFI[0].FullName);
+                GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out IntPtr opsf);
+                IShellFolder psf = (IShellFolder)Marshal.GetTypedObjectForIUnknown(opsf, typeof(IShellFolder));
+                psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
+                IShellView pShellView = (IShellView)Marshal.GetTypedObjectForIUnknown(opShellView, typeof(IShellView));
+                pShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
+                _oContextMenu = (IContextMenu)opContextMenu;
+            }
 
             IShellFolder oParentFolder = GetParentFolder(Directory.GetParent(arrFI[0].FullName).FullName);
             if (oParentFolder == null)
@@ -233,7 +244,14 @@ namespace ManagedShell.ShellFolders.Models
             ShowContextMenu(pointScreen);
         }
 
-        private void ShowContextMenu(Point pointScreen)
+        internal void ShowContextMenu(DirectoryInfo dir, Point pointScreen)
+        {
+            ReleaseAll();
+            _arrPIDLs = GetPIDLs([dir], true);
+            ShowContextMenu(pointScreen, true);
+        }
+
+        private void ShowContextMenu(Point pointScreen, bool background = false)
         {
             IntPtr pMenu = IntPtr.Zero,
                 iContextMenuPtr = IntPtr.Zero,
@@ -248,7 +266,7 @@ namespace ManagedShell.ShellFolders.Models
                     return;
                 }
 
-                if (!GetContextMenuInterfaces(_oParentFolder, _arrPIDLs, out iContextMenuPtr))
+                if (!background && !GetContextMenuInterfaces(_oParentFolder, _arrPIDLs, out iContextMenuPtr))
                 {
                     ReleaseAll();
                     return;
@@ -265,13 +283,21 @@ namespace ManagedShell.ShellFolders.Models
                     CMF.NORMAL |
                     ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? CMF.EXTENDEDVERBS : 0));
 
-                Guid cm2Guid = typeof(IContextMenu2).GUID;
-                Guid cm3Guid = typeof(IContextMenu3).GUID;
-                Marshal.QueryInterface(iContextMenuPtr, ref cm2Guid, out iContextMenuPtr2);
-                Marshal.QueryInterface(iContextMenuPtr, ref cm3Guid, out iContextMenuPtr3);
+                if (iContextMenuPtr != IntPtr.Zero)
+                {
+                    Guid cm2Guid = typeof(IContextMenu2).GUID;
+                    Guid cm3Guid = typeof(IContextMenu3).GUID;
+                    Marshal.QueryInterface(iContextMenuPtr, ref cm2Guid, out iContextMenuPtr2);
+                    Marshal.QueryInterface(iContextMenuPtr, ref cm3Guid, out iContextMenuPtr3);
 
-                _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
-                _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
+                    _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
+                    _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
+                }
+                else
+                {
+                    _oContextMenu2 = (IContextMenu2)_oContextMenu;
+                    _oContextMenu3 = (IContextMenu3)_oContextMenu;
+                }
 
                 uint nSelected = NativeMethods.TrackPopupMenuEx(
                     pMenu,

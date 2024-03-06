@@ -156,8 +156,9 @@ internal partial class ExploripDesktopViewModel : ObservableObject
             Point position = _parentDesktop.PointToScreen(Mouse.GetPosition(_parentDesktop));
             FileSystemInfo[] listItems = ListSelectedItem();
             if (listItems.Length == 0)
-                listItems = listItems.Add(new DirectoryInfo(Environment.SpecialFolder.DesktopDirectory.FullPath()));
-            contextMenu.ShowContextMenu(listItems, position);
+                contextMenu.ShowContextMenu(new DirectoryInfo(Environment.SpecialFolder.DesktopDirectory.FullPath()), position);
+            else
+                contextMenu.ShowContextMenu(listItems, position);
         }
     }
 
