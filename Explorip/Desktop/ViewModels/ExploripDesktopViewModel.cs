@@ -17,6 +17,8 @@ using ManagedShell.Interop;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
+using Securify.ShellLink;
+
 namespace Explorip.Desktop.ViewModels;
 
 internal partial class ExploripDesktopViewModel : ObservableObject
@@ -220,7 +222,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
 
     #region Drag'n drop
 
-    public void StartDrag(OneDesktopItemViewModel item)
+    internal void StartDrag(OneDesktopItemViewModel item)
     {
         DataObject data = new();
         List<string> listDrag = [];
@@ -232,7 +234,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
         DragDrop.DoDragDrop(_parentDesktop, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
     }
 
-    public void Drop(DragEventArgs e)
+    internal void Drop(DragEventArgs e)
     {
         double dpi = _parentDesktop.AssociateScreen.ScaleFactor;
         int x = (int)(e.GetPosition(_parentDesktop).X / (Constants.Desktop.ITEM_SIZE_X.Value * dpi));
@@ -280,13 +282,27 @@ internal partial class ExploripDesktopViewModel : ObservableObject
                             fileOperation.Dispose();
                         }
                         else
-                            dest.MyDataContext.ExecuteCommand.Execute(item.MyDataContext.FullPath);
+                            dest.MyDataContext.ExecuteCommand.Execute("\"" + item.MyDataContext.FullPath + "\"");
                     }
                     break;
                 }
                 else
                 {
-                    // TODO : Copy/Move/Execute to folder in desktop if drop on it (dest != null)
+                    // TODO : If it's a special folder ? (that doesn't work)
+                    if (dest != null && Path.GetExtension(destination).ToLower() == ".lnk")
+                    {
+                        Shortcut shortcut = Shortcut.ReadFromFile(destination);
+                        if (!string.IsNullOrWhiteSpace(shortcut.Target))
+                        {
+                            if (Directory.Exists(shortcut.Target))
+                                destination = shortcut.Target;
+                            else
+                            {
+                                dest.MyDataContext.ExecuteCommand.Execute("\"" + fs + "\"");
+                                continue;
+                            }
+                        }
+                    }
                     FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
                     if (e.Effects.HasFlag(DragDropEffects.Copy) && (e.KeyStates == DragDropKeyStates.ControlKey || !sameDrive))
                         fileOperation.CopyItem(fs, destination, Path.GetFileName(fs));
@@ -303,7 +319,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
         }
     }
 
-    public void DragOver(DragEventArgs e)
+    internal void DragOver(DragEventArgs e)
     {
         if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             e.Effects = DragDropEffects.Copy;
@@ -311,6 +327,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
             e.Effects = DragDropEffects.Link;
         else
             e.Effects = DragDropEffects.Move;
+        e.Handled = true;
     }
 
     #endregion

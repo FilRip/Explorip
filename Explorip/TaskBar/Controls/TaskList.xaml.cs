@@ -148,11 +148,8 @@ public partial class TaskList : UserControl
                 appWin = new ApplicationWindow(MyTaskbarApp.MyShellManager.TasksService, IntPtr.Zero);
                 appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
                 appWin.IsPinnedApp = true;
-                if (pinnedApp.LinkTargetIDList?.Path != null)
-                    appWin.WinFileName = Path.GetFullPath(pinnedApp.LinkTargetIDList.Path);
-                else if (pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode != null)
-                    appWin.WinFileName = Path.GetFullPath(pinnedApp.ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode);
-                else
+                appWin.WinFileName = pinnedApp.Target;
+                if (string.IsNullOrWhiteSpace(appWin.WinFileName))
                 {
                     Console.WriteLine($"Unable to add {file} as pinned app");
                     continue;

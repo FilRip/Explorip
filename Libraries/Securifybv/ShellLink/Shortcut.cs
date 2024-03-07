@@ -167,7 +167,21 @@ public class Shortcut : ShellLinkHeader
     /// </summary>
     public ExtraData ExtraData { get; set; }
 
+    public string Target
+    {
+        get
+        {
+            if (LinkTargetIDList?.Path != null)
+                return Path.GetFullPath(LinkTargetIDList.Path);
+            else if (ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode != null)
+                return Path.GetFullPath(ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode);
+            else
+                return null;
+        }
+    }
+
     #region ReadFromFile
+
     /// <summary>
     /// Reads a lnk and returns a Shortcut object
     /// </summary>
