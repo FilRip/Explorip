@@ -135,27 +135,9 @@ internal partial class OneDesktopItemViewModel : ObservableObject
         {
             FileInfo fi = new(FullPath);
             if (fi.Attributes.HasFlag(FileAttributes.Directory))
-            {
-                Icon = Constants.Icons.Folder;
                 IsDirectory = true;
-            }
-            else
-                Icon = IconManager.GetIconFromFile(FullPath, 0);
-            if (Path.GetExtension(FullPath) == ".lnk")
-            {
-                Shortcut shortcut = Shortcut.ReadFromFile(FullPath);
-                string iconLocation = shortcut.StringData?.IconLocation;
-                if (string.IsNullOrWhiteSpace(iconLocation))
-                    iconLocation = shortcut.StringData?.RelativePath;
-                if (!string.IsNullOrWhiteSpace(iconLocation))
-                {
-                    if (iconLocation.StartsWith(".") || iconLocation.StartsWith(Path.DirectorySeparatorChar.ToString()))
-                        iconLocation = Path.GetFullPath(Environment.SpecialFolder.Desktop.FullPath() + Path.DirectorySeparatorChar + iconLocation);
-                    if (!File.Exists(iconLocation))
-                        iconLocation = shortcut.LinkInfo?.LocalBasePath;
-                    Icon = IconManager.GetIconFromFile(iconLocation, shortcut.IconIndex);
-                }
-            }
+
+            Icon = IconManager.GetIconFromFile(FullPath, true);
             if (Icon == null)
             {
                 System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
