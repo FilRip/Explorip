@@ -8,8 +8,6 @@ using Explorip.Constants;
 using Explorip.Desktop.ViewModels;
 using Explorip.Helpers;
 
-using ManagedShell.Interop;
-
 using Microsoft.Win32;
 
 namespace Explorip.Configuration;
@@ -72,13 +70,12 @@ internal static class RegistrySettings
         foreach (string name in key.GetValueNames())
             if (key.GetValue(name).ToString() != "1")
             {
-                string label = "", originalLabel = "";
+                string label = "";
                 ImageSource icon = null;
                 RegistryKey clSidKey = Registry.ClassesRoot.OpenSubKey(@$"CLSID\{name}", false);
                 if (clSidKey != null)
                 {
                     label = clSidKey.GetValue("").ToString();
-                    originalLabel = label;
                     try
                     {
                         if (clSidKey.GetValueNames().Contains("LocalizedString"))
@@ -130,7 +127,8 @@ internal static class RegistrySettings
                 {
                     Name = label,
                     Icon = icon,
-                    FullPath = originalLabel,
+                    FullPath = $"shell:::{name}",
+                    SpecialFolder = true,
                 };
                 result.Add(item);
             }

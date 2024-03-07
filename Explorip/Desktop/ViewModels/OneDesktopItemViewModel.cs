@@ -21,7 +21,7 @@ namespace Explorip.Desktop.ViewModels;
 internal partial class OneDesktopItemViewModel : ObservableObject
 {
     internal string FullPath { get; set; }
-    internal Environment.SpecialFolder SpecialFolder { get; set; }
+    internal bool SpecialFolder { get; set; }
     internal bool IsDirectory { get; set; }
     internal ExploripDesktopViewModel CurrentDesktop { get; set; }
     private FileSystemInfo _fileSystemInfo;
@@ -120,8 +120,12 @@ internal partial class OneDesktopItemViewModel : ObservableObject
     {
         get
         {
-            _fileSystemInfo ??= (IsDirectory ? new DirectoryInfo(FullPath) : new FileInfo(FullPath));
-            return _fileSystemInfo;
+            if (!SpecialFolder)
+            {
+                _fileSystemInfo ??= (IsDirectory ? new DirectoryInfo(FullPath) : new FileInfo(FullPath));
+                return _fileSystemInfo;
+            }
+            return null;
         }
     }
 

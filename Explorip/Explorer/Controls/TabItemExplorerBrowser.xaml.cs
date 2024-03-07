@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,7 +10,6 @@ using System.Windows.Media;
 
 using Explorip.Explorer.ViewModels;
 using Explorip.Explorer.Windows;
-using Explorip.Helpers;
 
 using Microsoft.WindowsAPICodePack.Controls;
 using Microsoft.WindowsAPICodePack.Shell;

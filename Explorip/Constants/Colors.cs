@@ -32,6 +32,6 @@ public static class Colors
         BackgroundColorBrush = new SolidColorBrush(Color.FromArgb(255, BackgroundColor.R, BackgroundColor.G, BackgroundColor.B));
         ForegroundColorBrush = new SolidColorBrush(Color.FromArgb(255, ForegroundColor.R, ForegroundColor.G, ForegroundColor.B));
         TransparentColorBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
-        SelectedBackgroundShellObject = new SolidColorBrush(Color.FromArgb(255, System.Drawing.Color.DarkGray.R, System.Drawing.Color.DarkGray.G, System.Drawing.Color.DarkGray.B));
+        SelectedBackgroundShellObject = new SolidColorBrush(Color.FromArgb(128, System.Drawing.Color.DarkGray.R, System.Drawing.Color.DarkGray.G, System.Drawing.Color.DarkGray.B));
     }
 }

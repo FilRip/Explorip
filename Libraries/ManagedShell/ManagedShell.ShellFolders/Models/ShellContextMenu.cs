@@ -186,6 +186,17 @@ namespace ManagedShell.ShellFolders.Models
             return _oParentFolder;
         }
 
+        private IntPtr GetPIDL(string shell)
+        {
+            uint pch = 0;
+            GetDesktopFolder().ParseDisplayName(IntPtr.Zero, IntPtr.Zero, shell, ref pch, out IntPtr pidl, 0);
+            _oParentFolder = GetDesktopFolder();
+            Guid guidCM = typeof(IContextMenu).GUID;
+            _oParentFolder.GetUIObjectOf(IntPtr.Zero, 1, [pidl], ref guidCM, IntPtr.Zero, out IntPtr cm);
+            _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(cm, typeof(IContextMenu));
+            return pidl;
+        }
+
         private IntPtr[] GetPIDLs(FileSystemInfo[] arrFI, bool background = false)
         {
             if (null == arrFI || 0 == arrFI.Length)
@@ -249,6 +260,13 @@ namespace ManagedShell.ShellFolders.Models
             ReleaseAll();
             _arrPIDLs = GetPIDLs([dir], true);
             ShowContextMenu(pointScreen, true);
+        }
+
+        internal void ShowContextMenu(string shell, Point pointScreen)
+        {
+            ReleaseAll();
+            _arrPIDLs = [GetPIDL(shell)];
+            ShowContextMenu(pointScreen);
         }
 
         private void ShowContextMenu(Point pointScreen, bool background = false)

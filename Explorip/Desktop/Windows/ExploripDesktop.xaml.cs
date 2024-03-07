@@ -162,7 +162,7 @@ public partial class ExploripDesktop : Window
 
     private bool _selection;
     private Point _selectionStart;
-    private readonly Pen _selectionPen = new(Brushes.Transparent, 0);
+    private readonly Pen _selectionPen = new(Constants.Colors.SelectedBackgroundShellObject, 2);
 
     private bool SelectInRectangle()
     {
