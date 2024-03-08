@@ -16,8 +16,6 @@ using ManagedShell.Common.Helpers;
 
 using Microsoft.WindowsAPICodePack.Shell;
 
-using Securify.ShellLink;
-
 namespace Explorip.Desktop.ViewModels;
 
 internal partial class OneDesktopItemViewModel : ObservableObject
@@ -32,8 +30,10 @@ internal partial class OneDesktopItemViewModel : ObservableObject
     [ObservableProperty()]
     private string _name;
 
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(IconSize))]
     private ImageSource _icon;
+    [ObservableProperty()]
+    private ImageSource _overlayIcon;
 
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(BackgroundBrush))]
     private bool _isSelected;
@@ -57,6 +57,15 @@ internal partial class OneDesktopItemViewModel : ObservableObject
         set
         {
             _shellObject = value;
+        }
+    }
+
+    public double IconSize
+    {
+        get
+        {
+            return 48;
+            //return Icon?.Height ?? 0;
         }
     }
 
@@ -139,11 +148,13 @@ internal partial class OneDesktopItemViewModel : ObservableObject
             if (fi.Attributes.HasFlag(FileAttributes.Directory))
                 IsDirectory = true;
 
-            IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.ExtraLarge);
+            IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.ExtraLarge, out IntPtr hOverlay);
             if (hIcon != IntPtr.Zero)
             {
                 System.Drawing.Icon icon = System.Drawing.Icon.FromHandle(hIcon);
                 Icon = IconManager.Convert(icon);
+                if (hOverlay != IntPtr.Zero)
+                    OverlayIcon = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
             }
             if (Icon == null)
             {

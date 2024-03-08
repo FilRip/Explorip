@@ -21,7 +21,7 @@ public static class IconImageConverter
     /// <returns>The icon as an ImageSource, otherwise a default image.</returns>
     public static ImageSource GetImageFromAssociatedIcon(string filename, IconSize size)
     {
-        IntPtr hIcon = IconHelper.GetIconByFilename(filename, size);
+        IntPtr hIcon = IconHelper.GetIconByFilename(filename, size, out _);
 
         return GetImageFromHIcon(hIcon);
     }
@@ -34,7 +34,7 @@ public static class IconImageConverter
     /// <returns>The icon as an ImageSource, otherwise a default image.</returns>
     public static ImageSource GetImageFromAssociatedIcon(IntPtr pidl, IconSize size)
     {
-        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, size);
+        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, size, out _);
 
         return GetImageFromHIcon(hIcon);
     }

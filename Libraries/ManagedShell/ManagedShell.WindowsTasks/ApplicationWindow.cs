@@ -531,7 +531,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                         if (sizeSetting != size)
                             size = IconSize.Large;
 
-                        hIco = IconHelper.GetIconByFilename(WinFileName, size);
+                        hIco = IconHelper.GetIconByFilename(WinFileName, size, out _);
                     }
 
                     if (hIco != IntPtr.Zero)

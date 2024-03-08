@@ -501,6 +501,28 @@ public partial class NativeMethods
         public Rect rcImage;
     }
 
+    [Flags()]
+#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+    public enum ILD
+    {
+        NORMAL = 0x00000000,
+        TRANSPARENT = 0x00000001,
+        MASK = 0x00000010,
+        IMAGE = 0x00000020,
+        ROP = 0x00000040,
+        BLEND25 = 0x00000002,
+        BLEND50 = 0x00000004,
+        OVERLAYMASK = 0x00000F00,
+        PRESERVEALPHA = 0x00001000,
+        SCALE = 0x00002000,
+        DPISCALE = 0x00004000,
+        ASYNC = 0x00008000,
+        SELECTED = BLEND50,
+        FOCUS = BLEND25,
+        BLEND = BLEND50,
+    }
+#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+
     [ComImport()]
     [Guid("46EB5926-582E-4017-9FDF-E8998DAA0950")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -546,7 +568,7 @@ public partial class NativeMethods
         [PreserveSig()]
         int GetIcon(
             int i,
-            int flags,
+            ILD flags,
             ref IntPtr picon);
 
         [PreserveSig()]

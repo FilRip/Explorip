@@ -78,18 +78,19 @@ public static class IconHelper
         }
     }
 
-    public static IntPtr GetIconByFilename(string fileName, IconSize size)
+    public static IntPtr GetIconByFilename(string fileName, IconSize size, out IntPtr hOverlay)
     {
-        return GetIcon(fileName, size);
+        return GetIcon(fileName, size, out hOverlay);
     }
 
-    public static IntPtr GetIconByPidl(IntPtr pidl, IconSize size)
+    public static IntPtr GetIconByPidl(IntPtr pidl, IconSize size, out IntPtr hOverlay)
     {
-        return GetIcon(pidl, size);
+        return GetIcon(pidl, size, out hOverlay);
     }
 
-    private static IntPtr GetIcon(string filename, IconSize size)
+    private static IntPtr GetIcon(string filename, IconSize size, out IntPtr hOverlay)
     {
+        hOverlay = IntPtr.Zero;
         lock (ComLock)
         {
             try
@@ -102,16 +103,17 @@ public static class IconHelper
                     szTypeName = string.Empty
                 };
 
+                SHGFI flags = SHGFI.Icon | SHGFI.SysIconIndex | SHGFI.OverlayIndex;
                 if (!filename.StartsWith("\\") && (File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
                 {
-                    SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL | FILE_ATTRIBUTE.DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.SysIconIndex);
+                    SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL | FILE_ATTRIBUTE.DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), flags);
                 }
                 else
                 {
-                    SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.UseFileAttributes | SHGFI.SysIconIndex);
+                    SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), flags);
                 }
 
-                return GetFromImageList(shinfo.iIcon, size);
+                return GetFromImageList(shinfo.iIcon, size, out hOverlay);
             }
             catch
             {
@@ -120,8 +122,9 @@ public static class IconHelper
         }
     }
 
-    private static IntPtr GetIcon(IntPtr pidl, IconSize size)
+    private static IntPtr GetIcon(IntPtr pidl, IconSize size, out IntPtr hOverlay)
     {
+        hOverlay = IntPtr.Zero;
         lock (ComLock)
         {
             try
@@ -132,9 +135,9 @@ public static class IconHelper
                     szTypeName = string.Empty
                 };
 
-                SHGetFileInfo(pidl, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.PIDL | SHGFI.SysIconIndex);
+                SHGetFileInfo(pidl, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.PIDL | SHGFI.SysIconIndex | SHGFI.Icon | SHGFI.OverlayIndex);
 
-                return GetFromImageList(shinfo.iIcon, size);
+                return GetFromImageList(shinfo.iIcon, size, out hOverlay);
             }
             catch
             {
@@ -143,27 +146,37 @@ public static class IconHelper
         }
     }
 
-    private static IntPtr GetFromImageList(int iconIndex, IconSize size)
+    private static IntPtr GetFromImageList(int iconIndex, IconSize size, out IntPtr hOverlay)
     {
         // Initialize the IImageList object
         InitIml(size);
 
         IntPtr hIcon = IntPtr.Zero;
-        int ILD_TRANSPARENT = 1;
+        hOverlay = IntPtr.Zero;
+
+        int overlayIndex = 0;
 
         switch (size)
         {
-            case IconSize.Large:
-                imlLarge.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
-                break;
             case IconSize.Small:
-                imlSmall.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                imlSmall.GetIcon(iconIndex & 0xFFFFFF, ILD.TRANSPARENT, ref hIcon);
+                if (imlSmall.GetOverlayImage(iconIndex >> 24, ref overlayIndex) == 0)
+                    imlSmall.GetIcon(overlayIndex, ILD.TRANSPARENT, ref hOverlay);
+                break;
+            case IconSize.Large:
+                imlLarge.GetIcon(iconIndex & 0xFFFFFF, ILD.TRANSPARENT, ref hIcon);
+                if (imlLarge.GetOverlayImage(iconIndex >> 24, ref overlayIndex) == 0)
+                    imlLarge.GetIcon(overlayIndex, ILD.TRANSPARENT, ref hOverlay);
                 break;
             case IconSize.ExtraLarge:
-                imlExtraLarge.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                imlExtraLarge.GetIcon(iconIndex & 0xFFFFFF, ILD.TRANSPARENT, ref hIcon);
+                if (imlExtraLarge.GetOverlayImage(iconIndex >> 24, ref overlayIndex) == 0)
+                    imlExtraLarge.GetIcon(overlayIndex, ILD.TRANSPARENT, ref hOverlay);
                 break;
             case IconSize.Jumbo:
-                imlJumbo.GetIcon(iconIndex, ILD_TRANSPARENT, ref hIcon);
+                imlJumbo.GetIcon(iconIndex & 0xFFFFFF, ILD.TRANSPARENT, ref hIcon);
+                if (imlJumbo.GetOverlayImage(iconIndex >> 24, ref overlayIndex) == 0)
+                    imlJumbo.GetIcon(overlayIndex, ILD.TRANSPARENT, ref hOverlay);
                 break;
         }
 
