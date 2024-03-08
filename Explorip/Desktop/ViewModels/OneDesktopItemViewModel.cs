@@ -12,6 +12,8 @@ using Explorip.Helpers;
 
 using ExploripSharedCopy.Controls;
 
+using ManagedShell.Common.Helpers;
+
 using Microsoft.WindowsAPICodePack.Shell;
 
 using Securify.ShellLink;
@@ -137,7 +139,12 @@ internal partial class OneDesktopItemViewModel : ObservableObject
             if (fi.Attributes.HasFlag(FileAttributes.Directory))
                 IsDirectory = true;
 
-            Icon = IconManager.GetIconFromFile(FullPath, true);
+            IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.ExtraLarge);
+            if (hIcon != IntPtr.Zero)
+            {
+                System.Drawing.Icon icon = System.Drawing.Icon.FromHandle(hIcon);
+                Icon = IconManager.Convert(icon);
+            }
             if (Icon == null)
             {
                 System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);

@@ -174,7 +174,7 @@ public static class IconHelper
     {
         if (filename.EndsWith(".settingcontent-ms"))
         {
-            return "C:\\Windows\\ImmersiveControlPanel\\SystemSettings.exe";
+            return Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\ImmersiveControlPanel\SystemSettings.exe";
         }
 
         return filename;

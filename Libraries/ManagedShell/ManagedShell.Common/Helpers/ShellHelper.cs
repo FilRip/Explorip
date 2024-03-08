@@ -229,8 +229,8 @@ public static class ShellHelper
     {
         Process owProc = new();
         owProc.StartInfo.UseShellExecute = true;
-        owProc.StartInfo.FileName = Environment.GetEnvironmentVariable("WINDIR") + @"\system32\rundll32.exe";
-        owProc.StartInfo.Arguments = @"C:\WINDOWS\system32\shell32.dll,OpenAs_RunDLL " + fileName;
+        owProc.StartInfo.FileName = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\system32\rundll32.exe";
+        owProc.StartInfo.Arguments = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + @"\system32\shell32.dll,OpenAs_RunDLL " + fileName;
         owProc.Start();
     }
 

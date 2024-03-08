@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -52,21 +50,6 @@ internal static class IconManager
         Icon icon = Extract(filename, index, true);
         if (icon != null)
             return Convert(icon);
-        return null;
-    }
-
-    internal static ImageSource GetIconFromFile(string filename, bool withOverlay)
-    {
-        // TODO : https://www.lluisfranco.com/extract-icons-win32/
-        NativeMethods.SHGFI flags = NativeMethods.SHGFI.OpenIcon;
-        if (withOverlay)
-            flags |= NativeMethods.SHGFI.AddOverlays;
-        if (Path.GetExtension(filename).ToLower() == ".lnk")
-            flags |= NativeMethods.SHGFI.LinkOverlay;
-        NativeMethods.ShFileInfo fi = new();
-        NativeMethods.SHGetFileInfo(filename, NativeMethods.FILE_ATTRIBUTE.NORMAL, ref fi, (uint)Marshal.SizeOf(fi), flags);
-        if (fi.hIcon != IntPtr.Zero)
-            return Convert(Icon.FromHandle(fi.hIcon));
         return null;
     }
 }

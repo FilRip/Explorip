@@ -44,7 +44,7 @@
                 </Style>
             </Button.Style>
             <StackPanel Background="{Binding BackgroundBrush}">
-                <Image Source="{Binding Icon}" Height="48" Width="48" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <Image Source="{Binding Icon}" Height="48" Width="48" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0"/>
                 <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="{Binding BackgroundBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Center"/>
             </StackPanel>
         </Button>
