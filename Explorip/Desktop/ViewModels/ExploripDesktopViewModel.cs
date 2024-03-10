@@ -288,7 +288,6 @@ internal partial class ExploripDesktopViewModel : ObservableObject
                 }
                 else
                 {
-                    // TODO : If it's a special folder (shortcut to shell::{GUID}) ? (that doesn't work)
                     if (dest != null && Path.GetExtension(destination).ToLower() == ".lnk")
                     {
                         Shortcut shortcut = Shortcut.ReadFromFile(destination);
