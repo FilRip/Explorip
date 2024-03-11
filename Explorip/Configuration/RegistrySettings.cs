@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Media;
@@ -7,6 +8,10 @@ using System.Windows.Media;
 using Explorip.Constants;
 using Explorip.Desktop.ViewModels;
 using Explorip.Helpers;
+
+using ManagedShell.Common.Enums;
+using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 using Microsoft.Win32;
 
@@ -63,7 +68,7 @@ internal static class RegistrySettings
         return shell;
     }
 
-    public static List<OneDesktopItemViewModel> ListDesktopSystemIcons()
+    public static List<OneDesktopItemViewModel> ListDesktopSystemIcons(IconSize iconSize = IconSize.ExtraLarge)
     {
         List<OneDesktopItemViewModel> result = [];
         RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel", false);
@@ -71,7 +76,7 @@ internal static class RegistrySettings
             if (key.GetValue(name).ToString() != "1")
             {
                 string label = "";
-                ImageSource icon = null;
+                ImageSource icon = null, iconOverlay = null;
                 RegistryKey clSidKey = Registry.ClassesRoot.OpenSubKey(@$"CLSID\{name}", false);
                 if (clSidKey != null)
                 {
@@ -101,23 +106,17 @@ internal static class RegistrySettings
                     catch (Exception) { /* Can't get localized string, ignore errors */ }
                     try
                     {
-                        RegistryKey keyIcon = clSidKey.OpenSubKey("DefaultIcon", false);
-                        if (keyIcon != null)
+                        IntPtr pidl;
+                        pidl = NativeMethods.ILCreateFromPath($"shell:::{name}");
+                        if (pidl != IntPtr.Zero)
                         {
-                            string iconLocation;
-                            iconLocation = keyIcon.GetValue("").ToString();
-                            if (!string.IsNullOrWhiteSpace(iconLocation))
+                            IntPtr hIcon;
+                            hIcon = IconHelper.GetIconByPidl(pidl, iconSize, out IntPtr hOverlay);
+                            if (hIcon != IntPtr.Zero)
                             {
-                                int iconIndex = 0;
-                                string res;
-                                if (iconLocation.IndexOf(',') >= 0)
-                                {
-                                    res = iconLocation.Substring(0, iconLocation.LastIndexOf(','));
-                                    iconIndex = int.Parse(iconLocation.Substring(iconLocation.LastIndexOf(',') + 1));
-                                }
-                                else
-                                    res = iconLocation;
-                                icon = IconManager.GetIconFromFile(Path.GetFullPath(res), iconIndex);
+                                icon = IconManager.Convert(Icon.FromHandle(hIcon));
+                                if (hOverlay != IntPtr.Zero)
+                                    iconOverlay = IconManager.Convert(Icon.FromHandle(hOverlay));
                             }
                         }
                     }
@@ -129,6 +128,7 @@ internal static class RegistrySettings
                     Icon = icon,
                     FullPath = $"shell:::{name}",
                     SpecialFolder = true,
+                    OverlayIcon = iconOverlay,
                 };
                 result.Add(item);
             }
