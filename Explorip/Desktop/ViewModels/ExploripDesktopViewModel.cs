@@ -28,11 +28,16 @@ internal partial class ExploripDesktopViewModel : ObservableObject
     private int _currentCellX, _currentCellY;
     [ObservableProperty()]
     private int _nbColumns, _nbRows;
+    internal string DesktopPath { get; set; }
 
-    public ExploripDesktopViewModel(ExploripDesktop parent) : base()
+    public ExploripDesktopViewModel(ExploripDesktop parent, string path = null) : base()
     {
+        if (string.IsNullOrWhiteSpace(path))
+            DesktopPath = Environment.SpecialFolder.DesktopDirectory.FullPath();
+        else
+            DesktopPath = path;
         _parentDesktop = parent;
-        _watcher = new FileSystemWatcher(Environment.SpecialFolder.DesktopDirectory.FullPath())
+        _watcher = new FileSystemWatcher(DesktopPath)
         {
             EnableRaisingEvents = true,
         };
@@ -45,7 +50,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
     {
         _parentDesktop.MainGrid.Children.Clear();
         RefreshSystemIcons();
-        RefreshDesktopContent(Environment.SpecialFolder.DesktopDirectory.FullPath());
+        RefreshDesktopContent(DesktopPath);
         RefreshDesktopContent(Environment.SpecialFolder.CommonDesktopDirectory.FullPath());
     }
 
@@ -177,7 +182,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
                 if (ListItems().Exists(i => i.MyDataContext.IsSelected))
                     contextMenu.ShowContextMenu(ListItems()[0].MyDataContext.FullPath, position);
                 else
-                    contextMenu.ShowContextMenu(new DirectoryInfo(Environment.SpecialFolder.DesktopDirectory.FullPath()), position);
+                    contextMenu.ShowContextMenu(new DirectoryInfo(DesktopPath), position);
             }
             else
                 contextMenu.ShowContextMenu(listItems, position);
@@ -244,11 +249,11 @@ internal partial class ExploripDesktopViewModel : ObservableObject
         if (e.Data is DataObject && e.Data.GetDataPresent("FileDrop"))
         {
             string[] itemsFromExplorer = (string[])(e.Data.GetData("FileDrop"));
-            string destination = (dest == null ? Environment.SpecialFolder.DesktopDirectory.FullPath() : dest.MyDataContext.FullPath);
+            string destination = (dest == null ? DesktopPath : dest.MyDataContext.FullPath);
             string repSource = Path.GetDirectoryName(itemsFromExplorer[0]);
             bool sameDrive = false;
             if (!string.IsNullOrWhiteSpace(repSource))
-                sameDrive = repSource[0] == Environment.SpecialFolder.DesktopDirectory.FullPath()[0];
+                sameDrive = repSource[0] == DesktopPath[0];
             foreach (string fs in itemsFromExplorer)
             {
                 OneDesktopItem item = listItems.Find(i => i.MyDataContext.FullPath == fs);
