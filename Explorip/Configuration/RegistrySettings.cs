@@ -112,6 +112,7 @@ internal static class RegistrySettings
                         {
                             IntPtr hIcon;
                             hIcon = IconHelper.GetIconByPidl(pidl, iconSize, out IntPtr hOverlay);
+                            NativeMethods.ILFree(pidl);
                             if (hIcon != IntPtr.Zero)
                             {
                                 icon = IconManager.Convert(Icon.FromHandle(hIcon));

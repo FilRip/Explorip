@@ -245,4 +245,9 @@ public partial class ExploripDesktop : Window
     {
         MyDataContext.DragOver(e);
     }
+
+    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        MyDataContext?.Dispose();
+    }
 }

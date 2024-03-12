@@ -21,13 +21,15 @@ using Securify.ShellLink;
 
 namespace Explorip.Desktop.ViewModels;
 
-internal partial class ExploripDesktopViewModel : ObservableObject
+internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 {
     private readonly ExploripDesktop _parentDesktop;
     private readonly FileSystemWatcher _watcher;
     private int _currentCellX, _currentCellY;
     [ObservableProperty()]
     private int _nbColumns, _nbRows;
+    private bool disposedValue;
+
     internal string DesktopPath { get; set; }
 
     public ExploripDesktopViewModel(ExploripDesktop parent, string path = null) : base()
@@ -129,7 +131,6 @@ internal partial class ExploripDesktopViewModel : ObservableObject
                 item.MyDataContext.FullPath = e.FullPath;
                 item.MyDataContext.GetIcon();
                 item.MyDataContext.CurrentDesktop = this;
-                item.MyDataContext.CurrentShellObject = ShellObject.FromParsingName(e.FullPath);
                 _parentDesktop.AddItem(item);
             }
             catch (Exception) { /* Unable to add item ??? So what to do */ }
@@ -139,7 +140,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject
     [RelayCommand()]
     private void Quit()
     {
-        Environment.Exit(0);
+        Application.Current.Shutdown(0);
     }
 
     internal void UnSelectAll(bool select = false)
@@ -323,6 +324,8 @@ internal partial class ExploripDesktopViewModel : ObservableObject
         }
     }
 
+    #endregion
+
     internal void DragOver(DragEventArgs e)
     {
         if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
@@ -330,8 +333,46 @@ internal partial class ExploripDesktopViewModel : ObservableObject
         else if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
             e.Effects = DragDropEffects.Link;
         else
-            e.Effects = DragDropEffects.Move;
+            e.Effects = e.AllowedEffects.HasFlag(DragDropEffects.Move) ? DragDropEffects.Move : DragDropEffects.Copy;
         e.Handled = true;
+    }
+
+    #region IDisposable
+
+    internal bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                if (_watcher != null)
+                {
+                    _watcher.Created -= Watcher_Created;
+                    _watcher.Deleted -= Watcher_Deleted;
+                    _watcher.Renamed -= Watcher_Renamed;
+                    _watcher.Dispose();
+                }
+                if (ListItems()?.Count > 0)
+                    foreach (OneDesktopItem item in ListItems())
+                    {
+                        item.MyDataContext?.Dispose();
+                        _parentDesktop.MainGrid.Children.Remove(item);
+                    }
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 
     #endregion

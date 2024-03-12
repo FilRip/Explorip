@@ -18,7 +18,7 @@ using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Desktop.ViewModels;
 
-internal partial class OneDesktopItemViewModel : ObservableObject
+internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
 {
     internal string FullPath { get; set; }
     internal bool SpecialFolder { get; set; }
@@ -47,6 +47,8 @@ internal partial class OneDesktopItemViewModel : ObservableObject
     }
 
     private ShellObject _shellObject;
+    private bool disposedValue;
+
     internal ShellObject CurrentShellObject
     {
         get
@@ -170,4 +172,32 @@ internal partial class OneDesktopItemViewModel : ObservableObject
     {
         return FullPath;
     }
+
+    #region IDisposable
+
+    internal bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                _shellObject?.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }

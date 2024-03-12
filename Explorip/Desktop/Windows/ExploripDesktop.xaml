@@ -25,7 +25,8 @@
         AllowDrop="True"
         DragOver="Window_DragOver"
         Drop="Window_Drop"
-        DragEnter="Window_DragOver">
+        DragEnter="Window_DragOver"
+        Closing="Window_Closing">
     <Grid Name="MainGrid">
     </Grid>
 </Window>

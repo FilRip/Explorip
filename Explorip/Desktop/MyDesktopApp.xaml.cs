@@ -25,6 +25,7 @@ public partial class MyDesktopApp : Application
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
+        Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
         ManagedShell.Common.Helpers.ShellHelper.ToggleDesktopIcons(false);
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         ExploripDesktop desktop = new()
@@ -51,10 +52,5 @@ public partial class MyDesktopApp : Application
     {
         ManagedShell.Common.Helpers.IconHelper.DisposeIml();
         ManagedShell.Common.Helpers.ShellHelper.ToggleDesktopIcons(true);
-        foreach (ExploripDesktop desktop in _listDesktop)
-            desktop.Dispatcher.Invoke(() =>
-            {
-                desktop.Close();
-            });
     }
 }

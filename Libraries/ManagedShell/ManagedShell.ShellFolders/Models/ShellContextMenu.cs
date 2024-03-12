@@ -206,11 +206,14 @@ namespace ManagedShell.ShellFolders.Models
             {
                 IntPtr pItemIDL = NativeMethods.ILCreateFromPath(arrFI[0].FullName);
                 GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out IntPtr opsf);
+                NativeMethods.ILFree(pItemIDL);
                 IShellFolder psf = (IShellFolder)Marshal.GetTypedObjectForIUnknown(opsf, typeof(IShellFolder));
                 psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
                 IShellView pShellView = (IShellView)Marshal.GetTypedObjectForIUnknown(opShellView, typeof(IShellView));
                 pShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
                 _oContextMenu = (IContextMenu)opContextMenu;
+                Marshal.ReleaseComObject(psf);
+                Marshal.ReleaseComObject(pShellView);
             }
 
             IShellFolder oParentFolder = GetParentFolder(Directory.GetParent(arrFI[0].FullName).FullName);
