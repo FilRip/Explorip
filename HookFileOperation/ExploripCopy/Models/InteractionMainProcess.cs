@@ -13,7 +13,11 @@ internal class InteractionMainProcess : IInteractionMainProcess
 {
     public void StartNewFileOperation(List<OneFileOperation> listOperations)
     {
-        MainViewModels.Instance.ListWaiting.AddRange(listOperations);
-        MainViewModels.Instance.ForceUpdateWaitingList();
+        if (listOperations?.Count > 0)
+        {
+            MainViewModels.Instance.ListWaiting.AddRange(listOperations);
+            MainViewModels.Instance.LastOperationBeforeResetChoice = listOperations[0].Source;
+            MainViewModels.Instance.ForceUpdateWaitingList();
+        }
     }
 }

@@ -116,7 +116,7 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
         {
             try
             {
-                string newName = Path.Combine(Path.GetDirectoryName(FullPath), input.TxtUserEdit.Text);
+                string newName = Path.Combine(Path.GetDirectoryName(FullPath), input.UserEdit);
                 if (IsDirectory)
                     Directory.Move(FullPath, newName);
                 else
