@@ -37,6 +37,8 @@ public class OneFileOperation
 
     public bool ForceDeleteNoRecycled { get; set; }
 
+    public bool ResetChoice { get; set; }
+
     public void WriteOperation(FileOperation currentFileOperation)
     {
         switch (FileOperation)

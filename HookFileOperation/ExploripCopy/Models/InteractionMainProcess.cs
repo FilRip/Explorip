@@ -16,7 +16,7 @@ internal class InteractionMainProcess : IInteractionMainProcess
         if (listOperations?.Count > 0)
         {
             MainViewModels.Instance.ListWaiting.AddRange(listOperations);
-            MainViewModels.Instance.LastOperationBeforeResetChoice = listOperations[0].Source;
+            listOperations[listOperations.Count - 1].ResetChoice = true;
             MainViewModels.Instance.ForceUpdateWaitingList();
         }
     }

@@ -93,8 +93,6 @@ public partial class MainViewModels : ObservableObject, IDisposable
         ForceRefreshList?.Invoke(this, EventArgs.Empty);
     }
 
-    public string LastOperationBeforeResetChoice { get; set; }
-
     public OneFileOperation SelectedLine { get; set; }
     public int NumSelectedLine { get; set; }
 
@@ -365,7 +363,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     private void ThreadFileOpWaiting()
     {
-        string lastOp = "";
+        bool resetChoice = false;
         while (true)
         {
             try
@@ -374,13 +372,13 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 {
                     lock (_lockOperation)
                     {
-                        lastOp = ListWaiting[0].Source;
+                        resetChoice = ListWaiting[0].ResetChoice;
                         Treatment(ListWaiting[0]);
                     }
                 }
                 else
                 {
-                    if (ListWaiting.Count == 0 || lastOp == LastOperationBeforeResetChoice)
+                    if (ListWaiting.Count == 0 || resetChoice)
                         CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
                 }
                 Thread.Sleep(100);
