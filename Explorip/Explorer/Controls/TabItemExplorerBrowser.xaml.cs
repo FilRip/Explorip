@@ -184,17 +184,16 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         }
         else if (e.Key is Key.Enter or Key.Return)
         {
-            string nouvelEmplacement = EditPath.Text;
+            MyDataContext.ModeEdit = false;
             try
             {
+                string nouvelEmplacement = Path.GetFullPath(Environment.ExpandEnvironmentVariables(EditPath.Text));
                 Uri uri = new(nouvelEmplacement);
                 if (!uri.IsFile)
-                    throw new Exceptions.ExploripException();
+                    throw new Exceptions.ExploripException("This is not a file:// protocol");
 
                 ShellObject previousLocation = ExplorerBrowser.NavigationLog.CurrentLocation;
-                if (nouvelEmplacement.StartsWith("%"))
-                    nouvelEmplacement = Environment.GetEnvironmentVariable(nouvelEmplacement.Replace("%", "")).Split(';')[0];
-                MyDataContext.ModeEdit = false;
+
                 Task.Run(() =>
                 {
                     try
@@ -210,7 +209,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             }
             catch (Exception)
             {
-                Process.Start(nouvelEmplacement);
+                Process.Start(EditPath.Text);
             }
         }
     }
