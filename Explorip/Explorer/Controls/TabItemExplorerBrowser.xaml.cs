@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -183,23 +184,34 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         }
         else if (e.Key is Key.Enter or Key.Return)
         {
-            ShellObject previousLocation = ExplorerBrowser.NavigationLog.CurrentLocation;
             string nouvelEmplacement = EditPath.Text;
-            if (nouvelEmplacement.StartsWith("%"))
-                nouvelEmplacement = Environment.GetEnvironmentVariable(nouvelEmplacement.Replace("%", "")).Split(';')[0];
-            MyDataContext.ModeEdit = false;
-            Task.Run(() =>
+            try
             {
-                try
+                Uri uri = new(nouvelEmplacement);
+                if (!uri.IsFile)
+                    throw new Exceptions.ExploripException();
+
+                ShellObject previousLocation = ExplorerBrowser.NavigationLog.CurrentLocation;
+                if (nouvelEmplacement.StartsWith("%"))
+                    nouvelEmplacement = Environment.GetEnvironmentVariable(nouvelEmplacement.Replace("%", "")).Split(';')[0];
+                MyDataContext.ModeEdit = false;
+                Task.Run(() =>
                 {
-                    ExplorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Chemin non trouvé");
-                    ExplorerBrowser.Navigate(previousLocation);
-                }
-            });
+                    try
+                    {
+                        ExplorerBrowser.Navigate(ShellObject.FromParsingName(nouvelEmplacement));
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Chemin non trouvé");
+                        ExplorerBrowser.Navigate(previousLocation);
+                    }
+                });
+            }
+            catch (Exception)
+            {
+                Process.Start(nouvelEmplacement);
+            }
         }
     }
 
