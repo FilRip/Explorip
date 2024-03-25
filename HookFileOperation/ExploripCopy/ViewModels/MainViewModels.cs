@@ -28,7 +28,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
 {
     private static MainViewModels _instance;
     private readonly Thread _mainThread;
-    private readonly object _lockOperation;
+    private readonly object _lockOperation, _lockMovementOperation;
     private readonly Stopwatch _chronoSpeed;
     public event EventHandler ForceRefreshList;
     private Thread _currentThread;
@@ -41,6 +41,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     internal MainViewModels() : base()
     {
         _lockOperation = new object();
+        _lockMovementOperation = new object();
         _listWaiting = [];
         _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
         _mainThread.Start();
@@ -91,6 +92,14 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         OnPropertyChanged(nameof(ListWaiting));
         ForceRefreshList?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void AddOperations(List<OneFileOperation> list)
+    {
+        lock (_lockMovementOperation)
+        {
+            ListWaiting.AddRange(list);
+        }
     }
 
     public OneFileOperation SelectedLine { get; set; }
@@ -145,7 +154,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
         NotifyIconViewModel.Instance.SetSystrayIcon(false);
         if (Settings.ShowBalloon)
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
-        ListWaiting.RemoveAt(0);
+        lock (_lockMovementOperation)
+            ListWaiting.RemoveAt(0);
         if (_lastError == null)
         {
             _currentOperation = null;
@@ -283,68 +293,69 @@ public partial class MainViewModels : ObservableObject, IDisposable
             CurrentFile = operation.Source ?? operation.NewName;
             _currentThread = new Thread(new ThreadStart(() =>
             {
-                FileOperation fo = new(NativeMethods.GetDesktopWindow());
-                fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_SILENT);
-                switch (operation.FileOperation)
-                {
-                    case EFileOperation.Delete:
-                        if (operation.ForceDeleteNoRecycled || !ExploripSharedCopy.WinAPI.Shell32.RecycledEnabledOnDrive(operation.Source.Substring(0, 2)))
-                        {
-                            if (CopyHelper.ChoiceOnCollision == EChoiceFileOperation.ConfirmDelete)
-                                fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_NOCONFIRMATION);
-                            else
-                                CopyHelper.ChoiceOnCollision = EChoiceFileOperation.ConfirmDelete;
-                            fo.DeleteItem(operation.Source);
-                        }
-                        else
-                        {
-                            fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOFX_RECYCLEONDELETE);
-                            fo.DeleteItem(operation.Source);
-                        }
-                        break;
-                    case EFileOperation.Rename:
-                        fo.RenameItem(operation.Source, operation.NewName);
-                        break;
-                    case EFileOperation.Create:
-                        if (operation.Attributes.HasFlag(FileAttributes.Directory))
-                        {
-                            static void SetConstants(InputBoxWindow win)
-                            {
-                                win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                                win.Title = Localization.CREATE_FOLDER;
-                                win.Icon = Icons.Folder;
-                                win.Background = Constants.Colors.BackgroundColorBrush;
-                                win.Foreground = Constants.Colors.ForegroundColorBrush;
-                                win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
-                                win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);
-                            }
-
-                            ExploripSharedCopy.Helpers.CreateOperations.CreateFolder(operation.Destination, operation.NewName, SetConstants);
-                            break;
-                        }
-                        if (Path.GetExtension(operation.NewName).ToLower() == ".lnk")
-                        {
-                            static void SetConstants(CreateShortcutWindow win)
-                            {
-                                win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                                win.Title = Localization.CREATE_SHORTCUT;
-                                win.Icon = Icons.Shortcut;
-                                win.Background = Constants.Colors.BackgroundColorBrush;
-                                win.Foreground = Constants.Colors.ForegroundColorBrush;
-                                win.SetQuestions(Localization.CREATE_SHORTCUT_Q1, Localization.CREATE_SHORTCUT_Q2);
-                                win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
-                                win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);
-                                win.SetBrowse(Localization.BROWSE.Replace("_", ""));
-                            }
-
-                            ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(operation.Destination, operation.NewName, SetConstants);
-                            break;
-                        }
-                        fo.NewItem(operation.Destination, operation.NewName, operation.Attributes);
-                        break;
-                }
+                FileOperation fo = null;
                 try
                 {
+                    fo = new(NativeMethods.GetDesktopWindow());
+                    fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_SILENT);
+                    switch (operation.FileOperation)
+                    {
+                        case EFileOperation.Delete:
+                            if (operation.ForceDeleteNoRecycled || !ExploripSharedCopy.WinAPI.Shell32.RecycledEnabledOnDrive(operation.Source.Substring(0, 2)))
+                            {
+                                if (CopyHelper.ChoiceOnCollision == EChoiceFileOperation.ConfirmDelete)
+                                    fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_NOCONFIRMATION);
+                                else
+                                    CopyHelper.ChoiceOnCollision = EChoiceFileOperation.ConfirmDelete;
+                                fo.DeleteItem(operation.Source);
+                            }
+                            else
+                            {
+                                fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOFX_RECYCLEONDELETE);
+                                fo.DeleteItem(operation.Source);
+                            }
+                            break;
+                        case EFileOperation.Rename:
+                            fo.RenameItem(operation.Source, operation.NewName);
+                            break;
+                        case EFileOperation.Create:
+                            if (operation.Attributes.HasFlag(FileAttributes.Directory))
+                            {
+                                static void SetConstants(InputBoxWindow win)
+                                {
+                                    win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+                                    win.Title = Localization.CREATE_FOLDER;
+                                    win.Icon = Icons.Folder;
+                                    win.Background = Constants.Colors.BackgroundColorBrush;
+                                    win.Foreground = Constants.Colors.ForegroundColorBrush;
+                                    win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
+                                    win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);
+                                }
+
+                                ExploripSharedCopy.Helpers.CreateOperations.CreateFolder(operation.Destination, operation.NewName, SetConstants);
+                                break;
+                            }
+                            if (Path.GetExtension(operation.NewName).ToLower() == ".lnk")
+                            {
+                                static void SetConstants(CreateShortcutWindow win)
+                                {
+                                    win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+                                    win.Title = Localization.CREATE_SHORTCUT;
+                                    win.Icon = Icons.Shortcut;
+                                    win.Background = Constants.Colors.BackgroundColorBrush;
+                                    win.Foreground = Constants.Colors.ForegroundColorBrush;
+                                    win.SetQuestions(Localization.CREATE_SHORTCUT_Q1, Localization.CREATE_SHORTCUT_Q2);
+                                    win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
+                                    win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);
+                                    win.SetBrowse(Localization.BROWSE.Replace("_", ""));
+                                }
+
+                                ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(operation.Destination, operation.NewName, SetConstants);
+                                break;
+                            }
+                            fo.NewItem(operation.Destination, operation.NewName, operation.Attributes);
+                            break;
+                    }
                     fo.PerformOperations();
                 }
                 catch (Exception ex)
@@ -353,7 +364,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 }
                 finally
                 {
-                    fo.Dispose();
+                    fo?.Dispose();
                 }
                 FinishCurrent();
             }));
@@ -395,8 +406,11 @@ public partial class MainViewModels : ObservableObject, IDisposable
         {
             lock (_lockOperation)
             {
-                if (NumSelectedLine > 0)
-                    ListWaiting.Remove(SelectedLine);
+                lock (_lockMovementOperation)
+                {
+                    if (NumSelectedLine > 0)
+                        ListWaiting.Remove(SelectedLine);
+                }
             }
             ForceUpdateWaitingList();
         }
