@@ -381,7 +381,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                     if (ListWaiting.Count == 0 || resetChoice)
                         CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(10);
             }
             catch (ThreadAbortException) { break; }
             catch (Exception) { /* Ignore errors */ }
