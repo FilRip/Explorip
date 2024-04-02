@@ -154,7 +154,14 @@ public partial class MainViewModels : ObservableObject, IDisposable
         if (Settings.ShowBalloon)
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
         lock (_lockMovementOperation)
-            ListWaiting.RemoveAt(0);
+        {
+            if (ListWaiting.Count > 0)
+            {
+                if (SelectedLines?.Contains(ListWaiting[0]) == true)
+                    SelectedLines.Remove(ListWaiting[0]);
+                ListWaiting.RemoveAt(0);
+            }
+        }
         if (_lastError == null)
         {
             _currentOperation = null;
