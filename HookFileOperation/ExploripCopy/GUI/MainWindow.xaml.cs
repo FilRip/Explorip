@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+
+using Explorip.HookFileOperations.Models;
 
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
@@ -133,12 +137,24 @@ public partial class MainWindow : Window
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            DgListWaiting.Items.Refresh();
+            try
+            {
+                DgListWaiting.Items.Refresh();
+            }
+            catch (Exception)
+            {
+                // Nothing to do
+            }
         });
     }
 
     private void Window_StateChanged(object sender, EventArgs e)
     {
         MyDataContext.WindowMaximized = WindowState == WindowState.Maximized;
+    }
+
+    private void DgListWaiting_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        MyDataContext.SelectedLines = [.. DgListWaiting.SelectedItems.OfType<OneFileOperation>()];
     }
 }

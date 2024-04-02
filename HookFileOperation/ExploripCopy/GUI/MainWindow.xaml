@@ -72,7 +72,7 @@
             
             <!-- List operations are waiting -->
             <Grid Grid.Row="5" Name="ListOperations">
-                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Extended" SelectionUnit="FullRow" SelectedItem="{Binding SelectedLine, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectedIndex="{Binding NumSelectedLine}">
+                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Extended" SelectionUnit="FullRow" SelectionChanged="DgListWaiting_SelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Source}" Width="0.5*">
                             <DataGridTextColumn.HeaderStyle>

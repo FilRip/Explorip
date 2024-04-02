@@ -102,8 +102,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         }
     }
 
-    public OneFileOperation SelectedLine { get; set; }
-    public int NumSelectedLine { get; set; }
+    public List<OneFileOperation> SelectedLines { get; set; }
 
     private Exception _lastError;
     public Exception GetLastError
@@ -408,8 +407,9 @@ public partial class MainViewModels : ObservableObject, IDisposable
             {
                 lock (_lockMovementOperation)
                 {
-                    if (NumSelectedLine > 0)
-                        ListWaiting.Remove(SelectedLine);
+                    if (SelectedLines?.Count > 0)
+                        foreach (OneFileOperation op in SelectedLines)
+                            ListWaiting.Remove(op);
                 }
             }
             ForceUpdateWaitingList();
