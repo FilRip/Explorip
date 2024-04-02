@@ -39,3 +39,10 @@ Last news : Warning :
 Latest Windows 11 release 23H2 build 22621 ; Integrated Windows Defender doesn't like Explorer with hooking copy (report as a virus/trojan). Autorize it in Settings of Windows Defender to fully use it. Of course, it's NOT a virus (compile it yourself if you want to be sure)
 
 (or launch Explorer with "withouthook" arguments command line to use Explorip File Explorer, but without hooking copy (so use explorer original windows copy)
+
+
+
+Tested under
+------------
+- Windows 10 22H2 build 19041
+- Windows 11 23H2 build 22631
