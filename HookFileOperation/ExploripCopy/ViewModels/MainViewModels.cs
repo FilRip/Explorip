@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -28,7 +29,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
 {
     private static MainViewModels _instance;
     private readonly Thread _mainThread;
-    private readonly object _lockOperation, _lockMovementOperation;
+    private readonly object _lockOperation;
     private readonly Stopwatch _chronoSpeed;
     public event EventHandler ForceRefreshList;
     private Thread _currentThread;
@@ -41,7 +42,6 @@ public partial class MainViewModels : ObservableObject, IDisposable
     internal MainViewModels() : base()
     {
         _lockOperation = new object();
-        _lockMovementOperation = new object();
         _listWaiting = [];
         _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
         _mainThread.Start();
@@ -86,7 +86,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     }
 
     [ObservableProperty()]
-    private List<OneFileOperation> _listWaiting;
+    private ObservableCollection<OneFileOperation> _listWaiting;
 
     public void ForceUpdateWaitingList()
     {
@@ -96,13 +96,18 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     public void AddOperations(List<OneFileOperation> list)
     {
-        lock (_lockMovementOperation)
+        lock (_lockOperation)
         {
-            ListWaiting.AddRange(list);
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (OneFileOperation op in list)
+                    ListWaiting.Add(op);
+            });
+            ForceUpdateWaitingList();
         }
     }
 
-    public List<OneFileOperation> SelectedLines { get; set; }
+    public List<OneFileOperation> SelectedLines { get; set; } = [];
 
     private Exception _lastError;
     public Exception GetLastError
@@ -153,14 +158,16 @@ public partial class MainViewModels : ObservableObject, IDisposable
         NotifyIconViewModel.Instance.SetSystrayIcon(false);
         if (Settings.ShowBalloon)
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
-        lock (_lockMovementOperation)
+        lock (_lockOperation)
         {
-            if (ListWaiting.Count > 0)
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                if (SelectedLines?.Contains(ListWaiting[0]) == true)
-                    SelectedLines.Remove(ListWaiting[0]);
-                ListWaiting.RemoveAt(0);
-            }
+                if (ListWaiting.Count > 0)
+                {
+                    SelectedLines.Remove(_currentOperation);
+                    ListWaiting.Remove(_currentOperation);
+                }
+            });
         }
         if (_lastError == null)
         {
@@ -283,6 +290,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                         }
                     }
                 }
+                catch (ThreadAbortException) { /* Nothing to do */ }
                 catch (Exception ex)
                 {
                     GetLastError = ex;
@@ -364,6 +372,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                     }
                     fo.PerformOperations();
                 }
+                catch (ThreadAbortException) { /* Nothing to do */ }
                 catch (Exception ex)
                 {
                     GetLastError = ex;
@@ -371,6 +380,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 finally
                 {
                     fo?.Dispose();
+                    FinishCurrent();
                 }
                 FinishCurrent();
             }));
@@ -412,12 +422,9 @@ public partial class MainViewModels : ObservableObject, IDisposable
         {
             lock (_lockOperation)
             {
-                lock (_lockMovementOperation)
-                {
-                    if (SelectedLines?.Count > 0)
-                        foreach (OneFileOperation op in SelectedLines)
-                            ListWaiting.Remove(op);
-                }
+                if (SelectedLines.Count > 0)
+                    foreach (OneFileOperation op in SelectedLines)
+                        ListWaiting.Remove(op);
             }
             ForceUpdateWaitingList();
         }

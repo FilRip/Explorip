@@ -72,9 +72,9 @@
             
             <!-- List operations are waiting -->
             <Grid Grid.Row="5" Name="ListOperations">
-                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" SelectionMode="Extended" SelectionUnit="FullRow" SelectionChanged="DgListWaiting_SelectionChanged">
+                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Extended" SelectionUnit="FullRow" SelectionChanged="DgListWaiting_SelectionChanged">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Source}" Width="0.5*">
+                        <DataGridTextColumn Binding="{Binding Source}" Width="0.5*" IsReadOnly="True">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="Background" Value="{x:Static constants:Colors.BackgroundColorBrush}"/>
@@ -88,7 +88,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Destination}" Width="0.5*">
+                        <DataGridTextColumn Binding="{Binding Destination}" Width="0.5*" IsReadOnly="True">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="Background" Value="{x:Static constants:Colors.BackgroundColorBrush}"/>

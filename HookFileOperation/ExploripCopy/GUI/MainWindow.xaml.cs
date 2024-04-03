@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -131,6 +130,7 @@ public partial class MainWindow : Window
     private void Window_Closed(object sender, EventArgs e)
     {
         IpcServer.ShutdownIpcServer();
+        MyDataContext.ForceRefreshList -= ForceRefresh;
     }
 
     private void ForceRefresh(object sender, EventArgs e)
