@@ -30,8 +30,6 @@ Desktop
 -------
 Launch Explorip with "desktops" as command line arguments to use the new desktop background
 
-(Not finished, currently working on it)
-
 
 
 Last news : Warning :
