@@ -20,6 +20,9 @@ public static class MouseHelper
         }
     }
 
+    /// <summary>
+    /// Get the screen where the mouse is
+    /// </summary>
     public static Screen MouseScreen
     {
         get

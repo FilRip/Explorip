@@ -66,6 +66,11 @@ public static class WindowScreenHelper
         return new Rect(left, top, width, height);
     }
 
+    /// <summary>
+    /// Center a window on a specified screen
+    /// </summary>
+    /// <param name="window"></param>
+    /// <param name="screen"></param>
     public static void SetCenterOnScreen(this Window window, Screen screen)
     {
         if (window != null && screen != null)

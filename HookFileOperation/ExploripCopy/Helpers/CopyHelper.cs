@@ -12,12 +12,14 @@ namespace ExploripCopy.Helpers;
 
 internal static class CopyHelper
 {
+    private const int BUFFER_SIZE = 10485760; // 10Mo by default
+
     public static bool Pause { get; set; }
     public static EChoiceFileOperation ChoiceOnCollision { get; set; }
 
     internal delegate void CallbackRefreshProgress(string currentFile, long fullSize, long remainingSize, long nbBytesRead);
 
-    internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
+    internal static Exception CopyDirectory(string sourceDir, string destinationDir, int bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
     {
         Exception result;
         string destDir;
@@ -49,7 +51,7 @@ internal static class CopyHelper
         return null;
     }
 
-    internal static Exception MoveDirectory(string sourceDir, string destinationDir, int bufferSize = 10485760, CallbackRefreshProgress CallbackRefresh = null)
+    internal static Exception MoveDirectory(string sourceDir, string destinationDir, int bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null)
     {
         Exception result;
         DirectoryInfo destDir = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceDir));
@@ -79,7 +81,7 @@ internal static class CopyHelper
         return null;
     }
 
-    internal static Exception MoveFile(string sourceFile, string destinationDir, int bufferSize = 10485760, CallbackRefreshProgress CallbackRefresh = null)
+    internal static Exception MoveFile(string sourceFile, string destinationDir, int bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null)
     {
         Exception result;
         if ((result = CopyFile(sourceFile, destinationDir, bufferSize, CallbackRefresh)) == null)
@@ -98,7 +100,7 @@ internal static class CopyHelper
         return null;
     }
 
-    internal static Exception CopyFile(string sourceFile, string destinationDir, int bufferSize = 10485760, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
+    internal static Exception CopyFile(string sourceFile, string destinationDir, int bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
     {
         try
         {
@@ -107,6 +109,10 @@ internal static class CopyHelper
             FileInfo destFile = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceFile));
             int nbCopy = 0;
             long fullSize = fi.Length;
+            if (bufferSize > fullSize)
+            {
+                buffer = new byte[fullSize];
+            }
             long remaining = fullSize;
             if (destFile.Exists)
             {
@@ -176,7 +182,7 @@ internal static class CopyHelper
             while (source.CanRead && nbBytes > 0)
             {
                 if (Pause)
-                    Thread.Sleep(100);
+                    Thread.Sleep(10);
                 else
                 {
                     nbBytes = source.Read(buffer, 0, buffer.Length);
