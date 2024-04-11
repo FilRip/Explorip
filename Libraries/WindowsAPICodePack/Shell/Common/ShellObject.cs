@@ -289,16 +289,13 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
         {
             try
             {
+                if (NativeShellItem == null)
+                    return false;
                 NativeShellItem.GetAttributes(ShellNativeMethods.ShellFileGetAttributesOptions.Link, out ShellNativeMethods.ShellFileGetAttributesOptions sfgao);
-                return (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.Link) != 0;
+                return sfgao.HasFlag(ShellNativeMethods.ShellFileGetAttributesOptions.Link);
             }
             catch (FileNotFoundException)
             {
-                return false;
-            }
-            catch (NullReferenceException)
-            {
-                // NativeShellItem is null
                 return false;
             }
         }
@@ -313,16 +310,13 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
         {
             try
             {
+                if (NativeShellItem == null)
+                    return false;
                 NativeShellItem.GetAttributes(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem, out ShellNativeMethods.ShellFileGetAttributesOptions sfgao);
-                return (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem) != 0;
+                return sfgao.HasFlag(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem);
             }
             catch (FileNotFoundException)
             {
-                return false;
-            }
-            catch (NullReferenceException)
-            {
-                // NativeShellItem is null
                 return false;
             }
         }

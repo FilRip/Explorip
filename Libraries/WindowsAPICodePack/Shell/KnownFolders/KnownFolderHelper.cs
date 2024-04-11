@@ -83,7 +83,7 @@ public static class KnownFolderHelper
             shellItem.GetAttributes(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem, out ShellNativeMethods.ShellFileGetAttributesOptions sfgao);
 
             // Is this item a FileSystem item?
-            isFileSystem = (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem) != 0;
+            isFileSystem = sfgao.HasFlag(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem);
         }
 
         // If it's FileSystem, create a FileSystemKnownFolder, else NonFileSystemKnownFolder

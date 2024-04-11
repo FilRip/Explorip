@@ -10,20 +10,15 @@ using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.AppBar;
 
-public class AppBarManager : IDisposable
+public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
 {
     private static readonly object appBarLock = new();
 
-    private readonly ExplorerHelper _explorerHelper;
+    private readonly ExplorerHelper _explorerHelper = explorerHelper;
     private int uCallBack;
 
     public List<AppBarWindow> AppBars { get; } = [];
     public EventHandler<AppBarEventArgs> AppBarEvent { get; set; }
-
-    public AppBarManager(ExplorerHelper explorerHelper)
-    {
-        _explorerHelper = explorerHelper;
-    }
 
     public void SignalGracefulShutdown()
     {

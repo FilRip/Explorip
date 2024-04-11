@@ -4,6 +4,8 @@ using System.Windows.Input;
 using ExploripCopy.Models;
 using ExploripCopy.ViewModels;
 
+using WpfScreenHelper;
+
 namespace ExploripCopy.GUI;
 
 /// <summary>
@@ -14,6 +16,10 @@ public partial class ChoiceConflictFiles : Window
     public ChoiceConflictFiles()
     {
         InitializeComponent();
+        Icon = Constants.Icons.MainIconSource;
+        Screen screen = MouseHelper.MouseScreen;
+        if (screen != null)
+            WindowScreenHelper.SetCenterOnScreen(this, screen);
     }
 
     public ChoiceOnCollisionViewModel MyDataContext

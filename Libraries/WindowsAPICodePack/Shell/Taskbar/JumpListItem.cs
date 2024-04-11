@@ -7,16 +7,14 @@ namespace Microsoft.WindowsAPICodePack.Taskbar;
 /// <summary>
 /// Represents a jump list item.
 /// </summary>
-public class JumpListItem : ShellFile, IJumpListItem
+/// <remarks>
+/// Creates a jump list item with the specified path.
+/// </remarks>
+/// <param name="path">The path to the jump list item.</param>
+/// <remarks>The file type should associate the given file  
+/// with the calling application.</remarks>
+public class JumpListItem(string path) : ShellFile(path), IJumpListItem
 {
-    /// <summary>
-    /// Creates a jump list item with the specified path.
-    /// </summary>
-    /// <param name="path">The path to the jump list item.</param>
-    /// <remarks>The file type should associate the given file  
-    /// with the calling application.</remarks>
-    public JumpListItem(string path) : base(path) { }
-
     #region IJumpListItem Members
 
     /// <summary>

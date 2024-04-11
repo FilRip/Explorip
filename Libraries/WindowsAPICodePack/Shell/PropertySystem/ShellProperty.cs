@@ -211,7 +211,7 @@ public class ShellProperty<T> : IShellProperty
                     }
                 }
             }
-            else if (value == null)
+            else if (value is null)
             {
                 ClearValue();
                 return;

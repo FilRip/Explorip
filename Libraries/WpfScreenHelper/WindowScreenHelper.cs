@@ -66,6 +66,15 @@ public static class WindowScreenHelper
         return new Rect(left, top, width, height);
     }
 
+    public static void SetCenterOnScreen(this Window window, Screen screen)
+    {
+        if (window != null && screen != null)
+        {
+            window.Left = screen.WorkingArea.Left + (screen.WorkingArea.Width / 2) - (window.Width / 2);
+            window.Top = screen.WorkingArea.Top + (screen.WorkingArea.Height / 2) - (window.Height / 2);
+        }
+    }
+
     /// <summary>
     /// Calculates window end position.
     /// </summary>

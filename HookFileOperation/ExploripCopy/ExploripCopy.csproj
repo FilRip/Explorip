@@ -41,6 +41,7 @@
     <Resource Include="Resources\icone.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj" />
     <ProjectReference Include="..\ExploripSharedCopy\ExploripSharedCopy.csproj" />
     <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj" />
     <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />

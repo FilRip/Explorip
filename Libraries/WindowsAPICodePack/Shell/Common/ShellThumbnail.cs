@@ -56,7 +56,7 @@ public class ShellThumbnail
     /// 256x256 pixels for thumbnails.
     /// </summary>
     /// <remarks>If the size specified is larger than the maximum size of 1024x1024 for thumbnails and 256x256 for icons,
-    /// an <see cref="System.ArgumentOutOfRangeException"/> is thrown.
+    /// an <see cref="ArgumentOutOfRangeException"/> is thrown.
     /// </remarks>
     public System.Windows.Size CurrentSize
     {
@@ -66,7 +66,7 @@ public class ShellThumbnail
             // Check for 0; negative number check not required as System.Windows.Size only allows positive numbers.
             if (value.Height == 0 || value.Width == 0)
             {
-                throw new System.ArgumentOutOfRangeException("value", LocalizedMessages.ShellThumbnailSizeCannotBe0);
+                throw new ArgumentOutOfRangeException("value", LocalizedMessages.ShellThumbnailSizeCannotBe0);
             }
 
             System.Windows.Size size = (FormatOption == ShellThumbnailFormatOption.IconOnly) ?
@@ -74,7 +74,7 @@ public class ShellThumbnail
 
             if (value.Height > size.Height || value.Width > size.Width)
             {
-                throw new System.ArgumentOutOfRangeException("value",
+                throw new ArgumentOutOfRangeException("value",
                     string.Format(System.Globalization.CultureInfo.InvariantCulture,
                     LocalizedMessages.ShellThumbnailCurrentSizeRange, size.ToString()));
             }

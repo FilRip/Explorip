@@ -133,24 +133,19 @@ public class CommonFileDialogRadioButtonList : CommonFileDialogControl, ICommonF
 /// <summary>
 /// Represents a list item for the CommonFileDialogRadioButtonList object.
 /// </summary>
-public class CommonFileDialogRadioButtonListItem
+/// <remarks>
+/// Creates a new instance of this class with the specified text.
+/// </remarks>
+/// <param name="text">The string that you want to display for this list item.</param>
+public class CommonFileDialogRadioButtonListItem(string text)
 {
     /// <summary>
     /// Gets or sets the string that will be displayed for this list item.
     /// </summary>
-    public string Text { get; set; }
+    public string Text { get; set; } = text;
 
     /// <summary>
     /// Creates a new instance of this class.
     /// </summary>
     public CommonFileDialogRadioButtonListItem() : this(string.Empty) { }
-
-    /// <summary>
-    /// Creates a new instance of this class with the specified text.
-    /// </summary>
-    /// <param name="text">The string that you want to display for this list item.</param>
-    public CommonFileDialogRadioButtonListItem(string text)
-    {
-        Text = text;
-    }
 }

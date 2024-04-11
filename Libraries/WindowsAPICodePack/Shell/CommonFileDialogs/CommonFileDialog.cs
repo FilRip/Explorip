@@ -1069,15 +1069,10 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
 
     #region NativeDialogEventSink Nested Class
 
-    private sealed class NativeDialogEventSink : IFileDialogEvents, IFileDialogControlEvents
+    private sealed class NativeDialogEventSink(CommonFileDialog commonDialog) : IFileDialogEvents, IFileDialogControlEvents
     {
-        private readonly CommonFileDialog parent;
+        private readonly CommonFileDialog parent = commonDialog;
         private bool firstFolderChanged = true;
-
-        public NativeDialogEventSink(CommonFileDialog commonDialog)
-        {
-            parent = commonDialog;
-        }
 
         public uint Cookie { get; set; }
 

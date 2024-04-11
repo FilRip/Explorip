@@ -77,7 +77,7 @@ public static class ExtensionsArray
             {
                 trouve = false;
                 for (int i = 0; i < list.Length; i++)
-                    if ((list[i] != null) && (list[i].Equals(itemToRemove)))
+                    if ((list[i] is not null) && (list[i].Equals(itemToRemove)))
                     {
                         if (allOccurrences) trouve = true;
                         list = list.RemoveAt(i);
@@ -106,7 +106,7 @@ public static class ExtensionsArray
             {
                 trouve = false;
                 for (int i = 0; i < list.Length; i++)
-                    if (list[i] == null)
+                    if (list[i] is null)
                     {
                         trouve = true;
                         list = list.RemoveAt(i);

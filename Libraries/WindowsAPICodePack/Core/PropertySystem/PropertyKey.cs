@@ -108,12 +108,10 @@ public struct PropertyKey : IEquatable<PropertyKey>
     /// Returns the hash code of the object. This is vital for performance of value types.
     /// </summary>
     /// <returns></returns>
-#pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
     public override int GetHashCode()
     {
         return formatId.GetHashCode() ^ propertyId;
     }
-#pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
 
     /// <summary>
     /// Implements the == (equality) operator.

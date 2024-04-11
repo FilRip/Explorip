@@ -41,10 +41,10 @@ internal static class ShellObjectFactory
         nativeShellItem2.GetAttributes(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem | ShellNativeMethods.ShellFileGetAttributesOptions.Folder, out ShellNativeMethods.ShellFileGetAttributesOptions sfgao);
 
         // Is this item a FileSystem item?
-        bool isFileSystem = (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem) != 0;
+        bool isFileSystem = sfgao.HasFlag(ShellNativeMethods.ShellFileGetAttributesOptions.FileSystem);
 
         // Is this item a Folder?
-        bool isFolder = (sfgao & ShellNativeMethods.ShellFileGetAttributesOptions.Folder) != 0;
+        bool isFolder = sfgao.HasFlag(ShellNativeMethods.ShellFileGetAttributesOptions.Folder);
 
         // Shell Library
         ShellLibrary shellLibrary;

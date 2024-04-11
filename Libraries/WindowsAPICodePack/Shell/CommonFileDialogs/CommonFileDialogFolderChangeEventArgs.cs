@@ -8,20 +8,15 @@ namespace Microsoft.WindowsAPICodePack.Dialogs;
 /// Creates the event data associated with <see cref="CommonFileDialog.FolderChanging"/> event.
 /// </summary>
 /// 
-public class CommonFileDialogFolderChangeEventArgs : CancelEventArgs
+/// <remarks>
+/// Creates a new instance of this class.
+/// </remarks>
+/// <param name="folder">The name of the folder.</param>
+public class CommonFileDialogFolderChangeEventArgs(string folder) : CancelEventArgs
 {
-    /// <summary>
-    /// Creates a new instance of this class.
-    /// </summary>
-    /// <param name="folder">The name of the folder.</param>
-    public CommonFileDialogFolderChangeEventArgs(string folder)
-    {
-        Folder = folder;
-    }
 
     /// <summary>
     /// Gets or sets the name of the folder.
     /// </summary>
-    public string Folder { get; set; }
-
+    public string Folder { get; set; } = folder;
 }

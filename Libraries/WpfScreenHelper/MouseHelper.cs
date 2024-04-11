@@ -19,4 +19,12 @@ public static class MouseHelper
             return new Point(pt.x, pt.y);
         }
     }
+
+    public static Screen MouseScreen
+    {
+        get
+        {
+            return Screen.FromPoint(MousePosition);
+        }
+    }
 }

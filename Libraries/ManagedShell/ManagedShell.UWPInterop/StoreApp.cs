@@ -9,9 +9,9 @@ using ManagedShell.ShellFolders;
 
 namespace ManagedShell.UWPInterop;
 
-public sealed class StoreApp : IEquatable<StoreApp>
+public sealed class StoreApp(string appUserModelId) : IEquatable<StoreApp>
 {
-    public readonly string AppUserModelId;
+    public readonly string AppUserModelId = appUserModelId;
     public string DisplayName { get; set; }
     public string IconColor { get; set; }
 
@@ -20,11 +20,6 @@ public sealed class StoreApp : IEquatable<StoreApp>
     public string LargeIconPath { get; set; }
     public string ExtraLargeIconPath { get; set; }
     public string JumboIconPath { get; set; }
-
-    public StoreApp(string appUserModelId)
-    {
-        AppUserModelId = appUserModelId;
-    }
 
     private ImageSource GetShellItemImageSource(IconSize size)
     {

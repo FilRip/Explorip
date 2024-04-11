@@ -10,4 +10,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null")]
 [assembly: SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out")]
 [assembly: SuppressMessage("Style", "IDE0305:Simplifier l'initialisation des collections")]
-[assembly: SuppressMessage("Style", "IDE0290:Utiliser le constructeur principal")]
+[assembly: SuppressMessage("Major Bug", "S1244:Floating point numbers should not be tested for equality")]
