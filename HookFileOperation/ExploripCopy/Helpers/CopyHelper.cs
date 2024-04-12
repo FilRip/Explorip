@@ -185,7 +185,7 @@ internal static class CopyHelper
                     Thread.Sleep(10);
                 else
                 {
-                    if (buffer.Length > remaining)
+                    if (buffer.Length > remaining && remaining < bufferSize)
                         buffer = new byte[remaining];
                     nbBytes = source.Read(buffer, 0, buffer.Length);
                     if (nbBytes > 0)
