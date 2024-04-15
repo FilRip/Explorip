@@ -12,7 +12,7 @@ namespace ExploripCopy.Helpers;
 
 internal static class CopyHelper
 {
-    private const uint BUFFER_SIZE = 10485760; // 10Mo by default
+    private const uint BUFFER_SIZE = 1048576; // 1Mo by default
 
     public static bool Pause { get; set; }
     public static EChoiceFileOperation ChoiceOnCollision { get; set; }
@@ -148,14 +148,14 @@ internal static class CopyHelper
                         case EChoiceFileOperation.KeepExisting:
                             if (reset)
                                 ChoiceOnCollision = EChoiceFileOperation.None;
-                            CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, fullSize, new AsyncCallback(EndReportProgress), null);
+                            CallbackRefresh?.BeginInvoke(sourceFile, fullSize, 0, fullSize, new AsyncCallback(EndReportProgress), null);
                             return null;
                         case EChoiceFileOperation.KeepMostRecent:
-                            if (fi.Length > destFile.Length)
+                            if (fi.Length == destFile.Length)
                             {
                                 if (reset)
                                     ChoiceOnCollision = EChoiceFileOperation.None;
-                                CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, fullSize, new AsyncCallback(EndReportProgress), null);
+                                CallbackRefresh?.BeginInvoke(sourceFile, fullSize, 0, fullSize, new AsyncCallback(EndReportProgress), null);
                                 return null;
                             }
                             DateTime hdSrc = fi.LastWriteTimeUtc;
@@ -164,7 +164,7 @@ internal static class CopyHelper
                             {
                                 if (reset)
                                     ChoiceOnCollision = EChoiceFileOperation.None;
-                                CallbackRefresh?.BeginInvoke(sourceFile, fullSize, remaining, fullSize, new AsyncCallback(EndReportProgress), null);
+                                CallbackRefresh?.BeginInvoke(sourceFile, fullSize, 0, fullSize, new AsyncCallback(EndReportProgress), null);
                                 return null;
                             }
                             break;
@@ -196,8 +196,13 @@ internal static class CopyHelper
                     }
                 }
             }
+            CallbackRefresh?.Invoke(sourceFile, fullSize, 0, nbBytes);
             source.Close();
             destination.Close();
+            destFile.CreationTimeUtc = fi.CreationTimeUtc;
+            destFile.CreationTime = fi.CreationTime;
+            destFile.LastWriteTimeUtc = fi.LastWriteTimeUtc;
+            destFile.LastWriteTime = fi.LastWriteTime;
         }
         catch (Exception ex)
         {
