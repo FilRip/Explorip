@@ -75,7 +75,7 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(EditPath))
+            if (string.IsNullOrWhiteSpace(EditPath) || EditPath.StartsWith("\\\\"))
                 return;
             string currentPath;
             if (EditPath.LastIndexOf(@"\") >= 0)
