@@ -155,7 +155,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     private void FinishCurrent()
     {
-        NotifyIconViewModel.Instance.SetSystrayIcon(false);
+        if (ListWaiting.Count == 1)
+            NotifyIconViewModel.Instance.SetSystrayIcon(false);
         if (Settings.ShowBalloon)
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
         lock (_lockOperation)
