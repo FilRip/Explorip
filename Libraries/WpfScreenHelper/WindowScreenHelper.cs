@@ -69,14 +69,14 @@ public static class WindowScreenHelper
     /// <summary>
     /// Center a window on a specified screen
     /// </summary>
-    /// <param name="window"></param>
-    /// <param name="screen"></param>
+    /// <param name="window">Window to centered</param>
+    /// <param name="screen">Screen/Monitor on which the window must be centered</param>
     public static void SetCenterOnScreen(this Window window, Screen screen)
     {
         if (window != null && screen != null)
         {
-            window.Left = (screen.WorkingArea.Left + (screen.WorkingArea.Width / 2) - (window.Width / 2)) / screen.ScaleFactor;
-            window.Top = (screen.WorkingArea.Top + (screen.WorkingArea.Height / 2) - (window.Height / 2)) / screen.ScaleFactor;
+            window.Left = (screen.WpfWorkingArea.Left + (screen.WpfWorkingArea.Width / 2) - (window.Width / 2));
+            window.Top = (screen.WpfWorkingArea.Top + (screen.WpfWorkingArea.Height / 2) - (window.Height / 2));
         }
     }
 
