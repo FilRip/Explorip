@@ -189,7 +189,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             {
                 string nouvelEmplacement = Path.GetFullPath(Environment.ExpandEnvironmentVariables(EditPath.Text));
                 Uri uri = new(nouvelEmplacement);
-                if (!uri.IsFile || (!EditPath.Text.Contains(":") && !EditPath.Text.Contains("\\")))
+                if (!uri.IsFile || (!EditPath.Text.Contains(":") && !EditPath.Text.Contains("\\") && !EditPath.Text.Contains("%")))
                     throw new Exceptions.ExploripException("This is not a file:// protocol");
 
                 ShellObject previousLocation = ExplorerBrowser.NavigationLog.CurrentLocation;
