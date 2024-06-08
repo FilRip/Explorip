@@ -166,7 +166,7 @@ public class ShellProperty<T> : IShellProperty
             Debug.Assert(ValueType == ShellPropertyFactory.VarEnumToSystemType(Description.VarEnumType));
 
             using PropVariant propVar = new();
-            if (ParentShellObject.NativePropertyStore != null)
+            if (ParentShellObject?.NativePropertyStore != null)
             {
                 // If there is a valid property store for this shell object, then use it.
                 ParentShellObject.NativePropertyStore.GetValue(ref propertyKey, propVar);

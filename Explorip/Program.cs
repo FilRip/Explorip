@@ -78,6 +78,9 @@ public static class Program
             {
                 args ??= [];
                 args = args.Remove("explorer");
+                args = args.Remove("withoutHook");
+                args = args.Remove("useOwnCopier");
+                args = args.Remove("newinstance");
                 IpcServerManager.SendNewWindow(args);
             }
         }
