@@ -52,7 +52,7 @@ internal interface IShellItem
         [Out(), MarshalAs(UnmanagedType.Interface)] out IShellFolder ppv);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    HResult GetParent([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
+    void GetParent([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -76,11 +76,27 @@ Guid(ShellIidGuid.IShellItem2),
 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 internal interface IShellItem2 : IShellItem
 {
+    // Not supported: IBindCtx.
+    [PreserveSig()]
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new HResult BindToHandler(
+        [In()] IntPtr pbc,
+        [In()] ref Guid bhid,
+        [In()] ref Guid riid,
+        [Out(), MarshalAs(UnmanagedType.Interface)] out IShellFolder ppv);
+
+    [PreserveSig()]
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new HResult GetParent([MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
+
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     HResult GetDisplayName(
         [In()] ShellNativeMethods.ShellItemDesignNameOptions sigdnName,
         [MarshalAs(UnmanagedType.LPWStr)] out string ppszName);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void GetAttributes([In()] ShellNativeMethods.ShellFileGetAttributesOptions sfgaoMask, out ShellNativeMethods.ShellFileGetAttributesOptions psfgaoAttribs);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void Compare(
@@ -356,6 +372,36 @@ ComConversionLoss]
 internal interface IShellFolder2 : IShellFolder
 {
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void ParseDisplayName([In()] IntPtr hwnd, [In(), MarshalAs(UnmanagedType.Interface)] IBindCtx pbc, [In(), MarshalAs(UnmanagedType.LPWStr)] string pszDisplayName, [In(), Out] ref uint pchEaten, [Out()] IntPtr ppidl, [In(), Out] ref uint pdwAttributes);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void EnumObjects([In()] IntPtr hwnd, [In()] ShellNativeMethods.ShellFolderEnumerationOptions grfFlags, [MarshalAs(UnmanagedType.Interface)] out IEnumIDList ppenumIDList);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void BindToObject([In()] IntPtr pidl, /*[In(), MarshalAs(UnmanagedType.Interface)] IBindCtx*/ IntPtr pbc, [In()] ref Guid riid, [Out(), MarshalAs(UnmanagedType.Interface)] out IShellFolder ppv);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void BindToStorage([In()] ref IntPtr pidl, [In(), MarshalAs(UnmanagedType.Interface)] IBindCtx pbc, [In()] ref Guid riid, out IntPtr ppv);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void CompareIDs([In()] IntPtr lParam, [In()] ref IntPtr pidl1, [In()] ref IntPtr pidl2);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void CreateViewObject([In()] IntPtr hwndOwner, [In()] ref Guid riid, out IntPtr ppv);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void GetAttributesOf([In()] uint cidl, [In()] IntPtr apidl, [In(), Out] ref uint rgfInOut);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void GetUIObjectOf([In()] IntPtr hwndOwner, [In()] uint cidl, [In()] IntPtr apidl, [In()] ref Guid riid, [In(), Out] ref uint rgfReserved, out IntPtr ppv);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void GetDisplayNameOf([In()] ref IntPtr pidl, [In()] uint uFlags, out IntPtr pName);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+    new void SetNameOf([In()] IntPtr hwnd, [In()] ref IntPtr pidl, [In(), MarshalAs(UnmanagedType.LPWStr)] string pszName, [In()] uint uFlags, [Out()] IntPtr ppidlOut);
+
+    [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void GetDefaultSearchGUID(out Guid pguid);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
@@ -494,6 +540,34 @@ Guid(ShellIidGuid.ICondition),
 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 internal interface ICondition : IPersistStream
 {
+    // Summary:
+    //     Retrieves the class identifier (CLSID) of an object.
+    //
+    // Parameters:
+    //   pClassID:
+    //     When this method returns, contains a reference to the CLSID. This parameter
+    //     is passed uninitialized.
+    [PreserveSig()]
+    new void GetClassID(out Guid pClassID);
+    //
+    // Summary:
+    //     Checks an object for changes since it was last saved to its current file.
+    //
+    // Returns:
+    //     S_OK if the file has changed since it was last saved; S_FALSE if the file
+    //     has not changed since it was last saved.
+    [PreserveSig()]
+    new HResult IsDirty();
+
+    [PreserveSig()]
+    new HResult Load([In(), MarshalAs(UnmanagedType.Interface)] IStream stm);
+
+    [PreserveSig()]
+    new HResult Save([In(), MarshalAs(UnmanagedType.Interface)] IStream stm, bool fRemember);
+
+    [PreserveSig()]
+    new HResult GetSizeMax(out ulong cbSize);
+
     // For any node, return what kind of node it is.
     [PreserveSig()]
     HResult GetConditionType([Out()] out SearchConditionType pNodeType);
@@ -674,6 +748,27 @@ Guid(ShellIidGuid.IQuerySolution),
 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 interface IQuerySolution : IConditionFactory
 {
+    [PreserveSig()]
+    new HResult MakeNot([In()] ICondition pcSub, [In()] bool fSimplify, [Out()] out ICondition ppcResult);
+
+    [PreserveSig()]
+    new HResult MakeAndOr([In()] SearchConditionType ct, [In()] IEnumUnknown peuSubs, [In()] bool fSimplify, [Out()] out ICondition ppcResult);
+
+    [PreserveSig()]
+    new HResult MakeLeaf(
+        [In(), MarshalAs(UnmanagedType.LPWStr)] string pszPropertyName,
+        [In()] SearchConditionOperation cop,
+        [In(), MarshalAs(UnmanagedType.LPWStr)] string pszValueType,
+        [In()] PropVariant ppropvar,
+        IRichChunk richChunk1,
+        IRichChunk richChunk2,
+        IRichChunk richChunk3,
+        [In()] bool fExpand,
+        [Out()] out ICondition ppcResult);
+
+    [PreserveSig()]
+    new HResult Resolve(/*[In()] ICondition pc, [In()] int sqro, [In()] ref SYSTEMTIME pstReferenceTime, [Out()] out ICondition ppcResolved*/);
+
     // Retrieve the condition tree and the "main type" of the solution.
     // ppQueryNode and ppMainType may be NULL.
     [PreserveSig()]
