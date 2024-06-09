@@ -65,7 +65,7 @@ namespace WindowsDesktop.Interop
             return this.GetDesktop(Args(desktopId));
         }
 
-        private VirtualDesktop GetDesktop(object[] parameters = null, [CallerMemberName] string methodName = "")
+        private VirtualDesktop GetDesktop(object[] parameters = null, [CallerMemberName()] string methodName = "")
             => VirtualDesktopCache.GetOrCreate(this.Invoke<object>(parameters, methodName));
 
         public override void SetDesktopName(VirtualDesktop desktop, string name)

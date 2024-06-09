@@ -471,7 +471,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
     public event PropertyChangedEventHandler PropertyChanged;
 
-    public void OnPropertyChanged([CallerMemberName] string PropertyName = "")
+    public void OnPropertyChanged([CallerMemberName()] string PropertyName = "")
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
     }

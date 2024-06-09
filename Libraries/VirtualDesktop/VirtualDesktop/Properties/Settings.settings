@@ -72,11 +72,11 @@
   &lt;string&gt;IApplicationViewCollection,{1841C6D7-4F9D-42C0-AF41-8747538F10E5}&lt;/string&gt;
   &lt;string&gt;IObjectArray,{92CA9DCD-5622-4BBA-A805-5E9F541BD8C9}&lt;/string&gt;
   &lt;string&gt;IServiceProvider,{6D5140C1-7436-11CE-8034-00AA006009FA}&lt;/string&gt;
-  &lt;string&gt;IVirtualDesktop,{3F07F4BE-B107-441A-AF0F-39D82529072C}&lt;/string&gt;
+  &lt;string&gt;IVirtualDesktop,{A871910E-6CC0-4E65-8B9B-458CE9115E30}&lt;/string&gt;
   &lt;string&gt;IVirtualDesktopManager,{A5CD92FF-29BE-454C-8D04-D82879FB3F1B}&lt;/string&gt;
-  &lt;string&gt;IVirtualDesktopManagerInternal,{A3175F2D-239C-4BD2-8AA0-EEBA8B0B138E}&lt;/string&gt;
-  &lt;string&gt;IVirtualDesktopNotification,{B287FA1C-7771-471A-A2DF-9B6B21F0D675}&lt;/string&gt;
-  &lt;string&gt;IVirtualDesktopNotificationService,{0cd45e71-d927-4f15-8b0a-8fef525337bf}&lt;/string&gt;
+  &lt;string&gt;IVirtualDesktopManagerInternal,{53F5CA0B-158F-4124-900C-057158060B27}&lt;/string&gt;
+  &lt;string&gt;IVirtualDesktopNotification,{B9E5E94D-233E-49AB-AF5C-2B4541C3AADE}&lt;/string&gt;
+  &lt;string&gt;IVirtualDesktopNotificationService,{0CD45E71-D927-4F15-8B0A-8FEF525337BF}&lt;/string&gt;
   &lt;string&gt;IVirtualDesktopPinnedApps,{4CE81583-1E4C-4632-A621-07A53543148F}&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>
     </Setting>

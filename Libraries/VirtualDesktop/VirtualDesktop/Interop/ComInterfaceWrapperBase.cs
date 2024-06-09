@@ -59,10 +59,10 @@ namespace WindowsDesktop.Interop
         protected static object[] Args(params object[] args)
             => args;
 
-        protected void Invoke(object[] parameters = null, [CallerMemberName] string methodName = "")
+        protected void Invoke(object[] parameters = null, [CallerMemberName()] string methodName = "")
             => this.Invoke<object>(parameters, methodName);
 
-        protected T Invoke<T>(object[] parameters = null, [CallerMemberName] string methodName = "")
+        protected T Invoke<T>(object[] parameters = null, [CallerMemberName()] string methodName = "")
         {
             if (!_methods.TryGetValue(methodName, out MethodInfo methodInfo))
             {

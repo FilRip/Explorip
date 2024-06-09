@@ -10,7 +10,7 @@ namespace WindowsDesktop
         /// </summary>
         public event PropertyChangingEventHandler PropertyChanging;
 
-        private void RaisePropertyChanging([CallerMemberName] string propertyName = "")
+        private void RaisePropertyChanging([CallerMemberName()] string propertyName = "")
         {
             PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
         }
@@ -20,7 +20,7 @@ namespace WindowsDesktop
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+        private void RaisePropertyChanged([CallerMemberName()] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
