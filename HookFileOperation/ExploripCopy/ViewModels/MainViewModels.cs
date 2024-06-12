@@ -266,7 +266,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                                 if (isDirectory)
                                     Directory.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.Source));
                                 else
-                                    File.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.Source));
+                                    File.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.NewName));
                             }
                             catch (Exception ex)
                             {
