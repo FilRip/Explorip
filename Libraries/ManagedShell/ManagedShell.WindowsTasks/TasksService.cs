@@ -17,14 +17,14 @@ using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTasks;
 
-public class TasksService : DependencyObject, IDisposable
+public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
 {
     public static readonly IconSize DEFAULT_ICON_SIZE = IconSize.Small;
 
     private NativeWindowEx _HookWin;
     private readonly object _windowsLock = new();
     internal bool IsInitialized;
-    public IconSize TaskIconSize { get; set; }
+    public IconSize TaskIconSize { get; set; } = iconSize;
 
     private static int WM_SHELLHOOKMESSAGE = -1;
     private static int WM_TASKBARCREATEDMESSAGE = -1;
@@ -39,11 +39,6 @@ public class TasksService : DependencyObject, IDisposable
 
     public TasksService() : this(DEFAULT_ICON_SIZE)
     {
-    }
-
-    public TasksService(IconSize iconSize)
-    {
-        TaskIconSize = iconSize;
     }
 
     private static void RegisterWindowsMessages()

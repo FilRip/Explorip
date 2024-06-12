@@ -9,20 +9,15 @@ namespace Securify.PropertyStore.Structures;
 /// <summary>
 /// The TypedPropertyValue structure represents the typed value of a property in a property set.
 /// </summary>
-public class TypedPropertyValue : Structure
+/// <remarks>
+/// Constructor
+/// </remarks>
+public class TypedPropertyValue(PropertyType Type, byte[] Value) : Structure()
 {
-    private readonly PropertyType _Type;
-    private readonly byte[] _Value;
+    private readonly PropertyType _Type = Type;
+    private readonly byte[] _Value = Value;
 
     #region Constructor
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    public TypedPropertyValue(PropertyType Type, byte[] Value) : base()
-    {
-        _Type = Type;
-        _Value = Value;
-    }
     #endregion // Constructor
 
     /// <summary>

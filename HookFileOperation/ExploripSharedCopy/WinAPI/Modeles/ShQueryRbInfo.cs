@@ -1,12 +1,11 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace ExploripSharedCopy.WinAPI.Modeles
+namespace ExploripSharedCopy.WinAPI.Modeles;
+
+[StructLayout(LayoutKind.Sequential, Pack = 4)]
+public struct ShQueryRbInfo
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct ShQueryRbInfo
-    {
-        public int cbSize;
-        public long Size;
-        public long NumItems;
-    }
+    public int cbSize;
+    public long Size;
+    public long NumItems;
 }

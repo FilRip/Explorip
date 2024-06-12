@@ -149,16 +149,10 @@ internal static class NativeMethods
     // use this in cases where the Native API takes a POINT not a POINT*
     // classes marshal by ref.
     [StructLayout(LayoutKind.Sequential)]
-    public struct PointStruct
+    public struct PointStruct(int x, int y)
     {
-        public int x;
-        public int y;
-
-        public PointStruct(int x, int y)
-        {
-            this.x = x;
-            this.y = y;
-        }
+        public int x = x;
+        public int y = y;
     }
 
     [StructLayout(LayoutKind.Sequential)]

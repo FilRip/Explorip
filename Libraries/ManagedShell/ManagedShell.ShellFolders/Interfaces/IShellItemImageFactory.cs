@@ -17,14 +17,8 @@ public interface IShellItemImageFactory
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct Size
+public struct Size(int cx, int cy)
 {
-    public int cx;
-    public int cy;
-
-    public Size(int cx, int cy)
-    {
-        this.cx = cx;
-        this.cy = cy;
-    }
+    public int cx = cx;
+    public int cy = cy;
 }

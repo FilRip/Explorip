@@ -12,25 +12,19 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices;
 /// <remarks>This class is used to register for application recovery.
 /// See the <see cref="ApplicationRestartRecoveryManager"/> class.
 /// </remarks>
-public class RecoverySettings
+/// <remarks>
+/// Initializes a new instance of the <b>RecoverySettings</b> class.
+/// </remarks>
+/// <param name="data">A recovery data object that contains the callback method (invoked by the system
+/// before Windows Error Reporting terminates the application) and an optional state object.</param>
+/// <param name="interval">The time interval within which the 
+/// callback method must invoke <see cref="ApplicationRestartRecoveryManager.ApplicationRecoveryInProgress"/> to 
+/// prevent WER from terminating the application.</param>
+/// <seealso cref="ApplicationRestartRecoveryManager"/>
+public class RecoverySettings(RecoveryData data, uint interval)
 {
-    private readonly RecoveryData recoveryData;
-    private readonly uint pingInterval;
-
-    /// <summary>
-    /// Initializes a new instance of the <b>RecoverySettings</b> class.
-    /// </summary>
-    /// <param name="data">A recovery data object that contains the callback method (invoked by the system
-    /// before Windows Error Reporting terminates the application) and an optional state object.</param>
-    /// <param name="interval">The time interval within which the 
-    /// callback method must invoke <see cref="ApplicationRestartRecoveryManager.ApplicationRecoveryInProgress"/> to 
-    /// prevent WER from terminating the application.</param>
-    /// <seealso cref="ApplicationRestartRecoveryManager"/>
-    public RecoverySettings(RecoveryData data, uint interval)
-    {
-        recoveryData = data;
-        pingInterval = interval;
-    }
+    private readonly RecoveryData recoveryData = data;
+    private readonly uint pingInterval = interval;
 
     /// <summary>
     /// Gets the recovery data object that contains the callback method and an optional

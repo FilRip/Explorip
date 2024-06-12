@@ -9,29 +9,23 @@ namespace Securify.ShellLink.Structures;
 /// The VolumeID structure specifies information about the volume that a link target was on when the link was 
 /// created. This information is useful for resolving the link if the file is not found in its original location.
 /// </summary>
-public class VolumeID : Structure
+/// <remarks>
+/// Constructor
+/// </remarks>
+/// <param name="IsUnicode">When set to true, wide chars will be used</param>
+public class VolumeID(bool IsUnicode) : Structure()
 {
     #region Constructor
     /// <summary>
     /// Constructor
     /// </summary>
     public VolumeID() : this(false) { }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="IsUnicode">When set to true, wide chars will be used</param>
-    public VolumeID(bool IsUnicode) : base()
-    {
-        this.IsUnicode = IsUnicode;
-        VolumeLabel = "";
-    }
     #endregion // Constructor
 
     /// <summary>
     /// When set to true, wide chars will be used
     /// </summary>
-    public bool IsUnicode { get; set; }
+    public bool IsUnicode { get; set; } = IsUnicode;
 
     /// <summary>
     /// VolumeIDSize (4 bytes): A 32-bit, unsigned integer that specifies the size, in bytes, of this structure. 
@@ -76,7 +70,7 @@ public class VolumeID : Structure
     /// <summary>
     /// The volume label of the drive as a string
     /// </summary>
-    public string VolumeLabel { get; set; }
+    public string VolumeLabel { get; set; } = "";
 
     /// <summary>
     /// Data (variable): A buffer of data that contains the volume label of the drive as a string defined by the system 

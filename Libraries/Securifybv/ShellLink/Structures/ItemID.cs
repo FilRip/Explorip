@@ -11,19 +11,17 @@ namespace Securify.ShellLink.Structures;
 /// by the source that corresponds to the location in the target namespace of the preceding ItemIDs. 
 /// This data uniquely identifies the items in that part of the namespace.
 /// </summary>
-public class ItemID : Structure
+/// <remarks>
+/// Constructor
+/// </remarks>
+/// <param name="itemID">An ItemID value</param>
+public class ItemID(byte[] itemID) : Structure
 {
     #region Constructor
     /// <summary>
     /// Constructor
     /// </summary>
     public ItemID() : this([]) { }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="itemID">An ItemID value</param>
-    public ItemID(byte[] itemID) { Data = itemID; }
     #endregion // Constructor
 
     #region GetBytes
@@ -46,8 +44,7 @@ public class ItemID : Structure
     /// <summary>
     /// Data (variable): The shell data source-defined data that specifies an item.
     /// </summary>
-    public byte[] Data { get; set; }
-
+    public byte[] Data { get; set; } = itemID;
     #region DisplayName
     /// <summary>
     /// Retrieves the display name of an item identified by its IDList.

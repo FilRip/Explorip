@@ -13,22 +13,17 @@ namespace ManagedShell.Common.Logging.Observers;
 /// The Observer Design Pattern allows this class to attach itself to an
 /// the logger and 'listen' to certain events and be notified of the event. 
 /// </remarks>
-public class FileLog : ILog, IDisposable
+/// <remarks>
+/// Constructor of ObserverLogToFile.
+/// </remarks>
+/// <param name="fileName">File log to.</param>
+public class FileLog(string fileName) : ILog, IDisposable
 {
     private readonly object _syncRoot = new();
     private bool _disposed;
 
-    private readonly FileInfo _fileInfo;
+    private readonly FileInfo _fileInfo = new(fileName);
     private TextWriter _textWriter;
-
-    /// <summary>
-    /// Constructor of ObserverLogToFile.
-    /// </summary>
-    /// <param name="fileName">File log to.</param>
-    public FileLog(string fileName)
-    {
-        _fileInfo = new FileInfo(fileName);
-    }
 
     public void Open()
     {

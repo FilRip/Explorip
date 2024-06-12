@@ -93,17 +93,11 @@ internal static class TaskDialogNativeMethods
 
     // NOTE: Packing must be set to 4 to make this work on 64-bit platforms.
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 4)]
-    internal struct TaskDialogButton
+    internal struct TaskDialogButton(int buttonId, string text)
     {
-        public TaskDialogButton(int buttonId, string text)
-        {
-            this.buttonId = buttonId;
-            buttonText = text;
-        }
-
-        internal int buttonId;
+        internal int buttonId = buttonId;
         [MarshalAs(UnmanagedType.LPWStr)]
-        internal string buttonText;
+        internal string buttonText = text;
     }
 
     // Task Dialog - identifies common buttons.

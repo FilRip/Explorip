@@ -9,20 +9,12 @@ namespace ManagedShell.Interop;
 public partial class NativeMethods
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct Rect
+    public struct Rect(int left, int top, int right, int bottom)
     {
-        public Rect(int left, int top, int right, int bottom)
-        {
-            Left = left;
-            Top = top;
-            Right = right;
-            Bottom = bottom;
-        }
-
-        public int Left;
-        public int Top;
-        public int Right;
-        public int Bottom;
+        public int Left = left;
+        public int Top = top;
+        public int Right = right;
+        public int Bottom = bottom;
 
 #pragma warning disable IDE0251 // Définir comme membre 'readonly'
         public int Width
@@ -38,16 +30,10 @@ public partial class NativeMethods
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct Point
+    public struct Point(long x, long y)
     {
-        public Point(long x, long y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-
-        public long x;
-        public long y;
+        public long x = x;
+        public long y = y;
     }
 
     // lo = x; hi = y

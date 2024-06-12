@@ -8,23 +8,17 @@ namespace Securify.ShellLink.Structures;
 /// environment variables, which makes it possible to find the icon across machines where the 
 /// locations vary but are expressed using environment variables.
 /// </summary>
-public class IconEnvironmentDataBlock : ExtraDataBlock
+/// <remarks>
+/// Constructor
+/// </remarks>
+/// <param name="Target">The path that is constructed with environment variables</param>
+public class IconEnvironmentDataBlock(string Target) : ExtraDataBlock()
 {
     #region Constructor
     /// <summary>
     /// Constructor
     /// </summary>
     public IconEnvironmentDataBlock() : this("") { }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="Target">The path that is constructed with environment variables</param>
-    public IconEnvironmentDataBlock(string Target) : base()
-    {
-        TargetAnsi = Target;
-        TargetUnicode = Target;
-    }
     #endregion // Constructor
 
     /// <summary>
@@ -43,13 +37,13 @@ public class IconEnvironmentDataBlock : ExtraDataBlock
     /// TargetAnsi (260 bytes): A NULL-terminated string, defined by the system default code page, 
     /// which specifies a path that is constructed with environment variables.
     /// </summary>
-    public string TargetAnsi { get; set; }
+    public string TargetAnsi { get; set; } = Target;
 
     /// <summary>
     /// TargetUnicode (520 bytes): An optional, NULL-terminated, Unicode string that specifies a 
     /// path that is constructed with environment variables.
     /// </summary>
-    public string TargetUnicode { get; set; }
+    public string TargetUnicode { get; set; } = Target;
 
     #region GetBytes
     /// <inheritdoc />

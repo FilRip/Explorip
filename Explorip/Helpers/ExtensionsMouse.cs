@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Windows;
 
-namespace Explorip.Helpers
+namespace Explorip.Helpers;
+
+internal static class ExtensionsMouse
 {
-    internal static class ExtensionsMouse
+    public static Point GetDelta(this Point positionMouse, Point newPositionMouse)
     {
-        public static Point GetDelta(this Point positionMouse, Point newPositionMouse)
+        Point ret = new()
         {
-            Point ret = new()
-            {
-                X = Math.Abs(positionMouse.X - newPositionMouse.X),
-                Y = Math.Abs(positionMouse.Y - newPositionMouse.Y),
-            };
-            return ret;
-        }
+            X = Math.Abs(positionMouse.X - newPositionMouse.X),
+            Y = Math.Abs(positionMouse.Y - newPositionMouse.Y),
+        };
+        return ret;
     }
 }

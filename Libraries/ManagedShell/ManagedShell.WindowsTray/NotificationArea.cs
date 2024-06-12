@@ -15,7 +15,7 @@ using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray;
 
-public class NotificationArea : DependencyObject, IDisposable
+public class NotificationArea(string[] savedPinnedIcons, TrayService trayService, ExplorerTrayService explorerTrayService) : DependencyObject, IDisposable
 {
     const string HEALTH_GUID = "7820ae76-23e3-4229-82c1-e41cb67d5b9c";
     const string MEETNOW_GUID = "7820ae83-23e3-4229-82c1-e41cb67d5b9c";
@@ -45,7 +45,7 @@ public class NotificationArea : DependencyObject, IDisposable
         Right = 23
     };
 
-    public string[] PinnedNotifyIcons { get; internal set; }
+    public string[] PinnedNotifyIcons { get; internal set; } = savedPinnedIcons;
     public IntPtr Handle { get; private set; }
     public bool IsFailed { get; private set; }
 
@@ -72,13 +72,6 @@ public class NotificationArea : DependencyObject, IDisposable
 
     public NotificationArea(TrayService trayService, ExplorerTrayService explorerTrayService) : this(DEFAULT_PINNED, trayService, explorerTrayService)
     {
-    }
-
-    public NotificationArea(string[] savedPinnedIcons, TrayService trayService, ExplorerTrayService explorerTrayService)
-    {
-        PinnedNotifyIcons = savedPinnedIcons;
-        _trayService = trayService;
-        _explorerTrayService = explorerTrayService;
     }
 
     public ObservableCollection<NotifyIcon> TrayIcons
@@ -122,8 +115,8 @@ public class NotificationArea : DependencyObject, IDisposable
     }
 
     private static readonly DependencyProperty unpinnedIconsProperty = DependencyProperty.Register("UnpinnedIcons", typeof(ICollectionView), typeof(NotificationArea));
-    private readonly TrayService _trayService;
-    private readonly ExplorerTrayService _explorerTrayService;
+    private readonly TrayService _trayService = trayService;
+    private readonly ExplorerTrayService _explorerTrayService = explorerTrayService;
 
     public void Initialize()
     {

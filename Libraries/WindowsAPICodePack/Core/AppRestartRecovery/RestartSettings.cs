@@ -12,25 +12,19 @@ namespace Microsoft.WindowsAPICodePack.ApplicationServices;
 /// settings, the application
 /// will not be restarted if it executed for less than 60 seconds before
 /// terminating.</remarks>
-public class RestartSettings
+/// <remarks>
+/// Creates a new instance of the RestartSettings class.
+/// </remarks>
+/// <param name="command">The command line arguments 
+/// used to restart the application.</param>
+/// <param name="restrictions">A bitwise combination of the RestartRestrictions 
+/// values that specify  
+/// when the application should not be restarted.
+/// </param>
+public class RestartSettings(string command, RestartRestrictions restrictions)
 {
-    private readonly string command;
-    private readonly RestartRestrictions restrictions;
-
-    /// <summary>
-    /// Creates a new instance of the RestartSettings class.
-    /// </summary>
-    /// <param name="command">The command line arguments 
-    /// used to restart the application.</param>
-    /// <param name="restrictions">A bitwise combination of the RestartRestrictions 
-    /// values that specify  
-    /// when the application should not be restarted.
-    /// </param>
-    public RestartSettings(string command, RestartRestrictions restrictions)
-    {
-        this.command = command;
-        this.restrictions = restrictions;
-    }
+    private readonly string command = command;
+    private readonly RestartRestrictions restrictions = restrictions;
 
     /// <summary>
     /// Gets the command line arguments used to restart the application.

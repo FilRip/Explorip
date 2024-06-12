@@ -79,19 +79,12 @@ public partial class NativeMethods
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct Margins
+    public struct Margins(int Left, int Right, int Top, int Bottom)
     {
-        public int cxLeftWidth;
-        public int cxRightWidth;
-        public int cyTopHeight;
-        public int cyBottomHeight;
-        public Margins(int Left, int Right, int Top, int Bottom)
-        {
-            cxLeftWidth = Left;
-            cxRightWidth = Right;
-            cyTopHeight = Top;
-            cyBottomHeight = Bottom;
-        }
+        public int cxLeftWidth = Left;
+        public int cxRightWidth = Right;
+        public int cyTopHeight = Top;
+        public int cyBottomHeight = Bottom;
     }
 
     [Flags()]

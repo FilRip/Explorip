@@ -19,29 +19,24 @@ public delegate int RecoveryCallback(object state);
 /// Defines a class that contains a callback delegate and properties of the application
 /// as defined by the user.
 /// </summary>
-public class RecoveryData
+/// <remarks>
+/// Initializes a recovery data wrapper with a callback method and the current
+/// state of the application.
+/// </remarks>
+/// <param name="callback">The callback delegate.</param>
+/// <param name="state">The current state of the application.</param>
+public class RecoveryData(RecoveryCallback callback, object state)
 {
-    /// <summary>
-    /// Initializes a recovery data wrapper with a callback method and the current
-    /// state of the application.
-    /// </summary>
-    /// <param name="callback">The callback delegate.</param>
-    /// <param name="state">The current state of the application.</param>
-    public RecoveryData(RecoveryCallback callback, object state)
-    {
-        Callback = callback;
-        State = state;
-    }
 
     /// <summary>
     /// Gets or sets a value that determines the recovery callback function.
     /// </summary>
-    public RecoveryCallback Callback { get; set; }
+    public RecoveryCallback Callback { get; set; } = callback;
 
     /// <summary>
     /// Gets or sets a value that determines the application state.
     /// </summary>
-    public object State { get; set; }
+    public object State { get; set; } = state;
 
     /// <summary>
     /// Invokes the recovery callback function.

@@ -8,23 +8,17 @@ namespace Securify.ShellLink.Structures;
 /// information when the link target refers to a location that has a corresponding 
 /// environment variable.
 /// </summary>
-public class EnvironmentVariableDataBlock : ExtraDataBlock
+/// <remarks>
+/// Constructor
+/// </remarks>
+/// <param name="Target">The path to environment variable information</param>
+public class EnvironmentVariableDataBlock(string Target) : ExtraDataBlock()
 {
     #region Constructor
     /// <summary>
     /// Constructor
     /// </summary>
     public EnvironmentVariableDataBlock() : this("") { }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="Target">The path to environment variable information</param>
-    public EnvironmentVariableDataBlock(string Target) : base()
-    {
-        TargetAnsi = Target;
-        TargetUnicode = Target;
-    }
     #endregion // Constructor
 
     /// <summary>
@@ -43,13 +37,13 @@ public class EnvironmentVariableDataBlock : ExtraDataBlock
     /// TargetAnsi (260 bytes): A NULL-terminated string, defined by the system default code 
     /// page, which specifies a path to environment variable information.
     /// </summary>
-    public string TargetAnsi { get; set; }
+    public string TargetAnsi { get; set; } = Target;
 
     /// <summary>
     /// TargetUnicode (520 bytes): An optional, NULL-terminated, Unicode string that specifies 
     /// a path to environment variable information.
     /// </summary>
-    public string TargetUnicode { get; set; }
+    public string TargetUnicode { get; set; } = Target;
 
     #region GetBytes
     /// <inheritdoc />

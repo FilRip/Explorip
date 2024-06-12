@@ -171,27 +171,16 @@ public partial class NativeMethods
     internal static extern int GetApplicationUserModelId(IntPtr hProcess, ref uint applicationUserModelIdLength, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder sbAppUserModelID);
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct Coord
+    public struct Coord(short X, short Y)
     {
-        public short X;
-        public short Y;
-
-        public Coord(short X, short Y)
-        {
-            this.X = X;
-            this.Y = Y;
-        }
+        public short X = X;
+        public short Y = Y;
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct WindowBufferSizeRecord
+    public struct WindowBufferSizeRecord(short x, short y)
     {
-        public Coord dwSize;
-
-        public WindowBufferSizeRecord(short x, short y)
-        {
-            dwSize = new Coord(x, y);
-        }
+        public Coord dwSize = new(x, y);
     }
 
     public enum EventType : ushort

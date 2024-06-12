@@ -10,7 +10,11 @@ namespace Securify.ShellLink.Structures;
 /// <summary>
 /// The stored IDList structure specifies the format of a persisted item ID list.
 /// </summary>
-public class IDList : Structure
+/// <remarks>
+/// Constructor
+/// </remarks>
+/// <param name="idList">An IDList</param>
+public class IDList(List<ItemID> idList) : Structure
 {
     /// <summary>
     /// TerminalID (2 bytes): A 16-bit, unsigned integer that indicates the end of the item IDs.
@@ -23,19 +27,12 @@ public class IDList : Structure
     /// Constructor
     /// </summary>
     public IDList() : this([]) { }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="idList">An IDList</param>
-    public IDList(List<ItemID> idList) { ItemIDList = idList; }
     #endregion // Constructor
 
     /// <summary>
     /// ItemIDList (variable): An array of zero or more ItemID structures.
     /// </summary>
-    public List<ItemID> ItemIDList { get; set; }
-
+    public List<ItemID> ItemIDList { get; set; } = idList;
     #region IDListSize
     /// <summary>
     /// IDListSize (2 bytes): The size, in bytes, of the IDList field.
@@ -59,16 +56,16 @@ public class IDList : Structure
     {
         get
         {
-            byte[] idList = new byte[IDListSize];
+            byte[] lidList = new byte[IDListSize];
             int Offset = 0;
             for (int i = 0; i < ItemIDList.Count; i++)
             {
                 ItemID item = ItemIDList[i];
-                Buffer.BlockCopy(item.GetBytes(), 0, idList, Offset, item.ItemIDSize);
+                Buffer.BlockCopy(item.GetBytes(), 0, lidList, Offset, item.ItemIDSize);
                 Offset += item.ItemIDSize;
             }
-            Buffer.BlockCopy(TerminalID, 0, idList, Offset, 2);
-            return idList;
+            Buffer.BlockCopy(TerminalID, 0, lidList, Offset, 2);
+            return lidList;
         }
     }
     #endregion // Bytes

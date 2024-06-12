@@ -7,26 +7,23 @@ namespace Securify.ShellLink.Structures;
 /// StringData refers to a set of structures that convey user interface and path identification information. 
 /// The presence of these optional structures is controlled by LinkFlags in the ShellLinkHeader.
 /// </summary>
-public class StringData : Structure
+/// <remarks>
+/// Constructor
+/// </remarks>
+/// <param name="IsUnicode">Indicates whether wide chars should be used</param>
+public class StringData(bool IsUnicode) : Structure()
 {
     #region Constructor
     /// <summary>
     /// Constructor
     /// </summary>
     public StringData() : this(true) { }
-
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="IsUnicode">Indicates whether wide chars should be used</param>
-    public StringData(bool IsUnicode) : base() { this.IsUnicode = IsUnicode; }
     #endregion // Constructor
 
     /// <summary>
     /// When set to true, wide chars will be used
     /// </summary>
-    public bool IsUnicode { get; set; }
-
+    public bool IsUnicode { get; set; } = IsUnicode;
     /// <summary>
     /// NAME_STRING: An optional structure that specifies a description of the shortcut that is displayed to 
     /// end users to identify the purpose of the shell link. This structure MUST be present if the HasName 
