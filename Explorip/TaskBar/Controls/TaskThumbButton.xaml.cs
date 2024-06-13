@@ -64,30 +64,13 @@ public partial class TaskThumbButton : Window
 
     private void Window_ContentRendered(object sender, EventArgs e)
     {
-        _handle = new WindowInteropHelper(this).EnsureHandle();
-        WindowHelper.ExcludeWindowFromPeek(_handle);
-        if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
+        try
         {
-            int result = NativeMethods.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.Handle, out IntPtr thumbPtr);
-            if (result == (int)NativeMethods.HResult.SUCCESS)
+            _handle = new WindowInteropHelper(this).EnsureHandle();
+            WindowHelper.ExcludeWindowFromPeek(_handle);
+            if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
             {
-                NativeMethods.DwmThumbnailProperties thumbProp = new()
-                {
-                    dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.OPACITY,
-                    fVisible = true,
-                    opacity = 255,
-                    rcDestination = new NativeMethods.Rect() { Left = 0, Top = (int)(TitleFirst.ActualHeight * VisualTreeHelper.GetDpi(this).DpiScaleY), Right = (int)(Width * VisualTreeHelper.GetDpi(this).DpiScaleX), Bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
-                };
-                TitleFirst.Text = _parent.ApplicationWindow.Title;
-                NativeMethods.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
-                _thumbPtr.Add(thumbPtr);
-            }
-        }
-        else if (_parent.ApplicationWindow.ListWindows.Count > 0)
-        {
-            for (int i = 0; i < _parent.ApplicationWindow.ListWindows.Count; i++)
-            {
-                int result = NativeMethods.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.ListWindows[i], out IntPtr thumbPtr);
+                int result = NativeMethods.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.Handle, out IntPtr thumbPtr);
                 if (result == (int)NativeMethods.HResult.SUCCESS)
                 {
                     NativeMethods.DwmThumbnailProperties thumbProp = new()
@@ -95,30 +78,51 @@ public partial class TaskThumbButton : Window
                         dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.OPACITY,
                         fVisible = true,
                         opacity = 255,
-                        rcDestination = new NativeMethods.Rect() { Left = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX * i), Top = (int)(TitleFirst.ActualHeight * VisualTreeHelper.GetDpi(this).DpiScaleY), Right = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX * i), Bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
+                        rcDestination = new NativeMethods.Rect() { Left = 0, Top = (int)(TitleFirst.ActualHeight * VisualTreeHelper.GetDpi(this).DpiScaleY), Right = (int)(Width * VisualTreeHelper.GetDpi(this).DpiScaleX), Bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
                     };
-                    StringBuilder sb = new(255);
-                    NativeMethods.GetWindowText(_parent.ApplicationWindow.ListWindows[i], sb, 255);
-                    if (i > 0)
-                    {
-                        TextBlock txtTitle = new()
-                        {
-                            Text = sb.ToString(),
-                            Width = TitleFirst.Width,
-                            HorizontalAlignment = HorizontalAlignment.Left,
-                            Margin = new Thickness(TitleFirst.Width * i, 0, 0, 0),
-                            Background = Constants.Colors.BackgroundColorBrush,
-                            Foreground = Constants.Colors.ForegroundColorBrush,
-                        };
-                        MainGrid.Children.Add(txtTitle);
-                    }
-                    else
-                        TitleFirst.Text = sb.ToString();
+                    TitleFirst.Text = _parent.ApplicationWindow.Title;
                     NativeMethods.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
                     _thumbPtr.Add(thumbPtr);
                 }
             }
+            else if (_parent.ApplicationWindow.ListWindows.Count > 0)
+            {
+                for (int i = 0; i < _parent.ApplicationWindow.ListWindows.Count; i++)
+                {
+                    int result = NativeMethods.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.ListWindows[i], out IntPtr thumbPtr);
+                    if (result == (int)NativeMethods.HResult.SUCCESS)
+                    {
+                        NativeMethods.DwmThumbnailProperties thumbProp = new()
+                        {
+                            dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.OPACITY,
+                            fVisible = true,
+                            opacity = 255,
+                            rcDestination = new NativeMethods.Rect() { Left = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX * i), Top = (int)(TitleFirst.ActualHeight * VisualTreeHelper.GetDpi(this).DpiScaleY), Right = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX * i), Bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
+                        };
+                        StringBuilder sb = new(255);
+                        NativeMethods.GetWindowText(_parent.ApplicationWindow.ListWindows[i], sb, 255);
+                        if (i > 0)
+                        {
+                            TextBlock txtTitle = new()
+                            {
+                                Text = sb.ToString(),
+                                Width = TitleFirst.Width,
+                                HorizontalAlignment = HorizontalAlignment.Left,
+                                Margin = new Thickness(TitleFirst.Width * i, 0, 0, 0),
+                                Background = Constants.Colors.BackgroundColorBrush,
+                                Foreground = Constants.Colors.ForegroundColorBrush,
+                            };
+                            MainGrid.Children.Add(txtTitle);
+                        }
+                        else
+                            TitleFirst.Text = sb.ToString();
+                        NativeMethods.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
+                        _thumbPtr.Add(thumbPtr);
+                    }
+                }
+            }
         }
+        catch (Exception) { /* Ignore errors */ }
     }
 
     private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
