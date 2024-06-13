@@ -15,12 +15,16 @@ using ManagedShell.Interop;
 
 using Microsoft.Win32;
 
+using Windows.ApplicationModel.Email.DataProvider;
+
 namespace Explorip.Configuration;
 
 internal static class RegistrySettings
 {
     private static bool? _showVersion;
     private static string _currentVersion;
+    private static string _currentBuild;
+    private static string _currentBuildName;
 
     public static bool DrawWindowsVersionOnDesktop()
     {
@@ -45,12 +49,38 @@ internal static class RegistrySettings
             RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion", false);
             if (key != null)
             {
-                object name = key.GetValue("ProductName");
-                object build = key.GetValue("BuildLab");
+                string name = key.GetValue("ProductName").ToString();
+                string build = key.GetValue("BuildLab").ToString();
                 _currentVersion = name + Environment.NewLine + build;
             }
         }
         return _currentVersion;
+    }
+
+    public static string CurrentPreciseBuild()
+    {
+        if (string.IsNullOrWhiteSpace(_currentBuild))
+        {
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion", false);
+            if (key != null)
+            {
+                string name = key.GetValue("CurrentBuildNumber").ToString();
+                string subBuild = key.GetValue("UBR").ToString();
+                _currentBuild = name + "." + subBuild;
+            }
+        }
+        return _currentBuild;
+    }
+
+    public static string CurrentBuildName()
+    {
+        if (string.IsNullOrWhiteSpace(_currentBuildName))
+        {
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion", false);
+            if (key != null)
+                _currentBuildName = key.GetValue("DisplayVersion").ToString();
+        }
+        return _currentBuildName;
     }
 
     public static string GetCurrentShell()
@@ -135,5 +165,17 @@ internal static class RegistrySettings
             }
 
         return result;
+    }
+
+    public static void ChangeShellCurrentUser(bool remove = false)
+    {
+        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", false);
+        if (remove)
+        {
+            if (key.GetValueNames().Contains("Shell"))
+                key.DeleteValue("Shell");
+        }
+        else
+            key.SetValue("Shell", System.Reflection.Assembly.GetEntryAssembly().Location);
     }
 }

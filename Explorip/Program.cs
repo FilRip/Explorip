@@ -68,6 +68,7 @@ public static class Program
                 {
                     IpcServerManager.InitChannel(new IpcServer());
                     AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+                    AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                 }
                 if (!ArgumentExists("withoutHook"))
                     HookCopyOperations.GetInstance().InstallHook();
@@ -87,6 +88,13 @@ public static class Program
         mutexProcess.Dispose();
     }
 
+    private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+        Exception ex = (Exception)e.ExceptionObject;
+        if (MessageBox.Show($"Unhandled error happends : {Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}At : {ex.StackTrace}{Environment.NewLine}{Environment.NewLine}Please report it at filrip@gmail.com or in 'issue' on official website. Thank you.{Environment.NewLine}{Environment.NewLine}The application can be unstable. Do you want to continue ?", "Error", MessageBoxButton.YesNo) == MessageBoxResult.No)
+            Environment.Exit(1);
+    }
+
     private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
     {
         IpcServerManager.Shutdown();
@@ -101,6 +109,7 @@ public static class Program
     {
         SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
         SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
     }
 
     private static void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
