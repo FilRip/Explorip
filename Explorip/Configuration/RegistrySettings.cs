@@ -15,8 +15,6 @@ using ManagedShell.Interop;
 
 using Microsoft.Win32;
 
-using Windows.ApplicationModel.Email.DataProvider;
-
 namespace Explorip.Configuration;
 
 internal static class RegistrySettings

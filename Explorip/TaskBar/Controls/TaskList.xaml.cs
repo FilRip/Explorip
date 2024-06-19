@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using Explorip.Helpers;
 using Explorip.TaskBar.Utilities;
 
+using ExploripConfig.Helpers;
+
 using ManagedShell.AppBar;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;

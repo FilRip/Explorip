@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Explorip.Helpers;
+namespace ExploripConfig.Helpers;
 
 public static class ExtensionsDirectory
 {

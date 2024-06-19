@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Explorip.Helpers;
+namespace ExploripConfig.Helpers;
 
 /// <summary>
 /// Class for extensions methods for Array

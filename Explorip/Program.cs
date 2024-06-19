@@ -8,6 +8,8 @@ using Explorip.Helpers;
 
 using ExploripApi;
 
+using ExploripConfig.Helpers;
+
 using Microsoft.Win32;
 
 using static Explorip.Helpers.ExtensionsCommandLineArguments;
@@ -31,12 +33,13 @@ public static class Program
         Process[] process = Process.GetProcessesByName("explorer");
         if (process != null && process.Length > 0)
         {
-            ModeShell = process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.FullPath() + "\\explorer.exe"));
+            ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.FullPath() + "\\explorer.exe"));
         }
 
         Constants.Localization.LoadTranslation();
         Constants.Colors.LoadTheme();
         Constants.Icons.Init();
+        ExploripConfig.Configuration.ConfigManager.Init();
 
         if (ArgumentExists("desktop") || ArgumentExists("desktops"))
         {

@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Securify.ShellLink", "Libra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploripApi", "ExploripApi\ExploripApi.csproj", "{86B574DF-0076-4A7B-8082-4F0185953737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploripSharedCopy", "HookFileOperation\ExploripSharedCopy\ExploripSharedCopy.csproj", "{2C8D880A-68E2-49D9-82CD-3A2FE01E1F75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploripSharedCopy", "HookFileOperation\ExploripSharedCopy\ExploripSharedCopy.csproj", "{2C8D880A-68E2-49D9-82CD-3A2FE01E1F75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExploripConfig", "Libraries\ExploripConfig\ExploripConfig.csproj", "{865A98D3-510F-4B8A-9AF5-38C68A40C70F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -153,6 +155,10 @@ Global
 		{2C8D880A-68E2-49D9-82CD-3A2FE01E1F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C8D880A-68E2-49D9-82CD-3A2FE01E1F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C8D880A-68E2-49D9-82CD-3A2FE01E1F75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{865A98D3-510F-4B8A-9AF5-38C68A40C70F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{865A98D3-510F-4B8A-9AF5-38C68A40C70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{865A98D3-510F-4B8A-9AF5-38C68A40C70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{865A98D3-510F-4B8A-9AF5-38C68A40C70F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -184,6 +190,7 @@ Global
 		{C9341443-36D5-4309-AB3D-D3D2612D5609} = {47504A38-602C-43A1-989B-925F53E447E1}
 		{86B574DF-0076-4A7B-8082-4F0185953737} = {02E20678-9AD3-4370-904E-02D800F25B35}
 		{2C8D880A-68E2-49D9-82CD-3A2FE01E1F75} = {218DB468-F097-4391-9481-971D3F07B588}
+		{865A98D3-510F-4B8A-9AF5-38C68A40C70F} = {218DB468-F097-4391-9481-971D3F07B588}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}

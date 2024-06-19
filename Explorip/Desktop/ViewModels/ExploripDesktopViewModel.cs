@@ -11,7 +11,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Desktop.Controls;
 using Explorip.Desktop.Windows;
-using Explorip.Helpers;
+
+using ExploripConfig.Helpers;
 
 using ManagedShell.Interop;
 
