@@ -79,7 +79,8 @@ public partial class TaskList : UserControl
             if (MyTaskbarApp.MyShellManager.Tasks.GroupedWindows != null)
                 MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
 
-            VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
+            if (VirtualDesktopProvider.Default.Initialized)
+                VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
 
             isLoaded = true;
         }
@@ -104,7 +105,7 @@ public partial class TaskList : UserControl
 
                 NativeMethods.EnumWindows((hwnd, lParam) =>
                 {
-                    if (VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
+                    if (!VirtualDesktopProvider.Default.Initialized || VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
                     {
                         ApplicationWindow win = new(MyTaskbarApp.MyShellManager.TasksService, hwnd);
 
@@ -184,7 +185,8 @@ public partial class TaskList : UserControl
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
         MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
-        VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
+        if (VirtualDesktopProvider.Default.Initialized)
+            VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
         isLoaded = false;
     }
 

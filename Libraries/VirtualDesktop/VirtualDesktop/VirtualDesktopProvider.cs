@@ -48,8 +48,7 @@ namespace WindowsDesktop
 
                 if (AutoRestart && scheduler != null)
                 {
-                    _initializationTask.ContinueWith(
-                        _ => ComObjects.Listen(),
+                    _initializationTask.ContinueWith(ContinueTask,
                         CancellationToken.None,
                         TaskContinuationOptions.OnlyOnRanToCompletion,
                         scheduler);
@@ -66,6 +65,21 @@ namespace WindowsDesktop
                 ComObjects = new ComObjects(assembly);
             }
         }
+
+        private void ContinueTask(Task task)
+        {
+            try
+            {
+                if (task.IsCompleted)
+                {
+                    ComObjects.Listen();
+                    Initialized = true;
+                }
+            }
+            catch (Exception) { /* Ignore errors */ }
+        }
+
+        public bool Initialized { get; private set; }
 
         public bool IsDisposed
         {

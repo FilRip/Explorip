@@ -14,6 +14,7 @@ using Explorip.HookFileOperations;
 using Explorip.HookFileOperations.Models;
 
 using ExploripCopy.Constants;
+using ExploripCopy.GUI;
 using ExploripCopy.Helpers;
 using ExploripCopy.Models;
 
@@ -181,6 +182,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
         {
             if (Settings.ShowBalloon)
                 NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.ERROR, GlobalReport, BalloonIcon.Error);
+            else
+                MainWindow.Instance.ShowWindow();
             GlobalReport = _lastError.Message;
         }
         ForceUpdateWaitingList();

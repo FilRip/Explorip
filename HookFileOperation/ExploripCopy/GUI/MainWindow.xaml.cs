@@ -52,9 +52,12 @@ public partial class MainWindow : Window
 
     public void ShowWindow()
     {
-        Visibility = Visibility.Visible;
-        WindowState = WindowState.Normal;
-        Activate();
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            Visibility = Visibility.Visible;
+            WindowState = WindowState.Normal;
+            Activate();
+        });
     }
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

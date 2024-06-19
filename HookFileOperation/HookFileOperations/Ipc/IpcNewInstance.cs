@@ -32,7 +32,8 @@ public class IpcNewInstance : MarshalByRefObject
     {
         Task.Run(() =>
         {
-            if (_interactionWithMainProcess == null)
+            if (_interactionWithMainProcess == null ||
+                (listOperations.Count == 1 && listOperations[0].FileOperation == EFileOperation.Create))
             {
                 try
                 {
@@ -61,7 +62,8 @@ public class IpcNewInstance : MarshalByRefObject
                 }
                 finally
                 {
-                    Environment.Exit(0);
+                    if (_interactionWithMainProcess == null)
+                        Environment.Exit(0);
                 }
             }
             else

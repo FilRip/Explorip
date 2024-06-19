@@ -236,7 +236,14 @@ public partial class Taskbar : AppBarWindow
     private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
     {
         if (_mainScreen)
-            WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
+            try
+            {
+                WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error during initialization of VirtualDesktop support." + Environment.NewLine + "VirtualDesktop will not be supported");
+            }
         MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
     }
 
