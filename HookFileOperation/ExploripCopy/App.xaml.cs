@@ -30,6 +30,7 @@ public partial class App : Application
             Constants.Colors.LoadTheme();
             Constants.Localization.LoadTranslation();
             Constants.Icons.LoadIcons();
+            ExploripConfig.Configuration.ConfigManager.Init();
 
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
             NotifyIconViewModel.Instance.SetControl(notifyIcon);

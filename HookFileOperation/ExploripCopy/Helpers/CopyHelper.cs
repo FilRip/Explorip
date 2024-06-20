@@ -15,11 +15,12 @@ internal static class CopyHelper
     private const uint BUFFER_SIZE = 1048576; // 1Mo by default
 
     public static bool Pause { get; set; }
+    public static bool Stop { get; set; }
     public static EChoiceFileOperation ChoiceOnCollision { get; set; }
 
     internal delegate void CallbackRefreshProgress(string currentFile, long fullSize, long remainingSize, long nbBytesRead);
 
-    internal static Exception CopyDirectory(string sourceDir, string destinationDir, uint bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
+    internal static Exception CopyDirectory(string sourceDir, string destinationDir, long startOffset, uint bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
     {
         Exception result;
         string destDir;
@@ -38,20 +39,20 @@ internal static class CopyHelper
         destDir = dirInfo.FullName;
         foreach (string file in Directory.GetFiles(sourceDir))
         {
-            result = CopyFile(file, destDir, bufferSize, CallbackRefresh);
+            result = CopyFile(file, destDir, startOffset, bufferSize, CallbackRefresh);
             if (result != null)
                 return result;
         }
         foreach (string dir in Directory.GetDirectories(sourceDir))
         {
-            result = CopyDirectory(dir, destDir, bufferSize, CallbackRefresh);
+            result = CopyDirectory(dir, destDir, startOffset, bufferSize, CallbackRefresh);
             if (result != null)
                 return result;
         }
         return null;
     }
 
-    internal static Exception MoveDirectory(string sourceDir, string destinationDir, uint bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null)
+    internal static Exception MoveDirectory(string sourceDir, string destinationDir, long startOffset, uint bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null)
     {
         Exception result;
         DirectoryInfo destDir = new(destinationDir + Path.DirectorySeparatorChar + Path.GetFileName(sourceDir));
@@ -59,13 +60,13 @@ internal static class CopyHelper
             destDir.Create();
         foreach (string file in Directory.GetFiles(sourceDir))
         {
-            result = MoveFile(file, destDir.FullName, bufferSize, CallbackRefresh);
+            result = MoveFile(file, destDir.FullName, startOffset, bufferSize, CallbackRefresh);
             if (result != null)
                 return result;
         }
         foreach (string dir in Directory.GetDirectories(sourceDir))
         {
-            result = MoveDirectory(dir, destDir.FullName, bufferSize, CallbackRefresh);
+            result = MoveDirectory(dir, destDir.FullName, startOffset, bufferSize, CallbackRefresh);
             if (result != null)
                 return result;
         }
@@ -81,10 +82,10 @@ internal static class CopyHelper
         return null;
     }
 
-    internal static Exception MoveFile(string sourceFile, string destinationDir, uint bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null)
+    internal static Exception MoveFile(string sourceFile, string destinationDir, long startOffset, uint bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null)
     {
         Exception result;
-        if ((result = CopyFile(sourceFile, destinationDir, bufferSize, CallbackRefresh)) == null)
+        if ((result = CopyFile(sourceFile, destinationDir, startOffset, bufferSize, CallbackRefresh)) == null)
         {
             try
             {
@@ -100,7 +101,7 @@ internal static class CopyHelper
         return null;
     }
 
-    internal static Exception CopyFile(string sourceFile, string destinationDir, uint bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
+    internal static Exception CopyFile(string sourceFile, string destinationDir, long startOffset, uint bufferSize = BUFFER_SIZE, CallbackRefreshProgress CallbackRefresh = null, bool renameOnCollision = false)
     {
         try
         {
@@ -173,16 +174,21 @@ internal static class CopyHelper
                         ChoiceOnCollision = EChoiceFileOperation.None;
                 }
             }
-            FileStream source = new(sourceFile, FileMode.Open, FileAccess.Read);
+            FileStream source = new(sourceFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+            {
+                Position = startOffset,
+            };
             if (!Directory.Exists(Path.GetFullPath(destinationDir)))
                 Directory.CreateDirectory(Path.GetFullPath(destinationDir));
-            FileStream destination = new(destFile.FullName, FileMode.Create, FileAccess.Write);
+            FileStream destination = new(destFile.FullName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             destination.SetLength(fullSize);
             int nbBytes = 1;
             while (source.CanRead && nbBytes > 0)
             {
                 if (Pause)
                     Thread.Sleep(10);
+                else if (Stop)
+                    throw new ExploripCopyException(Constants.Localization.STOP);
                 else
                 {
                     if (buffer.Length > remaining && remaining < bufferSize)

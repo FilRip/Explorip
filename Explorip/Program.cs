@@ -8,6 +8,7 @@ using Explorip.Helpers;
 
 using ExploripApi;
 
+using ExploripConfig.Configuration;
 using ExploripConfig.Helpers;
 
 using Microsoft.Win32;
@@ -39,7 +40,7 @@ public static class Program
         Constants.Localization.LoadTranslation();
         Constants.Colors.LoadTheme();
         Constants.Icons.Init();
-        ExploripConfig.Configuration.ConfigManager.Init();
+        ConfigManager.Init();
 
         if (ArgumentExists("desktop") || ArgumentExists("desktops"))
         {

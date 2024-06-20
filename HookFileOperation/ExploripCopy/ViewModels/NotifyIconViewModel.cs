@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ExploripConfig.Configuration;
+
 using ExploripCopy.Constants;
 using ExploripCopy.GUI;
 
@@ -20,7 +22,8 @@ internal partial class NotifyIconViewModel : ObservableObject
     {
         Instance = this;
         SetSystrayIcon(false);
-        ActiveShowNotification = Settings.ShowBalloon;
+        ActiveShowNotification = ConfigManager.ShowNotificationCopy;
+        Settings.ShowBalloon = ActiveShowNotification;
     }
 
     partial void OnActiveShowNotificationChanged(bool value)
@@ -44,6 +47,7 @@ internal partial class NotifyIconViewModel : ObservableObject
     private void ShowNotification()
     {
         ActiveShowNotification = !ActiveShowNotification;
+        ConfigManager.ShowNotificationCopy = ActiveShowNotification;
     }
 
     public void SetSystrayIcon(bool working)

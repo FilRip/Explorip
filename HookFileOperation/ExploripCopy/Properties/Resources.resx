@@ -121,6 +121,9 @@
   <data name="icone" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\icone.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="StartNow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StartNow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="SystrayIconG" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SystrayIconG.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

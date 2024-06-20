@@ -39,6 +39,8 @@ public class OneFileOperation
 
     public bool ResetChoice { get; set; }
 
+    public long CurrentOffset { get; set; }
+
     public void WriteOperation(FileOperation currentFileOperation)
     {
         switch (FileOperation)

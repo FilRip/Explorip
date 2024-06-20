@@ -72,8 +72,17 @@
             
             <!-- List operations are waiting -->
             <Grid Grid.Row="5" Name="ListOperations">
-                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Extended" SelectionUnit="FullRow" SelectionChanged="DgListWaiting_SelectionChanged">
+                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Extended" SelectionUnit="FullRow" SelectionChanged="DgListWaiting_SelectionChanged" CanUserResizeRows="False" HeadersVisibility="None">
                     <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="16">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Grid.Column="0" BorderThickness="0" Click="StartNow_Click" Background="Transparent">
+                                        <Image Source="/ExploripCopy;component/Resources/StartNow.png"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Binding="{Binding Source}" Width="0.5*" IsReadOnly="True">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">

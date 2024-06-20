@@ -160,4 +160,10 @@ public partial class MainWindow : Window
     {
         MyDataContext.SelectedLines = [.. DgListWaiting.SelectedItems.OfType<OneFileOperation>()];
     }
+
+    private void StartNow_Click(object sender, RoutedEventArgs e)
+    {
+        MyDataContext.SelectedLines = [(OneFileOperation)((FrameworkElement)e.Source).DataContext];
+        MyDataContext.StartNow();
+    }
 }

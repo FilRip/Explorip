@@ -18,6 +18,5 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Runtime.Remoting" />
   </ItemGroup>
 </Project>

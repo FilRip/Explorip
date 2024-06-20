@@ -10,7 +10,7 @@ namespace ExploripConfig.Helpers;
 public class ManageIniFile : IDisposable
 {
     private List<string> _commentary = [";", "#", "//"];
-
+    private readonly object _lockWrite;
     private StreamReader _configFile;
     private string _currentFileName = "";
     private string[] _section;
@@ -19,26 +19,39 @@ public class ManageIniFile : IDisposable
 
     public static ManageIniFile OpenIniFile(string filename)
     {
-        ManageIniFile result = new();
-        result.OpenIni(filename);
-        return result;
+        return OpenIniFile(filename, Encoding.UTF8, true);
+    }
+
+    public static ManageIniFile OpenIniFile(string filename, bool createIfNotExist)
+    {
+        return OpenIniFile(filename, Encoding.UTF8, createIfNotExist);
     }
 
     public static ManageIniFile OpenIniFile(string filename, Encoding encoding)
     {
+        return OpenIniFile(filename, encoding, true);
+    }
+
+    public static ManageIniFile OpenIniFile(string filename, Encoding encoding, bool createIfNotExist)
+    {
         ManageIniFile result = new();
+        if (createIfNotExist)
+            result.CreateIni(filename);
         result.OpenIni(filename, encoding);
         return result;
     }
 
-    public ManageIniFile() : base() { }
-
-    public ManageIniFile(string filename) : base()
+    public ManageIniFile() : base()
     {
-        OpenIni(filename);
+        _lockWrite = new object();
     }
 
-    public ManageIniFile(string filename, Encoding encoding) : base()
+    public ManageIniFile(string filename) : this()
+    {
+        OpenIni(filename, Encoding.UTF8);
+    }
+
+    public ManageIniFile(string filename, Encoding encoding) : this()
     {
         OpenIni(filename, encoding);
     }
@@ -81,7 +94,7 @@ public class ManageIniFile : IDisposable
             return false;
         try
         {
-            File.AppendAllText(filename, " ", encoding);
+            File.WriteAllText(filename, "[Explorip]", encoding);
             return OpenIni(filename, encoding);
         }
         catch { /* Ignore errors */ }
@@ -104,55 +117,60 @@ public class ManageIniFile : IDisposable
 
         try
         {
-            if (File.Exists(_currentFileName))
+            lock (_lockWrite)
             {
-                string filename = _currentFileName;
-                Close();
-                _currentFileName = filename;
-                string[] lines = File.ReadAllLines(_currentFileName);
-                bool sectionFound = false;
-                bool paramFound = false;
-                int lastSectionLine = 0;
-                for (int numLine = 0; numLine < lines.Length; numLine++)
+                if (File.Exists(_currentFileName))
                 {
-                    if (lines[numLine].Trim().StartsWith($"[{sectionName}]", StringComparison.InvariantCultureIgnoreCase))
-                        sectionFound = true;
-                    else
+                    string filename = _currentFileName;
+                    Close();
+                    _currentFileName = filename;
+                    string[] lines = File.ReadAllLines(_currentFileName);
+                    bool sectionFound = false;
+                    bool paramFound = false;
+                    int lastSectionLine = 0;
+                    for (int numLine = 0; numLine < lines.Length; numLine++)
+                    {
+                        if (lines[numLine].Trim().StartsWith($"[{sectionName}]", StringComparison.InvariantCultureIgnoreCase))
+                            sectionFound = true;
+                        else
+                        {
+                            if (sectionFound)
+                            {
+                                if (lines[numLine].Trim().StartsWith($"{paramName}=", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    paramFound = true;
+                                    lines[numLine] = $"{paramName}={value}";
+                                    break;
+                                }
+                                if (lines[numLine].Trim().StartsWith("["))
+                                    break;
+                                lastSectionLine = numLine;
+                            }
+                        }
+                    }
+
+                    if (!paramFound)
                     {
                         if (sectionFound)
                         {
-                            if (lines[numLine].Trim().StartsWith($"{paramName}=", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                paramFound = true;
-                                lines[numLine] = $"{paramName}={value}";
-                                break;
-                            }
-                            if (lines[numLine].Trim().StartsWith("["))
-                                break;
-                            lastSectionLine = numLine;
+                            while (lines[lastSectionLine].Trim() == "" && lastSectionLine > 0)
+                                lastSectionLine--;
+                            lines = lines.Insert($"{paramName}={value}", lastSectionLine + 1);
+                        }
+                        else
+                        {
+                            lines = lines.Add($"[{sectionName}]");
+                            lines = lines.Add($"{paramName}={value}");
                         }
                     }
+                    if (string.IsNullOrWhiteSpace(lines[0]))
+                        lines = lines.RemoveAt(0);
+                    File.Delete(_currentFileName);
+                    File.AppendAllLines(_currentFileName, lines, _currentEncoding);
+                    return true;
                 }
-
-                if (!paramFound)
-                {
-                    if (sectionFound)
-                    {
-                        while (lines[lastSectionLine].Trim() == "" && lastSectionLine > 0)
-                            lastSectionLine--;
-                        lines = lines.Insert($"{paramName}={value}", lastSectionLine + 1);
-                    }
-                    else
-                    {
-                        lines = lines.Add($"[{sectionName}]");
-                        lines = lines.Add($"{paramName}={value}");
-                    }
-                }
-                if (string.IsNullOrWhiteSpace(lines[0]))
-                    lines = lines.RemoveAt(0);
-                File.Delete(_currentFileName);
-                File.AppendAllLines(_currentFileName, lines, _currentEncoding);
-                return true;
+                else
+                    File.WriteAllLines(_currentFileName, [$"[{sectionName}]", $"{paramName}={value}"]);
             }
         }
         catch { /* Ignore errors */ }

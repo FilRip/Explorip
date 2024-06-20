@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -139,6 +140,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     private long _currentSpeed;
     private void Callback_Operation(string currentFile, long fullSize, long remainingSize, long nbBytesRead)
     {
+        _currentOperation.CurrentOffset += nbBytesRead;
         CurrentFile = currentFile;
         _currentSpeed += nbBytesRead;
         if (_chronoSpeed.IsRunning && _chronoSpeed.ElapsedMilliseconds >= 1000)
@@ -171,7 +173,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 }
             });
         }
-        if (_lastError == null)
+        if (_lastError == null || _lastError.Message == Localization.STOP)
         {
             _currentOperation = null;
             if (Settings.ShowBalloon)
@@ -221,6 +223,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         }
     }
     private OneFileOperation _currentOperation;
+    private OneFileOperation _nextOperation;
     private bool disposedValue;
 
     private void Treatment(OneFileOperation operation)
@@ -251,12 +254,12 @@ public partial class MainViewModels : ObservableObject, IDisposable
                             GlobalReport = Localization.CALCUL;
                             MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
                             UpdateGlobalReport();
-                            GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                            GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, operation.CurrentOffset, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                         }
                         else
                         {
                             MaxGlobalProgress = new FileInfo(operation.Source).Length;
-                            GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                            GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, operation.CurrentOffset, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                         }
                     }
                     else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
@@ -284,12 +287,12 @@ public partial class MainViewModels : ObservableObject, IDisposable
                                 GlobalReport = Localization.CALCUL;
                                 MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
                                 UpdateGlobalReport();
-                                GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                                GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, operation.CurrentOffset, CallbackRefresh: Callback_Operation);
                             }
                             else
                             {
                                 MaxGlobalProgress = new FileInfo(operation.Source).Length;
-                                GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, CallbackRefresh: Callback_Operation);
+                                GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, operation.CurrentOffset, CallbackRefresh: Callback_Operation);
                             }
                         }
                     }
@@ -403,8 +406,10 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 {
                     lock (_lockOperation)
                     {
-                        resetChoice = ListWaiting[0].ResetChoice;
-                        Treatment(ListWaiting[0]);
+                        _nextOperation ??= ListWaiting[0];
+                        resetChoice = _nextOperation.ResetChoice;
+                        Treatment(_nextOperation);
+                        _nextOperation = null;
                     }
                 }
                 else
@@ -452,6 +457,27 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         if (CurrentFile != null && _lastError == null)
             CopyHelper.Pause = !CopyHelper.Pause;
+    }
+
+    [RelayCommand()]
+    internal void StartNow()
+    {
+        if (_currentOperation != null)
+        {
+            if (_currentOperation == SelectedLines[0])
+                return;
+            CopyHelper.Stop = true;
+            while (GetLastError == null)
+            {
+                Thread.Sleep(10);
+            }
+            CopyHelper.Stop = false;
+        }
+        lock (_lockOperation)
+        {
+            _nextOperation = SelectedLines[0];
+            GetLastError = null;
+        }
     }
 
     protected virtual void Dispose(bool disposing)

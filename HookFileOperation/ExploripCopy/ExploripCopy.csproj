@@ -50,6 +50,7 @@
     <ProjectReference Include="..\..\Libraries\NotifyIconWpf\NotifyIconWpf.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\StartNow.png" />
     <Resource Include="Resources\SystrayIconG.ico" />
   </ItemGroup>
   <ItemGroup>
