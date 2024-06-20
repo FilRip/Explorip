@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Explorip.TaskBar.PropertiesWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Settings="clr-namespace:Explorip.TaskBar.Utilities"
+        xmlns:Config="clr-namespace:ExploripConfig.Configuration"
         Title="{DynamicResource explorip_properties}"
         Height="Auto"
         Width="Auto"
@@ -79,7 +79,7 @@
                                         ToolTip="{DynamicResource language_tip}" />
                         </Label>
                         <ComboBox Name="cboLanguageSelect"
-                                  SelectedValue="{Binding Source={x:Static Settings:Settings.Instance}, Path=Language, UpdateSourceTrigger=PropertyChanged}" />
+                                  SelectedValue="{Binding Source={x:Static Config:ConfigManager}, Path=Language, UpdateSourceTrigger=PropertyChanged}" />
                     </DockPanel>
                     <DockPanel>
                         <Label VerticalAlignment="Center" Target="{Binding ElementName=cboThemeSelect}">

@@ -100,9 +100,4 @@
     <Resource Include="TaskBar\Resources\start11.png" />
     <Resource Include="TaskBar\Resources\taskman11.png" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-    </None>
-  </ItemGroup>
 </Project>

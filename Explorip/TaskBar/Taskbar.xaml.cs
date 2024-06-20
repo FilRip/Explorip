@@ -9,6 +9,8 @@ using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
 using Explorip.TaskBar.ViewModels;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
@@ -44,13 +46,11 @@ public partial class Taskbar : AppBarWindow
 
         _explorerHelper.HideExplorerTaskbar = true;
 
-        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
-
         // Layout rounding causes incorrect sizing on non-integer scales
         if (DpiHelper.DpiScale % 1 != 0)
             UseLayoutRounding = false;
 
-        if (Settings.Instance.ShowQuickLaunch)
+        if (ConfigManager.ShowQuickLaunch)
         {
             QuickLaunchToolbar.Visibility = Visibility.Visible;
             DesiredHeight += 16;
@@ -77,7 +77,7 @@ public partial class Taskbar : AppBarWindow
 
         if ((msg == (int)NativeMethods.WM.SYSCOLORCHANGE ||
             msg == (int)NativeMethods.WM.SETTINGCHANGE) &&
-            Settings.Instance.Theme == DictionaryManager.THEME_DEFAULT)
+            ConfigManager.Theme == DictionaryManager.THEME_DEFAULT)
         {
             handled = true;
 
@@ -107,7 +107,7 @@ public partial class Taskbar : AppBarWindow
 
     private void SetFontSmoothing()
     {
-        VisualTextRenderingMode = Settings.Instance.AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
+        VisualTextRenderingMode = ConfigManager.AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
     }
 
     private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -148,7 +148,7 @@ public partial class Taskbar : AppBarWindow
         }
         else if (e.PropertyName == "ShowQuickLaunch")
         {
-            if (Settings.Instance.ShowQuickLaunch)
+            if (ConfigManager.ShowQuickLaunch)
             {
                 QuickLaunchToolbar.Visibility = Visibility.Visible;
                 DesiredHeight += 16;
@@ -161,7 +161,7 @@ public partial class Taskbar : AppBarWindow
         }
         else if (e.PropertyName == "Edge")
         {
-            AppBarEdge = (AppBarEdge)Settings.Instance.Edge;
+            AppBarEdge = (AppBarEdge)ConfigManager.Edge;
             SetScreenPosition();
         }
     }
@@ -228,8 +228,6 @@ public partial class Taskbar : AppBarWindow
             if (!_isReopening)
                 _explorerHelper.HideExplorerTaskbar = false;
             QuickLaunchToolbar.Visibility = Visibility.Collapsed;
-
-            Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
         }
     }
 

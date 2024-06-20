@@ -6,6 +6,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using Explorip.TaskBar.Utilities;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.Common.Helpers;
 
 using Microsoft.WindowsAPICodePack.Shell.Constants;
@@ -25,12 +27,11 @@ public partial class ClockViewModel : ObservableObject
 
     public ClockViewModel() : base()
     {
-        if (Settings.Instance.ShowClock)
+        if (ConfigManager.ShowClock)
         {
             StartClock();
         }
 
-        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
         Microsoft.Win32.SystemEvents.TimeChanged += TimeChanged;
     }
 
@@ -59,21 +60,6 @@ public partial class ClockViewModel : ObservableObject
         clock.Stop();
 
         ClockVisibility = Visibility.Collapsed;
-    }
-
-    private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == "ShowClock")
-        {
-            if (Settings.Instance.ShowClock)
-            {
-                StartClock();
-            }
-            else
-            {
-                StopClock();
-            }
-        }
     }
 
     private void Clock_Tick(object sender, EventArgs args)

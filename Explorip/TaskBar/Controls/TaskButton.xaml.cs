@@ -64,8 +64,6 @@ public partial class TaskButton : UserControl
     {
         Window = DataContext as ApplicationWindow;
 
-        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
-
         // drag support - delayed activation using system setting
         dragTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
         dragTimer.Tick += DragTimer_Tick;
@@ -92,8 +90,6 @@ public partial class TaskButton : UserControl
         {
             return;
         }
-
-        Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
 
         if (Window != null)
         {

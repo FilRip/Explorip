@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 
+using ExploripConfig.Configuration;
+
 namespace Explorip.TaskBar.Utilities;
 
 public class DictionaryManager : IDisposable
@@ -25,15 +27,14 @@ public class DictionaryManager : IDisposable
 
     public DictionaryManager()
     {
-        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
     }
 
     public void SetThemeFromSettings()
     {
         SetTheme(THEME_DEFAULT);
-        if (Settings.Instance.Theme != THEME_DEFAULT)
+        if (ConfigManager.Theme != THEME_DEFAULT)
         {
-            SetTheme(Settings.Instance.Theme);
+            SetTheme(ConfigManager.Theme);
         }
     }
 
@@ -63,7 +64,7 @@ public class DictionaryManager : IDisposable
     public void SetLanguageFromSettings()
     {
         SetLanguage(LANG_FALLBACK);
-        if (Settings.Instance.Language == LANG_DEFAULT)
+        if (ConfigManager.Language == LANG_DEFAULT)
         {
             System.Globalization.CultureInfo currentUICulture = System.Globalization.CultureInfo.CurrentUICulture;
             string systemLanguageParent = currentUICulture.Parent.NativeName;
@@ -74,7 +75,7 @@ public class DictionaryManager : IDisposable
         }
         else
         {
-            SetLanguage(Settings.Instance.Language);
+            SetLanguage(ConfigManager.Language);
         }
     }
 
@@ -157,18 +158,6 @@ public class DictionaryManager : IDisposable
         return dictionaries;
     }
 
-    private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == "Language")
-        {
-            SetLanguageFromSettings();
-        }
-        if (e.PropertyName == "Theme")
-        {
-            SetThemeFromSettings();
-        }
-    }
-
     public bool IsDisposed
     {
         get { return disposedValue; }
@@ -179,7 +168,7 @@ public class DictionaryManager : IDisposable
         {
             if (disposing)
             {
-                Settings.Instance.PropertyChanged -= Settings_PropertyChanged;
+                // Something to dispose ?
             }
 
             disposedValue = true;

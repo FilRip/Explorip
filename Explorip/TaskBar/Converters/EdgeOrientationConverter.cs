@@ -4,6 +4,8 @@ using System.Windows.Data;
 
 using Explorip.TaskBar.Utilities;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.AppBar;
 
 namespace Explorip.TaskBar.Converters;
@@ -13,7 +15,7 @@ public class EdgeOrientationConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        if (Settings.Instance.Edge == (int)AppBarEdge.Left || Settings.Instance.Edge == (int)AppBarEdge.Right)
+        if (ConfigManager.Edge == (int)AppBarEdge.Left || ConfigManager.Edge == (int)AppBarEdge.Right)
         {
             return Orientation.Vertical;
         }

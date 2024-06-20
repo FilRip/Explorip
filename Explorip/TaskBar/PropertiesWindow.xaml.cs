@@ -6,6 +6,8 @@ using System.Windows;
 
 using Explorip.TaskBar.Utilities;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -91,7 +93,7 @@ public partial class PropertiesWindow : Window
 
     private void UpdateWindowPosition()
     {
-        switch (Settings.Instance.Edge)
+        switch (ConfigManager.Edge)
         {
             case (int)AppBarEdge.Left:
             case (int)AppBarEdge.Top:
@@ -176,7 +178,7 @@ public partial class PropertiesWindow : Window
     {
         if (cboEdgeSelect.SelectedItem == null)
         {
-            cboEdgeSelect.SelectedValue = cboEdgeSelect.Items[Settings.Instance.Edge];
+            cboEdgeSelect.SelectedValue = cboEdgeSelect.Items[ConfigManager.Edge];
         }
     }
 }

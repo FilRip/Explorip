@@ -7,6 +7,8 @@ using System.Windows.Interop;
 using Explorip.Helpers;
 using Explorip.TaskBar.Utilities;
 
+using ExploripConfig.Configuration;
+
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
@@ -68,7 +70,7 @@ public partial class MyTaskbarApp : Application
     private void OpenTaskbar()
     {
         Taskbar taskBar;
-        taskBar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen(), (AppBarEdge)Settings.Instance.Edge);
+        taskBar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen(), (AppBarEdge)ConfigManager.Edge);
         taskBar.Show();
         _taskbarList.Add(taskBar);
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
@@ -88,7 +90,7 @@ public partial class MyTaskbarApp : Application
             List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
             foreach (AppBarScreen appBarScreen in appBarScreens)
             {
-                taskBar = new Taskbar(_startMenuMonitor, appBarScreen, (AppBarEdge)Settings.Instance.Edge);
+                taskBar = new Taskbar(_startMenuMonitor, appBarScreen, (AppBarEdge)ConfigManager.Edge);
                 taskBar.Show();
                 _taskbarList.Add(taskBar);
             }

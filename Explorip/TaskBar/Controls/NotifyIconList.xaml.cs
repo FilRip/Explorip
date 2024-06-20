@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
 
-using Explorip.TaskBar.Utilities;
+using ExploripConfig.Configuration;
 
 using ManagedShell.WindowsTray;
 
@@ -34,15 +34,13 @@ public partial class NotifyIconList : UserControl
     public NotifyIconList()
     {
         InitializeComponent();
-
-        Settings.Instance.PropertyChanged += Settings_PropertyChanged;
     }
 
     private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == "CollapseNotifyIcons")
         {
-            if (Settings.Instance.CollapseNotifyIcons)
+            if (ConfigManager.CollapseNotifyIcons)
             {
                 NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;
                 SetToggleVisibility();
@@ -78,7 +76,7 @@ public partial class NotifyIconList : UserControl
             NotificationArea.UnpinnedIcons.CollectionChanged += UnpinnedIcons_CollectionChanged;
             NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
 
-            if (Settings.Instance.CollapseNotifyIcons)
+            if (ConfigManager.CollapseNotifyIcons)
             {
                 NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;
                 SetToggleVisibility();
@@ -168,7 +166,8 @@ public partial class NotifyIconList : UserControl
 
     private void SetToggleVisibility()
     {
-        if (!Settings.Instance.CollapseNotifyIcons) return;
+        if (!ConfigManager.CollapseNotifyIcons)
+            return;
 
         if (NotificationArea.UnpinnedIcons.IsEmpty)
         {
