@@ -33,8 +33,8 @@
                             <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
                         </ItemsPanelTemplate>
                     </ContextMenu.ItemsPanel>
-                    <MenuItem Header="Show/Hide title" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>
-                    <MenuItem Header="Show small/large icon" Name="ShowLargeIcon" Click="ShowLargeIcon_Click"/>
+                    <MenuItem Header="{x:Static constants:Localization.SHOW_TITLE}" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>
+                    <MenuItem Header="{x:Static constants:Localization.LARGE_ICON}" Name="ShowLargeIcon" Click="ShowLargeIcon_Click"/>
                 </ContextMenu>
             </Label.ContextMenu>
         </Label>
