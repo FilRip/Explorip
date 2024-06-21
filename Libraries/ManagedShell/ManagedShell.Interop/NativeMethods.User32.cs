@@ -81,6 +81,11 @@ public partial class NativeMethods
         public string dwTypeData;
         public int cch;
         public IntPtr hbmpItem;
+
+        public MenuItemInfo()
+        {
+            cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo));
+        }
     }
 
     [DllImport(User32_DllName, CharSet = CharSet.Unicode, SetLastError = true)]
@@ -3881,6 +3886,9 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     internal static extern IntPtr GetSubMenu(IntPtr hMenu, int nPos);
+
+    [DllImport(User32_DllName, CharSet = CharSet.Auto)]
+    internal static extern IntPtr LoadMenu(IntPtr hInstance, uint uID);
 
     [DllImport(User32_DllName, CharSet = CharSet.Auto)]
     internal static extern int LoadString(IntPtr hInstance, uint uID, StringBuilder lpBuffer, int nBufferMax);

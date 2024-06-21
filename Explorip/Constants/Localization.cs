@@ -102,14 +102,9 @@ public static class Localization
         SEARCH_RESULT = Load("shell32.dll", 34132, "Search result for %s").Replace("%s", "{0}");
     }
 
-    internal static string Load(string libraryName, uint Ident, string DefaultText)
+    internal static string Load(string libraryName, uint Ident, string defaultText)
     {
-        IntPtr libraryHandle = NativeMethods.GetModuleHandle(libraryName);
-        if (libraryHandle == IntPtr.Zero)
-        {
-            NativeMethods.LoadLibrary(libraryName);
-            libraryHandle = NativeMethods.GetModuleHandle(libraryName);
-        }
+        IntPtr libraryHandle = LibraryHandle(libraryName);
         if (libraryHandle != IntPtr.Zero)
         {
             StringBuilder sb = new(1024);
@@ -117,11 +112,51 @@ public static class Localization
             if (size > 0)
                 return sb.ToString().Replace("&", "_");
             else
-                return DefaultText;
+                return defaultText;
         }
         else
         {
-            return DefaultText;
+            return defaultText;
         }
+    }
+
+    private static IntPtr LibraryHandle(string libraryName)
+    {
+        IntPtr libraryHandle = NativeMethods.GetModuleHandle(libraryName);
+        if (libraryHandle == IntPtr.Zero)
+        {
+            NativeMethods.LoadLibrary(libraryName);
+            libraryHandle = NativeMethods.GetModuleHandle(libraryName);
+        }
+        return libraryHandle;
+    }
+
+    internal static string LoadMenuItem(string libraryName, uint idMenu, uint idSubMenu, string defaultText)
+    {
+        IntPtr libraryHandle = LibraryHandle(libraryName);
+        if (libraryHandle != IntPtr.Zero)
+        {
+            IntPtr hMenu = NativeMethods.LoadMenu(libraryHandle, idMenu);
+            if (hMenu != IntPtr.Zero)
+            {
+                IntPtr hSubMenu = NativeMethods.GetSubMenu(hMenu, 0);
+                if (hSubMenu != IntPtr.Zero)
+                {
+                    NativeMethods.MenuItemInfo myMenuItemInfo = new()
+                    {
+                        fMask = NativeMethods.MIIM.STRING,
+                        fType = NativeMethods.MFT.STRING,
+                    };
+                    if (NativeMethods.GetMenuItemInfo(hSubMenu, idSubMenu, false, ref myMenuItemInfo))
+                    {
+                        myMenuItemInfo.cch++; // one more octet for zero byte end string
+                        myMenuItemInfo.dwTypeData = new string(' ', myMenuItemInfo.cch * 2); // * 2 because of possible unicode string
+                        NativeMethods.GetMenuItemInfo(hSubMenu, idSubMenu, false, ref myMenuItemInfo);
+                        return myMenuItemInfo.dwTypeData;
+                    }
+                }
+            }
+        }
+        return defaultText;
     }
 }
