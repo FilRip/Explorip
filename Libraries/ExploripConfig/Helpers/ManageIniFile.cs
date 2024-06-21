@@ -167,10 +167,11 @@ public class ManageIniFile : IDisposable
                         lines = lines.RemoveAt(0);
                     File.Delete(_currentFileName);
                     File.AppendAllLines(_currentFileName, lines, _currentEncoding);
-                    return true;
                 }
                 else
                     File.WriteAllLines(_currentFileName, [$"[{sectionName}]", $"{paramName}={value}"]);
+                OpenIni(_currentFileName, _currentEncoding);
+                return true;
             }
         }
         catch { /* Ignore errors */ }

@@ -42,6 +42,10 @@ public static class ConfigManager
             _ini.WriteString(Explorip, "UseOwnCopier", "True");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "StartTwoExplorer")))
             _ini.WriteString(Explorip, "StartTwoExplorer", "True");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripCopy, "Notification")))
+            _ini.WriteString(ExploripCopy, "Notification", "True");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "HideDesktopBackground")))
+            _ini.WriteString(Explorip, "HideDesktopBackground", "False");
     }
 
     public static string Theme
@@ -92,10 +96,10 @@ public static class ConfigManager
         set { _ini.WriteString(Explorip, "Edge", value.ToString()); }
     }
 
-    public static bool ShowNotificationCopy
+    public static bool ShowNotificationCopyOperation
     {
-        get { return _ini.ReadBoolean(ExploripCopy, "Notification"); }
-        set { _ini.WriteString(ExploripCopy, "Notification", value.ToString()); }
+        get { return _ini.ReadBoolean(ExploripCopy, "ShowNotificationCopyOperation"); }
+        set { _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", value.ToString()); }
     }
 
     public static bool HookCopy
@@ -114,6 +118,12 @@ public static class ConfigManager
     {
         get { return _ini.ReadBoolean(Explorip, "StartTwoExplorer"); }
         set { _ini.WriteString(Explorip, "StartTwoExplorer", value.ToString()); }
+    }
+
+    public static bool HideDesktopBackground
+    {
+        get { return _ini.ReadBoolean(Explorip, "HideDesktopBackground"); }
+        set { _ini.WriteString(Explorip, "HideDesktopBackground", value.ToString()); }
     }
 
     public static ManageIniFile ManageIniFile

@@ -22,7 +22,7 @@ internal partial class NotifyIconViewModel : ObservableObject
     {
         Instance = this;
         SetSystrayIcon(false);
-        ActiveShowNotification = ConfigManager.ShowNotificationCopy;
+        ActiveShowNotification = ConfigManager.ShowNotificationCopyOperation;
         Settings.ShowBalloon = ActiveShowNotification;
     }
 
@@ -47,7 +47,7 @@ internal partial class NotifyIconViewModel : ObservableObject
     private void ShowNotification()
     {
         ActiveShowNotification = !ActiveShowNotification;
-        ConfigManager.ShowNotificationCopy = ActiveShowNotification;
+        ConfigManager.ShowNotificationCopyOperation = ActiveShowNotification;
     }
 
     public void SetSystrayIcon(bool working)

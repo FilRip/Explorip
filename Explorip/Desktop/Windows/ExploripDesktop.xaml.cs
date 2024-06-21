@@ -10,6 +10,8 @@ using Explorip.Desktop.Controls;
 using Explorip.Desktop.ViewModels;
 using Explorip.Helpers;
 
+using ExploripConfig.Configuration;
+
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
@@ -36,6 +38,8 @@ public partial class ExploripDesktop : Window
             WindowsSettings.UseImmersiveDarkMode(GetHandle(), true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
+        if (ConfigManager.HideDesktopBackground)
+            Background = Constants.Colors.BackgroundColorBrush;
     }
 
     internal void RefreshGrid()
