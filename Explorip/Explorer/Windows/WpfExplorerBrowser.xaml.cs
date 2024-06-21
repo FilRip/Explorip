@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using Explorip.Explorer.Controls;
 using Explorip.Explorer.ViewModels;
 
+using ExploripConfig.Configuration;
+
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
@@ -55,6 +57,8 @@ public partial class WpfExplorerBrowser : Window
                 LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
 
             RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
+            if (!ConfigManager.StartTwoExplorer)
+                HideRightTab();
         }
 
         Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());

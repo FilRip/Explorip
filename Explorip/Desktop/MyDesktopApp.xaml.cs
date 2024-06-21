@@ -7,7 +7,7 @@ using Explorip.Desktop.Windows;
 
 using WpfScreenHelper;
 
-using static Explorip.Helpers.ExtensionsCommandLineArguments;
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
 
 namespace Explorip.Desktop;
 

@@ -13,7 +13,7 @@ using ExploripConfig.Helpers;
 
 using Microsoft.Win32;
 
-using static Explorip.Helpers.ExtensionsCommandLineArguments;
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
 
 namespace Explorip;
 
@@ -74,7 +74,7 @@ public static class Program
                     AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
                     AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                 }
-                if (!ArgumentExists("withoutHook"))
+                if (ConfigManager.HookCopy)
                     HookCopyOperations.GetInstance().InstallHook();
                 _WpfHost = new Explorer.MyExplorerApp();
                 _WpfHost.Run();

@@ -1,4 +1,4 @@
-﻿namespace Explorip.Helpers;
+﻿namespace ExploripConfig.Helpers;
 
 /// <summary>
 /// Classe contenant des extensions pour la classe String

@@ -7,6 +7,7 @@
                      xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
                      xmlns:appbar="clr-namespace:ManagedShell.AppBar;assembly=ManagedShell.AppBar"
                      xmlns:localization="clr-namespace:Explorip.Constants"
+                     xmlns:Config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig"
                      Title="Explorip's taskbar"
                      Loaded="AppBarWindow_Loaded"
                      Left="0"
@@ -83,7 +84,7 @@
                     </Grid.RowDefinitions>
                     <controls:Toolbar x:Name="QuickLaunchToolbar" Grid.Column="0" Grid.Row="0"
                               Visibility="Collapsed"
-                              Path="{Binding Source={x:Static utilities:Settings.Instance}, Path=QuickLaunchPath}">
+                              Path="{Binding Source={x:Static Config:ConfigManager.QuickLaunchPath}}">
                     </controls:Toolbar>
                 </Grid>
                 <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="ListeDesTaches" MainScreen="{Binding MainScreen}" TaskbarParent="{Binding .}"/>

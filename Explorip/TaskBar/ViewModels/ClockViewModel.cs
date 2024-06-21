@@ -55,7 +55,10 @@ public partial class ClockViewModel : ObservableObject
         ClockVisibility = Visibility.Visible;
     }
 
+    // TODO : Do not remove, call it when disable show clock in user settings
+#pragma warning disable S1144, IDE0051 // Unused private types or members should be removed
     private void StopClock()
+#pragma warning restore S1144, IDE0051 // Unused private types or members should be removed
     {
         clock.Stop();
 

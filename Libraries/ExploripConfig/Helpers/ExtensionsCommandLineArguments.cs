@@ -3,9 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using ExploripConfig.Helpers;
-
-namespace Explorip.Helpers;
+namespace ExploripConfig.Helpers;
 
 /// <summary>
 /// Class to consult more easily command line arguments

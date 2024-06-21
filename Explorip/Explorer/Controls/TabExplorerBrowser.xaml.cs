@@ -50,9 +50,9 @@ public partial class TabExplorerBrowser : TabControl
         item.Navigation(location);
         Items.Insert(Items.Count - 1, item);
         SelectedItem = item;
-        WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
-        if (fenetre.RightTab == MyTabControl && MyTabControl.Items.Count > 1)
-            fenetre.ShowRightTab();
+        WpfExplorerBrowser window = (WpfExplorerBrowser)Window.GetWindow(this);
+        if (window.RightTab == MyTabControl && MyTabControl.Items.Count > 1)
+            window.ShowRightTab();
     }
 
     #endregion
