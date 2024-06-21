@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 
 using ExploripConfig.Helpers;
+
+using WpfScreenHelper;
 
 using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
 
@@ -13,6 +16,8 @@ public static class ConfigManager
     private static ManageIniFile _ini;
     private const string Explorip = "Explorip";
     private const string ExploripCopy = "ExploripCopy";
+    private const string ExploripDesktop = "ExploripDesktop";
+    private const string ExploripTaskbar = "ExploripTaskbar";
 
     public static void Init()
     {
@@ -22,20 +27,20 @@ public static class ConfigManager
         // If empty config ini file, set default settings
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Theme")))
             _ini.WriteString(Explorip, "Theme", "System");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "ShowClock")))
-            _ini.WriteString(Explorip, "ShowClock", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "ShowQuickLaunch")))
-            _ini.WriteString(Explorip, "ShowQuickLaunch", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "QuickLaunchPath")))
-            _ini.WriteString(Explorip, "QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "CollapseNotifyIcons")))
-            _ini.WriteString(Explorip, "CollapseNotifyIcons", "True");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "ShowClock")))
+            _ini.WriteString(ExploripTaskbar, "ShowClock", "True");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "ShowQuickLaunch")))
+            _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", "True");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "QuickLaunchPath")))
+            _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "CollapseNotifyIcons")))
+            _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", "True");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "AllowFontSmoothing")))
             _ini.WriteString(Explorip, "AllowFontSmoothing", "True");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Language")))
             _ini.WriteString(Explorip, "Language", "System");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Edge")))
-            _ini.WriteString(Explorip, "Edge", "3");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "Edge")))
+            _ini.WriteString(ExploripTaskbar, "Edge", "3");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "HookCopy")))
             _ini.WriteString(Explorip, "HookCopy", "True");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "UseOwnCopier")))
@@ -44,8 +49,18 @@ public static class ConfigManager
             _ini.WriteString(Explorip, "StartTwoExplorer", "True");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripCopy, "ShowNotificationCopyOperation")))
             _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "HideDesktopBackground")))
-            _ini.WriteString(Explorip, "HideDesktopBackground", "False");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripDesktop, "HideDesktopBackground")))
+            _ini.WriteString(ExploripDesktop, "HideDesktopBackground", "False");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "WindowState")))
+            ExplorerWindowState = WindowState.Normal;
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosX")))
+            _ini.WriteString(Explorip, "PosX", (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosY")))
+            _ini.WriteString(Explorip, "PosY", (Screen.PrimaryScreen.WpfWorkingArea.Y + 50).ToString());
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "SizeX")))
+            _ini.WriteString(Explorip, "SizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "SizeY")))
+            _ini.WriteString(Explorip, "SizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
     }
 
     public static string Theme
@@ -56,26 +71,26 @@ public static class ConfigManager
 
     public static bool ShowClock
     {
-        get { return _ini.ReadBoolean(Explorip, "ShowClock"); }
-        set { _ini.WriteString(Explorip, "ShowClock", value.ToString()); }
+        get { return _ini.ReadBoolean(ExploripTaskbar, "ShowClock"); }
+        set { _ini.WriteString(ExploripTaskbar, "ShowClock", value.ToString()); }
     }
 
     public static bool ShowQuickLaunch
     {
-        get { return _ini.ReadBoolean(Explorip, "ShowQuickLaunch"); }
-        set { _ini.WriteString(Explorip, "ShowQuickLaunch", value.ToString()); }
+        get { return _ini.ReadBoolean(ExploripTaskbar, "ShowQuickLaunch"); }
+        set { _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", value.ToString()); }
     }
 
     public static string QuickLaunchPath
     {
-        get { return _ini.ReadString(Explorip, "QuickLaunchPath"); }
-        set { _ini.WriteString(Explorip, "QuickLaunchPath", value); }
+        get { return _ini.ReadString(ExploripTaskbar, "QuickLaunchPath"); }
+        set { _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", value); }
     }
 
     public static bool CollapseNotifyIcons
     {
-        get { return _ini.ReadBoolean(Explorip, "CollapseNotifyIcons"); }
-        set { _ini.WriteString(Explorip, "CollapseNotifyIcons", value.ToString()); }
+        get { return _ini.ReadBoolean(ExploripTaskbar, "CollapseNotifyIcons"); }
+        set { _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", value.ToString()); }
     }
 
     public static bool AllowFontSmoothing
@@ -92,8 +107,8 @@ public static class ConfigManager
 
     public static int Edge
     {
-        get { return _ini.ReadInteger(Explorip, "Edge"); }
-        set { _ini.WriteString(Explorip, "Edge", value.ToString()); }
+        get { return _ini.ReadInteger(ExploripTaskbar, "Edge"); }
+        set { _ini.WriteString(ExploripTaskbar, "Edge", value.ToString()); }
     }
 
     public static bool ShowNotificationCopyOperation
@@ -122,8 +137,38 @@ public static class ConfigManager
 
     public static bool HideDesktopBackground
     {
-        get { return _ini.ReadBoolean(Explorip, "HideDesktopBackground"); }
-        set { _ini.WriteString(Explorip, "HideDesktopBackground", value.ToString()); }
+        get { return _ini.ReadBoolean(ExploripDesktop, "HideDesktopBackground"); }
+        set { _ini.WriteString(ExploripDesktop, "HideDesktopBackground", value.ToString()); }
+    }
+
+    public static WindowState ExplorerWindowState
+    {
+        get { return (WindowState)_ini.ReadInteger(Explorip, "WindowState"); }
+        set { _ini.WriteString(Explorip, "WindowState", ((int)value).ToString()); }
+    }
+
+    public static int ExplorerPosX
+    {
+        get { return _ini.ReadInteger(Explorip, "PosX"); }
+        set { _ini.WriteString(Explorip, "PosX", value.ToString()); }
+    }
+
+    public static int ExplorerPosY
+    {
+        get { return _ini.ReadInteger(Explorip, "PosY"); }
+        set { _ini.WriteString(Explorip, "PosY", value.ToString()); }
+    }
+
+    public static int ExplorerSizeX
+    {
+        get { return _ini.ReadInteger(Explorip, "SizeX"); }
+        set { _ini.WriteString(Explorip, "SizeX", value.ToString()); }
+    }
+
+    public static int ExplorerSizeY
+    {
+        get { return _ini.ReadInteger(Explorip, "SizeY"); }
+        set { _ini.WriteString(Explorip, "SizeY", value.ToString()); }
     }
 
     public static ManageIniFile ManageIniFile

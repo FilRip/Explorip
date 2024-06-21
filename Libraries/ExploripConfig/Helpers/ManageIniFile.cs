@@ -171,6 +171,7 @@ public class ManageIniFile : IDisposable
                 else
                     File.WriteAllLines(_currentFileName, [$"[{sectionName}]", $"{paramName}={value}"]);
                 OpenIni(_currentFileName, _currentEncoding);
+                ReadStartOfSection(sectionName);
                 return true;
             }
         }
@@ -192,8 +193,8 @@ public class ManageIniFile : IDisposable
         {
             string result = ReadString(sectionName, paramName);
             if (!string.IsNullOrWhiteSpace(result) &&
-                ((result.Trim().Equals("true", StringComparison.OrdinalIgnoreCase)) ||
-                (result.Trim().Equals("yes", StringComparison.OrdinalIgnoreCase)) ||
+                ((result.Trim().Equals("true", StringComparison.InvariantCultureIgnoreCase)) ||
+                (result.Trim().Equals("yes", StringComparison.InvariantCultureIgnoreCase)) ||
                 (result == "1")))
 
                 return true;
@@ -316,7 +317,7 @@ public class ManageIniFile : IDisposable
                 line = _configFile.ReadLine();
                 if (line == null)
                     break;
-                if (line.Trim().Equals(param.Trim(), StringComparison.OrdinalIgnoreCase))
+                if (line.Trim().Equals(param.Trim(), StringComparison.InvariantCultureIgnoreCase))
                     return line;
             }
         }
@@ -330,7 +331,7 @@ public class ManageIniFile : IDisposable
 
         if (!string.IsNullOrWhiteSpace(_currentFileName) && (sectionName != null) && (sectionName.Trim() != "") && (paramName != null) && (paramName.Trim() != ""))
         {
-            if (!_currentSectionName.Equals(sectionName.Trim(), StringComparison.OrdinalIgnoreCase))
+            if (!_currentSectionName.Equals(sectionName.Trim(), StringComparison.InvariantCultureIgnoreCase))
             {
                 string currentLine;
                 List<string> lines = [];
@@ -361,7 +362,7 @@ public class ManageIniFile : IDisposable
             {
                 for (int j = 0; j < _section.Length; j++)
                 {
-                    if (_section[j].Trim().StartsWith(paramName.Trim() + "=", StringComparison.OrdinalIgnoreCase))
+                    if (_section[j].Trim().StartsWith(paramName.Trim() + "=", StringComparison.InvariantCultureIgnoreCase))
                     {
                         int pos = _section[j].IndexOf('=') + 1;
                         result = _section[j].Substring(pos).Trim();
@@ -417,7 +418,7 @@ public class ManageIniFile : IDisposable
                 line = _configFile.ReadLine();
                 if (line == null)
                     break;
-                if (line.Trim().StartsWith("[" + sectionName.Trim(), StringComparison.OrdinalIgnoreCase))
+                if (line.Trim().StartsWith("[" + sectionName.Trim(), StringComparison.InvariantCultureIgnoreCase))
                     nbSections++;
             }
         }

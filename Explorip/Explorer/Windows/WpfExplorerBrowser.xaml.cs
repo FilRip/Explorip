@@ -80,6 +80,14 @@ public partial class WpfExplorerBrowser : Window
     {
         MyDataContext.SelectionLeft = false;
         MyDataContext.SelectionRight = false;
+        Left = ConfigManager.ExplorerPosX;
+        Top = ConfigManager.ExplorerPosY;
+        WindowState = ConfigManager.ExplorerWindowState;
+        if (WindowState == WindowState.Normal)
+        {
+            Width = ConfigManager.ExplorerSizeX;
+            Height = ConfigManager.ExplorerSizeY;
+        }
     }
 
     #region Window icon
@@ -305,5 +313,22 @@ public partial class WpfExplorerBrowser : Window
     private void Window_StateChanged(object sender, EventArgs e)
     {
         MyDataContext.WindowMaximized = (WindowState == WindowState.Maximized);
+        if (ConfigManager.ExplorerWindowState != WindowState)
+            ConfigManager.ExplorerWindowState = WindowState;
+    }
+
+    private void Window_LocationChanged(object sender, EventArgs e)
+    {
+        ConfigManager.ExplorerPosX = (int)Left;
+        ConfigManager.ExplorerPosY = (int)Top;
+    }
+
+    private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (WindowState == WindowState.Normal)
+        {
+            ConfigManager.ExplorerSizeX = (int)Width;
+            ConfigManager.ExplorerSizeY = (int)Height;
+        }
     }
 }
