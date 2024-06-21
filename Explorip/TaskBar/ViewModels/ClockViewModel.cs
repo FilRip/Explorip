@@ -4,8 +4,6 @@ using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
-using Explorip.TaskBar.Utilities;
-
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;

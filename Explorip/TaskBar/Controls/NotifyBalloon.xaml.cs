@@ -4,8 +4,6 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-using Explorip.TaskBar.Utilities;
-
 using ExploripConfig.Configuration;
 
 using ManagedShell.AppBar;

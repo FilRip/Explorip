@@ -10,7 +10,6 @@ using System.Windows.Threading;
 
 using Explorip.Helpers;
 using Explorip.TaskBar.Converters;
-using Explorip.TaskBar.Utilities;
 
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;

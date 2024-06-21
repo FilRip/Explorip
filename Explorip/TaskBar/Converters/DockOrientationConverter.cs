@@ -2,8 +2,6 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 
-using Explorip.TaskBar.Utilities;
-
 using ExploripConfig.Configuration;
 
 using ManagedShell.AppBar;

@@ -42,8 +42,8 @@ public static class ConfigManager
             _ini.WriteString(Explorip, "UseOwnCopier", "True");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "StartTwoExplorer")))
             _ini.WriteString(Explorip, "StartTwoExplorer", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripCopy, "Notification")))
-            _ini.WriteString(ExploripCopy, "Notification", "True");
+        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripCopy, "ShowNotificationCopyOperation")))
+            _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", "True");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "HideDesktopBackground")))
             _ini.WriteString(Explorip, "HideDesktopBackground", "False");
     }

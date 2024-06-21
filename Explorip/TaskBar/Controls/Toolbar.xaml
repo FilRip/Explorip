@@ -27,7 +27,12 @@
         </Grid.ColumnDefinitions>
         <Label Name="Title" Width="auto" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Grid.Column="0">
             <Label.ContextMenu>
-                <ContextMenu>
+                <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" BorderBrush="{x:Static constants:Colors.ForegroundColorBrush}">
+                    <ContextMenu.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                        </ItemsPanelTemplate>
+                    </ContextMenu.ItemsPanel>
                     <MenuItem Header="Show/Hide title" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>
                     <MenuItem Header="Show small/large icon" Name="ShowLargeIcon" Click="ShowLargeIcon_Click"/>
                 </ContextMenu>

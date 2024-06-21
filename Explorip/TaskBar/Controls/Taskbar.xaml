@@ -103,7 +103,7 @@
                         </StackPanel.Orientation>
                         <controls:NotifyIconList VerticalAlignment="Center"
                                              NotificationArea="{Binding NotificationArea}"></controls:NotifyIconList>
-                        <controls:Clock VerticalAlignment="Center"></controls:Clock>
+                        <controls:Clock VerticalAlignment="Center"/>
                     </StackPanel>
                 </GroupBox>
                 <controls:TabTipButton x:Name="TabTipButton" Grid.Column="6" Grid.RowSpan="2" Visibility="{Binding Source={x:Static viewmodels:TaskbarViewModel.Instance}, Path=ShowTabTip}">

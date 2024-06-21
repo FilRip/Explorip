@@ -4,10 +4,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 
-using ExploripConfig.Helpers;
 using Explorip.TaskBar.Utilities;
 
 using ExploripConfig.Configuration;
+using ExploripConfig.Helpers;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;

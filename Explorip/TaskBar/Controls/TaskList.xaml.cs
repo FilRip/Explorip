@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 
 using Explorip.Helpers;
-using Explorip.TaskBar.Utilities;
 
 using ExploripConfig.Configuration;
 using ExploripConfig.Helpers;
