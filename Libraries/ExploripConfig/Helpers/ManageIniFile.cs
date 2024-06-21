@@ -10,8 +10,8 @@ namespace ExploripConfig.Helpers;
 public class ManageIniFile : IDisposable
 {
     private List<string> _commentary = [";", "#", "//"];
-    private readonly object _lockWrite;
-    private StreamReader _configFile;
+    private readonly object _fileAccess;
+    private FileStream _configFile;
     private string _currentFileName = "";
     private string[] _section;
     private string _currentSectionName = "";
@@ -43,7 +43,7 @@ public class ManageIniFile : IDisposable
 
     public ManageIniFile() : base()
     {
-        _lockWrite = new object();
+        _fileAccess = new object();
     }
 
     public ManageIniFile(string filename) : this()
@@ -63,15 +63,18 @@ public class ManageIniFile : IDisposable
 
         try
         {
-            long size = new FileInfo(filename).Length;
-            if (size > int.MaxValue)
-                return false;
-            if (size > 0)
+            lock (_fileAccess)
             {
-                _configFile = new StreamReader(filename, encoding, false, (int)size);
-                _currentFileName = filename;
-                _currentEncoding = encoding;
-                return true;
+                long size = new FileInfo(filename).Length;
+                if (size > int.MaxValue)
+                    return false;
+                if (size > 0)
+                {
+                    _configFile = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    _currentFileName = filename;
+                    _currentEncoding = encoding;
+                    return true;
+                }
             }
         }
         catch { /* Ignore errors */ }
@@ -103,11 +106,14 @@ public class ManageIniFile : IDisposable
 
     public void Close()
     {
-        _configFile?.Close();
-        _configFile = null;
-        _currentFileName = "";
-        _section = null;
-        _currentSectionName = "";
+        lock (_fileAccess)
+        {
+            _configFile?.Close();
+            _configFile = null;
+            _currentFileName = "";
+            _section = null;
+            _currentSectionName = "";
+        }
     }
 
     public bool WriteString(string sectionName, string paramName, string value)
@@ -117,7 +123,7 @@ public class ManageIniFile : IDisposable
 
         try
         {
-            lock (_lockWrite)
+            lock (_fileAccess)
             {
                 if (File.Exists(_currentFileName))
                 {
@@ -130,7 +136,7 @@ public class ManageIniFile : IDisposable
                     int lastSectionLine = 0;
                     for (int numLine = 0; numLine < lines.Length; numLine++)
                     {
-                        if (lines[numLine].Trim().StartsWith($"[{sectionName}]", StringComparison.InvariantCultureIgnoreCase))
+                        if (lines[numLine].Trim().StartsWith($"[{sectionName}]", StringComparison.InvariantCultureIgnoreCase) && !sectionFound)
                             sectionFound = true;
                         else
                         {
@@ -181,92 +187,75 @@ public class ManageIniFile : IDisposable
 
     public string ReadString(string sectionName, string paramName)
     {
-        if (string.IsNullOrWhiteSpace(_currentFileName))
-            return "";
+        lock (_fileAccess)
+        {
+            if (string.IsNullOrWhiteSpace(_currentFileName))
+                return "";
 
-        return ReadSection(sectionName, paramName);
+            return ReadSection(sectionName, paramName);
+        }
     }
 
     public bool ReadBoolean(string sectionName, string paramName)
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
+        string result = ReadString(sectionName, paramName);
+        if (!string.IsNullOrWhiteSpace(result) &&
+            ((result.Trim().Equals("true", StringComparison.InvariantCultureIgnoreCase)) ||
+            (result.Trim().Equals("yes", StringComparison.InvariantCultureIgnoreCase)) ||
+            (result == "1")))
         {
-            string result = ReadString(sectionName, paramName);
-            if (!string.IsNullOrWhiteSpace(result) &&
-                ((result.Trim().Equals("true", StringComparison.InvariantCultureIgnoreCase)) ||
-                (result.Trim().Equals("yes", StringComparison.InvariantCultureIgnoreCase)) ||
-                (result == "1")))
-
-                return true;
+            return true;
         }
         return false;
     }
 
     public int ReadInteger(string sectionName, string paramName)
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
-        {
-            string result = ReadString(sectionName, paramName);
-            if (!string.IsNullOrWhiteSpace(result) && int.TryParse(result, out int convert))
-                return convert;
-        }
+        string result = ReadString(sectionName, paramName);
+        if (!string.IsNullOrWhiteSpace(result) && int.TryParse(result, out int convert))
+            return convert;
         return 0;
     }
 
     public long ReadLong(string sectionName, string paramName)
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
-        {
-            string result = ReadString(sectionName, paramName);
-            if (!string.IsNullOrWhiteSpace(result) && long.TryParse(result, out long convert))
-                return convert;
-        }
+        string result = ReadString(sectionName, paramName);
+        if (!string.IsNullOrWhiteSpace(result) && long.TryParse(result, out long convert))
+            return convert;
         return 0;
     }
 
     public double ReadDouble(string sectionName, string paramName)
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
-        {
-            string result = ReadString(sectionName, paramName);
-            if (!string.IsNullOrWhiteSpace(result) && double.TryParse(result, out double convert))
-                return convert;
-        }
+        string result = ReadString(sectionName, paramName);
+        if (!string.IsNullOrWhiteSpace(result) && double.TryParse(result, out double convert))
+            return convert;
         return 0d;
     }
 
     public float ReadFloat(string sectionName, string paramName)
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
-        {
-            string result = ReadString(sectionName, paramName);
-            if (!string.IsNullOrWhiteSpace(result) && float.TryParse(result, out float convert))
-                return convert;
-        }
+        string result = ReadString(sectionName, paramName);
+        if (!string.IsNullOrWhiteSpace(result) && float.TryParse(result, out float convert))
+            return convert;
         return 0f;
     }
 
     public DateTime? ReadDateTime(string nomSection, string nomParam)
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
-        {
-            string result = ReadString(nomSection, nomParam);
-            if (!string.IsNullOrWhiteSpace(result) && DateTime.TryParse(result, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime convert))
-                return convert;
-        }
+        string result = ReadString(nomSection, nomParam);
+        if (!string.IsNullOrWhiteSpace(result) && DateTime.TryParse(result, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out DateTime convert))
+            return convert;
         return null;
     }
 
     public Color ReadColor(string sectionName, string paramName)
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
+        string result = ReadString(sectionName, paramName);
+        if (!string.IsNullOrWhiteSpace(result))
         {
-            string result = ReadString(sectionName, paramName);
-            if (!string.IsNullOrWhiteSpace(result))
-            {
-                string[] splitter = result.Replace("(", "").Replace(")", "").Split(',');
-                return Color.FromArgb(byte.Parse(splitter[0]), byte.Parse(splitter[1]), byte.Parse(splitter[2]), byte.Parse(splitter[3]));
-            }
+            string[] splitter = result.Replace("(", "").Replace(")", "").Split(',');
+            return Color.FromArgb(byte.Parse(splitter[0]), byte.Parse(splitter[1]), byte.Parse(splitter[2]), byte.Parse(splitter[3]));
         }
 
         return Color.White;
@@ -274,28 +263,22 @@ public class ManageIniFile : IDisposable
 
     public T ReadEnum<T>(string sectionName, string paramName) where T : struct
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
+        string result = ReadString(sectionName, paramName);
+        if (!string.IsNullOrWhiteSpace(result) &&
+            Enum.TryParse(result, out T cast))
         {
-            string result = ReadString(sectionName, paramName);
-            if (!string.IsNullOrWhiteSpace(result) &&
-                Enum.TryParse(result, out T cast))
-            {
-                return cast;
-            }
+            return cast;
         }
         return default;
     }
 
     public Rectangle ReadRectangle(string sectionName, string paramName)
     {
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
+        string result = ReadString(sectionName, paramName);
+        if (!string.IsNullOrWhiteSpace(result))
         {
-            string result = ReadString(sectionName, paramName);
-            if (!string.IsNullOrWhiteSpace(result))
-            {
-                string[] splitter = result.Replace("(", "").Replace(")", "").Split(',');
-                return new Rectangle(int.Parse(splitter[0]), int.Parse(splitter[1]), int.Parse(splitter[2]), int.Parse(splitter[3]));
-            }
+            string[] splitter = result.Replace("(", "").Replace(")", "").Split(',');
+            return new Rectangle(int.Parse(splitter[0]), int.Parse(splitter[1]), int.Parse(splitter[2]), int.Parse(splitter[3]));
         }
         return default;
     }
@@ -309,8 +292,7 @@ public class ManageIniFile : IDisposable
     {
         if (!string.IsNullOrWhiteSpace(_currentFileName))
         {
-            _configFile.DiscardBufferedData();
-            _configFile.BaseStream.Seek(0, SeekOrigin.Begin);
+            _configFile.Seek(0, SeekOrigin.Begin);
             string line;
             while (true)
             {
@@ -321,6 +303,8 @@ public class ManageIniFile : IDisposable
                     return line;
             }
         }
+        _section = null;
+        _currentSectionName = "";
         return "";
     }
 
@@ -407,22 +391,24 @@ public class ManageIniFile : IDisposable
 
     public int NumberOfSection(string sectionName)
     {
-        int nbSections = 0;
-        if (!string.IsNullOrWhiteSpace(_currentFileName))
+        lock (_fileAccess)
         {
-            _configFile.DiscardBufferedData();
-            _configFile.BaseStream.Seek(0, SeekOrigin.Begin);
-            string line;
-            while (true)
+            int nbSections = 0;
+            if (!string.IsNullOrWhiteSpace(_currentFileName))
             {
-                line = _configFile.ReadLine();
-                if (line == null)
-                    break;
-                if (line.Trim().StartsWith("[" + sectionName.Trim(), StringComparison.InvariantCultureIgnoreCase))
-                    nbSections++;
+                _configFile.Seek(0, SeekOrigin.Begin);
+                string line;
+                while (true)
+                {
+                    line = _configFile.ReadLine();
+                    if (line == null)
+                        break;
+                    if (line.Trim().StartsWith("[" + sectionName.Trim(), StringComparison.InvariantCultureIgnoreCase))
+                        nbSections++;
+                }
             }
+            return nbSections;
         }
-        return nbSections;
     }
 
     #region IDisposable Support
@@ -440,7 +426,7 @@ public class ManageIniFile : IDisposable
         {
             if (disposing)
             {
-                _configFile?.Dispose();
+                Close();
                 if ((_section != null) && (_section.Length > 0))
                 {
                     Array.Clear(_section, 0, _section.Length);
@@ -459,4 +445,28 @@ public class ManageIniFile : IDisposable
     }
 
     #endregion
+}
+
+public static class ExtensionFileStream
+{
+    public static string ReadLine(this FileStream fileStream)
+    {
+        StringBuilder result = new("");
+        bool start = false;
+        byte[] dataRead = new byte[1];
+        while (fileStream.Read(dataRead, 0, 1) > 0)
+        {
+            if (dataRead[0] == (char)13 || dataRead[0] == (char)10)
+            {
+                if (start)
+                    break;
+            }
+            else
+            {
+                result.Append((char)dataRead[0]);
+                start = true;
+            }
+        }
+        return result.ToString();
+    }
 }

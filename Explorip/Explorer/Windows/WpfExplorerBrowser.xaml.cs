@@ -14,6 +14,7 @@ using Explorip.Explorer.Controls;
 using Explorip.Explorer.ViewModels;
 
 using ExploripConfig.Configuration;
+using ExploripConfig.Helpers;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
@@ -38,13 +39,17 @@ public partial class WpfExplorerBrowser : Window
         if (openDefaultView)
         {
             string dir = null;
-            if (Environment.GetCommandLineArgs().Length > 1)
+            string[] args = Environment.GetCommandLineArgs();
+            args = args.Remove("explorer");
+            args = args.Remove("withoutHook");
+            args = args.Remove("useOwnCopier");
+            args = args.Remove("newinstance");
+
+            if (args.Length > 0)
             {
-                dir = Environment.GetCommandLineArgs()[1].Trim().ToLower() == "explorer" && Environment.GetCommandLineArgs().Length > 2
-                    ? Environment.GetCommandLineArgs()[2]
-                    : Environment.GetCommandLineArgs()[1];
                 try
                 {
+                    dir = args[1];
                     LeftTab.FirstTab.Navigation(dir);
                 }
                 catch (Exception)
