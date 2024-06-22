@@ -284,7 +284,7 @@ public class ManagedIniFile : IDisposable
         return Color.White;
     }
 
-    public T ReadEnum<T>(string sectionName, string paramName) where T : struct
+    public T ReadEnum<T>(string sectionName, string paramName) where T : struct, Enum
     {
         string result = ReadString(sectionName, paramName);
         if (!string.IsNullOrWhiteSpace(result) &&

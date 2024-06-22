@@ -29,8 +29,8 @@ public partial class TabExplorerBrowser : TabControl
         if (MyTabControl.Items.Count == 1)
         {
             MyTabControl.Visibility = Visibility.Collapsed;
-            WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
-            fenetre.HideRightTab();
+            WpfExplorerBrowser window = (WpfExplorerBrowser)Window.GetWindow(this);
+            window.HideRightTab();
         }
     }
 

@@ -112,6 +112,7 @@ public partial class Taskbar : AppBarWindow
 
     private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
+        // TODO : Method Not more used
         if (e.PropertyName == "Theme")
         {
             bool newTransparency = Application.Current.FindResource("AllowsTransparency") as bool? ?? false;

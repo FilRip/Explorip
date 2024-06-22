@@ -185,6 +185,7 @@ public partial class WpfExplorerBrowser : Window
     {
         RightGrid.Width = new GridLength(0);
         LeftTab.SetValue(Grid.ColumnSpanProperty, 6);
+        ConfigManager.StartTwoExplorer = false;
     }
 
     public void ShowRightTab()
@@ -192,6 +193,7 @@ public partial class WpfExplorerBrowser : Window
         RightGrid.Width = new GridLength(1, GridUnitType.Star);
         RightTab.Visibility = Visibility.Visible;
         LeftTab.SetValue(Grid.ColumnSpanProperty, 1);
+        ConfigManager.StartTwoExplorer = true;
     }
 
     #endregion
@@ -318,8 +320,7 @@ public partial class WpfExplorerBrowser : Window
     private void Window_StateChanged(object sender, EventArgs e)
     {
         MyDataContext.WindowMaximized = (WindowState == WindowState.Maximized);
-        if (ConfigManager.ExplorerWindowState != WindowState)
-            ConfigManager.ExplorerWindowState = WindowState;
+        ConfigManager.ExplorerWindowState = WindowState;
     }
 
     private void Window_LocationChanged(object sender, EventArgs e)

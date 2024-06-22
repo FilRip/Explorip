@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
+using System.Xml;
 
 using ExploripConfig.Helpers;
 
@@ -21,7 +22,10 @@ public static class ConfigManager
 
     public static void Init()
     {
-        PATH_TO_INI = Path.Combine(Environment.SpecialFolder.LocalApplicationData.FullPath(), "CoolBytes", "Explorip", "ExploripConfig.ini");
+        string dir = Path.Combine(Environment.SpecialFolder.LocalApplicationData.FullPath(), "CoolBytes", "Explorip");
+        if (!Directory.Exists(dir))
+            Directory.CreateDirectory(dir);
+        PATH_TO_INI = Path.Combine(dir, "ExploripConfig.ini");
         _ini = ManagedIniFile.OpenIniFile(PATH_TO_INI);
 
         // If empty config ini file, set default settings
@@ -51,7 +55,8 @@ public static class ConfigManager
             _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", "True");
         if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripDesktop, "HideDesktopBackground")))
             _ini.WriteString(ExploripDesktop, "HideDesktopBackground", "False");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "WindowState")))
+        string ws = _ini.ReadString(Explorip, "WindowState");
+        if (string.IsNullOrWhiteSpace(ws) || !Enum.TryParse<WindowState>(ws, out _))
             ExplorerWindowState = WindowState.Normal;
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosX")))
             _ini.WriteString(Explorip, "PosX", (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
@@ -66,109 +71,181 @@ public static class ConfigManager
     public static string Theme
     {
         get { return _ini.ReadString(Explorip, "Theme"); }
-        set { _ini.WriteString(Explorip, "Theme", value); }
+        set
+        {
+            if (_ini.ReadString(Explorip, "Theme") != value)
+                _ini.WriteString(Explorip, "Theme", value);
+        }
     }
 
     public static bool ShowClock
     {
         get { return _ini.ReadBoolean(ExploripTaskbar, "ShowClock"); }
-        set { _ini.WriteString(ExploripTaskbar, "ShowClock", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(ExploripTaskbar, "ShowClock") != value)
+                _ini.WriteString(ExploripTaskbar, "ShowClock", value.ToString());
+        }
     }
 
     public static bool ShowQuickLaunch
     {
         get { return _ini.ReadBoolean(ExploripTaskbar, "ShowQuickLaunch"); }
-        set { _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(ExploripTaskbar, "ShowQuickLaunch") != value)
+                _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", value.ToString());
+        }
     }
 
     public static string QuickLaunchPath
     {
         get { return _ini.ReadString(ExploripTaskbar, "QuickLaunchPath"); }
-        set { _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", value); }
+        set
+        {
+            if (_ini.ReadString(ExploripTaskbar, "QuickLaunchPath") != value)
+                _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", value);
+        }
     }
 
     public static bool CollapseNotifyIcons
     {
         get { return _ini.ReadBoolean(ExploripTaskbar, "CollapseNotifyIcons"); }
-        set { _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(ExploripTaskbar, "CollapseNotifyIcons") != value)
+                _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", value.ToString());
+        }
     }
 
     public static bool AllowFontSmoothing
     {
         get { return _ini.ReadBoolean(Explorip, "AllowFontSmoothing"); }
-        set { _ini.WriteString(Explorip, "AllowFontSmoothing", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(Explorip, "AllowFontSmoothing") != value)
+                _ini.WriteString(Explorip, "AllowFontSmoothing", value.ToString());
+        }
     }
 
     public static string Language
     {
         get { return _ini.ReadString(Explorip, "Language"); }
-        set { _ini.WriteString(Explorip, "Language", value); }
+        set
+        {
+            if (_ini.ReadString(Explorip, "Language") != value)
+                _ini.WriteString(Explorip, "Language", value);
+        }
     }
 
-    public static int Edge
+    public static int Edge // TODO : Enum ?
     {
         get { return _ini.ReadInteger(ExploripTaskbar, "Edge"); }
-        set { _ini.WriteString(ExploripTaskbar, "Edge", value.ToString()); }
+        set
+        {
+            if (_ini.ReadInteger(ExploripTaskbar, "Edge") != value)
+                _ini.WriteString(ExploripTaskbar, "Edge", value.ToString());
+        }
     }
 
     public static bool ShowNotificationCopyOperation
     {
         get { return _ini.ReadBoolean(ExploripCopy, "ShowNotificationCopyOperation"); }
-        set { _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(ExploripCopy, "ShowNotificationCopyOperation") != value)
+                _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", value.ToString());
+        }
     }
 
     public static bool HookCopy
     {
         get { return _ini.ReadBoolean(Explorip, "HookCopy") && !ArgumentExists("withouthook"); }
-        set { _ini.WriteString(Explorip, "HookCopy", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(Explorip, "HookCopy") != value && !ArgumentExists("withouthook"))
+                _ini.WriteString(Explorip, "HookCopy", value.ToString());
+        }
     }
 
     public static bool UseOwnCopier
     {
         get { return _ini.ReadBoolean(Explorip, "UseOwnCopier") || ArgumentExists("useowncopier"); }
-        set { _ini.WriteString(Explorip, "UseOwnCopier", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(Explorip, "UseOwnCopier") != value && !ArgumentExists("useowncopier"))
+                _ini.WriteString(Explorip, "UseOwnCopier", value.ToString());
+        }
     }
 
     public static bool StartTwoExplorer
     {
         get { return _ini.ReadBoolean(Explorip, "StartTwoExplorer"); }
-        set { _ini.WriteString(Explorip, "StartTwoExplorer", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(Explorip, "StartTwoExplorer") != value)
+                _ini.WriteString(Explorip, "StartTwoExplorer", value.ToString());
+        }
     }
 
     public static bool HideDesktopBackground
     {
         get { return _ini.ReadBoolean(ExploripDesktop, "HideDesktopBackground"); }
-        set { _ini.WriteString(ExploripDesktop, "HideDesktopBackground", value.ToString()); }
+        set
+        {
+            if (_ini.ReadBoolean(ExploripDesktop, "HideDesktopBackground") != value)
+                _ini.WriteString(ExploripDesktop, "HideDesktopBackground", value.ToString());
+        }
     }
 
     public static WindowState ExplorerWindowState
     {
-        get { return (WindowState)_ini.ReadInteger(Explorip, "WindowState"); }
-        set { _ini.WriteString(Explorip, "WindowState", ((int)value).ToString()); }
+        get { return _ini.ReadEnum<WindowState>(Explorip, "WindowState"); }
+        set
+        {
+            if (_ini.ReadEnum<WindowState>(Explorip, "WindowState") != value)
+                _ini.WriteString(Explorip, "WindowState", ((int)value).ToString());
+        }
     }
 
     public static int ExplorerPosX
     {
         get { return _ini.ReadInteger(Explorip, "PosX"); }
-        set { _ini.WriteString(Explorip, "PosX", value.ToString()); }
+        set
+        {
+            if (_ini.ReadInteger(Explorip, "PosX") != value)
+                _ini.WriteString(Explorip, "PosX", value.ToString());
+        }
     }
 
     public static int ExplorerPosY
     {
         get { return _ini.ReadInteger(Explorip, "PosY"); }
-        set { _ini.WriteString(Explorip, "PosY", value.ToString()); }
+        set
+        {
+            if (_ini.ReadInteger(Explorip, "PosY") != value)
+                _ini.WriteString(Explorip, "PosY", value.ToString());
+        }
     }
 
     public static int ExplorerSizeX
     {
         get { return _ini.ReadInteger(Explorip, "SizeX"); }
-        set { _ini.WriteString(Explorip, "SizeX", value.ToString()); }
+        set
+        {
+            if (_ini.ReadInteger(Explorip, "SizeX") != value)
+                _ini.WriteString(Explorip, "SizeX", value.ToString());
+        }
     }
 
     public static int ExplorerSizeY
     {
         get { return _ini.ReadInteger(Explorip, "SizeY"); }
-        set { _ini.WriteString(Explorip, "SizeY", value.ToString()); }
+        set
+        {
+            if (_ini.ReadInteger(Explorip, "SizeY") != value)
+                _ini.WriteString(Explorip, "SizeY", value.ToString());
+        }
     }
 
     public static ManagedIniFile ManageIniFile
