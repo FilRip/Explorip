@@ -89,7 +89,7 @@ public partial class StartButton : System.Windows.Controls.UserControl
 
     private void Start_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        allowOpenStart = Start.IsChecked == false;
+        allowOpenStart = (Start.IsChecked == false);
     }
 
     private void Start_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)

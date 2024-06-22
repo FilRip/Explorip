@@ -13,7 +13,7 @@ namespace ExploripConfig.Configuration;
 public static class ConfigManager
 {
     public static string PATH_TO_INI { get; private set; }
-    private static ManageIniFile _ini;
+    private static ManagedIniFile _ini;
     private const string Explorip = "Explorip";
     private const string ExploripCopy = "ExploripCopy";
     private const string ExploripDesktop = "ExploripDesktop";
@@ -22,7 +22,7 @@ public static class ConfigManager
     public static void Init()
     {
         PATH_TO_INI = Path.Combine(Environment.SpecialFolder.LocalApplicationData.FullPath(), "CoolBytes", "Explorip", "ExploripConfig.ini");
-        _ini = ManageIniFile.OpenIniFile(PATH_TO_INI);
+        _ini = ManagedIniFile.OpenIniFile(PATH_TO_INI);
 
         // If empty config ini file, set default settings
         if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Theme")))
@@ -171,7 +171,7 @@ public static class ConfigManager
         set { _ini.WriteString(Explorip, "SizeY", value.ToString()); }
     }
 
-    public static ManageIniFile ManageIniFile
+    public static ManagedIniFile ManageIniFile
     {
         get { return _ini; }
     }

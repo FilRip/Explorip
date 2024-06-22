@@ -4,54 +4,56 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace ExploripConfig.Helpers;
 
-public class ManageIniFile : IDisposable
+public class ManagedIniFile : IDisposable
 {
     private List<string> _commentary = [";", "#", "//"];
-    private readonly object _fileAccess;
+    private readonly Mutex _fileAccess;
     private FileStream _configFile;
     private string _currentFileName = "";
     private string[] _section;
     private string _currentSectionName = "";
     private Encoding _currentEncoding;
 
-    public static ManageIniFile OpenIniFile(string filename)
+    public static ManagedIniFile OpenIniFile(string filename)
     {
         return OpenIniFile(filename, Encoding.UTF8, true);
     }
 
-    public static ManageIniFile OpenIniFile(string filename, bool createIfNotExist)
+    public static ManagedIniFile OpenIniFile(string filename, bool createIfNotExist)
     {
         return OpenIniFile(filename, Encoding.UTF8, createIfNotExist);
     }
 
-    public static ManageIniFile OpenIniFile(string filename, Encoding encoding)
+    public static ManagedIniFile OpenIniFile(string filename, Encoding encoding)
     {
         return OpenIniFile(filename, encoding, true);
     }
 
-    public static ManageIniFile OpenIniFile(string filename, Encoding encoding, bool createIfNotExist)
+    public static ManagedIniFile OpenIniFile(string filename, Encoding encoding, bool createIfNotExist)
     {
-        ManageIniFile result = new();
+        ManagedIniFile result = new();
         if (createIfNotExist)
             result.CreateIni(filename);
         result.OpenIni(filename, encoding);
         return result;
     }
 
-    public ManageIniFile() : base()
+    public ManagedIniFile() : base()
     {
-        _fileAccess = new object();
+        _currentEncoding = Encoding.Default;
+        _fileAccess = new Mutex(false, "ExplripConfigFile");
     }
 
-    public ManageIniFile(string filename) : this()
+    public ManagedIniFile(string filename) : this()
     {
         OpenIni(filename, Encoding.UTF8);
     }
 
-    public ManageIniFile(string filename, Encoding encoding) : this()
+    public ManagedIniFile(string filename, Encoding encoding) : this()
     {
         OpenIni(filename, encoding);
     }
@@ -63,21 +65,25 @@ public class ManageIniFile : IDisposable
 
         try
         {
-            lock (_fileAccess)
+            _fileAccess.WaitOne();
+            long size = new FileInfo(filename).Length;
+            if (size > int.MaxValue)
+                return false;
+            if (size > 0)
             {
-                long size = new FileInfo(filename).Length;
-                if (size > int.MaxValue)
-                    return false;
-                if (size > 0)
-                {
-                    _configFile = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    _currentFileName = filename;
-                    _currentEncoding = encoding;
-                    return true;
-                }
+                _configFile = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                _currentFileName = filename;
+                _currentEncoding = encoding;
+                _currentSectionName = "";
+                _section = [];
+                return true;
             }
         }
         catch { /* Ignore errors */ }
+        finally
+        {
+            _fileAccess.ReleaseMutex();
+        }
         return false;
     }
 
@@ -106,13 +112,19 @@ public class ManageIniFile : IDisposable
 
     public void Close()
     {
-        lock (_fileAccess)
+        try
         {
+            _fileAccess.WaitOne();
+
             _configFile?.Close();
             _configFile = null;
             _currentFileName = "";
             _section = null;
             _currentSectionName = "";
+        }
+        finally
+        {
+            _fileAccess.ReleaseMutex();
         }
     }
 
@@ -123,76 +135,87 @@ public class ManageIniFile : IDisposable
 
         try
         {
-            lock (_fileAccess)
-            {
-                if (File.Exists(_currentFileName))
-                {
-                    string filename = _currentFileName;
-                    Close();
-                    _currentFileName = filename;
-                    string[] lines = File.ReadAllLines(_currentFileName);
-                    bool sectionFound = false;
-                    bool paramFound = false;
-                    int lastSectionLine = 0;
-                    for (int numLine = 0; numLine < lines.Length; numLine++)
-                    {
-                        if (lines[numLine].Trim().StartsWith($"[{sectionName}]", StringComparison.InvariantCultureIgnoreCase) && !sectionFound)
-                            sectionFound = true;
-                        else
-                        {
-                            if (sectionFound)
-                            {
-                                if (lines[numLine].Trim().StartsWith($"{paramName}=", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    paramFound = true;
-                                    lines[numLine] = $"{paramName}={value}";
-                                    break;
-                                }
-                                if (lines[numLine].Trim().StartsWith("["))
-                                    break;
-                                lastSectionLine = numLine;
-                            }
-                        }
-                    }
+            _fileAccess.WaitOne();
+            CheckFileStream();
 
-                    if (!paramFound)
+            if (File.Exists(_currentFileName))
+            {
+                string filename = _currentFileName;
+                Close();
+                _currentFileName = filename;
+                string[] lines = File.ReadAllLines(_currentFileName);
+                bool sectionFound = false;
+                bool paramFound = false;
+                int lastSectionLine = 0;
+                for (int numLine = 0; numLine < lines.Length; numLine++)
+                {
+                    if (lines[numLine].Trim().StartsWith($"[{sectionName}]", StringComparison.InvariantCultureIgnoreCase) && !sectionFound)
+                        sectionFound = true;
+                    else
                     {
                         if (sectionFound)
                         {
-                            while (lines[lastSectionLine].Trim() == "" && lastSectionLine > 0)
-                                lastSectionLine--;
-                            lines = lines.Insert($"{paramName}={value}", lastSectionLine + 1);
-                        }
-                        else
-                        {
-                            lines = lines.Add($"[{sectionName}]");
-                            lines = lines.Add($"{paramName}={value}");
+                            if (lines[numLine].Trim().StartsWith($"{paramName}=", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                paramFound = true;
+                                lines[numLine] = $"{paramName}={value}";
+                                break;
+                            }
+                            if (lines[numLine].Trim().StartsWith("["))
+                                break;
+                            lastSectionLine = numLine;
                         }
                     }
-                    if (string.IsNullOrWhiteSpace(lines[0]))
-                        lines = lines.RemoveAt(0);
-                    File.Delete(_currentFileName);
-                    File.AppendAllLines(_currentFileName, lines, _currentEncoding);
                 }
-                else
-                    File.WriteAllLines(_currentFileName, [$"[{sectionName}]", $"{paramName}={value}"]);
-                OpenIni(_currentFileName, _currentEncoding);
-                ReadStartOfSection(sectionName);
-                return true;
+
+                if (!paramFound)
+                {
+                    if (sectionFound)
+                    {
+                        while (lines[lastSectionLine].Trim() == "" && lastSectionLine > 0)
+                            lastSectionLine--;
+                        lines = lines.Insert($"{paramName}={value}", lastSectionLine + 1);
+                    }
+                    else
+                    {
+                        lines = lines.Add($"[{sectionName}]");
+                        lines = lines.Add($"{paramName}={value}");
+                    }
+                }
+                if (string.IsNullOrWhiteSpace(lines[0]))
+                    lines = lines.RemoveAt(0);
+                File.Delete(_currentFileName);
+                File.AppendAllLines(_currentFileName, lines, _currentEncoding);
             }
+            else
+                File.WriteAllLines(_currentFileName, [$"[{sectionName}]", $"{paramName}={value}"]);
+            OpenIni(_currentFileName, _currentEncoding);
+            ReadStartOfSection(sectionName);
+            return true;
         }
         catch { /* Ignore errors */ }
+        finally
+        {
+            _fileAccess.ReleaseMutex();
+        }
         return false;
     }
 
     public string ReadString(string sectionName, string paramName)
     {
-        lock (_fileAccess)
+        try
         {
+            _fileAccess.WaitOne();
+            CheckFileStream();
+
             if (string.IsNullOrWhiteSpace(_currentFileName))
                 return "";
 
             return ReadSection(sectionName, paramName);
+        }
+        finally
+        {
+            _fileAccess.ReleaseMutex();
         }
     }
 
@@ -288,6 +311,12 @@ public class ManageIniFile : IDisposable
         get { return _currentFileName; }
     }
 
+    private void CheckFileStream()
+    {
+        if (_configFile == null && !string.IsNullOrWhiteSpace(_currentFileName))
+            OpenIni(_currentFileName, _currentEncoding);
+    }
+
     private string ReadStartOfSection(string param)
     {
         if (!string.IsNullOrWhiteSpace(_currentFileName))
@@ -296,7 +325,7 @@ public class ManageIniFile : IDisposable
             string line;
             while (true)
             {
-                line = _configFile.ReadLine();
+                line = ReadLine();
                 if (line == null)
                     break;
                 if (line.Trim().Equals(param.Trim(), StringComparison.InvariantCultureIgnoreCase))
@@ -325,7 +354,7 @@ public class ManageIniFile : IDisposable
                 {
                     while (true)
                     {
-                        currentLine = _configFile.ReadLine();
+                        currentLine = ReadLine();
                         if ((currentLine == null) || (currentLine.Trim().StartsWith("[")))
                             break;
                         commentary = false;
@@ -391,8 +420,11 @@ public class ManageIniFile : IDisposable
 
     public int NumberOfSection(string sectionName)
     {
-        lock (_fileAccess)
+        try
         {
+            _fileAccess.WaitOne();
+            CheckFileStream();
+
             int nbSections = 0;
             if (!string.IsNullOrWhiteSpace(_currentFileName))
             {
@@ -400,7 +432,7 @@ public class ManageIniFile : IDisposable
                 string line;
                 while (true)
                 {
-                    line = _configFile.ReadLine();
+                    line = ReadLine();
                     if (line == null)
                         break;
                     if (line.Trim().StartsWith("[" + sectionName.Trim(), StringComparison.InvariantCultureIgnoreCase))
@@ -409,6 +441,33 @@ public class ManageIniFile : IDisposable
             }
             return nbSections;
         }
+        finally
+        {
+            _fileAccess.ReleaseMutex();
+        }
+    }
+
+    private string ReadLine()
+    {
+        List<byte> result = [];
+        int dataRead;
+        while ((dataRead = _configFile.ReadByte()) >= 0)
+        {
+            // Skip BOM of file
+            if (dataRead > 0xB0 || (result.Count == 0 && dataRead == 0x00))
+                continue;
+
+            // If we encounter CR or LF
+            if (dataRead == 13 || dataRead == 10)
+            {
+                // And it's not the begining of the read
+                if (result.Count > 0)
+                    break; // Then it's the end of the line
+            }
+            else // If it's a char, we add it to the list to nuild the line
+                result.Add((byte)dataRead);
+        }
+        return (result.Count == 0 ? null : _currentEncoding.GetString(result.ToArray()));
     }
 
     #region IDisposable Support
@@ -445,28 +504,4 @@ public class ManageIniFile : IDisposable
     }
 
     #endregion
-}
-
-public static class ExtensionFileStream
-{
-    public static string ReadLine(this FileStream fileStream)
-    {
-        StringBuilder result = new("");
-        bool start = false;
-        byte[] dataRead = new byte[1];
-        while (fileStream.Read(dataRead, 0, 1) > 0)
-        {
-            if (dataRead[0] == (char)13 || dataRead[0] == (char)10)
-            {
-                if (start)
-                    break;
-            }
-            else
-            {
-                result.Append((char)dataRead[0]);
-                start = true;
-            }
-        }
-        return result.ToString();
-    }
 }
