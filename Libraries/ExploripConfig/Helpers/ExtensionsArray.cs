@@ -64,8 +64,9 @@ public static class ExtensionsArray
     /// <param name="list">Array from where to remove instance</param>
     /// <param name="itemToRemove">Instance of object to remove</param>
     /// <param name="allOccurrences">True to remove all iteration from the Array, or False to remove only the first one find</param>
+    /// <param name="comparisonType">If it's a list of string, choice the comparison type (culture and case sensitive)</param>
     /// <returns>Return new Array, without the instance of object to remove</returns>
-    public static T[] Remove<T>(this T[] list, object itemToRemove, bool allOccurrences = true)
+    public static T[] Remove<T>(this T[] list, object itemToRemove, bool allOccurrences = true, StringComparison comparisonType = StringComparison.InvariantCultureIgnoreCase)
     {
         if (list == null) throw new ArgumentNullException(nameof(list));
         if (itemToRemove == null) throw new ArgumentNullException(nameof(itemToRemove));
@@ -77,9 +78,10 @@ public static class ExtensionsArray
             {
                 trouve = false;
                 for (int i = 0; i < list.Length; i++)
-                    if ((list[i] is not null) && (list[i].Equals(itemToRemove)))
+                    if ((list[i] is not null) && (list[i].Equals(itemToRemove) || (typeof(T) == typeof(string) && string.Compare(list[i].ToString(), itemToRemove.ToString(), comparisonType) == 0)))
                     {
-                        if (allOccurrences) trouve = true;
+                        if (allOccurrences)
+                            trouve = true;
                         list = list.RemoveAt(i);
                         break;
                     }

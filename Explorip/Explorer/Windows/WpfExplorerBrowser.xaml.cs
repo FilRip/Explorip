@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -44,6 +45,7 @@ public partial class WpfExplorerBrowser : Window
             args = args.Remove("withoutHook");
             args = args.Remove("useOwnCopier");
             args = args.Remove("newinstance");
+            args = args.Remove("disablewriteconfig");
 
             if (args.Length > 0)
             {
@@ -141,22 +143,12 @@ public partial class WpfExplorerBrowser : Window
 
             if (e.GetPosition(this).Y <= 32 && e.GetPosition(this).Y > 0)
             {
-                if (e.ChangedButton == MouseButton.Left)
+                if (e.ChangedButton == MouseButton.Left && e.LeftButton == MouseButtonState.Pressed)
                 {
-                    if (e.ClickCount == 2 && e.LeftButton == MouseButtonState.Pressed)
+                    HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
+                    if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
                     {
-                        if (WindowState == WindowState.Normal)
-                            MaximizeWindow_Click(this, new RoutedEventArgs());
-                        else
-                            RestoreWindow_Click(this, new RoutedEventArgs());
-                    }
-                    else
-                    {
-                        HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
-                        if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
-                        {
-                            _startDrag = true;
-                        }
+                        _startDrag = true;
                     }
                 }
                 else if (e.ChangedButton == MouseButton.Right)
@@ -335,6 +327,20 @@ public partial class WpfExplorerBrowser : Window
         {
             ConfigManager.ExplorerSizeX = (int)Width;
             ConfigManager.ExplorerSizeY = (int)Height;
+        }
+    }
+
+    private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (WindowState == WindowState.Minimized || !IsVisible || !IsActive)
+            return;
+
+        if (e.GetPosition(this).Y <= 32 && e.GetPosition(this).Y > 0 && e.ChangedButton == MouseButton.Left)
+        {
+            if (WindowState == WindowState.Normal)
+                MaximizeWindow_Click(this, new RoutedEventArgs());
+            else
+                RestoreWindow_Click(this, new RoutedEventArgs());
         }
     }
 }

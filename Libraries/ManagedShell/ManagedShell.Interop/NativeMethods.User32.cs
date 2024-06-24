@@ -4146,4 +4146,7 @@ public partial class NativeMethods
         }
         // ************************************************************************
     }
+
+    [DllImport(User32_DllName, CharSet = CharSet.Auto, ExactSpelling = true)]
+    internal static extern int GetDoubleClickTime();
 }

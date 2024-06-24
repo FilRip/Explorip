@@ -17,7 +17,7 @@ public static class ExtensionsCommandLineArguments
     /// <param name="argument">Argument to search</param>
     public static bool ArgumentExists(string argument)
     {
-        return ArgumentExists(argument, StringComparer.OrdinalIgnoreCase);
+        return ArgumentExists(argument, StringComparer.InvariantCultureIgnoreCase);
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ public static class ExtensionsCommandLineArguments
     /// <param name="argument">Argument to search</param>
     public static bool ArgumentVariableExists(string argument)
     {
-        return ArgumentVariableExists(argument, "=", StringComparison.OrdinalIgnoreCase);
+        return ArgumentVariableExists(argument, "=", StringComparison.InvariantCultureIgnoreCase);
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public static class ExtensionsCommandLineArguments
     /// <param name="separator">Separator to use</param>
     public static bool ArgumentVariableExists(string argument, string separator)
     {
-        return ArgumentVariableExists(argument, separator, StringComparison.OrdinalIgnoreCase);
+        return ArgumentVariableExists(argument, separator, StringComparison.InvariantCultureIgnoreCase);
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public static class ExtensionsCommandLineArguments
     /// <param name="argument">Argument to search</param>
     public static string ArgumentValue(string argument)
     {
-        return ArgumentValue(argument, "=", StringComparison.OrdinalIgnoreCase);
+        return ArgumentValue(argument, "=", StringComparison.InvariantCultureIgnoreCase);
     }
 
     /// <summary>
@@ -99,7 +99,7 @@ public static class ExtensionsCommandLineArguments
     /// <param name="separator">Separator to use</param>
     public static string ArgumentValue(string argument, string separator)
     {
-        return ArgumentValue(argument, separator, StringComparison.OrdinalIgnoreCase);
+        return ArgumentValue(argument, separator, StringComparison.InvariantCultureIgnoreCase);
     }
 
     /// <summary>

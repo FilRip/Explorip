@@ -86,6 +86,7 @@ public static class Program
                 args = args.Remove("withoutHook");
                 args = args.Remove("useOwnCopier");
                 args = args.Remove("newinstance");
+                args = args.Remove("disablewriteconfig");
                 IpcServerManager.SendNewWindow(args);
             }
         }
