@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Windows;
-using System.Xml;
 
 using ExploripConfig.Helpers;
 
