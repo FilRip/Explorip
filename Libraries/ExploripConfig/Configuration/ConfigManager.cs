@@ -19,53 +19,58 @@ public static class ConfigManager
     private const string ExploripCopy = "ExploripCopy";
     private const string ExploripDesktop = "ExploripDesktop";
     private const string ExploripTaskbar = "ExploripTaskbar";
+    public static bool AllowWrite { get; set; }
 
-    public static void Init()
+    public static void Init(bool allowWrite = true)
     {
+        AllowWrite = allowWrite && !ArgumentExists("disablewriteconfig");
         string dir = Path.Combine(Environment.SpecialFolder.LocalApplicationData.FullPath(), "CoolBytes", "Explorip");
         if (!Directory.Exists(dir))
             Directory.CreateDirectory(dir);
         PATH_TO_INI = Path.Combine(dir, "ExploripConfig.ini");
         _ini = ManagedIniFile.OpenIniFile(PATH_TO_INI);
 
-        // If empty config ini file, set default settings
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Theme")))
-            _ini.WriteString(Explorip, "Theme", "System");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "ShowClock")))
-            _ini.WriteString(ExploripTaskbar, "ShowClock", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "ShowQuickLaunch")))
-            _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "QuickLaunchPath")))
-            _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "CollapseNotifyIcons")))
-            _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "AllowFontSmoothing")))
-            _ini.WriteString(Explorip, "AllowFontSmoothing", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Language")))
-            _ini.WriteString(Explorip, "Language", "System");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "Edge")))
-            _ini.WriteString(ExploripTaskbar, "Edge", "3");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "HookCopy")))
-            _ini.WriteString(Explorip, "HookCopy", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "UseOwnCopier")))
-            _ini.WriteString(Explorip, "UseOwnCopier", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "StartTwoExplorer")))
-            _ini.WriteString(Explorip, "StartTwoExplorer", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripCopy, "ShowNotificationCopyOperation")))
-            _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", "True");
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripDesktop, "HideDesktopBackground")))
-            _ini.WriteString(ExploripDesktop, "HideDesktopBackground", "False");
-        string ws = _ini.ReadString(Explorip, "WindowState");
-        if (string.IsNullOrWhiteSpace(ws) || !Enum.TryParse<WindowState>(ws, out _))
-            ExplorerWindowState = WindowState.Normal;
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosX")))
-            _ini.WriteString(Explorip, "PosX", (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosY")))
-            _ini.WriteString(Explorip, "PosY", (Screen.PrimaryScreen.WpfWorkingArea.Y + 50).ToString());
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "SizeX")))
-            _ini.WriteString(Explorip, "SizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
-        if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "SizeY")))
-            _ini.WriteString(Explorip, "SizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
+        if (allowWrite)
+        {
+            // If empty config ini file, set default settings
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Theme")))
+                _ini.WriteString(Explorip, "Theme", "System");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "ShowClock")))
+                _ini.WriteString(ExploripTaskbar, "ShowClock", "True");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "ShowQuickLaunch")))
+                _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", "True");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "QuickLaunchPath")))
+                _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "CollapseNotifyIcons")))
+                _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", "True");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "AllowFontSmoothing")))
+                _ini.WriteString(Explorip, "AllowFontSmoothing", "True");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Language")))
+                _ini.WriteString(Explorip, "Language", "System");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "Edge")))
+                _ini.WriteString(ExploripTaskbar, "Edge", "3");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "HookCopy")))
+                _ini.WriteString(Explorip, "HookCopy", "True");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "UseOwnCopier")))
+                _ini.WriteString(Explorip, "UseOwnCopier", "True");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "StartTwoExplorer")))
+                _ini.WriteString(Explorip, "StartTwoExplorer", "True");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripCopy, "ShowNotificationCopyOperation")))
+                _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", "True");
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripDesktop, "HideDesktopBackground")))
+                _ini.WriteString(ExploripDesktop, "HideDesktopBackground", "False");
+            string ws = _ini.ReadString(Explorip, "WindowState");
+            if (string.IsNullOrWhiteSpace(ws) || !Enum.TryParse<WindowState>(ws, out _))
+                ExplorerWindowState = WindowState.Normal;
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosX")))
+                _ini.WriteString(Explorip, "PosX", (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosY")))
+                _ini.WriteString(Explorip, "PosY", (Screen.PrimaryScreen.WpfWorkingArea.Y + 50).ToString());
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "SizeX")))
+                _ini.WriteString(Explorip, "SizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
+            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "SizeY")))
+                _ini.WriteString(Explorip, "SizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
+        }
     }
 
     public static string Theme
@@ -73,7 +78,7 @@ public static class ConfigManager
         get { return _ini.ReadString(Explorip, "Theme"); }
         set
         {
-            if (_ini.ReadString(Explorip, "Theme") != value)
+            if (_ini.ReadString(Explorip, "Theme") != value && AllowWrite)
                 _ini.WriteString(Explorip, "Theme", value);
         }
     }
@@ -83,7 +88,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(ExploripTaskbar, "ShowClock"); }
         set
         {
-            if (_ini.ReadBoolean(ExploripTaskbar, "ShowClock") != value)
+            if (_ini.ReadBoolean(ExploripTaskbar, "ShowClock") != value && AllowWrite)
                 _ini.WriteString(ExploripTaskbar, "ShowClock", value.ToString());
         }
     }
@@ -93,7 +98,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(ExploripTaskbar, "ShowQuickLaunch"); }
         set
         {
-            if (_ini.ReadBoolean(ExploripTaskbar, "ShowQuickLaunch") != value)
+            if (_ini.ReadBoolean(ExploripTaskbar, "ShowQuickLaunch") != value && AllowWrite)
                 _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", value.ToString());
         }
     }
@@ -103,7 +108,7 @@ public static class ConfigManager
         get { return _ini.ReadString(ExploripTaskbar, "QuickLaunchPath"); }
         set
         {
-            if (_ini.ReadString(ExploripTaskbar, "QuickLaunchPath") != value)
+            if (_ini.ReadString(ExploripTaskbar, "QuickLaunchPath") != value && AllowWrite)
                 _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", value);
         }
     }
@@ -113,7 +118,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(ExploripTaskbar, "CollapseNotifyIcons"); }
         set
         {
-            if (_ini.ReadBoolean(ExploripTaskbar, "CollapseNotifyIcons") != value)
+            if (_ini.ReadBoolean(ExploripTaskbar, "CollapseNotifyIcons") != value && AllowWrite)
                 _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", value.ToString());
         }
     }
@@ -123,7 +128,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(Explorip, "AllowFontSmoothing"); }
         set
         {
-            if (_ini.ReadBoolean(Explorip, "AllowFontSmoothing") != value)
+            if (_ini.ReadBoolean(Explorip, "AllowFontSmoothing") != value && AllowWrite)
                 _ini.WriteString(Explorip, "AllowFontSmoothing", value.ToString());
         }
     }
@@ -133,7 +138,7 @@ public static class ConfigManager
         get { return _ini.ReadString(Explorip, "Language"); }
         set
         {
-            if (_ini.ReadString(Explorip, "Language") != value)
+            if (_ini.ReadString(Explorip, "Language") != value && AllowWrite)
                 _ini.WriteString(Explorip, "Language", value);
         }
     }
@@ -143,7 +148,7 @@ public static class ConfigManager
         get { return _ini.ReadInteger(ExploripTaskbar, "Edge"); }
         set
         {
-            if (_ini.ReadInteger(ExploripTaskbar, "Edge") != value)
+            if (_ini.ReadInteger(ExploripTaskbar, "Edge") != value && AllowWrite)
                 _ini.WriteString(ExploripTaskbar, "Edge", value.ToString());
         }
     }
@@ -153,7 +158,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(ExploripCopy, "ShowNotificationCopyOperation"); }
         set
         {
-            if (_ini.ReadBoolean(ExploripCopy, "ShowNotificationCopyOperation") != value)
+            if (_ini.ReadBoolean(ExploripCopy, "ShowNotificationCopyOperation") != value && AllowWrite)
                 _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", value.ToString());
         }
     }
@@ -163,7 +168,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(Explorip, "HookCopy") && !ArgumentExists("withouthook"); }
         set
         {
-            if (_ini.ReadBoolean(Explorip, "HookCopy") != value && !ArgumentExists("withouthook"))
+            if (_ini.ReadBoolean(Explorip, "HookCopy") != value && !ArgumentExists("withouthook") && AllowWrite)
                 _ini.WriteString(Explorip, "HookCopy", value.ToString());
         }
     }
@@ -173,7 +178,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(Explorip, "UseOwnCopier") || ArgumentExists("useowncopier"); }
         set
         {
-            if (_ini.ReadBoolean(Explorip, "UseOwnCopier") != value && !ArgumentExists("useowncopier"))
+            if (_ini.ReadBoolean(Explorip, "UseOwnCopier") != value && !ArgumentExists("useowncopier") && AllowWrite)
                 _ini.WriteString(Explorip, "UseOwnCopier", value.ToString());
         }
     }
@@ -183,7 +188,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(Explorip, "StartTwoExplorer"); }
         set
         {
-            if (_ini.ReadBoolean(Explorip, "StartTwoExplorer") != value)
+            if (_ini.ReadBoolean(Explorip, "StartTwoExplorer") != value && AllowWrite)
                 _ini.WriteString(Explorip, "StartTwoExplorer", value.ToString());
         }
     }
@@ -193,7 +198,7 @@ public static class ConfigManager
         get { return _ini.ReadBoolean(ExploripDesktop, "HideDesktopBackground"); }
         set
         {
-            if (_ini.ReadBoolean(ExploripDesktop, "HideDesktopBackground") != value)
+            if (_ini.ReadBoolean(ExploripDesktop, "HideDesktopBackground") != value && AllowWrite)
                 _ini.WriteString(ExploripDesktop, "HideDesktopBackground", value.ToString());
         }
     }
@@ -203,7 +208,7 @@ public static class ConfigManager
         get { return _ini.ReadEnum<WindowState>(Explorip, "WindowState"); }
         set
         {
-            if (_ini.ReadEnum<WindowState>(Explorip, "WindowState") != value)
+            if (_ini.ReadEnum<WindowState>(Explorip, "WindowState") != value && AllowWrite)
                 _ini.WriteString(Explorip, "WindowState", ((int)value).ToString());
         }
     }
@@ -213,7 +218,7 @@ public static class ConfigManager
         get { return _ini.ReadInteger(Explorip, "PosX"); }
         set
         {
-            if (_ini.ReadInteger(Explorip, "PosX") != value)
+            if (_ini.ReadInteger(Explorip, "PosX") != value && AllowWrite)
                 _ini.WriteString(Explorip, "PosX", value.ToString());
         }
     }
@@ -223,7 +228,7 @@ public static class ConfigManager
         get { return _ini.ReadInteger(Explorip, "PosY"); }
         set
         {
-            if (_ini.ReadInteger(Explorip, "PosY") != value)
+            if (_ini.ReadInteger(Explorip, "PosY") != value && AllowWrite)
                 _ini.WriteString(Explorip, "PosY", value.ToString());
         }
     }
@@ -233,7 +238,7 @@ public static class ConfigManager
         get { return _ini.ReadInteger(Explorip, "SizeX"); }
         set
         {
-            if (_ini.ReadInteger(Explorip, "SizeX") != value)
+            if (_ini.ReadInteger(Explorip, "SizeX") != value && AllowWrite)
                 _ini.WriteString(Explorip, "SizeX", value.ToString());
         }
     }
@@ -243,7 +248,7 @@ public static class ConfigManager
         get { return _ini.ReadInteger(Explorip, "SizeY"); }
         set
         {
-            if (_ini.ReadInteger(Explorip, "SizeY") != value)
+            if (_ini.ReadInteger(Explorip, "SizeY") != value && AllowWrite)
                 _ini.WriteString(Explorip, "SizeY", value.ToString());
         }
     }

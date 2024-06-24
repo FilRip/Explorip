@@ -3,6 +3,10 @@
   "Id": "001dcda7-f4c3-4bd6-a86c-c99b35a9798a",
   "Items": [
     {
+      "Id": "76a8226b-d72c-4056-be9c-17ffe10368f3",
+      "Command": "disableWriteConfig"
+    },
+    {
       "Id": "f280a574-007e-4b06-bff2-8ea6a20b09f5",
       "Command": "desktop"
     },
