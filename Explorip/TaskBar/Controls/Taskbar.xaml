@@ -84,7 +84,7 @@
                     </Grid.RowDefinitions>
                     <controls:Toolbar x:Name="QuickLaunchToolbar" Grid.Column="0" Grid.Row="0"
                               Visibility="Collapsed"
-                              Path="{Binding Source={x:Static Config:ConfigManager.QuickLaunchPath}}">
+                              Path="{x:Static Config:ConfigManager.QuickLaunchPath}">
                     </controls:Toolbar>
                 </Grid>
                 <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="ListeDesTaches" MainScreen="{Binding MainScreen}" TaskbarParent="{Binding .}"/>
@@ -144,7 +144,7 @@
                 <MenuItem Header="{x:Static localization:Localization.LARGE_ICON}" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
             </MenuItem>
             <Separator/>
-            <MenuItem Header="Barre des tâches sur tous les écrans" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
+            <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
             <MenuItem Header="{x:Static localization:Localization.UNLOCK_TASKBAR}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAjoutToolbar" Click="AddToolbar_Click"/>
             <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Click="MenuShowTabTip_Click"/>

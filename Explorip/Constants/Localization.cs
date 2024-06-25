@@ -52,6 +52,7 @@ public static class Localization
     public static string ERROR_DURING_RENAME { get; private set; }
     public static string ERROR { get; private set; }
     public static string SEARCH_RESULT { get; private set; }
+    public static string SHOW_TASKBAR_ON_ALL_SCREENS { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -100,6 +101,7 @@ public static class Localization
         ERROR_DURING_RENAME = Load("shell32.dll", 6020, "Error during rename {0} : {1}").Replace("%2!ls!", "{0}").Replace("%1!ls!", "{1}");
         ERROR = Load("shell32.dll", 51248, "Error");
         SEARCH_RESULT = Load("shell32.dll", 34132, "Search result for %s").Replace("%s", "{0}");
+        SHOW_TASKBAR_ON_ALL_SCREENS = "Show taskbar on all screens";
     }
 
     internal static string Load(string libraryName, uint Ident, string defaultText)
