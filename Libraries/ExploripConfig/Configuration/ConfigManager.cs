@@ -1,8 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 
 using ExploripConfig.Helpers;
+
+using Microsoft.Win32;
 
 using WpfScreenHelper;
 
@@ -12,248 +13,256 @@ namespace ExploripConfig.Configuration;
 
 public static class ConfigManager
 {
-    public static string PATH_TO_INI { get; private set; }
-    private static ManagedIniFile _ini;
-    private const string Explorip = "Explorip";
-    private const string ExploripCopy = "ExploripCopy";
-    private const string ExploripDesktop = "ExploripDesktop";
-    private const string ExploripTaskbar = "ExploripTaskbar";
     public static bool AllowWrite { get; set; }
+    private static RegistryKey _registryKey;
 
     public static void Init(bool allowWrite = true)
     {
         AllowWrite = allowWrite && !ArgumentExists("disablewriteconfig");
-        string dir = Path.Combine(Environment.SpecialFolder.LocalApplicationData.FullPath(), "CoolBytes", "Explorip");
-        if (!Directory.Exists(dir))
-            Directory.CreateDirectory(dir);
-        PATH_TO_INI = Path.Combine(dir, "ExploripConfig.ini");
-        _ini = ManagedIniFile.OpenIniFile(PATH_TO_INI);
+        _registryKey = Registry.CurrentUser.CreateSubKey("Software\\CoolBytes\\Explorip", true);
+        if (_registryKey == null)
+            AllowWrite = false;
 
-        if (allowWrite)
+        if (allowWrite && _registryKey != null)
         {
             // If empty config ini file, set default settings
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Theme")))
-                _ini.WriteString(Explorip, "Theme", "System");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "ShowClock")))
-                _ini.WriteString(ExploripTaskbar, "ShowClock", "True");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "ShowQuickLaunch")))
-                _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", "True");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "QuickLaunchPath")))
-                _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "CollapseNotifyIcons")))
-                _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", "True");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "AllowFontSmoothing")))
-                _ini.WriteString(Explorip, "AllowFontSmoothing", "True");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "Language")))
-                _ini.WriteString(Explorip, "Language", "System");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripTaskbar, "Edge")))
-                _ini.WriteString(ExploripTaskbar, "Edge", "3");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "HookCopy")))
-                _ini.WriteString(Explorip, "HookCopy", "True");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "UseOwnCopier")))
-                _ini.WriteString(Explorip, "UseOwnCopier", "True");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "StartTwoExplorer")))
-                _ini.WriteString(Explorip, "StartTwoExplorer", "True");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripCopy, "ShowNotificationCopyOperation")))
-                _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", "True");
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(ExploripDesktop, "HideDesktopBackground")))
-                _ini.WriteString(ExploripDesktop, "HideDesktopBackground", "False");
-            string ws = _ini.ReadString(Explorip, "WindowState");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("Theme", "").ToString()))
+                _registryKey.SetValue("Theme", "System");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ShowClock", "").ToString()))
+                _registryKey.SetValue("ShowClock", "True");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ShowQuickLaunch", "").ToString()))
+                _registryKey.SetValue("ShowQuickLaunch", "True");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("QuickLaunchPath", "").ToString()))
+                _registryKey.SetValue("QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("CollapseNotifyIcons", "").ToString()))
+                _registryKey.SetValue("CollapseNotifyIcons", "True");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("AllowFontSmoothing", "").ToString()))
+                _registryKey.SetValue("AllowFontSmoothing", "True");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("Language", "").ToString()))
+                _registryKey.SetValue("Language", "System");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("Edge", "").ToString()))
+                _registryKey.SetValue("Edge", "3");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("HookCopy", "").ToString()))
+                _registryKey.SetValue("HookCopy", "True");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("UseOwnCopier", "").ToString()))
+                _registryKey.SetValue("UseOwnCopier", "True");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("StartTwoExplorer", "").ToString()))
+                _registryKey.SetValue("StartTwoExplorer", "True");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ShowNotificationCopyOperation", "").ToString()))
+                _registryKey.SetValue("ShowNotificationCopyOperation", "True");
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("HideDesktopBackground", "").ToString()))
+                _registryKey.SetValue("HideDesktopBackground", "False");
+            string ws = _registryKey.GetValue("ExplorerWindowState", "").ToString();
             if (string.IsNullOrWhiteSpace(ws) || !Enum.TryParse<WindowState>(ws, out _))
                 ExplorerWindowState = WindowState.Normal;
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosX")))
-                _ini.WriteString(Explorip, "PosX", (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "PosY")))
-                _ini.WriteString(Explorip, "PosY", (Screen.PrimaryScreen.WpfWorkingArea.Y + 50).ToString());
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "SizeX")))
-                _ini.WriteString(Explorip, "SizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
-            if (string.IsNullOrWhiteSpace(_ini.ReadString(Explorip, "SizeY")))
-                _ini.WriteString(Explorip, "SizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ExplorerPosX", "").ToString()))
+                _registryKey.SetValue("ExplorerPosX", (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ExplorerPosY", "").ToString()))
+                _registryKey.SetValue("ExplorerPosY", (Screen.PrimaryScreen.WpfWorkingArea.Y + 50).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ExplorerSizeX", "").ToString()))
+                _registryKey.SetValue("ExplorerSizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ExplorerSizeY", "").ToString()))
+                _registryKey.SetValue("ExplorerSizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
         }
     }
 
     public static string Theme
     {
-        get { return _ini.ReadString(Explorip, "Theme"); }
+        get { return _registryKey.GetValue("Theme", "").ToString(); }
         set
         {
-            if (_ini.ReadString(Explorip, "Theme") != value && AllowWrite)
-                _ini.WriteString(Explorip, "Theme", value);
+            if (Theme != value && AllowWrite)
+                _registryKey.SetValue("Theme", value);
         }
     }
 
     public static bool ShowClock
     {
-        get { return _ini.ReadBoolean(ExploripTaskbar, "ShowClock"); }
+        get { return _registryKey.ReadBoolean("ShowClock", true); }
         set
         {
-            if (_ini.ReadBoolean(ExploripTaskbar, "ShowClock") != value && AllowWrite)
-                _ini.WriteString(ExploripTaskbar, "ShowClock", value.ToString());
+            if (ShowClock != value && AllowWrite)
+                _registryKey.SetValue("ShowClock", value.ToString());
         }
     }
 
     public static bool ShowQuickLaunch
     {
-        get { return _ini.ReadBoolean(ExploripTaskbar, "ShowQuickLaunch"); }
+        get { return _registryKey.ReadBoolean("ShowQuickLaunch", true); }
         set
         {
-            if (_ini.ReadBoolean(ExploripTaskbar, "ShowQuickLaunch") != value && AllowWrite)
-                _ini.WriteString(ExploripTaskbar, "ShowQuickLaunch", value.ToString());
+            if (ShowQuickLaunch != value && AllowWrite)
+                _registryKey.SetValue("ShowQuickLaunch", value.ToString());
         }
     }
 
     public static string QuickLaunchPath
     {
-        get { return _ini.ReadString(ExploripTaskbar, "QuickLaunchPath"); }
+        get { return _registryKey.GetValue("QuickLaunchPath", "").ToString(); }
         set
         {
-            if (_ini.ReadString(ExploripTaskbar, "QuickLaunchPath") != value && AllowWrite)
-                _ini.WriteString(ExploripTaskbar, "QuickLaunchPath", value);
+            if (QuickLaunchPath != value && AllowWrite)
+                _registryKey.SetValue("QuickLaunchPath", value);
         }
     }
 
     public static bool CollapseNotifyIcons
     {
-        get { return _ini.ReadBoolean(ExploripTaskbar, "CollapseNotifyIcons"); }
+        get { return _registryKey.ReadBoolean("CollapseNotifyIcons"); }
         set
         {
-            if (_ini.ReadBoolean(ExploripTaskbar, "CollapseNotifyIcons") != value && AllowWrite)
-                _ini.WriteString(ExploripTaskbar, "CollapseNotifyIcons", value.ToString());
+            if (CollapseNotifyIcons != value && AllowWrite)
+                _registryKey.SetValue("CollapseNotifyIcons", value.ToString());
         }
     }
 
     public static bool AllowFontSmoothing
     {
-        get { return _ini.ReadBoolean(Explorip, "AllowFontSmoothing"); }
+        get { return _registryKey.ReadBoolean("AllowFontSmoothing"); }
         set
         {
-            if (_ini.ReadBoolean(Explorip, "AllowFontSmoothing") != value && AllowWrite)
-                _ini.WriteString(Explorip, "AllowFontSmoothing", value.ToString());
+            if (AllowFontSmoothing != value && AllowWrite)
+                _registryKey.SetValue("AllowFontSmoothing", value.ToString());
         }
     }
 
     public static string Language
     {
-        get { return _ini.ReadString(Explorip, "Language"); }
+        get { return _registryKey.GetValue("Language", "").ToString(); }
         set
         {
-            if (_ini.ReadString(Explorip, "Language") != value && AllowWrite)
-                _ini.WriteString(Explorip, "Language", value);
+            if (Language != value && AllowWrite)
+                _registryKey.SetValue("Language", value);
         }
     }
 
     public static int Edge // TODO : Enum ?
     {
-        get { return _ini.ReadInteger(ExploripTaskbar, "Edge"); }
+        get { return _registryKey.ReadInteger("Edge"); }
         set
         {
-            if (_ini.ReadInteger(ExploripTaskbar, "Edge") != value && AllowWrite)
-                _ini.WriteString(ExploripTaskbar, "Edge", value.ToString());
+            if (Edge != value && AllowWrite)
+                _registryKey.SetValue("Edge", value.ToString());
         }
     }
 
     public static bool ShowNotificationCopyOperation
     {
-        get { return _ini.ReadBoolean(ExploripCopy, "ShowNotificationCopyOperation"); }
+        get { return _registryKey.ReadBoolean("ShowNotificationCopyOperation"); }
         set
         {
-            if (_ini.ReadBoolean(ExploripCopy, "ShowNotificationCopyOperation") != value && AllowWrite)
-                _ini.WriteString(ExploripCopy, "ShowNotificationCopyOperation", value.ToString());
+            if (ShowNotificationCopyOperation != value && AllowWrite)
+                _registryKey.SetValue("ShowNotificationCopyOperation", value.ToString());
         }
     }
 
     public static bool HookCopy
     {
-        get { return _ini.ReadBoolean(Explorip, "HookCopy") && !ArgumentExists("withouthook"); }
+        get { return _registryKey.ReadBoolean("HookCopy") && !ArgumentExists("withouthook"); }
         set
         {
-            if (_ini.ReadBoolean(Explorip, "HookCopy") != value && !ArgumentExists("withouthook") && AllowWrite)
-                _ini.WriteString(Explorip, "HookCopy", value.ToString());
+            if (HookCopy != value && !ArgumentExists("withouthook") && AllowWrite)
+                _registryKey.SetValue("HookCopy", value.ToString());
         }
     }
 
     public static bool UseOwnCopier
     {
-        get { return _ini.ReadBoolean(Explorip, "UseOwnCopier") || ArgumentExists("useowncopier"); }
+        get { return _registryKey.ReadBoolean("UseOwnCopier") || ArgumentExists("useowncopier"); }
         set
         {
-            if (_ini.ReadBoolean(Explorip, "UseOwnCopier") != value && !ArgumentExists("useowncopier") && AllowWrite)
-                _ini.WriteString(Explorip, "UseOwnCopier", value.ToString());
+            if (UseOwnCopier != value && !ArgumentExists("useowncopier") && AllowWrite)
+                _registryKey.SetValue("UseOwnCopier", value.ToString());
         }
     }
 
     public static bool StartTwoExplorer
     {
-        get { return _ini.ReadBoolean(Explorip, "StartTwoExplorer"); }
+        get { return _registryKey.ReadBoolean("StartTwoExplorer"); }
         set
         {
-            if (_ini.ReadBoolean(Explorip, "StartTwoExplorer") != value && AllowWrite)
-                _ini.WriteString(Explorip, "StartTwoExplorer", value.ToString());
+            if (StartTwoExplorer != value && AllowWrite)
+                _registryKey.SetValue("StartTwoExplorer", value.ToString());
         }
     }
 
     public static bool HideDesktopBackground
     {
-        get { return _ini.ReadBoolean(ExploripDesktop, "HideDesktopBackground"); }
+        get { return _registryKey.ReadBoolean("HideDesktopBackground"); }
         set
         {
-            if (_ini.ReadBoolean(ExploripDesktop, "HideDesktopBackground") != value && AllowWrite)
-                _ini.WriteString(ExploripDesktop, "HideDesktopBackground", value.ToString());
+            if (HideDesktopBackground != value && AllowWrite)
+                _registryKey.SetValue("HideDesktopBackground", value.ToString());
         }
     }
 
     public static WindowState ExplorerWindowState
     {
-        get { return _ini.ReadEnum<WindowState>(Explorip, "WindowState"); }
+        get { return _registryKey.ReadEnum<WindowState>("ExplorerWindowState"); }
         set
         {
-            if (_ini.ReadEnum<WindowState>(Explorip, "WindowState") != value && AllowWrite)
-                _ini.WriteString(Explorip, "WindowState", ((int)value).ToString());
+            if (ExplorerWindowState != value && AllowWrite)
+                _registryKey.SetValue("ExplorerWindowState", ((int)value).ToString());
         }
     }
 
     public static int ExplorerPosX
     {
-        get { return _ini.ReadInteger(Explorip, "PosX"); }
+        get { return _registryKey.ReadInteger("ExplorerPosX"); }
         set
         {
-            if (_ini.ReadInteger(Explorip, "PosX") != value && AllowWrite)
-                _ini.WriteString(Explorip, "PosX", value.ToString());
+            if (ExplorerPosX != value && AllowWrite)
+                _registryKey.SetValue("ExplorerPosX", value.ToString());
         }
     }
 
     public static int ExplorerPosY
     {
-        get { return _ini.ReadInteger(Explorip, "PosY"); }
+        get { return _registryKey.ReadInteger("ExplorerPosY"); }
         set
         {
-            if (_ini.ReadInteger(Explorip, "PosY") != value && AllowWrite)
-                _ini.WriteString(Explorip, "PosY", value.ToString());
+            if (ExplorerPosY != value && AllowWrite)
+                _registryKey.SetValue("ExplorerPosY", value.ToString());
         }
     }
 
     public static int ExplorerSizeX
     {
-        get { return _ini.ReadInteger(Explorip, "SizeX"); }
+        get { return _registryKey.ReadInteger("ExplorerSizeX"); }
         set
         {
-            if (_ini.ReadInteger(Explorip, "SizeX") != value && AllowWrite)
-                _ini.WriteString(Explorip, "SizeX", value.ToString());
+            if (ExplorerSizeX != value && AllowWrite)
+                _registryKey.SetValue("ExplorerSizeX", value.ToString());
         }
     }
 
     public static int ExplorerSizeY
     {
-        get { return _ini.ReadInteger(Explorip, "SizeY"); }
+        get { return _registryKey.ReadInteger("ExplorerSizeY"); }
         set
         {
-            if (_ini.ReadInteger(Explorip, "SizeY") != value && AllowWrite)
-                _ini.WriteString(Explorip, "SizeY", value.ToString());
+            if (ExplorerSizeY != value && AllowWrite)
+                _registryKey.SetValue("ExplorerSizeY", value.ToString());
         }
     }
 
-    public static ManagedIniFile ManageIniFile
+    public static bool ShowLargeIcon
     {
-        get { return _ini; }
+        get { return _registryKey.ReadBoolean("ShowLargeIcon"); }
+        set
+        {
+            if (ShowLargeIcon != value && AllowWrite)
+                _registryKey.SetValue("ShowLargeIcon", value.ToString());
+        }
+    }
+
+    public static bool ShowTitle
+    {
+        get { return _registryKey.ReadBoolean("ShowTitle"); }
+        set
+        {
+            if (ShowTitle != value && AllowWrite)
+                _registryKey.SetValue("ShowTitle", value.ToString());
+        }
     }
 }

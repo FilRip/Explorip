@@ -81,12 +81,7 @@ public static class Program
             }
             else
             {
-                args ??= [];
-                args = args.Remove("explorer");
-                args = args.Remove("withoutHook");
-                args = args.Remove("useOwnCopier");
-                args = args.Remove("newinstance");
-                args = args.Remove("disablewriteconfig");
+                args = MyDebug.RemoveDebugArguments(args ?? []);
                 IpcServerManager.SendNewWindow(args);
             }
         }

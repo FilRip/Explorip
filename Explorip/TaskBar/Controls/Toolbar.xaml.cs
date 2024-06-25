@@ -20,8 +20,6 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class Toolbar : UserControl
 {
-    private string _toolbarName;
-
     private enum MenuItem : uint
     {
         OpenParentFolder = CommonContextMenuItem.Paste + 1
@@ -69,10 +67,9 @@ public partial class Toolbar : UserControl
         {
             Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
             Title.Content = Folder.DisplayName;
-            _toolbarName = "Toolbar_" + Folder.DisplayName;
-            if (ConfigManager.ManageIniFile.ReadBoolean(_toolbarName, "ShowLargeIcon") && !CurrentShowLargeIcon)
+            if (ConfigManager.ShowLargeIcon && !CurrentShowLargeIcon)
                 ShowLargeIcon_Click(null, null);
-            Title.Visibility = ConfigManager.ManageIniFile.ReadBoolean(_toolbarName, "ShowTitle") ? Visibility.Visible : Visibility.Collapsed;
+            Title.Visibility = ConfigManager.ShowTitle ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 
@@ -288,7 +285,7 @@ public partial class Toolbar : UserControl
             Title.Visibility = Visibility.Collapsed;
         else
             Title.Visibility = Visibility.Visible;
-        ConfigManager.ManageIniFile.WriteString(_toolbarName, "ShowTitle", Title.Visibility == Visibility.Visible ? "True" : "False");
+        ConfigManager.ShowTitle = Title.Visibility == Visibility.Visible;
     }
 
     public bool CurrentShowLargeIcon { get; private set; }
@@ -306,7 +303,7 @@ public partial class Toolbar : UserControl
         else
             newHeight -= 16;
         parentTaskbar.ChangeDesiredSize(newHeight, parentTaskbar.Width);
-        ConfigManager.ManageIniFile.WriteString(_toolbarName, "ShowLargeIcon", CurrentShowLargeIcon.ToString());
+        ConfigManager.ShowLargeIcon = CurrentShowLargeIcon;
     }
 }
 

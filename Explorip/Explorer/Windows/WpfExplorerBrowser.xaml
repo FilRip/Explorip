@@ -9,9 +9,8 @@
         mc:Ignorable="d"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
         UseLayoutRounding="True" Focusable="True" MouseDown="Window_MouseDown" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
-        ResizeMode="CanResizeWithGrip" Activated="Window_Activated" StateChanged="Window_StateChanged" LocationChanged="Window_LocationChanged"
+        ResizeMode="CanResizeWithGrip" Activated="Window_Activated"
         MouseDoubleClick="Window_MouseDoubleClick"
-        SizeChanged="Window_SizeChanged"
         Loaded="Window_Loaded">
 
     <Window.Resources>

@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 
 using Explorip.Explorer.Controls;
 using Explorip.Explorer.ViewModels;
+using Explorip.Helpers;
 
 using ExploripConfig.Configuration;
 using ExploripConfig.Helpers;
@@ -39,12 +40,7 @@ public partial class WpfExplorerBrowser : Window
         if (openDefaultView)
         {
             string dir = null;
-            string[] args = Environment.GetCommandLineArgs();
-            args = args.Remove("explorer");
-            args = args.Remove("withoutHook");
-            args = args.Remove("useOwnCopier");
-            args = args.Remove("newinstance");
-            args = args.Remove("disablewriteconfig");
+            string[] args = MyDebug.RemoveDebugArguments(Environment.GetCommandLineArgs(), true);
 
             if (args.Length > 0)
             {
@@ -75,6 +71,10 @@ public partial class WpfExplorerBrowser : Window
             WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
+
+        Left = ConfigManager.ExplorerPosX;
+        Top = ConfigManager.ExplorerPosY;
+        WindowState = ConfigManager.ExplorerWindowState;
     }
 
     public WpfExplorerBrowserViewModel MyDataContext
@@ -86,9 +86,9 @@ public partial class WpfExplorerBrowser : Window
     {
         MyDataContext.SelectionLeft = false;
         MyDataContext.SelectionRight = false;
-        Left = ConfigManager.ExplorerPosX;
-        Top = ConfigManager.ExplorerPosY;
-        WindowState = ConfigManager.ExplorerWindowState;
+        StateChanged += Window_StateChanged;
+        LocationChanged += Window_LocationChanged;
+        SizeChanged += Window_SizeChanged;
         if (WindowState == WindowState.Normal)
         {
             Width = ConfigManager.ExplorerSizeX;
