@@ -22,9 +22,9 @@ public static class ExtensionsArray
         if (list == null)
             throw new ArgumentNullException(nameof(list));
 
-#pragma warning disable S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
+#pragma warning disable S112 // It's the best exception. There is no better
         if (index > list.Length - 1)
-            throw new IndexOutOfRangeException();
+            throw new IndexOutOfRangeException("The index is greater than the number of item in list");
 #pragma warning restore S112
 
         T[] retour = list;
@@ -47,7 +47,7 @@ public static class ExtensionsArray
             throw new ArgumentNullException(nameof(list));
 #pragma warning disable S112 // It's the best exception to use, remove Sonar warning
         if (index >= list.Length || list.Length == 0)
-            throw new IndexOutOfRangeException();
+            throw new IndexOutOfRangeException("The index is greater than the number of item in list");
 #pragma warning restore S112
 
         T[] newListe = new T[list.Length - 1];
@@ -68,20 +68,22 @@ public static class ExtensionsArray
     /// <returns>Return new Array, without the instance of object to remove</returns>
     public static T[] Remove<T>(this T[] list, object itemToRemove, bool allOccurrences = true, StringComparison comparisonType = StringComparison.InvariantCultureIgnoreCase)
     {
-        if (list == null) throw new ArgumentNullException(nameof(list));
-        if (itemToRemove == null) throw new ArgumentNullException(nameof(itemToRemove));
+        if (list == null)
+            throw new ArgumentNullException(nameof(list));
+        if (itemToRemove == null)
+            throw new ArgumentNullException(nameof(itemToRemove));
 
         if (list.Length > 0)
         {
-            bool trouve = true;
-            while (trouve)
+            bool find = true;
+            while (find)
             {
-                trouve = false;
+                find = false;
                 for (int i = 0; i < list.Length; i++)
                     if ((list[i] is not null) && (list[i].Equals(itemToRemove) || (typeof(T) == typeof(string) && string.Compare(list[i].ToString(), itemToRemove.ToString(), comparisonType) == 0)))
                     {
                         if (allOccurrences)
-                            trouve = true;
+                            find = true;
                         list = list.RemoveAt(i);
                         break;
                     }
@@ -99,18 +101,19 @@ public static class ExtensionsArray
     /// <returns>A new array without null instance</returns>
     public static T[] RemoveAllNull<T>(this T[] list)
     {
-        if (list == null) throw new ArgumentNullException(nameof(list));
+        if (list == null)
+            throw new ArgumentNullException(nameof(list));
 
         if (list.Length > 0)
         {
-            bool trouve = true;
-            while (trouve)
+            bool find = true;
+            while (find)
             {
-                trouve = false;
+                find = false;
                 for (int i = 0; i < list.Length; i++)
                     if (list[i] is null)
                     {
-                        trouve = true;
+                        find = true;
                         list = list.RemoveAt(i);
                         break;
                     }
@@ -171,12 +174,12 @@ public static class ExtensionsArray
         if (itemsToAdd == null)
             throw new ArgumentNullException(nameof(itemsToAdd));
 
-        foreach (T objet in itemsToAdd.Select(v => (T)v))
+        foreach (T obj in itemsToAdd.Select(v => (T)v))
         {
-            if ((typeof(T) == objet.GetType()) || (objet.GetType().IsSubclassOf(typeof(T))))
+            if ((typeof(T) == obj.GetType()) || (obj.GetType().IsSubclassOf(typeof(T))))
             {
                 Array.Resize(ref list, list.Length + 1);
-                list[list.Length - 1] = objet;
+                list[list.Length - 1] = obj;
             }
         }
         return list;
@@ -192,9 +195,11 @@ public static class ExtensionsArray
     /// <returns>Return a new Array with the item insert at the specified index</returns>
     public static T[] Insert<T>(this T[] list, object itemToInsert, int position)
     {
-        if (itemToInsert == null) throw new ArgumentNullException(nameof(itemToInsert));
+        if (itemToInsert == null)
+            throw new ArgumentNullException(nameof(itemToInsert));
 
-        if (position > list.Length - 1) position = list.Length;
+        if (position > list.Length - 1)
+            position = list.Length;
         if ((typeof(T) == itemToInsert.GetType()) || (itemToInsert.GetType().IsSubclassOf(typeof(T))))
         {
             Array.Resize(ref list, list.Length + 1);
@@ -219,14 +224,14 @@ public static class ExtensionsArray
             throw new ArgumentNullException(nameof(itemsToInsert));
 
         if (position > list.Length - 1) position = list.Length;
-        foreach (T objet in itemsToInsert.Select(v => (T)v))
+        foreach (T obj in itemsToInsert.Select(v => (T)v))
         {
-            if ((typeof(T) == objet.GetType()) || (objet.GetType().IsSubclassOf(typeof(T))))
+            if ((typeof(T) == obj.GetType()) || (obj.GetType().IsSubclassOf(typeof(T))))
             {
                 Array.Resize(ref list, list.Length + 1);
                 for (int i = list.Length - 1; i > position; i--)
                     list[i] = list[i - 1];
-                list[position] = objet;
+                list[position] = obj;
             }
         }
         return list;
@@ -238,13 +243,13 @@ public static class ExtensionsArray
     /// <typeparam name="T1">Type of Array</typeparam>
     /// <typeparam name="T2">Type of the member of the item array to use as distinct</typeparam>
     /// <param name="list">Array where execute the distinct</param>
-    /// <param name="unique">Predicate that return the member of item array where to make the distinct</param>
-    public static T1[] Distinct<T1, T2>(this T1[] list, Func<T1, T2> unique)
+    /// <param name="predicate">Predicate that return the member of item array where to make the distinct</param>
+    public static T1[] Distinct<T1, T2>(this T1[] list, Func<T1, T2> predicate)
     {
-        T1[] nouvelleListe = [];
-        HashSet<T2> cle = [];
-        foreach (T1 item in list.Where(i => cle.Add(unique(i))))
-            nouvelleListe = nouvelleListe.Add(item);
-        return nouvelleListe;
+        T1[] newList = [];
+        HashSet<T2> key = [];
+        foreach (T1 item in list.Where(i => key.Add(predicate(i))))
+            newList = newList.Add(item);
+        return newList;
     }
 }

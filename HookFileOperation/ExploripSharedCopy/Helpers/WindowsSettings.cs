@@ -39,7 +39,7 @@ public static class WindowsSettings
         return IsWindows10OrGreater(build);
     }
 
-    public static bool UseImmersiveDarkMode(IntPtr pointeurFenetre, bool activerDarkMode)
+    public static bool UseImmersiveDarkMode(IntPtr windowHandle, bool enableDarkMode)
     {
         if (IsWindows10OrGreater())
         {
@@ -48,8 +48,8 @@ public static class WindowsSettings
             {
                 attribut = DWMWA_USE_IMMERSIVE_DARK_MODE;
             }
-            int immersiveActif = (activerDarkMode ? 1 : 0);
-            return WinAPI.Dwmapi.DwmSetWindowAttribute(pointeurFenetre, attribut, ref immersiveActif, IntPtr.Size);
+            int immersiveActif = (enableDarkMode ? 1 : 0);
+            return WinAPI.Dwmapi.DwmSetWindowAttribute(windowHandle, attribut, ref immersiveActif, IntPtr.Size);
         }
         return false;
     }

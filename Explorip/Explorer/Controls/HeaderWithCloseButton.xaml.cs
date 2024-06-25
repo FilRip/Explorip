@@ -92,12 +92,12 @@ public partial class HeaderWithCloseButton : UserControl, INotifyPropertyChanged
 
     private void NewTabOther_Click(object sender, RoutedEventArgs e)
     {
-        WpfExplorerBrowser fenetre = (WpfExplorerBrowser)Window.GetWindow(this);
+        WpfExplorerBrowser window = (WpfExplorerBrowser)Window.GetWindow(this);
         ShellObject dir = CurrentTabExplorer?.ExplorerBrowser?.NavigationLog?.CurrentLocation ?? (ShellObject)KnownFolders.Desktop;
-        if (fenetre.LeftTab == MyTabControl)
-            fenetre.RightTab.AddNewTab(dir);
+        if (window.LeftTab == MyTabControl)
+            window.RightTab.AddNewTab(dir);
         else
-            fenetre.LeftTab.AddNewTab(dir);
+            window.LeftTab.AddNewTab(dir);
     }
 
     #endregion
