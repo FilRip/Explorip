@@ -9,7 +9,6 @@ using Explorip.Helpers;
 using ExploripApi;
 
 using ExploripConfig.Configuration;
-using ExploripConfig.Helpers;
 
 using Microsoft.Win32;
 
@@ -81,7 +80,6 @@ public static class Program
             }
             else
             {
-                args = MyDebug.RemoveDebugArguments(args ?? []);
                 IpcServerManager.SendNewWindow(args);
             }
         }

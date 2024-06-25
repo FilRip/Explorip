@@ -3,6 +3,8 @@ using System.Windows;
 
 using ExploripConfig.Helpers;
 
+using ManagedShell.AppBar;
+
 using Microsoft.Win32;
 
 using WpfScreenHelper;
@@ -40,8 +42,9 @@ public static class ConfigManager
                 _registryKey.SetValue("AllowFontSmoothing", "True");
             if (string.IsNullOrWhiteSpace(_registryKey.GetValue("Language", "").ToString()))
                 _registryKey.SetValue("Language", "System");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("Edge", "").ToString()))
-                _registryKey.SetValue("Edge", "3");
+            string edge = _registryKey.GetValue("Edge", "").ToString();
+            if (string.IsNullOrWhiteSpace(edge) || !Enum.TryParse<AppBarEdge>(edge, out _))
+                Edge = AppBarEdge.Bottom;
             if (string.IsNullOrWhiteSpace(_registryKey.GetValue("HookCopy", "").ToString()))
                 _registryKey.SetValue("HookCopy", "True");
             if (string.IsNullOrWhiteSpace(_registryKey.GetValue("UseOwnCopier", "").ToString()))
@@ -136,13 +139,13 @@ public static class ConfigManager
         }
     }
 
-    public static int Edge // TODO : Enum ?
+    public static AppBarEdge Edge
     {
-        get { return _registryKey.ReadInteger("Edge"); }
+        get { return _registryKey.ReadEnum<AppBarEdge>("Edge"); }
         set
         {
             if (Edge != value && AllowWrite)
-                _registryKey.SetValue("Edge", value.ToString());
+                _registryKey.SetValue("Edge", ((int)value).ToString());
         }
     }
 

@@ -162,7 +162,7 @@ public partial class Taskbar : AppBarWindow
         }
         else if (e.PropertyName == "Edge")
         {
-            AppBarEdge = (AppBarEdge)ConfigManager.Edge;
+            AppBarEdge = ConfigManager.Edge;
             SetScreenPosition();
         }
     }

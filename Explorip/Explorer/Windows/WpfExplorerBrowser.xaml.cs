@@ -31,37 +31,34 @@ namespace Explorip.Explorer.Windows;
 /// </summary>
 public partial class WpfExplorerBrowser : Window
 {
-    public WpfExplorerBrowser() : this(true) { }
+    public WpfExplorerBrowser() : this(Environment.GetCommandLineArgs().RemoveAt(0)) { }
 
-    public WpfExplorerBrowser(bool openDefaultView)
+    public WpfExplorerBrowser(string[] args)
     {
         InitializeComponent();
 
-        if (openDefaultView)
+        string dir = null;
+        args = MyDebug.RemoveDebugArguments(args);
+
+        if (args.Length > 0)
         {
-            string dir = null;
-            string[] args = MyDebug.RemoveDebugArguments(Environment.GetCommandLineArgs(), true);
-
-            if (args.Length > 0)
+            try
             {
-                try
-                {
-                    dir = args[1];
-                    LeftTab.FirstTab.Navigation(dir);
-                }
-                catch (Exception)
-                {
-                    dir = null;
-                }
+                dir = args[0];
+                LeftTab.FirstTab.Navigation(dir);
             }
-
-            if (string.IsNullOrWhiteSpace(dir))
-                LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
-
-            RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
-            if (!ConfigManager.StartTwoExplorer)
-                HideRightTab();
+            catch (Exception)
+            {
+                dir = null;
+            }
         }
+
+        if (string.IsNullOrWhiteSpace(dir))
+            LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
+
+        RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
+        if (!ConfigManager.StartTwoExplorer)
+            HideRightTab();
 
         Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 

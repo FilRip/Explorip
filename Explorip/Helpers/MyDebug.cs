@@ -4,10 +4,8 @@ namespace Explorip.Helpers;
 
 public static class MyDebug
 {
-    public static string[] RemoveDebugArguments(string[] args, bool removeFirst = false)
+    public static string[] RemoveDebugArguments(string[] args)
     {
-        if (removeFirst && args.Length > 0)
-            args = args.RemoveAt(0);
         args = args.Remove("explorer");
         args = args.Remove("withouthook");
         args = args.Remove("useowncopier");

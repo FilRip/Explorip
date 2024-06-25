@@ -13,7 +13,7 @@ public class DockOrientationConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        bool vertical = ConfigManager.Edge == (int)AppBarEdge.Left || ConfigManager.Edge == (int)AppBarEdge.Right;
+        bool vertical = ConfigManager.Edge == AppBarEdge.Left || ConfigManager.Edge == AppBarEdge.Right;
 
         // parameter is a string "leading" or "trailing"
 

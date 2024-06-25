@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using Explorip.Helpers;
 
 using ExploripConfig.Configuration;
-using ExploripConfig.Helpers;
 
 using ManagedShell.AppBar;
 using ManagedShell.Interop;
@@ -55,7 +54,7 @@ public partial class TaskList : UserControl
         DefaultButtonWidth = Application.Current.FindResource("TaskButtonWidth") as double? ?? 0;
         Thickness buttonMargin;
 
-        if (ConfigManager.Edge == (int)AppBarEdge.Left || ConfigManager.Edge == (int)AppBarEdge.Right)
+        if (ConfigManager.Edge == AppBarEdge.Left || ConfigManager.Edge == AppBarEdge.Right)
         {
             buttonMargin = Application.Current.FindResource("TaskButtonVerticalMargin") as Thickness? ?? new Thickness();
         }
@@ -204,7 +203,7 @@ public partial class TaskList : UserControl
 
     private void SetTaskButtonWidth()
     {
-        if (ConfigManager.Edge == (int)AppBarEdge.Left || ConfigManager.Edge == (int)AppBarEdge.Right)
+        if (ConfigManager.Edge == AppBarEdge.Left || ConfigManager.Edge == AppBarEdge.Right)
         {
             ButtonWidth = ActualWidth;
             return;

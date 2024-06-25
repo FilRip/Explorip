@@ -46,7 +46,7 @@ public partial class NotifyBalloon : UserControl
     public CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
     {
         DpiScale dpiScale = VisualTreeHelper.GetDpi(this);
-        CustomPopupPlacement placement = (AppBarEdge)ConfigManager.Edge switch
+        CustomPopupPlacement placement = ConfigManager.Edge switch
         {
             AppBarEdge.Top => new CustomPopupPlacement(new Point((popupSize.Width * -1) + (offset.X * dpiScale.DpiScaleX),
                                    targetSize.Height + (offset.Y * dpiScale.DpiScaleY)),

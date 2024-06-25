@@ -13,7 +13,7 @@ public class EdgeOrientationConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        if (ConfigManager.Edge == (int)AppBarEdge.Left || ConfigManager.Edge == (int)AppBarEdge.Right)
+        if (ConfigManager.Edge == AppBarEdge.Left || ConfigManager.Edge == AppBarEdge.Right)
         {
             return Orientation.Vertical;
         }
