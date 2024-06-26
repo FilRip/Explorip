@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Text;
 
 using ManagedShell.Interop;
@@ -101,7 +102,17 @@ public static class Localization
         ERROR_DURING_RENAME = Load("shell32.dll", 6020, "Error during rename {0} : {1}").Replace("%2!ls!", "{0}").Replace("%1!ls!", "{1}");
         ERROR = Load("shell32.dll", 51248, "Error");
         SEARCH_RESULT = Load("shell32.dll", 34132, "Search result for %s").Replace("%s", "{0}");
-        SHOW_TASKBAR_ON_ALL_SCREENS = "Show taskbar on all screens";
+        SHOW_TASKBAR_ON_ALL_SCREENS = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Taskbar_MultiMon/Description}", "Show taskbar on all screens");
+    }
+
+    private static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
+    {
+        StringBuilder sb = new(maxChar);
+        NativeMethods.SHLoadIndirectString(key, sb, sb.Capacity, IntPtr.Zero);
+        if (sb.Length == 0)
+            return defaultValue;
+        else
+            return sb.ToString();
     }
 
     internal static string Load(string libraryName, uint Ident, string defaultText)
