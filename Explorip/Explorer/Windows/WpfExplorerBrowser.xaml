@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
         UseLayoutRounding="True" Focusable="True" MouseDown="Window_MouseDown" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
-        ResizeMode="CanResizeWithGrip" Activated="Window_Activated"
+        ResizeMode="CanResizeWithGrip"
         MouseDoubleClick="Window_MouseDoubleClick"
         Loaded="Window_Loaded">
 

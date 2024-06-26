@@ -105,7 +105,7 @@ public static class Localization
         SHOW_TASKBAR_ON_ALL_SCREENS = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Taskbar_MultiMon/Description}", "Show taskbar on all screens");
     }
 
-    private static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
+    internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
     {
         StringBuilder sb = new(maxChar);
         NativeMethods.SHLoadIndirectString(key, sb, sb.Capacity, IntPtr.Zero);

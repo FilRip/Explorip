@@ -31,11 +31,15 @@ namespace Explorip.Explorer.Windows;
 /// </summary>
 public partial class WpfExplorerBrowser : Window
 {
+    private readonly IntPtr _windowHandle;
+
     public WpfExplorerBrowser() : this(Environment.GetCommandLineArgs().RemoveAt(0)) { }
 
     public WpfExplorerBrowser(string[] args)
     {
         InitializeComponent();
+
+        _windowHandle = new WindowInteropHelper(this).EnsureHandle();
 
         string dir = null;
         args = MyDebug.RemoveDebugArguments(args);
@@ -65,7 +69,7 @@ public partial class WpfExplorerBrowser : Window
         // TODO : https://stackoverflow.com/questions/69097246/how-to-support-for-windows-11-snap-layout-to-the-custom-maximize-restore-butto
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
         {
-            WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
+            WindowsSettings.UseImmersiveDarkMode(_windowHandle, true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
 
@@ -152,12 +156,11 @@ public partial class WpfExplorerBrowser : Window
                     HitTestResult result = VisualTreeHelper.HitTest((WpfExplorerBrowser)sender, e.GetPosition((WpfExplorerBrowser)sender));
                     if (result.VisualHit is System.Windows.Controls.Primitives.TabPanel)
                     {
-                        IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
-                        IntPtr hMenu = NativeMethods.GetSystemMenu(hWnd, false);
+                        IntPtr hMenu = NativeMethods.GetSystemMenu(_windowHandle, false);
                         Point posMouse = PointToScreen(Mouse.GetPosition(this));
-                        int cmd = NativeMethods.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
+                        int cmd = NativeMethods.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, _windowHandle, IntPtr.Zero);
                         if (cmd > 0)
-                            NativeMethods.SendMessage(hWnd, 0x112, (uint)cmd, 0);
+                            NativeMethods.SendMessage(_windowHandle, 0x112, (uint)cmd, 0);
                     }
                 }
             }
