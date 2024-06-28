@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -158,9 +157,9 @@ public partial class WpfExplorerBrowser : Window
                     {
                         IntPtr hMenu = NativeMethods.GetSystemMenu(_windowHandle, false);
                         Point posMouse = PointToScreen(Mouse.GetPosition(this));
-                        int cmd = NativeMethods.TrackPopupMenu(hMenu, 0x100, (int)posMouse.X, (int)posMouse.Y, 0, _windowHandle, IntPtr.Zero);
+                        int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, _windowHandle, IntPtr.Zero);
                         if (cmd > 0)
-                            NativeMethods.SendMessage(_windowHandle, 0x112, (uint)cmd, 0);
+                            NativeMethods.SendMessage(_windowHandle, NativeMethods.WM.SYSCOMMAND, (uint)cmd, 0);
                     }
                 }
             }
@@ -289,25 +288,6 @@ public partial class WpfExplorerBrowser : Window
 
     #endregion
 
-    private void Window_Activated(object sender, EventArgs e)
-    {
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            try
-            {
-                Thread.Sleep(100);
-                if (IsActive && WindowState == WindowState.Minimized)
-                {
-                    if (MyDataContext.WindowMaximized)
-                        WindowState = WindowState.Maximized;
-                    else
-                        WindowState = WindowState.Normal;
-                }
-            }
-            catch (Exception) { /* Ignore errors */ }
-        }, System.Windows.Threading.DispatcherPriority.Background);
-    }
-
     private void Window_StateChanged(object sender, EventArgs e)
     {
         MyDataContext.WindowMaximized = (WindowState == WindowState.Maximized);
@@ -341,5 +321,10 @@ public partial class WpfExplorerBrowser : Window
             else
                 RestoreWindow_Click(this, new RoutedEventArgs());
         }
+    }
+
+    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+
     }
 }

@@ -18,7 +18,7 @@ public sealed class IpcServer : IServerIpc
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            WpfExplorerBrowser newExplorerWindow = new(args);
+            WpfExplorerBrowser newExplorerWindow = new(args, false);
             newExplorerWindow.LeftTab.FirstTab.Navigation(ShellObject.FromParsingName(args[0]));
             newExplorerWindow.RightTab.CloseAllTabs();
             newExplorerWindow.RightTab.HideTab();

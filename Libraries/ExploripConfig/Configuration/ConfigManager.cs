@@ -268,4 +268,9 @@ public static class ConfigManager
                 _registryKey.SetValue("ShowTitle", value.ToString());
         }
     }
+
+    public static RegistryKey MyRegistryKey
+    {
+        get { return _registryKey; }
+    }
 }
