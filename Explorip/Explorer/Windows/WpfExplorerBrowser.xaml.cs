@@ -21,6 +21,7 @@ using ExploripSharedCopy.WinAPI;
 
 using ManagedShell.Interop;
 
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Explorer.Windows;
@@ -31,10 +32,11 @@ namespace Explorip.Explorer.Windows;
 public partial class WpfExplorerBrowser : Window
 {
     private readonly IntPtr _windowHandle;
+    private readonly bool _allowSaveSession;
 
     public WpfExplorerBrowser() : this(Environment.GetCommandLineArgs().RemoveAt(0)) { }
 
-    public WpfExplorerBrowser(string[] args)
+    public WpfExplorerBrowser(string[] args, bool saveSession = true)
     {
         InitializeComponent();
 
@@ -325,6 +327,13 @@ public partial class WpfExplorerBrowser : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-
+        if (_allowSaveSession)
+        {
+            if (ConfigManager.MyRegistryKey.GetSubKeyNames().Contains("LeftTab"))
+                ConfigManager.MyRegistryKey.DeleteSubKeyTree("LeftTab");
+            if (ConfigManager.MyRegistryKey.GetSubKeyNames().Contains("RightTab"))
+                ConfigManager.MyRegistryKey.DeleteSubKeyTree("RightTab");
+            RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
+        }
     }
 }
