@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 
 using Microsoft.Win32;
 
@@ -24,6 +25,28 @@ public static class ExtensionsRegistry
     {
         if (Enum.TryParse(registryKey.GetValue(keyName, default(T)).ToString(), out T result))
             return result;
+        return default;
+    }
+
+    public static Point ReadPoint(this RegistryKey registryKey, string keyName)
+    {
+        try
+        {
+            Point result = Point.Parse(registryKey.GetValue(keyName).ToString());
+            return result;
+        }
+        catch (Exception) { /* Ignore errors */ }
+        return default;
+    }
+
+    public static Rect ReadRectangle(this RegistryKey registryKey, string keyName)
+    {
+        try
+        {
+            Rect result = Rect.Parse(registryKey.GetValue(keyName).ToString());
+            return result;
+        }
+        catch (Exception) { /* Ignore errors */ }
         return default;
     }
 }

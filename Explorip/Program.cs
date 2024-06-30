@@ -51,8 +51,7 @@ public static class Program
                 _WpfHost.Run();
             }
         }
-        else if (ArgumentExists("taskbar") ||
-            ArgumentExists("taskbars"))
+        else if (ArgumentExists("taskbar") || ArgumentExists("taskbars"))
         {
             mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
             if (processNotLaunched)

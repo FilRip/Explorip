@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 using Explorip.Explorer.Controls;
 using Explorip.Explorer.ViewModels;
@@ -19,6 +20,7 @@ using ExploripConfig.Helpers;
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
+using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
 using Microsoft.Win32;
@@ -32,15 +34,26 @@ namespace Explorip.Explorer.Windows;
 public partial class WpfExplorerBrowser : Window
 {
     private readonly IntPtr _windowHandle;
-    private readonly bool _allowSaveSession;
+    private readonly bool _mainSession;
+    private readonly DispatcherTimer _dispatcherTimer;
+    private bool _snapVisible;
 
     public WpfExplorerBrowser() : this(Environment.GetCommandLineArgs().RemoveAt(0)) { }
 
-    public WpfExplorerBrowser(string[] args, bool saveSession = true)
+    public WpfExplorerBrowser(string[] args, bool mainSession = true)
     {
         InitializeComponent();
 
+        _mainSession = mainSession;
         _windowHandle = new WindowInteropHelper(this).EnsureHandle();
+        if (EnvironmentHelper.IsWindows11OrBetter)
+        {
+            _dispatcherTimer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(1),
+            };
+            _dispatcherTimer.Tick += DispatcherTimer_Tick;
+        }
 
         string dir = null;
         args = MyDebug.RemoveDebugArguments(args);
@@ -58,16 +71,50 @@ public partial class WpfExplorerBrowser : Window
             }
         }
 
-        if (string.IsNullOrWhiteSpace(dir))
-            LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
+        
+        if (_mainSession)
+        {
+            if (string.IsNullOrWhiteSpace(dir))
+            {
+                RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
+                if (registryKey != null)
+                {
+                    string[] listValues = registryKey.GetValueNames();
+                    foreach (string value in listValues)
+                        try
+                        {
+                            LeftTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
+                        }
+                        catch { /* Ignore errors */ }
+                }
+                else
+                    LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
 
-        RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
-        if (!ConfigManager.StartTwoExplorer)
+                registryKey = ConfigManager.MyRegistryKey.OpenSubKey("RightTab");
+                if (registryKey != null)
+                {
+                    string[] listValues = registryKey.GetValueNames();
+                    foreach (string value in listValues)
+                        try
+                        {
+                            RightTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
+                        }
+                        catch { /* Ignore errors */ }
+                }
+            }
+        }
+        else if (string.IsNullOrWhiteSpace(dir))
+        {
+            LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
+            HideRightTab();
+        }
+        if (RightTab.Items.Count == 0 && RightTab.Visibility == Visibility.Visible && _mainSession)
+            RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
+        if (!ConfigManager.StartTwoExplorer && RightTab.Visibility == Visibility.Visible)
             HideRightTab();
 
         Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
-        // TODO : https://stackoverflow.com/questions/69097246/how-to-support-for-windows-11-snap-layout-to-the-custom-maximize-restore-butto
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
         {
             WindowsSettings.UseImmersiveDarkMode(_windowHandle, true);
@@ -176,6 +223,7 @@ public partial class WpfExplorerBrowser : Window
     public void HideRightTab()
     {
         RightGrid.Width = new GridLength(0);
+        RightTab.Visibility = Visibility.Hidden;
         LeftTab.SetValue(Grid.ColumnSpanProperty, 6);
         ConfigManager.StartTwoExplorer = false;
     }
@@ -327,13 +375,42 @@ public partial class WpfExplorerBrowser : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (_allowSaveSession)
+        if (_mainSession)
         {
             if (ConfigManager.MyRegistryKey.GetSubKeyNames().Contains("LeftTab"))
-                ConfigManager.MyRegistryKey.DeleteSubKeyTree("LeftTab");
+                ConfigManager.MyRegistryKey.DeleteSubKeyTree("LeftTab", false);
             if (ConfigManager.MyRegistryKey.GetSubKeyNames().Contains("RightTab"))
-                ConfigManager.MyRegistryKey.DeleteSubKeyTree("RightTab");
-            RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
+                ConfigManager.MyRegistryKey.DeleteSubKeyTree("RightTab", false);
+            int i = 0;
+            RegistryKey registryKey = ConfigManager.MyRegistryKey.CreateSubKey("LeftTab");
+            foreach (TabItemExplorerBrowser tab in LeftTab.Items.OfType<TabItemExplorerBrowser>())
+                registryKey.SetValue($"{i++}", tab.CurrentDirectory);
+            if (RightTab.Visibility == Visibility.Visible)
+            {
+                i = 0;
+                registryKey = ConfigManager.MyRegistryKey.CreateSubKey("RightTab");
+                foreach (TabItemExplorerBrowser tab in RightTab.Items.OfType<TabItemExplorerBrowser>())
+                    registryKey.SetValue($"{i++}", tab.CurrentDirectory);
+            }
         }
+    }
+
+    private void DispatcherTimer_Tick(object sender, EventArgs e)
+    {
+        _dispatcherTimer?.Stop();
+        _snapVisible = !_snapVisible;
+        ManagedShell.Common.Helpers.ShellHelper.ShellKeyCombo(NativeMethods.VK.LWIN, NativeMethods.VK.KEY_Z);
+    }
+
+    private void MaximizeWindow_MouseEnter(object sender, MouseEventArgs e)
+    {
+        _dispatcherTimer?.Start();
+    }
+
+    private void MaximizeWindow_MouseLeave(object sender, MouseEventArgs e)
+    {
+        _dispatcherTimer?.Stop();
+        if (_snapVisible)
+            DispatcherTimer_Tick(null, null);
     }
 }
