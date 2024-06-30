@@ -56,6 +56,7 @@ public partial class WpfExplorerBrowser : Window
         }
 
         string dir = null;
+        bool newInstance = Array.Exists(args, arg => arg.Equals("newinstance", StringComparison.InvariantCultureIgnoreCase));
         args = MyDebug.RemoveDebugArguments(args);
 
         if (args.Length > 0)
@@ -71,46 +72,40 @@ public partial class WpfExplorerBrowser : Window
             }
         }
 
-        
-        if (_mainSession)
-        {
-            if (string.IsNullOrWhiteSpace(dir))
-            {
-                RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
-                if (registryKey != null)
-                {
-                    string[] listValues = registryKey.GetValueNames();
-                    foreach (string value in listValues)
-                        try
-                        {
-                            LeftTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
-                        }
-                        catch { /* Ignore errors */ }
-                }
-                else
-                    LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
 
-                registryKey = ConfigManager.MyRegistryKey.OpenSubKey("RightTab");
-                if (registryKey != null)
-                {
-                    string[] listValues = registryKey.GetValueNames();
-                    foreach (string value in listValues)
-                        try
-                        {
-                            RightTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
-                        }
-                        catch { /* Ignore errors */ }
-                }
+        if (_mainSession && string.IsNullOrWhiteSpace(dir))
+        {
+            RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
+            if (registryKey != null)
+            {
+                string[] listValues = registryKey.GetValueNames();
+                foreach (string value in listValues)
+                    try
+                    {
+                        LeftTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
+                    }
+                    catch { /* Ignore errors */ }
+            }
+            else
+                LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
+
+            registryKey = ConfigManager.MyRegistryKey.OpenSubKey("RightTab");
+            if (registryKey != null)
+            {
+                string[] listValues = registryKey.GetValueNames();
+                foreach (string value in listValues)
+                    try
+                    {
+                        RightTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
+                    }
+                    catch { /* Ignore errors */ }
             }
         }
-        else if (string.IsNullOrWhiteSpace(dir))
-        {
+        if (string.IsNullOrWhiteSpace(dir))
             LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
-            HideRightTab();
-        }
         if (RightTab.Items.Count == 0 && RightTab.Visibility == Visibility.Visible && _mainSession)
             RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
-        if (!ConfigManager.StartTwoExplorer && RightTab.Visibility == Visibility.Visible)
+        if ((!ConfigManager.StartTwoExplorer && RightTab.Visibility == Visibility.Visible) || newInstance)
             HideRightTab();
 
         Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
@@ -123,7 +118,10 @@ public partial class WpfExplorerBrowser : Window
 
         Left = ConfigManager.ExplorerPosX;
         Top = ConfigManager.ExplorerPosY;
-        WindowState = ConfigManager.ExplorerWindowState;
+        if (_mainSession)
+            WindowState = ConfigManager.ExplorerWindowState;
+        if (WindowState == WindowState.Minimized && newInstance)
+            WindowState = WindowState.Normal;
     }
 
     public WpfExplorerBrowserViewModel MyDataContext

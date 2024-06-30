@@ -264,7 +264,8 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         if (CurrentDirectory != null && CurrentDirectory.Name.Contains(Constants.Localization.SEARCH_RESULT.Replace("{0}", "")))
         {
             CurrentDirectory.Dispose();
-            Navigation(_searchDirectory);
+            if (!IsDisposed)
+                Navigation(_searchDirectory);
         }
     }
 
