@@ -11,12 +11,15 @@ using Explorip.Desktop.ViewModels;
 using Explorip.Helpers;
 
 using ExploripConfig.Configuration;
+using ExploripConfig.Helpers;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+
+using Microsoft.Win32;
 
 using WpfScreenHelper;
 
@@ -28,10 +31,14 @@ namespace Explorip.Desktop.Windows;
 public partial class ExploripDesktop : Window
 {
     private IntPtr _handle;
+    public RegistryKey DesktopRegistryKey { get; private set; }
 
-    public ExploripDesktop()
+    public ExploripDesktop() : this(Screen.PrimaryScreen) { }
+
+    public ExploripDesktop(Screen screen)
     {
         InitializeComponent();
+        AssociateScreen = screen;
         DataContext = new ExploripDesktopViewModel(this);
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
         {
@@ -40,6 +47,7 @@ public partial class ExploripDesktop : Window
         }
         if (ConfigManager.HideDesktopBackground)
             Background = Constants.Colors.BackgroundColorBrush;
+        DesktopRegistryKey = ConfigManager.MyRegistryKey.CreateSubKey(ScreenId);
     }
 
     internal void RefreshGrid()
@@ -83,12 +91,22 @@ public partial class ExploripDesktop : Window
         {
             if (!MainGrid.Children.Contains(item))
                 MainGrid.Children.Add(item);
+            if (DesktopRegistryKey.GetValueNames().Contains(item.MyDataContext.Name))
+            {
+                Point point = DesktopRegistryKey.ReadPoint(item.MyDataContext.Name);
+                nbColumn = (int)point.X;
+                nbRow = (int)point.Y;
+            }
             Grid.SetColumn(item, nbColumn);
             Grid.SetRow(item, nbRow);
         }
     }
 
     internal Screen AssociateScreen { get; set; }
+    private string ScreenId
+    {
+        get { return AssociateScreen.DeviceName.TrimStart('.', '\\'); }
+    }
 
     internal ExploripDesktopViewModel MyDataContext
     {

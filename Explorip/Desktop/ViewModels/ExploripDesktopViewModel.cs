@@ -276,6 +276,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                         {
                             Grid.SetColumn(item, x);
                             Grid.SetRow(item, y);
+                            _parentDesktop.DesktopRegistryKey.SetValue(item.Name, $"{x}, {y}");
                         }
                     }
                     else

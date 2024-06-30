@@ -28,20 +28,14 @@ public partial class MyDesktopApp : Application
         Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
         ManagedShell.Common.Helpers.ShellHelper.ToggleDesktopIcons(false);
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-        ExploripDesktop desktop = new()
-        {
-            AssociateScreen = Screen.PrimaryScreen,
-        };
+        ExploripDesktop desktop = new();
         desktop.InitDesktopWindow();
         _listDesktop.Add(desktop);
         if (ArgumentExists("desktops"))
         {
             foreach (Screen screen in Screen.AllScreens.Where(s => !s.Primary))
             {
-                ExploripDesktop ed = new()
-                {
-                    AssociateScreen = screen,
-                };
+                ExploripDesktop ed = new(screen);
                 ed.InitDesktopWindow();
                 _listDesktop.Add(ed);
             }
