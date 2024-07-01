@@ -42,7 +42,7 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
     {
         get
         {
-            return (IsSelected ? Constants.Colors.SelectedBackgroundShellObject : Constants.Colors.TransparentColorBrush);
+            return (IsSelected ? ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject : ExploripSharedCopy.Constants.Colors.TransparentColorBrush);
         }
     }
 
@@ -107,8 +107,8 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
         InputBoxWindow input = new()
         {
             Icon = Icon,
-            Background = Constants.Colors.BackgroundColorBrush,
-            Foreground = Constants.Colors.ForegroundColorBrush,
+            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
         };
         input.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
         input.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);

@@ -27,7 +27,7 @@ public partial class App : Application
         _mutexProcess = new Mutex(true, "ExploripCopy", out bool processNotLaunched);
         if (processNotLaunched)
         {
-            Constants.Colors.LoadTheme();
+            ExploripSharedCopy.Constants.Colors.LoadTheme();
             Constants.Localization.LoadTranslation();
             Constants.Icons.LoadIcons();
             ExploripConfig.Configuration.ConfigManager.Init();

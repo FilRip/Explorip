@@ -45,9 +45,9 @@ public partial class ExploripDesktop : Window
             WindowsSettings.UseImmersiveDarkMode(GetHandle(), true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
-        if (ConfigManager.HideDesktopBackground)
-            Background = Constants.Colors.BackgroundColorBrush;
         DesktopRegistryKey = ConfigManager.MyRegistryKey.CreateSubKey(ScreenId);
+        if (DesktopRegistryKey.GetValueNames().Contains("HideBackgroundDesktop", StringComparer.InvariantCultureIgnoreCase))
+            Background = new SolidColorBrush(DesktopRegistryKey.ReadColor("BackgroundColor", ExploripSharedCopy.Constants.Colors.BackgroundColor));
     }
 
     internal void RefreshGrid()
@@ -91,7 +91,7 @@ public partial class ExploripDesktop : Window
         {
             if (!MainGrid.Children.Contains(item))
                 MainGrid.Children.Add(item);
-            if (DesktopRegistryKey.GetValueNames().Contains(item.MyDataContext.Name))
+            if (DesktopRegistryKey.GetValueNames().Contains(item.MyDataContext.Name, StringComparer.InvariantCultureIgnoreCase))
             {
                 Point point = DesktopRegistryKey.ReadPoint(item.MyDataContext.Name);
                 nbColumn = (int)point.X;
@@ -184,7 +184,7 @@ public partial class ExploripDesktop : Window
 
     private bool _selection;
     private Point _selectionStart;
-    private readonly Pen _selectionPen = new(Constants.Colors.SelectedBackgroundShellObject, 2);
+    private readonly Pen _selectionPen = new(ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject, 2);
 
     private bool SelectInRectangle()
     {
@@ -204,7 +204,7 @@ public partial class ExploripDesktop : Window
     {
         base.OnRender(drawingContext);
         if (_selection)
-            drawingContext.DrawRectangle(Constants.Colors.SelectedBackgroundShellObject, _selectionPen, new Rect(_selectionStart, Mouse.GetPosition(this)));
+            drawingContext.DrawRectangle(ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject, _selectionPen, new Rect(_selectionStart, Mouse.GetPosition(this)));
     }
 
     private void Window_PreviewMouseMove(object sender, MouseEventArgs e)

@@ -42,7 +42,7 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
         get
         {
             if (AllowNavigatePrevious)
-                return Constants.Colors.AccentColorBrush;
+                return ExploripSharedCopy.Constants.Colors.AccentColorBrush;
             else
                 return DisabledButtonColor;
         }
@@ -53,7 +53,7 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
         get
         {
             if (AllowNavigateNext)
-                return Constants.Colors.AccentColorBrush;
+                return ExploripSharedCopy.Constants.Colors.AccentColorBrush;
             else
                 return DisabledButtonColor;
         }

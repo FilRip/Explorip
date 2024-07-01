@@ -109,8 +109,8 @@ public partial class TaskThumbButton : Window
                                 Width = TitleFirst.Width,
                                 HorizontalAlignment = HorizontalAlignment.Left,
                                 Margin = new Thickness(TitleFirst.Width * i, 0, 0, 0),
-                                Background = Constants.Colors.BackgroundColorBrush,
-                                Foreground = Constants.Colors.ForegroundColorBrush,
+                                Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+                                Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
                             };
                             MainGrid.Children.Add(txtTitle);
                         }

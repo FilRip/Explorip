@@ -80,7 +80,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         get
         {
             if (_lastError == null)
-                return Constants.Colors.ForegroundColorBrush;
+                return ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
             else
                 return Brushes.Red;
         }
@@ -346,8 +346,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
                                     win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
                                     win.Title = Localization.CREATE_FOLDER;
                                     win.Icon = Icons.Folder;
-                                    win.Background = Constants.Colors.BackgroundColorBrush;
-                                    win.Foreground = Constants.Colors.ForegroundColorBrush;
+                                    win.Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
+                                    win.Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
                                     win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
                                     win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);
                                 }
@@ -362,8 +362,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
                                     win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
                                     win.Title = Localization.CREATE_SHORTCUT;
                                     win.Icon = Icons.Shortcut;
-                                    win.Background = Constants.Colors.BackgroundColorBrush;
-                                    win.Foreground = Constants.Colors.ForegroundColorBrush;
+                                    win.Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
+                                    win.Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
                                     win.SetQuestions(Localization.CREATE_SHORTCUT_Q1, Localization.CREATE_SHORTCUT_Q2);
                                     win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
                                     win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);

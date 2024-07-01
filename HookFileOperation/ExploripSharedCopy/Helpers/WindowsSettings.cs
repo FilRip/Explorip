@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using System.Windows.Media;
 
 using Microsoft.Win32;
 
@@ -60,15 +60,15 @@ public static class WindowsSettings
         if (cle != null)
         {
             object valeurCle = cle.GetValue("AccentColor");
-            if (valeurCle is Int32 accentColor)
+            if (valeurCle is int accentColor)
             {
                 return ParseDWordColor(accentColor);
             }
         }
-        return Color.CadetBlue;
+        return Color.FromArgb(255, 0, 146, 255);
     }
 
-    private static Color ParseDWordColor(Int32 color)
+    private static Color ParseDWordColor(int color)
     {
         byte a = (byte)((color >> 24) & 0xFF),
             b = (byte)((color >> 16) & 0xFF),

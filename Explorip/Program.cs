@@ -37,7 +37,7 @@ public static class Program
         }
 
         Constants.Localization.LoadTranslation();
-        Constants.Colors.LoadTheme();
+        ExploripSharedCopy.Constants.Colors.LoadTheme();
         Constants.Icons.Init();
         ConfigManager.Init();
 

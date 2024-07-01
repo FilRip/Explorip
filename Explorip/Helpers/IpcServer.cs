@@ -32,8 +32,8 @@ public sealed class IpcServer : IServerIpc
         {
             win.Title = Constants.Localization.CREATE_FOLDER;
             win.Icon = Constants.Icons.Folder;
-            win.Background = Constants.Colors.BackgroundColorBrush;
-            win.Foreground = Constants.Colors.ForegroundColorBrush;
+            win.Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
+            win.Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
             win.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
             win.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
         }
@@ -47,8 +47,8 @@ public sealed class IpcServer : IServerIpc
         {
             win.Title = Constants.Localization.CREATE_SHORTCUT;
             win.Icon = Constants.Icons.Shortcut;
-            win.Background = Constants.Colors.BackgroundColorBrush;
-            win.Foreground = Constants.Colors.ForegroundColorBrush;
+            win.Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
+            win.Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
             win.SetQuestions(Constants.Localization.CREATE_SHORTCUT_Q1, Constants.Localization.CREATE_SHORTCUT_Q2);
             win.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
             win.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);

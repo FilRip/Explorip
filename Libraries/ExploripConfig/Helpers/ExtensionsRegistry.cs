@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Media;
 
 using Microsoft.Win32;
 
@@ -48,5 +49,23 @@ public static class ExtensionsRegistry
         }
         catch (Exception) { /* Ignore errors */ }
         return default;
+    }
+
+    public static Color ReadColor(this RegistryKey registryKey, string keyName, Color defaultColor)
+    {
+        try
+        {
+            object value = registryKey.GetValue(keyName);
+            if (value is string)
+            {
+                string[] splitter = value.ToString().Split(',');
+                if (splitter.Length == 4)
+                    return Color.FromArgb(byte.Parse(splitter[0]), byte.Parse(splitter[1]), byte.Parse(splitter[2]), byte.Parse(splitter[3]));
+                else if (splitter.Length == 3)
+                    return Color.FromArgb(255, byte.Parse(splitter[0]), byte.Parse(splitter[1]), byte.Parse(splitter[2]));
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
+        return defaultColor;
     }
 }

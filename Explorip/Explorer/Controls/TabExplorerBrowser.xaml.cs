@@ -5,6 +5,10 @@ using System.Windows.Input;
 
 using Explorip.Explorer.Windows;
 
+using ExploripConfig.Configuration;
+using ExploripConfig.Helpers;
+
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Shell;
 
 namespace Explorip.Explorer.Controls;
@@ -18,6 +22,16 @@ public partial class TabExplorerBrowser : TabControl
     {
         DataContext = this;
         InitializeComponent();
+        if (Name == "LeftTab")
+        {
+            RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
+            if (registryKey != null)
+            {
+                int width = registryKey.ReadInteger("Width");
+                if (width > 0)
+                    Width = width;
+            }
+        }
     }
 
     public bool AllowCloseLastTab { get; set; }
@@ -123,5 +137,14 @@ public partial class TabExplorerBrowser : TabControl
     public Vector GetVisualOffset()
     {
         return VisualOffset;
+    }
+
+    private void TabControl_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (e.WidthChanged && Name == "LeftTab" && ConfigManager.AllowWrite)
+        {
+            RegistryKey registryKey = ConfigManager.MyRegistryKey.CreateSubKey("LeftTab");
+            registryKey.SetValue("Width", e.NewSize.Width.ToString());
+        }
     }
 }
