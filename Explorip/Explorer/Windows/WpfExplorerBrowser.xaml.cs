@@ -122,6 +122,16 @@ public partial class WpfExplorerBrowser : Window
             WindowState = ConfigManager.ExplorerWindowState;
         if (WindowState == WindowState.Minimized && newInstance)
             WindowState = WindowState.Normal;
+        if (RightTab.Visibility == Visibility.Visible)
+        {
+            RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
+            if (registryKey != null)
+            {
+                int width = registryKey.ReadInteger("Width");
+                if (width > 0)
+                    Width = width;
+            }
+        }
     }
 
     public WpfExplorerBrowserViewModel MyDataContext

@@ -22,16 +22,6 @@ public partial class TabExplorerBrowser : TabControl
     {
         DataContext = this;
         InitializeComponent();
-        if (Name == "LeftTab")
-        {
-            RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
-            if (registryKey != null)
-            {
-                int width = registryKey.ReadInteger("Width");
-                if (width > 0)
-                    Width = width;
-            }
-        }
     }
 
     public bool AllowCloseLastTab { get; set; }
