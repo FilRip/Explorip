@@ -2,12 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:tb="http://www.hardcodet.net/taskbar"
                     xmlns:viewmodels="clr-namespace:ExploripCopy.ViewModels"
-                    xmlns:constants="clr-namespace:ExploripCopy.Constants">
+                    xmlns:constants="clr-namespace:ExploripCopy.Constants"
+                    xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy">
     <ContextMenu x:Shared="false" x:Key="SysTrayMenu" BorderThickness="0">
-        <MenuItem Header="{x:Static constants:Localization.SHOW_MAIN_WINDOW}" Command="{Binding ShowWindowCommand}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0"/>
-        <MenuItem Header="{x:Static constants:Localization.SHOW_NOTIFICATION}" Style="{DynamicResource NewMenuItemStyle}" IsChecked="{Binding ActiveShowNotification}" Command="{Binding ShowNotificationCommand}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0" BorderBrush="{x:Static constants:Colors.ForegroundColorBrush}"/>
+        <MenuItem Header="{x:Static constants:Localization.SHOW_MAIN_WINDOW}" Command="{Binding ShowWindowCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0"/>
+        <MenuItem Header="{x:Static constants:Localization.SHOW_NOTIFICATION}" Style="{DynamicResource NewMenuItemStyle}" IsChecked="{Binding ActiveShowNotification}" Command="{Binding ShowNotificationCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}"/>
         <Separator BorderThickness="0" Margin="0" Padding="0"/>
-        <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding ExitApplicationCommand}" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0"/>
+        <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding ExitApplicationCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0"/>
     </ContextMenu>
     <tb:TaskbarIcon x:Key="NotifyIcon"
                     IconSource="{Binding SystrayIcon, UpdateSourceTrigger=PropertyChanged}"

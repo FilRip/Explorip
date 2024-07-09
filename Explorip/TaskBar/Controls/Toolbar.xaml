@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:constants="clr-namespace:Explorip.Constants"
+             xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              IsVisibleChanged="UserControl_IsVisibleChanged"
              MouseDown="UserControl_MouseDown"
              MouseUp="UserControl_MouseUp"
@@ -25,12 +26,12 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Label Name="Title" Width="auto" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Grid.Column="0">
+        <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0">
             <Label.ContextMenu>
-                <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" BorderBrush="{x:Static constants:Colors.ForegroundColorBrush}">
+                <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
                     <ContextMenu.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                            <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
                         </ItemsPanelTemplate>
                     </ContextMenu.ItemsPanel>
                     <MenuItem Header="{x:Static constants:Localization.SHOW_TITLE}" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>

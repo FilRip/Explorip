@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
              xmlns:constants="clr-namespace:Explorip.Constants"
+             xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              mc:Ignorable="d" Focusable="True"
              d:DesignHeight="96" d:DesignWidth="96"
              KeyDown="UserControl_KeyDown">
@@ -29,10 +30,10 @@
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                                        <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
                                     </Trigger>
                                     <Trigger Property="IsFocused" Value="True">
-                                        <Setter Property="BorderBrush" Value="{x:Static constants:Colors.ForegroundColorBrush}"/>
+                                        <Setter Property="BorderBrush" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
                                     </Trigger>
                                     <Trigger Property="IsFocused" Value="False">
                                         <Setter Property="BorderBrush" Value="Transparent"/>
@@ -48,7 +49,7 @@
                     <Image Source="{Binding Icon}" Height="{Binding IconSize}" Width="{Binding IconSize}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0"/>
                     <Image Source="{Binding OverlayIcon}" Height="{Binding IconSize}" Width="{Binding IconSize}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0"/>
                 </Grid>
-                <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="{Binding BackgroundBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Center"/>
+                <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="{Binding BackgroundBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Center"/>
             </StackPanel>
         </Button>
     </Grid>

@@ -8,6 +8,7 @@
          xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
          xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
          xmlns:constants="clr-namespace:Explorip.Constants"
+         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
          mc:Ignorable="d" Style="{DynamicResource CustomTabItem}"
          IsTabStop="False"
          d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
@@ -96,7 +97,7 @@
                       IsDropDownOpen="{Binding ShowSuggestions}"/>
             <TextBox Name="SearchText" Grid.Column="2" BorderThickness="2" Foreground="White" Background="Black" Visibility="{Binding ModeSearch, Converter={StaticResource boolToVisibility}}" Text="{Binding SearchTo}" Focusable="True" IsTabStop="False" KeyDown="SearchText_KeyDown"/>
 
-            <Button Name="SearchButton" Grid.Column="3" Content="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{x:Static constants:Colors.AccentColorBrush}" Click="SearchButton_Click" BorderBrush="{Binding DisabledButtonColor}" BorderThickness="2" IsTabStop="False" Focusable="False">
+            <Button Name="SearchButton" Grid.Column="3" Content="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{x:Static colors:Colors.AccentColorBrush}" Click="SearchButton_Click" BorderBrush="{Binding DisabledButtonColor}" BorderThickness="2" IsTabStop="False" Focusable="False">
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="Transparent"/>

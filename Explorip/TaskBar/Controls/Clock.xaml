@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
+             xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              MouseLeftButtonDown="Clock_OnMouseLeftButtonDown"
              MouseDoubleClick="Clock_OnMouseDoubleClick"
              mc:Ignorable="d">
@@ -17,10 +18,10 @@
                Name="ClockTextBlock"
                Visibility="{Binding ClockVisibility}" />
     <UserControl.ContextMenu>
-        <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" BorderBrush="{x:Static constants:Colors.ForegroundColorBrush}">
+        <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
             <ContextMenu.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                    <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
                 </ItemsPanelTemplate>
             </ContextMenu.ItemsPanel>
             <MenuItem Header="{x:Static constants:Localization.ADJUST_DATE_TIME}" Click="MenuItem_OnClick" />

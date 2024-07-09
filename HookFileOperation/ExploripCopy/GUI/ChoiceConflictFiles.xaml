@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:constants="clr-namespace:ExploripCopy.Constants"
+        xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         xmlns:viewmodels="clr-namespace:ExploripCopy.ViewModels"
-        mc:Ignorable="d" BorderBrush="{x:Static constants:Colors.ForegroundColorBrush}" BorderThickness="1"
-        Title="ChoiceConflictFiles" Height="220" Width="400" WindowStyle="None" Topmost="True" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" ResizeMode="NoResize"
+        mc:Ignorable="d" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" BorderThickness="1"
+        Title="ChoiceConflictFiles" Height="220" Width="400" WindowStyle="None" Topmost="True" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" ResizeMode="NoResize"
         MouseMove="Window_MouseMove">
     <Window.DataContext>
         <viewmodels:ChoiceOnCollisionViewModel/>
@@ -26,20 +27,20 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="{x:Static constants:Localization.FILE_COLLISION_TITLE}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Background="Transparent" MouseDown="TextBlock_MouseDown" MouseUp="TextBlock_MouseUp" TextWrapping="Wrap"/>
-        <TextBlock Grid.Row="2" Text="{Binding ConflictFile}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Background="Transparent" MouseDown="TextBlock_MouseDown" MouseUp="TextBlock_MouseUp" TextWrapping="Wrap"/>
-        <RadioButton Grid.Row="4" GroupName="MyChoice" Name="ReplaceAll" Click="RadioButton_Click" Content="{x:Static constants:Localization.REPLACE_FILE}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
-        <RadioButton Grid.Row="5" GroupName="MyChoice" Name="IgnoreAll" Click="RadioButton_Click" Content="{x:Static constants:Localization.IGNORE_FILE}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
-        <RadioButton Grid.Row="6" GroupName="MyChoice" Name="IgnoreSameDateSize" Click="RadioButton_Click" IsChecked="True" Content="{x:Static constants:Localization.IGNORE_FILE_SAME_DATE_SIZE}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
-        <CheckBox Grid.Row="8" Content="Faire de même pour tous les prochains fichiers" IsChecked="{Binding DoSameForAllFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
+        <TextBlock Grid.Row="0" Text="{x:Static constants:Localization.FILE_COLLISION_TITLE}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Background="Transparent" MouseDown="TextBlock_MouseDown" MouseUp="TextBlock_MouseUp" TextWrapping="Wrap"/>
+        <TextBlock Grid.Row="2" Text="{Binding ConflictFile}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Background="Transparent" MouseDown="TextBlock_MouseDown" MouseUp="TextBlock_MouseUp" TextWrapping="Wrap"/>
+        <RadioButton Grid.Row="4" GroupName="MyChoice" Name="ReplaceAll" Click="RadioButton_Click" Content="{x:Static constants:Localization.REPLACE_FILE}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+        <RadioButton Grid.Row="5" GroupName="MyChoice" Name="IgnoreAll" Click="RadioButton_Click" Content="{x:Static constants:Localization.IGNORE_FILE}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+        <RadioButton Grid.Row="6" GroupName="MyChoice" Name="IgnoreSameDateSize" Click="RadioButton_Click" IsChecked="True" Content="{x:Static constants:Localization.IGNORE_FILE_SAME_DATE_SIZE}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+        <CheckBox Grid.Row="8" Content="Faire de même pour tous les prochains fichiers" IsChecked="{Binding DoSameForAllFiles, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
         <Grid Grid.Row="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Button Content="{x:Static constants:Localization.CANCEL}" Grid.Column="1" Name="ButtonAnnuler" Click="ButtonAnnuler_Click" Width="100" Margin="0 0 50 0" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
-            <Button Content="{x:Static constants:Localization.CONTINUE}" Grid.Column="2" Name="ButtonOK" Click="ButtonOK_Click" Width="100" Margin="0 0 10 0" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
+            <Button Content="{x:Static constants:Localization.CANCEL}" Grid.Column="1" Name="ButtonAnnuler" Click="ButtonAnnuler_Click" Width="100" Margin="0 0 50 0" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+            <Button Content="{x:Static constants:Localization.CONTINUE}" Grid.Column="2" Name="ButtonOK" Click="ButtonOK_Click" Width="100" Margin="0 0 10 0" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
         </Grid>
     </Grid>
 </Window>

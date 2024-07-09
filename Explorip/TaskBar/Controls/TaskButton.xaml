@@ -2,13 +2,14 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:constants="clr-namespace:Explorip.Constants"
+             xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:windowstask="clr-namespace:ManagedShell.WindowsTasks;assembly=ManagedShell.WindowsTasks"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
              Loaded="TaskButton_OnLoaded"
-             Unloaded="TaskButton_OnUnloaded" Background="{x:Static constants:Colors.BackgroundColorBrush}" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave">
+             Unloaded="TaskButton_OnUnloaded" Background="{x:Static colors:Colors.BackgroundColorBrush}" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
     </UserControl.Resources>
@@ -29,16 +30,16 @@
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
                    Style="{DynamicResource TaskIcon}"/>
             <Button.ContextMenu>
-                <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" BorderBrush="{x:Static constants:Colors.ForegroundColorBrush}">
+                <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
                     <ContextMenu.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                            <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
                         </ItemsPanelTemplate>
                     </ContextMenu.ItemsPanel>
                     <MenuItem Header="{x:Static constants:Localization.RESTORE}" BorderThickness="0"
                           Click="RestoreMenuItem_OnClick"
-                          Background="{x:Static constants:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
+                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
+                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
                           Name="RestoreMenuItem">
                         <MenuItem.Icon>
                             <TextBlock FontFamily="Marlett"
@@ -49,18 +50,18 @@
                     </MenuItem>
                     <MenuItem Header="{x:Static constants:Localization.MOVE}" BorderThickness="0"
                           Click="MoveMenuItem_OnClick"
-                          Background="{x:Static constants:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
+                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
+                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
                           Name="MoveMenuItem" />
                     <MenuItem Header="{DynamicResource size}" BorderThickness="0"
                           Click="SizeMenuItem_OnClick"
-                          Background="{x:Static constants:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
+                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
+                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
                           Name="SizeMenuItem" />
                     <MenuItem Header="{x:Static constants:Localization.MINIMIZE}" BorderThickness="0"
                           Click="MinimizeMenuItem_OnClick"
-                          Background="{x:Static constants:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
+                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
+                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
                           Name="MinimizeMenuItem">
                         <MenuItem.Icon>
                             <TextBlock FontFamily="Marlett"
@@ -71,8 +72,8 @@
                     </MenuItem>
                     <MenuItem Header="{x:Static constants:Localization.MAXIMIZE}" BorderThickness="0"
                           Click="MaximizeMenuItem_OnClick"
-                          Background="{x:Static constants:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
+                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
+                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
                           Name="MaximizeMenuItem">
                         <MenuItem.Icon>
                             <TextBlock FontFamily="Marlett"
@@ -84,8 +85,8 @@
                     <Separator BorderThickness="0"/>
                     <MenuItem Header="{x:Static constants:Localization.CLOSE}" BorderThickness="0"
                           FontWeight="Bold"
-                          Background="{x:Static constants:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static constants:Colors.ForegroundColorBrush}"
+                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
+                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
                           Click="CloseMenuItem_OnClick">
                         <MenuItem.Icon>
                             <TextBlock FontFamily="Marlett" 
@@ -97,6 +98,6 @@
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
-        <StackPanel Grid.Row="1" Background="{x:Static constants:Colors.AccentColorBrush}" Visibility="{Binding Launched, Converter={StaticResource BoolToVisibility}}"/>
+        <StackPanel Grid.Row="1" Background="{x:Static colors:Colors.AccentColorBrush}" Visibility="{Binding Launched, Converter={StaticResource BoolToVisibility}}"/>
     </Grid>
 </UserControl>
