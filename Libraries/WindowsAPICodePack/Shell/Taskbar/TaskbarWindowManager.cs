@@ -26,12 +26,12 @@ internal static class TaskbarWindowManager
         TaskbarWindow temp = null;
         try
         {
-#pragma warning disable S1121
+#pragma warning disable S1121,S1854
             AddThumbnailButtons(
                 taskbarWindow ?? (temp = new TaskbarWindow(userWindowHandle, buttons)),
                 taskbarWindow == null,
                 buttons);
-#pragma warning restore S1121
+#pragma warning restore S1854, S1121
         }
         catch
         {
@@ -47,12 +47,12 @@ internal static class TaskbarWindowManager
         TaskbarWindow temp = null;
         try
         {
-#pragma warning disable S1121
+#pragma warning disable S1121, S1854
             AddThumbnailButtons(
                 taskbarWindow ?? (temp = new TaskbarWindow(control, buttons)),
                 taskbarWindow == null,
                 buttons);
-#pragma warning restore S1121
+#pragma warning restore S1121, S1854
         }
         catch
         {
