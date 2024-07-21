@@ -72,7 +72,6 @@ public partial class WpfExplorerBrowser : Window
             }
         }
 
-
         if (_mainSession && string.IsNullOrWhiteSpace(dir))
         {
             RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
@@ -157,8 +156,6 @@ public partial class WpfExplorerBrowser : Window
 
     private void CloseWindow_Click(object sender, RoutedEventArgs e)
     {
-        LeftTab.CloseAllTabs();
-        RightTab.CloseAllTabs();
         Close();
     }
 
@@ -401,6 +398,8 @@ public partial class WpfExplorerBrowser : Window
                     registryKey.SetValue($"{i++}", tab.CurrentDirectory);
             }
         }
+        LeftTab.CloseAllTabs();
+        RightTab.CloseAllTabs();
     }
 
     private void DispatcherTimer_Tick(object sender, EventArgs e)
