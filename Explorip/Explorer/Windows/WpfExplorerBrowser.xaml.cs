@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -77,8 +78,7 @@ public partial class WpfExplorerBrowser : Window
             RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
             if (registryKey != null)
             {
-                string[] listValues = registryKey.GetValueNames();
-                foreach (string value in listValues)
+                foreach (string value in registryKey.GetValueNames().Where(name => name.StartsWith("Tab(")))
                     try
                     {
                         LeftTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
@@ -91,8 +91,7 @@ public partial class WpfExplorerBrowser : Window
             registryKey = ConfigManager.MyRegistryKey.OpenSubKey("RightTab");
             if (registryKey != null)
             {
-                string[] listValues = registryKey.GetValueNames();
-                foreach (string value in listValues)
+                foreach (string value in registryKey.GetValueNames().Where(name => name.StartsWith("Tab(")))
                     try
                     {
                         RightTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
@@ -102,7 +101,7 @@ public partial class WpfExplorerBrowser : Window
         }
         if (string.IsNullOrWhiteSpace(dir))
             LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
-        if (RightTab.Items.Count == 0 && RightTab.Visibility == Visibility.Visible && _mainSession)
+        if (RightTab.Items.Count == 1 && RightTab.Visibility == Visibility.Visible && _mainSession)
             RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
         if ((!ConfigManager.StartTwoExplorer && RightTab.Visibility == Visibility.Visible) || newInstance)
             HideRightTab();
@@ -382,20 +381,20 @@ public partial class WpfExplorerBrowser : Window
     {
         if (_mainSession)
         {
-            if (ConfigManager.MyRegistryKey.GetSubKeyNames().Contains("LeftTab"))
-                ConfigManager.MyRegistryKey.DeleteSubKeyTree("LeftTab", false);
-            if (ConfigManager.MyRegistryKey.GetSubKeyNames().Contains("RightTab"))
-                ConfigManager.MyRegistryKey.DeleteSubKeyTree("RightTab", false);
-            int i = 0;
             RegistryKey registryKey = ConfigManager.MyRegistryKey.CreateSubKey("LeftTab");
+            foreach (string name in registryKey.GetValueNames().Where(name => name.StartsWith("Tab(")))
+                registryKey.DeleteValue(name);
+            int i = 0;
             foreach (TabItemExplorerBrowser tab in LeftTab.Items.OfType<TabItemExplorerBrowser>())
-                registryKey.SetValue($"{i++}", tab.CurrentDirectory);
+                registryKey.SetValue($"Tab({i++})", tab.CurrentDirectory);
             if (RightTab.Visibility == Visibility.Visible)
             {
                 i = 0;
                 registryKey = ConfigManager.MyRegistryKey.CreateSubKey("RightTab");
+                foreach (string name in registryKey.GetValueNames().Where(name => name.StartsWith("Tab(")))
+                    registryKey.DeleteValue(name);
                 foreach (TabItemExplorerBrowser tab in RightTab.Items.OfType<TabItemExplorerBrowser>())
-                    registryKey.SetValue($"{i++}", tab.CurrentDirectory);
+                    registryKey.SetValue($"Tab({i++})", tab.CurrentDirectory);
             }
         }
         LeftTab.CloseAllTabs();
