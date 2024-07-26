@@ -6,7 +6,6 @@ using System.Windows.Input;
 using Explorip.Explorer.Windows;
 
 using ExploripConfig.Configuration;
-using ExploripConfig.Helpers;
 
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Shell;
