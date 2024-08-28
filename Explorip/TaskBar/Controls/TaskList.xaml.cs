@@ -161,7 +161,10 @@ public partial class TaskList : UserControl
                 else
                     appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
                 appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
-                MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
+                if (numPinnedApp > MyTaskbarApp.MyShellManager.TasksService.Windows.Count)
+                    MyTaskbarApp.MyShellManager.TasksService.Windows.Add(appWin);
+                else
+                    MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
                 if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
                 {
                     foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw.WinFileName == appWin.WinFileName).ToList())
