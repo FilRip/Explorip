@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// A wrapper for the native POINT structure.
@@ -60,7 +60,7 @@ public struct NativePoint
     /// <returns>True if this NativePoint is equal obj; false otherwise.</returns>
     public override bool Equals(object obj)
     {
-        return (obj is NativePoint point) && this == point;
+        return obj is NativePoint point && this == point;
     }
 
     /// <summary>

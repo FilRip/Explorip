@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 using ExploripConfig.Helpers;
@@ -15,13 +17,15 @@ namespace ExploripConfig.Configuration;
 
 public static class ConfigManager
 {
+    private const string HKeyRoot = "Software\\CoolBytes\\Explorip";
+
     public static bool AllowWrite { get; set; }
     private static RegistryKey _registryKey;
 
     public static void Init(bool allowWrite = true)
     {
         AllowWrite = allowWrite && !ArgumentExists("disablewriteconfig");
-        _registryKey = Registry.CurrentUser.CreateSubKey("Software\\CoolBytes\\Explorip", true);
+        _registryKey = Registry.CurrentUser.CreateSubKey(HKeyRoot, true);
         if (_registryKey == null)
             AllowWrite = false;
 
@@ -272,5 +276,45 @@ public static class ConfigManager
     public static RegistryKey MyRegistryKey
     {
         get { return _registryKey; }
+    }
+
+    public static string[] LeftTabs
+    {
+        get { return GetAllTabs("LeftTab"); }
+        set
+        {
+            if (AllowWrite)
+                SaveAllTabs("LeftTab", value);
+        }
+    }
+
+    public static string[] RightTabs
+    {
+        get { return GetAllTabs("RightTab"); }
+        set
+        {
+            if (AllowWrite)
+                SaveAllTabs("RightTab", value);
+        }
+    }
+
+    private static string[] GetAllTabs(string tabName)
+    {
+        List<string> allTabs = [];
+        RegistryKey hkey = Registry.CurrentUser.OpenSubKey($"{HKeyRoot}\\{tabName}");
+        if (hkey != null)
+            foreach (string name in hkey.GetValueNames().Where(name => name.StartsWith("Tab(")))
+                allTabs.Add(hkey.GetValue(name).ToString());
+        return allTabs.ToArray();
+    }
+
+    private static void SaveAllTabs(string hkeyPath, string[] listTabs)
+    {
+        RegistryKey hkey = Registry.CurrentUser.CreateSubKey($"{HKeyRoot}\\{hkeyPath}", true);
+        foreach (string name in hkey.GetValueNames().Where(name => name.StartsWith("Tab(")))
+            hkey.DeleteValue(name);
+        int i = 0;
+        foreach (string path in listTabs)
+            hkey.SetValue($"Tab({i++})", path);
     }
 }

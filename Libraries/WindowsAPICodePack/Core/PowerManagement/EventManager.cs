@@ -1,9 +1,7 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Threading;
 
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.PowerManagement;
 
 /// <summary>
 /// This class keeps track of the current state of each type of event.  

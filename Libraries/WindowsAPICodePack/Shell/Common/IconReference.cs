@@ -1,10 +1,8 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// A refence to an icon resource 
@@ -125,9 +123,9 @@ public struct IconReference
     /// <returns>True if icon1 equals icon1; false otherwise.</returns>
     public static bool operator ==(IconReference icon1, IconReference icon2)
     {
-        return (icon1.moduleName == icon2.moduleName) &&
-            (icon1.referencePath == icon2.referencePath) &&
-            (icon1.ResourceId == icon2.ResourceId);
+        return icon1.moduleName == icon2.moduleName &&
+            icon1.referencePath == icon2.referencePath &&
+            icon1.ResourceId == icon2.ResourceId;
     }
 
     /// <summary>

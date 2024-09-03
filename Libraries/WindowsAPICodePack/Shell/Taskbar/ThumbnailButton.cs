@@ -1,13 +1,12 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Drawing;
 
+using Microsoft.WindowsAPICodePack.Interop;
 using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Represents a taskbar thumbnail button in the thumbnail toolbar.
@@ -47,7 +46,7 @@ public sealed class ThumbnailToolBarButton : IDisposable
         Id = nextId;
 
         // increment the ID
-        if (nextId == Int32.MaxValue)
+        if (nextId == int.MaxValue)
             SetNextId(101); // our starting point
         else
             SetNextId(nextId + 1);
@@ -132,7 +131,7 @@ public sealed class ThumbnailToolBarButton : IDisposable
 
                 if (value)
                 {
-                    Flags &= ~(ThumbButtonOptions.Hidden);
+                    Flags &= ~ThumbButtonOptions.Hidden;
                 }
                 else
                 {
@@ -164,7 +163,7 @@ public sealed class ThumbnailToolBarButton : IDisposable
 
                 if (value)
                 {
-                    Flags &= ~(ThumbButtonOptions.Disabled);
+                    Flags &= ~ThumbButtonOptions.Disabled;
                 }
                 else
                 {
@@ -199,7 +198,7 @@ public sealed class ThumbnailToolBarButton : IDisposable
                 }
                 else
                 {
-                    Flags &= ~(ThumbButtonOptions.DismissOnClick);
+                    Flags &= ~ThumbButtonOptions.DismissOnClick;
                 }
 
                 UpdateThumbnailButton();
@@ -230,7 +229,7 @@ public sealed class ThumbnailToolBarButton : IDisposable
 
                 if (value)
                 {
-                    Flags &= ~(ThumbButtonOptions.NonInteractive);
+                    Flags &= ~ThumbButtonOptions.NonInteractive;
                 }
                 else
                 {

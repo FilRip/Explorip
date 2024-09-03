@@ -1,6 +1,4 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Indicates the various buttons and options clicked by the user on the task dialog.

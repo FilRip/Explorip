@@ -1,6 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using Microsoft.WindowsAPICodePack.Interop;
 
-namespace MS.WindowsAPICodePack.Internal;
+namespace Microsoft.WindowsAPICodePack.SafeHandles;
 
 /// <summary>
 /// Safe Window Handle

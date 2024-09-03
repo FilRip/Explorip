@@ -1,4 +1,4 @@
-﻿namespace Explorip.HookFileOperations;
+﻿namespace Explorip.HookFileOperations.FilesOperations;
 
 public enum CopyEngineResult : uint
 {

@@ -3,7 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 namespace Explorip.Explorer.Controls;
 

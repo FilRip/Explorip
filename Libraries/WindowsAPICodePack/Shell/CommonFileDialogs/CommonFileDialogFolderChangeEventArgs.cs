@@ -1,8 +1,6 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System.ComponentModel;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 /// Creates the event data associated with <see cref="CommonFileDialog.FolderChanging"/> event.

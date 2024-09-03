@@ -1,13 +1,11 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.ComponentModel;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Interop.PowerManagement;
 using Microsoft.WindowsAPICodePack.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.PowerManagement;
 
 /// <summary>
 /// Enables registration for 
@@ -28,7 +26,7 @@ public static class PowerManager
     /// Raised each time the active power scheme changes.
     /// </summary>
     /// <exception cref="InvalidOperationException">The event handler specified for removal was not registered.</exception>
-    /// <exception cref="System.PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
     public static event EventHandler PowerPersonalityChanged
     {
         add
@@ -52,7 +50,7 @@ public static class PowerManager
     /// Raised when the power source changes.
     /// </summary>
     /// <exception cref="InvalidOperationException">The event handler specified for removal was not registered.</exception>
-    /// <exception cref="System.PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
     public static event EventHandler PowerSourceChanged
     {
         add
@@ -76,7 +74,7 @@ public static class PowerManager
     /// Raised when the remaining battery life changes.
     /// </summary>
     /// <exception cref="InvalidOperationException">The event handler specified for removal was not registered.</exception>
-    /// <exception cref="System.PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
     public static event EventHandler BatteryLifePercentChanged
     {
         add
@@ -99,7 +97,7 @@ public static class PowerManager
     /// Raised when the monitor status changes.
     /// </summary>
     /// <exception cref="InvalidOperationException">The event handler specified for removal was not registered.</exception>
-    /// <exception cref="System.PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
     public static event EventHandler IsMonitorOnChanged
     {
         add
@@ -125,7 +123,7 @@ public static class PowerManager
     /// would otherwise prevent the computer from entering an idle state. 
     /// </summary>
     /// <exception cref="InvalidOperationException">The event handler specified for removal was not registered.</exception>
-    /// <exception cref="System.PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
     public static event EventHandler SystemBusyChanged
     {
         add
@@ -150,8 +148,8 @@ public static class PowerManager
     /// </summary>
     /// <returns>A <see cref="BatteryState"/> instance that represents 
     /// the state of the battery at the time this method was called.</returns>
-    /// <exception cref="System.InvalidOperationException">The system does not have a battery.</exception>
-    /// <exception cref="System.PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>        
+    /// <exception cref="InvalidOperationException">The system does not have a battery.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>        
     public static BatteryState GetCurrentBatteryState()
     {
         CoreHelpers.ThrowIfNotXP();
@@ -171,7 +169,7 @@ public static class PowerManager
     /// that display information but do not require 
     /// user interaction. For example, video playback applications.</remarks>
     /// <permission cref="T:System.Security.Permissions.SecurityPermission"> to set this property. Demand value: <see cref="F:System.Security.Permissions.SecurityAction.Demand"/>; Named Permission Sets: <b>FullTrust</b>.</permission>
-    /// <value>A <see cref="System.Boolean"/> value. <b>True</b> if the monitor
+    /// <value>A <see cref="bool"/> value. <b>True</b> if the monitor
     /// is required to remain on.</value>
     public static bool MonitorRequired
     {
@@ -180,18 +178,18 @@ public static class PowerManager
             CoreHelpers.ThrowIfNotXP();
             return monitorRequired;
         }
-        [System.Security.Permissions.PermissionSetAttribute(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
+        [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
         set
         {
             CoreHelpers.ThrowIfNotXP();
 
             if (value)
             {
-                PowerManager.SetThreadExecutionState(ExecutionStates.Continuous | ExecutionStates.DisplayRequired);
+                SetThreadExecutionState(ExecutionStates.Continuous | ExecutionStates.DisplayRequired);
             }
             else
             {
-                PowerManager.SetThreadExecutionState(ExecutionStates.Continuous);
+                SetThreadExecutionState(ExecutionStates.Continuous);
             }
 
             monitorRequired = value;
@@ -202,11 +200,11 @@ public static class PowerManager
     /// Gets or sets a value that indicates whether the system 
     /// is required to be in the working state.
     /// </summary>
-    /// <exception cref="System.PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>
     /// <exception cref="System.Security.SecurityException">The caller does not have sufficient privileges to set this property.
     /// </exception>
     /// <permission cref="System.Security.Permissions.SecurityPermission"> to set this property. Demand value: <see cref="F:System.Security.Permissions.SecurityAction.Demand"/>; Named Permission Sets: <b>FullTrust</b>.</permission>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <value>A <see cref="bool"/> value.</value>
     public static bool RequestBlockSleep
     {
         get
@@ -215,15 +213,15 @@ public static class PowerManager
 
             return requestBlockSleep;
         }
-        [System.Security.Permissions.PermissionSetAttribute(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
+        [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
         set
         {
             CoreHelpers.ThrowIfNotXP();
 
             if (value)
-                PowerManager.SetThreadExecutionState(ExecutionStates.Continuous | ExecutionStates.SystemRequired);
+                SetThreadExecutionState(ExecutionStates.Continuous | ExecutionStates.SystemRequired);
             else
-                PowerManager.SetThreadExecutionState(ExecutionStates.Continuous);
+                SetThreadExecutionState(ExecutionStates.Continuous);
 
             requestBlockSleep = value;
         }
@@ -233,8 +231,8 @@ public static class PowerManager
     /// Gets a value that indicates whether a battery is present.  
     /// The battery can be a short term battery.
     /// </summary>
-    /// <exception cref="System.PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <exception cref="PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>
+    /// <value>A <see cref="bool"/> value.</value>
     public static bool IsBatteryPresent
     {
         get
@@ -248,8 +246,8 @@ public static class PowerManager
     /// <summary>
     /// Gets a value that indicates whether the battery is a short term battery. 
     /// </summary>
-    /// <exception cref="System.PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <exception cref="PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>
+    /// <value>A <see cref="bool"/> value.</value>
     public static bool IsBatteryShortTerm
     {
         get
@@ -263,8 +261,8 @@ public static class PowerManager
     /// Gets a value that indicates a UPS is present to prevent 
     /// sudden loss of power.
     /// </summary>
-    /// <exception cref="System.PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <exception cref="PlatformNotSupportedException">Requires XP/Windows Server 2003 or higher.</exception>
+    /// <value>A <see cref="bool"/> value.</value>
     public static bool IsUpsPresent
     {
         get
@@ -275,14 +273,14 @@ public static class PowerManager
             // use .BatteriesAreShortTerm and .SystemBatteriesPresent to check for UPS
             PowerManagementNativeMethods.SystemPowerCapabilities batt = Power.GetSystemPowerCapabilities();
 
-            return (batt.BatteriesAreShortTerm && batt.SystemBatteriesPresent);
+            return batt.BatteriesAreShortTerm && batt.SystemBatteriesPresent;
         }
     }
 
     /// <summary>
     /// Gets a value that indicates the current power scheme.  
     /// </summary>
-    /// <exception cref="System.PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
     /// <value>A <see cref="PowerPersonality"/> value.</value>
     public static PowerPersonality PowerPersonality
     {
@@ -309,9 +307,9 @@ public static class PowerManager
     /// This value is in the range 0-100, 
     /// where 0 is not charged and 100 is fully charged.  
     /// </summary>
-    /// <exception cref="System.InvalidOperationException">The system does not have a battery.</exception>
-    /// <exception cref="System.PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
-    /// <value>An <see cref="System.Int32"/> value.</value>
+    /// <exception cref="InvalidOperationException">The system does not have a battery.</exception>
+    /// <exception cref="PlatformNotSupportedException">Requires Vista/Windows Server 2008.</exception>
+    /// <value>An <see cref="int"/> value.</value>
     public static int BatteryLifePercent
     {
         get
@@ -324,7 +322,7 @@ public static class PowerManager
 
             PowerManagementNativeMethods.SystemBatteryState state = Power.GetSystemBatteryState();
 
-            int percent = (int)Math.Round(((double)state.RemainingCapacity / state.MaxCapacity * 100), 0);
+            int percent = (int)Math.Round((double)state.RemainingCapacity / state.MaxCapacity * 100, 0);
             return percent;
         }
     }

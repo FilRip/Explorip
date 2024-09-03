@@ -1,14 +1,13 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
+using Microsoft.WindowsAPICodePack.Interop.PowerManagement;
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.PowerManagement;
 
 /// <summary>
 /// This class generates .NET events based on Windows messages.  
@@ -168,9 +167,9 @@ internal static class MessageManager
 
                 // IsMonitorOn
                 if (ps.PowerSetting == EventManager.MonitorPowerStatus &&
-                    ps.DataLength == Marshal.SizeOf(typeof(Int32)))
+                    ps.DataLength == Marshal.SizeOf(typeof(int)))
                 {
-                    Int32 monitorStatus = (Int32)Marshal.PtrToStructure(pData, typeof(Int32));
+                    int monitorStatus = (int)Marshal.PtrToStructure(pData, typeof(int));
                     PowerManager.IsMonitorOn = monitorStatus != 0;
                     EventManager.monitorOnReset.Set();
                 }

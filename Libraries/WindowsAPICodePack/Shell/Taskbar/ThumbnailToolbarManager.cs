@@ -1,11 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Windows;
 
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Thumbnail toolbar manager class for adding a thumbnail toolbar with a specified set of buttons 

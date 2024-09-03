@@ -8,7 +8,7 @@ using Explorip.Explorer.Windows;
 using ExploripConfig.Configuration;
 
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
 namespace Explorip.Explorer.Controls;
 
@@ -56,6 +56,11 @@ public partial class TabExplorerBrowser : TabControl
         WpfExplorerBrowser window = (WpfExplorerBrowser)Window.GetWindow(this);
         if (window.RightTab == MyTabControl && MyTabControl.Items.Count > 1)
             window.ShowRightTab();
+    }
+
+    public void AddNewTab(string path)
+    {
+        AddNewTab(ShellObject.FromParsingName(path));
     }
 
     #endregion

@@ -1,6 +1,4 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
 internal static class ShellIidGuid
 {

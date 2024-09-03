@@ -1,6 +1,4 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Defines a radio button that can be hosted in by a 

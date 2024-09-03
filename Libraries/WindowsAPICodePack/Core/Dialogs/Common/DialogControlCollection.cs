@@ -1,12 +1,10 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.Common;
 
 /// <summary>
 /// Strongly typed collection for dialog controls.
@@ -59,7 +57,7 @@ public sealed class DialogControlCollection<T> : Collection<T> where T : DialogC
     /// Removes the control at the specified index.
     /// </summary>
     /// <param name="index">The location of the control to remove.</param>
-    /// <permission cref="System.InvalidOperationException">
+    /// <permission cref="InvalidOperationException">
     /// The associated dialog is 
     /// showing and cannot be modified.</permission>
     protected override void RemoveItem(int index)
@@ -87,7 +85,7 @@ public sealed class DialogControlCollection<T> : Collection<T> where T : DialogC
     /// <para>Control names are case sensitive.</para>
     /// <para>This indexer is useful when the dialog is created in XAML
     /// rather than constructed in code.</para></remarks>
-    ///<exception cref="System.ArgumentException">
+    ///<exception cref="ArgumentException">
     /// The name cannot be null or a zero-length string.</exception>
     /// <remarks>If there is more than one control with the same name, only the <B>first control</B> will be returned.</remarks>
     public T this[string name]

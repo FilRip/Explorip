@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace ManagedShell.Common;
+namespace ManagedShell.Common.Common;
 
 /// <summary>
 /// Defines a class that is disposable.

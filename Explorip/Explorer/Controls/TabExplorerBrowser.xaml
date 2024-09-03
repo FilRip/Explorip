@@ -8,6 +8,5 @@
             d:DesignHeight="450" d:DesignWidth="800" BorderThickness="0" Padding="0"
             Name="MyTabControl" IsTabStop="False" SelectionChanged="MyTabControl_SelectionChanged"
             SizeChanged="TabControl_SizeChanged">
-    <local:TabItemExplorerBrowser x:Name="FirstTab"/>
     <local:TabItemPlusExplorerBrowser x:Name="PlusTab"/>
 </TabControl>

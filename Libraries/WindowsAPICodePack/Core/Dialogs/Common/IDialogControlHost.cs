@@ -1,6 +1,4 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.Common;
 
 /// <summary>
 /// Indicates that the implementing class is a dialog that can host

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+using Microsoft.WindowsAPICodePack.Interop;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 
 /// <summary>

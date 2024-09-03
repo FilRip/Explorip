@@ -1,6 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
+using Microsoft.WindowsAPICodePack.PropertySystem;
 
 namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 

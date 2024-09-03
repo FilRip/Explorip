@@ -1,8 +1,7 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// A Serch Connector folder in the Shell Namespace

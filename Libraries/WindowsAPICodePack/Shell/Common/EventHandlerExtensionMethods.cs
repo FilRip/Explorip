@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// Provides extension methods for raising events safely.
@@ -36,6 +36,6 @@ public static class EventHandlerExtensionMethods
     /// <param name="sender">Event sender</param>
     public static void SafeRaise(this EventHandler<EventArgs> eventHandler, object sender)
     {
-        SafeRaise(eventHandler, sender, EventArgs.Empty);
+        eventHandler.SafeRaise(sender, EventArgs.Empty);
     }
 }

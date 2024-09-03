@@ -8,7 +8,7 @@ using Explorip.HookFileOperations.Helpers;
 
 using ExploripApi;
 
-namespace Explorip.HookFileOperations;
+namespace Explorip.HookFileOperations.FilesOperations;
 
 public class FileOperation : IDisposable
 {

@@ -15,7 +15,7 @@ using Explorip.Helpers;
 
 using ManagedShell.Interop;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
 using Securify.ShellLink;
 

@@ -1,10 +1,8 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace MS.WindowsAPICodePack.Internal;
+namespace Microsoft.WindowsAPICodePack.Interop;
 
 /// <summary>
 /// Wrappers for Native Methods and Structs.

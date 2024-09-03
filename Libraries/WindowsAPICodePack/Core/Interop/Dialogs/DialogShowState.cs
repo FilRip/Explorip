@@ -1,6 +1,4 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Interop.Dialogs;
 
 /// <summary>
 /// Dialog Show State

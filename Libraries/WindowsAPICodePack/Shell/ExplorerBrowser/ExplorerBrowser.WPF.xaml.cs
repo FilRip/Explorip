@@ -1,10 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation;
 
@@ -16,7 +16,7 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     /// <summary>
     /// The underlying WinForms control
     /// </summary>
-    public WindowsForms.ExplorerBrowser ExplorerBrowserControl { get; set; }
+    public Shell.ExplorerBrowser.ExplorerBrowser ExplorerBrowserControl { get; set; }
 
     private ShellObject initialNavigationTarget;
     private ExplorerBrowserViewMode? initialViewMode;
@@ -29,7 +29,7 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         InitializeComponent();
 
         // the ExplorerBrowser WinForms control
-        ExplorerBrowserControl = new WindowsForms.ExplorerBrowser();
+        ExplorerBrowserControl = new Shell.ExplorerBrowser.ExplorerBrowser();
 
         // host the control           
         WindowsFormsHost host = new()

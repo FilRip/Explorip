@@ -1,13 +1,12 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// An ennumerable list of ShellObjects
@@ -157,7 +156,7 @@ public class ShellObjectCollection : IDisposable, IList<ShellObject>
                 {
                     // Because the ShellObjects passed in may be from anywhere, the 
                     // parent folder reference must be the desktop.
-                    idls[index] = ((ShellObject)KnownFolders.Desktop).PIDL;
+                    idls[index] = ((ShellObject)KnownFolders.KnownFolders.Desktop).PIDL;
                 }
                 else
                 {

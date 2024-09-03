@@ -1,4 +1,6 @@
-﻿namespace ManagedShell.Common.Logging.Observers;
+﻿using ManagedShell.Common.Common;
+
+namespace ManagedShell.Common.Logging.Observers;
 
 public abstract class DisposableLogBase : DisposableObject, ILog
 {

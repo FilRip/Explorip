@@ -1,6 +1,5 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.PropertySystem;
+using Microsoft.WindowsAPICodePack.Shell.Interop.PropertySystem;
 
 namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 

@@ -1,6 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// Represents the base class for all search-related classes.

@@ -1,12 +1,10 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 /// <summary>
 /// Contains the GUID identifiers for well-known folders.

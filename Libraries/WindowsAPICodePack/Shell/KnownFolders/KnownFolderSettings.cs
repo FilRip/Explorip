@@ -1,12 +1,11 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.KnownFolders;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 /// <summary>
 /// Internal class to represent the KnownFolder settings/properties
@@ -85,7 +84,7 @@ internal class KnownFolderSettings
     /// </param>
     /// <param name="knownFolderNative">Native IKnownFolder reference</param>
     /// <returns>
-    /// A <see cref="System.String"/> containing the path, or <see cref="System.String.Empty"/> if this known folder does not exist.
+    /// A <see cref="string"/> containing the path, or <see cref="string.Empty"/> if this known folder does not exist.
     /// </returns>
     private string GetPath(out bool fileExists, IKnownFolderNative knownFolderNative)
     {
@@ -124,7 +123,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets the path for this known folder.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Path
     {
         get { return knownFolderProperties.path; }
@@ -143,7 +142,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets this known folder's canonical name.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string CanonicalName
     {
         get { return knownFolderProperties.canonicalName; }
@@ -152,7 +151,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets this known folder's description.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Description
     {
         get { return knownFolderProperties.description; }
@@ -161,7 +160,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets the unique identifier for this known folder's parent folder.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> value.</value>
+    /// <value>A <see cref="Guid"/> value.</value>
     public Guid ParentId
     {
         get { return knownFolderProperties.parentId; }
@@ -170,7 +169,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets this known folder's relative path.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string RelativePath
     {
         get { return knownFolderProperties.relativePath; }
@@ -179,7 +178,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets this known folder's tool tip text.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Tooltip
     {
         get { return knownFolderProperties.tooltip; }
@@ -188,7 +187,7 @@ internal class KnownFolderSettings
     /// Gets the resource identifier for this 
     /// known folder's tool tip text.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string TooltipResourceId
     {
         get { return knownFolderProperties.tooltipResourceId; }
@@ -197,7 +196,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets this known folder's localized name.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string LocalizedName
     {
         get { return knownFolderProperties.localizedName; }
@@ -206,7 +205,7 @@ internal class KnownFolderSettings
     /// Gets the resource identifier for this 
     /// known folder's localized name.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string LocalizedNameResourceId
     {
         get { return knownFolderProperties.localizedNameResourceId; }
@@ -215,7 +214,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets this known folder's security attributes.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Security
     {
         get { return knownFolderProperties.security; }
@@ -243,7 +242,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets the unique identifier for this known folder's type.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> value.</value>
+    /// <value>A <see cref="Guid"/> value.</value>
     public Guid FolderTypeId
     {
         get { return knownFolderProperties.folderTypeId; }
@@ -252,7 +251,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets a string representation of this known folder's type.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string FolderType
     {
         get { return knownFolderProperties.folderType; }
@@ -260,7 +259,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets the unique identifier for this known folder.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> value.</value>
+    /// <value>A <see cref="Guid"/> value.</value>
     public Guid FolderId
     {
         get { return knownFolderProperties.folderId; }
@@ -269,7 +268,7 @@ internal class KnownFolderSettings
     /// <summary>
     /// Gets a value that indicates whether this known folder's path exists on the computer. 
     /// </summary>
-    /// <value>A bool<see cref="System.Boolean"/> value.</value>
+    /// <value>A bool<see cref="bool"/> value.</value>
     /// <remarks>If this property value is <b>false</b>, 
     /// the folder might be a virtual folder (<see cref="Category"/> property will
     /// be <see cref="FolderCategory.Virtual"/> for virtual folders)</remarks>

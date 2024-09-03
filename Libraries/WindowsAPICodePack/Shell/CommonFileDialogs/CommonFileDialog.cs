@@ -1,5 +1,3 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,13 +10,16 @@ using System.Windows.Interop;
 using System.Windows.Markup;
 
 using Microsoft.WindowsAPICodePack.Controls;
-using Microsoft.WindowsAPICodePack.Dialogs.Controls;
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Dialogs.Common;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Interop.Dialogs;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Dialogs;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 /// Defines the abstract base class for the common file dialogs.
@@ -556,7 +557,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         }
 
         // Set the parent / owner window
-        parentWindow = (new WindowInteropHelper(window)).EnsureHandle();
+        parentWindow = new WindowInteropHelper(window).EnsureHandle();
 
         // Show the modal dialog
         return ShowDialog();
@@ -637,7 +638,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
             || SelectionChanged != null
             || FileTypeChanged != null
             || DialogOpening != null
-            || (controls != null && controls.Count > 0))
+            || controls != null && controls.Count > 0)
         {
             nativeEventSink = new NativeDialogEventSink(this);
             nativeDlg.Advise(nativeEventSink, out uint cookie);
@@ -914,7 +915,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
     /// <summary>
     /// Ensures that the user has selected one or more files.
     /// </summary>
-    /// <permission cref="System.InvalidOperationException">
+    /// <permission cref="InvalidOperationException">
     /// The dialog has not been dismissed yet or the dialog was cancelled.
     /// </permission>
     protected void CheckFileNamesAvailable()
@@ -936,7 +937,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
     /// <summary>
     /// Ensures that the user has selected one or more files.
     /// </summary>
-    /// <permission cref="System.InvalidOperationException">
+    /// <permission cref="InvalidOperationException">
     /// The dialog has not been dismissed yet or the dialog was cancelled.
     /// </permission>
     protected void CheckFileItemsAvailable()
@@ -959,7 +960,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
     {
         get
         {
-            return (nativeDialog != null)
+            return nativeDialog != null
                 && (showState == DialogShowState.Showing || showState == DialogShowState.Closing);
         }
     }
@@ -988,7 +989,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
     /// a requested change to a property or the visible set of controls.
     /// </summary>
     /// <param name="message">The message to include in the exception.</param>
-    /// <permission cref="System.InvalidOperationException"> The dialog is in an
+    /// <permission cref="InvalidOperationException"> The dialog is in an
     /// invalid state to perform the requested operation.</permission>
     protected void ThrowIfDialogShowing(string message)
     {
@@ -1016,7 +1017,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
 
     #region CheckChanged handling members
     /// <summary>
-    /// Raises the <see cref="CommonFileDialog.FileOk"/> event just before the dialog is about to return with a result.
+    /// Raises the <see cref="FileOk"/> event just before the dialog is about to return with a result.
     /// </summary>
     /// <param name="e">The event data.</param>
     protected virtual void OnFileOk(CancelEventArgs e)
@@ -1032,7 +1033,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         FolderChanging?.Invoke(this, e);
     }
     /// <summary>
-    /// Raises the <see cref="CommonFileDialog.FolderChanged"/> event when the user navigates to a new folder.
+    /// Raises the <see cref="FolderChanged"/> event when the user navigates to a new folder.
     /// </summary>
     /// <param name="e">The event data.</param>
     protected virtual void OnFolderChanged(EventArgs e)
@@ -1040,7 +1041,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         FolderChanged?.Invoke(this, e);
     }
     /// <summary>
-    /// Raises the <see cref="CommonFileDialog.SelectionChanged"/> event when the user changes the selection in the dialog's view.
+    /// Raises the <see cref="SelectionChanged"/> event when the user changes the selection in the dialog's view.
     /// </summary>
     /// <param name="e">The event data.</param>
     protected virtual void OnSelectionChanged(EventArgs e)
@@ -1048,7 +1049,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         SelectionChanged?.Invoke(this, e);
     }
     /// <summary>
-    /// Raises the <see cref="CommonFileDialog.FileTypeChanged"/> event when the dialog is opened to notify the 
+    /// Raises the <see cref="FileTypeChanged"/> event when the dialog is opened to notify the 
     /// application of the initial chosen filetype.
     /// </summary>
     /// <param name="e">The event data.</param>
@@ -1057,7 +1058,7 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         FileTypeChanged?.Invoke(this, e);
     }
     /// <summary>
-    /// Raises the <see cref="CommonFileDialog.DialogOpening"/> event when the dialog is opened.
+    /// Raises the <see cref="DialogOpening"/> event when the dialog is opened.
     /// </summary>
     /// <param name="e">The event data.</param>
     protected virtual void OnOpening(EventArgs e)
@@ -1109,11 +1110,11 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         public HResult OnFolderChanging(IFileDialog pfd, IShellItem psiFolder)
         {
             CommonFileDialogFolderChangeEventArgs args = new(
-                CommonFileDialog.GetFileNameFromShellItem(psiFolder));
+                GetFileNameFromShellItem(psiFolder));
 
             if (!firstFolderChanged) { parent.OnFolderChanging(args); }
 
-            return (args.Cancel ? HResult.False : HResult.Ok);
+            return args.Cancel ? HResult.False : HResult.Ok;
         }
 
         public void OnFolderChange(IFileDialog pfd)

@@ -1,11 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 
 [ComImport()]
 [Guid("6332DEBF-87B5-4670-90C0-5E57B408A49E")]
@@ -107,7 +105,7 @@ internal interface ITaskbarList4
 
     // ITaskbarList3
     [PreserveSig()]
-    void SetProgressValue(IntPtr hwnd, UInt64 ullCompleted, UInt64 ullTotal);
+    void SetProgressValue(IntPtr hwnd, ulong ullCompleted, ulong ullTotal);
     [PreserveSig()]
     void SetProgressState(IntPtr hwnd, TaskbarProgressBarStatus tbpFlags);
     [PreserveSig()]

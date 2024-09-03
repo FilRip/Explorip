@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// A wrapper for a RECT struct
@@ -76,7 +76,7 @@ public struct NativeRect
     /// <returns>True if this NativeRect is equal to the one provided; false otherwise.</returns>
     public override bool Equals(object obj)
     {
-        return (obj is NativeRect rect) && this == rect;
+        return obj is NativeRect rect && this == rect;
     }
 
     /// <summary>

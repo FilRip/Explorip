@@ -1,10 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System.IO;
 
-using System.IO;
-
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// A file in the Shell Namespace

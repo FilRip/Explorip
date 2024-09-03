@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
 /// <summary>
 /// The STGM constants are flags that indicate 

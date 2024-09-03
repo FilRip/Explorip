@@ -1,11 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Represents a collection of custom categories

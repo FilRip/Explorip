@@ -1,8 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-using Microsoft.WindowsAPICodePack.Controls.WindowsForms;
+﻿using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 
-namespace Microsoft.WindowsAPICodePack.Controls;
-
+namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 /// <summary>
 /// These options control the results subsequent navigations of the ExplorerBrowser

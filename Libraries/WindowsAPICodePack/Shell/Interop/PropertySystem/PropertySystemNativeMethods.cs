@@ -1,11 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.PropertySystem;
 
-namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.PropertySystem;
 
 internal static class PropertySystemNativeMethods
 {

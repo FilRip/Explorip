@@ -1,11 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.StockIcons;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.StockIcons;
 
 internal static class StockIconsNativeMethods
 {
@@ -60,13 +59,13 @@ internal static class StockIconsNativeMethods
         Selected = 0x000010000
     }
 
-    [StructLayoutAttribute(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     internal struct StockIconInfo
     {
-        internal UInt32 StuctureSize;
+        internal uint StuctureSize;
         internal IntPtr Handle;
-        internal Int32 ImageIndex;
-        internal Int32 Identifier;
+        internal int ImageIndex;
+        internal int Identifier;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
         internal string Path;
     }

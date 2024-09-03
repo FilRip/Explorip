@@ -1,17 +1,16 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// A Shell Library in the Shell Namespace
@@ -71,7 +70,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
                 AccessModes.ReadWrite;
 
         // Get the IShellItem2
-        base.nativeShellItem = ((ShellObject)sourceKnownFolder).NativeShellItem2;
+        nativeShellItem = ((ShellObject)sourceKnownFolder).NativeShellItem2;
 
         Guid guid = sourceKnownFolder.FolderId;
 
@@ -196,7 +195,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
         {
             if (base.Name == null && NativeShellItem != null)
             {
-                base.Name = System.IO.Path.GetFileNameWithoutExtension(ShellHelper.GetParsingName(NativeShellItem));
+                base.Name = Path.GetFileNameWithoutExtension(ShellHelper.GetParsingName(NativeShellItem));
             }
 
             return base.Name;
@@ -325,8 +324,8 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
         {
             nativeShellLibrary.GetOptions(out ShellNativeMethods.LibraryOptions flags);
 
-            return ((flags & ShellNativeMethods.LibraryOptions.PinnedToNavigationPane) ==
-                ShellNativeMethods.LibraryOptions.PinnedToNavigationPane);
+            return (flags & ShellNativeMethods.LibraryOptions.PinnedToNavigationPane) ==
+                ShellNativeMethods.LibraryOptions.PinnedToNavigationPane;
         }
         set
         {
@@ -400,11 +399,11 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
     {
         CoreHelpers.ThrowIfNotWin7();
 
-        IKnownFolder kf = KnownFolders.Libraries;
-        string librariesFolderPath = (kf != null) ? kf.Path : string.Empty;
+        IKnownFolder kf = KnownFolders.KnownFolders.Libraries;
+        string librariesFolderPath = kf != null ? kf.Path : string.Empty;
 
         Guid guid = new(ShellIidGuid.IShellItem);
-        string shellItemPath = System.IO.Path.Combine(librariesFolderPath, libraryName + FileExtension);
+        string shellItemPath = Path.Combine(librariesFolderPath, libraryName + FileExtension);
         int hr = ShellNativeMethods.SHCreateItemFromParsingName(shellItemPath, IntPtr.Zero, ref guid, out IShellItem nativeShellItem);
 
         if (!CoreErrorHelper.Succeeded(hr))
@@ -443,7 +442,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
         CoreHelpers.ThrowIfNotWin7();
 
         // Create the shell item path
-        string shellItemPath = System.IO.Path.Combine(folderPath, libraryName + FileExtension);
+        string shellItemPath = Path.Combine(folderPath, libraryName + FileExtension);
         ShellFile item = ShellFile.FromFilePath(shellItemPath);
 
         IShellItem nativeShellItem = item.NativeShellItem;
@@ -545,7 +544,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
         // Access Violations if called from an MTA thread so we wrap this
         // call up into a Worker thread that performs all operations in a
         // single threaded apartment
-        using ShellLibrary shellLibrary = ShellLibrary.Load(libraryName, folderPath, true);
+        using ShellLibrary shellLibrary = Load(libraryName, folderPath, true);
         ShowManageLibraryUI(shellLibrary, windowHandle, title, instruction, allowAllLocations);
     }
 
@@ -564,7 +563,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
         // Access Violations if called from an MTA thread so we wrap this
         // call up into a Worker thread that performs all operations in a
         // single threaded apartment
-        using ShellLibrary shellLibrary = ShellLibrary.Load(libraryName, true);
+        using ShellLibrary shellLibrary = Load(libraryName, true);
         ShowManageLibraryUI(shellLibrary, windowHandle, title, instruction, allowAllLocations);
     }
 
@@ -583,7 +582,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
         // Access Violations if called from an MTA thread so we wrap this
         // call up into a Worker thread that performs all operations in a
         // single threaded apartment
-        using ShellLibrary shellLibrary = ShellLibrary.Load(sourceKnownFolder, true);
+        using ShellLibrary shellLibrary = Load(sourceKnownFolder, true);
         ShowManageLibraryUI(shellLibrary, windowHandle, title, instruction, allowAllLocations);
     }
 

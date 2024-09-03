@@ -1,6 +1,4 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Threading;
@@ -9,12 +7,12 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Represents a tabbed thumbnail on the taskbar for a given window or a control.
@@ -132,7 +130,7 @@ public class TabbedThumbnail : IDisposable
 
         WindowsControl = windowsControl ?? throw new ArgumentNullException(nameof(windowsControl));
         WindowsControlParentWindow = parentWindow ?? throw new ArgumentNullException(nameof(parentWindow));
-        ParentWindowHandle = (new WindowInteropHelper(parentWindow)).EnsureHandle();
+        ParentWindowHandle = new WindowInteropHelper(parentWindow).EnsureHandle();
         PeekOffset = peekOffset;
     }
 
@@ -200,7 +198,7 @@ public class TabbedThumbnail : IDisposable
     /// <remarks>This method will not release the icon handle. It is the caller's responsibility to release the icon handle.</remarks>
     public void SetWindowIcon(IntPtr iconHandle)
     {
-        Icon = iconHandle != IntPtr.Zero ? System.Drawing.Icon.FromHandle(iconHandle) : null;
+        Icon = iconHandle != IntPtr.Zero ? Icon.FromHandle(iconHandle) : null;
 
         if (TaskbarWindow != null && TaskbarWindow.TabbedThumbnailProxyWindow != null)
         {

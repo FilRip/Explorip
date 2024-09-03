@@ -1,9 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+using Microsoft.WindowsAPICodePack.PowerManagement;
+
+namespace Microsoft.WindowsAPICodePack.Interop.PowerManagement;
 
 internal static class PowerManagementNativeMethods
 {
@@ -22,7 +22,7 @@ internal static class PowerManagementNativeMethods
     public struct PowerBroadcastSetting
     {
         public Guid PowerSetting;
-        public Int32 DataLength;
+        public int DataLength;
     }
 
     // This structure is used when calling CallNtPowerInformation 
@@ -143,8 +143,8 @@ internal static class PowerManagementNativeMethods
     [StructLayout(LayoutKind.Sequential)]
     public struct BatteryReportingScale
     {
-        public UInt32 Granularity;
-        public UInt32 Capacity;
+        public uint Granularity;
+        public uint Capacity;
     }
 
     public enum SystemPowerState
@@ -183,21 +183,21 @@ internal static class PowerManagementNativeMethods
     }
 
     [DllImport("powrprof.dll")]
-    internal static extern UInt32 CallNtPowerInformation(
+    internal static extern uint CallNtPowerInformation(
          PowerInformationLevel informationLevel,
          IntPtr inputBuffer,
-         UInt32 inputBufferSize,
+         uint inputBufferSize,
          out SystemPowerCapabilities outputBuffer,
-         UInt32 outputBufferSize
+         uint outputBufferSize
     );
 
     [DllImport("powrprof.dll")]
-    internal static extern UInt32 CallNtPowerInformation(
+    internal static extern uint CallNtPowerInformation(
          PowerInformationLevel informationLevel,
          IntPtr inputBuffer,
-         UInt32 inputBufferSize,
+         uint inputBufferSize,
          out SystemBatteryState outputBuffer,
-         UInt32 outputBufferSize
+         uint outputBufferSize
     );
 
     /// <summary>
@@ -217,7 +217,7 @@ internal static class PowerManagementNativeMethods
     internal static extern int RegisterPowerSettingNotification(
             IntPtr hRecipient,
             ref Guid PowerSettingGuid,
-            Int32 Flags);
+            int Flags);
 
     [DllImport("kernel32.dll", SetLastError = true)]
     internal static extern ExecutionStates SetThreadExecutionState(ExecutionStates esFlags);

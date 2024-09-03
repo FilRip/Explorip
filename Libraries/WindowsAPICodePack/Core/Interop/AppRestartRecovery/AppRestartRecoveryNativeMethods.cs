@@ -1,22 +1,21 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.AppRestartRecovery;
+using Microsoft.WindowsAPICodePack.Interop;
 
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.Interop.AppRestartRecovery;
 
 internal static class AppRestartRecoveryNativeMethods
 {
     #region Application Restart and Recovery Definitions
 
-    internal delegate UInt32 InternalRecoveryCallback(IntPtr state);
+    internal delegate uint InternalRecoveryCallback(IntPtr state);
 
     private static readonly InternalRecoveryCallback internalCallback = new(InternalRecoveryHandler);
     internal static InternalRecoveryCallback InternalCallback { get { return internalCallback; } }
 
-    private static UInt32 InternalRecoveryHandler(IntPtr parameter)
+    private static uint InternalRecoveryHandler(IntPtr parameter)
     {
         ApplicationRecoveryInProgress(out _);
 
@@ -25,7 +24,7 @@ internal static class AppRestartRecoveryNativeMethods
         data.Invoke();
         handle.Free();
 
-        return (0);
+        return 0;
     }
 
 

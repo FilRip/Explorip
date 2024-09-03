@@ -1,8 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using Microsoft.WindowsAPICodePack.Resources;
 
-using Microsoft.WindowsAPICodePack.Resources;
-
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.AppRestartRecovery;
 
 /// <summary>
 /// Specifies the options for an application to be automatically
@@ -29,7 +27,7 @@ public class RestartSettings(string command, RestartRestrictions restrictions)
     /// <summary>
     /// Gets the command line arguments used to restart the application.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Command
     {
         get { return command; }
@@ -49,7 +47,7 @@ public class RestartSettings(string command, RestartRestrictions restrictions)
     /// Returns a string representation of the current state
     /// of this object.
     /// </summary>
-    /// <returns>A <see cref="System.String"/> that displays 
+    /// <returns>A <see cref="string"/> that displays 
     /// the command line arguments 
     /// and restrictions for restarting the application.</returns>
     public override string ToString()
@@ -59,4 +57,3 @@ public class RestartSettings(string command, RestartRestrictions restrictions)
             command, restrictions.ToString());
     }
 }
-

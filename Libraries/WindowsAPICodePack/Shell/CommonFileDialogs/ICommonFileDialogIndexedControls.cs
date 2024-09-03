@@ -1,8 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System;
 
-using System;
-
-namespace Microsoft.WindowsAPICodePack.Dialogs.Controls;
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 /// Specifies a property, event and method that indexed controls need

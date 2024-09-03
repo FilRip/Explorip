@@ -1,11 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 /// <summary>
 /// The FolderTypes values represent a view template applied to a folder, 

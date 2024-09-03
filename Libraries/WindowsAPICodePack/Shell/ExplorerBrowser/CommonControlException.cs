@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
 
-namespace Microsoft.WindowsAPICodePack.Controls;
+namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 /// <summary>
 /// An exception thrown when an error occurs while dealing with Control objects.

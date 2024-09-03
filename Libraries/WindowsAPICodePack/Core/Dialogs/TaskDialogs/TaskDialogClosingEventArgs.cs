@@ -1,8 +1,6 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System.ComponentModel;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Data associated with <see cref="TaskDialog.Closing"/> event.

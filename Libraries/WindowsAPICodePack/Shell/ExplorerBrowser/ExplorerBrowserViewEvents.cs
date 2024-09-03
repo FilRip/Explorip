@@ -1,12 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-using Microsoft.WindowsAPICodePack.Controls;
-using Microsoft.WindowsAPICodePack.Controls.WindowsForms;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 
-namespace MS.WindowsAPICodePack.Internal;
+namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 /// <summary>
 /// This provides a connection point container compatible dispatch interface for

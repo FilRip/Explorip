@@ -1,17 +1,16 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Security.Cryptography;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.PropertySystem;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// The base class for all Shell objects in Shell Namespace.
@@ -97,7 +96,7 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
     /// <summary>
     /// Return the native ShellFolder object as newer IShellItem2
     /// </summary>
-    /// <exception cref="System.Runtime.InteropServices.ExternalException">If the native object cannot be created.
+    /// <exception cref="ExternalException">If the native object cannot be created.
     /// The ErrorCode member will contain the external error code.</exception>
     virtual internal IShellItem2 NativeShellItem2
     {
@@ -257,7 +256,7 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
     /// <summary>
     /// Returns the display name of the ShellFolder object. DisplayNameType represents one of the 
     /// values that indicates how the name should look. 
-    /// See <see cref="Microsoft.WindowsAPICodePack.Shell.DisplayNameType"/>for a list of possible values.
+    /// See <see cref="DisplayNameType"/>for a list of possible values.
     /// </summary>
     /// <param name="displayNameType">A disaply name type.</param>
     /// <returns>A string.</returns>
@@ -478,7 +477,7 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
                 HResult hr = ifirst.Compare(
                     isecond, SICHINTF.SICHINT_ALLFIELDS, out int result);
 
-                areEqual = (hr == HResult.Ok) && (result == 0);
+                areEqual = hr == HResult.Ok && result == 0;
             }
         }
 
@@ -505,7 +504,7 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
     {
         if (leftShellObject is null)
         {
-            return (rightShellObject is null);
+            return rightShellObject is null;
         }
         return leftShellObject.Equals(rightShellObject);
     }

@@ -4,9 +4,10 @@ using System;
 using System.Windows;
 using System.Windows.Forms;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 internal sealed class TabbedThumbnailProxyWindow : Form, IDisposable
 {
@@ -43,9 +44,9 @@ internal sealed class TabbedThumbnailProxyWindow : Form, IDisposable
         }
 
         // If it's a WM_Destroy message, then also forward it to the base class (our native window)
-        if (((m.Msg == (int)WindowMessage.Destroy) ||
-           (m.Msg == (int)WindowMessage.NCDestroy) ||
-           ((m.Msg == (int)WindowMessage.SystemCommand) && (((int)m.WParam) == TabbedThumbnailNativeMethods.ScClose))) || !handled)
+        if (m.Msg == (int)WindowMessage.Destroy ||
+           m.Msg == (int)WindowMessage.NCDestroy ||
+           m.Msg == (int)WindowMessage.SystemCommand && (int)m.WParam == TabbedThumbnailNativeMethods.ScClose || !handled)
         {
             base.WndProc(ref m);
         }

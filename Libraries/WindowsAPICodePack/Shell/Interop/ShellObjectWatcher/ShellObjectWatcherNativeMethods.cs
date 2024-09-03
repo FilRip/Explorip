@@ -2,9 +2,10 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
-namespace Microsoft.WindowsAPICodePack.Shell.Interop;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.ShellObjectWatcher;
 
 internal static class ShellObjectWatcherNativeMethods
 {
@@ -173,7 +174,7 @@ public struct Message
     /// <returns>True if this message is equal argument; false otherwise.</returns>
     public override bool Equals(object obj)
     {
-        return (obj is Message message && this == message);
+        return obj is Message message && this == message;
     }
 
     /// <summary>

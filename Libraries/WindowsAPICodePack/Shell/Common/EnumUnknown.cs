@@ -1,12 +1,11 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 internal class EnumUnknownClass : IEnumUnknown
 {
@@ -38,7 +37,7 @@ internal class EnumUnknownClass : IEnumUnknown
     {
         int temp = current + (int)number;
 
-        if (temp > (conditionList.Count - 1))
+        if (temp > conditionList.Count - 1)
         {
             return HResult.False;
         }

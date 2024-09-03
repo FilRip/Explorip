@@ -12,8 +12,8 @@ using System.Windows.Media;
 using Explorip.Explorer.ViewModels;
 using Explorip.Explorer.Windows;
 
-using Microsoft.WindowsAPICodePack.Controls;
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace Explorip.Explorer.Controls;

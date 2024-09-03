@@ -1,6 +1,4 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace MS.WindowsAPICodePack.Internal;
+﻿namespace Microsoft.WindowsAPICodePack.Interop;
 
 /// <summary>
 /// HRESULT Wrapper    
@@ -99,7 +97,7 @@ internal static class CoreErrorHelper
         if (win32ErrorCode > 0)
         {
             win32ErrorCode =
-                (int)(((uint)win32ErrorCode & 0x0000FFFF) | (FacilityWin32 << 16) | 0x80000000);
+                (int)((uint)win32ErrorCode & 0x0000FFFF | FacilityWin32 << 16 | 0x80000000);
         }
         return win32ErrorCode;
 

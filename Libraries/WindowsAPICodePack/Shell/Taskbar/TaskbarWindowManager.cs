@@ -6,12 +6,13 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Media;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 internal static class TaskbarWindowManager
 {
@@ -141,9 +142,9 @@ internal static class TaskbarWindowManager
 
         TaskbarWindow toReturn = _taskbarWindowList.Find(window =>
         {
-            return (window.TabbedThumbnail != null && window.TabbedThumbnail.WindowsControl == windowsControl) ||
-                (window.ThumbnailToolbarProxyWindow != null &&
-                 window.ThumbnailToolbarProxyWindow.WindowsControl == windowsControl);
+            return window.TabbedThumbnail != null && window.TabbedThumbnail.WindowsControl == windowsControl ||
+                window.ThumbnailToolbarProxyWindow != null &&
+                 window.ThumbnailToolbarProxyWindow.WindowsControl == windowsControl;
         });
 
         if (toReturn != null)
@@ -235,7 +236,7 @@ internal static class TaskbarWindowManager
         if (m.Msg == (int)TaskbarNativeMethods.WmDwmSendIconThumbnail)
         {
             int width = (int)((long)m.LParam >> 16);
-            int height = (int)(((long)m.LParam) & (0xFFFF));
+            int height = (int)((long)m.LParam & 0xFFFF);
             Size requestedSize = new(width, height);
 
             // Fire an event to let the user update their bitmap
@@ -537,7 +538,7 @@ internal static class TaskbarWindowManager
     {
         if (m.Msg == (int)WindowMessage.SystemCommand)
         {
-            if (((int)m.WParam) == TabbedThumbnailNativeMethods.ScClose)
+            if ((int)m.WParam == TabbedThumbnailNativeMethods.ScClose)
             {
                 // Raise the event
                 if (taskbarWindow.TabbedThumbnail.OnTabbedThumbnailClosed())
@@ -551,12 +552,12 @@ internal static class TaskbarWindowManager
                     taskbarWindow.Dispose();
                 }
             }
-            else if (((int)m.WParam) == TabbedThumbnailNativeMethods.ScMaximize)
+            else if ((int)m.WParam == TabbedThumbnailNativeMethods.ScMaximize)
             {
                 // Raise the event
                 taskbarWindow.TabbedThumbnail.OnTabbedThumbnailMaximized();
             }
-            else if (((int)m.WParam) == TabbedThumbnailNativeMethods.ScMinimize)
+            else if ((int)m.WParam == TabbedThumbnailNativeMethods.ScMinimize)
             {
                 // Raise the event
                 taskbarWindow.TabbedThumbnail.OnTabbedThumbnailMinimized();

@@ -1,15 +1,12 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.ComponentModel;
 using System.Text;
 using System.Windows.Forms;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms;
+namespace Microsoft.WindowsAPICodePack.Shell.Controls;
 
 /// <summary>
 /// Implements a CommandLink button that can be used in 
@@ -60,11 +57,11 @@ public class CommandLink : Button
     /// </summary>
     [Category("Appearance")]
     [Description("Specifies the supporting note text.")]
-    [BrowsableAttribute(true)]
+    [Browsable(true)]
     [DefaultValue("(Note Text)")]
     public string NoteText
     {
-        get { return (GetNote(this)); }
+        get { return GetNote(this); }
         set
         {
             SetNote(this, value);
@@ -76,11 +73,11 @@ public class CommandLink : Button
     /// </summary>
     [Category("Appearance")]
     [Description("Indicates whether the button should be decorated with the security shield icon (Windows Vista only).")]
-    [BrowsableAttribute(true)]
+    [Browsable(true)]
     [DefaultValue(false)]
     public bool UseElevationIcon
     {
-        get { return (useElevationIcon); }
+        get { return useElevationIcon; }
         set
         {
             useElevationIcon = value;
@@ -113,7 +110,7 @@ public class CommandLink : Button
             IntPtr.Zero);
 
         // Add 1 for null terminator, to get the entire string back.
-        int len = ((int)retVal) + 1;
+        int len = (int)retVal + 1;
         StringBuilder strBld = new(len);
 
         CoreNativeMethods.SendMessage(Button.Handle, ShellNativeMethods.GetNote, ref len, strBld);

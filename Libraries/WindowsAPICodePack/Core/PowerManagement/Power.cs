@@ -1,13 +1,11 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Runtime.InteropServices;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Interop.PowerManagement;
 using Microsoft.WindowsAPICodePack.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.PowerManagement;
 
 internal static class Power
 {
@@ -18,7 +16,7 @@ internal static class Power
         uint retval = PowerManagementNativeMethods.CallNtPowerInformation(
           PowerManagementNativeMethods.PowerInformationLevel.SystemPowerCapabilities,
           IntPtr.Zero, 0, out PowerManagementNativeMethods.SystemPowerCapabilities powerCap,
-          (UInt32)Marshal.SizeOf(typeof(PowerManagementNativeMethods.SystemPowerCapabilities))
+          (uint)Marshal.SizeOf(typeof(PowerManagementNativeMethods.SystemPowerCapabilities))
           );
 
         if (retval == CoreNativeMethods.StatusAccessDenied)
@@ -35,7 +33,7 @@ internal static class Power
         uint retval = PowerManagementNativeMethods.CallNtPowerInformation(
           PowerManagementNativeMethods.PowerInformationLevel.SystemBatteryState,
           IntPtr.Zero, 0, out PowerManagementNativeMethods.SystemBatteryState batteryState,
-          (UInt32)Marshal.SizeOf(typeof(PowerManagementNativeMethods.SystemBatteryState))
+          (uint)Marshal.SizeOf(typeof(PowerManagementNativeMethods.SystemBatteryState))
           );
 
         if (retval == CoreNativeMethods.StatusAccessDenied)

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Explorip.HookFileOperations.FilesOperations.Interfaces;
+namespace Explorip.HookFileOperations.FilesOperations;
 
 [Flags(), Serializable()]
 public enum EFileOperation : uint

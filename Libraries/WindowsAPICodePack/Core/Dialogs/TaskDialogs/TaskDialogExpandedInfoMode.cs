@@ -1,6 +1,4 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Specifies the options for expand/collapse sections in dialogs.

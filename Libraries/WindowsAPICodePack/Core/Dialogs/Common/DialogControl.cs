@@ -1,11 +1,9 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Diagnostics;
 
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.Common;
 
 /// <summary>
 /// Abstract base class for all dialog controls
@@ -27,7 +25,7 @@ public abstract class DialogControl
         Id = nextId;
 
         // Support wrapping of control IDs in case you create a lot of custom controls
-        if (nextId == Int32.MaxValue) { SetNextId(DialogsDefaults.MinimumDialogControlId); }
+        if (nextId == int.MaxValue) { SetNextId(DialogsDefaults.MinimumDialogControlId); }
         else { SetNextId(nextId + 1); }
     }
     /// <summary>
@@ -50,7 +48,7 @@ public abstract class DialogControl
     /// <summary>
     /// Gets the name for this control.
     /// </summary>
-    /// <value>A <see cref="System.String"/> value.</value>        
+    /// <value>A <see cref="string"/> value.</value>        
     public string Name
     {
         get { return name; }
@@ -79,7 +77,7 @@ public abstract class DialogControl
     /// <summary>
     /// Gets the identifier for this control.
     /// </summary>
-    /// <value>An <see cref="System.Int32"/> value.</value>
+    /// <value>An <see cref="int"/> value.</value>
     public int Id { get; private set; }
 
     ///<summary>
@@ -118,11 +116,11 @@ public abstract class DialogControl
     /// Compares two objects to determine whether they are equal
     /// </summary>
     /// <param name="obj">The object to compare against.</param>
-    /// <returns>A <see cref="System.Boolean"/> value.</returns>
+    /// <returns>A <see cref="bool"/> value.</returns>
     public override bool Equals(object obj)
     {
         if (obj is DialogControl control)
-            return (Id == control.Id);
+            return Id == control.Id;
 
         return false;
     }
@@ -130,7 +128,7 @@ public abstract class DialogControl
     /// <summary>
     /// Serves as a hash function for a particular type. 
     /// </summary>
-    /// <returns>An <see cref="System.Int32"/> hash code for this control.</returns>
+    /// <returns>An <see cref="int"/> hash code for this control.</returns>
     public override int GetHashCode()
     {
         if (Name == null)

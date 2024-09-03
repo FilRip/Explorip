@@ -5,11 +5,13 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.KnownFolders;
+using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 internal static class ShellObjectFactory
 {

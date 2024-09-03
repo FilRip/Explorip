@@ -24,7 +24,7 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
 namespace Explorip.Explorer.Windows;
 
@@ -37,6 +37,7 @@ public partial class WpfExplorerBrowser : Window
     private readonly bool _mainSession;
     private readonly DispatcherTimer _dispatcherTimer;
     private bool _snapVisible;
+    private readonly double _firstLeftTabWidth;
 
     public WpfExplorerBrowser() : this(Environment.GetCommandLineArgs().RemoveAt(0)) { }
 
@@ -64,7 +65,7 @@ public partial class WpfExplorerBrowser : Window
             try
             {
                 dir = args[0];
-                LeftTab.FirstTab.Navigation(dir);
+                LeftTab.AddNewTab(dir);
             }
             catch (Exception)
             {
@@ -74,35 +75,20 @@ public partial class WpfExplorerBrowser : Window
 
         if (_mainSession && string.IsNullOrWhiteSpace(dir))
         {
-            RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
-            if (registryKey != null)
-            {
-                foreach (string value in registryKey.GetValueNames().Where(name => name.StartsWith("Tab(")))
-                    try
-                    {
-                        LeftTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
-                    }
-                    catch { /* Ignore errors */ }
-            }
-            else
-                LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
+            foreach (string path in ConfigManager.LeftTabs)
+                LeftTab.AddNewTab(ShellObject.FromParsingName(path));
 
-            registryKey = ConfigManager.MyRegistryKey.OpenSubKey("RightTab");
-            if (registryKey != null)
-            {
-                foreach (string value in registryKey.GetValueNames().Where(name => name.StartsWith("Tab(")))
-                    try
-                    {
-                        RightTab.AddNewTab(ShellObject.FromParsingName(registryKey.GetValue(value).ToString()));
-                    }
-                    catch { /* Ignore errors */ }
-            }
+            foreach (string path in ConfigManager.RightTabs)
+                RightTab.AddNewTab(ShellObject.FromParsingName(path));
         }
         if (string.IsNullOrWhiteSpace(dir))
-            LeftTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
-        if (RightTab.Items.Count == 1 && RightTab.Visibility == Visibility.Visible && _mainSession)
-            RightTab.FirstTab.ExplorerBrowser.Navigate((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.Desktop);
-        if ((!ConfigManager.StartTwoExplorer && RightTab.Visibility == Visibility.Visible) || newInstance)
+        {
+            if (LeftTab.Items.Count == 1)
+                LeftTab.AddNewTab((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.KnownFolders.Desktop);
+            if (RightTab.Items.Count == 1)
+                RightTab.AddNewTab((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.KnownFolders.Desktop);
+        }
+        if ((!ConfigManager.StartTwoExplorer && RightTab.Visibility == Visibility.Visible) && !newInstance)
             HideRightTab();
 
         Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
@@ -119,16 +105,7 @@ public partial class WpfExplorerBrowser : Window
             WindowState = ConfigManager.ExplorerWindowState;
         if (WindowState == WindowState.Minimized && newInstance)
             WindowState = WindowState.Normal;
-        if (RightTab.Visibility == Visibility.Visible)
-        {
-            RegistryKey registryKey = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab");
-            if (registryKey != null)
-            {
-                int width = registryKey.ReadInteger("Width");
-                if (width > 0)
-                    Width = width;
-            }
-        }
+        _firstLeftTabWidth = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab")?.ReadInteger("Width") ?? 0;
     }
 
     public WpfExplorerBrowserViewModel MyDataContext
@@ -236,6 +213,7 @@ public partial class WpfExplorerBrowser : Window
         RightGrid.Width = new GridLength(1, GridUnitType.Star);
         RightTab.Visibility = Visibility.Visible;
         LeftTab.SetValue(Grid.ColumnSpanProperty, 1);
+        LeftGrid.Width = _firstLeftTabWidth == 0 ? new GridLength(1.5, GridUnitType.Star) : new GridLength(_firstLeftTabWidth, GridUnitType.Pixel);
         ConfigManager.StartTwoExplorer = true;
     }
 
@@ -344,6 +322,8 @@ public partial class WpfExplorerBrowser : Window
     private void Window_StateChanged(object sender, EventArgs e)
     {
         MyDataContext.WindowMaximized = (WindowState == WindowState.Maximized);
+        if (WindowState == WindowState.Minimized)
+            return;
         ConfigManager.ExplorerWindowState = WindowState;
     }
 
@@ -380,21 +360,9 @@ public partial class WpfExplorerBrowser : Window
     {
         if (_mainSession)
         {
-            RegistryKey registryKey = ConfigManager.MyRegistryKey.CreateSubKey("LeftTab");
-            foreach (string name in registryKey.GetValueNames().Where(name => name.StartsWith("Tab(")))
-                registryKey.DeleteValue(name);
-            int i = 0;
-            foreach (TabItemExplorerBrowser tab in LeftTab.Items.OfType<TabItemExplorerBrowser>())
-                registryKey.SetValue($"Tab({i++})", tab.CurrentDirectory);
+            ConfigManager.LeftTabs = LeftTab.Items.OfType<TabItemExplorerBrowser>().Select(tab => tab.CurrentDirectory.ParsingName).ToArray();
             if (RightTab.Visibility == Visibility.Visible)
-            {
-                i = 0;
-                registryKey = ConfigManager.MyRegistryKey.CreateSubKey("RightTab");
-                foreach (string name in registryKey.GetValueNames().Where(name => name.StartsWith("Tab(")))
-                    registryKey.DeleteValue(name);
-                foreach (TabItemExplorerBrowser tab in RightTab.Items.OfType<TabItemExplorerBrowser>())
-                    registryKey.SetValue($"Tab({i++})", tab.CurrentDirectory);
-            }
+                ConfigManager.RightTabs = RightTab.Items.OfType<TabItemExplorerBrowser>().Select(tab => tab.CurrentDirectory.ParsingName).ToArray();
         }
         LeftTab.CloseAllTabs();
         RightTab.CloseAllTabs();

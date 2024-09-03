@@ -1,15 +1,15 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+using Microsoft.WindowsAPICodePack.Dialogs.Common;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Interop.Dialogs;
+using Microsoft.WindowsAPICodePack.Interop.TaskDialogs;
 using Microsoft.WindowsAPICodePack.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Encapsulates a new-to-Vista Win32 TaskDialog window 
@@ -701,7 +701,7 @@ public sealed class TaskDialog : IDialogControlHost, IDisposable
             // These are the actual arrays/lists of 
             // the structs that we'll copy to the 
             // unmanaged heap.
-            List<TaskDialogButtonBase> sourceList = (buttons.Count > 0 ? buttons : commandLinks);
+            List<TaskDialogButtonBase> sourceList = buttons.Count > 0 ? buttons : commandLinks;
             settings.Buttons = BuildButtonStructArray(sourceList);
 
             // Apply option flag that forces all 
@@ -866,7 +866,7 @@ public sealed class TaskDialog : IDialogControlHost, IDisposable
     {
         get
         {
-            return (nativeDialog != null)
+            return nativeDialog != null
                 && (nativeDialog.ShowState == DialogShowState.Showing
                 || nativeDialog.ShowState == DialogShowState.Closing);
         }

@@ -1,12 +1,10 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Collections.ObjectModel;
 using System.Text;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 /// Stores the file extensions used when filtering files in File Open and File Save dialogs.
@@ -37,7 +35,7 @@ public class CommonFileDialogFilter
     /// <remarks>The <paramref name="extensionList"/> can use a semicolon(";") 
     /// or comma (",") to separate extensions. Extensions can be prefaced 
     /// with a period (".") or with the file wild card specifier "*.".</remarks>
-    /// <permission cref="System.ArgumentNullException">
+    /// <permission cref="ArgumentNullException">
     /// The <paramref name="extensionList"/> cannot be null or a 
     /// zero-length string. 
     /// </permission>
@@ -57,13 +55,13 @@ public class CommonFileDialogFilter
         string[] rawExtensions = extensionList.Split(',', ';');
         foreach (string extension in rawExtensions)
         {
-            extensions.Add(CommonFileDialogFilter.NormalizeExtension(extension));
+            extensions.Add(NormalizeExtension(extension));
         }
     }
     /// <summary>
     /// Gets or sets the display name for this filter.
     /// </summary>
-    /// <permission cref="System.ArgumentNullException">
+    /// <permission cref="ArgumentNullException">
     /// The value for this property cannot be set to null or a 
     /// zero-length string. 
     /// </permission>        
@@ -76,7 +74,7 @@ public class CommonFileDialogFilter
                 return string.Format(System.Globalization.CultureInfo.InvariantCulture,
                     "{0} ({1})",
                     rawDisplayName,
-                    CommonFileDialogFilter.GetDisplayExtensionList(extensions));
+                    GetDisplayExtensionList(extensions));
             }
 
             return rawDisplayName;
@@ -151,12 +149,12 @@ public class CommonFileDialogFilter
     /// Returns a string representation for this filter that includes
     /// the display name and the list of extensions.
     /// </summary>
-    /// <returns>A <see cref="System.String"/>.</returns>
+    /// <returns>A <see cref="string"/>.</returns>
     public override string ToString()
     {
         return string.Format(System.Globalization.CultureInfo.InvariantCulture,
             "{0} ({1})",
             rawDisplayName,
-            CommonFileDialogFilter.GetDisplayExtensionList(extensions));
+            GetDisplayExtensionList(extensions));
     }
 }

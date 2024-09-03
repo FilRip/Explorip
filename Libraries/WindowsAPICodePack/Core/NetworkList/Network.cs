@@ -1,8 +1,8 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System;
 
-using System;
+using Microsoft.WindowsAPICodePack.Interop.NetworkList;
 
-namespace Microsoft.WindowsAPICodePack.Net;
+namespace Microsoft.WindowsAPICodePack.NetworkList;
 
 /// <summary>
 /// Represents a network on the local machine. 
@@ -49,7 +49,7 @@ public class Network
     /// Gets the local date and time when the network 
     /// was connected.
     /// </summary>
-    /// <value>A <see cref="System.DateTime"/> object.</value>
+    /// <value>A <see cref="DateTime"/> object.</value>
     public DateTime ConnectedTime
     {
         get
@@ -94,7 +94,7 @@ public class Network
     /// Gets the local date and time when the 
     /// network was created.
     /// </summary>
-    /// <value>A <see cref="System.DateTime"/> object.</value>
+    /// <value>A <see cref="DateTime"/> object.</value>
     public DateTime CreatedTime
     {
         get
@@ -111,7 +111,7 @@ public class Network
     /// <summary>
     /// Gets or sets a description for the network.
     /// </summary>
-    /// <value>A <see cref="System.String"/> value.</value>
+    /// <value>A <see cref="string"/> value.</value>
     public string Description
     {
         get
@@ -145,7 +145,7 @@ public class Network
     /// Gets a value that indicates whether there is
     /// network connectivity.
     /// </summary>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <value>A <see cref="bool"/> value.</value>
     public bool IsConnected
     {
         get
@@ -158,7 +158,7 @@ public class Network
     /// Gets a value that indicates whether there is 
     /// Internet connectivity.
     /// </summary>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <value>A <see cref="bool"/> value.</value>
     public bool IsConnectedToInternet
     {
         get
@@ -170,7 +170,7 @@ public class Network
     /// <summary>
     /// Gets or sets the name of the network.
     /// </summary>
-    /// <value>A <see cref="System.String"/> value.</value>
+    /// <value>A <see cref="string"/> value.</value>
     public string Name
     {
         get
@@ -187,7 +187,7 @@ public class Network
     /// <summary>
     /// Gets a unique identifier for the network.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> value.</value>
+    /// <value>A <see cref="Guid"/> value.</value>
     public Guid NetworkId
     {
         get

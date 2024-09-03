@@ -1,12 +1,10 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
 
 namespace Microsoft.WindowsAPICodePack.Controls.WindowsPresentationFoundation;
 

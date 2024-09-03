@@ -1,10 +1,8 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System;
 
-using System;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
-using Microsoft.WindowsAPICodePack.Shell;
-
-namespace Microsoft.WindowsAPICodePack.Controls;
+namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 
 /// <summary>

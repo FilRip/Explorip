@@ -3,7 +3,7 @@
 using System;
 using System.Windows;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Event args for various Tabbed Thumbnail related events

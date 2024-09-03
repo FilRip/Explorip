@@ -5,7 +5,7 @@ using System.Windows;
 
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 internal class TaskbarWindow : IDisposable
 {

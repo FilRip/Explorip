@@ -1,13 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System.Runtime.InteropServices;
 
-using System.Runtime.InteropServices;
-
-using Microsoft.WindowsAPICodePack.Controls.WindowsForms;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Controls;
+namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 /// <summary>
 /// These options control how the content of the Explorer Browser 

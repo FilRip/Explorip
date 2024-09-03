@@ -1,11 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Interop.TaskDialogs;
 
 
 /// <summary>
@@ -20,7 +18,7 @@ internal static class TaskDialogNativeMethods
 
     [DllImport("Comctl32.dll", SetLastError = true)]
     internal static extern HResult TaskDialogIndirect(
-        [In()] TaskDialogNativeMethods.TaskDialogConfiguration taskConfig,
+        [In()] TaskDialogConfiguration taskConfig,
         [Out()] out int button,
         [Out()] out int radioButton,
         [MarshalAs(UnmanagedType.Bool), Out] out bool verificationFlagChecked);

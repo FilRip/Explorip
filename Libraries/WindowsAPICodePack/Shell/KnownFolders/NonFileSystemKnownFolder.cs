@@ -1,10 +1,12 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.KnownFolders;
+
+namespace Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 /// <summary>
 /// Represents a registered non file system Known Folder
@@ -77,7 +79,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets the path for this known folder.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Path
     {
         get { return KnownFolderSettings.Path; }
@@ -95,7 +97,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets this known folder's canonical name.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string CanonicalName
     {
         get { return KnownFolderSettings.CanonicalName; }
@@ -104,7 +106,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets this known folder's description.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Description
     {
         get { return KnownFolderSettings.Description; }
@@ -113,7 +115,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets the unique identifier for this known folder's parent folder.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> value.</value>
+    /// <value>A <see cref="Guid"/> value.</value>
     public Guid ParentId
     {
         get { return KnownFolderSettings.ParentId; }
@@ -122,7 +124,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets this known folder's relative path.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string RelativePath
     {
         get { return KnownFolderSettings.RelativePath; }
@@ -131,7 +133,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets this known folder's parsing name.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public override string ParsingName
     {
         get { return base.ParsingName; }
@@ -140,7 +142,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets this known folder's tool tip text.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Tooltip
     {
         get { return KnownFolderSettings.Tooltip; }
@@ -149,7 +151,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// Gets the resource identifier for this 
     /// known folder's tool tip text.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string TooltipResourceId
     {
         get { return KnownFolderSettings.TooltipResourceId; }
@@ -158,7 +160,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets this known folder's localized name.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string LocalizedName
     {
         get { return KnownFolderSettings.LocalizedName; }
@@ -167,7 +169,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// Gets the resource identifier for this 
     /// known folder's localized name.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string LocalizedNameResourceId
     {
         get { return KnownFolderSettings.LocalizedNameResourceId; }
@@ -176,7 +178,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets this known folder's security attributes.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string Security
     {
         get { return KnownFolderSettings.Security; }
@@ -204,7 +206,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets the unique identifier for this known folder's type.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> value.</value>
+    /// <value>A <see cref="Guid"/> value.</value>
     public Guid FolderTypeId
     {
         get { return KnownFolderSettings.FolderTypeId; }
@@ -213,7 +215,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets a string representation of this known folder's type.
     /// </summary>
-    /// <value>A <see cref="System.String"/> object.</value>
+    /// <value>A <see cref="string"/> object.</value>
     public string FolderType
     {
         get { return KnownFolderSettings.FolderType; }
@@ -221,7 +223,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets the unique identifier for this known folder.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> value.</value>
+    /// <value>A <see cref="Guid"/> value.</value>
     public Guid FolderId
     {
         get { return KnownFolderSettings.FolderId; }
@@ -230,7 +232,7 @@ public class NonFileSystemKnownFolder : ShellNonFileSystemFolder, IKnownFolder
     /// <summary>
     /// Gets a value that indicates whether this known folder's path exists on the computer. 
     /// </summary>
-    /// <value>A bool<see cref="System.Boolean"/> value.</value>
+    /// <value>A bool<see cref="bool"/> value.</value>
     /// <remarks>If this property value is <b>false</b>, 
     /// the folder might be a virtual folder (<see cref="Category"/> property will
     /// be <see cref="FolderCategory.Virtual"/> for virtual folders)</remarks>

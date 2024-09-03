@@ -1,13 +1,12 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.KnownFolders;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 /// <summary>
 /// Defines properties for known folders that identify the path of standard known folders.
@@ -48,7 +47,7 @@ public static class KnownFolders
                 for (int i = 0; i < count; i++)
                 {
                     // Read the current pointer
-                    IntPtr current = new(folders.ToInt64() + (Marshal.SizeOf(typeof(Guid)) * i));
+                    IntPtr current = new(folders.ToInt64() + Marshal.SizeOf(typeof(Guid)) * i);
 
                     // Convert to Guid
                     Guid knownFolderID = (Guid)Marshal.PtrToStructure(current, typeof(Guid));

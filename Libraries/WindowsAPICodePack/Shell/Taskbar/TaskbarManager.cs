@@ -1,14 +1,12 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows.Interop;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Represents an instance of the Windows taskbar
@@ -80,7 +78,7 @@ public class TaskbarManager
     public void SetOverlayIcon(System.Windows.Window window, System.Drawing.Icon icon, string accessibilityText)
     {
         TaskbarList.Instance.SetOverlayIcon(
-            (new WindowInteropHelper(window)).EnsureHandle(),
+            new WindowInteropHelper(window).EnsureHandle(),
             icon != null ? icon.Handle : IntPtr.Zero,
             accessibilityText);
     }
@@ -126,7 +124,7 @@ public class TaskbarManager
     public void SetProgressValue(int currentValue, int maximumValue, System.Windows.Window window)
     {
         TaskbarList.Instance.SetProgressValue(
-            (new WindowInteropHelper(window)).EnsureHandle(),
+            new WindowInteropHelper(window).EnsureHandle(),
             Convert.ToUInt32(currentValue),
             Convert.ToUInt32(maximumValue));
     }
@@ -162,7 +160,7 @@ public class TaskbarManager
     public void SetProgressState(TaskbarProgressBarState state, System.Windows.Window window)
     {
         TaskbarList.Instance.SetProgressState(
-            (new WindowInteropHelper(window)).EnsureHandle(),
+            new WindowInteropHelper(window).EnsureHandle(),
             (TaskbarProgressBarStatus)state);
     }
 
@@ -248,7 +246,7 @@ public class TaskbarManager
     /// <param name="appId">The app id to set</param>
     /// <param name="windowHandle">Window handle for the window that needs a specific application id</param>
     /// <remarks>AppId specifies a unique Application User Model ID (AppID) for the application or individual 
-    /// top-level window whose taskbar button will hold the custom JumpList built through the methods <see cref="Microsoft.WindowsAPICodePack.Taskbar.JumpList"/> class.
+    /// top-level window whose taskbar button will hold the custom JumpList built through the methods <see cref="JumpList"/> class.
     /// By setting an appId for a specific window, the window will not be grouped with it's parent window/application. Instead it will have it's own taskbar button.</remarks>
     public void SetApplicationIdForSpecificWindow(IntPtr windowHandle, string appId)
     {
@@ -262,12 +260,12 @@ public class TaskbarManager
     /// <param name="appId">The app id to set</param>
     /// <param name="window">Window that needs a specific application id</param>
     /// <remarks>AppId specifies a unique Application User Model ID (AppID) for the application or individual 
-    /// top-level window whose taskbar button will hold the custom JumpList built through the methods <see cref="Microsoft.WindowsAPICodePack.Taskbar.JumpList"/> class.
+    /// top-level window whose taskbar button will hold the custom JumpList built through the methods <see cref="JumpList"/> class.
     /// By setting an appId for a specific window, the window will not be grouped with it's parent window/application. Instead it will have it's own taskbar button.</remarks>
     public void SetApplicationIdForSpecificWindow(System.Windows.Window window, string appId)
     {
         // Left as instance method, to follow singleton pattern.
-        TaskbarNativeMethods.SetWindowAppId((new WindowInteropHelper(window)).EnsureHandle(), appId);
+        TaskbarNativeMethods.SetWindowAppId(new WindowInteropHelper(window).EnsureHandle(), appId);
     }
 
     /// <summary>

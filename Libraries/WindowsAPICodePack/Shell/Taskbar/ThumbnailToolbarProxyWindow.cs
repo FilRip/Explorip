@@ -1,13 +1,11 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Windows.Forms;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 internal class ThumbnailToolbarProxyWindow : NativeWindow, IDisposable
 {
@@ -78,9 +76,9 @@ internal class ThumbnailToolbarProxyWindow : NativeWindow, IDisposable
         handled = TaskbarWindowManager.DispatchMessage(ref m, TaskbarWindow);
 
         // If it's a WM_Destroy message, then also forward it to the base class (our native window)
-        if (((m.Msg == (int)WindowMessage.Destroy) ||
-            (m.Msg == (int)WindowMessage.NCDestroy) ||
-            ((m.Msg == (int)WindowMessage.SystemCommand) && (((int)m.WParam) == TabbedThumbnailNativeMethods.ScClose))) || !handled)
+        if (m.Msg == (int)WindowMessage.Destroy ||
+            m.Msg == (int)WindowMessage.NCDestroy ||
+            m.Msg == (int)WindowMessage.SystemCommand && (int)m.WParam == TabbedThumbnailNativeMethods.ScClose || !handled)
         {
             base.WndProc(ref m);
         }

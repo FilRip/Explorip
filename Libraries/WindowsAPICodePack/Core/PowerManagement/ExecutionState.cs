@@ -1,8 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System;
 
-using System;
-
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.PowerManagement;
 
 /// <summary>
 /// Enumeration of execution states.

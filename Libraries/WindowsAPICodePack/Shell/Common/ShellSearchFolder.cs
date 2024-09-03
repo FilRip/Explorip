@@ -1,16 +1,15 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.PropertySystem;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.PropertySystem;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// Create and modify search folders.
@@ -56,7 +55,7 @@ public class ShellSearchFolder : ShellSearchCollection
 
     private SearchCondition searchCondition;
     /// <summary>
-    /// Gets the <see cref="Shell.SearchCondition"/> of the search. 
+    /// Gets the <see cref="Common.SearchCondition"/> of the search. 
     /// When this property is not set, the resulting search will have no filters applied.
     /// </summary>
     public SearchCondition SearchCondition

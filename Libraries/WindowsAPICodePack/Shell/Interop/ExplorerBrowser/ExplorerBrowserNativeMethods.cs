@@ -1,12 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
 
-namespace Microsoft.WindowsAPICodePack.Controls;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 
 /// <summary>
 /// Internal class that contains interop declarations for 

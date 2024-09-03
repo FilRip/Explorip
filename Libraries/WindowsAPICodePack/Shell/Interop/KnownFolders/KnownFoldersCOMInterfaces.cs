@@ -1,12 +1,12 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.KnownFolders;
 
 // Disable warning if a method declaration hides another inherited from a parent COM interface
 // To successfully import a COM interface, all inherited methods need to be declared again with 
@@ -78,7 +78,7 @@ internal interface IKnownFolderManager
     [MethodImpl(MethodImplOptions.InternalCall,
         MethodCodeType = MethodCodeType.Runtime)]
     void GetFolderIds([Out()] out IntPtr folders,
-      [Out()] out UInt32 count);
+      [Out()] out uint count);
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall,
@@ -138,7 +138,7 @@ internal class KnownFolderManagerClass : IKnownFolderManager
         MethodCodeType = MethodCodeType.Runtime)]
     public virtual extern void GetFolderIds(
         [Out()] out IntPtr folders,
-        [Out()] out UInt32 count);
+        [Out()] out uint count);
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall,

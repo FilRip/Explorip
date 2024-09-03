@@ -1,13 +1,13 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Dialogs;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 /// Creates a Vista or Windows 7 Common File Dialog, allowing the user to select one or more files.
@@ -24,7 +24,7 @@ public sealed class CommonOpenFileDialog : CommonFileDialog
         : base()
     {
         // For Open file dialog, allow read only files.
-        base.EnsureReadOnly = true;
+        EnsureReadOnly = true;
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public sealed class CommonOpenFileDialog : CommonFileDialog
         : base(name)
     {
         // For Open file dialog, allow read only files.
-        base.EnsureReadOnly = true;
+        EnsureReadOnly = true;
     }
 
     #region Public API specific to Open
@@ -44,14 +44,14 @@ public sealed class CommonOpenFileDialog : CommonFileDialog
     /// Gets a collection of the selected file names.
     /// </summary>
     /// <remarks>This property should only be used when the
-    /// <see cref="CommonOpenFileDialog.Multiselect"/>
+    /// <see cref="Multiselect"/>
     /// property is <b>true</b>.</remarks>
     public IEnumerable<string> FileNames
     {
         get
         {
             CheckFileNamesAvailable();
-            return base.FileNameCollection;
+            return FileNameCollection;
         }
     }
 
@@ -59,7 +59,7 @@ public sealed class CommonOpenFileDialog : CommonFileDialog
     /// Gets a collection of the selected items as ShellObject objects.
     /// </summary>
     /// <remarks>This property should only be used when the
-    /// <see cref="CommonOpenFileDialog.Multiselect"/>
+    /// <see cref="Multiselect"/>
     /// property is <b>true</b>.</remarks>
     public ICollection<ShellObject> FilesAsShellObject
     {

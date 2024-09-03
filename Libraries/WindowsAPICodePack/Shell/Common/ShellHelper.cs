@@ -1,15 +1,13 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
 
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.PropertySystem;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// A helper class for Shell Objects
@@ -45,7 +43,7 @@ internal static class ShellHelper
         {
             return path;
         }
-        return Path.GetFullPath((path));
+        return Path.GetFullPath(path);
     }
 
     private static PropertyKey ItemTypePropertyKey = new(new Guid("28636AA6-953D-11D2-B5D6-00C04FD918D0"), 11);
@@ -67,7 +65,7 @@ internal static class ShellHelper
         int retCode = ShellNativeMethods.SHParseDisplayName(
             name, IntPtr.Zero, out IntPtr pidl, 0, out _);
 
-        return (CoreErrorHelper.Succeeded(retCode) ? pidl : IntPtr.Zero);
+        return CoreErrorHelper.Succeeded(retCode) ? pidl : IntPtr.Zero;
     }
 
     internal static IntPtr PidlFromShellItem(IShellItem nativeShellItem)
@@ -79,7 +77,7 @@ internal static class ShellHelper
     internal static IntPtr PidlFromUnknown(IntPtr unknown)
     {
         int retCode = ShellNativeMethods.SHGetIDListFromObject(unknown, out IntPtr pidl);
-        return (CoreErrorHelper.Succeeded(retCode) ? pidl : IntPtr.Zero);
+        return CoreErrorHelper.Succeeded(retCode) ? pidl : IntPtr.Zero;
     }
 
 }

@@ -1,10 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
+
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.KnownFolders;
 
 /// <summary>
 /// Internal class that contains interop declarations for 
@@ -33,7 +33,7 @@ internal static class KnownFoldersSafeNativeMethods
         internal IntPtr localizedName;
         internal IntPtr icon;
         internal IntPtr security;
-        internal UInt32 attributes;
+        internal uint attributes;
         internal DefinitionOptions definitionOptions;
         internal Guid folderTypeId;
     }

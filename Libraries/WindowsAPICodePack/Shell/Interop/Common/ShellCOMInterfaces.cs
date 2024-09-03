@@ -1,17 +1,16 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
-using Microsoft.WindowsAPICodePack.Taskbar;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.PropertySystem;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.PropertySystem;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
 internal enum SICHINTF
 {
@@ -304,15 +303,15 @@ interface IThumbnailCache
 {
     void GetThumbnail([In()] IShellItem pShellItem,
     [In()] uint cxyRequestedThumbSize,
-    [In()] Microsoft.WindowsAPICodePack.Shell.ShellNativeMethods.ThumbnailOptions flags,
+    [In()] ShellNativeMethods.ThumbnailOptions flags,
     [Out()] out ISharedBitmap ppvThumb,
-    [Out()] out Microsoft.WindowsAPICodePack.Shell.ShellNativeMethods.ThumbnailCacheOptions pOutFlags,
-    [Out()] Microsoft.WindowsAPICodePack.Shell.ShellNativeMethods.ThumbnailId pThumbnailID);
+    [Out()] out ShellNativeMethods.ThumbnailCacheOptions pOutFlags,
+    [Out()] ShellNativeMethods.ThumbnailId pThumbnailID);
 
-    void GetThumbnailByID([In()] Microsoft.WindowsAPICodePack.Shell.ShellNativeMethods.ThumbnailId thumbnailID,
+    void GetThumbnailByID([In()] ShellNativeMethods.ThumbnailId thumbnailID,
     [In()] uint cxyRequestedThumbSize,
     [Out()] out ISharedBitmap ppvThumb,
-    [Out()] out Microsoft.WindowsAPICodePack.Shell.ShellNativeMethods.ThumbnailCacheOptions pOutFlags);
+    [Out()] out ShellNativeMethods.ThumbnailCacheOptions pOutFlags);
 }
 
 [ComImport(),
@@ -631,9 +630,9 @@ internal interface IRichChunk
 internal interface IEnumUnknown
 {
     [PreserveSig()]
-    HResult Next(UInt32 requestedNumber, ref IntPtr buffer, ref UInt32 fetchedNumber);
+    HResult Next(uint requestedNumber, ref IntPtr buffer, ref uint fetchedNumber);
     [PreserveSig()]
-    HResult Skip(UInt32 number);
+    HResult Skip(uint number);
     [PreserveSig()]
     HResult Reset();
     [PreserveSig()]

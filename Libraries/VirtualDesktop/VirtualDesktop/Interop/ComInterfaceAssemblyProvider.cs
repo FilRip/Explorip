@@ -108,7 +108,7 @@ namespace WindowsDesktop.Interop
             foreach (string name in executingAssembly.GetManifestResourceNames())
             {
                 string[] texts = Path.GetFileNameWithoutExtension(name)?.Split('.');
-                string typeName = texts.LastOrDefault();
+                string typeName = texts?.LastOrDefault();
                 if (typeName == null)
                     continue;
 

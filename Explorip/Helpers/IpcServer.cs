@@ -7,8 +7,6 @@ using ExploripApi;
 
 using ExploripSharedCopy.Controls;
 
-using Microsoft.WindowsAPICodePack.Shell;
-
 namespace Explorip.Helpers;
 
 [Serializable()]
@@ -19,7 +17,7 @@ public sealed class IpcServer : IServerIpc
         Application.Current.Dispatcher.Invoke(() =>
         {
             WpfExplorerBrowser newExplorerWindow = new(args, false);
-            newExplorerWindow.LeftTab.FirstTab.Navigation(ShellObject.FromParsingName(args[0]));
+            newExplorerWindow.LeftTab.AddNewTab(args[0]);
             newExplorerWindow.RightTab.CloseAllTabs();
             newExplorerWindow.RightTab.HideTab();
             newExplorerWindow.Show();

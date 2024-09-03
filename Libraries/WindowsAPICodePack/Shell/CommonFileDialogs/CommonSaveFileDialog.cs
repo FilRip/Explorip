@@ -1,17 +1,18 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.PropertySystem;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Dialogs;
+using Microsoft.WindowsAPICodePack.Shell.Interop.PropertySystem;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 /// Creates a Vista or Windows 7 Common File Dialog, allowing the user to select the filename and location for a saved file.
@@ -40,7 +41,7 @@ public sealed class CommonSaveFileDialog : CommonFileDialog
     /// Gets or sets a value that controls whether to prompt before 
     /// overwriting an existing file of the same name. Default value is true.
     /// </summary>
-    /// <permission cref="System.InvalidOperationException">
+    /// <permission cref="InvalidOperationException">
     /// This property cannot be changed when the dialog is showing.
     /// </permission>
     public bool OverwritePrompt
@@ -58,7 +59,7 @@ public sealed class CommonSaveFileDialog : CommonFileDialog
     /// Gets or sets a value that controls whether to prompt for creation if the item returned in the save dialog does not exist. 
     /// </summary>
     /// <remarks>Note that this does not actually create the item.</remarks>
-    /// <permission cref="System.InvalidOperationException">
+    /// <permission cref="InvalidOperationException">
     /// This property cannot be changed when the dialog is showing.
     /// </permission>
     public bool CreatePrompt
@@ -78,7 +79,7 @@ public sealed class CommonSaveFileDialog : CommonFileDialog
     /// </summary>
     /// <remarks>Expanded mode controls whether the dialog
     /// shows folders for browsing or hides them.</remarks>
-    /// <permission cref="System.InvalidOperationException">
+    /// <permission cref="InvalidOperationException">
     /// This property cannot be changed when the dialog is showing.
     /// </permission>
     public bool IsExpandedMode
@@ -98,7 +99,7 @@ public sealed class CommonSaveFileDialog : CommonFileDialog
     /// currently selected file type.  If necessary, the dialog appends the correct 
     /// file extension.
     /// </summary>
-    /// <permission cref="System.InvalidOperationException">
+    /// <permission cref="InvalidOperationException">
     /// This property cannot be changed when the dialog is showing.
     /// </permission>
     public bool AlwaysAppendDefaultExtension

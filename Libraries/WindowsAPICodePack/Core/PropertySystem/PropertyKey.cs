@@ -1,11 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Shell.PropertySystem;
+namespace Microsoft.WindowsAPICodePack.PropertySystem;
 
 /// <summary>
 /// Defines a unique key for a Shell Property
@@ -16,7 +14,7 @@ public struct PropertyKey : IEquatable<PropertyKey>
     #region Private Fields
 
     private Guid formatId;
-    private readonly Int32 propertyId;
+    private readonly int propertyId;
 
     #endregion
 
@@ -97,7 +95,7 @@ public struct PropertyKey : IEquatable<PropertyKey>
             return false;
 
         PropertyKey other = (PropertyKey)obj;
-        return other.formatId.Equals(formatId) && (other.propertyId == propertyId);
+        return other.formatId.Equals(formatId) && other.propertyId == propertyId;
     }
 
     #endregion

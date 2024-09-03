@@ -1,10 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.WindowsAPICodePack.Net;
+using Microsoft.WindowsAPICodePack.NetworkList;
+
+namespace Microsoft.WindowsAPICodePack.Interop.NetworkList;
 
 [ComImport]
 [TypeLibType(0x1040)]

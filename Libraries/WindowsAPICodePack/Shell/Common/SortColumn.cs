@@ -2,9 +2,10 @@
 
 using System.Runtime.InteropServices;
 
+using Microsoft.WindowsAPICodePack.PropertySystem;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// Stores information about how to sort a column that is displayed in the folder view.
@@ -46,8 +47,8 @@ public struct SortColumn
     /// <returns>True if col1 equals col2; false otherwise.</returns>
     public static bool operator ==(SortColumn col1, SortColumn col2)
     {
-        return (col1.Direction == col2.Direction) &&
-            (col1.PropertyKey == col2.PropertyKey);
+        return col1.Direction == col2.Direction &&
+            col1.PropertyKey == col2.PropertyKey;
     }
 
     /// <summary>
@@ -69,7 +70,7 @@ public struct SortColumn
     public override bool Equals(object obj)
     {
         if (obj is not SortColumn result) { return false; }
-        return (this == result);
+        return this == result;
     }
 
     /// <summary>

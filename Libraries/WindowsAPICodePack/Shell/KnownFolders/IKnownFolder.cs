@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+
+namespace Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 /// <summary>
 /// Represents a registered or known folder in the system.

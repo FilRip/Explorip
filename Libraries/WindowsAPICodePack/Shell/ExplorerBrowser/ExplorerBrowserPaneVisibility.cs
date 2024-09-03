@@ -1,6 +1,4 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.Controls;
+﻿namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 /// <summary>
 /// Controls the visibility of the various ExplorerBrowser panes on subsequent navigation

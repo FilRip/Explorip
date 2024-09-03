@@ -1,6 +1,4 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Windows;
@@ -8,9 +6,10 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Helper class to capture a control or window as System.Drawing.Bitmap
@@ -43,7 +42,7 @@ public static class TabbedThumbnailScreenCapture
                 realWindowSize = new System.Drawing.Size(200, 200);
             }
 
-            System.Drawing.Size size = (bitmapSize == System.Drawing.Size.Empty) ?
+            System.Drawing.Size size = bitmapSize == System.Drawing.Size.Empty ?
                     realWindowSize : bitmapSize;
 
             Bitmap targetBitmap = null;
@@ -148,7 +147,7 @@ public static class TabbedThumbnailScreenCapture
     /// <returns></returns>
     internal static Bitmap ResizeImageWithAspect(IntPtr originalHBitmap, int newWidth, int maxHeight, bool resizeIfWider)
     {
-        Bitmap originalBitmap = Bitmap.FromHbitmap(originalHBitmap);
+        Bitmap originalBitmap = Image.FromHbitmap(originalHBitmap);
 
         try
         {

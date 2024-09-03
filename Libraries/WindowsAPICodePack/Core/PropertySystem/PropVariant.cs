@@ -1,15 +1,12 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
 using Microsoft.WindowsAPICodePack.Resources;
-using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-namespace MS.WindowsAPICodePack.Internal;
+namespace Microsoft.WindowsAPICodePack.PropertySystem;
 
 /// <summary>
 /// Represents the OLE struct PROPVARIANT.
@@ -32,7 +29,7 @@ public sealed class PropVariant : IDisposable
         Dictionary<Type, Action<PropVariant, Array, uint>> cache = new()
         {
             {
-                typeof(Int16),
+                typeof(short),
                 (pv, array, i) =>
                 {
                     PropVariantNativeMethods.PropVariantGetInt16Elem(pv, i, out short val);
@@ -41,7 +38,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(UInt16),
+                typeof(ushort),
                 (pv, array, i) =>
                 {
                     PropVariantNativeMethods.PropVariantGetUInt16Elem(pv, i, out ushort val);
@@ -50,7 +47,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(Int32),
+                typeof(int),
                 (pv, array, i) =>
                 {
                     PropVariantNativeMethods.PropVariantGetInt32Elem(pv, i, out int val);
@@ -59,7 +56,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(UInt32),
+                typeof(uint),
                 (pv, array, i) =>
                 {
                     PropVariantNativeMethods.PropVariantGetUInt32Elem(pv, i, out uint val);
@@ -68,7 +65,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(Int64),
+                typeof(long),
                 (pv, array, i) =>
                 {
                     PropVariantNativeMethods.PropVariantGetInt64Elem(pv, i, out long val);
@@ -77,7 +74,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(UInt64),
+                typeof(ulong),
                 (pv, array, i) =>
                 {
                     PropVariantNativeMethods.PropVariantGetUInt64Elem(pv, i, out ulong val);
@@ -98,7 +95,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(Boolean),
+                typeof(bool),
                 (pv, array, i) =>
                 {
                     PropVariantNativeMethods.PropVariantGetBooleanElem(pv, i, out bool val);
@@ -107,7 +104,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(Double),
+                typeof(double),
                 (pv, array, i) =>
                 {
                     PropVariantNativeMethods.PropVariantGetDoubleElem(pv, i, out double val);
@@ -116,7 +113,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(Single),
+                typeof(float),
                 (pv, array, i) => // float
                 {
                     float[] val = new float[1];
@@ -126,7 +123,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(Decimal),
+                typeof(decimal),
                 (pv, array, i) =>
                 {
                     int[] val = new int[4];
@@ -140,7 +137,7 @@ public sealed class PropVariant : IDisposable
             },
 
             {
-                typeof(String),
+                typeof(string),
                 (pv, array, i) =>
                 {
                     string val = string.Empty;
@@ -248,9 +245,9 @@ public sealed class PropVariant : IDisposable
     [FieldOffset(8)]
     IntPtr _ptr;
     [FieldOffset(8)]
-    readonly Int32 _int32;
+    readonly int _int32;
     [FieldOffset(8)]
-    readonly UInt32 _uint32;
+    readonly uint _uint32;
     [FieldOffset(8)]
     readonly byte _byte;
     [FieldOffset(8)]
@@ -597,7 +594,7 @@ public sealed class PropVariant : IDisposable
             for (int i = 0; i < array.Length; ++i)
             {
                 object obj = array.GetValue(i);
-                IntPtr punk = (obj != null) ? Marshal.GetIUnknownForObject(obj) : IntPtr.Zero;
+                IntPtr punk = obj != null ? Marshal.GetIUnknownForObject(obj) : IntPtr.Zero;
                 Marshal.WriteIntPtr(pvData, i * IntPtr.Size, punk);
             }
         }
@@ -631,7 +628,7 @@ public sealed class PropVariant : IDisposable
     {
         get
         {
-            return (_valueType == (ushort)VarEnum.VT_EMPTY || _valueType == (ushort)VarEnum.VT_NULL);
+            return _valueType == (ushort)VarEnum.VT_EMPTY || _valueType == (ushort)VarEnum.VT_NULL;
         }
     }
 
@@ -669,17 +666,17 @@ public sealed class PropVariant : IDisposable
 #pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
                 VarEnum.VT_ARRAY | VarEnum.VT_UNKNOWN => CrackSingleDimSafeArray(_ptr),
                 (VarEnum.VT_VECTOR | VarEnum.VT_LPWSTR) => GetVector<string>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_I2) => GetVector<Int16>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_UI2) => GetVector<UInt16>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_I4) => GetVector<Int32>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_UI4) => GetVector<UInt32>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_I8) => GetVector<Int64>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_UI8) => GetVector<UInt64>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_I2) => GetVector<short>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_UI2) => GetVector<ushort>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_I4) => GetVector<int>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_UI4) => GetVector<uint>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_I8) => GetVector<long>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_UI8) => GetVector<ulong>(),
                 (VarEnum.VT_VECTOR | VarEnum.VT_R4) => GetVector<float>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_R8) => GetVector<Double>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_BOOL) => GetVector<Boolean>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_R8) => GetVector<double>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_BOOL) => GetVector<bool>(),
                 (VarEnum.VT_VECTOR | VarEnum.VT_FILETIME) => GetVector<DateTime>(),
-                (VarEnum.VT_VECTOR | VarEnum.VT_DECIMAL) => GetVector<Decimal>(),
+                (VarEnum.VT_VECTOR | VarEnum.VT_DECIMAL) => GetVector<decimal>(),
 #pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
                 _ => null,// if the value cannot be marshaled
             };
@@ -692,7 +689,7 @@ public sealed class PropVariant : IDisposable
 
     private static long GetFileTimeAsLong(ref System.Runtime.InteropServices.ComTypes.FILETIME val)
     {
-        return (((long)val.dwHighDateTime) << 32) + val.dwLowDateTime;
+        return ((long)val.dwHighDateTime << 32) + val.dwLowDateTime;
     }
 
     private static System.Runtime.InteropServices.ComTypes.FILETIME DateTimeToFileTime(DateTime value)

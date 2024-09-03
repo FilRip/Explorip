@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.DesktopWindowManager;
 
 /// <summary>
 /// Event argument for The GlassAvailabilityChanged event

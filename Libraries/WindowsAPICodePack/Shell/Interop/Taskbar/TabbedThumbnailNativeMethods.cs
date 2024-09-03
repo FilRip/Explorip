@@ -1,11 +1,9 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Runtime.InteropServices;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 
 internal static class TabbedThumbnailNativeMethods
 {

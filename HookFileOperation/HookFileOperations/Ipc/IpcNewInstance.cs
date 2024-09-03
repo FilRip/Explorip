@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
+using Explorip.HookFileOperations.FilesOperations;
 using Explorip.HookFileOperations.Interfaces;
 using Explorip.HookFileOperations.Models;
 
@@ -33,11 +34,11 @@ public class IpcNewInstance : MarshalByRefObject
         Task.Run(() =>
         {
             if (_interactionWithMainProcess == null ||
-                (listOperations.Count == 1 && listOperations[0].FileOperation == EFileOperation.Create))
+                (listOperations.Count == 1 && listOperations[0].FileOperation == Models.EFileOperation.Create))
             {
                 try
                 {
-                    if (listOperations.Count == 1 && listOperations[0].FileOperation == EFileOperation.Create)
+                    if (listOperations.Count == 1 && listOperations[0].FileOperation == Models.EFileOperation.Create)
                     {
                         if (listOperations[0].Attributes.HasFlag(FileAttributes.Directory))
                         {

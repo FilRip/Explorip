@@ -16,7 +16,7 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
 
-using Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 namespace Explorip.TaskBar;
 

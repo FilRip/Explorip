@@ -1,8 +1,8 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System;
 
-using System;
+using Microsoft.WindowsAPICodePack.Interop.NetworkList;
 
-namespace Microsoft.WindowsAPICodePack.Net;
+namespace Microsoft.WindowsAPICodePack.NetworkList;
 
 /// <summary>
 /// Represents a connection to a network.
@@ -38,7 +38,7 @@ public class NetworkConnection
     /// <summary>
     /// Gets the adapter identifier for this connection.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> object.</value>
+    /// <value>A <see cref="Guid"/> object.</value>
     public Guid AdapterId
     {
         get
@@ -49,7 +49,7 @@ public class NetworkConnection
     /// <summary>
     /// Gets the unique identifier for this connection.
     /// </summary>
-    /// <value>A <see cref="System.Guid"/> object.</value>
+    /// <value>A <see cref="Guid"/> object.</value>
     public Guid ConnectionId
     {
         get
@@ -87,7 +87,7 @@ public class NetworkConnection
     /// Gets a value that indicates whether this 
     /// connection has Internet access.
     /// </summary>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <value>A <see cref="bool"/> value.</value>
     public bool IsConnectedToInternet
     {
         get
@@ -100,7 +100,7 @@ public class NetworkConnection
     /// Gets a value that indicates whether this connection has
     /// network connectivity.
     /// </summary>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <value>A <see cref="bool"/> value.</value>
     public bool IsConnected
     {
         get

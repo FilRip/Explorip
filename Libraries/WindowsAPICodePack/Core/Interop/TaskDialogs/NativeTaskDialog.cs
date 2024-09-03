@@ -1,15 +1,14 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+using Microsoft.WindowsAPICodePack.Dialogs.Common;
+using Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
+using Microsoft.WindowsAPICodePack.Interop.Dialogs;
 using Microsoft.WindowsAPICodePack.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Interop.TaskDialogs;
 
 /// <summary>
 /// Encapsulates the native logic required to create, 
@@ -318,7 +317,7 @@ hresult),
         AssertCurrentlyShowing();
 
         // Build range LPARAM - note it is in REVERSE intuitive order.
-        long range = NativeTaskDialog.MakeLongLParam(
+        long range = MakeLongLParam(
             settings.ProgressBarMaximum,
             settings.ProgressBarMinimum);
 
@@ -386,7 +385,7 @@ hresult),
         AssertCurrentlyShowing();
         SendMessageHelper(
             TaskDialogNativeMethods.TaskDialogMessages.ClickVerification,
-            (cbc ? 1 : 0),
+            cbc ? 1 : 0,
             1);
     }
 
@@ -440,7 +439,7 @@ hresult),
 
     private bool IsOptionSet(TaskDialogNativeMethods.TaskDialogOptions flag)
     {
-        return ((nativeDialogConfig.taskDialogFlags & flag) == flag);
+        return (nativeDialogConfig.taskDialogFlags & flag) == flag;
     }
 
     // Allocates a new string on the unmanaged heap, 

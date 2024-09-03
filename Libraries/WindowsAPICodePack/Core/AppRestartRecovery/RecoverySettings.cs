@@ -1,8 +1,6 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using Microsoft.WindowsAPICodePack.Resources;
 
-using Microsoft.WindowsAPICodePack.Resources;
-
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.AppRestartRecovery;
 
 /// <summary>
 /// Defines methods and properties for recovery settings, and specifies options for an application that attempts
@@ -53,7 +51,7 @@ public class RecoverySettings(RecoveryData data, uint interval)
     /// Returns a string representation of the current state
     /// of this object.
     /// </summary>
-    /// <returns>A <see cref="System.String"/> object.</returns>
+    /// <returns>A <see cref="string"/> object.</returns>
     public override string ToString()
     {
         return string.Format(System.Globalization.CultureInfo.InvariantCulture,
@@ -63,4 +61,3 @@ public class RecoverySettings(RecoveryData data, uint interval)
             PingInterval);
     }
 }
-

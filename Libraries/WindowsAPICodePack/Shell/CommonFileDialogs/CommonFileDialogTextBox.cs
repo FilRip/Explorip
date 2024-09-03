@@ -1,8 +1,8 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System.Diagnostics;
 
-using System.Diagnostics;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Dialogs;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs.Controls;
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 ///  Defines the text box controls in the Common File Dialog.

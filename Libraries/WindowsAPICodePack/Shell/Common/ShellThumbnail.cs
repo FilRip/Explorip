@@ -1,16 +1,14 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// Represents a thumbnail or an icon for a ShellObject.
@@ -69,7 +67,7 @@ public class ShellThumbnail
                 throw new ArgumentOutOfRangeException("value", LocalizedMessages.ShellThumbnailSizeCannotBe0);
             }
 
-            System.Windows.Size size = (FormatOption == ShellThumbnailFormatOption.IconOnly) ?
+            System.Windows.Size size = FormatOption == ShellThumbnailFormatOption.IconOnly ?
                 DefaultIconSize.Maximum : DefaultThumbnailSize.Maximum;
 
             if (value.Height > size.Height || value.Width > size.Width)
@@ -322,7 +320,7 @@ public class ShellThumbnail
         IntPtr hBitmap = GetHBitmap(size);
 
         // return a System.Drawing.Bitmap from the hBitmap
-        Bitmap returnValue = Bitmap.FromHbitmap(hBitmap);
+        Bitmap returnValue = Image.FromHbitmap(hBitmap);
 
         // delete HBitmap to avoid memory leaks
         ShellNativeMethods.DeleteObject(hBitmap);

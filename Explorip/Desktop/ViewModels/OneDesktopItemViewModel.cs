@@ -14,7 +14,7 @@ using ExploripSharedCopy.Controls;
 
 using ManagedShell.Common.Helpers;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
 namespace Explorip.Desktop.ViewModels;
 

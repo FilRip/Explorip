@@ -1,8 +1,6 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 /// <summary>
 /// Specifies behaviors for known folders.

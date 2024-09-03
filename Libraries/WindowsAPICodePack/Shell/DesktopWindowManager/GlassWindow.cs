@@ -3,9 +3,9 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-using MS.WindowsAPICodePack.Internal;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.DesktopWindowManager;
 
 /// <summary>
 /// WPF Glass Window
@@ -86,7 +86,7 @@ public class GlassWindow : Window
             {
                 LeftWidth = (int)topLeftFrame.X,
                 RightWidth = (int)(ActualWidth - bottomRightFrame.X),
-                TopHeight = (int)(topLeftFrame.Y),
+                TopHeight = (int)topLeftFrame.Y,
                 BottomHeight = (int)(ActualHeight - bottomRightFrame.Y)
             };
 

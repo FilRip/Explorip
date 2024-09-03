@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.ShellObjectWatcher;
 
 /// <summary>
 /// Describes the event that has occurred. 

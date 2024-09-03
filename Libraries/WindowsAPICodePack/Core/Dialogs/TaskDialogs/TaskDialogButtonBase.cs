@@ -1,8 +1,6 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 // ContentProperty allows us to specify the text 
 // of the button as the child text of
@@ -103,7 +101,7 @@ public abstract class TaskDialogButtonBase : TaskDialogControl
     /// <summary>
     /// Returns the Text property value for this button.
     /// </summary>
-    /// <returns>A <see cref="System.String"/>.</returns>
+    /// <returns>A <see cref="string"/>.</returns>
     public override string ToString()
     {
         return text ?? string.Empty;

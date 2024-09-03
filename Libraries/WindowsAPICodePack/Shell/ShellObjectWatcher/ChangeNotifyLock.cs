@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 
-using Microsoft.WindowsAPICodePack.Shell.Interop;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.ShellObjectWatcher;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.ShellObjectWatcher;
 
 internal class ChangeNotifyLock
 {
@@ -23,7 +23,7 @@ internal class ChangeNotifyLock
 
             Guid guid = new(ShellIidGuid.IShellItem2);
             if (notifyStruct.item1 != IntPtr.Zero &&
-                (((ShellObjectChangeTypes)_event) & ShellObjectChangeTypes.SystemImageUpdate) == ShellObjectChangeTypes.None)
+                ((ShellObjectChangeTypes)_event & ShellObjectChangeTypes.SystemImageUpdate) == ShellObjectChangeTypes.None)
             {
                 if (CoreErrorHelper.Succeeded(ShellNativeMethods.SHCreateItemFromIDList(
                     notifyStruct.item1, ref guid, out IShellItem2 nativeShellItem)))

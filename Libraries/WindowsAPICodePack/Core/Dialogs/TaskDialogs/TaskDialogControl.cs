@@ -1,6 +1,6 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
+using Microsoft.WindowsAPICodePack.Dialogs.Common;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Declares the abstract base class for all custom task dialog controls.

@@ -1,11 +1,12 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Markup;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs.Controls;
+using Microsoft.WindowsAPICodePack.Dialogs.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Dialogs;
+
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 /// Represents a group box control for the Common File Dialog.

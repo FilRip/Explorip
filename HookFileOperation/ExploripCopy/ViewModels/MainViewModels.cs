@@ -10,7 +10,7 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.HookFileOperations;
+using Explorip.HookFileOperations.FilesOperations;
 using Explorip.HookFileOperations.Models;
 
 using ExploripCopy.Constants;
@@ -196,19 +196,19 @@ public partial class MainViewModels : ObservableObject, IDisposable
         StringBuilder sb = new();
         switch (_currentOperation.FileOperation)
         {
-            case EFileOperation.Copy:
+            case Explorip.HookFileOperations.Models.EFileOperation.Copy:
                 sb.Append(Localization.COPY_OF_FILESYSTEM);
                 break;
-            case EFileOperation.Move:
+            case Explorip.HookFileOperations.Models.EFileOperation.Move:
                 sb.Append(Localization.MOVE_OF_FILESYSTEM);
                 break;
-            case EFileOperation.Delete:
+            case Explorip.HookFileOperations.Models.EFileOperation.Delete:
                 sb.Append(Localization.DELETE_OF_FILESYSTEM);
                 break;
-            case EFileOperation.Rename:
+            case Explorip.HookFileOperations.Models.EFileOperation.Rename:
                 sb.Append(Localization.RENAME_OF_FILESYSTEM);
                 break;
-            case EFileOperation.Create:
+            case Explorip.HookFileOperations.Models.EFileOperation.Create:
                 sb.Append(Localization.CREATE_OF_FILESYSTEM);
                 break;
         }
@@ -235,7 +235,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         LastSpeed = 0;
         if (_currentThread?.IsAlive == true)
             _currentThread.Abort();
-        if (operation.FileOperation == EFileOperation.Copy || operation.FileOperation == EFileOperation.Move)
+        if (operation.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Copy || operation.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Move)
         {
             CurrentFile = operation.Source;
             _currentThread = new Thread(new ThreadStart(() =>
@@ -246,7 +246,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                     srcDir = new DirectoryInfo(operation.Source).Parent;
                     destDir = new DirectoryInfo(operation.Destination);
                     bool isDirectory = Directory.Exists(operation.Source);
-                    if (operation.FileOperation == EFileOperation.Copy)
+                    if (operation.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Copy)
                     {
                         if (isDirectory)
                         {
@@ -317,28 +317,28 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 try
                 {
                     fo = new(NativeMethods.GetDesktopWindow());
-                    fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_SILENT);
+                    fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_SILENT);
                     switch (operation.FileOperation)
                     {
-                        case EFileOperation.Delete:
+                        case Explorip.HookFileOperations.Models.EFileOperation.Delete:
                             if (operation.ForceDeleteNoRecycled || !ExploripSharedCopy.WinAPI.Shell32.RecycledEnabledOnDrive(operation.Source.Substring(0, 2)))
                             {
                                 if (CopyHelper.ChoiceOnCollision == EChoiceFileOperation.ConfirmDelete)
-                                    fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOF_NOCONFIRMATION);
+                                    fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_NOCONFIRMATION);
                                 else
                                     CopyHelper.ChoiceOnCollision = EChoiceFileOperation.ConfirmDelete;
                                 fo.DeleteItem(operation.Source);
                             }
                             else
                             {
-                                fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.Interfaces.EFileOperation.FOFX_RECYCLEONDELETE);
+                                fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.EFileOperation.FOFX_RECYCLEONDELETE);
                                 fo.DeleteItem(operation.Source);
                             }
                             break;
-                        case EFileOperation.Rename:
+                        case Explorip.HookFileOperations.Models.EFileOperation.Rename:
                             fo.RenameItem(operation.Source, operation.NewName);
                             break;
-                        case EFileOperation.Create:
+                        case Explorip.HookFileOperations.Models.EFileOperation.Create:
                             if (operation.Attributes.HasFlag(FileAttributes.Directory))
                             {
                                 static void SetConstants(InputBoxWindow win)

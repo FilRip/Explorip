@@ -1,16 +1,14 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Represents the main class for adding and removing tabbed thumbnails on the Taskbar
@@ -40,7 +38,7 @@ public class TabbedThumbnailManager
     /// </summary>
     /// <param name="preview">Thumbnail preview for a specific window handle or control. The preview
     /// object can be initialized with specific properties for the title, bitmap, and tooltip.</param>
-    /// <exception cref="System.ArgumentException">If the tabbed thumbnail has already been added</exception>
+    /// <exception cref="ArgumentException">If the tabbed thumbnail has already been added</exception>
     public void AddThumbnailPreview(TabbedThumbnail preview)
     {
         if (preview == null) { throw new ArgumentNullException("preview"); }
@@ -215,7 +213,7 @@ public class TabbedThumbnailManager
     /// is currently active (or selected, in the case of tabbed application).
     /// </summary>
     /// <param name="preview">TabbedThumbnail for the specific control/indow that is currently active in the application</param>
-    /// <exception cref="System.ArgumentException">If the control/window is not yet added to the tabbed thumbnails list</exception>
+    /// <exception cref="ArgumentException">If the control/window is not yet added to the tabbed thumbnails list</exception>
     public void SetActiveTab(TabbedThumbnail preview)
     {
         if (preview == null) { throw new ArgumentNullException("preview"); }
@@ -244,7 +242,7 @@ public class TabbedThumbnailManager
     /// is currently active (or selected, in the case of tabbed application).
     /// </summary>
     /// <param name="windowHandle">Window handle for the control/window that is currently active in the application</param>
-    /// <exception cref="System.ArgumentException">If the control/window is not yet added to the tabbed thumbnails list</exception>
+    /// <exception cref="ArgumentException">If the control/window is not yet added to the tabbed thumbnails list</exception>
     public void SetActiveTab(IntPtr windowHandle)
     {
         if (!_tabbedThumbnailCache.ContainsKey(windowHandle))
@@ -260,7 +258,7 @@ public class TabbedThumbnailManager
     /// is currently active (or selected, in the case of tabbed application).
     /// </summary>
     /// <param name="control">Control/Form that is currently active in the application</param>
-    /// <exception cref="System.ArgumentException">If the control/window is not yet added to the tabbed thumbnails list</exception>
+    /// <exception cref="ArgumentException">If the control/window is not yet added to the tabbed thumbnails list</exception>
     public void SetActiveTab(Control control)
     {
         if (control == null)
@@ -276,7 +274,7 @@ public class TabbedThumbnailManager
     /// is currently active (or selected, in the case of tabbed application).
     /// </summary>
     /// <param name="windowsControl">WPF control that is currently active in the application</param>
-    /// <exception cref="System.ArgumentException">If the control/window is not yet added to the tabbed thumbnails list</exception>
+    /// <exception cref="ArgumentException">If the control/window is not yet added to the tabbed thumbnails list</exception>
     public void SetActiveTab(UIElement windowsControl)
     {
         if (windowsControl == null)

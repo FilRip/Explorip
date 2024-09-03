@@ -1,6 +1,4 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+﻿namespace Microsoft.WindowsAPICodePack.Shell.Common;
 
 /// <summary>
 /// CommonFileDialog AddPlace locations
@@ -171,8 +169,8 @@ public enum WindowShowCommand
 }
 
 /// <summary>
-/// Provides a set of flags to be used with <see cref="Microsoft.WindowsAPICodePack.Shell.SearchCondition"/> 
-/// to indicate the operation in <see cref="Microsoft.WindowsAPICodePack.Shell.SearchConditionFactory"/> methods.
+/// Provides a set of flags to be used with <see cref="SearchCondition"/> 
+/// to indicate the operation in <see cref="SearchConditionFactory"/> methods.
 /// </summary>
 public enum SearchConditionOperation
 {
@@ -254,7 +252,7 @@ public enum SearchConditionOperation
 }
 
 /// <summary>
-/// Set of flags to be used with <see cref="Microsoft.WindowsAPICodePack.Shell.SearchConditionFactory"/>.
+/// Set of flags to be used with <see cref="SearchConditionFactory"/>.
 /// </summary>
 public enum SearchConditionType
 {
@@ -275,7 +273,7 @@ public enum SearchConditionType
 
     /// <summary>
     /// Indicates that the node is a comparison between a property and a 
-    /// constant value using a <see cref="Microsoft.WindowsAPICodePack.Shell.SearchConditionOperation"/>.
+    /// constant value using a <see cref="SearchConditionOperation"/>.
     /// </summary>
     Leaf = 3,
 }

@@ -1,8 +1,6 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Provides a visual representation of the progress of a long running operation.

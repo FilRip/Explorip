@@ -2,9 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.DesktopWindowManager;
 
 /// <summary>
 /// Windows Glass Form

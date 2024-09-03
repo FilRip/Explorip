@@ -1,10 +1,9 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿using System;
 
-using System;
-
+using Microsoft.WindowsAPICodePack.Interop.PowerManagement;
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.PowerManagement;
 
 /// <summary>
 /// A snapshot of the state of the battery.
@@ -45,19 +44,19 @@ public class BatteryState
     /// Gets a value that indicates whether the battery charger is 
     /// operating on external power.
     /// </summary>
-    /// <value>A <see cref="System.Boolean"/> value. <b>True</b> indicates the battery charger is operating on AC power.</value>
+    /// <value>A <see cref="bool"/> value. <b>True</b> indicates the battery charger is operating on AC power.</value>
     public bool ACOnline { get; private set; }
 
     /// <summary>
     /// Gets the maximum charge of the battery (in mW).
     /// </summary>
-    /// <value>An <see cref="System.Int32"/> value.</value>
+    /// <value>An <see cref="int"/> value.</value>
     public int MaxCharge { get; private set; }
 
     /// <summary>
     /// Gets the current charge of the battery (in mW).
     /// </summary>
-    /// <value>An <see cref="System.Int32"/> value.</value>
+    /// <value>An <see cref="int"/> value.</value>
     public int CurrentCharge { get; private set; }
     /// <summary>
     /// Gets the rate of discharge for the battery (in mW). 
@@ -67,27 +66,27 @@ public class BatteryState
     /// If plugged in, charging: DischargeRate = positive mW per hour.
     /// If unplugged: DischargeRate = negative mW per hour.
     /// </remarks>
-    /// <value>An <see cref="System.Int32"/> value.</value>
+    /// <value>An <see cref="int"/> value.</value>
     public int ChargeRate { get; private set; }
 
     /// <summary>
     /// Gets the estimated time remaining until the battery is empty.
     /// </summary>
-    /// <value>A <see cref="System.TimeSpan"/> object.</value>
+    /// <value>A <see cref="TimeSpan"/> object.</value>
     public TimeSpan EstimatedTimeRemaining { get; private set; }
 
     /// <summary>
     /// Gets the manufacturer's suggested battery charge level 
     /// that should cause a critical alert to be sent to the user.
     /// </summary>
-    /// <value>An <see cref="System.Int32"/> value.</value>
+    /// <value>An <see cref="int"/> value.</value>
     public int SuggestedCriticalBatteryCharge { get; private set; }
 
     /// <summary>
     /// Gets the manufacturer's suggested battery charge level
     /// that should cause a warning to be sent to the user.
     /// </summary>
-    /// <value>An <see cref="System.Int32"/> value.</value>
+    /// <value>An <see cref="int"/> value.</value>
     public int SuggestedBatteryWarningCharge { get; private set; }
 
     #endregion
@@ -95,7 +94,7 @@ public class BatteryState
     /// <summary>
     /// Generates a string that represents this <b>BatteryState</b> object.
     /// </summary>
-    /// <returns>A <see cref="System.String"/> representation of this object's current state.</returns>        
+    /// <returns>A <see cref="string"/> representation of this object's current state.</returns>        
     public override string ToString()
     {
         return string.Format(System.Globalization.CultureInfo.InvariantCulture,

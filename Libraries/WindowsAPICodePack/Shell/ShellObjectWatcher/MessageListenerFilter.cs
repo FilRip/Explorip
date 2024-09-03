@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.ShellObjectWatcher;
 
 internal static class MessageListenerFilter
 {

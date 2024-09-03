@@ -1,13 +1,12 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+using Microsoft.WindowsAPICodePack.Dialogs.Common;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs.Controls;
+namespace Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
 /// <summary>
 /// Provides a strongly typed collection for dialog controls.
@@ -68,7 +67,7 @@ public sealed class CommonFileDialogControlCollection<T> : Collection<T> where T
     /// Removes the control at the specified index.
     /// </summary>
     /// <param name="index">The location of the control to remove.</param>
-    /// <permission cref="System.InvalidOperationException">
+    /// <permission cref="InvalidOperationException">
     /// The associated dialog is 
     /// showing and cannot be modified.</permission>
     protected override void RemoveItem(int index)
@@ -95,7 +94,7 @@ public sealed class CommonFileDialogControlCollection<T> : Collection<T> where T
                 throw new ArgumentException(LocalizedMessages.DialogControlCollectionEmptyName, "name");
             }
 
-            foreach (T control in base.Items)
+            foreach (T control in Items)
             {
                 // NOTE: we don't ToLower() the strings - casing effects 
                 // hash codes, so we are case-sensitive.

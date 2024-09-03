@@ -5,7 +5,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+using Explorip.HookFileOperations.FilesOperations;
 using Explorip.HookFileOperations.Models;
+
+using EFileOperation = Explorip.HookFileOperations.Models.EFileOperation;
 
 namespace Explorip.HookFileOperations.Ipc;
 
@@ -133,7 +136,7 @@ public class ServerInterface : MarshalByRefObject
         _listOperations.Add(new OneFileOperation(EFileOperation.Create) { Destination = destFolder, Attributes = dwFileAttributes, NewName = filename });
     }
 
-    public void SetOperationFlags(FilesOperations.Interfaces.EFileOperation operationFlag)
+    public void SetOperationFlags(FilesOperations.EFileOperation operationFlag)
     {
         _listOperations.Add(new OneFileOperation(EFileOperation.ChangeOperationFlags) { OperationsFlags = operationFlag });
     }

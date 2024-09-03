@@ -1,10 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.ShellObjectWatcher;
+
+namespace Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
 internal static class ShellNativeMethods
 {
@@ -667,11 +667,11 @@ internal static class ShellNativeMethods
 
     [DllImport("shell32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern Boolean SHChangeNotification_Unlock(IntPtr hLock);
+    internal static extern bool SHChangeNotification_Unlock(IntPtr hLock);
 
     [DllImport("shell32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern Boolean SHChangeNotifyDeregister(uint hNotify);
+    internal static extern bool SHChangeNotifyDeregister(uint hNotify);
 
     [Flags()]
     internal enum ShellChangeNotifyEventSource

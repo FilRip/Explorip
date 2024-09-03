@@ -1,13 +1,11 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Interop.AppRestartRecovery;
 using Microsoft.WindowsAPICodePack.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.AppRestartRecovery;
 
 /// <summary>
 /// Provides access to the Application Restart and Recovery
@@ -22,7 +20,7 @@ public static class ApplicationRestartRecoveryManager
     /// <param name="settings">An object that specifies
     /// the callback method, an optional parameter to pass to the callback
     /// method and a time interval.</param>
-    /// <exception cref="System.ArgumentException">
+    /// <exception cref="ArgumentException">
     /// The registration failed due to an invalid parameter.
     /// </exception>
     /// <exception cref="System.ComponentModel.Win32Exception">
@@ -73,7 +71,7 @@ public static class ApplicationRestartRecoveryManager
     /// <summary>
     /// Removes an application's restart registration.
     /// </summary>
-    /// <exception cref="Microsoft.WindowsAPICodePack.ApplicationServices.ApplicationRecoveryException">
+    /// <exception cref="ApplicationRecoveryException">
     /// The attempt to unregister for restart failed.</exception>
     public static void UnregisterApplicationRestart()
     {
@@ -91,9 +89,9 @@ public static class ApplicationRestartRecoveryManager
     /// Called by an application's <see cref="RecoveryCallback"/> method 
     /// to indicate that it is still performing recovery work.
     /// </summary>
-    /// <returns>A <see cref="System.Boolean"/> value indicating whether the user
+    /// <returns>A <see cref="bool"/> value indicating whether the user
     /// canceled the recovery.</returns>
-    /// <exception cref="Microsoft.WindowsAPICodePack.ApplicationServices.ApplicationRecoveryException">
+    /// <exception cref="ApplicationRecoveryException">
     /// This method must be called from a registered callback method.</exception>
     public static bool ApplicationRecoveryInProgress()
     {
@@ -138,8 +136,8 @@ public static class ApplicationRestartRecoveryManager
     /// application, and 
     /// the conditions under which the application should not be 
     /// restarted.</param>
-    /// <exception cref="System.ArgumentException">Registration failed due to an invalid parameter.</exception>
-    /// <exception cref="System.InvalidOperationException">The attempt to register failed.</exception>
+    /// <exception cref="ArgumentException">Registration failed due to an invalid parameter.</exception>
+    /// <exception cref="InvalidOperationException">The attempt to register failed.</exception>
     /// <remarks>A registered application will not be restarted if it executed for less than 60 seconds before terminating.</remarks>
     public static void RegisterForApplicationRestart(RestartSettings settings)
     {
@@ -160,4 +158,3 @@ public static class ApplicationRestartRecoveryManager
     }
 
 }
-

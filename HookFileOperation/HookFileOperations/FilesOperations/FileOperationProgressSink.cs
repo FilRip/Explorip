@@ -2,7 +2,7 @@
 
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
 
-namespace Explorip.HookFileOperations;
+namespace Explorip.HookFileOperations.FilesOperations;
 
 public class FileOperationProgressSink : IFileOperationProgressSink
 {

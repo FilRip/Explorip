@@ -1,10 +1,10 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+using Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
+
+namespace Microsoft.WindowsAPICodePack.Interop.TaskDialogs;
 
 ///<summary>
 /// Encapsulates additional configuration needed by NativeTaskDialog

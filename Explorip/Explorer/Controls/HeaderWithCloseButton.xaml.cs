@@ -7,7 +7,8 @@ using System.Windows.Media;
 
 using Explorip.Explorer.Windows;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 namespace Explorip.Explorer.Controls;
 

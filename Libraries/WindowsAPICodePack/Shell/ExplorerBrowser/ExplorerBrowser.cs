@@ -1,25 +1,24 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Controls.WindowsForms;
+namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 /// <summary>
 /// This class is a wrapper around the Windows Explorer Browser control.
 /// </summary>
 public sealed class ExplorerBrowser :
     UserControl,
-    IServiceProvider,
+    Interop.ExplorerBrowser.IServiceProvider,
     IExplorerPaneVisibility,
     IExplorerBrowserEvents,
     ICommDlgBrowser3,
@@ -407,7 +406,7 @@ public sealed class ExplorerBrowser :
     /// <param name="ppvObject">caller-allocated memory for interface pointer</param>
     /// <returns></returns>
 #pragma warning disable S125, S1871 // Sections of code should not be commented out
-    HResult IServiceProvider.QueryService(
+    HResult Interop.ExplorerBrowser.IServiceProvider.QueryService(
         ref Guid guidService, ref Guid riid, out IntPtr ppvObject)
     {
         HResult hr;
@@ -656,7 +655,7 @@ public sealed class ExplorerBrowser :
             // translate keyboard input
             hr = ((IInputObject)explorerBrowserControl).TranslateAcceleratorIO(ref m);
         }
-        return (hr == HResult.Ok);
+        return hr == HResult.Ok;
     }
 
     #endregion

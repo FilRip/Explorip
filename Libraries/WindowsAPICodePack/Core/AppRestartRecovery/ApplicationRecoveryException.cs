@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+namespace Microsoft.WindowsAPICodePack.AppRestartRecovery;
 
 /// <summary>
 /// This exception is thrown when there are problems with registering, unregistering or updating

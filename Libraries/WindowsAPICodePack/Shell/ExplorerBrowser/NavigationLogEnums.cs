@@ -1,7 +1,4 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-
-namespace Microsoft.WindowsAPICodePack.Controls;
+﻿namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 /// <summary>
 /// The direction argument for Navigate

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.ShellObjectWatcher;
 
 internal class ChangeNotifyEventManager
 {
@@ -50,7 +50,7 @@ internal class ChangeNotifyEventManager
         }
         else
         {
-            del = MulticastDelegate.Combine(del, handler);
+            del = Delegate.Combine(del, handler);
             _events[changeType] = del;
         }
     }
@@ -59,7 +59,7 @@ internal class ChangeNotifyEventManager
     {
         if (_events.TryGetValue(changeType, out Delegate del))
         {
-            del = MulticastDelegate.Remove(del, handler);
+            del = Delegate.Remove(del, handler);
             if (del == null) // It's a bug in .NET if del is non-null and has an empty invocation list.
             {
                 _events.Remove(changeType);
@@ -94,9 +94,9 @@ internal class ChangeNotifyEventManager
     {
         get
         {
-            return _events.Keys.Aggregate<ShellObjectChangeTypes, ShellObjectChangeTypes>(
+            return _events.Keys.Aggregate(
                 ShellObjectChangeTypes.None,
-                (accumulator, changeType) => (changeType | accumulator));
+                (accumulator, changeType) => changeType | accumulator);
         }
     }
 }

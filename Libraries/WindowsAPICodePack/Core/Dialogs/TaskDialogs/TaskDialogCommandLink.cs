@@ -1,9 +1,7 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
 using System;
 using System.Globalization;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Represents a command-link. 
@@ -47,7 +45,7 @@ public class TaskDialogCommandLink : TaskDialogButton
     {
         return string.Format(CultureInfo.CurrentCulture, "{0}{1}{2}",
             Text ?? string.Empty,
-            (!string.IsNullOrEmpty(Text) && !string.IsNullOrEmpty(Instruction)) ? Environment.NewLine : string.Empty,
+            !string.IsNullOrEmpty(Text) && !string.IsNullOrEmpty(Instruction) ? Environment.NewLine : string.Empty,
             Instruction ?? string.Empty);
     }
 }

@@ -1,13 +1,11 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-using Microsoft.WindowsAPICodePack.Controls.WindowsForms;
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Controls;
+namespace Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 
 /// <summary>
@@ -33,8 +31,8 @@ public class ExplorerBrowserNavigationLog
         NavigationLogEventArgs args = new()
         {
             LocationsChanged = true,
-            CanNavigateBackwardChanged = (oldCanNavigateBackward != CanNavigateBackward),
-            CanNavigateForwardChanged = (oldCanNavigateForward != CanNavigateForward)
+            CanNavigateBackwardChanged = oldCanNavigateBackward != CanNavigateBackward,
+            CanNavigateForwardChanged = oldCanNavigateForward != CanNavigateForward
         };
         NavigationLogChanged?.Invoke(this, args);
     }
@@ -49,7 +47,7 @@ public class ExplorerBrowserNavigationLog
     {
         get
         {
-            return (CurrentLocationIndex < (_locations.Count - 1));
+            return CurrentLocationIndex < _locations.Count - 1;
         }
     }
 
@@ -61,7 +59,7 @@ public class ExplorerBrowserNavigationLog
     {
         get
         {
-            return (CurrentLocationIndex > 0);
+            return CurrentLocationIndex > 0;
         }
     }
 
@@ -152,25 +150,25 @@ public class ExplorerBrowserNavigationLog
         bool oldCanNavigateBackward = CanNavigateBackward;
         bool oldCanNavigateForward = CanNavigateForward;
 
-        if ((pendingNavigation != null))
+        if (pendingNavigation != null)
         {
             // navigation log traversal in progress
 
             // determine if new location is the same as the traversal request
             pendingNavigation.Location.NativeShellItem.Compare(
                 args.NewLocation.NativeShellItem, SICHINTF.SICHINT_ALLFIELDS, out int result);
-            bool shellItemsEqual = (result == 0);
+            bool shellItemsEqual = result == 0;
             if (!shellItemsEqual)
             {
                 // new location is different than traversal request, 
                 // behave is if it never happened!
                 // remove history following currentLocationIndex, append new item
-                if (currentLocationIndex < (_locations.Count - 1))
+                if (currentLocationIndex < _locations.Count - 1)
                 {
                     _locations.RemoveRange(currentLocationIndex + 1, _locations.Count - (currentLocationIndex + 1));
                 }
                 _locations.Add(args.NewLocation);
-                currentLocationIndex = (_locations.Count - 1);
+                currentLocationIndex = _locations.Count - 1;
                 eventArgs.LocationsChanged = true;
             }
             else
@@ -184,18 +182,18 @@ public class ExplorerBrowserNavigationLog
         else
         {
             // remove history following currentLocationIndex, append new item
-            if (currentLocationIndex < (_locations.Count - 1))
+            if (currentLocationIndex < _locations.Count - 1)
             {
                 _locations.RemoveRange(currentLocationIndex + 1, _locations.Count - (currentLocationIndex + 1));
             }
             _locations.Add(args.NewLocation);
-            currentLocationIndex = (_locations.Count - 1);
+            currentLocationIndex = _locations.Count - 1;
             eventArgs.LocationsChanged = true;
         }
 
         // update event args
-        eventArgs.CanNavigateBackwardChanged = (oldCanNavigateBackward != CanNavigateBackward);
-        eventArgs.CanNavigateForwardChanged = (oldCanNavigateForward != CanNavigateForward);
+        eventArgs.CanNavigateBackwardChanged = oldCanNavigateBackward != CanNavigateBackward;
+        eventArgs.CanNavigateForwardChanged = oldCanNavigateForward != CanNavigateForward;
 
         NavigationLogChanged?.Invoke(this, eventArgs);
     }
@@ -206,11 +204,11 @@ public class ExplorerBrowserNavigationLog
         int locationIndex;
         if (direction == NavigationLogDirection.Backward && CanNavigateBackward)
         {
-            locationIndex = (currentLocationIndex - 1);
+            locationIndex = currentLocationIndex - 1;
         }
         else if (direction == NavigationLogDirection.Forward && CanNavigateForward)
         {
-            locationIndex = (currentLocationIndex + 1);
+            locationIndex = currentLocationIndex + 1;
         }
         else
         {

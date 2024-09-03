@@ -1,12 +1,10 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Globalization;
 using System.Text;
 
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace MS.WindowsAPICodePack.Internal;
+namespace Microsoft.WindowsAPICodePack.Interop;
 
 /// <summary>
 /// Common Helper methods
@@ -30,7 +28,7 @@ public static class CoreHelpers
     /// </summary>
     public static void ThrowIfNotXP()
     {
-        if (!CoreHelpers.RunningOnXP)
+        if (!RunningOnXP)
         {
             throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOnXp);
         }
@@ -52,7 +50,7 @@ public static class CoreHelpers
     /// </summary>
     public static void ThrowIfNotVista()
     {
-        if (!CoreHelpers.RunningOnVista)
+        if (!RunningOnVista)
         {
             throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOnVista);
         }
@@ -76,7 +74,7 @@ public static class CoreHelpers
     /// </summary>
     public static void ThrowIfNotWin7()
     {
-        if (!CoreHelpers.RunningOnWin7)
+        if (!RunningOnWin7)
         {
             throw new PlatformNotSupportedException(LocalizedMessages.CoreHelpersRunningOn7);
         }

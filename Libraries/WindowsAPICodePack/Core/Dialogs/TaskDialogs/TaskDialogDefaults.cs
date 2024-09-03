@@ -1,8 +1,7 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
-
+using Microsoft.WindowsAPICodePack.Interop.TaskDialogs;
 using Microsoft.WindowsAPICodePack.Resources;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 internal static class TaskDialogDefaults
 {

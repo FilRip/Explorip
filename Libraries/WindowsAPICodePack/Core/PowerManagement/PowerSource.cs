@@ -1,6 +1,4 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-namespace Microsoft.WindowsAPICodePack.ApplicationServices;
+﻿namespace Microsoft.WindowsAPICodePack.PowerManagement;
 
 /// <summary>
 /// Specifies the power source currently supplying power to the system.

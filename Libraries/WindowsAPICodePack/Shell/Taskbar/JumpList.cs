@@ -1,17 +1,16 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using Microsoft.WindowsAPICodePack.Shell;
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Common;
+using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Taskbar;
+namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 /// <summary>
 /// Represents an instance of a Taskbar button jump list.
@@ -205,7 +204,7 @@ public class JumpList
     /// <param name="appID">Application Id to use for this instance.</param>
     /// <param name="window">WPF Window that is associated with this JumpList</param>
     internal JumpList(string appID, System.Windows.Window window)
-        : this(appID, (new System.Windows.Interop.WindowInteropHelper(window)).EnsureHandle())
+        : this(appID, new System.Windows.Interop.WindowInteropHelper(window).EnsureHandle())
     {
     }
 

@@ -1,4 +1,4 @@
-﻿namespace MS.WindowsAPICodePack.Internal;
+﻿namespace Microsoft.WindowsAPICodePack.Interop;
 
 internal enum WindowMessage
 {

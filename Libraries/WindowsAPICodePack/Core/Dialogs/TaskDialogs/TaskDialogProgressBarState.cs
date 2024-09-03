@@ -1,6 +1,6 @@
-//Copyright (c) Microsoft Corporation.  All rights reserved.
+using Microsoft.WindowsAPICodePack.Interop.TaskDialogs;
 
-namespace Microsoft.WindowsAPICodePack.Dialogs;
+namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 
 /// <summary>
 /// Sets the state of a task dialog progress bar.

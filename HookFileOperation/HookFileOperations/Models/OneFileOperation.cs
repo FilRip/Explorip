@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using Explorip.HookFileOperations.FilesOperations;
+
 namespace Explorip.HookFileOperations.Models;
 
 [Serializable()]
@@ -25,7 +27,7 @@ public class OneFileOperation
 
     public object Properties { get; set; }
 
-    public FilesOperations.Interfaces.EFileOperation OperationsFlags { get; set; } = FilesOperations.Interfaces.EFileOperation.None;
+    public FilesOperations.EFileOperation OperationsFlags { get; set; } = FilesOperations.EFileOperation.None;
 
     public FilesOperations.Interfaces.IFileOperationProgressSink Callback { get; set; }
 

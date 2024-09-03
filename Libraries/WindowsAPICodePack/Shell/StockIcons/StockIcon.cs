@@ -1,17 +1,15 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
+using Microsoft.WindowsAPICodePack.Interop;
+using Microsoft.WindowsAPICodePack.Shell.Interop.StockIcons;
 using Microsoft.WindowsAPICodePack.Shell.Resources;
 
-using MS.WindowsAPICodePack.Internal;
-
-namespace Microsoft.WindowsAPICodePack.Shell;
+namespace Microsoft.WindowsAPICodePack.Shell.StockIcons;
 
 /// <summary>
 /// Represents a standard system icon.
@@ -65,7 +63,7 @@ public class StockIcon : IDisposable
     /// <summary>
     /// Gets or sets a value indicating whether the icon appears selected.
     /// </summary>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <value>A <see cref="bool"/> value.</value>
     public bool Selected
     {
         get { return selected; }
@@ -79,7 +77,7 @@ public class StockIcon : IDisposable
     /// <summary>
     /// Gets or sets a value that cotrols whether to put a link overlay on the icon.
     /// </summary>
-    /// <value>A <see cref="System.Boolean"/> value.</value>
+    /// <value>A <see cref="bool"/> value.</value>
     public bool LinkOverlay
     {
         get { return linkOverlay; }
@@ -93,7 +91,7 @@ public class StockIcon : IDisposable
     /// <summary>
     /// Gets or sets a value that controls the size of the Stock Icon.
     /// </summary>
-    /// <value>A <see cref="Microsoft.WindowsAPICodePack.Shell.StockIconSize"/> value.</value>
+    /// <value>A <see cref="StockIcons.StockIcons.StockIconSize"/> value.</value>
     public StockIconSize CurrentSize
     {
         get { return currentSize; }
@@ -139,7 +137,7 @@ public class StockIcon : IDisposable
         {
             UpdateHIcon();
 
-            return (hIcon != IntPtr.Zero) ?
+            return hIcon != IntPtr.Zero ?
                 Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, null) : null;
         }
     }
@@ -206,7 +204,7 @@ public class StockIcon : IDisposable
         // Create a StockIconInfo structure to pass to the native method.
         StockIconsNativeMethods.StockIconInfo info = new()
         {
-            StuctureSize = (UInt32)Marshal.SizeOf(typeof(StockIconsNativeMethods.StockIconInfo))
+            StuctureSize = (uint)Marshal.SizeOf(typeof(StockIconsNativeMethods.StockIconInfo))
         };
 
         // Pass the struct to the native method

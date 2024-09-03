@@ -1,9 +1,7 @@
-﻿//Copyright (c) Microsoft Corporation.  All rights reserved.
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MS.WindowsAPICodePack.Internal;
+namespace Microsoft.WindowsAPICodePack.SafeHandles;
 
 /// <summary>
 /// Base class for Safe handles with Null IntPtr as invalid
