@@ -119,7 +119,7 @@ public class NotificationBalloon
             Icon ??= IconImageConverter.GetDefaultIcon();
     }
 
-    private BitmapSource GetSystemIcon(IntPtr hIcon)
+    private static BitmapSource GetSystemIcon(IntPtr hIcon)
     {
         BitmapSource bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
         bs.Freeze();

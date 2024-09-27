@@ -19,6 +19,7 @@ public class ServerInterface : MarshalByRefObject
 {
     private readonly List<OneFileOperation> _listOperations = [];
 
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public void IsInstalled(int clientPID)
     {
         Console.WriteLine("Explorip has injected HookFileOperations into process {0}.", clientPID);
@@ -49,6 +50,7 @@ public class ServerInterface : MarshalByRefObject
     {
         Console.WriteLine($"The target process has reported an error:{Environment.NewLine}" + e.ToString());
     }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
     /// <summary>
     /// Called to confirm that the IPC channel is still open / host application has not closed

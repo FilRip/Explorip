@@ -43,7 +43,7 @@ public class AppBarInfo
         get { return GetRectangle(m_data.rc); }
     }
 
-    private Rectangle GetRectangle(Rect rc)
+    private static Rectangle GetRectangle(Rect rc)
     {
         return new Rectangle(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
     }

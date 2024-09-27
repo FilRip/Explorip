@@ -61,7 +61,7 @@ public class TaskbarManager
     /// <param name="windowHandle">The handle of the window whose associated taskbar button receives the overlay. This handle must belong to a calling process associated with the button's application and must be a valid HWND or the call is ignored.</param>
     /// <param name="icon">The overlay icon</param>
     /// <param name="accessibilityText">String that provides an alt text version of the information conveyed by the overlay, for accessibility purposes</param>
-    public void SetOverlayIcon(IntPtr windowHandle, System.Drawing.Icon icon, string accessibilityText)
+    public static void SetOverlayIcon(IntPtr windowHandle, System.Drawing.Icon icon, string accessibilityText)
     {
         TaskbarList.Instance.SetOverlayIcon(
             windowHandle,
@@ -75,7 +75,7 @@ public class TaskbarManager
     /// <param name="window">The window whose associated taskbar button receives the overlay. This window belong to a calling process associated with the button's application and must be already loaded.</param>
     /// <param name="icon">The overlay icon</param>
     /// <param name="accessibilityText">String that provides an alt text version of the information conveyed by the overlay, for accessibility purposes</param>
-    public void SetOverlayIcon(System.Windows.Window window, System.Drawing.Icon icon, string accessibilityText)
+    public static void SetOverlayIcon(System.Windows.Window window, System.Drawing.Icon icon, string accessibilityText)
     {
         TaskbarList.Instance.SetOverlayIcon(
             new WindowInteropHelper(window).EnsureHandle(),
@@ -105,7 +105,7 @@ public class TaskbarManager
     /// This window belong to a calling process associated with the button's application and must be already loaded.</param>
     /// <param name="currentValue">An application-defined value that indicates the proportion of the operation that has been completed at the time the method is called.</param>
     /// <param name="maximumValue">An application-defined value that specifies the value currentValue will have when the operation is complete.</param>
-    public void SetProgressValue(int currentValue, int maximumValue, IntPtr windowHandle)
+    public static void SetProgressValue(int currentValue, int maximumValue, IntPtr windowHandle)
     {
         TaskbarList.Instance.SetProgressValue(
             windowHandle,
@@ -121,7 +121,7 @@ public class TaskbarManager
     /// This window belong to a calling process associated with the button's application and must be already loaded.</param>
     /// <param name="currentValue">An application-defined value that indicates the proportion of the operation that has been completed at the time the method is called.</param>
     /// <param name="maximumValue">An application-defined value that specifies the value currentValue will have when the operation is complete.</param>
-    public void SetProgressValue(int currentValue, int maximumValue, System.Windows.Window window)
+    public static void SetProgressValue(int currentValue, int maximumValue, System.Windows.Window window)
     {
         TaskbarList.Instance.SetProgressValue(
             new WindowInteropHelper(window).EnsureHandle(),
@@ -145,7 +145,7 @@ public class TaskbarManager
     /// <param name="windowHandle">The handle of the window whose associated taskbar button is being used as a progress indicator.
     /// This window belong to a calling process associated with the button's application and must be already loaded.</param>
     /// <param name="state">Progress state of the progress button</param>
-    public void SetProgressState(TaskbarProgressBarState state, IntPtr windowHandle)
+    public static void SetProgressState(TaskbarProgressBarState state, IntPtr windowHandle)
     {
         TaskbarList.Instance.SetProgressState(windowHandle, (TaskbarProgressBarStatus)state);
     }
@@ -157,7 +157,7 @@ public class TaskbarManager
     /// <param name="window">The window whose associated taskbar button is being used as a progress indicator. 
     /// This window belong to a calling process associated with the button's application and must be already loaded.</param>
     /// <param name="state">Progress state of the progress button</param>
-    public void SetProgressState(TaskbarProgressBarState state, System.Windows.Window window)
+    public static void SetProgressState(TaskbarProgressBarState state, System.Windows.Window window)
     {
         TaskbarList.Instance.SetProgressState(
             new WindowInteropHelper(window).EnsureHandle(),
@@ -175,21 +175,6 @@ public class TaskbarManager
         {
             _tabbedThumbnail ??= new TabbedThumbnailManager();
             return _tabbedThumbnail;
-        }
-    }
-
-    private ThumbnailToolBarManager _thumbnailToolBarManager;
-    /// <summary>
-    /// Gets the Thumbnail toolbar manager class for adding/updating
-    /// toolbar buttons.
-    /// </summary>
-    public ThumbnailToolBarManager ThumbnailToolBars
-    {
-        get
-        {
-            _thumbnailToolBarManager ??= new ThumbnailToolBarManager();
-
-            return _thumbnailToolBarManager;
         }
     }
 
@@ -248,7 +233,7 @@ public class TaskbarManager
     /// <remarks>AppId specifies a unique Application User Model ID (AppID) for the application or individual 
     /// top-level window whose taskbar button will hold the custom JumpList built through the methods <see cref="JumpList"/> class.
     /// By setting an appId for a specific window, the window will not be grouped with it's parent window/application. Instead it will have it's own taskbar button.</remarks>
-    public void SetApplicationIdForSpecificWindow(IntPtr windowHandle, string appId)
+    public static void SetApplicationIdForSpecificWindow(IntPtr windowHandle, string appId)
     {
         // Left as instance method, to follow singleton pattern.
         TaskbarNativeMethods.SetWindowAppId(windowHandle, appId);
@@ -262,7 +247,7 @@ public class TaskbarManager
     /// <remarks>AppId specifies a unique Application User Model ID (AppID) for the application or individual 
     /// top-level window whose taskbar button will hold the custom JumpList built through the methods <see cref="JumpList"/> class.
     /// By setting an appId for a specific window, the window will not be grouped with it's parent window/application. Instead it will have it's own taskbar button.</remarks>
-    public void SetApplicationIdForSpecificWindow(System.Windows.Window window, string appId)
+    public static void SetApplicationIdForSpecificWindow(System.Windows.Window window, string appId)
     {
         // Left as instance method, to follow singleton pattern.
         TaskbarNativeMethods.SetWindowAppId(new WindowInteropHelper(window).EnsureHandle(), appId);
@@ -272,7 +257,7 @@ public class TaskbarManager
     /// Sets the current process' explicit application user model id.
     /// </summary>
     /// <param name="appId">The application id.</param>
-    private void SetCurrentProcessAppId(string appId)
+    private static void SetCurrentProcessAppId(string appId)
     {
         TaskbarNativeMethods.SetCurrentProcessExplicitAppUserModelID(appId);
     }
@@ -281,7 +266,7 @@ public class TaskbarManager
     /// Gets the current process' explicit application user model id.
     /// </summary>
     /// <returns>The app id or null if no app id has been defined.</returns>
-    private string GetCurrentProcessAppId()
+    private static string GetCurrentProcessAppId()
     {
         TaskbarNativeMethods.GetCurrentProcessExplicitAppUserModelID(out string appId);
         return appId;

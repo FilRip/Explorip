@@ -4,17 +4,9 @@ using System.IO;
 
 namespace Explorip.Helpers;
 
-internal class HookCopyOperations
+internal static class HookCopyOperations
 {
-    private static HookCopyOperations _instance;
-
-    public static HookCopyOperations GetInstance()
-    {
-        _instance ??= new HookCopyOperations();
-        return _instance;
-    }
-
-    internal void InstallHook()
+    internal static void InstallHook()
     {
         string path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         Process.Start(Path.Combine(path, "HookFileOperationsManager.exe"), Process.GetCurrentProcess().Id.ToString());

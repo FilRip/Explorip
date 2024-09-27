@@ -129,7 +129,7 @@ public class StartupRunner
         return startupApps;
     }
 
-    private List<string> GetDisallowedItems(StartupLocation location, StartupEntryScope? overrideScope = null)
+    private static List<string> GetDisallowedItems(StartupLocation location, StartupEntryScope? overrideScope = null)
     {
         List<string> disallowedApps = [];
 
@@ -286,7 +286,7 @@ public class StartupRunner
         return startupApps;
     }
 
-    private RegistryKey[] ScopeToRoots(StartupEntryScope scope)
+    private static RegistryKey[] ScopeToRoots(StartupEntryScope scope)
     {
         RegistryKey[] roots = [];
 

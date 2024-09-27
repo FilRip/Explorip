@@ -25,7 +25,7 @@ namespace WindowsDesktop.Interop
                 Type type = assembly.GetType(version != 1 ? $"{comInterfaceName2}{version}" : comInterfaceName2);
                 if (type != null)
                 {
-                    object instance = assembly.CreateInstance(type, service);
+                    object instance = ComInterfaceAssembly.CreateInstance(type, service);
                     ComInterfaceAssembly = assembly;
                     ComInterfaceType = type;
                     ComObject = instance;

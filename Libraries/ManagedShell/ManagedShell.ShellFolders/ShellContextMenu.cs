@@ -77,7 +77,7 @@ public abstract class ShellContextMenu : NativeWindow
         }
     }
 
-    protected string GetCommandString(IContextMenu iContextMenu, uint idcmd, bool executeString)
+    protected static string GetCommandString(IContextMenu iContextMenu, uint idcmd, bool executeString)
     {
         string command = GetCommandStringW(iContextMenu, idcmd, executeString);
 
@@ -95,7 +95,7 @@ public abstract class ShellContextMenu : NativeWindow
     /// <param name="executeString">indicating whether it should return an execute string or not</param>
     /// <returns>if executeString is true it will return the executeString for the item, 
     /// otherwise it will return the help info string</returns>
-    private string GetCommandStringA(IContextMenu iContextMenu, uint idcmd, bool executeString)
+    private static string GetCommandStringA(IContextMenu iContextMenu, uint idcmd, bool executeString)
     {
         string info = string.Empty;
         byte[] bytes = new byte[256];
@@ -126,7 +126,7 @@ public abstract class ShellContextMenu : NativeWindow
     /// <param name="executeString">indicating whether it should return an execute string or not</param>
     /// <returns>if executeString is true it will return the executeString for the item, 
     /// otherwise it will return the help info string</returns>
-    private string GetCommandStringW(IContextMenu iContextMenu, uint idcmd, bool executeString)
+    private static string GetCommandStringW(IContextMenu iContextMenu, uint idcmd, bool executeString)
     {
         string info = string.Empty;
         byte[] bytes = new byte[256];

@@ -203,12 +203,12 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         // yup, do nothing. helps prevent a NRE
     }
 
-    private bool PinnedIcons_Filter(object item)
+    private static bool PinnedIcons_Filter(object item)
     {
         return (item as NotifyIcon).IsPinned && !(item as NotifyIcon).IsHidden;
     }
 
-    private bool UnpinnedIcons_Filter(object item)
+    private static bool UnpinnedIcons_Filter(object item)
     {
         return !(item as NotifyIcon).IsPinned && !(item as NotifyIcon).IsHidden;
     }

@@ -48,7 +48,7 @@ public class IntegerName : SerializedPropertyValue
     /// <summary>
     /// Reserved(1 byte): MUST be 0x00.
     /// </summary>
-    public byte Reserved => 0x00;
+    public static byte Reserved => 0x00;
 
     #region GetBytes
     /// <inheritdoc />

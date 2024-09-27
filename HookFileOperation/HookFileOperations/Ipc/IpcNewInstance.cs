@@ -74,10 +74,10 @@ public class IpcNewInstance : MarshalByRefObject
         });
     }
 
-#pragma warning disable S3400 // Methods should not return constants
+#pragma warning disable S3400, S2325
     public bool IsReady()
     {
         return true;
     }
-#pragma warning restore S3400 // Methods should not return constants
+#pragma warning restore S3400, S2325
 }

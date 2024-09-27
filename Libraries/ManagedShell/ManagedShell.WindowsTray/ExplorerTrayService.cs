@@ -112,7 +112,7 @@ public class ExplorerTrayService
         CloseHandle((int)hProcess);
     }
 
-    private IntPtr FindExplorerTrayToolbarHwnd()
+    private static IntPtr FindExplorerTrayToolbarHwnd()
     {
         IntPtr hwnd = FindWindow(WindowHelper.TrayWndClass, "");
 
@@ -136,12 +136,12 @@ public class ExplorerTrayService
         return IntPtr.Zero;
     }
 
-    private int GetNumTrayIcons(IntPtr toolbarHwnd)
+    private static int GetNumTrayIcons(IntPtr toolbarHwnd)
     {
         return (int)SendMessage(toolbarHwnd, (int)TB.BUTTONCOUNT, IntPtr.Zero, IntPtr.Zero);
     }
 
-    private TrayItem GetTrayItem(int i, IntPtr hBuffer, IntPtr hProcess, IntPtr toolbarHwnd)
+    private static TrayItem GetTrayItem(int i, IntPtr hBuffer, IntPtr hProcess, IntPtr toolbarHwnd)
     {
         TbButton tbButton = new();
         TrayItem trayItem = new();
@@ -201,7 +201,7 @@ public class ExplorerTrayService
         return nid;
     }
 
-    private bool GetAutoTrayEnabled()
+    private static bool GetAutoTrayEnabled()
     {
         int enableAutoTray = 1;
 
@@ -227,7 +227,7 @@ public class ExplorerTrayService
         return enableAutoTray == 1;
     }
 
-    private void SetAutoTrayEnabled(TrayNotify trayNotify, bool enabled)
+    private static void SetAutoTrayEnabled(TrayNotify trayNotify, bool enabled)
     {
         try
         {

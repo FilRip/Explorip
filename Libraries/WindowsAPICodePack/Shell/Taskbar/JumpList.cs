@@ -236,7 +236,7 @@ public class JumpList
                 TaskbarManager.Instance.ApplicationId = appID;
             }
 
-            TaskbarManager.Instance.SetApplicationIdForSpecificWindow(windowHandle, appID);
+            TaskbarManager.SetApplicationIdForSpecificWindow(windowHandle, appID);
         }
     }
 

@@ -220,7 +220,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         }
     }
 
-    public void SendTaskbarButtonCreatedMessage(IntPtr hWnd)
+    public static void SendTaskbarButtonCreatedMessage(IntPtr hWnd)
     {
         // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
         if (!EnvironmentHelper.IsServerCore) SendNotifyMessage(hWnd, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
@@ -565,7 +565,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         }
     }
 
-    private void SetTaskbarListHwnd(IntPtr hwndHook)
+    private static void SetTaskbarListHwnd(IntPtr hwndHook)
     {
         // set property on hook window that should receive ITaskbarList messages
 

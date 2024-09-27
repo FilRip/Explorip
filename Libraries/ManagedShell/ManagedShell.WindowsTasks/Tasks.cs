@@ -48,7 +48,7 @@ public class Tasks : IDisposable
         // yup, do nothing. helps prevent a NRE
     }
 
-    private bool GroupedWindows_Filter(object item)
+    private static bool GroupedWindows_Filter(object item)
     {
         if (item is ApplicationWindow window && window.ShowInTaskbar)
             return true;

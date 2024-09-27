@@ -53,7 +53,7 @@ public class SerializedPropertyStorage : Structure
     /// <summary>
     /// MUST be equal to 0x53505331.
     /// </summary>
-    public uint Version => 0x53505331;
+    public static uint Version => 0x53505331;
 
     /// <summary>
     /// A GUID that specifies the semantics and expected usage of the properties contained in 

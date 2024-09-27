@@ -17,6 +17,7 @@ public class SearchHelper : DependencyObject
     private static readonly object searchLock = new();
     private static int QueryNum;
     private static string SearchString;
+    private static readonly ThreadSafeObservableCollection<SearchResult> m_results = [];
 
     const int MAX_RESULT = 8;
 
@@ -27,7 +28,7 @@ public class SearchHelper : DependencyObject
         typeof(string), typeof(SearchHelper), new UIPropertyMetadata(default(string),
             new PropertyChangedCallback(OnSearchTextChanged)));
 
-    static void OnSearchTextChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    private static void OnSearchTextChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
     {
         SearchString = e.NewValue.ToString();
 
@@ -40,7 +41,7 @@ public class SearchHelper : DependencyObject
         }
     }
 
-    static void IncrementQueryNum()
+    private static void IncrementQueryNum()
     {
         if (QueryNum < int.MaxValue)
         {
@@ -52,7 +53,7 @@ public class SearchHelper : DependencyObject
         }
     }
 
-    static void DoSearch()
+    private static void DoSearch()
     {
         int localQueryNum = QueryNum;
 
@@ -159,7 +160,7 @@ public class SearchHelper : DependencyObject
         }
     }
 
-    static SearchResult BuildSearchResult(OleDbDataReader reader)
+    private static SearchResult BuildSearchResult(OleDbDataReader reader)
     {
         SearchResult result = new()
         {
@@ -184,9 +185,9 @@ public class SearchHelper : DependencyObject
         set { SetValue(SearchTextProperty, value); }
     }
 
-    static readonly ThreadSafeObservableCollection<SearchResult> m_results = [];
-
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public ReadOnlyObservableCollection<SearchResult> Results
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         get { return new ReadOnlyObservableCollection<SearchResult>(m_results); }
     }

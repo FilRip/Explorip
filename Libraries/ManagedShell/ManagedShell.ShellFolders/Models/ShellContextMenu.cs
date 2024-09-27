@@ -240,7 +240,7 @@ internal class ShellContextMenu : NativeWindow
         return arrPIDLs;
     }
 
-    private void FreePIDLs(IntPtr[] arrPIDLs)
+    private static void FreePIDLs(IntPtr[] arrPIDLs)
     {
         if (arrPIDLs != null)
             for (int n = 0; n < arrPIDLs.Length; n++)

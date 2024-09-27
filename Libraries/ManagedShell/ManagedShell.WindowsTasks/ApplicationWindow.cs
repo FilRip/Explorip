@@ -737,7 +737,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     /// Returns whether a window is normal (1), minimized (2), or maximized (3).
     /// </summary>
     /// <param name="hWnd">The handle of the window.</param>
-    private NativeMethods.WindowShowStyle GetWindowShowStyle(IntPtr hWnd)
+    private static NativeMethods.WindowShowStyle GetWindowShowStyle(IntPtr hWnd)
     {
         NativeMethods.WindowPlacement placement = new();
         NativeMethods.GetWindowPlacement(hWnd, ref placement);

@@ -21,7 +21,7 @@ namespace WindowsDesktop.Interop
             }
         }
 
-        protected VirtualDesktop GetDesktop(object comObject)
+        protected static VirtualDesktop GetDesktop(object comObject)
             => VirtualDesktopCache.GetOrCreate(comObject);
 
         protected void VirtualDesktopCreatedCore(object pDesktop)

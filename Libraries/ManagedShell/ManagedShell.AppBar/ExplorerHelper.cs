@@ -89,7 +89,7 @@ public class ExplorerHelper
         }
     }
 
-    public void SetSecondaryTaskbarVisibility(SWP swp)
+    public static void SetSecondaryTaskbarVisibility(SWP swp)
     {
         IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
 

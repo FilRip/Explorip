@@ -9,13 +9,8 @@ namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 /// Thumbnail toolbar manager class for adding a thumbnail toolbar with a specified set of buttons 
 /// to the thumbnail image of a window in a taskbar button flyout.
 /// </summary>
-public class ThumbnailToolBarManager
+public static class ThumbnailToolBarManager
 {
-    internal ThumbnailToolBarManager()
-    {
-        // Hide the public constructor so users can't create an instance of this class.
-    }
-
     /// <summary>
     /// Adds thumbnail toolbar for the specified window.
     /// </summary>
@@ -28,7 +23,7 @@ public class ThumbnailToolBarManager
     /// they can be shown and hidden through <see cref="P:Microsoft.WindowsAPICodePack.Taskbar.ThumbnailToolBarButton.Visible"/> as needed. 
     /// The toolbar itself cannot be removed without re-creating the window itself.
     /// </remarks>
-    public void AddButtons(IntPtr windowHandle, params ThumbnailToolBarButton[] buttons)
+    public static void AddButtons(IntPtr windowHandle, params ThumbnailToolBarButton[] buttons)
     {
         if (windowHandle == IntPtr.Zero)
         {
@@ -52,9 +47,10 @@ public class ThumbnailToolBarManager
     /// they can be shown and hidden through ThumbnailToolBarButton.Visible as needed. 
     /// The toolbar itself cannot be removed without re-creating the window itself.
     /// </remarks>
-    public void AddButtons(UIElement control, params ThumbnailToolBarButton[] buttons)
+    public static void AddButtons(UIElement control, params ThumbnailToolBarButton[] buttons)
     {
-        if (control == null) { throw new ArgumentNullException("control"); }
+        if (control == null)
+            throw new ArgumentNullException("control");
         VerifyButtons(buttons);
 
         // Add the buttons to our window manager, which will also create a proxy window

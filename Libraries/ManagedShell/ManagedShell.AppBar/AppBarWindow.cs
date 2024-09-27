@@ -400,7 +400,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
     protected virtual void SetScreenProperties(ScreenSetupReason reason)
     {
-        _fullScreenHelper.NotifyScreensChanged();
+        FullScreenHelper.NotifyScreensChanged();
 
         SetScreenPosition();
     }

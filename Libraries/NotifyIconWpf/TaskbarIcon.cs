@@ -167,7 +167,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// Returns the location of the system tray
     /// </summary>
     /// <returns>Point</returns>
-    public Point GetPopupTrayPosition()
+    public static Point GetPopupTrayPosition()
     {
         return TrayInfo.GetTrayLocation();
     }

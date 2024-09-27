@@ -73,7 +73,7 @@ public static class Program
                     AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                 }
                 if (ConfigManager.HookCopy)
-                    HookCopyOperations.GetInstance().InstallHook();
+                    HookCopyOperations.InstallHook();
                 _WpfHost = new Explorer.MyExplorerApp();
                 _WpfHost.Run();
             }

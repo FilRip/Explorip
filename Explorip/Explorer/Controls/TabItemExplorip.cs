@@ -145,7 +145,7 @@ public abstract class TabItemExplorip : TabItem, IDisposable
         }
     }
 
-    private void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
+    private static void TabItem_PreviewMouseMove(object sender, MouseEventArgs e)
     {
         if (e.Source is not TabItemExplorip tabItem)
         {
@@ -158,7 +158,7 @@ public abstract class TabItemExplorip : TabItem, IDisposable
         }
     }
 
-    private void TabItem_Drop(object sender, DragEventArgs e)
+    private static void TabItem_Drop(object sender, DragEventArgs e)
     {
         TabItemExplorip tabItemTarget = null;
         if (e.Source is TabItemExplorip browser)

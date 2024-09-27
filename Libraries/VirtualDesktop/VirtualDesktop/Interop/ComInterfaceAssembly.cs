@@ -27,7 +27,7 @@ namespace WindowsDesktop.Interop
             return type;
         }
 
-        internal object CreateInstance(Type type, Guid? guidService)
+        internal static object CreateInstance(Type type, Guid? guidService)
         {
             Type shellType = Type.GetTypeFromCLSID(ClSid.ImmersiveShell);
             IServiceProvider shell = (IServiceProvider)Activator.CreateInstance(shellType);

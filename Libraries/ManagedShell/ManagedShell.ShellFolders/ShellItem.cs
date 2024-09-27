@@ -392,7 +392,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
         return parent;
     }
 
-    protected IShellItem GetShellItem(string parsingName)
+    protected static IShellItem GetShellItem(string parsingName)
     {
         try
         {
@@ -406,7 +406,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
         }
     }
 
-    private IShellItem GetShellItem(IntPtr parentPidl, IShellFolder parentShellFolder, IntPtr relativePidl)
+    private static IShellItem GetShellItem(IntPtr parentPidl, IShellFolder parentShellFolder, IntPtr relativePidl)
     {
         try
         {

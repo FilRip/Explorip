@@ -141,7 +141,7 @@ public sealed class FullScreenHelper : IDisposable
         return null;
     }
 
-    private void ResetScreenCache()
+    private static void ResetScreenCache()
     {
         // use reflection to empty screens cache
 #pragma warning disable S3011
@@ -149,7 +149,7 @@ public sealed class FullScreenHelper : IDisposable
 #pragma warning restore S3011
     }
 
-    public void NotifyScreensChanged()
+    public static void NotifyScreensChanged()
     {
         ResetScreenCache();
     }

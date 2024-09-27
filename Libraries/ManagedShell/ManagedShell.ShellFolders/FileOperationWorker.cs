@@ -44,7 +44,7 @@ public class FileOperationWorker
         });
     }
 
-    private void DoOperation(BackgroundFileOperation operation, string path)
+    private static void DoOperation(BackgroundFileOperation operation, string path)
     {
         try
         {
@@ -69,7 +69,7 @@ public class FileOperationWorker
         }
     }
 
-    private void DoDirectoryOperation(BackgroundFileOperation operation, string path)
+    private static void DoDirectoryOperation(BackgroundFileOperation operation, string path)
     {
         if (path == operation.TargetPath)
         {
@@ -93,7 +93,7 @@ public class FileOperationWorker
         }
     }
 
-    private void DoFileOperation(BackgroundFileOperation operation, string path)
+    private static void DoFileOperation(BackgroundFileOperation operation, string path)
     {
         string futureName = Path.Combine(operation.TargetPath, Path.GetFileName(path));
         if (futureName == path)
@@ -112,7 +112,7 @@ public class FileOperationWorker
         }
     }
 
-    private void WorkerDoWork(object sender, DoWorkEventArgs e)
+    private static void WorkerDoWork(object sender, DoWorkEventArgs e)
     {
         BackgroundFileOperation operation = (BackgroundFileOperation)e.Argument;
 

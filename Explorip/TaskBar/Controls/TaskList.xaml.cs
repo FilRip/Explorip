@@ -113,7 +113,7 @@ public partial class TaskList : UserControl
                         if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyTaskbarApp.MyShellManager.TasksService.Windows.Contains(win))
                         {
                             MyTaskbarApp.MyShellManager.TasksService.Windows.Add(win);
-                            MyTaskbarApp.MyShellManager.TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
+                            TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
                         }
                     }
                     return true;
@@ -136,7 +136,7 @@ public partial class TaskList : UserControl
         }
     }
 
-    private void InsertPinnedApp()
+    private static void InsertPinnedApp()
     {
         string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
         if (Directory.Exists(path))

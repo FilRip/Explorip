@@ -23,7 +23,6 @@ using ExploripSharedCopy.WinAPI;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
-using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Shell.Common;
 
 namespace Explorip.Explorer.Windows;
@@ -221,7 +220,7 @@ public partial class WpfExplorerBrowser : Window
 
     #region Files operations
 
-    private void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
+    private static void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
     {
         ShellObject[] listeItems = tabSource.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
         string destination = tabDestination.CurrentTabExplorer.ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
@@ -265,7 +264,7 @@ public partial class WpfExplorerBrowser : Window
         CopyBetweenTab(RightTab, LeftTab, true);
     }
 
-    private void DeleteSelectTab(TabExplorerBrowser tab)
+    private static void DeleteSelectTab(TabExplorerBrowser tab)
     {
         ShellObject[] listeItems = tab.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
         Task.Run(() =>

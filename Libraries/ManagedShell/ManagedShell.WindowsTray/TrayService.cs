@@ -112,7 +112,7 @@ public class TrayService : IDisposable
         }
     }
 
-    private void SendTaskbarCreated()
+    private static void SendTaskbarCreated()
     {
         int msg = RegisterWindowMessage("TaskbarCreated");
 

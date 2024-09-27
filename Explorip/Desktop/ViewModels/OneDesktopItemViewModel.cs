@@ -62,7 +62,7 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
         }
     }
 
-    public double IconSize
+    public static double IconSize
     {
         get
         {

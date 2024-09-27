@@ -29,7 +29,7 @@ public class TypedPropertyValue(PropertyType Type, byte[] Value) : Structure()
     /// <summary>
     /// Padding (2 bytes): MUST be set to zero, and any nonzero value SHOULD be rejected.
     /// </summary>
-    public ushort Padding => 0x0000;
+    public static ushort Padding => 0x0000;
 
     #region Value
     /// <summary>

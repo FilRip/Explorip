@@ -1,12 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <ProductVersion>8.0.50727</ProductVersion>
     <ProjectGuid>{001DCDA7-F4C3-4BD6-A86C-C99B35A9798A}</ProjectGuid>
 	<ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
 	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <OutputType>WinExe</OutputType>
-    <FileUpgradeFlags />
-    <UpgradeBackupLocation />
     <TargetFramework>net481</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AssemblyTitle>Explorip</AssemblyTitle>
@@ -17,7 +14,6 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
-	<AssemblyVersion>1.0.0.0</AssemblyVersion>
 	<Version>1.0.0.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

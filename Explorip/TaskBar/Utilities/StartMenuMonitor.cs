@@ -87,17 +87,17 @@ public class StartMenuMonitor : IDisposable
         return _appVisibilityHelper.IsLauncherVisible();
     }
 
-    private bool IsClassicStartMenuOpen()
+    private static bool IsClassicStartMenuOpen()
     {
         return IsVisibleByClass("DV2ControlHost");
     }
 
-    private bool IsOpenShellMenuOpen()
+    private static bool IsOpenShellMenuOpen()
     {
         return IsVisibleByClass("OpenShell.CMenuContainer");
     }
 
-    private bool IsVisibleByClass(string className)
+    private static bool IsVisibleByClass(string className)
     {
         IntPtr hStartMenu = NativeMethods.FindWindowEx(IntPtr.Zero, IntPtr.Zero, className, IntPtr.Zero);
 

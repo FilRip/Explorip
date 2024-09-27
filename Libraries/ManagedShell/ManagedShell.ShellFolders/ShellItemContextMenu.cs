@@ -41,7 +41,7 @@ public class ShellItemContextMenu : ShellContextMenu
         }
     }
 
-    private uint ConfigureMenuItems(bool allFolders, IntPtr contextMenu, ShellMenuCommandBuilder builder)
+    private static uint ConfigureMenuItems(bool allFolders, IntPtr contextMenu, ShellMenuCommandBuilder builder)
     {
         uint numAdded = 0;
 
@@ -208,7 +208,7 @@ public class ShellItemContextMenu : ShellContextMenu
     }
 
     #region Helpers
-    private bool ItemsAllFolders(ShellItem[] items)
+    private static bool ItemsAllFolders(ShellItem[] items)
     {
         bool allFolders = true;
         foreach (ShellItem item in items)
@@ -224,7 +224,7 @@ public class ShellItemContextMenu : ShellContextMenu
         return allFolders;
     }
 
-    protected bool GetIContextMenu(ShellItem[] items, ShellFolder parentFolder, IntPtr hwndOwner, out IntPtr icontextMenuPtr, out IContextMenu iContextMenu)
+    protected static bool GetIContextMenu(ShellItem[] items, ShellFolder parentFolder, IntPtr hwndOwner, out IntPtr icontextMenuPtr, out IContextMenu iContextMenu)
     {
         if (items.Length < 1)
         {

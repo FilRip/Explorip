@@ -198,6 +198,7 @@ public partial class Taskbar : AppBarWindow
 
     #region Context menu
 
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void TaskManagerMenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         ShellHelper.StartTaskManager();
@@ -212,6 +213,7 @@ public partial class Taskbar : AppBarWindow
     {
         ((MyTaskbarApp)Program.MyCurrentApp).ShowTaskbarOnAllOthersScreen();
     }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
     private void MenuShowTabTip_Click(object sender, RoutedEventArgs e)
     {

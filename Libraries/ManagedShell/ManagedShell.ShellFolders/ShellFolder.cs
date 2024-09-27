@@ -139,7 +139,7 @@ public class ShellFolder : ShellItem
     {
         _userDesktopPath = newPath;
     }
-    private void SetUserDesktopPath()
+    private static void SetUserDesktopPath()
     {
         SetUserDesktopPath(Environment.GetFolderPath(Environment.SpecialFolder.Desktop, Environment.SpecialFolderOption.DoNotVerify).ToLower());
     }
@@ -287,7 +287,7 @@ public class ShellFolder : ShellItem
         }, CancellationToken.None, TaskCreationOptions.None, Interop.ShellItemScheduler);
     }
 
-    private IShellFolder GetShellFolder()
+    private static IShellFolder GetShellFolder()
     {
         Interop.SHGetDesktopFolder(out IntPtr desktopFolderPtr);
         return (IShellFolder)Marshal.GetTypedObjectForIUnknown(desktopFolderPtr, typeof(IShellFolder));

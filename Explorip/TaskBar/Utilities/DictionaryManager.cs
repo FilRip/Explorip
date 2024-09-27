@@ -52,7 +52,7 @@ public class DictionaryManager : IDisposable
         return GetMergedDictionaries().FirstOrDefault(rd => rd.Source.ToString().Contains($"{THEME_FOLDER}/"));
     }
 
-    private void ClearPreviousThemes()
+    private static void ClearPreviousThemes()
     {
         if (GetActualThemeDictionary() != null)
         {
@@ -116,12 +116,12 @@ public class DictionaryManager : IDisposable
         });
     }
 
-    public List<string> GetThemes()
+    public static List<string> GetThemes()
     {
         return GetDictionaries(THEME_DEFAULT, THEME_FOLDER, THEME_EXT);
     }
 
-    public List<string> GetLanguages()
+    public static List<string> GetLanguages()
     {
         List<string> languages =
         [
@@ -131,7 +131,7 @@ public class DictionaryManager : IDisposable
         return languages;
     }
 
-    private List<string> GetDictionaries(string dictDefault, string dictFolder, string dictExtension)
+    private static List<string> GetDictionaries(string dictDefault, string dictFolder, string dictExtension)
     {
         List<string> dictionaries = [dictDefault];
 

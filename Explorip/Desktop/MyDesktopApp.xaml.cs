@@ -42,7 +42,7 @@ public partial class MyDesktopApp : Application
         }
     }
 
-    private void CurrentDomain_ProcessExit(object sender, EventArgs e)
+    private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
     {
         ManagedShell.Common.Helpers.IconHelper.DisposeIml();
         ManagedShell.Common.Helpers.ShellHelper.ToggleDesktopIcons(true);
