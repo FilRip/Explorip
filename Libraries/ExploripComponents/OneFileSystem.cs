@@ -1,14 +1,43 @@
-﻿using System.Windows.Media;
+﻿using System.IO;
+using System.Windows.Media;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ExploripComponents;
 
-public abstract class OneFileSystem
+public abstract partial class OneFileSystem : ObservableObject
 {
-    public string Text { get; set; }
+    [ObservableProperty()]
+    private bool _isSelected;
+    [ObservableProperty()]
+    private SolidColorBrush _foreground;
+    [ObservableProperty()]
+    private SolidColorBrush _background;
+    [ObservableProperty()]
+    private string _fullPath;
 
-    public SolidColorBrush Foreground { get; set; } = new SolidColorBrush(Colors.White);
+    public string Text
+    {
+        get { return Path.GetFileName(FullPath); }
+    }
 
-    public SolidColorBrush Background { get; set; } = new SolidColorBrush(Colors.Transparent);
+    partial void OnIsSelectedChanged(bool value)
+    {
+        if (value)
+            RefreshFiles();
+    }
 
-    public bool Selected { get; set; }
+    protected virtual void RefreshFiles()
+    {
+    }
+
+    public FileAttributes FileAttributes
+    {
+        get { return File.GetAttributes(FullPath); }
+    }
+
+    public bool Hidden
+    {
+        get { return FileAttributes.HasFlag(FileAttributes.Hidden); }
+    }
 }

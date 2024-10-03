@@ -1,8 +1,11 @@
-﻿using ManagedShell.Common.Enums;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+using ManagedShell.Common.Enums;
 
 namespace ExploripComponents;
 
-public class OneFile
+public partial class OneFile : OneFileSystem
 {
-    public IconSize IconSize { get; set; }
+    [ObservableProperty()]
+    private IconSize _iconSize;
 }

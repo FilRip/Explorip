@@ -22,17 +22,22 @@ public partial class ExplorerViewModel : ObservableObject
     {
         List<OneDirectory> list = [];
         OneDirectory dir;
-        foreach (string directory in Directory.GetDirectories($"c:\\"))
+        OneDirectory parent = new(null, true) { FullPath = "C:\\", MainViewModel = this };
+        bool hasSubFolder;
+        foreach (string directory in Directory.GetDirectories(parent.FullPath))
         {
-            dir = new OneDirectory()
-            {
-                Text = Path.GetFileName(directory),
-            };
             try
             {
-                dir.HasChildren = Directory.GetDirectories(directory).Length > 0;
+                hasSubFolder = Directory.GetDirectories(directory).Length > 0;
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                hasSubFolder = false;
+            }
+            dir = new OneDirectory(parent, hasSubFolder)
+            {
+                FullPath = directory,
+            };
             list.Add(dir);
         }
         FolderTreeView = new ObservableCollection<OneDirectory>(list);
