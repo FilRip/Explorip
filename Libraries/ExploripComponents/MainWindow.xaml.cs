@@ -1,4 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Interop;
+
+using ExploripSharedCopy.Helpers;
+using ExploripSharedCopy.WinAPI;
 
 namespace ExploripComponents
 {
@@ -7,10 +12,20 @@ namespace ExploripComponents
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly IntPtr _windowHandle;
+
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ExplorerViewModel();
+
+            _windowHandle = new WindowInteropHelper(this).EnsureHandle();
+            if (WindowsSettings.IsWindowsApplicationInDarkMode())
+            {
+                WindowsSettings.UseImmersiveDarkMode(_windowHandle, true);
+                _ = Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
+            }
+
+            DataContext = new ExplorerViewModel(_windowHandle);
         }
 
         public ExplorerViewModel MyDataContext

@@ -1,11 +1,12 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ExploripComponents;
 
-public abstract partial class OneFileSystem : ObservableObject
+public abstract partial class OneFileSystem(string fullPath) : ObservableObject
 {
     [ObservableProperty()]
     private bool _isSelected;
@@ -14,7 +15,8 @@ public abstract partial class OneFileSystem : ObservableObject
     [ObservableProperty()]
     private SolidColorBrush _background;
     [ObservableProperty()]
-    private string _fullPath;
+    private string _fullPath = fullPath;
+    protected long _lastSize;
 
     public string Text
     {
@@ -24,10 +26,10 @@ public abstract partial class OneFileSystem : ObservableObject
     partial void OnIsSelectedChanged(bool value)
     {
         if (value)
-            RefreshFiles();
+            Task.Run(RefreshListView);
     }
 
-    protected virtual void RefreshFiles()
+    protected virtual void RefreshListView()
     {
     }
 
@@ -39,5 +41,15 @@ public abstract partial class OneFileSystem : ObservableObject
     public bool Hidden
     {
         get { return FileAttributes.HasFlag(FileAttributes.Hidden); }
+    }
+
+    public virtual long Size
+    {
+        get
+        {
+            if (_lastSize == 0)
+                _lastSize = new FileInfo(FullPath).Length;
+            return _lastSize;
+        }
     }
 }

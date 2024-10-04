@@ -104,7 +104,7 @@ public static class IconHelper
                 };
 
                 SHGFI flags = SHGFI.Icon | SHGFI.SysIconIndex | SHGFI.OverlayIndex;
-                if (!filename.StartsWith("\\") && (File.GetAttributes(filename) & FileAttributes.Directory) == FileAttributes.Directory)
+                if (!filename.StartsWith("\\") && (File.GetAttributes(filename).HasFlag(FileAttributes.Directory)))
                 {
                     SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL | FILE_ATTRIBUTE.DIRECTORY, ref shinfo, (uint)Marshal.SizeOf(shinfo), flags);
                 }

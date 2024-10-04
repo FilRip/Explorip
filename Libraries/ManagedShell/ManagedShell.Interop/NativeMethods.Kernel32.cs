@@ -329,4 +329,48 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName)]
     internal static extern uint GetLastError();
+
+    [DllImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool FindClose(IntPtr handle);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    internal static extern SafeSearchHandle FindFirstFile(string fileName, out Win32FindData data);
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool FindNextFile(SafeSearchHandle hndFindFile, out Win32FindData lpFindFileData);
+
+    public sealed class SafeSearchHandle : SafeHandleZeroOrMinusOneIsInvalid
+    {
+        public SafeSearchHandle() : base(true)
+        {
+        }
+
+        protected override bool ReleaseHandle()
+        {
+            FindClose(handle);
+            return true;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+    public struct Win32FindData
+    {
+        public FileAttributes dwFileAttributes;
+        public uint ftCreationTime_dwLowDateTime;
+        public uint ftCreationTime_dwHighDateTime;
+        public uint ftLastAccessTime_dwLowDateTime;
+        public uint ftLastAccessTime_dwHighDateTime;
+        public uint ftLastWriteTime_dwLowDateTime;
+        public uint ftLastWriteTime_dwHighDateTime;
+        public uint nFileSizeHigh;
+        public uint nFileSizeLow;
+        public int dwReserved0;
+        public int dwReserved1;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+        public string cFileName;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
+        public string cAlternateFileName;
+    }
 }

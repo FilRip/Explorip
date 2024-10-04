@@ -10,3 +10,4 @@
 [assembly: InternalsVisibleTo("ManagedShell.ShellFolders")]
 [assembly: InternalsVisibleTo("HookFileOperations")]
 [assembly: InternalsVisibleTo("ExploripCopy")]
+[assembly: InternalsVisibleTo("ExploripComponents")]

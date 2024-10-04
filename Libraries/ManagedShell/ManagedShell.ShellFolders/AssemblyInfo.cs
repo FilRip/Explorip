@@ -8,3 +8,4 @@
 [assembly: InternalsVisibleTo("ManagedShell.WindowsTray")]
 [assembly: InternalsVisibleTo("ManagedShell")]
 [assembly: InternalsVisibleTo("HookFileOperations")]
+[assembly: InternalsVisibleTo("ExploripComponents")]

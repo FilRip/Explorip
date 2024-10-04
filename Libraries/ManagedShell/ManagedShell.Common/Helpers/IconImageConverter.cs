@@ -140,9 +140,7 @@ public static class IconImageConverter
         {
             BitmapImage img = new();
             img.BeginInit();
-#pragma warning disable S1075
-            img.UriSource = new Uri("pack://application:,,,/ManagedShell.Common;component/Resources/nullIcon.png", UriKind.RelativeOrAbsolute);
-#pragma warning restore S1075
+            img.UriSource = new Uri($"pack://application:,,,/ManagedShell.Common;component/Resources/nullIcon.png", UriKind.RelativeOrAbsolute);
             img.EndInit();
             img.Freeze();
 

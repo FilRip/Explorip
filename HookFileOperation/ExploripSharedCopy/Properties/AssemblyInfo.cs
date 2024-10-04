@@ -28,3 +28,4 @@ using System.Windows;
 [assembly: InternalsVisibleTo("Explorip")]
 [assembly: InternalsVisibleTo("HookFileOperations")]
 [assembly: InternalsVisibleTo("ExploripCopy")]
+[assembly: InternalsVisibleTo("ExploripComponents")]

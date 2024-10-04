@@ -126,14 +126,21 @@ public static class StoreAppHelper
     private static XmlNamespaceManager GetNamespaceManager(XmlDocument manifest)
     {
         XmlNamespaceManager xmlnsManager = new(manifest.NameTable);
-#pragma warning disable S1075
-        xmlnsManager.AddNamespace("ns", "http://schemas.microsoft.com/appx/manifest/foundation/windows10");
-        xmlnsManager.AddNamespace("uap", "http://schemas.microsoft.com/appx/manifest/uap/windows10");
-        xmlnsManager.AddNamespace("uap2", "http://schemas.microsoft.com/appx/manifest/uap/windows10/2");
-        xmlnsManager.AddNamespace("uap3", "http://schemas.microsoft.com/appx/manifest/uap/windows10/3");
-        xmlnsManager.AddNamespace("uap4", "http://schemas.microsoft.com/appx/manifest/uap/windows10/4");
-        xmlnsManager.AddNamespace("uap5", "http://schemas.microsoft.com/appx/manifest/uap/windows10/5");
-#pragma warning restore S1075
+        xmlnsManager.AddNamespace("ns", $"http://schemas.microsoft.com/appx/manifest/foundation/windows10");
+        xmlnsManager.AddNamespace("uap", $"http://schemas.microsoft.com/appx/manifest/uap/windows10");
+        xmlnsManager.AddNamespace("uap2", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/2");
+        xmlnsManager.AddNamespace("uap3", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/3");
+        xmlnsManager.AddNamespace("uap4", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/4");
+        xmlnsManager.AddNamespace("uap5", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/5");
+        xmlnsManager.AddNamespace("uap6", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/6");
+        xmlnsManager.AddNamespace("uap7", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/7");
+        xmlnsManager.AddNamespace("uap8", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/8");
+        xmlnsManager.AddNamespace("uap10", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/10");
+        xmlnsManager.AddNamespace("uap11", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/11");
+        xmlnsManager.AddNamespace("uap12", $"http://schemas.microsoft.com/appx/manifest/uap/windows/10/12");
+        xmlnsManager.AddNamespace("uap13", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/13");
+        xmlnsManager.AddNamespace("uap15", $"http://schemas.microsoft.com/appx/manifest/foundation/windows10/15");
+        xmlnsManager.AddNamespace("uap17", $"http://schemas.microsoft.com/appx/manifest/uap/windows10/17");
 
         return xmlnsManager;
     }
@@ -145,7 +152,7 @@ public static class StoreAppHelper
         if (node == null && nodeText.Contains("uap:"))
         {
             int i = 0;
-            string[] namespaces = ["uap:", "uap2:", "uap3:", "uap4:", "uap5:"];
+            string[] namespaces = ["uap:", "uap2:", "uap3:", "uap4:", "uap5:", "uap6:", "uap7:", "uap8:", "uap10:", "uap11:", "uap12:", "uap13:", "uap15:", "uap17:"];
             while (node == null && i <= 3)
             {
                 nodeText = nodeText.Replace(namespaces[i], namespaces[i + 1]);
