@@ -19,7 +19,6 @@ namespace Microsoft.WindowsAPICodePack.Shell.Common;
 public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
 #pragma warning restore S4035 // Classes implementing "IEquatable<T>" should be sealed
 {
-
     #region Public Static Methods
 
     /// <summary>

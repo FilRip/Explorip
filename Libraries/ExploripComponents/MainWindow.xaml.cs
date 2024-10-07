@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
@@ -25,17 +30,29 @@ namespace ExploripComponents
                 _ = Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
 
-            DataContext = new ExplorerViewModel(_windowHandle);
+            DataContext = new WpfExplorerViewModel(_windowHandle);
         }
 
-        public ExplorerViewModel MyDataContext
+        public WpfExplorerViewModel MyDataContext
         {
-            get { return (ExplorerViewModel)DataContext; }
+            get { return (WpfExplorerViewModel)DataContext; }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             MyDataContext.Refresh();
+        }
+
+        private void FileLV_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MyDataContext.SelectedItems = new ObservableCollection<OneFileSystem>(FileLV.SelectedItems.OfType<OneFileSystem>());
+        }
+
+        private void FileLV_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
+            if (r.VisualHit is not FrameworkElement || ((FrameworkElement)r.VisualHit).DataContext is not OneFile)
+                FileLV.UnselectAll();
         }
     }
 }

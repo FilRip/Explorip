@@ -5,11 +5,13 @@
     <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
 	<Version>1.0.0.0</Version>
+	<Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="ModernWpfUI" Version="0.9.6" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
@@ -17,5 +19,6 @@
     <ProjectReference Include="..\..\HookFileOperation\ExploripSharedCopy\ExploripSharedCopy.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
+    <ProjectReference Include="..\WindowsAPICodePack\Shell\Shell.csproj" />
   </ItemGroup>
 </Project>

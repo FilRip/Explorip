@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExploripComponents"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=local:ExplorerViewModel}"
+        d:DataContext="{d:DesignInstance Type=local:WpfExplorerViewModel}"
+        ui:WindowHelper.UseModernWindowStyle="True"
         Title="MainWindow" Height="450" Width="800">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -21,10 +23,15 @@
 
         <TreeView Grid.Column="0" Name="FolderTV" ItemsSource="{Binding FolderTreeView}">
             <TreeView.ItemContainerStyle>
-                <Style TargetType="{x:Type TreeViewItem}">
+                <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                     <Setter Property="FontWeight" Value="Normal" />
+                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="0,2,0,2"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="MinHeight" Value="0"/>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="FontWeight" Value="Bold" />
@@ -33,36 +40,49 @@
                 </Style>
             </TreeView.ItemContainerStyle>
 
-            <TreeView.Resources>
+            <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate 
-                  DataType="{x:Type local:OneDirectory}" 
-                  ItemsSource="{Binding Children}"
-                  >
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Text}" />
-                    </StackPanel>
+                    DataType="{x:Type local:OneDirectory}" 
+                    ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding DisplayText}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseRightButtonUp">
+                            <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    </TextBlock>
                 </HierarchicalDataTemplate>
-            </TreeView.Resources>
+            </TreeView.ItemTemplate>
 
         </TreeView>
         
         <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"/>
 
-        <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}" SelectionMode="Extended">
+        <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}" SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" PreviewMouseDown="FileLV_PreviewMouseDown">
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseRightButtonDown">
-                    <i:InvokeCommandAction Command="{Binding ContextMenuCommand}"/>
+                <i:EventTrigger EventName="MouseRightButtonUp">
+                    <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
-                        <Grid>
-                            <Image Source="{Binding Icon}" HorizontalAlignment="Center"/>
-                            <Image Source="{Binding IconOverlay}" HorizontalAlignment="Center"/>
-                        </Grid>
-                        <TextBlock Text="{Binding Text}" HorizontalAlignment="Center"/>
-                    </StackPanel>
+                    <ContentControl>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseRightButtonUp">
+                                <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding DoubleClickFileCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                            <Grid>
+                                <Image Source="{Binding Icon}" HorizontalAlignment="Center"/>
+                                <Image Source="{Binding IconOverlay}" HorizontalAlignment="Center"/>
+                            </Grid>
+                            <TextBlock Text="{Binding DisplayText}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </ContentControl>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

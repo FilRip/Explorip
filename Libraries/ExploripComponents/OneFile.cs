@@ -1,30 +1,22 @@
-﻿using System;
-using System.Windows.Media;
-
-using CommunityToolkit.Mvvm.ComponentModel;
-
-using ManagedShell.Common.Helpers;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ExploripComponents;
 
-public partial class OneFile(string fullPath) : OneFileSystem(fullPath)
+public partial class OneFile(string fullPath, OneDirectory parentDirectory) : OneFileSystem(fullPath, Path.GetFileName(fullPath), parentDirectory)
 {
-    private ImageSource _icon;
-    [ObservableProperty()]
-    private ImageSource _iconOverlay;
-
-    public ImageSource Icon
+    public override void DoubleClickFile()
     {
-        get
+        Process process = new()
         {
-            if (_icon == null && !string.IsNullOrWhiteSpace(FullPath))
+            StartInfo = new ProcessStartInfo()
             {
-                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out nint hOverlay);
-                _icon = IconImageConverter.GetImageFromHIcon(hIcon);
-                if (hOverlay != IntPtr.Zero)
-                    IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
-            }
-            return _icon;
-        }
+                FileName = FullPath,
+                UseShellExecute = true,
+                WorkingDirectory = Path.GetDirectoryName(FullPath),
+            },
+        };
+        Task.Run(process.Start);
     }
 }

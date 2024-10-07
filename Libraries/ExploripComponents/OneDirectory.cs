@@ -2,36 +2,63 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
+using System.Windows.Input;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
+using Microsoft.WindowsAPICodePack.Shell.Common;
+using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 namespace ExploripComponents;
 
 public partial class OneDirectory : OneFileSystem
 {
-    private static readonly OneDirectory _dummyDir = new("", null, false);
-    private readonly OneDirectory _parent;
+    private static readonly OneDirectory _dummyDir = new(null, "", false, "");
+
     [ObservableProperty()]
-    private ObservableCollection<OneDirectory> _children = [];
+    private ObservableCollection<OneDirectory> _children;
     [ObservableProperty()]
     private bool _isExpanded;
-    private readonly ObservableCollection<OneFile> _files = [];
-    private Task _taskCalculateSize;
-    private CancellationTokenSource _cancellationToken;
+    [ObservableProperty()]
+    private DriveInfo? _driveInfo;
 
-    public ExplorerViewModel MainViewModel { get; set; }
+    private readonly ObservableCollection<OneFileSystem> _items;
+    private Task? _taskCalculateSize;
+    private CancellationTokenSource? _cancellationToken;
+    private readonly ShellObject? _shellObject;
+    private readonly IKnownFolder? _knownFolder;
+    private readonly DriveInfo? _drive;
 
-    public OneDirectory(string fullPath, OneDirectory parent, bool hasSubFolder) : base(fullPath)
+    public WpfExplorerViewModel? MainViewModel { get; set; }
+
+    private OneDirectory(OneDirectory? parent, string fullPath, bool hasSubFolder, string displayText) : base(fullPath, displayText, parent)
     {
-        _parent = parent;
-
+        _children = [];
+        _items = [];
+        _knownFolder = null;
         if (hasSubFolder)
             _children.Add(_dummyDir);
+    }
+
+    public OneDirectory(string fullPath, OneDirectory? parent, bool hasSubFolder) : this(parent, fullPath, hasSubFolder, ShellObject.FromParsingName(fullPath).Name)
+    {
+        _shellObject = ShellObject.FromParsingName(fullPath);
+    }
+
+    public OneDirectory(IKnownFolder knownFolder, OneDirectory? parent, bool hasSubFolder) : this(parent, ((ShellObject)knownFolder).ParsingName, hasSubFolder, ((ShellObject)knownFolder).Name)
+    {
+        _knownFolder = knownFolder;
+        _shellObject = (ShellObject)knownFolder;
+    }
+
+    public OneDirectory(DriveInfo drive, OneDirectory parent) : this(parent, drive.Name, true, drive.Name)
+    {
+        _drive = drive;
+        _shellObject = ShellObject.FromParsingName(_drive.Name);
     }
 
     public bool HasDummyChild
@@ -41,8 +68,8 @@ public partial class OneDirectory : OneFileSystem
 
     partial void OnIsExpandedChanged(bool value)
     {
-        if (IsExpanded && _parent != null)
-            _parent.IsExpanded = true;
+        if (IsExpanded && _parentDirectory != null)
+            _parentDirectory.IsExpanded = true;
 
         if (this.HasDummyChild)
         {
@@ -51,9 +78,9 @@ public partial class OneDirectory : OneFileSystem
         }
     }
 
-    public OneDirectory Parent
+    public OneDirectory? Parent
     {
-        get { return _parent; }
+        get { return _parentDirectory; }
     }
 
     private void LoadChildren()
@@ -81,18 +108,18 @@ public partial class OneDirectory : OneFileSystem
 
     protected override void RefreshListView()
     {
-        _files.Clear();
-        FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out _, out List<string> listFiles);
+        _items.Clear();
+        FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
         foreach (string file in listFiles)
-        {
-            _files.Add(new OneFile(Path.Combine(FullPath, file)));
-        }
+            _items.Add(new OneFile(Path.Combine(FullPath, file), this));
+        foreach (string subFolder in listSubFolder)
+            _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true));
         _cancellationToken?.Cancel();
-        GetRootParent().MainViewModel.FileListView = _files;
-        GetRootParent().MainViewModel.SelectedFolder = FullPath;
+        GetRootParent().MainViewModel!.FileListView = _items;
+        GetRootParent().MainViewModel!.SelectedFolder = this;
     }
 
-    private OneDirectory GetRootParent()
+    public OneDirectory GetRootParent()
     {
         OneDirectory curDir = this;
         while (curDir.Parent != null)
@@ -118,7 +145,7 @@ public partial class OneDirectory : OneFileSystem
 
     private void EndCalculationSize(Task task)
     {
-        _cancellationToken.Dispose();
+        _cancellationToken?.Dispose();
     }
 
     public Task CalculateFolderSize()
@@ -143,5 +170,27 @@ public partial class OneDirectory : OneFileSystem
             }
             catch (Exception) { /* Ignore access to file */ }
         return result;
+    }
+
+    public IKnownFolder? KnownFolder
+    {
+        get { return _knownFolder; }
+    }
+
+    public ShellObject? ShellObject
+    {
+        get { return _shellObject; }
+    }
+
+    [RelayCommand()]
+    public void ContextMenuBackgroundFolder()
+    {
+        // When right click on an item tree view
+        new ShellContextMenu().ShowContextMenu(new DirectoryInfo(FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
+    }
+
+    public override void DoubleClickFile()
+    {
+        GetRootParent().MainViewModel!.BrowseTo(this);
     }
 }
