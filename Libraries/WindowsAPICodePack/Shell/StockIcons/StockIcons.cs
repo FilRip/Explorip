@@ -622,5 +622,4 @@ public class StockIcons
 
 
     #endregion
-
 }

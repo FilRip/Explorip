@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.WindowsAPICodePack.Interop;
 using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
+
+using NativeMethods = ManagedShell.Interop.NativeMethods;
 
 namespace ExploripComponents;
 
@@ -186,11 +192,33 @@ public partial class OneDirectory : OneFileSystem
     public void ContextMenuBackgroundFolder()
     {
         // When right click on an item tree view
-        new ShellContextMenu().ShowContextMenu(new DirectoryInfo(FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
+        ShellContextMenu scm = new()
+        {
+            Root = _knownFolder?.FolderId == KnownFolders.Computer.FolderId || _knownFolder?.FolderId == KnownFolders.Desktop.FolderId,
+        };
+        scm.ShowContextMenu(new DirectoryInfo(FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)), false);
     }
 
     public override void DoubleClickFile()
     {
         GetRootParent().MainViewModel!.BrowseTo(this);
+    }
+
+    public override ImageSource? Icon
+    {
+        get
+        {
+            if (_icon == null && _knownFolder != null)
+            {
+                nint ptr = nint.Zero;
+                if (_knownFolder.FolderId == KnownFolders.Computer.FolderId)
+                {
+                    int hResult = NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref ptr);
+                    if (hResult == (int)HResult.Ok)
+                        _icon = Imaging.CreateBitmapSourceFromHIcon(SystemIcons.GetStockIcon(StockIconId.DesktopPC, 16).Handle, new Int32Rect(0, 0, 16, 16), System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                }
+            }
+            return base.Icon;
+        }
     }
 }

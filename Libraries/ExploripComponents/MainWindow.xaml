@@ -44,13 +44,24 @@
                 <HierarchicalDataTemplate 
                     DataType="{x:Type local:OneDirectory}" 
                     ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding DisplayText}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseRightButtonUp">
-                            <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    </TextBlock>
+                    <Grid Margin="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" Margin="0">
+                            <Image Source="{Binding Icon}"/>
+                            <Image Source="{Binding IconOverlay}"/>
+                        </Grid>
+                        <TextBlock Grid.Column="2" Text="{Binding DisplayText}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseRightButtonUp">
+                                <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        </TextBlock>
+                    </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
 

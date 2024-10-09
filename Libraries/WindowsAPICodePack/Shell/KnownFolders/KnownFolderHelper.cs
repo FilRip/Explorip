@@ -178,6 +178,5 @@ public static class KnownFolderHelper
             ShellNativeMethods.ILFree(pidl);
             ShellNativeMethods.ILFree(pidl2);
         }
-
     }
 }

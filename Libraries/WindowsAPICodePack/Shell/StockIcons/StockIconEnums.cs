@@ -410,5 +410,4 @@ public enum StockIconIdentifier
     /// Icon for Clustered disk
     /// </summary>
     ClusteredDisk = 140,
-
 }

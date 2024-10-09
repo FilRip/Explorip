@@ -16,7 +16,7 @@ namespace ExploripComponents;
 public abstract partial class OneFileSystem(string fullPath, string displayText, OneDirectory? parentDirectory) : ObservableObject
 {
     protected readonly OneDirectory? _parentDirectory = parentDirectory;
-    private ImageSource? _icon;
+    protected ImageSource? _icon;
     protected long _lastSize;
 
     [ObservableProperty()]
@@ -28,7 +28,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     [ObservableProperty()]
     private ImageSource? _iconOverlay;
 
-    public ImageSource? Icon
+    public virtual ImageSource? Icon
     {
         get
         {

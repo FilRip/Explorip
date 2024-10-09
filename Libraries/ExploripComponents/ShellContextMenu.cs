@@ -10,6 +10,8 @@ using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 using ManagedShell.ShellFolders.Structs;
 
+using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ExploripComponents;
@@ -58,6 +60,7 @@ public class ShellContextMenu
     #endregion
 
     #region GetContextMenuInterfaces()
+
     /// <summary>Gets the interfaces to the context menu</summary>
     /// <param name="oParentFolder">Parent folder</param>
     /// <param name="arrPIDLs">PIDLs</param>
@@ -214,7 +217,7 @@ public class ShellContextMenu
     /// <returns>IShellFolder for the folder (relative from the desktop)</returns>
     private IShellFolder? GetParentFolder(string? folderName, bool desktopParent)
     {
-        if (!string.IsNullOrWhiteSpace(folderName))
+        if (!string.IsNullOrWhiteSpace(folderName) && !Root)
         {
             if (_oParentFolder == null)
             {
@@ -252,7 +255,7 @@ public class ShellContextMenu
         }
         else
         {
-            if (desktopParent)
+            if (desktopParent || Root)
                 _oParentFolder = GetDesktopFolder();
             else
             {
@@ -412,7 +415,7 @@ public class ShellContextMenu
         if (arrFI == null || arrFI.Length == 0)
             return null;
 
-        if (background)
+        if (background && !Root)
         {
             nint pItemIDL = ILCreateFromPath(arrFI[0].FullName);
             GetDesktopFolder().BindToObject(pItemIDL, nint.Zero, typeof(IShellFolder).GUID, out nint opsf);
@@ -424,14 +427,14 @@ public class ShellContextMenu
         }
 
         IShellFolder? oParentFolder;
-        if (arrFI[0].FullName.Length > 3 && arrFI[0].Name != "My Computer" && arrFI[0].Name != "Desktop" && arrFI[0].Exists)
+        if (arrFI[0].FullName.Length > 3 && !Root)
         {
             oParentFolder = GetParentFolder(arrFI[0].Parent!.FullName, false);
             if (oParentFolder == null)
                 return null;
         }
         else
-            oParentFolder = GetParentFolder(null, arrFI[0].Name == "My Computer" || arrFI[0].Name == "Desktop");
+            oParentFolder = GetParentFolder(null, arrFI[0].Name == KnownFolders.Computer.CanonicalName || arrFI[0].Name == "Desktop");
 
         if (oParentFolder == null)
             throw new ExploripCommonException("Parent folder is null");
@@ -444,16 +447,9 @@ public class ShellContextMenu
             uint pchEaten = 0;
             SFGAO pdwAttributes = 0;
             int nResult = oParentFolder.ParseDisplayName(nint.Zero, nint.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
-            if (nResult != (int)HResult.SUCCESS)
+            if (nResult != (int)HResult.SUCCESS && Root)
             {
-                if (fi.Name == "Desktop" && !fi.Exists)
-                {
-                    nResult = SHGetSpecialFolderLocation(nint.Zero, CSIDL.CSIDL_DESKTOP, ref pPIDL);
-                }
-                else if (fi.Name == "My Computer" && !fi.Exists)
-                {
-                    nResult = SHGetSpecialFolderLocation(nint.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
-                }
+                nResult = SHGetSpecialFolderLocation(nint.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
             }
             if (pPIDL != nint.Zero && nResult == (int)HResult.SUCCESS)
             {
@@ -526,11 +522,11 @@ public class ShellContextMenu
     /// <summary>
     /// Show default context menu of folder
     /// </summary>
-    public void ShowContextMenu(DirectoryInfo dir, System.Windows.Point pointScreen)
+    public void ShowContextMenu(DirectoryInfo dir, System.Windows.Point pointScreen, bool background = true)
     {
         ReleaseAll();
-        _arrPIDLs = GetPIDLs([dir], true);
-        ShowContextMenu(pointScreen, true);
+        _arrPIDLs = GetPIDLs([dir], background);
+        ShowContextMenu(pointScreen, background);
     }
 
     /// <summary>
@@ -538,7 +534,7 @@ public class ShellContextMenu
     /// </summary>
     /// <param name="arrFI">FileInfos (should all be in same directory)</param>
     /// <param name="pointScreen">Where to show the menu</param>
-    public void ShowContextMenu(System.Windows.Point pointScreen, bool background = false)
+    private void ShowContextMenu(System.Windows.Point pointScreen, bool background = false)
     {
         try
         {
@@ -611,4 +607,6 @@ public class ShellContextMenu
     }
 
     #endregion
+
+    public bool Root { get; set; } = false;
 }

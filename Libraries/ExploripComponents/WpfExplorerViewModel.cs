@@ -36,6 +36,18 @@ public partial class WpfExplorerViewModel(IntPtr handle) : ObservableObject
         FolderTreeView.Add(parent);
         parent.Children.Clear();
 
+        // Add special folder
+        void AddChild(IKnownFolder folder)
+        {
+            OneDirectory child = new(folder, null, true) { MainViewModel = this };
+            parent.Children.Add(child);
+        }
+        AddChild(KnownFolders.Desktop);
+        AddChild(KnownFolders.Documents);
+        AddChild(KnownFolders.Pictures);
+        AddChild(KnownFolders.Music);
+        AddChild(KnownFolders.Downloads);
+
         foreach (DriveInfo di in DriveInfo.GetDrives())
         {
             try
@@ -68,7 +80,7 @@ public partial class WpfExplorerViewModel(IntPtr handle) : ObservableObject
             {
                 currentPath = subFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar);
                 if (subFolder.DriveInfo is null)
-                    Path.GetFileName(currentPath);
+                    currentPath = Path.GetFileName(currentPath);
 
                 if (currentPath == folder)
                 {
