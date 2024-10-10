@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Microsoft.WindowsAPICodePack.Interop;
 using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 namespace ExploripComponents;
@@ -47,22 +47,26 @@ public partial class WpfExplorerViewModel(IntPtr handle) : ObservableObject
         AddChild(KnownFolders.Pictures);
         AddChild(KnownFolders.Music);
         AddChild(KnownFolders.Downloads);
+        AddChild(KnownFolders.Videos);
+        AddChild(KnownFolders.Objects3D);
 
         foreach (DriveInfo di in DriveInfo.GetDrives())
         {
             try
             {
-                FastDirectoryEnumerator.EnumerateFolderContent(di.RootDirectory.FullName, out List<string> subDir, out _);
-                hasSubFolder = subDir.Count > 0;
+                if (di.DriveType == DriveType.Fixed)
+                {
+                    FastDirectoryEnumerator.EnumerateFolderContent(di.RootDirectory.FullName, out List<string> subDir, out _);
+                    hasSubFolder = subDir.Count > 0;
+                }
+                else
+                    hasSubFolder = true;
             }
             catch (Exception)
             {
                 hasSubFolder = false;
             }
-            dir = new OneDirectory(di.RootDirectory.FullName, parent, hasSubFolder)
-            {
-                DriveInfo = di,
-            };
+            dir = new OneDirectory(di, parent, hasSubFolder);
             parent.Children.Add(dir);
         }
 
@@ -79,7 +83,7 @@ public partial class WpfExplorerViewModel(IntPtr handle) : ObservableObject
             foreach (OneDirectory subFolder in actualFolder.Children)
             {
                 currentPath = subFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar);
-                if (subFolder.DriveInfo is null)
+                if (subFolder.Drive == null)
                     currentPath = Path.GetFileName(currentPath);
 
                 if (currentPath == folder)

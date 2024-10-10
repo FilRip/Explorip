@@ -1326,6 +1326,15 @@ public static class KnownFolders
         }
     }
 
+    public static IKnownFolder Objects3D
+    {
+        get
+        {
+            CoreHelpers.ThrowIfNotWin7();
+            return GetKnownFolder(FolderIdentifiers.Objects3D);
+        }
+    }
+
     #endregion
 
 }

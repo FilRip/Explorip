@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,15 +30,14 @@ public partial class OneDirectory : OneFileSystem
     private ObservableCollection<OneDirectory> _children;
     [ObservableProperty()]
     private bool _isExpanded;
-    [ObservableProperty()]
-    private DriveInfo? _driveInfo;
+
+    public DriveInfo? Drive { get; set; }
 
     private readonly ObservableCollection<OneFileSystem> _items;
     private Task? _taskCalculateSize;
     private CancellationTokenSource? _cancellationToken;
     private readonly ShellObject? _shellObject;
     private readonly IKnownFolder? _knownFolder;
-    private readonly DriveInfo? _drive;
 
     public WpfExplorerViewModel? MainViewModel { get; set; }
 
@@ -61,10 +61,10 @@ public partial class OneDirectory : OneFileSystem
         _shellObject = (ShellObject)knownFolder;
     }
 
-    public OneDirectory(DriveInfo drive, OneDirectory parent) : this(parent, drive.Name, true, drive.Name)
+    public OneDirectory(DriveInfo drive, OneDirectory parent, bool hasSubFolder) : this(parent, drive.Name, hasSubFolder, ShellObject.FromParsingName(drive.RootDirectory.FullName).Name)
     {
-        _drive = drive;
-        _shellObject = ShellObject.FromParsingName(_drive.Name);
+        Drive = drive;
+        _shellObject = ShellObject.FromParsingName(drive.Name);
     }
 
     public bool HasDummyChild
@@ -93,6 +93,8 @@ public partial class OneDirectory : OneFileSystem
     {
         OneDirectory dir;
         bool hasSubFolder;
+        if (Drive != null && Drive.DriveType != DriveType.Fixed && !IsSelected)
+            return;
         FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listDirectories, out _);
         string newFullPath;
         foreach (string directory in listDirectories)
@@ -114,6 +116,12 @@ public partial class OneDirectory : OneFileSystem
 
     protected override void RefreshListView()
     {
+        if (_knownFolder?.FolderId == KnownFolders.Computer.FolderId)
+        {
+            GetRootParent().MainViewModel!.FileListView = new ObservableCollection<OneFileSystem>(Children.OfType<OneFileSystem>());
+            GetRootParent().MainViewModel!.SelectedFolder = this;
+            return;
+        }
         _items.Clear();
         FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
         foreach (string file in listFiles)
