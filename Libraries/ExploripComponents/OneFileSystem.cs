@@ -78,10 +78,12 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         if (_parentDirectory != null && _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.Count > 0)
         {
-            List<FileInfo> listFiles = [];
+            List<FileSystemInfo> listFiles = [];
             foreach (OneFile file in _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.OfType<OneFile>())
                 listFiles.Add(new FileInfo(file.FullPath));
-            new ShellContextMenu().ShowContextMenu(listFiles.ToArray(), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
+            foreach (OneDirectory file in _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.OfType<OneDirectory>())
+                listFiles.Add(new DirectoryInfo(file.FullPath));
+            new ShellContextMenu().ShowContextMenu([.. listFiles], _parentDirectory.FullPath, Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
         }
     }
 

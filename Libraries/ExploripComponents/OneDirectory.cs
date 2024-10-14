@@ -124,10 +124,10 @@ public partial class OneDirectory : OneFileSystem
         }
         _items.Clear();
         FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
-        foreach (string file in listFiles)
-            _items.Add(new OneFile(Path.Combine(FullPath, file), this));
         foreach (string subFolder in listSubFolder)
             _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true));
+        foreach (string file in listFiles)
+            _items.Add(new OneFile(Path.Combine(FullPath, file), this));
         _cancellationToken?.Cancel();
         GetRootParent().MainViewModel!.FileListView = _items;
         GetRootParent().MainViewModel!.SelectedFolder = this;

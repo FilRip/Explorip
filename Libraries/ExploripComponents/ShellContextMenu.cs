@@ -20,14 +20,11 @@ public class ShellContextMenu
 {
     #region Champs
 
-    private nint pMenu = nint.Zero,
-        iContextMenuPtr = nint.Zero,
-        iContextMenuPtr2 = nint.Zero,
-        iContextMenuPtr3 = nint.Zero;
+    private nint pMenu, iContextMenuPtr, iContextMenuPtr2, iContextMenuPtr3;
     private IContextMenu? _oContextMenu;
     private IContextMenu2? _oContextMenu2;
     private IContextMenu3? _oContextMenu3;
-    private IShellFolder? _oDesktopFolder;
+    private static IShellFolder? _oDesktopFolder;
     private IShellFolder? _oParentFolder;
     private nint[]? _arrPIDLs;
     private string? _strParentFolder;
@@ -43,6 +40,10 @@ public class ShellContextMenu
     /// <summary>Default constructor</summary>
     public ShellContextMenu()
     {
+        pMenu = nint.Zero;
+        iContextMenuPtr = nint.Zero;
+        iContextMenuPtr2 = nint.Zero;
+        iContextMenuPtr3 = nint.Zero;
         CleanUp();
     }
 
@@ -191,7 +192,7 @@ public class ShellContextMenu
     /// Gets the desktop folder
     /// </summary>
     /// <returns>IShellFolder for desktop folder</returns>
-    private IShellFolder GetDesktopFolder()
+    private static IShellFolder GetDesktopFolder()
     {
         if (_oDesktopFolder == null)
         {
@@ -215,7 +216,7 @@ public class ShellContextMenu
     /// </summary>
     /// <param name="folderName">Folder path</param>
     /// <returns>IShellFolder for the folder (relative from the desktop)</returns>
-    private IShellFolder? GetParentFolder(string? folderName, bool desktopParent)
+    private void GetParentFolder(string? folderName, bool desktopParent)
     {
         if (!string.IsNullOrWhiteSpace(folderName) && !Root)
         {
@@ -223,7 +224,7 @@ public class ShellContextMenu
             {
                 GetDesktopFolder();
                 if (_oDesktopFolder == null)
-                    return null;
+                    return;
 
                 uint pchEaten = 0;
                 SFGAO pdwAttributes = 0;
@@ -231,7 +232,7 @@ public class ShellContextMenu
                 // Get the PIDL for the folder file is in
                 int nResult = _oDesktopFolder.ParseDisplayName(nint.Zero, nint.Zero, folderName, ref pchEaten, out nint pPIDL, ref pdwAttributes);
                 if (nResult != (int)HResult.SUCCESS)
-                    return null;
+                    return;
 
                 nint pStrRet = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
                 Marshal.WriteInt32(pStrRet, 0, 0);
@@ -248,7 +249,7 @@ public class ShellContextMenu
                 // Free the PIDL first
                 Marshal.FreeCoTaskMem(pPIDL);
                 if (nResult != (int)HResult.SUCCESS)
-                    return null;
+                    return;
 
                 _oParentFolder = (IShellFolder)Marshal.GetObjectForIUnknown(pUnknownParentFolder);
             }
@@ -330,7 +331,6 @@ public class ShellContextMenu
                 }
             }
         }
-        return _oParentFolder;
     }
 
     #endregion
@@ -347,8 +347,8 @@ public class ShellContextMenu
         if (arrFI == null || arrFI.Length == 0)
             return null;
 
-        IShellFolder? oParentFolder = GetParentFolder(arrFI[0].DirectoryName!, false);
-        if (oParentFolder == null)
+        GetParentFolder(arrFI[0].DirectoryName!, false);
+        if (_oParentFolder == null)
             return null;
 
         nint[] arrPIDLs = new nint[arrFI.Length];
@@ -358,7 +358,7 @@ public class ShellContextMenu
             // Get the file relative to folder
             uint pchEaten = 0;
             SFGAO pdwAttributes = 0;
-            int nResult = oParentFolder.ParseDisplayName(nint.Zero, nint.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+            int nResult = _oParentFolder.ParseDisplayName(nint.Zero, nint.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
             if (nResult != (int)HResult.SUCCESS)
             {
                 FreePIDLs(arrPIDLs);
@@ -381,8 +381,8 @@ public class ShellContextMenu
         if (arrFI == null || arrFI.Length == 0)
             return null;
 
-        IShellFolder? oParentFolder = GetParentFolder(currentFolder, false);
-        if (oParentFolder == null)
+        GetParentFolder(currentFolder, false);
+        if (_oParentFolder == null)
             return null;
 
         nint[] arrPIDLs = new nint[arrFI.Length];
@@ -392,7 +392,7 @@ public class ShellContextMenu
             // Get the file relative to folder
             uint pchEaten = 0;
             SFGAO pdwAttributes = 0;
-            int nResult = oParentFolder.ParseDisplayName(nint.Zero, nint.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+            int nResult = _oParentFolder.ParseDisplayName(nint.Zero, nint.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
             if (nResult != (int)HResult.SUCCESS)
             {
                 FreePIDLs(arrPIDLs);
@@ -426,17 +426,12 @@ public class ShellContextMenu
             _oContextMenu = (IContextMenu)opContextMenu;
         }
 
-        IShellFolder? oParentFolder;
         if (arrFI[0].FullName.Length > 3 && !Root)
-        {
-            oParentFolder = GetParentFolder(arrFI[0].Parent!.FullName, false);
-            if (oParentFolder == null)
-                return null;
-        }
+            GetParentFolder(arrFI[0].Parent!.FullName, false);
         else
-            oParentFolder = GetParentFolder(null, arrFI[0].Name == KnownFolders.Computer.CanonicalName || arrFI[0].Name == "Desktop");
+            GetParentFolder(null, arrFI[0].Name == KnownFolders.Computer.CanonicalName || arrFI[0].Name == "Desktop");
 
-        if (oParentFolder == null)
+        if (_oParentFolder == null)
             throw new ExploripCommonException("Parent folder is null");
 
         nint[] arrPIDLs = new nint[arrFI.Length];
@@ -446,7 +441,7 @@ public class ShellContextMenu
             // Get the file relative to folder
             uint pchEaten = 0;
             SFGAO pdwAttributes = 0;
-            int nResult = oParentFolder.ParseDisplayName(nint.Zero, nint.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+            int nResult = _oParentFolder.ParseDisplayName(nint.Zero, nint.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
             if (nResult != (int)HResult.SUCCESS && Root)
             {
                 nResult = SHGetSpecialFolderLocation(nint.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
@@ -581,7 +576,7 @@ public class ShellContextMenu
 
             nSelected = TrackPopupMenuEx(
                 pMenu,
-                TPM.RETURNCMD,
+                TPM.RETURNCMD | TPM.RIGHTBUTTON,
                 (int)pointScreen.X,
                 (int)pointScreen.Y,
                 ((MainWindow)System.Windows.Application.Current.Windows[0]).MyDataContext.WindowHandle,
