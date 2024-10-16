@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Explorip.Helpers;
-using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
 using Explorip.TaskBar.ViewModels;
 
@@ -18,7 +17,7 @@ using ManagedShell.WindowsTray;
 
 using Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
-namespace Explorip.TaskBar;
+namespace Explorip.TaskBar.Controls;
 
 /// <summary>
 /// Interaction logic for Taskbar.xaml

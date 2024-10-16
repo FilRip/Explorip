@@ -89,7 +89,16 @@ public partial class NativeMethods
     }
 
     [DllImport(User32_DllName, CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern bool SetMenuInfo(IntPtr handle, MenuItemInfo mi);
+
+    [DllImport(User32_DllName, CharSet = CharSet.Unicode, SetLastError = true)]
     internal static extern bool GetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, ref MenuItemInfo lpmii);
+
+    [DllImport(User32_DllName, CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern bool SetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, ref MenuItemInfo lpmii);
+
+    [DllImport(User32_DllName, CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern bool RemoveMenu(IntPtr hMenu, uint uItem, bool fByPosition);
 
     [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
     internal static extern int GetMenuDefaultItem(IntPtr hMenu, bool fByPos, uint gmdiFlags);

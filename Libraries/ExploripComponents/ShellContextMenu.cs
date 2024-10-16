@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Input;
@@ -166,11 +165,6 @@ public class ShellContextMenu
         {
             Marshal.ReleaseComObject(_oContextMenu3);
             _oContextMenu3 = null;
-        }
-        if (_oDesktopFolder != null)
-        {
-            Marshal.ReleaseComObject(_oDesktopFolder);
-            _oDesktopFolder = null;
         }
         if (_oParentFolder != null)
         {
@@ -550,12 +544,16 @@ public class ShellContextMenu
             if (_oContextMenu == null)
                 throw new ExploripCommonException("ContextMenu interface not initialized");
 
+            CMF flag = CMF.NORMAL;
+            if (!background)
+                flag |= CMF.CANRENAME | CMF.EXTENDEDVERBS;
+
             _oContextMenu.QueryContextMenu(
                 pMenu,
                 0,
                 CMD_FIRST,
                 CMD_LAST,
-                CMF.NORMAL | CMF.CANRENAME | CMF.EXTENDEDVERBS);
+                flag);
 
             if (iContextMenuPtr != nint.Zero)
             {
@@ -571,6 +569,9 @@ public class ShellContextMenu
                 _oContextMenu2 = (IContextMenu2)_oContextMenu;
                 _oContextMenu3 = (IContextMenu3)_oContextMenu;
             }
+
+            if (background)
+                EnablePaste(pMenu, out uint cmdPaste, out uint cmdPasteShortcut);
 
             uint nSelected = 0;
 
@@ -599,6 +600,100 @@ public class ShellContextMenu
         {
             CleanUp();
         }
+    }
+
+    private void EnablePaste(nint pMenu, out uint cmdPaste, out uint cmdPasteShortcut)
+    {
+        cmdPaste = 0;
+        cmdPasteShortcut = 0;
+        if (pMenu != IntPtr.Zero)
+        {
+            int nbMenu = GetMenuItemCount(pMenu);
+            if (nbMenu > 0)
+            {
+                int IdMenu;
+                for (int i = 0; i < nbMenu; i++)
+                {
+                    IdMenu = GetMenuItemID(pMenu, i);
+                    if (IdMenu > 0)
+                    {
+                        string? libelle = GetMenuItemString(IdMenu, pMenu, false, out uint cmd);
+                        if (string.IsNullOrWhiteSpace(libelle))
+                        {
+                            if (i == nbMenu - 1)
+                                RemoveMenu(pMenu, (uint)IdMenu, false);
+                            continue;
+                        }
+                        bool bPaste = libelle.Trim().ToLower().Replace("&", "") == Load("shell32.dll", 33562, "Paste").Trim().ToLower();
+                        if (!string.IsNullOrWhiteSpace(libelle) &&
+                            (bPaste ||
+                             libelle.Trim().ToLower().Replace("&", "") == Load("shell32.dll", 37376, "Paste shortcut").Trim().ToLower()) &&
+                             PasteAvailable())
+                        {
+                            MenuItemInfo mi = new()
+                            {
+                                cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
+                                fMask = MIIM.STATE,
+                                fState = MFS.ENABLED,
+                            };
+                            if (bPaste)
+                                cmdPaste = cmd;
+                            else
+                                cmdPasteShortcut = cmd;
+                            SetMenuItemInfo(pMenu, (uint)IdMenu, false, ref mi);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public bool PasteAvailable()
+    {
+        System.Windows.IDataObject data = System.Windows.Clipboard.GetDataObject();
+        return data.GetDataPresent(System.Windows.DataFormats.FileDrop);
+    }
+
+    public string Load(string libraryName, uint Ident, string DefaultText)
+    {
+        IntPtr libraryHandle = GetModuleHandle(libraryName);
+        if (libraryHandle != IntPtr.Zero)
+        {
+            StringBuilder sb = new(1024);
+            int size = LoadString(libraryHandle, Ident, sb, 1024);
+            if (size > 0)
+                return sb.ToString();
+            else
+                return DefaultText;
+        }
+        else
+            return DefaultText;
+    }
+
+    private string? GetMenuItemString(int IdOrPositionMenu, IntPtr pointeurMenu, bool usePosition, out uint cmd)
+    {
+        try
+        {
+            MenuItemInfo sortie = new()
+            {
+                cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
+                dwTypeData = new string('\0', 256),
+                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID | MIIM.BITMAP,
+                fType = ManagedShell.Interop.NativeMethods.MFT.STRING | ManagedShell.Interop.NativeMethods.MFT.DISABLED | ManagedShell.Interop.NativeMethods.MFT.GRAYED
+            };
+            sortie.cch = sortie.dwTypeData.Length - 1;
+            if (GetMenuItemInfo(pointeurMenu, (uint)IdOrPositionMenu, usePosition, ref sortie))
+            {
+                cmd = sortie.wID;
+                return sortie.dwTypeData;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Erreur " + ex.Message);
+        }
+        cmd = 0;
+        return null;
     }
 
     #endregion

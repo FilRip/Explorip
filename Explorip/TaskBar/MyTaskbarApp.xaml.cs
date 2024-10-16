@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 
+using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
 
 using ExploripConfig.Configuration;

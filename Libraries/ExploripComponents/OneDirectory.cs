@@ -93,7 +93,7 @@ public partial class OneDirectory : OneFileSystem
     {
         OneDirectory dir;
         bool hasSubFolder;
-        if (Drive != null && Drive.DriveType != DriveType.Fixed && !IsSelected)
+        if (Drive != null && !IsSelected && !Drive.IsReady && Drive.DriveType != DriveType.Fixed)
             return;
         FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listDirectories, out _);
         string newFullPath;

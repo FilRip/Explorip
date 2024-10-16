@@ -1,4 +1,4 @@
-﻿<appbar:AppBarWindow x:Class="Explorip.TaskBar.Taskbar"
+﻿<appbar:AppBarWindow x:Class="Explorip.TaskBar.Controls.Taskbar"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                      xmlns:controls="clr-namespace:Explorip.TaskBar.Controls"
