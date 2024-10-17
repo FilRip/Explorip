@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Microsoft.WindowsAPICodePack.Interop;
 using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 namespace ExploripComponents;
 
-public partial class WpfExplorerViewModel(IntPtr handle) : ObservableObject
+public partial class WpfExplorerViewModel(IntPtr handle, Control control) : ObservableObject
 {
     [ObservableProperty()]
     private ObservableCollection<OneDirectory> _folderTreeView = [];
@@ -23,6 +23,14 @@ public partial class WpfExplorerViewModel(IntPtr handle) : ObservableObject
     private OneDirectory? _selectedFolder;
     [ObservableProperty()]
     private ObservableCollection<OneFileSystem> _selectedItems = [];
+    private readonly Control _control = control;
+
+    public bool CurrentlyDraging { get; set; } = false;
+
+    public Control CurrentControl
+    {
+        get { return _control; }
+    }
 
     public IntPtr WindowHandle { get; private set; } = handle;
 

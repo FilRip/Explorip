@@ -17,7 +17,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
 {
     protected readonly OneDirectory? _parentDirectory = parentDirectory;
     protected ImageSource? _icon;
-    protected long _lastSize;
+    protected long? _lastSize;
 
     [ObservableProperty()]
     private bool _isSelected;
@@ -67,9 +67,8 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         get
         {
-            if (_lastSize == 0)
-                _lastSize = new FileInfo(FullPath).Length;
-            return _lastSize;
+            _lastSize ??= new FileInfo(FullPath).Length;
+            return _lastSize.Value;
         }
     }
 
@@ -89,4 +88,28 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
 
     [RelayCommand()]
     public abstract void DoubleClickFile();
+
+    [RelayCommand()]
+    public virtual void MouseMove()
+    {
+        if (_parentDirectory == null)
+            return;
+
+        if (_parentDirectory.GetRootParent().MainViewModel!.SelectedItems.Count > 0 && (Mouse.LeftButton == MouseButtonState.Pressed || Mouse.RightButton == MouseButtonState.Pressed) &&
+            !_parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging)
+        {
+            _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = true;
+            DataObject data = new();
+            data.SetFileDropList([.. _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.Select(fs => fs.FullPath)]);
+            DragDrop.DoDragDrop(_parentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy);
+        }
+    }
+
+    public virtual void Drop(object sender, DragEventArgs e)
+    {
+        if (_parentDirectory == null)
+            return;
+
+        _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = false;
+    }
 }

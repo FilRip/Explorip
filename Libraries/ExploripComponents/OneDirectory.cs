@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -148,13 +147,13 @@ public partial class OneDirectory : OneFileSystem
     {
         get
         {
-            if (_lastSize == 0 && (_taskCalculateSize == null || _cancellationToken?.IsCancellationRequested == true))
+            if (_lastSize == null && (_taskCalculateSize == null || _cancellationToken?.IsCancellationRequested == true))
             {
                 _cancellationToken = new CancellationTokenSource();
                 _taskCalculateSize = new Task(() => CalculateFolderSize(), _cancellationToken.Token).ContinueWith(EndCalculationSize);
                 _taskCalculateSize.Start();
             }
-            return _lastSize;
+            return _lastSize!.Value;
         }
     }
 
@@ -234,5 +233,16 @@ public partial class OneDirectory : OneFileSystem
             }
             return base.Icon;
         }
+    }
+
+    public override void Drop(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            List<string> filesAndFolders = ((DataObject)e.Data).GetFileDropList().OfType<string>().ToList();
+            foreach (string fs in filesAndFolders)
+                File.Copy(fs, Path.Combine(FullPath, Path.GetFileName(fs)));
+        }
+        base.Drop(sender, e);
     }
 }

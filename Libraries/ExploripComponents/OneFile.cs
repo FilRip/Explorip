@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ExploripComponents;
 
@@ -18,5 +19,10 @@ public partial class OneFile(string fullPath, OneDirectory parentDirectory) : On
             },
         };
         Task.Run(process.Start);
+    }
+
+    public override void Drop(object sender, DragEventArgs e)
+    {
+        base.Drop(sender, e);
     }
 }

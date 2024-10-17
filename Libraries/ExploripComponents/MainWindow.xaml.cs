@@ -30,7 +30,7 @@ namespace ExploripComponents
                 _ = Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
 
-            DataContext = new WpfExplorerViewModel(_windowHandle);
+            DataContext = new WpfExplorerViewModel(_windowHandle, this);
         }
 
         public WpfExplorerViewModel MyDataContext
@@ -51,8 +51,22 @@ namespace ExploripComponents
         private void FileLV_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
-            if (r.VisualHit is not FrameworkElement || ((FrameworkElement)r.VisualHit).DataContext is not OneFile)
+            if (r.VisualHit is not FrameworkElement || ((FrameworkElement)r.VisualHit).DataContext is not OneFileSystem)
                 FileLV.UnselectAll();
+        }
+
+        private void TreeItemGrid_Drop(object sender, DragEventArgs e)
+        {
+            HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
+            if (r.VisualHit is FrameworkElement element && element.DataContext is OneDirectory dir)
+                dir.Drop(sender, e);
+        }
+
+        private void FileViewStackPanel_Drop(object sender, DragEventArgs e)
+        {
+            HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
+            if (r.VisualHit is FrameworkElement element && element.DataContext is OneFileSystem fs)
+                fs.Drop(sender, e);
         }
     }
 }
