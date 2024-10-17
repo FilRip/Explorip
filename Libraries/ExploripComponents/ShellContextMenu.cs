@@ -648,7 +648,7 @@ public class ShellContextMenu
         }
     }
 
-    public bool PasteAvailable()
+    public static bool PasteAvailable()
     {
         System.Windows.IDataObject data = System.Windows.Clipboard.GetDataObject();
         return data.GetDataPresent(System.Windows.DataFormats.FileDrop);

@@ -17,11 +17,11 @@
     </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.2*"/>
-            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition Width="0.25*"/>
+            <ColumnDefinition Width="0.75*"/>
         </Grid.ColumnDefinitions>
 
-        <TreeView Grid.Column="0" Name="FolderTV" ItemsSource="{Binding FolderTreeView}">
+        <TreeView Grid.Column="0" Name="FolderTV" ItemsSource="{Binding FolderTreeView}" Margin="0 0 5 0">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -58,6 +58,9 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonUp">
                                 <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseMove">
+                                <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         </TextBlock>

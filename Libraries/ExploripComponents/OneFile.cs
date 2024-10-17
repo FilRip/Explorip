@@ -23,6 +23,20 @@ public partial class OneFile(string fullPath, OneDirectory parentDirectory) : On
 
     public override void Drop(object sender, DragEventArgs e)
     {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            Process process = new()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = FullPath,
+                    UseShellExecute = true,
+                    WorkingDirectory = Path.GetDirectoryName(FullPath),
+                    Arguments = ((DataObject)e.Data).GetFileDropList()[0],
+                },
+            };
+            Task.Run(process.Start);
+        }
         base.Drop(sender, e);
     }
 }
