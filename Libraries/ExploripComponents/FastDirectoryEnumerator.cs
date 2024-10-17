@@ -15,7 +15,7 @@ public static class FastDirectoryEnumerator
         if (string.IsNullOrWhiteSpace(path))
             throw new ArgumentNullException(nameof(path));
         NativeMethods.SafeSearchHandle handle;
-        if (!path.EndsWith(Path.DirectorySeparatorChar))
+        if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
             path += Path.DirectorySeparatorChar;
         handle = NativeMethods.FindFirstFile(path + filter, out NativeMethods.Win32FindData dataFind);
         if (!handle.IsInvalid)

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -218,12 +219,17 @@ public partial class OneDirectory : OneFileSystem
         {
             if (_icon == null && _knownFolder != null)
             {
-                nint ptr = nint.Zero;
+                IntPtr ptr = IntPtr.Zero;
                 if (_knownFolder.FolderId == KnownFolders.Computer.FolderId)
                 {
                     int hResult = NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref ptr);
                     if (hResult == (int)HResult.Ok)
-                        _icon = Imaging.CreateBitmapSourceFromHIcon(SystemIcons.GetStockIcon(StockIconId.DesktopPC, 16).Handle, new Int32Rect(0, 0, 16, 16), System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                    {
+                        NativeMethods.ShFileInfo result = new();
+                        NativeMethods.SHGetFileInfo(ptr, NativeMethods.FILE_ATTRIBUTE.NULL, ref result, (uint)Marshal.SizeOf(result), NativeMethods.SHGFI.PIDL | NativeMethods.SHGFI.Icon | NativeMethods.SHGFI.SmallIcon);
+                        _icon = Imaging.CreateBitmapSourceFromHIcon(result.hIcon, new Int32Rect(0, 0, 16, 16), System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                        NativeMethods.DestroyIcon(result.hIcon);
+                    }
                 }
             }
             return base.Icon;

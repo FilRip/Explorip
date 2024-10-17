@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net481</TargetFramework>
     <OutputType>WinExe</OutputType>
     <LangVersion>latest</LangVersion>
     <UseWPF>true</UseWPF>
