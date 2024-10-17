@@ -48,6 +48,7 @@ public static class Localization
     public static string LOCATE { get; private set; }
     public static string SHOW_NOTIFICATION { get; private set; }
     public static string SHOW_MAIN_WINDOW { get; private set; }
+    public static string NOT_ENOUGH_FREE_SPACE { get; private set; }
 
     internal static void LoadTranslation()
     {
@@ -93,6 +94,7 @@ public static class Localization
         CREATE_SHORTCUT_Q2 = Load("appwiz.cpl", 2203, "Which name do you want to use for this shortcut ?");
         SHOW_NOTIFICATION = Load("twinui.dll", 5592, "Show notifications");
         SHOW_MAIN_WINDOW = Load("oleaccrc.dll", 146, "Show main window");
+        NOT_ENOUGH_FREE_SPACE = Load("shell32.dll", 16915, "Not enough free space in destination drive");
     }
 
     private static string Load(string libraryName, uint Ident, string DefaultText)
