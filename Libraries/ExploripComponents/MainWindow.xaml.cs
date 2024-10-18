@@ -68,5 +68,10 @@ namespace ExploripComponents
             if (r.VisualHit is FrameworkElement element && element.DataContext is OneFileSystem fs)
                 fs.Drop(sender, e);
         }
+
+        private void ListView_Drop(object sender, DragEventArgs e)
+        {
+            MyDataContext.SelectedFolder?.Drop(sender, e);
+        }
     }
 }

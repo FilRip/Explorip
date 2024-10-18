@@ -14,6 +14,9 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="MouseUp">
+            <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -60,7 +63,7 @@
                                 <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseMove">
-                                <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
+                                <i:InvokeCommandAction Command="{Binding MouseMoveTreeViewCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         </TextBlock>
@@ -72,7 +75,7 @@
         
         <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"/>
 
-        <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}" SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" PreviewMouseDown="FileLV_PreviewMouseDown">
+        <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}" SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
                     <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>

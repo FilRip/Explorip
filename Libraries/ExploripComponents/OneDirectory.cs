@@ -245,4 +245,20 @@ public partial class OneDirectory : OneFileSystem
         }
         base.Drop(sender, e);
     }
+
+    [RelayCommand()]
+    public void MouseMoveTreeView()
+    {
+        if (_parentDirectory == null)
+            return;
+
+        if ((Mouse.LeftButton == MouseButtonState.Pressed || Mouse.RightButton == MouseButtonState.Pressed) &&
+            !_parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging)
+        {
+            _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = true;
+            DataObject data = new();
+            data.SetFileDropList([FullPath]);
+            DragDrop.DoDragDrop(_parentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy);
+        }
+    }
 }

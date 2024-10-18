@@ -112,4 +112,10 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         if (SelectedItems.Count == 0)
             new ShellContextMenu().ShowContextMenu(new DirectoryInfo(SelectedFolder!.FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
     }
+
+    [RelayCommand()]
+    public void MouseUp()
+    {
+        CurrentlyDraging = false;
+    }
 }
