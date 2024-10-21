@@ -17,7 +17,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
 {
     protected readonly OneDirectory? _parentDirectory = parentDirectory;
     protected ImageSource? _icon;
-    protected long? _lastSize;
+    protected ulong? _lastSize;
 
     [ObservableProperty()]
     private bool _isSelected;
@@ -43,13 +43,19 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         }
     }
 
-    partial void OnIsSelectedChanged(bool value)
+    partial void OnIsSelectedChanged(bool oldValue, bool newValue)
     {
-        if (value)
-            Application.Current.Dispatcher.BeginInvoke(RefreshListView);
+        if (!oldValue && newValue)
+            OnSelectIt();
+        else if (oldValue && !newValue)
+            DeSelectIt();
     }
 
-    protected virtual void RefreshListView()
+    protected virtual void OnSelectIt()
+    {
+    }
+
+    protected virtual void DeSelectIt()
     {
     }
 
@@ -63,11 +69,11 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         get { return FileAttributes.HasFlag(FileAttributes.Hidden); }
     }
 
-    public virtual long Size
+    public virtual ulong Size
     {
         get
         {
-            _lastSize ??= new FileInfo(FullPath).Length;
+            _lastSize ??= (ulong)new FileInfo(FullPath).Length;
             return _lastSize.Value;
         }
     }
@@ -101,7 +107,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
             _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = true;
             DataObject data = new();
             data.SetFileDropList([.. _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.Select(fs => fs.FullPath)]);
-            DragDrop.DoDragDrop(_parentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy);
+            DragDrop.DoDragDrop(_parentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
         }
     }
 

@@ -29,7 +29,7 @@ public class ShellContextMenu
     private string? _strParentFolder;
     private const uint CMD_FIRST = 0;
     private const uint CMD_LAST = (uint)short.MaxValue;
-
+    private string? _strBackgroundFolder;
     private static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CmInvokeCommandInfoEx));
 
     #endregion
@@ -515,6 +515,8 @@ public class ShellContextMenu
     {
         ReleaseAll();
         _arrPIDLs = GetPIDLs([dir], background);
+        if (background)
+            _strBackgroundFolder = dir.FullName;
         ShowContextMenu(pointScreen, background);
     }
 
@@ -570,8 +572,9 @@ public class ShellContextMenu
                 _oContextMenu3 = (IContextMenu3)_oContextMenu;
             }
 
+            uint cmdPaste = 0, cmdPasteShortcut = 0;
             if (background)
-                EnablePaste(pMenu, out uint cmdPaste, out uint cmdPasteShortcut);
+                EnablePaste(pMenu, out cmdPaste, out cmdPasteShortcut);
 
             uint nSelected = 0;
 
@@ -588,7 +591,17 @@ public class ShellContextMenu
 
             if (nSelected != 0)
             {
-                InvokeCommand(_oContextMenu, nSelected, pointScreen);
+                if (background)
+                {
+                    if (nSelected == cmdPaste)
+                        PasteClipboard();
+                    else if (nSelected == cmdPasteShortcut)
+                        PasteShortcutClipboard();
+                    else
+                        InvokeCommand(_oContextMenu, nSelected, pointScreen);
+                }
+                else
+                    InvokeCommand(_oContextMenu, nSelected, pointScreen);
             }
         }
         catch (Exception)
@@ -600,6 +613,36 @@ public class ShellContextMenu
         {
             CleanUp();
         }
+    }
+
+    private void PasteClipboard()
+    {
+        System.Windows.DataObject data = (System.Windows.DataObject)System.Windows.Clipboard.GetDataObject();
+        string[] listItems = (string[])data.GetData(System.Windows.DataFormats.FileDrop);
+        byte[] buffer = new byte[4];
+        bool move = false;
+        if (((MemoryStream)System.Windows.Clipboard.GetData("Preferred DropEffect")).Read(buffer, 0, 4) > 0)
+        {
+            int dropEffect = BitConverter.ToInt32(buffer, 0);
+            if (dropEffect == 2)
+                move = true;
+        }
+        Explorip.HookFileOperations.FilesOperations.FileOperation fileOp = new(GetDesktopWindow());
+        foreach (string fs in listItems)
+            if (move)
+                fileOp.MoveItem(fs, _strBackgroundFolder, Path.GetFileName(fs));
+            else
+                fileOp.CopyItem(fs, _strBackgroundFolder, Path.GetFileName(fs));
+        fileOp.ChangeOperationFlags(Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_RENAMEONCOLLISION |
+            Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_NOCONFIRMMKDIR |
+            Explorip.HookFileOperations.FilesOperations.EFileOperation.FOFX_ADDUNDORECORD);
+        fileOp.PerformOperations();
+        fileOp.Dispose();
+    }
+
+    private void PasteShortcutClipboard()
+    {
+
     }
 
     private void EnablePaste(nint pMenu, out uint cmdPaste, out uint cmdPasteShortcut)
@@ -654,7 +697,7 @@ public class ShellContextMenu
         return data.GetDataPresent(System.Windows.DataFormats.FileDrop);
     }
 
-    public string Load(string libraryName, uint Ident, string DefaultText)
+    public static string Load(string libraryName, uint Ident, string DefaultText)
     {
         IntPtr libraryHandle = GetModuleHandle(libraryName);
         if (libraryHandle != IntPtr.Zero)

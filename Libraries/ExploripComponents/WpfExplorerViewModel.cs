@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -117,5 +118,49 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     public void MouseUp()
     {
         CurrentlyDraging = false;
+    }
+
+    private FileSystemWatcher? _fsWatcher;
+    partial void OnSelectedFolderChanged(OneDirectory? value)
+    {
+        if (_fsWatcher == null)
+        {
+            _fsWatcher = new FileSystemWatcher();
+            _fsWatcher.Changed += FsWatcher_Changed;
+            _fsWatcher.Created += FsWatcher_Created;
+            _fsWatcher.Deleted += FsWatcher_Deleted;
+            _fsWatcher.Renamed += FsWatcher_Renamed;
+        }
+        try
+        {
+            _fsWatcher.Path = SelectedFolder!.FullPath;
+            _fsWatcher.EnableRaisingEvents = true;
+        }
+        catch (Exception)
+        {
+            _fsWatcher.EnableRaisingEvents = false;
+            _fsWatcher.Path = "";
+        }
+        Debug.WriteLine($"Create Watcher of {_fsWatcher.Path}");
+    }
+
+    private void FsWatcher_Renamed(object sender, RenamedEventArgs e)
+    {
+        SelectedFolder!.RefreshListView();
+    }
+
+    private void FsWatcher_Deleted(object sender, FileSystemEventArgs e)
+    {
+        SelectedFolder!.RefreshListView();
+    }
+
+    private void FsWatcher_Created(object sender, FileSystemEventArgs e)
+    {
+        SelectedFolder!.RefreshListView();
+    }
+
+    private void FsWatcher_Changed(object sender, FileSystemEventArgs e)
+    {
+        SelectedFolder!.RefreshListView();
     }
 }

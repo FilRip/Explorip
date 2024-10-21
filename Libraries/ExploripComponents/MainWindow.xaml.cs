@@ -73,5 +73,22 @@ namespace ExploripComponents
         {
             MyDataContext.SelectedFolder?.Drop(sender, e);
         }
+
+        private void AllowDrop_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                DataObject data = (DataObject)e.Data;
+                if (data.GetFileDropList().Count == 1)
+                {
+                    HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
+                    if (r.VisualHit is FrameworkElement element && element.DataContext is OneFileSystem fs && fs.FullPath == data.GetFileDropList()[0])
+                    {
+                        e.Effects = DragDropEffects.None;
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
     }
 }

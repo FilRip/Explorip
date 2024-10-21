@@ -38,6 +38,7 @@ public partial class OneDirectory : OneFileSystem
     private CancellationTokenSource? _cancellationToken;
     private readonly ShellObject? _shellObject;
     private readonly IKnownFolder? _knownFolder;
+    private readonly object _lockSize = new();
 
     public WpfExplorerViewModel? MainViewModel { get; set; }
 
@@ -114,23 +115,26 @@ public partial class OneDirectory : OneFileSystem
         }
     }
 
-    protected override void RefreshListView()
+    public void RefreshListView()
     {
-        if (_knownFolder?.FolderId == KnownFolders.Computer.FolderId)
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            GetRootParent().MainViewModel!.FileListView = new ObservableCollection<OneFileSystem>(Children.OfType<OneFileSystem>());
+            if (_knownFolder?.FolderId == KnownFolders.Computer.FolderId)
+            {
+                GetRootParent().MainViewModel!.FileListView = new ObservableCollection<OneFileSystem>(Children.OfType<OneFileSystem>());
+                GetRootParent().MainViewModel!.SelectedFolder = this;
+                return;
+            }
+            _items.Clear();
+            FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
+            foreach (string subFolder in listSubFolder)
+                _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true));
+            foreach (string file in listFiles)
+                _items.Add(new OneFile(Path.Combine(FullPath, file), this));
+            _cancellationToken?.Cancel();
+            GetRootParent().MainViewModel!.FileListView = _items;
             GetRootParent().MainViewModel!.SelectedFolder = this;
-            return;
-        }
-        _items.Clear();
-        FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
-        foreach (string subFolder in listSubFolder)
-            _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true));
-        foreach (string file in listFiles)
-            _items.Add(new OneFile(Path.Combine(FullPath, file), this));
-        _cancellationToken?.Cancel();
-        GetRootParent().MainViewModel!.FileListView = _items;
-        GetRootParent().MainViewModel!.SelectedFolder = this;
+        });
     }
 
     public OneDirectory GetRootParent()
@@ -143,47 +147,46 @@ public partial class OneDirectory : OneFileSystem
         return curDir;
     }
 
-    public override long Size
+    public override ulong Size
     {
         get
         {
-            if (_lastSize == null && (_taskCalculateSize == null || _cancellationToken?.IsCancellationRequested == true))
+            lock (_lockSize)
             {
-                _cancellationToken = new CancellationTokenSource();
-                _taskCalculateSize = new Task(() => CalculateFolderSize(), _cancellationToken.Token).ContinueWith(EndCalculationSize);
-                _taskCalculateSize.Start();
+                if (_lastSize == null && (_taskCalculateSize == null || _cancellationToken?.IsCancellationRequested == true))
+                {
+                    _cancellationToken = new CancellationTokenSource();
+                    _taskCalculateSize = new Task(() => CalculateFolderSize(), _cancellationToken.Token).ContinueWith(EndCalculationSize);
+                    _taskCalculateSize.Start();
+                }
             }
             return _lastSize!.Value;
         }
     }
 
+    protected override void OnSelectIt()
+    {
+        RefreshListView();
+    }
+
+    protected override void DeSelectIt()
+    {
+        if (_cancellationToken != null && !_cancellationToken.IsCancellationRequested)
+            _cancellationToken.Cancel();
+    }
+
     private void EndCalculationSize(Task task)
     {
         _cancellationToken?.Dispose();
+        _cancellationToken = null;
+        OnPropertyChanged(nameof(Size));
     }
 
     public Task CalculateFolderSize()
     {
-        _lastSize = RecursiveCalculateFolderSize(FullPath);
+        FastDirectoryEnumerator.FolderSize(FullPath, out ulong calculateSize, _cancellationToken!.Token);
+        _lastSize = calculateSize;
         return Task.CompletedTask;
-    }
-
-    private static long RecursiveCalculateFolderSize(string path)
-    {
-        long result = 0;
-        foreach (string file in Directory.GetFiles(path))
-            try
-            {
-                result += new FileInfo(file).Length;
-            }
-            catch (Exception) { /* Ignore access to file */ }
-        foreach (string folder in Directory.GetDirectories(path))
-            try
-            {
-                result += RecursiveCalculateFolderSize(folder);
-            }
-            catch (Exception) { /* Ignore access to file */ }
-        return result;
     }
 
     public IKnownFolder? KnownFolder
@@ -258,7 +261,7 @@ public partial class OneDirectory : OneFileSystem
             _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = true;
             DataObject data = new();
             data.SetFileDropList([FullPath]);
-            DragDrop.DoDragDrop(_parentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy);
+            DragDrop.DoDragDrop(_parentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Windows.Navigation;
 
 using ManagedShell.Interop;
 
@@ -34,5 +36,42 @@ public static class FastDirectoryEnumerator
             }
         }
         handle.Dispose();
+    }
+
+    public static void FolderSize(string path, out ulong size, CancellationToken token, string filter = "*.*")
+    {
+        size = 0;
+        List<string> subFolders = [];
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentNullException(nameof(path));
+        NativeMethods.SafeSearchHandle handle;
+        if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            path += Path.DirectorySeparatorChar;
+        handle = NativeMethods.FindFirstFile(path + filter, out NativeMethods.Win32FindData dataFind);
+        if (!handle.IsInvalid && !token.IsCancellationRequested)
+        {
+            while (true)
+            {
+                if (dataFind.dwFileAttributes.HasFlag(FileAttributes.Directory))
+                {
+                    if (dataFind.cFileName != "." && dataFind.cFileName != "..")
+                        subFolders.Add(dataFind.cFileName);
+                }
+                else
+                {
+                    size += (dataFind.nFileSizeHigh * ((ulong)uint.MaxValue + 1)) + dataFind.nFileSizeLow;
+                }
+                if (!NativeMethods.FindNextFile(handle, out dataFind) || token.IsCancellationRequested)
+                    break;
+            }
+        }
+        handle.Dispose();
+        if (subFolders.Count > 0)
+            foreach (string subFolder in subFolders)
+            {
+                FolderSize(Path.Combine(path, subFolder), out size, token, filter);
+                if (token.IsCancellationRequested)
+                    return;
+            }
     }
 }
