@@ -243,8 +243,9 @@ public partial class OneDirectory : OneFileSystem
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
             List<string> filesAndFolders = ((DataObject)e.Data).GetFileDropList().OfType<string>().ToList();
-            foreach (string fs in filesAndFolders)
-                File.Copy(fs, Path.Combine(FullPath, Path.GetFileName(fs)));
+            if (filesAndFolders[0] != FullPath)
+                foreach (string fs in filesAndFolders)
+                    File.Copy(fs, Path.Combine(FullPath, Path.GetFileName(fs)));
         }
         base.Drop(sender, e);
     }

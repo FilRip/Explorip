@@ -11,6 +11,8 @@ using ManagedShell.ShellFolders.Structs;
 
 using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
+using Securify.ShellLink;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ExploripComponents;
@@ -642,7 +644,23 @@ public class ShellContextMenu
 
     private void PasteShortcutClipboard()
     {
-
+        System.Windows.DataObject data = (System.Windows.DataObject)System.Windows.Clipboard.GetDataObject();
+        string[] listItems = (string[])data.GetData(System.Windows.DataFormats.FileDrop);
+        string shortcutLabel = Load("shell32.dll", 4154, "%s - Shortcut ().lnk").Replace(" ().lnk", "");
+        Shortcut sc;
+        int iteration;
+        foreach (string fs in listItems)
+        {
+            string name = shortcutLabel.Replace("%s", Path.GetFileNameWithoutExtension(fs)) + ".lnk";
+            iteration = 1;
+            while (File.Exists(Path.Combine(_strBackgroundFolder, name)))
+            {
+                name = shortcutLabel.Replace("%s", Path.GetFileNameWithoutExtension(fs)) + $" ({iteration}).lnk";
+                iteration++;
+            }
+            sc = Shortcut.CreateShortcut(fs);
+            sc.WriteToFile(Path.Combine(_strBackgroundFolder, name));
+        }
     }
 
     private void EnablePaste(nint pMenu, out uint cmdPaste, out uint cmdPasteShortcut)

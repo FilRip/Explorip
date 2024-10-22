@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\HookFileOperation\HookFileOperations\HookFileOperations.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
+    <ProjectReference Include="..\Securifybv\ShellLink\Securify.ShellLink.csproj" />
     <ProjectReference Include="..\WindowsAPICodePack\Shell\Shell.csproj" />
   </ItemGroup>
 </Project>

@@ -25,17 +25,21 @@ public partial class OneFile(string fullPath, OneDirectory parentDirectory) : On
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop))
         {
-            Process process = new()
+            string file = ((DataObject)e.Data).GetFileDropList()[0];
+            if (file != FullPath)
             {
-                StartInfo = new ProcessStartInfo()
+                Process process = new()
                 {
-                    FileName = FullPath,
-                    UseShellExecute = true,
-                    WorkingDirectory = Path.GetDirectoryName(FullPath),
-                    Arguments = ((DataObject)e.Data).GetFileDropList()[0],
-                },
-            };
-            Task.Run(process.Start);
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = FullPath,
+                        UseShellExecute = true,
+                        WorkingDirectory = Path.GetDirectoryName(FullPath),
+                        Arguments = file,
+                    },
+                };
+                Task.Run(process.Start);
+            }
         }
         base.Drop(sender, e);
     }
