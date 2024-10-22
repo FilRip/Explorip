@@ -23,7 +23,7 @@ public partial class OneFile(string fullPath, OneDirectory parentDirectory) : On
 
     public override void Drop(object sender, DragEventArgs e)
     {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        if (e.Data.GetDataPresent(DataFormats.FileDrop) && ParentDirectory!.GetRootParent().MainViewModel!.NbMillisecondsStartDragging > 500)
         {
             string file = ((DataObject)e.Data).GetFileDropList()[0];
             if (file != FullPath)

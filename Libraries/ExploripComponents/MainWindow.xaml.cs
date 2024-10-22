@@ -78,6 +78,7 @@ namespace ExploripComponents
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
+                MyDataContext.DragDropKeyStates = e.KeyStates;
                 DataObject data = (DataObject)e.Data;
                 if (data.GetFileDropList().Count == 1)
                 {
@@ -88,6 +89,32 @@ namespace ExploripComponents
                         e.Handled = true;
                     }
                 }
+            }
+        }
+
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
+        private void Scroll_PreviewDragOver(object sender, DragEventArgs e)
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+        {
+            if (sender is not FrameworkElement control)
+                return;
+            ScrollViewer? scrollViewer = control.FindVisualChild<ScrollViewer>();
+            if (scrollViewer == null)
+                return;
+
+            double verticalPos = e.GetPosition(control).Y;
+            double offset = 32;
+            double offsetChange;
+
+            if (verticalPos < offset)
+            {
+                offsetChange = offset - verticalPos;
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - offsetChange);
+            }
+            else if (verticalPos > control.ActualHeight - offset)
+            {
+                offsetChange = verticalPos - (control.ActualHeight - offset);
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + offsetChange);
             }
         }
     }

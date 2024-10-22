@@ -4,6 +4,10 @@ namespace ManagedShell.Interop;
 
 public partial class NativeMethods
 {
+    public const int DRAGDROP_S_DROP = 0x00040100;
+    public const int DRAGDROP_S_CANCEL = 0x00040101;
+    public const int DRAGDROP_S_USEDEFAULTCURSORS = 0x00040102;
+
     /// <summary>
     /// Constants defined in winerror.h.
     /// </summary>

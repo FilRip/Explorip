@@ -13,3 +13,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("48fe0672-7ff4-48fd-a3fd-83c8fa8c3506")]
 
 [assembly: InternalsVisibleTo("Explorip")]
+[assembly: InternalsVisibleTo("ExploripComponents")]

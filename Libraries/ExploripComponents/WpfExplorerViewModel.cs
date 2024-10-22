@@ -26,7 +26,31 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     private ObservableCollection<OneFileSystem> _selectedItems = [];
     private readonly Control _control = control;
 
-    public bool CurrentlyDraging { get; set; } = false;
+    private readonly Stopwatch _stopWatchDrop = new();
+    private bool _currentlyDragging;
+    public bool CurrentlyDraging
+    {
+        get { return _currentlyDragging; }
+        set
+        {
+            _currentlyDragging = value;
+            if (value)
+                _stopWatchDrop.Restart();
+            else
+                _stopWatchDrop.Stop();
+        }
+    }
+    public long NbMillisecondsStartDragging
+    {
+        get
+        {
+            if (_stopWatchDrop.IsRunning)
+                return _stopWatchDrop.ElapsedMilliseconds;
+            else
+                return 0;
+        }
+    }
+    public DragDropKeyStates DragDropKeyStates { get; set; }
 
     public Control CurrentControl
     {

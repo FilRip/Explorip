@@ -78,6 +78,11 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         }
     }
 
+    protected OneDirectory? ParentDirectory
+    {
+        get { return _parentDirectory; }
+    }
+
     [RelayCommand()]
     public void ContextMenuFiles()
     {

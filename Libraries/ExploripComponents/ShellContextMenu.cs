@@ -188,7 +188,7 @@ public class ShellContextMenu
     /// Gets the desktop folder
     /// </summary>
     /// <returns>IShellFolder for desktop folder</returns>
-    private static IShellFolder GetDesktopFolder()
+    public static IShellFolder GetDesktopFolder()
     {
         if (_oDesktopFolder == null)
         {

@@ -9,6 +9,7 @@ public partial class NativeMethods
 {
     const string Shell32_DllName = "shell32.dll";
     public const int S_OK = 0;
+    public static readonly Guid CLSID_DragDropHelper = new("{4657278A-411B-11d2-839A-00C04FD918D0}");
 
     [StructLayout(LayoutKind.Sequential)]
     public struct AppBarData

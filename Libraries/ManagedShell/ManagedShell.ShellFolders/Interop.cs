@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Windows;
 
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
@@ -86,6 +87,7 @@ internal static class Interop
         [In()] IntPtr pidl,
         [In()][MarshalAs(UnmanagedType.LPStruct)] Guid riid,
         [Out()][MarshalAs(UnmanagedType.Interface, IidParameterIndex = 3)] out IShellItem ppv);
+
     // appends a new item to the end of the specified menu bar, drop-down menu, submenu, 
     // or shortcut menu. You can use this function to specify the content, appearance, and 
     // behavior of the menu item
@@ -155,4 +157,12 @@ internal static class Interop
 
     [DllImport("user32.dll")]
     public static extern uint GetMenuDefaultItem(IntPtr hMenu, uint fByPos, uint gmdiFlags);
+
+    [DllImport("ole32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern int DoDragDrop(
+        IntPtr pDataObject,
+        [MarshalAs(UnmanagedType.Interface)]
+            IDropSource pDropSource,
+        DragDropEffects dwOKEffect,
+        out DragDropEffects pdwEffect);
 }
