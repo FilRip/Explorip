@@ -17,6 +17,7 @@
     <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Explorip\Explorip.csproj" />
     <ProjectReference Include="..\..\HookFileOperation\ExploripSharedCopy\ExploripSharedCopy.csproj" />
     <ProjectReference Include="..\..\HookFileOperation\HookFileOperations\HookFileOperations.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />

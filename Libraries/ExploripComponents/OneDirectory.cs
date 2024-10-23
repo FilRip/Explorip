@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Microsoft.WindowsAPICodePack.Interop;
+using Explorip.Helpers;
+
+using ManagedShell.Common.Helpers;
+
 using Microsoft.WindowsAPICodePack.Shell.Common;
-using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
@@ -36,8 +36,7 @@ public partial class OneDirectory : OneFileSystem
     private readonly ObservableCollection<OneFileSystem> _items;
     private Task? _taskCalculateSize;
     private CancellationTokenSource? _cancellationToken;
-    private readonly ShellObject? _shellObject;
-    private readonly IKnownFolder? _knownFolder;
+    private readonly Environment.SpecialFolder? _specialFolder;
     private readonly object _lockSize = new();
 
     public WpfExplorerViewModel? MainViewModel { get; set; }
@@ -46,26 +45,23 @@ public partial class OneDirectory : OneFileSystem
     {
         _children = [];
         _items = [];
-        _knownFolder = null;
+        _specialFolder = null;
         if (hasSubFolder)
             _children.Add(_dummyDir);
     }
 
     public OneDirectory(string fullPath, OneDirectory? parent, bool hasSubFolder) : this(parent, fullPath, hasSubFolder, ShellObject.FromParsingName(fullPath).Name)
     {
-        _shellObject = ShellObject.FromParsingName(fullPath);
     }
 
-    public OneDirectory(IKnownFolder knownFolder, OneDirectory? parent, bool hasSubFolder) : this(parent, ((ShellObject)knownFolder).ParsingName, hasSubFolder, ((ShellObject)knownFolder).Name)
+    public OneDirectory(Environment.SpecialFolder knownFolder, OneDirectory? parent, bool hasSubFolder) : this(parent, Environment.GetFolderPath(knownFolder), hasSubFolder, knownFolder.RealName())
     {
-        _knownFolder = knownFolder;
-        _shellObject = (ShellObject)knownFolder;
+        _specialFolder = knownFolder;
     }
 
     public OneDirectory(DriveInfo drive, OneDirectory parent, bool hasSubFolder) : this(parent, drive.Name, hasSubFolder, ShellObject.FromParsingName(drive.RootDirectory.FullName).Name)
     {
         Drive = drive;
-        _shellObject = ShellObject.FromParsingName(drive.Name);
     }
 
     public bool HasDummyChild
@@ -114,7 +110,7 @@ public partial class OneDirectory : OneFileSystem
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            if (_knownFolder?.FolderId == KnownFolders.Computer.FolderId)
+            if (_specialFolder == Environment.SpecialFolder.MyComputer)
             {
                 GetRootParent().MainViewModel!.FileListView = new ObservableCollection<OneFileSystem>(Children.OfType<OneFileSystem>());
                 GetRootParent().MainViewModel!.SelectedFolder = this;
@@ -184,23 +180,13 @@ public partial class OneDirectory : OneFileSystem
         return Task.CompletedTask;
     }
 
-    public IKnownFolder? KnownFolder
-    {
-        get { return _knownFolder; }
-    }
-
-    public ShellObject? ShellObject
-    {
-        get { return _shellObject; }
-    }
-
     [RelayCommand()]
     public void ContextMenuBackgroundFolder()
     {
         // When right click on an item tree view
         ShellContextMenu scm = new()
         {
-            Root = _knownFolder?.FolderId == KnownFolders.Computer.FolderId || _knownFolder?.FolderId == KnownFolders.Desktop.FolderId,
+            Root = _specialFolder == Environment.SpecialFolder.MyComputer || _specialFolder == Environment.SpecialFolder.Desktop,
         };
         scm.ShowContextMenu(new DirectoryInfo(FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)), false);
     }
@@ -214,18 +200,36 @@ public partial class OneDirectory : OneFileSystem
     {
         get
         {
-            if (_icon == null && _knownFolder != null)
+            if (_icon == null && _specialFolder != null)
             {
-                IntPtr ptr = IntPtr.Zero;
-                if (_knownFolder.FolderId == KnownFolders.Computer.FolderId)
+                if (!string.IsNullOrWhiteSpace(FullPath))
                 {
-                    int hResult = NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref ptr);
-                    if (hResult == (int)HResult.Ok)
+                    IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                    if (hIcon != IntPtr.Zero)
                     {
-                        NativeMethods.ShFileInfo result = new();
-                        NativeMethods.SHGetFileInfo(ptr, NativeMethods.FILE_ATTRIBUTE.NULL, ref result, (uint)Marshal.SizeOf(result), NativeMethods.SHGFI.PIDL | NativeMethods.SHGFI.Icon | NativeMethods.SHGFI.SmallIcon);
-                        _icon = Imaging.CreateBitmapSourceFromHIcon(result.hIcon, new Int32Rect(0, 0, 16, 16), System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-                        NativeMethods.DestroyIcon(result.hIcon);
+                        System.Drawing.Icon icon = System.Drawing.Icon.FromHandle(hIcon);
+                        _icon = IconManager.Convert(icon);
+                        if (hOverlay != IntPtr.Zero)
+                            IconOverlay = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
+                    }
+                    if (Icon == null)
+                    {
+                        System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
+                        if (icon != null)
+                            _icon = IconManager.Convert(icon);
+                    }
+                }
+                else if (_specialFolder == Environment.SpecialFolder.MyComputer)
+                {
+                    IntPtr pidl = IntPtr.Zero;
+                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
+                    IntPtr hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                    if (hIcon != IntPtr.Zero)
+                    {
+                        System.Drawing.Icon icon = System.Drawing.Icon.FromHandle(hIcon);
+                        _icon = IconManager.Convert(icon);
+                        if (hOverlay != IntPtr.Zero)
+                            IconOverlay = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
                     }
                 }
             }

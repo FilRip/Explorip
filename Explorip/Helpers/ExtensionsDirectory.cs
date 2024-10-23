@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using static ManagedShell.Interop.NativeMethods;
+
 namespace Explorip.Helpers;
 
 public static class ExtensionsDirectory
@@ -21,5 +23,38 @@ public static class ExtensionsDirectory
     public static string FullPath(this Environment.SpecialFolder specialFolder)
     {
         return Environment.GetFolderPath(specialFolder);
+    }
+
+    /// <summary>
+    /// Return the localized name of special folder (windows) like in C:\User<br/>
+    /// For example : downloads, my documents, ...
+    /// </summary>
+    /// <param name="specialFolder">The special folder what you want to localize</param>
+    public static string RealName(this Environment.SpecialFolder specialFolder)
+    {
+        string path = Environment.GetFolderPath(specialFolder);
+        try
+        {
+            if (specialFolder == Environment.SpecialFolder.MyComputer)
+            {
+                IntPtr Pidl = IntPtr.Zero;
+                SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref Pidl);
+                ShFileInfo info = new();
+                if (SHGetFileInfo(Pidl, FILE_ATTRIBUTE.NULL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), SHGFI.TypeName | SHGFI.PIDL | SHGFI.DisplayName) != IntPtr.Zero)
+                {
+                    return info.szDisplayName;
+                }
+            }
+            else
+            {
+                ShFileInfo info = new();
+                if (SHGetFileInfo(path, FILE_ATTRIBUTE.NORMAL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), SHGFI.DisplayName) != IntPtr.Zero)
+                {
+                    return info.szDisplayName;
+                }
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
+        return Path.GetFileName(path);
     }
 }

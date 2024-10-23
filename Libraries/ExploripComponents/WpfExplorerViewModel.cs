@@ -10,8 +10,6 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
-
 namespace ExploripComponents;
 
 public partial class WpfExplorerViewModel(IntPtr handle, Control control) : ObservableObject
@@ -65,23 +63,21 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         FolderTreeView.Clear();
         OneDirectory dir;
         bool hasSubFolder;
-        OneDirectory parent = new(KnownFolders.Computer, null, true) { MainViewModel = this };
+        OneDirectory parent = new(Environment.SpecialFolder.MyComputer, null, true) { MainViewModel = this };
         FolderTreeView.Add(parent);
         parent.Children.Clear();
 
         // Add special folder
-        void AddChild(IKnownFolder folder)
+        void AddChild(Environment.SpecialFolder folder)
         {
             OneDirectory child = new(folder, null, true) { MainViewModel = this };
             parent.Children.Add(child);
         }
-        AddChild(KnownFolders.Desktop);
-        AddChild(KnownFolders.Documents);
-        AddChild(KnownFolders.Pictures);
-        AddChild(KnownFolders.Music);
-        AddChild(KnownFolders.Downloads);
-        AddChild(KnownFolders.Videos);
-        AddChild(KnownFolders.Objects3D);
+        AddChild(Environment.SpecialFolder.Desktop);
+        AddChild(Environment.SpecialFolder.MyDocuments);
+        AddChild(Environment.SpecialFolder.MyPictures);
+        AddChild(Environment.SpecialFolder.MyMusic);
+        AddChild(Environment.SpecialFolder.MyVideos);
 
         foreach (DriveInfo di in DriveInfo.GetDrives())
         {
@@ -104,6 +100,9 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         }
 
         SelectedFolder = parent;
+
+        parent = new OneDirectory(Environment.SpecialFolder.NetworkShortcuts, null, true) { MainViewModel = this };
+        FolderTreeView.Add(parent);
     }
 
     public void BrowseTo(string fullPath)

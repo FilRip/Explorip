@@ -9,9 +9,9 @@ using ManagedShell.Interop;
 
 namespace Explorip.Helpers;
 
-internal static class IconManager
+public static class IconManager
 {
-    internal static Icon Extract(string file, int number, bool largeIcon)
+    public static Icon Extract(string file, int number, bool largeIcon)
     {
         try
         {
@@ -30,7 +30,7 @@ internal static class IconManager
         }
     }
 
-    internal static BitmapSource Convert(Icon icon, bool disposeIcon = true)
+    public static BitmapSource Convert(Icon icon, bool disposeIcon = true)
     {
         try
         {
@@ -45,7 +45,7 @@ internal static class IconManager
         }
     }
 
-    internal static ImageSource GetIconFromFile(string filename, int index)
+    public static ImageSource GetIconFromFile(string filename, int index)
     {
         Icon icon = Extract(filename, index, true);
         if (icon != null)

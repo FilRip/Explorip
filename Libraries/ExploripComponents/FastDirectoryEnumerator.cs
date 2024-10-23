@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Windows.Navigation;
 
 using ManagedShell.Interop;
 
