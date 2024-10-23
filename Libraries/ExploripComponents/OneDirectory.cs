@@ -240,7 +240,7 @@ public partial class OneDirectory : OneFileSystem
 
     public override void Drop(object sender, DragEventArgs e)
     {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop) && GetRootParent().MainViewModel!.NbMillisecondsStartDragging > 500)
+        if (e.Data.GetDataPresent(DataFormats.FileDrop) && GetRootParent().MainViewModel!.NbMillisecondsStartDragging > Constants.DelayIgnoreDrag)
         {
             List<string> filesAndFolders = ((DataObject)e.Data).GetFileDropList().OfType<string>().ToList();
             if (GetRootParent().MainViewModel!.DragDropKeyStates.HasFlag(DragDropKeyStates.LeftMouseButton))
@@ -251,8 +251,10 @@ public partial class OneDirectory : OneFileSystem
             }
             else if (GetRootParent().MainViewModel!.DragDropKeyStates.HasFlag(DragDropKeyStates.RightMouseButton))
             {
-                DragDropHelper.GetInstance().ItemDrag(filesAndFolders, FullPath);
-                DragDropHelper.GetInstance().DragDrop(sender, e, Application.Current.MainWindow.PointToScreen(e.GetPosition(Application.Current.MainWindow)));
+                DragDropHelper.GetInstance().DragDrop(GetRootParent().MainViewModel!.DragDropKeyStates,
+                                                      Application.Current.MainWindow.PointToScreen(e.GetPosition(Application.Current.MainWindow)),
+                                                      FullPath,
+                                                      filesAndFolders);
             }
         }
         base.Drop(sender, e);

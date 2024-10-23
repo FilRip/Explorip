@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Interop;
 
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
@@ -14,45 +12,26 @@ using static ManagedShell.Interop.NativeMethods;
 
 namespace ExploripComponents;
 
-public class DragDropHelper : IDropSource
+public class DragDropHelper
 {
     private static DragDropHelper? _instance;
     public static DragDropHelper GetInstance()
     {
-        if (_instance == null)
-        {
-            _instance = new();
-            _instance.GetIDropTargetHelper();
-        }
+        _instance ??= new();
         return _instance;
     }
-
-    private bool _dragDropActivate;
 
     private IntPtr _pidlParent;
     private IShellFolder? _shellFolder;
     private IDropTarget? _dropTarget;
-    private IntPtr _dropTargetHelperPtr;
-    private IDropTargetHelper? _dropTargetHelper;
     private IntPtr _ptrData;
 
-    public const DragDropEffects effetDragDrop = DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link;
+    private const DragDropEffects dragDropEffects = DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link;
 
     private DragDropHelper()
     {
         ListFs = [];
         ListPtrFs = [];
-    }
-
-    public bool DragDropActivate
-    {
-        get { return _dragDropActivate; }
-        set
-        {
-            if (!value && _dragDropActivate)
-                FreeMemory();
-            _dragDropActivate = value;
-        }
     }
 
     public List<string> ListFs { get; private set; }
@@ -63,18 +42,18 @@ public class DragDropHelper : IDropSource
     {
         ListPtrFs = new IntPtr[ListFs.Count];
         int position = 0;
-        List<ShellItem> listeShellItems = [];
+        List<ShellItem> listShellItems = [];
         foreach (string item in ListFs)
         {
             ShellItem si = new(item);
             ListPtrFs[position++] = si.RelativePidl;
-            listeShellItems.Add(si);
+            listShellItems.Add(si);
         }
 
-        _ptrData = GetIDataObject([.. listeShellItems]);
+        _ptrData = GetIDataObject([.. listShellItems]);
     }
 
-    public bool ItemDrag(List<string> listFs, string fullPath)
+    private bool ItemDrag(List<string> listFs, string fullPath)
     {
         try
         {
@@ -85,7 +64,7 @@ public class DragDropHelper : IDropSource
 
             if (string.IsNullOrWhiteSpace(fullPath))
             {
-                // Si on a pas de dossier, on prend la racine de toute chose : le bureau
+                // If there is no folder, we take the parent of everything : the desktop
                 _shellFolder = ShellContextMenu.GetDesktopFolder();
             }
             else
@@ -101,11 +80,10 @@ public class DragDropHelper : IDropSource
             if (_shellFolder != null)
             {
                 ListFs = listFs;
-                GetIDropTarget();
+                GetIDropTarget(fullPath);
                 CreateDataPtr();
             }
 
-            _dragDropActivate = true;
             return true;
         }
         catch (Exception) { /* Ignore errors */ }
@@ -136,14 +114,14 @@ public class DragDropHelper : IDropSource
         }
     }
 
-    private void GetIDropTarget()
+    private void GetIDropTarget(string fullPath)
     {
-        DirectoryInfo dirInfo = new(Path.GetDirectoryName(ListFs[0]));
+        DirectoryInfo dirInfo = new(fullPath);
         ShellItem item = new(dirInfo.FullName);
         Guid guid = typeof(IDropTarget).GUID;
         if (_shellFolder != null)
         {
-            int erreur = GetShellFolder(dirInfo.Parent).GetUIObjectOf(
+            int erreur = GetShellFolder(dirInfo.Parent.FullName).GetUIObjectOf(
                 IntPtr.Zero,
                 1,
                 [item.RelativePidl],
@@ -155,72 +133,55 @@ public class DragDropHelper : IDropSource
         }
     }
 
-    public static IShellFolder GetShellFolder(DirectoryInfo directoryInfo)
+    public static IShellFolder GetShellFolder(string path)
     {
-        // TODO : Rewrite, check https://www.codeproject.com/Articles/39224/Rewrite-DirectoryInfo-using-IShellFolder
+        Guid guid = typeof(IShellFolder).GUID;
         IShellFolder sfd = ShellContextMenu.GetDesktopFolder();
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            IntPtr pidlMyComputer = IntPtr.Zero;
+            SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref pidlMyComputer);
+            sfd.BindToObject(pidlMyComputer, IntPtr.Zero, guid, out IntPtr ptrMyComputer);
+            IShellFolder myComputerFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrMyComputer, typeof(IShellFolder));
+            return myComputerFolder;
+        }
         uint pchEaten = 0;
         SFGAO pdwAttributes = 0;
-        sfd.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, directoryInfo.FullName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
-        Guid guid = typeof(IShellFolder).GUID;
+        sfd.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, path, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
         sfd.BindToObject(pPIDL, IntPtr.Zero, ref guid, out IntPtr pUnknownParentFolder);
         return (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnknownParentFolder, typeof(IShellFolder));
     }
 
-    public void DragDrop(object sender, DragEventArgs e, System.Windows.Point mousePos)
+    public void DragDrop(DragDropKeyStates e, System.Windows.Point mousePos, string fullPath, List<string> listFs)
     {
-        MK keys = MK.RBUTTON;
-        if (e.KeyStates.HasFlag(DragDropKeyStates.ControlKey))
-            keys |= MK.CONTROL;
-        if (e.KeyStates.HasFlag(DragDropKeyStates.AltKey))
-            keys |= MK.ALT;
-        if (e.KeyStates.HasFlag(DragDropKeyStates.ShiftKey))
-            keys |= MK.SHIFT;
-        DragDropEffects effets = effetDragDrop;
-
-        if (ListFs.Count == 0)
-            return;
-
-        if (_ptrData != IntPtr.Zero)
+        try
         {
-            ManagedShell.Interop.NativeMethods.Point nativePoint = new((int)mousePos.X, (int)mousePos.Y);
+            if (!ItemDrag(listFs, fullPath))
+                return;
 
-            _dropTarget!.DragEnter(_ptrData, keys, nativePoint, ref effets);
-            _dropTargetHelper!.DragEnter((PresentationSource.FromVisual((System.Windows.Controls.Control)sender) as HwndSource)!.Handle, _ptrData, nativePoint, effetDragDrop);
+            MK keys = MK.RBUTTON;
+            if (e.HasFlag(DragDropKeyStates.ControlKey))
+                keys |= MK.CONTROL;
+            if (e.HasFlag(DragDropKeyStates.AltKey))
+                keys |= MK.ALT;
+            if (e.HasFlag(DragDropKeyStates.ShiftKey))
+                keys |= MK.SHIFT;
 
-            _dropTarget.DragOver(keys, nativePoint, ref effets);
-            _dropTargetHelper.DragOver(nativePoint, effetDragDrop);
+            if (ListFs.Count == 0)
+                return;
 
-            _dropTarget.DragDrop(_ptrData, keys, nativePoint, ref effets);
-            _dropTargetHelper.Drop(_ptrData, nativePoint, effets);
+            if (_ptrData != IntPtr.Zero && _dropTarget != null)
+            {
+                PointInt nativePoint = new((int)mousePos.X, (int)mousePos.Y);
+
+                DragDropEffects effects = dragDropEffects;
+                _dropTarget.DragEnter(_ptrData, keys, nativePoint, ref effects);
+                effects = dragDropEffects;
+                _dropTarget.DragDrop(_ptrData, keys, nativePoint, ref effects);
+            }
         }
-        _dragDropActivate = false;
+        catch (Exception) { /* Ignore errors */ }
     }
-
-    #region Interface IDropSource
-
-    int IDropSource.QueryContinueDrag(bool fEscapePressed, MK grfKeyState)
-    {
-        if (fEscapePressed)
-        {
-            _dragDropActivate = false;
-            return DRAGDROP_S_CANCEL;
-        }
-        else
-        {
-            if ((grfKeyState & MK.RBUTTON) == 0)
-                return DRAGDROP_S_DROP;
-            else
-                return (int)HResult.SUCCESS;
-        }
-    }
-
-    int IDropSource.GiveFeedback(DragDropEffects dwEffect)
-    {
-        return DRAGDROP_S_USEDEFAULTCURSORS;
-    }
-
-    #endregion
 
     /// <summary>
     /// This method will use the GetUIObjectOf method of IShellFolder to obtain the IDataObject of a
@@ -249,27 +210,6 @@ public class DragDropHelper : IDropSource
         else
         {
             return IntPtr.Zero;
-        }
-    }
-
-    private void GetIDropTargetHelper()
-    {
-        Guid guidDropTarget = typeof(IDropTargetHelper).GUID, guidDropHelper = CLSID_DragDropHelper;
-
-        if (Interop.CoCreateInstance(
-                ref guidDropHelper,
-                IntPtr.Zero,
-                CLSCTX.INPROC_SERVER,
-                ref guidDropTarget,
-                out _dropTargetHelperPtr) == (int)HResult.SUCCESS)
-        {
-            _dropTargetHelper =
-                (IDropTargetHelper)Marshal.GetTypedObjectForIUnknown(_dropTargetHelperPtr, typeof(IDropTargetHelper));
-        }
-        else
-        {
-            _dropTargetHelper = null;
-            _dropTargetHelperPtr = IntPtr.Zero;
         }
     }
 }

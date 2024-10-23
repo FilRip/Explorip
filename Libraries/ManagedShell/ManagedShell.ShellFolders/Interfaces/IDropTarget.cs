@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 
-using Point = ManagedShell.Interop.NativeMethods.Point;
+using Point = ManagedShell.Interop.NativeMethods.PointInt;
 
 namespace ManagedShell.ShellFolders.Interfaces;
 

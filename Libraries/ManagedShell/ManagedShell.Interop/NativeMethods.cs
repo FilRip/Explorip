@@ -36,6 +36,13 @@ public partial class NativeMethods
         public long y = y;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PointInt(int x, int y)
+    {
+        public int x = x;
+        public int y = y;
+    }
+
     // lo = x; hi = y
     public static IntPtr MakeLParam(int loWord, int hiWord)
     {
