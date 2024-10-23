@@ -10,6 +10,8 @@ using System.Windows.Media;
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
+// TODO : Hightlight when drag over https://stackoverflow.com/questions/44731343/change-button-image-on-mouse-over-during-drag-and-drop-operation
+
 namespace ExploripComponents
 {
     /// <summary>

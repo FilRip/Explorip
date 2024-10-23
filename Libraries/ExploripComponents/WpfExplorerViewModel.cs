@@ -106,9 +106,9 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         SelectedFolder = parent;
     }
 
-    public void BrowseTo(OneDirectory value)
+    public void BrowseTo(string fullPath)
     {
-        string[] folders = value.FullPath.Split(Path.DirectorySeparatorChar);
+        string[] folders =fullPath.Split(Path.DirectorySeparatorChar);
         OneDirectory actualFolder = FolderTreeView[0];
         string currentPath;
         foreach (string folder in folders)

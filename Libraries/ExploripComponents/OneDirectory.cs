@@ -75,19 +75,14 @@ public partial class OneDirectory : OneFileSystem
 
     partial void OnIsExpandedChanged(bool value)
     {
-        if (IsExpanded && _parentDirectory != null)
-            _parentDirectory.IsExpanded = true;
+        if (IsExpanded && ParentDirectory != null)
+            ParentDirectory.IsExpanded = true;
 
         if (this.HasDummyChild)
         {
             this.Children.Remove(_dummyDir);
             this.LoadChildren();
         }
-    }
-
-    public OneDirectory? Parent
-    {
-        get { return _parentDirectory; }
     }
 
     private void LoadChildren()
@@ -140,9 +135,9 @@ public partial class OneDirectory : OneFileSystem
     public OneDirectory GetRootParent()
     {
         OneDirectory curDir = this;
-        while (curDir.Parent != null)
+        while (curDir.ParentDirectory != null)
         {
-            curDir = curDir.Parent;
+            curDir = curDir.ParentDirectory;
         }
         return curDir;
     }
@@ -212,7 +207,7 @@ public partial class OneDirectory : OneFileSystem
 
     public override void DoubleClickFile()
     {
-        GetRootParent().MainViewModel!.BrowseTo(this);
+        GetRootParent().MainViewModel!.BrowseTo(FullPath);
     }
 
     public override ImageSource? Icon
@@ -263,16 +258,16 @@ public partial class OneDirectory : OneFileSystem
     [RelayCommand()]
     public void MouseMoveTreeView()
     {
-        if (_parentDirectory == null)
+        if (ParentDirectory == null)
             return;
 
         if ((Mouse.LeftButton == MouseButtonState.Pressed || Mouse.RightButton == MouseButtonState.Pressed) &&
-            !_parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging)
+            !ParentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging)
         {
-            _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = true;
+            ParentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = true;
             DataObject data = new();
             data.SetFileDropList([FullPath]);
-            DragDrop.DoDragDrop(_parentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
+            DragDrop.DoDragDrop(ParentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
         }
     }
 }

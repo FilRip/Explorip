@@ -13,20 +13,29 @@ using ManagedShell.Common.Helpers;
 
 namespace ExploripComponents;
 
-public abstract partial class OneFileSystem(string fullPath, string displayText, OneDirectory? parentDirectory) : ObservableObject
+public abstract partial class OneFileSystem : ObservableObject
 {
-    protected readonly OneDirectory? _parentDirectory = parentDirectory;
+    private readonly OneDirectory? _parentDirectory;
     protected ImageSource? _icon;
     protected ulong? _lastSize;
 
     [ObservableProperty()]
     private bool _isSelected;
     [ObservableProperty()]
-    private string _fullPath = fullPath;
+    private string _fullPath;
     [ObservableProperty()]
-    private string _displayText = displayText;
+    private string _displayText;
     [ObservableProperty()]
     private ImageSource? _iconOverlay;
+    private readonly bool _isLink;
+
+    protected OneFileSystem(string fullPath, string displayText, OneDirectory? parentDirectory) : base()
+    {
+        _parentDirectory = parentDirectory;
+        _fullPath = fullPath;
+        _isLink = Path.GetExtension(displayText) == ".lnk";
+        _displayText = _isLink ? displayText.Substring(0, displayText.Length - 4) : displayText;
+    }
 
     public virtual ImageSource? Icon
     {
@@ -41,6 +50,11 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
             }
             return _icon;
         }
+    }
+
+    protected virtual bool IsLink
+    {
+        get { return _isLink; }
     }
 
     partial void OnIsSelectedChanged(bool oldValue, bool newValue)

@@ -3,12 +3,23 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 
+using Securify.ShellLink;
+
 namespace ExploripComponents;
 
 public partial class OneFile(string fullPath, OneDirectory parentDirectory) : OneFileSystem(fullPath, Path.GetFileName(fullPath), parentDirectory)
 {
     public override void DoubleClickFile()
     {
+        if (IsLink)
+        {
+            Shortcut shortcut = Shortcut.ReadFromFile(FullPath);
+            if (Directory.Exists(shortcut.Target))
+            {
+                ParentDirectory!.GetRootParent().MainViewModel!.BrowseTo(shortcut.Target);
+                return;
+            }
+        }
         Process process = new()
         {
             StartInfo = new ProcessStartInfo()
