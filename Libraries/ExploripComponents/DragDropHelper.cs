@@ -114,14 +114,14 @@ public class DragDropHelper
         }
     }
 
-    private void GetIDropTarget(string fullPath)
+    private void GetIDropTarget(string path)
     {
-        DirectoryInfo dirInfo = new(fullPath);
+        DirectoryInfo dirInfo = new(path);
         ShellItem item = new(dirInfo.FullName);
         Guid guid = typeof(IDropTarget).GUID;
         if (_shellFolder != null)
         {
-            int erreur = GetShellFolder(dirInfo.Parent.FullName).GetUIObjectOf(
+            int erreur = GetShellFolder(dirInfo.Parent?.FullName).GetUIObjectOf(
                 IntPtr.Zero,
                 1,
                 [item.RelativePidl],
@@ -133,7 +133,7 @@ public class DragDropHelper
         }
     }
 
-    public static IShellFolder GetShellFolder(string path)
+    public static IShellFolder GetShellFolder(string? path)
     {
         Guid guid = typeof(IShellFolder).GUID;
         IShellFolder sfd = ShellContextMenu.GetDesktopFolder();
@@ -197,7 +197,7 @@ public class DragDropHelper
             pidls[i] = items[i].RelativePidl;
 
         Guid guid = new("{0000010e-0000-0000-C000-000000000046}");
-        if (_shellFolder!.GetUIObjectOf(
+        if (GetShellFolder(Path.GetDirectoryName(ListFs[0]))!.GetUIObjectOf(
                 IntPtr.Zero,
                 (uint)pidls.Length,
                 pidls,
