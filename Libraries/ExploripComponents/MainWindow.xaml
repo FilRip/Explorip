@@ -24,6 +24,7 @@
             <ColumnDefinition Width="0.75*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Left part, TreeView for folders -->
         <TreeView Grid.Column="0" Name="FolderTV" ItemsSource="{Binding FolderTreeView}" Margin="0 0 5 0" PreviewDragOver="Scroll_PreviewDragOver">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
@@ -70,12 +71,13 @@
                     </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-
         </TreeView>
         
+        <!-- Middle, splitter -->
         <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"/>
 
-        <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}" SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver">
+        <!-- Right part, ListView for files -->
+        <ListView ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}" SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
                     <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
@@ -83,7 +85,7 @@
             </i:Interaction.Triggers>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ContentControl>
+                    <ContentControl HorizontalAlignment="Center" HorizontalContentAlignment="Center">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonUp">
                                 <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
@@ -95,16 +97,21 @@
                                 <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver">
+                        <StackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver">
                             <Grid>
-                                <Image Source="{Binding Icon}" HorizontalAlignment="Center"/>
-                                <Image Source="{Binding IconOverlay}" HorizontalAlignment="Center"/>
+                                <Image Source="{Binding Icon}"/>
+                                <Image Source="{Binding IconOverlay}"/>
                             </Grid>
-                            <TextBlock Text="{Binding DisplayText}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding DisplayText}"/>
                         </StackPanel>
                     </ContentControl>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
         </ListView>
         
     </Grid>

@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Input;
 
+using Explorip.Helpers;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 using ManagedShell.ShellFolders.Structs;
-
-using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
 using Securify.ShellLink;
 
@@ -19,13 +19,12 @@ namespace ExploripComponents;
 
 public class ShellContextMenu
 {
-    #region Champs
+    #region Fields
 
     private IntPtr pMenu, iContextMenuPtr, iContextMenuPtr2, iContextMenuPtr3;
     private IContextMenu? _oContextMenu;
     private IContextMenu2? _oContextMenu2;
     private IContextMenu3? _oContextMenu3;
-    private static IShellFolder? _oDesktopFolder;
     private IShellFolder? _oParentFolder;
     private nint[]? _arrPIDLs;
     private string? _strParentFolder;
@@ -59,65 +58,24 @@ public class ShellContextMenu
         CleanUp();
     }
 
-    #endregion
-
-    #region GetContextMenuInterfaces()
-
-    /// <summary>Gets the interfaces to the context menu</summary>
-    /// <param name="oParentFolder">Parent folder</param>
-    /// <param name="arrPIDLs">PIDLs</param>
-    /// <returns>true if it got the interfaces, otherwise false</returns>
-    private bool GetContextMenuInterfaces(nint[] arrPIDLs, out nint ctxMenuPtr)
+    /// <summary>
+    /// Free the PIDLs
+    /// </summary>
+    /// <param name="arrPIDLs">Array of PIDLs (IntPtr)</param>
+    protected static void FreePIDLs(nint[] arrPIDLs)
     {
-        if (_oParentFolder == null)
-            throw new ExploripCommonException("Parent folder is null");
-        Guid guid = typeof(IContextMenu).GUID;
-        int nResult = _oParentFolder.GetUIObjectOf(
-            IntPtr.Zero,
-            (uint)arrPIDLs.Length,
-            arrPIDLs,
-            ref guid,
-            IntPtr.Zero,
-            out ctxMenuPtr);
-
-        if (nResult == (int)HResult.SUCCESS)
+        if (null != arrPIDLs)
         {
-            _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
-            return true;
-        }
-        else
-        {
-            ctxMenuPtr = IntPtr.Zero;
-            _oContextMenu = null;
-            return false;
+            for (int n = 0; n < arrPIDLs.Length; n++)
+            {
+                if (arrPIDLs[n] != IntPtr.Zero)
+                {
+                    Marshal.FreeCoTaskMem(arrPIDLs[n]);
+                    arrPIDLs[n] = IntPtr.Zero;
+                }
+            }
         }
     }
-
-    #endregion
-
-    #region InvokeCommand
-
-    private void InvokeCommand(IContextMenu oContextMenu, uint nCmd, System.Windows.Point pointInvoke)
-    {
-        CmInvokeCommandInfoEx invoke = new()
-        {
-            cbSize = cbInvokeCommand,
-            lpVerb = (nint)(nCmd - CMD_FIRST),
-            lpDirectory = _strParentFolder,
-            lpVerbW = (nint)(nCmd - CMD_FIRST),
-            lpDirectoryW = _strParentFolder,
-            fMask = CMIC.UNICODE | CMIC.PTINVOKE |
-            (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? CMIC.CONTROL_DOWN : 0) |
-            (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? CMIC.SHIFT_DOWN : 0),
-            ptInvoke = new Point((long)pointInvoke.X, (long)pointInvoke.Y),
-            nShow = WindowShowStyle.ShowNormal,
-        };
-        oContextMenu.InvokeCommand(ref invoke);
-    }
-
-    #endregion
-
-    #region ReleaseAll()
 
     private void CleanUp()
     {
@@ -182,7 +140,59 @@ public class ShellContextMenu
 
     #endregion
 
-    #region GetDesktopFolder()
+    #region Properties
+
+    public bool Root { get; set; } = false;
+
+    #endregion
+
+    /// <summary>Gets the interfaces to the context menu</summary>
+    /// <param name="oParentFolder">Parent folder</param>
+    /// <param name="arrPIDLs">PIDLs</param>
+    /// <returns>true if it got the interfaces, otherwise false</returns>
+    private bool GetContextMenuInterfaces(nint[] arrPIDLs, out nint ctxMenuPtr)
+    {
+        if (_oParentFolder == null)
+            throw new ExploripCommonException("Parent folder is null");
+        Guid guid = typeof(IContextMenu).GUID;
+        int nResult = _oParentFolder.GetUIObjectOf(
+            IntPtr.Zero,
+            (uint)arrPIDLs.Length,
+            arrPIDLs,
+            ref guid,
+            IntPtr.Zero,
+            out ctxMenuPtr);
+
+        if (nResult == (int)HResult.SUCCESS)
+        {
+            _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
+            return true;
+        }
+        else
+        {
+            ctxMenuPtr = IntPtr.Zero;
+            _oContextMenu = null;
+            return false;
+        }
+    }
+
+    private void InvokeCommand(IContextMenu oContextMenu, uint nCmd, System.Windows.Point pointInvoke)
+    {
+        CmInvokeCommandInfoEx invoke = new()
+        {
+            cbSize = cbInvokeCommand,
+            lpVerb = (nint)(nCmd - CMD_FIRST),
+            lpDirectory = _strParentFolder,
+            lpVerbW = (nint)(nCmd - CMD_FIRST),
+            lpDirectoryW = _strParentFolder,
+            fMask = CMIC.UNICODE | CMIC.PTINVOKE |
+            (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? CMIC.CONTROL_DOWN : 0) |
+            (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? CMIC.SHIFT_DOWN : 0),
+            ptInvoke = new Point((long)pointInvoke.X, (long)pointInvoke.Y),
+            nShow = WindowShowStyle.ShowNormal,
+        };
+        oContextMenu.InvokeCommand(ref invoke);
+    }
 
     /// <summary>
     /// Gets the desktop folder
@@ -190,22 +200,13 @@ public class ShellContextMenu
     /// <returns>IShellFolder for desktop folder</returns>
     public static IShellFolder GetDesktopFolder()
     {
-        if (_oDesktopFolder == null)
-        {
-            // Get desktop IShellFolder
-            int nResult = SHGetDesktopFolder(out nint pUnkownDesktopFolder);
-            if (nResult != (int)HResult.SUCCESS)
-                throw new ExploripCommonException("Failed to get the desktop shell folder");
+        // Get desktop IShellFolder
+        int nResult = SHGetDesktopFolder(out nint pUnkownDesktopFolder);
+        if (nResult != (int)HResult.SUCCESS)
+            throw new ExploripCommonException("Failed to get the desktop shell folder");
 
-            _oDesktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnkownDesktopFolder, typeof(IShellFolder));
-        }
-
-        return _oDesktopFolder;
+        return (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnkownDesktopFolder, typeof(IShellFolder));
     }
-
-    #endregion
-
-    #region GetParentFolder()
 
     /// <summary>
     /// Gets the parent folder
@@ -218,21 +219,21 @@ public class ShellContextMenu
         {
             if (_oParentFolder == null)
             {
-                GetDesktopFolder();
-                if (_oDesktopFolder == null)
+                IShellFolder desktopFolder = GetDesktopFolder();
+                if (desktopFolder == null)
                     return;
 
                 uint pchEaten = 0;
                 SFGAO pdwAttributes = 0;
 
                 // Get the PIDL for the folder file is in
-                int nResult = _oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+                int nResult = desktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out nint pPIDL, ref pdwAttributes);
                 if (nResult != (int)HResult.SUCCESS)
                     return;
 
                 nint pStrRet = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
                 Marshal.WriteInt32(pStrRet, 0, 0);
-                _ = _oDesktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING, pStrRet);
+                _ = desktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING, pStrRet);
                 StringBuilder strFolder = new(ShellHelper.MAX_PATH);
                 _ = StrRetToBuf(pStrRet, pPIDL, strFolder, ShellHelper.MAX_PATH);
                 Marshal.FreeCoTaskMem(pStrRet);
@@ -240,7 +241,7 @@ public class ShellContextMenu
 
                 // Get the IShellFolder for folder
                 Guid guid = typeof(IShellFolder).GUID;
-                nResult = _oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref guid, out nint pUnknownParentFolder);
+                nResult = desktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref guid, out nint pUnknownParentFolder);
 
                 // Free the PIDL first
                 Marshal.FreeCoTaskMem(pPIDL);
@@ -328,8 +329,6 @@ public class ShellContextMenu
             }
         }
     }
-
-    #endregion
 
     #region GetPIDLs()
 
@@ -422,10 +421,10 @@ public class ShellContextMenu
             _oContextMenu = (IContextMenu)opContextMenu;
         }
 
-        if (arrFI[0].FullName.Length > 3 && !Root)
+        if (!Root && arrFI[0].FullName.Length > 3)
             GetParentFolder(arrFI[0].Parent!.FullName, false);
         else
-            GetParentFolder(null, arrFI[0].Name == KnownFolders.Computer.CanonicalName || arrFI[0].Name == "Desktop");
+            GetParentFolder(null, arrFI[0].Name == Environment.SpecialFolder.MyComputer.RealName() || arrFI[0].Name == Environment.SpecialFolder.Desktop.RealName());
 
         if (_oParentFolder == null)
             throw new ExploripCommonException("Parent folder is null");
@@ -450,29 +449,6 @@ public class ShellContextMenu
         }
 
         return arrPIDLs;
-    }
-
-    #endregion
-
-    #region FreePIDLs()
-
-    /// <summary>
-    /// Free the PIDLs
-    /// </summary>
-    /// <param name="arrPIDLs">Array of PIDLs (IntPtr)</param>
-    protected static void FreePIDLs(nint[] arrPIDLs)
-    {
-        if (null != arrPIDLs)
-        {
-            for (int n = 0; n < arrPIDLs.Length; n++)
-            {
-                if (arrPIDLs[n] != IntPtr.Zero)
-                {
-                    Marshal.FreeCoTaskMem(arrPIDLs[n]);
-                    arrPIDLs[n] = IntPtr.Zero;
-                }
-            }
-        }
     }
 
     #endregion
@@ -617,6 +593,10 @@ public class ShellContextMenu
         }
     }
 
+    #endregion
+
+    #region Manipulate submenu
+
     private void PasteClipboard()
     {
         System.Windows.DataObject data = (System.Windows.DataObject)System.Windows.Clipboard.GetDataObject();
@@ -758,6 +738,4 @@ public class ShellContextMenu
     }
 
     #endregion
-
-    public bool Root { get; set; } = false;
 }

@@ -186,9 +186,14 @@ public partial class OneDirectory : OneFileSystem
         // When right click on an item tree view
         ShellContextMenu scm = new()
         {
-            Root = _specialFolder == Environment.SpecialFolder.MyComputer || _specialFolder == Environment.SpecialFolder.Desktop,
+            Root = _specialFolder == Environment.SpecialFolder.MyComputer || _specialFolder == Environment.SpecialFolder.Desktop || FullPath?.StartsWith("::") == true,
         };
-        scm.ShowContextMenu(new DirectoryInfo(FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)), false);
+        DirectoryInfo dir;
+        if (string.IsNullOrWhiteSpace(FullPath) || FullPath?.StartsWith("::") == true)
+            dir = new DirectoryInfo(DisplayText);
+        else
+            dir = new DirectoryInfo(FullPath);
+        scm.ShowContextMenu(dir, Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)), false);
     }
 
     public override void DoubleClickFile()
@@ -200,11 +205,20 @@ public partial class OneDirectory : OneFileSystem
     {
         get
         {
-            if (_icon == null && _specialFolder != null)
+            if (_icon == null && (_specialFolder != null || FullPath.StartsWith("::")))
             {
                 if (!string.IsNullOrWhiteSpace(FullPath))
                 {
-                    IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                    IntPtr hIcon, hOverlay;
+                    if (FullPath.StartsWith("::"))
+                    {
+                        IntPtr pidl = NativeMethods.ILCreateFromPath(FullPath);
+                        hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                    }
+                    else
+                    {
+                        hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                    }
                     if (hIcon != IntPtr.Zero)
                     {
                         System.Drawing.Icon icon = System.Drawing.Icon.FromHandle(hIcon);

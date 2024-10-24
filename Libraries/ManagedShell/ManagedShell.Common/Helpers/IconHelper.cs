@@ -115,7 +115,7 @@ public static class IconHelper
 
                 return GetFromImageList(shinfo.iIcon, size, out hOverlay);
             }
-            catch
+            catch (Exception)
             {
                 return IntPtr.Zero;
             }

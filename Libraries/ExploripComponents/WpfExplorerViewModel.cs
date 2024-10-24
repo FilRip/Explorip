@@ -10,6 +10,8 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ManagedShell.Interop;
+
 namespace ExploripComponents;
 
 public partial class WpfExplorerViewModel(IntPtr handle, Control control) : ObservableObject
@@ -78,6 +80,10 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         AddChild(Environment.SpecialFolder.MyPictures);
         AddChild(Environment.SpecialFolder.MyMusic);
         AddChild(Environment.SpecialFolder.MyVideos);
+        // Add special folder "Downloads"
+        Guid guid = new("374DE290-123F-4565-9164-39C4925E467B");
+        NativeMethods.SHGetKnownFolderPath(ref guid, NativeMethods.KnownFolder.None, IntPtr.Zero, out string pathDownload);
+        parent.Children.Add(new OneDirectory(pathDownload, parent, true));
 
         foreach (DriveInfo di in DriveInfo.GetDrives())
         {
@@ -101,7 +107,8 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
 
         SelectedFolder = parent;
 
-        parent = new OneDirectory(Environment.SpecialFolder.NetworkShortcuts, null, true) { MainViewModel = this };
+        // Add Network root
+        parent = new OneDirectory("::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}", null, true) { MainViewModel = this };
         FolderTreeView.Add(parent);
     }
 
