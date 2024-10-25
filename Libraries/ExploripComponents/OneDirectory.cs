@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,8 +16,7 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.Helpers;
 
 using ManagedShell.Common.Helpers;
-
-using Microsoft.WindowsAPICodePack.Shell.Common;
+using ManagedShell.ShellFolders.Interfaces;
 
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
@@ -32,6 +32,8 @@ public partial class OneDirectory : OneFileSystem
     private bool _isExpanded;
 
     public DriveInfo? Drive { get; set; }
+
+    public bool NetworkRoot { get; set; }
 
     private readonly ObservableCollection<OneFileSystem> _items;
     private Task? _taskCalculateSize;
@@ -50,7 +52,7 @@ public partial class OneDirectory : OneFileSystem
             _children.Add(_dummyDir);
     }
 
-    public OneDirectory(string fullPath, OneDirectory? parent, bool hasSubFolder) : this(parent, fullPath, hasSubFolder, ShellObject.FromParsingName(fullPath).Name)
+    public OneDirectory(string fullPath, OneDirectory? parent, bool hasSubFolder, string displayText) : this(parent, fullPath, hasSubFolder, displayText)
     {
     }
 
@@ -59,7 +61,7 @@ public partial class OneDirectory : OneFileSystem
         _specialFolder = knownFolder;
     }
 
-    public OneDirectory(DriveInfo drive, OneDirectory parent, bool hasSubFolder) : this(parent, drive.Name, hasSubFolder, ShellObject.FromParsingName(drive.RootDirectory.FullName).Name)
+    public OneDirectory(DriveInfo drive, OneDirectory parent, bool hasSubFolder, string displayText) : this(parent, drive.Name, hasSubFolder, displayText)
     {
         Drive = drive;
     }
@@ -101,7 +103,7 @@ public partial class OneDirectory : OneFileSystem
             {
                 hasSubFolder = false;
             }
-            dir = new OneDirectory(newFullPath, this, hasSubFolder);
+            dir = new OneDirectory(newFullPath, this, hasSubFolder, directory);
             Children.Add(dir);
         }
     }
@@ -110,18 +112,54 @@ public partial class OneDirectory : OneFileSystem
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
+            _items.Clear();
             if (_specialFolder == Environment.SpecialFolder.MyComputer)
             {
-                GetRootParent().MainViewModel!.FileListView = new ObservableCollection<OneFileSystem>(Children.OfType<OneFileSystem>());
-                GetRootParent().MainViewModel!.SelectedFolder = this;
-                return;
+                foreach (OneFileSystem fs in Children.OfType<OneFileSystem>())
+                    _items.Add(fs);
             }
-            _items.Clear();
-            FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
-            foreach (string subFolder in listSubFolder)
-                _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true));
-            foreach (string file in listFiles)
-                _items.Add(new OneFile(Path.Combine(FullPath, file), this));
+            else if (NetworkRoot)
+            {
+                IShellFolder? networkShellFolder = null;
+                Guid guidSf = typeof(IShellFolder).GUID;
+
+                // Get IShellFolder from WinApi
+                NativeMethods.SHGetDesktopFolder(out IntPtr pidl);
+                IShellFolder desktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidl, typeof(IShellFolder));
+                NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_NETWORK, ref pidl);
+                desktopFolder.BindToObject(pidl, IntPtr.Zero, ref guidSf, out IntPtr ptrsh);
+                networkShellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrsh, typeof(IShellFolder));
+
+                // Get IShellFolder from ManagedShell
+                /*ShellFolder networkFolder = new(FullPath, IntPtr.Zero);
+                networkShellFolder = networkFolder.ShellFolderInterface;*/
+
+                if (networkShellFolder != null)
+                {
+                    networkShellFolder.EnumObjects(IntPtr.Zero, ManagedShell.ShellFolders.Enums.SHCONTF.FOLDERS, out IntPtr data);
+                    IEnumIDList itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(data, typeof(IEnumIDList));
+                    while (itemsEnum.Next(1, out IntPtr subItemPtr, out uint fetch) == 0 && fetch == 1)
+                    {
+                        if (networkShellFolder.BindToObject(subItemPtr, IntPtr.Zero, ref guidSf, out IntPtr siPtr) == 0)
+                        {
+                            IShellFolder subSf = (IShellFolder)Marshal.GetTypedObjectForIUnknown(siPtr, typeof(IShellFolder));
+                            IntPtr namePtr = IntPtr.Zero;
+                            subSf.GetDisplayNameOf(subItemPtr, ManagedShell.ShellFolders.Enums.SHGDN.NORMAL, namePtr);
+                            string displayName = Marshal.PtrToStringAuto(namePtr);
+                            Marshal.FreeCoTaskMem(namePtr);
+                            _items.Add(new OneFile(displayName, this));
+                        }
+                    }
+                }
+            }
+            else
+            {
+                FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
+                foreach (string subFolder in listSubFolder)
+                    _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true, subFolder));
+                foreach (string file in listFiles)
+                    _items.Add(new OneFile(Path.Combine(FullPath, file), this));
+            }
             _cancellationToken?.Cancel();
             GetRootParent().MainViewModel!.FileListView = _items;
             GetRootParent().MainViewModel!.SelectedFolder = this;

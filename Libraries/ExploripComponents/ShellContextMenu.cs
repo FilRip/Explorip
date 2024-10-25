@@ -26,7 +26,7 @@ public class ShellContextMenu
     private IContextMenu2? _oContextMenu2;
     private IContextMenu3? _oContextMenu3;
     private IShellFolder? _oParentFolder;
-    private nint[]? _arrPIDLs;
+    private IntPtr[]? _arrPIDLs;
     private string? _strParentFolder;
     private const uint CMD_FIRST = 0;
     private const uint CMD_LAST = (uint)short.MaxValue;
@@ -62,7 +62,7 @@ public class ShellContextMenu
     /// Free the PIDLs
     /// </summary>
     /// <param name="arrPIDLs">Array of PIDLs (IntPtr)</param>
-    protected static void FreePIDLs(nint[] arrPIDLs)
+    protected static void FreePIDLs(IntPtr[] arrPIDLs)
     {
         if (null != arrPIDLs)
         {
@@ -150,7 +150,7 @@ public class ShellContextMenu
     /// <param name="oParentFolder">Parent folder</param>
     /// <param name="arrPIDLs">PIDLs</param>
     /// <returns>true if it got the interfaces, otherwise false</returns>
-    private bool GetContextMenuInterfaces(nint[] arrPIDLs, out nint ctxMenuPtr)
+    private bool GetContextMenuInterfaces(IntPtr[] arrPIDLs, out IntPtr ctxMenuPtr)
     {
         if (_oParentFolder == null)
             throw new ExploripCommonException("Parent folder is null");
@@ -181,9 +181,9 @@ public class ShellContextMenu
         CmInvokeCommandInfoEx invoke = new()
         {
             cbSize = cbInvokeCommand,
-            lpVerb = (nint)(nCmd - CMD_FIRST),
+            lpVerb = (IntPtr)(nCmd - CMD_FIRST),
             lpDirectory = _strParentFolder,
-            lpVerbW = (nint)(nCmd - CMD_FIRST),
+            lpVerbW = (IntPtr)(nCmd - CMD_FIRST),
             lpDirectoryW = _strParentFolder,
             fMask = CMIC.UNICODE | CMIC.PTINVOKE |
             (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? CMIC.CONTROL_DOWN : 0) |
@@ -201,7 +201,7 @@ public class ShellContextMenu
     public static IShellFolder GetDesktopFolder()
     {
         // Get desktop IShellFolder
-        int nResult = SHGetDesktopFolder(out nint pUnkownDesktopFolder);
+        int nResult = SHGetDesktopFolder(out IntPtr pUnkownDesktopFolder);
         if (nResult != (int)HResult.SUCCESS)
             throw new ExploripCommonException("Failed to get the desktop shell folder");
 
@@ -227,11 +227,11 @@ public class ShellContextMenu
                 SFGAO pdwAttributes = 0;
 
                 // Get the PIDL for the folder file is in
-                int nResult = desktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+                int nResult = desktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 if (nResult != (int)HResult.SUCCESS)
                     return;
 
-                nint pStrRet = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
+                IntPtr pStrRet = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
                 Marshal.WriteInt32(pStrRet, 0, 0);
                 _ = desktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING, pStrRet);
                 StringBuilder strFolder = new(ShellHelper.MAX_PATH);
@@ -241,7 +241,7 @@ public class ShellContextMenu
 
                 // Get the IShellFolder for folder
                 Guid guid = typeof(IShellFolder).GUID;
-                nResult = desktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref guid, out nint pUnknownParentFolder);
+                nResult = desktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref guid, out IntPtr pUnknownParentFolder);
 
                 // Free the PIDL first
                 Marshal.FreeCoTaskMem(pPIDL);
@@ -257,16 +257,16 @@ public class ShellContextMenu
                 _oParentFolder = GetDesktopFolder();
             else
             {
-                nint folderEnumPtr = IntPtr.Zero;
+                IntPtr folderEnumPtr = IntPtr.Zero;
                 IEnumIDList? folderEnum = null;
-                nint winHandle = IntPtr.Zero;
+                IntPtr winHandle = IntPtr.Zero;
 
-                nint tempPidl;
+                IntPtr tempPidl;
                 ShFileInfo info;
 
                 info = new ShFileInfo();
                 tempPidl = IntPtr.Zero;
-                _ = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref tempPidl);
+                SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref tempPidl);
 
                 SHGetFileInfo(tempPidl, 0, ref info, (uint)Marshal.SizeOf(info), SHGFI.PIDL | SHGFI.DisplayName | SHGFI.TypeName);
 
@@ -279,16 +279,16 @@ public class ShellContextMenu
                     if (_oParentFolder.EnumObjects(winHandle, SHCONTF.FOLDERS | SHCONTF.INCLUDEHIDDEN, out folderEnumPtr) == (int)HResult.SUCCESS)
                     {
                         folderEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(folderEnumPtr, typeof(IEnumIDList));
-                        while (folderEnum.Next(1, out nint pidlSubItem, out uint celtFetched) == (int)HResult.SUCCESS && celtFetched == 1)
+                        while (folderEnum.Next(1, out IntPtr pidlSubItem, out uint celtFetched) == (int)HResult.SUCCESS && celtFetched == 1)
                         {
                             Guid guid = typeof(IShellFolder).GUID;
                             if (_oParentFolder.BindToObject(
                                         pidlSubItem,
                                         IntPtr.Zero,
                                         ref guid,
-                                        out nint shellFolderPtr) == (int)HResult.SUCCESS)
+                                        out IntPtr shellFolderPtr) == (int)HResult.SUCCESS)
                             {
-                                nint strr = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
+                                IntPtr strr = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
                                 Marshal.WriteInt32(strr, 0, 0);
                                 StringBuilder buf = new(ShellHelper.MAX_PATH);
 
@@ -337,7 +337,7 @@ public class ShellContextMenu
     /// </summary>
     /// <param name="arrFI">Array of FileInfo</param>
     /// <returns>Array of PIDLs</returns>
-    protected nint[]? GetPIDLs(FileInfo[] arrFI)
+    protected IntPtr[]? GetPIDLs(FileInfo[] arrFI)
     {
         if (arrFI == null || arrFI.Length == 0)
             return null;
@@ -346,14 +346,14 @@ public class ShellContextMenu
         if (_oParentFolder == null)
             return null;
 
-        nint[] arrPIDLs = new nint[arrFI.Length];
+        IntPtr[] arrPIDLs = new IntPtr[arrFI.Length];
         int n = 0;
         foreach (FileInfo fi in arrFI)
         {
             // Get the file relative to folder
             uint pchEaten = 0;
             SFGAO pdwAttributes = 0;
-            int nResult = _oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+            int nResult = _oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
             if (nResult != (int)HResult.SUCCESS)
             {
                 FreePIDLs(arrPIDLs);
@@ -371,7 +371,7 @@ public class ShellContextMenu
     /// </summary>
     /// <param name="arrFI">Array of FileInfo</param>
     /// <returns>Array of PIDLs</returns>
-    protected nint[]? GetPIDLs(FileSystemInfo[] arrFI, string currentFolder)
+    protected IntPtr[]? GetPIDLs(FileSystemInfo[] arrFI, string currentFolder)
     {
         if (arrFI == null || arrFI.Length == 0)
             return null;
@@ -380,14 +380,14 @@ public class ShellContextMenu
         if (_oParentFolder == null)
             return null;
 
-        nint[] arrPIDLs = new nint[arrFI.Length];
+        IntPtr[] arrPIDLs = new IntPtr[arrFI.Length];
         int n = 0;
         foreach (FileSystemInfo fi in arrFI)
         {
             // Get the file relative to folder
             uint pchEaten = 0;
             SFGAO pdwAttributes = 0;
-            int nResult = _oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+            int nResult = _oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
             if (nResult != (int)HResult.SUCCESS)
             {
                 FreePIDLs(arrPIDLs);
@@ -405,17 +405,17 @@ public class ShellContextMenu
     /// </summary>
     /// <param name="arrFI">Array of DirectoryInfo</param>
     /// <returns>Array of PIDLs</returns>
-    protected nint[]? GetPIDLs(DirectoryInfo[] arrFI, bool background = false)
+    protected IntPtr[]? GetPIDLs(DirectoryInfo[] arrFI, bool background = false)
     {
         if (arrFI == null || arrFI.Length == 0)
             return null;
 
         if (background && !Root)
         {
-            nint pItemIDL = ILCreateFromPath(arrFI[0].FullName);
-            GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out nint opsf);
+            IntPtr pItemIDL = ILCreateFromPath(arrFI[0].FullName);
+            GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out IntPtr opsf);
             IShellFolder psf = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
-            psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out nint opShellView);
+            psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
             IShellView pShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
             pShellView.GetItemObject((uint)ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
             _oContextMenu = (IContextMenu)opContextMenu;
@@ -429,14 +429,14 @@ public class ShellContextMenu
         if (_oParentFolder == null)
             throw new ExploripCommonException("Parent folder is null");
 
-        nint[] arrPIDLs = new nint[arrFI.Length];
+        IntPtr[] arrPIDLs = new IntPtr[arrFI.Length];
         int n = 0;
         foreach (DirectoryInfo fi in arrFI)
         {
             // Get the file relative to folder
             uint pchEaten = 0;
             SFGAO pdwAttributes = 0;
-            int nResult = _oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+            int nResult = _oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
             if (nResult != (int)HResult.SUCCESS && Root)
             {
                 nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
@@ -643,7 +643,7 @@ public class ShellContextMenu
         }
     }
 
-    private void EnablePaste(nint pMenu, out uint cmdPaste, out uint cmdPasteShortcut)
+    private void EnablePaste(IntPtr pMenu, out uint cmdPaste, out uint cmdPasteShortcut)
     {
         cmdPaste = 0;
         cmdPasteShortcut = 0;

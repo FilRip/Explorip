@@ -43,7 +43,7 @@ public abstract partial class OneFileSystem : ObservableObject
         {
             if (_icon == null && !string.IsNullOrWhiteSpace(FullPath))
             {
-                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out nint hOverlay);
+                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
                 _icon = IconImageConverter.GetImageFromHIcon(hIcon);
                 if (hOverlay != IntPtr.Zero)
                     IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);

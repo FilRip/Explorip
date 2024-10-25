@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,6 +12,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using ManagedShell.Interop;
+using ManagedShell.ShellFolders;
+using ManagedShell.ShellFolders.Interfaces;
 
 namespace ExploripComponents;
 
@@ -83,7 +86,9 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         // Add special folder "Downloads"
         Guid guid = new("374DE290-123F-4565-9164-39C4925E467B");
         NativeMethods.SHGetKnownFolderPath(ref guid, NativeMethods.KnownFolder.None, IntPtr.Zero, out string pathDownload);
-        parent.Children.Add(new OneDirectory(pathDownload, parent, true));
+        NativeMethods.ShFileInfo fi = new();
+        NativeMethods.SHGetFileInfo(pathDownload, NativeMethods.FILE_ATTRIBUTE.NORMAL | NativeMethods.FILE_ATTRIBUTE.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), NativeMethods.SHGFI.DisplayName);
+        parent.Children.Add(new OneDirectory(pathDownload, parent, true, fi.szDisplayName));
 
         foreach (DriveInfo di in DriveInfo.GetDrives())
         {
@@ -101,14 +106,16 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
             {
                 hasSubFolder = false;
             }
-            dir = new OneDirectory(di, parent, hasSubFolder);
+            dir = new OneDirectory(di, parent, hasSubFolder, new ShellItem(di.RootDirectory.FullName).DisplayName);
             parent.Children.Add(dir);
         }
 
         SelectedFolder = parent;
 
         // Add Network root
-        parent = new OneDirectory("::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}", null, true) { MainViewModel = this };
+        string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
+        ShellItem si = new(specialPath);
+        parent = new OneDirectory(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true };
         FolderTreeView.Add(parent);
     }
 

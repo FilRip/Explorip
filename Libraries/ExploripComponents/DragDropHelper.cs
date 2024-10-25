@@ -71,9 +71,9 @@ public class DragDropHelper
             {
                 uint pchEaten = 0;
                 SFGAO pdwAttributes = 0;
-                ShellContextMenu.GetDesktopFolder().ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fullPath, ref pchEaten, out nint pPIDL, ref pdwAttributes);
+                ShellContextMenu.GetDesktopFolder().ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fullPath, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 Guid guid = typeof(IShellFolder).GUID;
-                ShellContextMenu.GetDesktopFolder().BindToObject(pPIDL, IntPtr.Zero, ref guid, out nint pUnknownParentFolder);
+                ShellContextMenu.GetDesktopFolder().BindToObject(pPIDL, IntPtr.Zero, ref guid, out IntPtr pUnknownParentFolder);
                 _shellFolder = (IShellFolder)Marshal.GetObjectForIUnknown(pUnknownParentFolder);
             }
 

@@ -757,4 +757,7 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
     internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, SHGFI uFlags);
+
+    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
+    internal static extern int SHCreateShellItem(IntPtr parentPidl, IntPtr parentShellFolder, IntPtr pidl, out IntPtr shellItemPtr);
 }

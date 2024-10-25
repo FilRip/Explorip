@@ -49,6 +49,14 @@
                     DataType="{x:Type local:OneDirectory}" 
                     ItemsSource="{Binding Children}">
                     <Grid Margin="0" AllowDrop="True" Name="TreeItemGrid" Drop="TreeItemGrid_Drop" DragOver="AllowDrop_DragOver">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseRightButtonUp">
+                                <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseMove">
+                                <i:InvokeCommandAction Command="{Binding MouseMoveTreeViewCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="16"/>
                             <ColumnDefinition Width="5"/>
@@ -59,14 +67,6 @@
                             <Image Source="{Binding IconOverlay}"/>
                         </Grid>
                         <TextBlock Grid.Column="2" Text="{Binding DisplayText}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseRightButtonUp">
-                                <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="MouseMove">
-                                <i:InvokeCommandAction Command="{Binding MouseMoveTreeViewCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
                         </TextBlock>
                     </Grid>
                 </HierarchicalDataTemplate>

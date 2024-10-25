@@ -62,6 +62,7 @@ public partial class NativeMethods
         Context
     }
 
+    [Flags()]
     public enum ResourceType
     {
         Any = 0,
@@ -86,6 +87,31 @@ public partial class NativeMethods
         Ndscontainer = 0x0b
     }
 
+    [Flags()]
+    public enum ResourceUsage : uint
+    {
+        Connectable = 0x1,
+        Container = 0x2,
+        NoLocalDevice = 0x4,
+        Sibling = 0x8,
+        Attached = 0x10,
+        All = Connectable | Container | Attached,
+        Reserved = 0x80000000u
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+    public struct NetResource
+    {
+        public ResourceScope dwScope;
+        public ResourceType dwType;
+        public ResourceDisplaytype dwDisplayType;
+        public ResourceUsage dwUsage;
+        [MarshalAs(UnmanagedType.LPTStr)] public string LocalName;
+        [MarshalAs(UnmanagedType.LPTStr)] public string RemoteName;
+        [MarshalAs(UnmanagedType.LPTStr)] public string Comment;
+        [MarshalAs(UnmanagedType.LPTStr)] public string Provider;
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public struct NetreSource
     {
@@ -99,6 +125,34 @@ public partial class NativeMethods
         public string Provider;
     }
 
+    public enum WNetOpenEnumError
+    {
+        NERR_Success = 0,
+        ERROR_ACCESS_DENIED = 5,
+        ERROR_NOT_ENOUGH_MEMORY = 8,
+        ERROR_BAD_NETPATH = 53,
+        ERROR_NETWORK_BUSY = 54,
+        ERROR_INVALID_PARAMETER = 87,
+        ERROR_INVALID_LEVEL = 124,
+        ERROR_MORE_DATA = 234,
+        ERROR_EXTENDED_ERROR = 1208,
+        ERROR_NO_NETWORK = 1222,
+        ERROR_INVALID_HANDLE_STATE = 1609,
+        ERROR_NO_BROWSER_SERVERS_FOUND = 6118,
+    }
+
     [DllImport(Mpr_DllName)]
     internal static extern int WNetAddConnection2(NetreSource netResource, string password, string username, uint flags);
+
+    [DllImport(Mpr_DllName, CharSet = CharSet.Auto)]
+    internal static extern int WNetOpenEnum(ResourceScope dwScope, ResourceType dwType, ResourceUsage dwUsage, NetResource lpNetResource, ref IntPtr lphEnum);
+
+    [DllImport(Mpr_DllName, CharSet = CharSet.Auto)]
+    internal static extern int WNetEnumResource(IntPtr hEnum, ref int lpcCount, IntPtr lpBuffer, ref uint lpBufferSize);
+
+    [DllImport(Mpr_DllName)]
+    internal static extern int WNetCloseEnum(IntPtr hEnum);
+
+    [DllImport(Mpr_DllName, CharSet = CharSet.Auto, SetLastError = false)]
+    internal static extern int WNetGetLastError(out uint lpError, StringBuilder lpErrorBuf, uint nErrorBufSize, StringBuilder lpNameBuf, uint nNameBufSize);
 }
