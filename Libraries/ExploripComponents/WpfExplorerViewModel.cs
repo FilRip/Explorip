@@ -13,7 +13,6 @@ using CommunityToolkit.Mvvm.Input;
 
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders;
-using ManagedShell.ShellFolders.Interfaces;
 
 namespace ExploripComponents;
 
@@ -121,7 +120,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
 
     public void BrowseTo(string fullPath)
     {
-        string[] folders =fullPath.Split(Path.DirectorySeparatorChar);
+        string[] folders = fullPath.Split(Path.DirectorySeparatorChar);
         OneDirectory actualFolder = FolderTreeView[0];
         string currentPath;
         foreach (string folder in folders)
