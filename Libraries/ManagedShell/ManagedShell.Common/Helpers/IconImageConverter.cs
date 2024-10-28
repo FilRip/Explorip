@@ -53,7 +53,6 @@ public static class IconImageConverter
             {
                 bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 bs.Freeze();
-                NativeMethods.DeleteObject(hBitmap);
             }
             catch
             {
@@ -62,6 +61,7 @@ public static class IconImageConverter
                 else
                     return null;
             }
+            NativeMethods.DeleteObject(hBitmap);
         }
         else
         {
@@ -89,15 +89,15 @@ public static class IconImageConverter
             {
                 bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 bs.Freeze();
-                NativeMethods.DestroyIcon(hIcon);
             }
-            catch
+            catch (Exception)
             {
                 if (returnDefault)
                     bs = GetDefaultIcon();
                 else
                     return null;
             }
+            NativeMethods.DestroyIcon(hIcon);
         }
         else
         {
@@ -146,7 +146,7 @@ public static class IconImageConverter
 
             return img;
         }
-        catch
+        catch (Exception)
         {
             return GenerateEmptyBitmapSource();
         }

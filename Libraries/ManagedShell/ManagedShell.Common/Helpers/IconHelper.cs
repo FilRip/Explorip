@@ -113,6 +113,9 @@ public static class IconHelper
                     SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), flags);
                 }
 
+                if (shinfo.hIcon != IntPtr.Zero)
+                    NativeMethods.DestroyIcon(shinfo.hIcon);
+
                 return GetFromImageList(shinfo.iIcon, size, out hOverlay);
             }
             catch (Exception)

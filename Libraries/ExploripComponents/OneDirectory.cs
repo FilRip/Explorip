@@ -176,6 +176,19 @@ public partial class OneDirectory : OneFileSystem
         return curDir;
     }
 
+    protected override void OnSelectIt()
+    {
+        RefreshListView();
+    }
+
+    protected override void DeSelectIt()
+    {
+        if (_cancellationToken != null && !_cancellationToken.IsCancellationRequested)
+            _cancellationToken.Cancel();
+    }
+
+    #region Size folder
+
     public override ulong Size
     {
         get
@@ -193,17 +206,6 @@ public partial class OneDirectory : OneFileSystem
         }
     }
 
-    protected override void OnSelectIt()
-    {
-        RefreshListView();
-    }
-
-    protected override void DeSelectIt()
-    {
-        if (_cancellationToken != null && !_cancellationToken.IsCancellationRequested)
-            _cancellationToken.Cancel();
-    }
-
     private void EndCalculationSize(Task task)
     {
         _cancellationToken?.Dispose();
@@ -217,6 +219,8 @@ public partial class OneDirectory : OneFileSystem
         _lastSize = calculateSize;
         return Task.CompletedTask;
     }
+
+    #endregion
 
     [RelayCommand()]
     public void ContextMenuBackgroundFolder()
@@ -247,11 +251,19 @@ public partial class OneDirectory : OneFileSystem
             {
                 if (!string.IsNullOrWhiteSpace(FullPath))
                 {
-                    IntPtr hIcon, hOverlay;
+                    IntPtr hIcon = IntPtr.Zero, hOverlay = IntPtr.Zero;
                     if (FullPath.StartsWith("::"))
                     {
                         IntPtr pidl = NativeMethods.ILCreateFromPath(FullPath);
-                        hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                        if (pidl != IntPtr.Zero)
+                        {
+                            hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                            NativeMethods.ILFree(pidl);
+                        }
+                        else
+                        {
+                            _icon = IconImageConverter.GetDefaultIcon();
+                        }
                     }
                     else
                     {
@@ -259,29 +271,34 @@ public partial class OneDirectory : OneFileSystem
                     }
                     if (hIcon != IntPtr.Zero)
                     {
-                        System.Drawing.Icon icon = System.Drawing.Icon.FromHandle(hIcon);
-                        _icon = IconManager.Convert(icon);
+                        _icon = IconImageConverter.GetImageFromHIcon(hIcon);
                         if (hOverlay != IntPtr.Zero)
-                            IconOverlay = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
+                            IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
                     }
-                    if (Icon == null)
+                    if (_icon == null)
                     {
                         System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
                         if (icon != null)
+                        {
                             _icon = IconManager.Convert(icon);
+                            icon.Dispose();
+                        }
                     }
                 }
                 else if (_specialFolder == Environment.SpecialFolder.MyComputer)
                 {
                     IntPtr pidl = IntPtr.Zero;
                     NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
-                    IntPtr hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
-                    if (hIcon != IntPtr.Zero)
+                    if (pidl != IntPtr.Zero)
                     {
-                        System.Drawing.Icon icon = System.Drawing.Icon.FromHandle(hIcon);
-                        _icon = IconManager.Convert(icon);
-                        if (hOverlay != IntPtr.Zero)
-                            IconOverlay = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
+                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                        NativeMethods.ILFree(pidl);
+                        if (hIcon != IntPtr.Zero)
+                        {
+                            _icon = IconImageConverter.GetImageFromHIcon(hIcon);
+                            if (hOverlay != IntPtr.Zero)
+                                IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+                        }
                     }
                 }
             }

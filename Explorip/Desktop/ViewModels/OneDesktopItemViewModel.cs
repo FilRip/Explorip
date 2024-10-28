@@ -153,15 +153,16 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
             IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.ExtraLarge, out IntPtr hOverlay);
             if (hIcon != IntPtr.Zero)
             {
-                System.Drawing.Icon icon = System.Drawing.Icon.FromHandle(hIcon);
-                Icon = IconManager.Convert(icon);
+                Icon = IconImageConverter.GetImageFromHIcon(hIcon);
                 if (hOverlay != IntPtr.Zero)
                     OverlayIcon = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
             }
             if (Icon == null)
             {
                 System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
-                if (icon != null)
+                if (icon == null)
+                    Icon = IconImageConverter.GetDefaultIcon();
+                else
                     Icon = IconManager.Convert(icon);
             }
         }
