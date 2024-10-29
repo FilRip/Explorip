@@ -68,7 +68,7 @@ public partial class OneDirectory : OneFileSystem
 
     public bool HasDummyChild
     {
-        get { return this.Children.Count == 1 && this.Children[0] == _dummyDir; }
+        get { return Children.Count == 1 && Children[0] == _dummyDir; }
     }
 
     partial void OnIsExpandedChanged(bool value)
@@ -76,10 +76,10 @@ public partial class OneDirectory : OneFileSystem
         if (IsExpanded && ParentDirectory != null)
             ParentDirectory.IsExpanded = true;
 
-        if (this.HasDummyChild)
+        if (HasDummyChild)
         {
-            this.Children.Remove(_dummyDir);
-            this.LoadChildren();
+            Children.Remove(_dummyDir);
+            LoadChildren();
         }
     }
 
@@ -103,7 +103,7 @@ public partial class OneDirectory : OneFileSystem
             {
                 hasSubFolder = false;
             }
-            dir = new OneDirectory(newFullPath, this, hasSubFolder, directory);
+            dir = new OneDirectory(newFullPath, this, hasSubFolder, directory) { IsItemVisible = true };
             Children.Add(dir);
         }
     }

@@ -28,6 +28,8 @@ public abstract partial class OneFileSystem : ObservableObject
     [ObservableProperty()]
     private ImageSource? _iconOverlay;
     private readonly bool _isLink;
+    [ObservableProperty()]
+    private bool _isItemVisible;
 
     protected OneFileSystem(string fullPath, string displayText, OneDirectory? parentDirectory) : base()
     {
@@ -37,11 +39,20 @@ public abstract partial class OneFileSystem : ObservableObject
         _displayText = _isLink ? displayText.Substring(0, displayText.Length - 4) : displayText;
     }
 
+    partial void OnIsItemVisibleChanged(bool value)
+    {
+        if (value)
+        {
+            OnPropertyChanged(nameof(Icon));
+            OnPropertyChanged(nameof(DisplayText));
+        }
+    }
+
     public virtual ImageSource? Icon
     {
         get
         {
-            if (_icon == null && !string.IsNullOrWhiteSpace(FullPath))
+            if (_icon == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
             {
                 IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
                 _icon = IconImageConverter.GetImageFromHIcon(hIcon);

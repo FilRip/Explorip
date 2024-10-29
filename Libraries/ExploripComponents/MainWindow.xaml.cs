@@ -119,5 +119,36 @@ namespace ExploripComponents
                 scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + offsetChange);
             }
         }
+
+        private void FileLV_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            foreach (OneFileSystem item in FileLV.Items)
+            {
+                ListViewItem container = (ListViewItem)FileLV.ItemContainerGenerator.ContainerFromItem(item);
+                if (container != null && container.DataContext is OneFileSystem file)
+                    file.IsItemVisible = IsElementInViewport(container);
+            }
+        }
+
+        private bool IsElementInViewport(FrameworkElement element)
+        {
+            if (element != null)
+            {
+                ListViewItem container = (ListViewItem)element;
+                GeneralTransform transform = container.TransformToAncestor(FileLV);
+                Rect bounds = transform.TransformBounds(new Rect(new Point(0, 0), container.RenderSize));
+                Rect viewport = new(0, 0, FileLV.ActualWidth, FileLV.ActualHeight);
+                return viewport.IntersectsWith(bounds);
+            }
+            return false;
+        }
+
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
+        private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+        {
+            if (sender is ListViewItem item && item.DataContext is OneFileSystem file)
+                file.DoubleClickFileCommand.Execute(null);
+        }
     }
 }

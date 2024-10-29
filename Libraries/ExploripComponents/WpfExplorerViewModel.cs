@@ -28,6 +28,8 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     private ObservableCollection<OneFileSystem> _selectedItems = [];
     private readonly Control _control = control;
 
+    #region Drag'n drop
+
     private readonly Stopwatch _stopWatchDrop = new();
     private bool _currentlyDragging;
     public bool CurrentlyDraging
@@ -54,6 +56,8 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     }
     public DragDropKeyStates DragDropKeyStates { get; set; }
 
+    #endregion
+
     public Control CurrentControl
     {
         get { return _control; }
@@ -74,7 +78,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         // Add special folder
         void AddChild(Environment.SpecialFolder folder)
         {
-            OneDirectory child = new(folder, null, true) { MainViewModel = this };
+            OneDirectory child = new(folder, null, true) { MainViewModel = this, IsItemVisible = true };
             parent.Children.Add(child);
         }
         AddChild(Environment.SpecialFolder.Desktop);
@@ -87,7 +91,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         NativeMethods.SHGetKnownFolderPath(ref guid, NativeMethods.KnownFolder.None, IntPtr.Zero, out string pathDownload);
         NativeMethods.ShFileInfo fi = new();
         NativeMethods.SHGetFileInfo(pathDownload, NativeMethods.FILE_ATTRIBUTE.NORMAL | NativeMethods.FILE_ATTRIBUTE.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), NativeMethods.SHGFI.DisplayName);
-        parent.Children.Add(new OneDirectory(pathDownload, parent, true, fi.szDisplayName));
+        parent.Children.Add(new OneDirectory(pathDownload, parent, true, fi.szDisplayName) { IsItemVisible = true });
 
         foreach (DriveInfo di in DriveInfo.GetDrives())
         {
@@ -105,7 +109,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
             {
                 hasSubFolder = false;
             }
-            dir = new OneDirectory(di, parent, hasSubFolder, new ShellItem(di.RootDirectory.FullName).DisplayName);
+            dir = new OneDirectory(di, parent, hasSubFolder, new ShellItem(di.RootDirectory.FullName).DisplayName) { IsItemVisible = true };
             parent.Children.Add(dir);
         }
 
@@ -114,7 +118,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         // Add Network root
         string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
         ShellItem si = new(specialPath);
-        parent = new OneDirectory(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true };
+        parent = new OneDirectory(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
         FolderTreeView.Add(parent);
     }
 
@@ -156,6 +160,13 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         CurrentlyDraging = false;
     }
 
+    public void ScrollToTop()
+    {
+        ((MainWindow)_control).FileLV.FindVisualChild<ScrollViewer>()!.ScrollToTop();
+    }
+
+    #region Auto refresh by folder watcher
+
     private FileSystemWatcher? _fsWatcher;
     partial void OnSelectedFolderChanged(OneDirectory? value)
     {
@@ -177,7 +188,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
             _fsWatcher.EnableRaisingEvents = false;
             _fsWatcher.Path = "";
         }
-        Debug.WriteLine($"Create Watcher of {_fsWatcher.Path}");
+        ScrollToTop();
     }
 
     private void FsWatcher_Renamed(object sender, RenamedEventArgs e)
@@ -199,4 +210,6 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     {
         SelectedFolder!.RefreshListView();
     }
+
+    #endregion
 }

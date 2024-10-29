@@ -77,41 +77,46 @@
         <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"/>
 
         <!-- Right part, ListView for files -->
-        <ListView ScrollViewer.VerticalScrollBarVisibility="Disabled" Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}" SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver">
+        <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}"
+                  SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged"
+                  PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver"
+                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
                     <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ContentControl HorizontalAlignment="Center" HorizontalContentAlignment="Center">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseRightButtonUp">
-                                <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <i:InvokeCommandAction Command="{Binding DoubleClickFileCommand}"/>
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="MouseMove">
-                                <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <StackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver">
-                            <Grid>
-                                <Image Source="{Binding Icon}"/>
-                                <Image Source="{Binding IconOverlay}"/>
-                            </Grid>
-                            <TextBlock Text="{Binding DisplayText}"/>
-                        </StackPanel>
-                    </ContentControl>
+                    <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver">
+                        <Grid>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseRightButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding DoubleClickFileCommand}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseMove">
+                                    <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Image Source="{Binding Icon}" Grid.Row="0"/>
+                            <Image Source="{Binding IconOverlay}" Grid.Row="0"/>
+                            <TextBlock Text="{Binding DisplayText}" Grid.Row="1"/>
+                        </Grid>
+                    </VirtualizingStackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Vertical"/>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
         </ListView>
         
     </Grid>
