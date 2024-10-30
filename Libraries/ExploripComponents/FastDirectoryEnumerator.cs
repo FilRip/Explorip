@@ -37,9 +37,8 @@ public static class FastDirectoryEnumerator
         handle.Dispose();
     }
 
-    public static void FolderSize(string path, out ulong size, CancellationToken token, string filter = "*.*")
+    public static void FolderSize(string path, ref ulong size, CancellationToken token, string filter = "*.*")
     {
-        size = 0;
         List<string> subFolders = [];
         if (string.IsNullOrWhiteSpace(path))
             throw new ArgumentNullException(nameof(path));
@@ -58,7 +57,7 @@ public static class FastDirectoryEnumerator
                 }
                 else
                 {
-                    size += (dataFind.nFileSizeHigh * ((ulong)uint.MaxValue + 1)) + dataFind.nFileSizeLow;
+                    size += ((ulong)dataFind.nFileSizeHigh << 32) + dataFind.nFileSizeLow;
                 }
                 if (!FindNextFile(handle, out dataFind) || token.IsCancellationRequested)
                     break;
@@ -68,7 +67,7 @@ public static class FastDirectoryEnumerator
         if (subFolders.Count > 0)
             foreach (string subFolder in subFolders)
             {
-                FolderSize(Path.Combine(path, subFolder), out size, token, filter);
+                FolderSize(Path.Combine(path, subFolder), ref size, token, filter);
                 if (token.IsCancellationRequested)
                     return;
             }

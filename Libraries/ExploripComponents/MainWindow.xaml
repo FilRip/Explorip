@@ -89,30 +89,30 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver">
-                        <Grid>
+                        <Grid HorizontalAlignment="Stretch">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseRightButtonUp">
                                     <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseDoubleClick">
-                                    <i:InvokeCommandAction Command="{Binding DoubleClickFileCommand}"/>
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseMove">
                                     <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <Image Source="{Binding Icon}" Grid.Row="0"/>
-                            <Image Source="{Binding IconOverlay}" Grid.Row="0"/>
-                            <TextBlock Text="{Binding DisplayText}" Grid.Row="1"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding Icon}" Grid.Column="0"/>
+                            <Image Source="{Binding IconOverlay}" Grid.Column="0"/>
+                            <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0"/>
+                            <TextBlock Text="{Binding Size}" Grid.Column="2" HorizontalAlignment="Right"/>
                         </Grid>
                     </VirtualizingStackPanel>
                 </DataTemplate>

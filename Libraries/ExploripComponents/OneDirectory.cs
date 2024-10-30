@@ -198,8 +198,10 @@ public partial class OneDirectory : OneFileSystem
                 if (_lastSize == null && (_taskCalculateSize == null || _cancellationToken?.IsCancellationRequested == true))
                 {
                     _cancellationToken = new CancellationTokenSource();
-                    _taskCalculateSize = new Task(() => CalculateFolderSize(), _cancellationToken.Token).ContinueWith(EndCalculationSize);
+                    _taskCalculateSize = new Task(() => CalculateFolderSize(), _cancellationToken.Token);
+                    _taskCalculateSize.ContinueWith(EndCalculationSize);
                     _taskCalculateSize.Start();
+                    return 0;
                 }
             }
             return _lastSize!.Value;
@@ -215,7 +217,8 @@ public partial class OneDirectory : OneFileSystem
 
     public Task CalculateFolderSize()
     {
-        FastDirectoryEnumerator.FolderSize(FullPath, out ulong calculateSize, _cancellationToken!.Token);
+        ulong calculateSize = 0;
+        FastDirectoryEnumerator.FolderSize(FullPath, ref calculateSize, _cancellationToken!.Token);
         _lastSize = calculateSize;
         return Task.CompletedTask;
     }
