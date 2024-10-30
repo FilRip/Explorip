@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -24,16 +25,18 @@ namespace ExploripComponents;
 
 public partial class OneDirectory : OneFileSystem
 {
+    #region Fields
+
     private static readonly OneDirectory _dummyDir = new(null, "", false, "");
+
+    #region Binding properties
 
     [ObservableProperty()]
     private ObservableCollection<OneDirectory> _children;
     [ObservableProperty()]
     private bool _isExpanded;
 
-    public DriveInfo? Drive { get; set; }
-
-    public bool NetworkRoot { get; set; }
+    #endregion
 
     private readonly ObservableCollection<OneFileSystem> _items;
     private Task? _taskCalculateSize;
@@ -41,7 +44,9 @@ public partial class OneDirectory : OneFileSystem
     private readonly Environment.SpecialFolder? _specialFolder;
     private readonly object _lockSize = new();
 
-    public WpfExplorerViewModel? MainViewModel { get; set; }
+    #endregion
+
+    #region Constructor
 
     private OneDirectory(OneDirectory? parent, string fullPath, bool hasSubFolder, string displayText) : base(fullPath, displayText, parent)
     {
@@ -66,22 +71,7 @@ public partial class OneDirectory : OneFileSystem
         Drive = drive;
     }
 
-    public bool HasDummyChild
-    {
-        get { return Children.Count == 1 && Children[0] == _dummyDir; }
-    }
-
-    partial void OnIsExpandedChanged(bool value)
-    {
-        if (IsExpanded && ParentDirectory != null)
-            ParentDirectory.IsExpanded = true;
-
-        if (HasDummyChild)
-        {
-            Children.Remove(_dummyDir);
-            LoadChildren();
-        }
-    }
+    #endregion
 
     private void LoadChildren()
     {
@@ -160,7 +150,7 @@ public partial class OneDirectory : OneFileSystem
                 foreach (string file in listFiles)
                     _items.Add(new OneFile(Path.Combine(FullPath, file), this));
             }
-            _cancellationToken?.Cancel();
+            CancelCalculateSize();
             GetRootParent().MainViewModel!.FileListView = _items;
             GetRootParent().MainViewModel!.SelectedFolder = this;
         });
@@ -176,6 +166,26 @@ public partial class OneDirectory : OneFileSystem
         return curDir;
     }
 
+    public void CancelCalculateSize()
+    {
+        if (_cancellationToken != null && !_cancellationToken.IsCancellationRequested)
+            _cancellationToken.Cancel();
+    }
+
+    #region Events
+
+    partial void OnIsExpandedChanged(bool value)
+    {
+        if (IsExpanded && ParentDirectory != null)
+            ParentDirectory.IsExpanded = true;
+
+        if (HasDummyChild)
+        {
+            Children.Remove(_dummyDir);
+            LoadChildren();
+        }
+    }
+
     protected override void OnSelectIt()
     {
         RefreshListView();
@@ -183,9 +193,12 @@ public partial class OneDirectory : OneFileSystem
 
     protected override void DeSelectIt()
     {
-        if (_cancellationToken != null && !_cancellationToken.IsCancellationRequested)
-            _cancellationToken.Cancel();
+        if (_items?.Count > 0)
+            foreach (OneDirectory dir in _items.OfType<OneDirectory>())
+                dir.CancelCalculateSize();
     }
+
+    #endregion
 
     #region Size folder
 
@@ -201,10 +214,9 @@ public partial class OneDirectory : OneFileSystem
                     _taskCalculateSize = new Task(() => CalculateFolderSize(), _cancellationToken.Token);
                     _taskCalculateSize.ContinueWith(EndCalculationSize);
                     _taskCalculateSize.Start();
-                    return 0;
                 }
             }
-            return _lastSize!.Value;
+            return _lastSize ?? 0;
         }
     }
 
@@ -224,6 +236,8 @@ public partial class OneDirectory : OneFileSystem
     }
 
     #endregion
+
+    #region Relay commands
 
     [RelayCommand()]
     public void ContextMenuBackgroundFolder()
@@ -245,6 +259,21 @@ public partial class OneDirectory : OneFileSystem
     {
         GetRootParent().MainViewModel!.BrowseTo(FullPath);
     }
+
+    #endregion
+
+    #region Properties
+
+    private bool HasDummyChild
+    {
+        get { return Children.Count == 1 && Children[0] == _dummyDir; }
+    }
+
+    public DriveInfo? Drive { get; set; }
+
+    public bool NetworkRoot { get; set; }
+
+    public WpfExplorerViewModel? MainViewModel { get; set; }
 
     public override ImageSource? Icon
     {
@@ -309,6 +338,20 @@ public partial class OneDirectory : OneFileSystem
         }
     }
 
+    public override bool Hidden
+    {
+        get
+        {
+            if (Drive != null || NetworkRoot)
+                return false;
+            return base.Hidden;
+        }
+    }
+
+    #endregion
+
+    #region Drag'n Drop
+
     public override void Drop(object sender, DragEventArgs e)
     {
         if (e.Data.GetDataPresent(DataFormats.FileDrop) && GetRootParent().MainViewModel!.NbMillisecondsStartDragging > Constants.DelayIgnoreDrag)
@@ -346,4 +389,6 @@ public partial class OneDirectory : OneFileSystem
             DragDrop.DoDragDrop(ParentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
         }
     }
+
+    #endregion
 }

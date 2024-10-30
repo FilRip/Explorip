@@ -7,11 +7,20 @@ using Securify.ShellLink;
 
 namespace ExploripComponents;
 
-public partial class OneFile(string fullPath, OneDirectory parentDirectory) : OneFileSystem(fullPath, Path.GetFileName(fullPath), parentDirectory)
+public partial class OneFile : OneFileSystem
 {
+    private readonly bool _isLink;
+
+    public OneFile(string fullPath, OneDirectory parentDirectory) : base(fullPath, Path.GetFileName(fullPath), parentDirectory)
+    {
+        string filename = Path.GetFileName(fullPath);
+        _isLink = Path.GetExtension(filename) == ".lnk";
+        DisplayText = _isLink ? filename.Substring(0, filename.Length - 4) : filename;
+    }
+
     public override void DoubleClickFile()
     {
-        if (IsLink)
+        if (_isLink)
         {
             Shortcut shortcut = Shortcut.ReadFromFile(FullPath);
             if (Directory.Exists(shortcut.Target))

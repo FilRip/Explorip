@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -10,34 +11,38 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 namespace ExploripComponents;
 
-public abstract partial class OneFileSystem : ObservableObject
+public abstract partial class OneFileSystem(string fullPath, string displayText, OneDirectory? parentDirectory) : ObservableObject()
 {
-    private readonly OneDirectory? _parentDirectory;
+    #region Fields
+
+    private readonly OneDirectory? _parentDirectory = parentDirectory;
     protected ImageSource? _icon;
     protected ulong? _lastSize;
+    private NativeMethods.ShFileInfo _fileInfo = new();
+    private FileAttributes _fileAttributes;
+
+    #region Binding properties
 
     [ObservableProperty()]
     private bool _isSelected;
     [ObservableProperty()]
-    private string _fullPath;
+    private string _fullPath = fullPath;
     [ObservableProperty()]
-    private string _displayText;
+    private string _displayText = displayText;
     [ObservableProperty()]
     private ImageSource? _iconOverlay;
-    private readonly bool _isLink;
     [ObservableProperty()]
     private bool _isItemVisible;
 
-    protected OneFileSystem(string fullPath, string displayText, OneDirectory? parentDirectory) : base()
-    {
-        _parentDirectory = parentDirectory;
-        _fullPath = fullPath;
-        _isLink = Path.GetExtension(displayText) == ".lnk";
-        _displayText = _isLink ? displayText.Substring(0, displayText.Length - 4) : displayText;
-    }
+    #endregion
+
+    #endregion
+
+    #region Events
 
     partial void OnIsItemVisibleChanged(bool value)
     {
@@ -45,27 +50,20 @@ public abstract partial class OneFileSystem : ObservableObject
         {
             OnPropertyChanged(nameof(Icon));
             OnPropertyChanged(nameof(DisplayText));
-        }
-    }
-
-    public virtual ImageSource? Icon
-    {
-        get
-        {
-            if (_icon == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
+            OnPropertyChanged(nameof(Size));
+            if (string.IsNullOrWhiteSpace(_fileInfo.szTypeName))
             {
-                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
-                _icon = IconImageConverter.GetImageFromHIcon(hIcon);
-                if (hOverlay != IntPtr.Zero)
-                    IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+                _fileInfo = new();
+                NativeMethods.SHGetFileInfo(FullPath, NativeMethods.FILE_ATTRIBUTE.NULL, ref _fileInfo, (uint)Marshal.SizeOf(_fileInfo), NativeMethods.SHGFI.TypeName);
+                if (!FullPath.StartsWith("::"))
+                    _fileAttributes = File.GetAttributes(FullPath);
             }
-            return _icon;
+            OnPropertyChanged(nameof(TypeName));
+            OnPropertyChanged(nameof(FileAttributes));
+            OnPropertyChanged(nameof(Hidden));
+            OnPropertyChanged(nameof(ReadOnly));
+            OnPropertyChanged(nameof(Opacity));
         }
-    }
-
-    protected virtual bool IsLink
-    {
-        get { return _isLink; }
     }
 
     partial void OnIsSelectedChanged(bool oldValue, bool newValue)
@@ -84,12 +82,36 @@ public abstract partial class OneFileSystem : ObservableObject
     {
     }
 
-    public FileAttributes FileAttributes
+    #endregion
+
+    #region Properties
+
+    public virtual ImageSource? Icon
     {
-        get { return File.GetAttributes(FullPath); }
+        get
+        {
+            if (_icon == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
+            {
+                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                _icon = IconImageConverter.GetImageFromHIcon(hIcon);
+                if (hOverlay != IntPtr.Zero)
+                    IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+            }
+            return _icon;
+        }
     }
 
-    public bool Hidden
+    public FileAttributes FileAttributes
+    {
+        get { return _fileAttributes; }
+    }
+
+    public bool ReadOnly
+    {
+        get { return FileAttributes.HasFlag(FileAttributes.ReadOnly); }
+    }
+
+    public virtual bool Hidden
     {
         get { return FileAttributes.HasFlag(FileAttributes.Hidden); }
     }
@@ -108,6 +130,20 @@ public abstract partial class OneFileSystem : ObservableObject
         get { return _parentDirectory; }
     }
 
+    public string TypeName
+    {
+        get { return _fileInfo.szTypeName; }
+    }
+
+    public double Opacity
+    {
+        get { return Hidden ? 0.8 : 1; }
+    }
+
+    #endregion
+
+    #region Relay commands
+
     [RelayCommand()]
     public void ContextMenuFiles()
     {
@@ -124,6 +160,10 @@ public abstract partial class OneFileSystem : ObservableObject
 
     [RelayCommand()]
     public abstract void DoubleClickFile();
+
+    #endregion
+
+    #region Drag'n Drop
 
     [RelayCommand()]
     public virtual void MouseMove()
@@ -148,4 +188,6 @@ public abstract partial class OneFileSystem : ObservableObject
 
         _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = false;
     }
+
+    #endregion
 }

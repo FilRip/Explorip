@@ -180,13 +180,15 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         }
         try
         {
-            _fsWatcher.Path = SelectedFolder!.FullPath;
-            _fsWatcher.EnableRaisingEvents = true;
+            if (!string.IsNullOrWhiteSpace(SelectedFolder!.FullPath))
+            {
+                _fsWatcher.Path = SelectedFolder!.FullPath;
+                _fsWatcher.EnableRaisingEvents = true;
+            }
         }
         catch (Exception)
         {
             _fsWatcher.EnableRaisingEvents = false;
-            _fsWatcher.Path = "";
         }
         ScrollToTop();
     }

@@ -10,6 +10,11 @@
         d:DataContext="{d:DesignInstance Type=local:WpfExplorerViewModel}"
         ui:WindowHelper.UseModernWindowStyle="True"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            <local:FileSizeConverter x:Key="sizeConverter"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
@@ -94,7 +99,7 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver">
+                    <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
                         <Grid HorizontalAlignment="Stretch">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseRightButtonUp">
@@ -106,13 +111,15 @@
                             </i:Interaction.Triggers>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
                             </Grid.ColumnDefinitions>
                             <Image Source="{Binding Icon}" Grid.Column="0"/>
                             <Image Source="{Binding IconOverlay}" Grid.Column="0"/>
                             <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0"/>
-                            <TextBlock Text="{Binding Size}" Grid.Column="2" HorizontalAlignment="Right"/>
+                            <TextBlock Text="{Binding TypeName}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0"/>
+                            <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Grid.Column="3" HorizontalAlignment="Right"/>
                         </Grid>
                     </VirtualizingStackPanel>
                 </DataTemplate>
