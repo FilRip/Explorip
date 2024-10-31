@@ -73,7 +73,7 @@ public partial class OneDirectory : OneFileSystem
 
     #endregion
 
-    private void LoadChildren()
+    public void LoadChildren()
     {
         OneDirectory dir;
         bool hasSubFolder;
@@ -294,6 +294,11 @@ public partial class OneDirectory : OneFileSystem
     #endregion
 
     #region Properties
+
+    public bool IsSpecialFolder
+    {
+        get { return _specialFolder != null; }
+    }
 
     private bool HasDummyChild
     {

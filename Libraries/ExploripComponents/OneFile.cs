@@ -24,11 +24,10 @@ public partial class OneFile : OneFileSystem
         {
             Shortcut shortcut = Shortcut.ReadFromFile(FullPath);
             if (Directory.Exists(shortcut.Target))
-            {
                 ParentDirectory!.GetRootParent().MainViewModel!.BrowseTo(shortcut.Target);
-                return;
-            }
+            return;
         }
+
         Process process = new()
         {
             StartInfo = new ProcessStartInfo()

@@ -160,7 +160,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         }
     }
 
-    protected OneDirectory? ParentDirectory
+    public OneDirectory? ParentDirectory
     {
         get { return _parentDirectory; }
     }

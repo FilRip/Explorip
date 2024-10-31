@@ -172,17 +172,44 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         IInputElement o = FocusManager.GetFocusedElement(_control);
         if (e.Key == Key.F5)
             SelectedFolder?.Refresh();
-        if (e.Key == Key.F2)
+        else if (e.Key == Key.F2)
         {
             if (o is ListViewItem && SelectedItems.Count > 0)
                 SelectedItems[0].EditMode(true);
             else if (o is TreeViewItem)
                 SelectedFolder?.EditMode(true);
         }
-        if (e.Key == Key.Escape && _currentlyRenaming != null)
+        else if (e.Key == Key.Escape && _currentlyRenaming != null)
             _currentlyRenaming.EditMode(false);
-        if ((e.Key == Key.Enter || e.Key == Key.Return) && _currentlyRenaming != null)
+        else if ((e.Key == Key.Enter || e.Key == Key.Return) && _currentlyRenaming != null)
             _currentlyRenaming.Rename();
+        else if (e.Key == Key.Delete)
+        {
+            if (o is ListViewItem && SelectedItems.Count > 0)
+            {
+                Explorip.HookFileOperations.FilesOperations.FileOperation fileOp = new(NativeMethods.GetDesktopWindow());
+                foreach (OneFileSystem fs in SelectedItems)
+                    fileOp.DeleteItem(fs.FullPath);
+                fileOp.PerformOperations();
+            }
+            else if (o is TreeViewItem && SelectedFolder != null)
+            {
+                if (SelectedFolder.Drive != null || SelectedFolder.IsSpecialFolder)
+                    return;
+                Explorip.HookFileOperations.FilesOperations.FileOperation fileOp = new(NativeMethods.GetDesktopWindow());
+                fileOp.DeleteItem(SelectedFolder.FullPath);
+                fileOp.PerformOperations();
+                SelectedFolder = SelectedFolder.ParentDirectory;
+                SelectedFolder!.Children.Clear();
+                SelectedFolder!.LoadChildren();
+            }
+        }
+        else if (e.Key == Key.Back)
+        {
+            OneDirectory? parent = ((MainWindow)_control).FolderTV.SelectedItem as OneDirectory;
+            if (parent?.ParentDirectory != null)
+                BrowseTo(parent.ParentDirectory.FullPath);
+        }
     }
 
     public void SetCurrentlyRenaming(OneFileSystem? fs)
