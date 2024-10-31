@@ -184,8 +184,10 @@ public class ShellContextMenu
         IShellFolder psf = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
         psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
         IShellView pShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
-        pShellView.GetItemObject((uint)ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
+        pShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
         _oContextMenu = (IContextMenu)opContextMenu;
+        _oContextMenu2 = (IContextMenu2)opContextMenu;
+        _oContextMenu3 = (IContextMenu3)opContextMenu;
     }
 
     private void InvokeCommand(IContextMenu oContextMenu, uint nCmd, System.Windows.Point pointInvoke)
@@ -506,7 +508,6 @@ public class ShellContextMenu
     /// <summary>
     /// Shows the context menu
     /// </summary>
-    /// <param name="arrFI">FileInfos (should all be in same directory)</param>
     /// <param name="pointScreen">Where to show the menu</param>
     private void ShowContextMenu(System.Windows.Point pointScreen, bool background = false)
     {
@@ -535,7 +536,7 @@ public class ShellContextMenu
                 CMD_LAST,
                 flag);
 
-            if (_iContextMenuPtr != IntPtr.Zero)
+            if (_oContextMenu2 == null)
             {
                 Guid guid = typeof(IContextMenu2).GUID;
                 Marshal.QueryInterface(_iContextMenuPtr, ref guid, out _iContextMenuPtr2);
@@ -544,17 +545,14 @@ public class ShellContextMenu
                 _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(_iContextMenuPtr2, typeof(IContextMenu2));
                 _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(_iContextMenuPtr3, typeof(IContextMenu3));
             }
-            else
-            {
-                _oContextMenu2 = (IContextMenu2)_oContextMenu;
-                _oContextMenu3 = (IContextMenu3)_oContextMenu;
-            }
 
             uint cmdPaste = 0, cmdPasteShortcut = 0;
             if (background)
                 EnablePaste(_pMenu, out cmdPaste, out cmdPasteShortcut);
 
             uint nSelected = 0;
+
+            ExpandSubMenu(_pMenu, _oContextMenu2);
 
             nSelected = TrackPopupMenuEx(
                 _pMenu,
@@ -597,6 +595,26 @@ public class ShellContextMenu
 
     #region Manipulate submenu
 
+    private static void ExpandSubMenu(IntPtr pMenu, IContextMenu2 cm2)
+    {
+        if (pMenu == IntPtr.Zero)
+            return;
+        int nbMenu = GetMenuItemCount(pMenu);
+        if (nbMenu > 0)
+        {
+            int IdMenu;
+            for (int i = 0; i < nbMenu; i++)
+            {
+                IdMenu = GetMenuItemID(pMenu, i);
+                if (IdMenu < 0)
+                {
+                    IntPtr IdSousMenu = GetSubMenu(pMenu, i);
+                    cm2.HandleMenuMsg((int)WM.INITMENUPOPUP, IdSousMenu, (IntPtr)i);
+                }
+            }
+        }
+    }
+
     private void PasteClipboard()
     {
         System.Windows.DataObject data = (System.Windows.DataObject)System.Windows.Clipboard.GetDataObject();
@@ -626,7 +644,7 @@ public class ShellContextMenu
     {
         System.Windows.DataObject data = (System.Windows.DataObject)System.Windows.Clipboard.GetDataObject();
         string[] listItems = (string[])data.GetData(System.Windows.DataFormats.FileDrop);
-        string shortcutLabel = Load("shell32.dll", 4154, "%s - Shortcut ().lnk").Replace(" ().lnk", "");
+        string shortcutLabel = Explorip.Constants.Localization.NEW_SHORTCUT_NAME.Replace(" ().lnk", "");
         Shortcut sc;
         int iteration;
         foreach (string fs in listItems)
@@ -665,10 +683,10 @@ public class ShellContextMenu
                                 RemoveMenu(pMenu, (uint)IdMenu, false);
                             continue;
                         }
-                        bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Load("shell32.dll", 33562, "Paste").Trim().ToLower();
+                        bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE.Trim().ToLower();
                         if (!string.IsNullOrWhiteSpace(libelle) &&
                             (bPaste ||
-                             libelle.Trim().ToLower().Replace("&", "") == Load("shell32.dll", 37376, "Paste shortcut").Trim().ToLower()) &&
+                             libelle.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
                              PasteAvailable())
                         {
                             MenuItemInfo mi = new()
@@ -693,22 +711,6 @@ public class ShellContextMenu
     {
         System.Windows.IDataObject data = System.Windows.Clipboard.GetDataObject();
         return data.GetDataPresent(System.Windows.DataFormats.FileDrop);
-    }
-
-    public static string Load(string libraryName, uint Ident, string DefaultText)
-    {
-        IntPtr libraryHandle = GetModuleHandle(libraryName);
-        if (libraryHandle != IntPtr.Zero)
-        {
-            StringBuilder sb = new(1024);
-            int size = LoadString(libraryHandle, Ident, sb, 1024);
-            if (size > 0)
-                return sb.ToString();
-            else
-                return DefaultText;
-        }
-        else
-            return DefaultText;
     }
 
     private string? GetMenuItemString(int IdOrPositionMenu, IntPtr pointeurMenu, bool usePosition, out uint cmd)

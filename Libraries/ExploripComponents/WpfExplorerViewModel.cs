@@ -74,6 +74,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     [RelayCommand()]
     public void Refresh()
     {
+        Explorip.Constants.Localization.LoadTranslation();
         FolderTreeView.Clear();
         OneDirectory dir;
         bool hasSubFolder;

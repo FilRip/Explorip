@@ -53,6 +53,7 @@ public static class Localization
     public static string ERROR { get; private set; }
     public static string SEARCH_RESULT { get; private set; }
     public static string SHOW_TASKBAR_ON_ALL_SCREENS { get; private set; }
+    public static string NEW_SHORTCUT_NAME { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -102,6 +103,7 @@ public static class Localization
         ERROR = Load("shell32.dll", 51248, "Error");
         SEARCH_RESULT = Load("shell32.dll", 34132, "Search result for %s").Replace("%s", "{0}");
         SHOW_TASKBAR_ON_ALL_SCREENS = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Taskbar_MultiMon/Description}", "Show taskbar on all screens");
+        NEW_SHORTCUT_NAME = Load("shell32.dll", 4154, "%s - Shortcut ().lnk");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

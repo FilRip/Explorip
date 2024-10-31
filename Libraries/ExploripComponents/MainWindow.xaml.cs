@@ -40,11 +40,6 @@ namespace ExploripComponents
             get { return (WpfExplorerViewModel)DataContext; }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            MyDataContext.Refresh();
-        }
-
         private void FileLV_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             MyDataContext.SelectedItems = new ObservableCollection<OneFileSystem>(FileLV.SelectedItems.OfType<OneFileSystem>());
