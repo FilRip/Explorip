@@ -222,11 +222,12 @@ public partial class OneDirectory : OneFileSystem
     public override void Rename()
     {
         Directory.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), NewName));
+        DisplayText = NewName;
         base.Rename();
-        if (IsExpanded)
+        if (ParentDirectory?.IsExpanded == true)
         {
-            Children.Clear();
-            LoadChildren();
+            ParentDirectory.Children.Clear();
+            ParentDirectory.LoadChildren();
         }
     }
 

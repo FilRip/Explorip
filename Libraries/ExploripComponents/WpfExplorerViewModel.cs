@@ -169,10 +169,16 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     [RelayCommand()]
     public void KeyUp(KeyEventArgs e)
     {
+        IInputElement o = FocusManager.GetFocusedElement(_control);
         if (e.Key == Key.F5)
             SelectedFolder?.Refresh();
-        if (e.Key == Key.F2 && SelectedItems.Count > 0)
-            SelectedItems[0].EditMode(true);
+        if (e.Key == Key.F2)
+        {
+            if (o is ListViewItem && SelectedItems.Count > 0)
+                SelectedItems[0].EditMode(true);
+            else if (o is TreeViewItem)
+                SelectedFolder?.EditMode(true);
+        }
         if (e.Key == Key.Escape && _currentlyRenaming != null)
             _currentlyRenaming.EditMode(false);
         if ((e.Key == Key.Enter || e.Key == Key.Return) && _currentlyRenaming != null)

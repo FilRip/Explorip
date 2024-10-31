@@ -75,8 +75,8 @@
                             <Image Source="{Binding Icon}"/>
                             <Image Source="{Binding IconOverlay}"/>
                         </Grid>
-                        <TextBlock Grid.Column="2" Text="{Binding DisplayText}">
-                        </TextBlock>
+                        <TextBlock Grid.Column="2" Text="{Binding DisplayText}" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
+                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
                     </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
