@@ -200,6 +200,36 @@ public partial class OneDirectory : OneFileSystem
 
     #endregion
 
+    public void Refresh()
+    {
+        DeSelectIt();
+        if (IsExpanded)
+        {
+            Children.Clear();
+            LoadChildren();
+        }
+        RefreshListView();
+        GetRootParent().MainViewModel!.ScrollToTop();
+    }
+
+    public override void EditMode(bool activate)
+    {
+        if (Drive != null || _specialFolder != null)
+            return;
+        base.EditMode(activate);
+    }
+
+    public override void Rename()
+    {
+        Directory.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), NewName));
+        base.Rename();
+        if (IsExpanded)
+        {
+            Children.Clear();
+            LoadChildren();
+        }
+    }
+
     #region Size folder
 
     public override ulong Size

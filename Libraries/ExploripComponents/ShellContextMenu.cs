@@ -21,7 +21,7 @@ public class ShellContextMenu
 {
     #region Fields
 
-    private IntPtr pMenu, iContextMenuPtr, iContextMenuPtr2, iContextMenuPtr3;
+    private IntPtr _pMenu, _iContextMenuPtr, _iContextMenuPtr2, _iContextMenuPtr3;
     private IContextMenu? _oContextMenu;
     private IContextMenu2? _oContextMenu2;
     private IContextMenu3? _oContextMenu3;
@@ -40,10 +40,10 @@ public class ShellContextMenu
     /// <summary>Default constructor</summary>
     public ShellContextMenu()
     {
-        pMenu = IntPtr.Zero;
-        iContextMenuPtr = IntPtr.Zero;
-        iContextMenuPtr2 = IntPtr.Zero;
-        iContextMenuPtr3 = IntPtr.Zero;
+        _pMenu = IntPtr.Zero;
+        _iContextMenuPtr = IntPtr.Zero;
+        _iContextMenuPtr2 = IntPtr.Zero;
+        _iContextMenuPtr3 = IntPtr.Zero;
         CleanUp();
     }
 
@@ -79,28 +79,28 @@ public class ShellContextMenu
 
     private void CleanUp()
     {
-        if (pMenu != IntPtr.Zero)
+        if (_pMenu != IntPtr.Zero)
         {
-            DestroyMenu(pMenu);
-            pMenu = IntPtr.Zero;
+            DestroyMenu(_pMenu);
+            _pMenu = IntPtr.Zero;
         }
 
-        if (iContextMenuPtr != IntPtr.Zero)
+        if (_iContextMenuPtr != IntPtr.Zero)
         {
-            Marshal.Release(iContextMenuPtr);
-            iContextMenuPtr = IntPtr.Zero;
+            Marshal.Release(_iContextMenuPtr);
+            _iContextMenuPtr = IntPtr.Zero;
         }
 
-        if (iContextMenuPtr2 != IntPtr.Zero)
+        if (_iContextMenuPtr2 != IntPtr.Zero)
         {
-            Marshal.Release(iContextMenuPtr2);
-            iContextMenuPtr2 = IntPtr.Zero;
+            Marshal.Release(_iContextMenuPtr2);
+            _iContextMenuPtr2 = IntPtr.Zero;
         }
 
-        if (iContextMenuPtr3 != IntPtr.Zero)
+        if (_iContextMenuPtr3 != IntPtr.Zero)
         {
-            Marshal.Release(iContextMenuPtr3);
-            iContextMenuPtr3 = IntPtr.Zero;
+            Marshal.Release(_iContextMenuPtr3);
+            _iContextMenuPtr3 = IntPtr.Zero;
         }
 
         ReleaseAll();
@@ -174,6 +174,18 @@ public class ShellContextMenu
             _oContextMenu = null;
             return false;
         }
+    }
+
+    private void GetContextMenuInterfacesBackground(string fullPath)
+    {
+        IntPtr pItemIDL = ILCreateFromPath(fullPath);
+        GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out IntPtr opsf);
+        ILFree(pItemIDL);
+        IShellFolder psf = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
+        psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
+        IShellView pShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
+        pShellView.GetItemObject((uint)ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
+        _oContextMenu = (IContextMenu)opContextMenu;
     }
 
     private void InvokeCommand(IContextMenu oContextMenu, uint nCmd, System.Windows.Point pointInvoke)
@@ -405,21 +417,10 @@ public class ShellContextMenu
     /// </summary>
     /// <param name="arrFI">Array of DirectoryInfo</param>
     /// <returns>Array of PIDLs</returns>
-    protected IntPtr[]? GetPIDLs(DirectoryInfo[] arrFI, bool background = false)
+    protected IntPtr[]? GetPIDLs(DirectoryInfo[] arrFI)
     {
         if (arrFI == null || arrFI.Length == 0)
             return null;
-
-        if (background && !Root)
-        {
-            IntPtr pItemIDL = ILCreateFromPath(arrFI[0].FullName);
-            GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out IntPtr opsf);
-            IShellFolder psf = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
-            psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
-            IShellView pShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
-            pShellView.GetItemObject((uint)ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
-            _oContextMenu = (IContextMenu)opContextMenu;
-        }
 
         if (!Root && arrFI[0].FullName.Length > 3)
             GetParentFolder(arrFI[0].Parent!.FullName, false);
@@ -492,9 +493,13 @@ public class ShellContextMenu
     public void ShowContextMenu(DirectoryInfo dir, System.Windows.Point pointScreen, bool background = true)
     {
         ReleaseAll();
-        _arrPIDLs = GetPIDLs([dir], background);
         if (background)
+        {
+            GetContextMenuInterfacesBackground(dir.FullName);
             _strBackgroundFolder = dir.FullName;
+        }
+        else
+            _arrPIDLs = GetPIDLs([dir]);
         ShowContextMenu(pointScreen, background);
     }
 
@@ -507,42 +512,37 @@ public class ShellContextMenu
     {
         try
         {
-            if (_arrPIDLs == null)
+            if ((!background) &&
+                (_arrPIDLs == null || !GetContextMenuInterfaces(_arrPIDLs, out _iContextMenuPtr)))
             {
                 ReleaseAll();
                 return;
             }
-
-            if (!background && !GetContextMenuInterfaces(_arrPIDLs, out iContextMenuPtr))
-            {
-                ReleaseAll();
-                return;
-            }
-
-            pMenu = CreatePopupMenu();
 
             if (_oContextMenu == null)
                 throw new ExploripCommonException("ContextMenu interface not initialized");
+
+            _pMenu = CreatePopupMenu();
 
             CMF flag = CMF.NORMAL;
             if (!background)
                 flag |= CMF.CANRENAME | CMF.EXTENDEDVERBS;
 
             _oContextMenu.QueryContextMenu(
-                pMenu,
+                _pMenu,
                 0,
                 CMD_FIRST,
                 CMD_LAST,
                 flag);
 
-            if (iContextMenuPtr != IntPtr.Zero)
+            if (_iContextMenuPtr != IntPtr.Zero)
             {
                 Guid guid = typeof(IContextMenu2).GUID;
-                Marshal.QueryInterface(iContextMenuPtr, ref guid, out iContextMenuPtr2);
+                Marshal.QueryInterface(_iContextMenuPtr, ref guid, out _iContextMenuPtr2);
                 guid = typeof(IContextMenu3).GUID;
-                Marshal.QueryInterface(iContextMenuPtr, ref guid, out iContextMenuPtr3);
-                _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr2, typeof(IContextMenu2));
-                _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(iContextMenuPtr3, typeof(IContextMenu3));
+                Marshal.QueryInterface(_iContextMenuPtr, ref guid, out _iContextMenuPtr3);
+                _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(_iContextMenuPtr2, typeof(IContextMenu2));
+                _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(_iContextMenuPtr3, typeof(IContextMenu3));
             }
             else
             {
@@ -552,20 +552,20 @@ public class ShellContextMenu
 
             uint cmdPaste = 0, cmdPasteShortcut = 0;
             if (background)
-                EnablePaste(pMenu, out cmdPaste, out cmdPasteShortcut);
+                EnablePaste(_pMenu, out cmdPaste, out cmdPasteShortcut);
 
             uint nSelected = 0;
 
             nSelected = TrackPopupMenuEx(
-                pMenu,
+                _pMenu,
                 TPM.RETURNCMD | TPM.RIGHTBUTTON,
                 (int)pointScreen.X,
                 (int)pointScreen.Y,
                 ((MainWindow)System.Windows.Application.Current.Windows[0]).MyDataContext.WindowHandle,
                 IntPtr.Zero);
 
-            DestroyMenu(pMenu);
-            pMenu = IntPtr.Zero;
+            DestroyMenu(_pMenu);
+            _pMenu = IntPtr.Zero;
 
             if (nSelected != 0)
             {

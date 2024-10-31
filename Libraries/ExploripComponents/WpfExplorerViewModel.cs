@@ -18,6 +18,8 @@ namespace ExploripComponents;
 
 public partial class WpfExplorerViewModel(IntPtr handle, Control control) : ObservableObject
 {
+    #region Binding fields
+
     [ObservableProperty()]
     private ObservableCollection<OneDirectory> _folderTreeView = [];
     [ObservableProperty()]
@@ -26,7 +28,11 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     private OneDirectory? _selectedFolder;
     [ObservableProperty()]
     private ObservableCollection<OneFileSystem> _selectedItems = [];
+
+    #endregion
+
     private readonly Control _control = control;
+    private OneFileSystem? _currentlyRenaming;
 
     #region Drag'n drop
 
@@ -158,6 +164,24 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     public void MouseUp()
     {
         CurrentlyDraging = false;
+    }
+
+    [RelayCommand()]
+    public void KeyUp(KeyEventArgs e)
+    {
+        if (e.Key == Key.F5)
+            SelectedFolder?.Refresh();
+        if (e.Key == Key.F2 && SelectedItems.Count > 0)
+            SelectedItems[0].EditMode(true);
+        if (e.Key == Key.Escape && _currentlyRenaming != null)
+            _currentlyRenaming.EditMode(false);
+        if ((e.Key == Key.Enter || e.Key == Key.Return) && _currentlyRenaming != null)
+            _currentlyRenaming.Rename();
+    }
+
+    public void SetCurrentlyRenaming(OneFileSystem? fs)
+    {
+        _currentlyRenaming = fs;
     }
 
     public void ScrollToTop()

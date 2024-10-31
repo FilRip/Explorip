@@ -150,5 +150,17 @@ namespace ExploripComponents
             if (sender is ListViewItem item && item.DataContext is OneFileSystem file)
                 file.DoubleClickFileCommand.Execute(null);
         }
+
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
+        private void EditBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+        {
+            TextBox editName = (TextBox)sender;
+            if (editName.Visibility == Visibility.Visible)
+            {
+                editName.Focus();
+                editName.SelectAll();
+            }
+        }
     }
 }

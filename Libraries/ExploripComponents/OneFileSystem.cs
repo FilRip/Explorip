@@ -24,9 +24,12 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     protected ulong? _lastSize;
     private NativeMethods.ShFileInfo _fileInfo = new();
     private FileAttributes _fileAttributes;
-
     #region Binding properties
 
+    [ObservableProperty()]
+    private bool _renameMode;
+    [ObservableProperty()]
+    private bool _readOnlyBox = true;
     [ObservableProperty()]
     private bool _isSelected;
     [ObservableProperty()]
@@ -37,6 +40,8 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     private ImageSource? _iconOverlay;
     [ObservableProperty()]
     private bool _isItemVisible;
+    [ObservableProperty()]
+    private string _newName = displayText;
 
     #endregion
 
@@ -83,6 +88,36 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     }
 
     #endregion
+
+    partial void OnRenameModeChanged(bool value)
+    {
+        ReadOnlyBox = !value;
+    }
+
+    public virtual void EditMode(bool activate)
+    {
+        if (_parentDirectory == null)
+            return;
+
+        if (activate)
+        {
+            if (RenameMode)
+                return;
+            NewName = Path.GetFileName(FullPath);
+            RenameMode = true;
+            _parentDirectory.GetRootParent().MainViewModel!.SetCurrentlyRenaming(this);
+        }
+        else
+        {
+            _parentDirectory.GetRootParent().MainViewModel!.SetCurrentlyRenaming(null);
+            RenameMode = false;
+        }
+    }
+
+    public virtual void Rename()
+    {
+        RenameMode = false;
+    }
 
     #region Properties
 

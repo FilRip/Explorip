@@ -63,4 +63,10 @@ public partial class OneFile : OneFileSystem
         }
         base.Drop(sender, e);
     }
+
+    public override void Rename()
+    {
+        File.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), NewName));
+        base.Rename();
+    }
 }

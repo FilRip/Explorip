@@ -13,6 +13,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <local:FileSizeConverter x:Key="sizeConverter"/>
+            <BooleanToVisibilityConverter x:Key="boolToVisible"/>
         </ResourceDictionary>
     </Window.Resources>
     <i:Interaction.Triggers>
@@ -21,6 +22,9 @@
         </i:EventTrigger>
         <i:EventTrigger EventName="MouseUp">
             <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="KeyUp">
+            <i:InvokeCommandAction Command="{Binding KeyUpCommand}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
@@ -117,7 +121,10 @@
                             </Grid.ColumnDefinitions>
                             <Image Source="{Binding Icon}" Grid.Column="0"/>
                             <Image Source="{Binding IconOverlay}" Grid.Column="0"/>
-                            <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0"/>
+                            <!-- Name -->
+                            <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
+                            <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
+                            <!-- End name -->
                             <TextBlock Text="{Binding TypeName}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0"/>
                             <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Grid.Column="3" HorizontalAlignment="Right"/>
                         </Grid>
