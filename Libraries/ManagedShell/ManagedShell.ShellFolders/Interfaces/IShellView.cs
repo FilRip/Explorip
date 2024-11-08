@@ -11,12 +11,12 @@ internal enum ShellViewGetItemObject
     AllView = 0x00000002,
     Checked = 0x00000003,
     TypeMask = 0x0000000F,
-    ViewOrderFlag = unchecked((int)0x80000000)
+    ViewOrderFlag = unchecked((int)0x80000000),
 }
 
-public enum FolderViewMode : uint
+public enum FolderViewMode
 {
-    //FVM_AUTO = -1,
+    FVM_AUTO = -1,
     FVM_FIRST = 1,
     FVM_ICON = 1,
     FVM_SMALLICON = 2,
@@ -26,7 +26,7 @@ public enum FolderViewMode : uint
     FVM_TILE = 6,
     FVM_THUMBSTRIP = 7,
     FVM_CONTENT = 8,
-    FVM_LAST = 8
+    FVM_LAST = 8,
 }
 
 [Flags()]
@@ -66,7 +66,7 @@ public enum FolderFlags : uint
     FWF_NOBROWSERVIEWSTATE = 0x10000000,
     FWF_SUBSETGROUPS = 0x20000000,
     FWF_USESEARCHFOLDER = 0x40000000,
-    FWF_ALLOWRTLREADING = 0x80000000
+    FWF_ALLOWRTLREADING = 0x80000000,
 }
 
 [StructLayout(LayoutKind.Sequential)]

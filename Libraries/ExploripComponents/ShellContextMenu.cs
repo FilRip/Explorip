@@ -31,8 +31,9 @@ public class ShellContextMenu
     private const uint CMD_FIRST = 0;
     private const uint CMD_LAST = (uint)short.MaxValue;
     private string? _strBackgroundFolder;
-    private static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CmInvokeCommandInfoEx));
-
+    /*private Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.ExplorerBrowserClass? _explorerBrowser;
+    private System.Windows.Window? _explorerWindow;*/
+    private IShellView _shellView;
     #endregion
 
     #region Constructor
@@ -136,6 +137,12 @@ public class ShellContextMenu
             FreePIDLs(_arrPIDLs);
             _arrPIDLs = null;
         }
+        /*_explorerBrowser?.Destroy();
+        if (_explorerWindow != null)
+        {
+            _explorerWindow.Close();
+            _explorerWindow = null;
+        }*/
     }
 
     #endregion
@@ -178,23 +185,40 @@ public class ShellContextMenu
 
     private void GetContextMenuInterfacesBackground(string fullPath)
     {
+        object opContextMenu;
+        Guid guidSv = typeof(IShellView).GUID;
+
         IntPtr pItemIDL = ILCreateFromPath(fullPath);
         GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out IntPtr opsf);
         ILFree(pItemIDL);
-        IShellFolder psf = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
-        psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
-        IShellView pShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
-        pShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
+        _oParentFolder = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
+        _oParentFolder.CreateViewObject(IntPtr.Zero, guidSv, out IntPtr opShellView);
+        _shellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
+        _shellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out opContextMenu);
+
+        /*_explorerBrowser = new Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.ExplorerBrowserClass();
+        _explorerWindow = new System.Windows.Window();
+        _explorerWindow.Show();
+        IntPtr handleWindow = new System.Windows.Interop.WindowInteropHelper(_explorerWindow).EnsureHandle();
+        Microsoft.WindowsAPICodePack.Shell.Common.NativeRect rect = new(0, 32, (int)_explorerWindow.Width, (int)_explorerWindow.Height - 32);
+        _explorerBrowser.Initialize(handleWindow, ref rect, null);
+        _explorerBrowser.SetFolderSettings(new Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.FolderSettings() { Options = Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.FolderOptions.NoColumnHeaders | Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.FolderOptions.HideFilenames | Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.FolderOptions.NoSubfolders, ViewMode = Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.FolderViewMode.Auto });
+        _explorerBrowser.SetOptions(Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.ExplorerBrowserOptions.NavigateOnce | Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.ExplorerBrowserOptions.NoWrapperWindow | Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.ExplorerBrowserOptions.NoBorder | Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.ExplorerBrowserOptions.NoTravelLog);
+        _explorerBrowser.BrowseToObject(Microsoft.WindowsAPICodePack.Shell.Common.ShellObject.FromParsingName(fullPath).NativeShellItem, 0);
+        _explorerBrowser.GetCurrentView(ref guidSv, out IntPtr newpShellView);
+        IShellView newShellView = (IShellView)Marshal.GetTypedObjectForIUnknown(newpShellView, typeof(IShellView));
+        newShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out opContextMenu);*/
+
         _oContextMenu = (IContextMenu)opContextMenu;
         _oContextMenu2 = (IContextMenu2)opContextMenu;
         _oContextMenu3 = (IContextMenu3)opContextMenu;
     }
 
-    private void InvokeCommand(IContextMenu oContextMenu, uint nCmd, System.Windows.Point pointInvoke)
+    private void InvokeCommand(uint nCmd, System.Windows.Point pointInvoke)
     {
         CmInvokeCommandInfoEx invoke = new()
         {
-            cbSize = cbInvokeCommand,
+            cbSize = Marshal.SizeOf(typeof(CmInvokeCommandInfoEx)),
             lpVerb = (IntPtr)(nCmd - CMD_FIRST),
             lpDirectory = _strParentFolder,
             lpVerbW = (IntPtr)(nCmd - CMD_FIRST),
@@ -205,7 +229,7 @@ public class ShellContextMenu
             ptInvoke = new Point((long)pointInvoke.X, (long)pointInvoke.Y),
             nShow = WindowShowStyle.ShowNormal,
         };
-        oContextMenu.InvokeCommand(ref invoke);
+        _oContextMenu?.InvokeCommand(ref invoke);
     }
 
     /// <summary>
@@ -540,9 +564,12 @@ public class ShellContextMenu
             {
                 Guid guid = typeof(IContextMenu2).GUID;
                 Marshal.QueryInterface(_iContextMenuPtr, ref guid, out _iContextMenuPtr2);
-                guid = typeof(IContextMenu3).GUID;
-                Marshal.QueryInterface(_iContextMenuPtr, ref guid, out _iContextMenuPtr3);
                 _oContextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(_iContextMenuPtr2, typeof(IContextMenu2));
+            }
+            if (_oContextMenu3 == null)
+            {
+                Guid guid = typeof(IContextMenu3).GUID;
+                Marshal.QueryInterface(_iContextMenuPtr, ref guid, out _iContextMenuPtr3);
                 _oContextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(_iContextMenuPtr3, typeof(IContextMenu3));
             }
 
@@ -574,10 +601,10 @@ public class ShellContextMenu
                     else if (nSelected == cmdPasteShortcut)
                         PasteShortcutClipboard();
                     else
-                        InvokeCommand(_oContextMenu, nSelected, pointScreen);
+                        InvokeCommand(nSelected, pointScreen);
                 }
                 else
-                    InvokeCommand(_oContextMenu, nSelected, pointScreen);
+                    InvokeCommand(nSelected, pointScreen);
             }
         }
         catch (Exception)

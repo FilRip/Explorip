@@ -760,4 +760,10 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
     internal static extern int SHCreateShellItem(IntPtr parentPidl, IntPtr parentShellFolder, IntPtr pidl, out IntPtr shellItemPtr);
+
+    [DllImport(Shell32_DllName, SetLastError = false)]
+    internal static extern int SHCreateDefaultContextMenu(ref object defContextMenu, in Guid riid, out IntPtr ppv);
+
+    [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
+    internal static extern int SHParseDisplayName(string pszName, IntPtr pbc, out IntPtr ppidl, uint sfgaoIn, out uint sfgaoOut);
 }
