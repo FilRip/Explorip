@@ -270,7 +270,7 @@ public partial class OneDirectory : OneFileSystem
     #region Relay commands
 
     [RelayCommand()]
-    public void ContextMenuBackgroundFolder()
+    public void ContextMenuFolder()
     {
         // When right click on an item tree view
         ShellContextMenu scm = new()

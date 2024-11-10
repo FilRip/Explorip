@@ -42,7 +42,11 @@ namespace WindowsDesktop.Interop
             VirtualDesktopCache.Initialize(_assembly);
 
             VirtualDesktopManager = (IVirtualDesktopManager)Activator.CreateInstance(Type.GetTypeFromCLSID(ClSid.VirtualDesktopManager));
-            if (ProductInfo.OSBuild >= 22631)
+            if (ProductInfo.OSBuild >= 26100)
+            {
+                VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal26100(_assembly);
+            }
+            else if (ProductInfo.OSBuild >= 22631)
             {
                 VirtualDesktopManagerInternal = new VirtualDesktopManagerInternal22631(_assembly);
             }

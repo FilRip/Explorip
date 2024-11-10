@@ -61,7 +61,11 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
                 _fileInfo = new();
                 NativeMethods.SHGetFileInfo(FullPath, NativeMethods.FILE_ATTRIBUTE.NULL, ref _fileInfo, (uint)Marshal.SizeOf(_fileInfo), NativeMethods.SHGFI.TypeName);
                 if (!FullPath.StartsWith("::"))
-                    _fileAttributes = File.GetAttributes(FullPath);
+                    try
+                    {
+                        _fileAttributes = File.GetAttributes(FullPath);
+                    }
+                    catch (Exception) { /* Ignore errors */ }
             }
             OnPropertyChanged(nameof(TypeName));
             OnPropertyChanged(nameof(FileAttributes));

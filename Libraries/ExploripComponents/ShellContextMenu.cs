@@ -28,12 +28,12 @@ public class ShellContextMenu
     private IShellFolder? _oParentFolder;
     private IntPtr[]? _arrPIDLs;
     private string? _strParentFolder;
-    private const uint CMD_FIRST = 0;
-    private const uint CMD_LAST = (uint)short.MaxValue;
     private string? _strBackgroundFolder;
+    private IShellView? _shellView;
+
     /*private Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser.ExplorerBrowserClass? _explorerBrowser;
     private System.Windows.Window? _explorerWindow;*/
-    private IShellView _shellView;
+
     #endregion
 
     #region Constructor
@@ -132,6 +132,11 @@ public class ShellContextMenu
             Marshal.ReleaseComObject(_oParentFolder);
             _oParentFolder = null;
         }
+        if (_shellView != null)
+        {
+            Marshal.ReleaseComObject(_shellView);
+            _shellView = null;
+        }
         if (_arrPIDLs != null)
         {
             FreePIDLs(_arrPIDLs);
@@ -154,7 +159,6 @@ public class ShellContextMenu
     #endregion
 
     /// <summary>Gets the interfaces to the context menu</summary>
-    /// <param name="oParentFolder">Parent folder</param>
     /// <param name="arrPIDLs">PIDLs</param>
     /// <returns>true if it got the interfaces, otherwise false</returns>
     private bool GetContextMenuInterfaces(IntPtr[] arrPIDLs, out IntPtr ctxMenuPtr)
@@ -219,15 +223,16 @@ public class ShellContextMenu
         CmInvokeCommandInfoEx invoke = new()
         {
             cbSize = Marshal.SizeOf(typeof(CmInvokeCommandInfoEx)),
-            lpVerb = (IntPtr)(nCmd - CMD_FIRST),
-            lpDirectory = _strParentFolder,
-            lpVerbW = (IntPtr)(nCmd - CMD_FIRST),
+            lpVerbW = new IntPtr(nCmd),
+            lpVerb = new IntPtr(nCmd),
             lpDirectoryW = _strParentFolder,
+            lpDirectory = _strParentFolder,
             fMask = CMIC.UNICODE | CMIC.PTINVOKE |
-            (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? CMIC.CONTROL_DOWN : 0) |
-            (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? CMIC.SHIFT_DOWN : 0),
+                (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? CMIC.CONTROL_DOWN : 0) |
+                (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? CMIC.SHIFT_DOWN : 0),
             ptInvoke = new Point((long)pointInvoke.X, (long)pointInvoke.Y),
             nShow = WindowShowStyle.ShowNormal,
+            hwnd = ((MainWindow)System.Windows.Application.Current.MainWindow).MyDataContext.WindowHandle,
         };
         _oContextMenu?.InvokeCommand(ref invoke);
     }
@@ -490,30 +495,6 @@ public class ShellContextMenu
     }
 
     /// <summary>
-    /// Shows the context menu
-    /// </summary>
-    /// <param name="files">FileInfos (should all be in same directory)</param>
-    /// <param name="pointScreen">Where to show the menu</param>
-    public void ShowContextMenu(FileInfo[] files, System.Windows.Point pointScreen)
-    {
-        ReleaseAll();
-        _arrPIDLs = GetPIDLs(files);
-        ShowContextMenu(pointScreen);
-    }
-
-    /// <summary>
-    /// Shows the context menu
-    /// </summary>
-    /// <param name="dirs">DirectoryInfos (should all be in same directory)</param>
-    /// <param name="pointScreen">Where to show the menu</param>
-    public void ShowContextMenu(DirectoryInfo[] dirs, System.Windows.Point pointScreen)
-    {
-        ReleaseAll();
-        _arrPIDLs = GetPIDLs(dirs);
-        ShowContextMenu(pointScreen);
-    }
-
-    /// <summary>
     /// Show default context menu of folder
     /// </summary>
     public void ShowContextMenu(DirectoryInfo dir, System.Windows.Point pointScreen, bool background = true)
@@ -556,8 +537,8 @@ public class ShellContextMenu
             _oContextMenu.QueryContextMenu(
                 _pMenu,
                 0,
-                CMD_FIRST,
-                CMD_LAST,
+                0,
+                (uint)short.MaxValue,
                 flag);
 
             if (_oContextMenu2 == null)

@@ -60,7 +60,7 @@
                     <Grid Margin="0" AllowDrop="True" Name="TreeItemGrid" Drop="TreeItemGrid_Drop" DragOver="AllowDrop_DragOver">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonUp">
-                                <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
+                                <i:InvokeCommandAction Command="{Binding ContextMenuFolderCommand}"/>
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseMove">
                                 <i:InvokeCommandAction Command="{Binding MouseMoveTreeViewCommand}"/>
@@ -92,7 +92,7 @@
                   VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
-                    <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}"/>
+                    <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}" PassEventArgsToCommand="True"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <ListView.ItemContainerStyle>
