@@ -157,9 +157,9 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     public void ContextMenuBackgroundFolder(MouseButtonEventArgs e)
     {
         // When right click on empty space in list view
-        if (SelectedItems.Count == 0)
+        if (SelectedItems.Count == 0 && !string.IsNullOrWhiteSpace(SelectedFolder?.FullPath))
         {
-            new ShellContextMenu().ShowContextMenu(new DirectoryInfo(SelectedFolder!.FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
+            new ShellContextMenu().ShowContextMenu(new DirectoryInfo(SelectedFolder.FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
         }
     }
 

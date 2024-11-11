@@ -176,7 +176,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
 
     public double Opacity
     {
-        get { return Hidden ? 0.8 : 1; }
+        get { return Hidden ? 0.75 : 1; }
     }
 
     #endregion

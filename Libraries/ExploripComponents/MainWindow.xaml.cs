@@ -29,7 +29,7 @@ namespace ExploripComponents
             if (WindowsSettings.IsWindowsApplicationInDarkMode())
             {
                 WindowsSettings.UseImmersiveDarkMode(_windowHandle, true);
-                _ = Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
+                Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
 
             DataContext = new WpfExplorerViewModel(_windowHandle, this);
@@ -91,7 +91,6 @@ namespace ExploripComponents
 
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void Scroll_PreviewDragOver(object sender, DragEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
             if (sender is not FrameworkElement control)
                 return;
@@ -114,6 +113,7 @@ namespace ExploripComponents
                 scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + offsetChange);
             }
         }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
         private void FileLV_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -140,15 +140,14 @@ namespace ExploripComponents
 
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
             if (sender is ListViewItem item && item.DataContext is OneFileSystem file)
                 file.DoubleClickFileCommand.Execute(null);
         }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void EditBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
         {
             TextBox editName = (TextBox)sender;
             if (editName.Visibility == Visibility.Visible)
@@ -157,5 +156,6 @@ namespace ExploripComponents
                 editName.SelectAll();
             }
         }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     }
 }
