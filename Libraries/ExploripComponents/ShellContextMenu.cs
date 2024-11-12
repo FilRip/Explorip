@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 
 using Explorip.Helpers;
+using Explorip.HookFileOperations.FilesOperations;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders.Enums;
@@ -18,13 +18,18 @@ using Securify.ShellLink;
 
 using static ManagedShell.Interop.NativeMethods;
 
+using Localization = Explorip.Constants.Localization;
+using MFT = ManagedShell.Interop.NativeMethods.MFT;
+using Point = ManagedShell.Interop.NativeMethods.Point;
+
 namespace ExploripComponents;
 
-public class ShellContextMenu
+/// <summary>Default constructor</summary>
+public class ShellContextMenu(WpfExplorerViewModel viewModel)
 {
     #region Fields
 
-    private IntPtr _pMenu, _contextMenuPtr, _contextMenu2Ptr, _contextMenu3Ptr;
+    private IntPtr _pMenu = IntPtr.Zero, _contextMenuPtr = IntPtr.Zero, _contextMenu2Ptr = IntPtr.Zero, _contextMenu3Ptr = IntPtr.Zero;
     private IContextMenu? _contextMenu;
     private IContextMenu2? _contextMenu2;
     private IContextMenu3? _contextMenu3;
@@ -33,23 +38,8 @@ public class ShellContextMenu
     private string? _strParentFolder;
     private string? _strCurrentFolder;
     private IShellView? _backgroundShellView;
-    private readonly WpfExplorerViewModel _viewModel;
+    private readonly WpfExplorerViewModel _viewModel = viewModel;
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
-    private IntPtr _sendToSubMenu;
-
-    #endregion
-
-    #region Constructor
-
-    /// <summary>Default constructor</summary>
-    public ShellContextMenu(WpfExplorerViewModel viewModel)
-    {
-        _pMenu = IntPtr.Zero;
-        _contextMenuPtr = IntPtr.Zero;
-        _contextMenu2Ptr = IntPtr.Zero;
-        _contextMenu3Ptr = IntPtr.Zero;
-        _viewModel = viewModel;
-    }
 
     #endregion
 
@@ -523,46 +513,7 @@ public class ShellContextMenu
                     if (nSelected == _cmdRename)
                         _viewModel.RenameMode();
                     else
-                    {
-                        if (_sendToSubMenu != IntPtr.Zero)
-                        {
-                            bool isSendTo = IsCmdInMenu(_sendToSubMenu, nSelected, out string? fullName);
-                            if (isSendTo)
-                            {
-                                OneFileSystem[]? selectedItems = _viewModel.GetCurrentSelection();
-                                if (selectedItems == null || selectedItems.Length == 0)
-                                    return;
-                                if (fullName == Explorip.Constants.Localization.SEND_TO_DESKTOP)
-                                {
-                                    foreach (string fs in selectedItems.Select(fs => fs.FullPath))
-                                    {
-                                        Shortcut shortcut = Shortcut.CreateShortcut(fs);
-                                        string name = Explorip.Constants.Localization.NEW_SHORTCUT_NAME.Replace(" ().lnk", "").Replace("%s", Path.GetFileNameWithoutExtension(fs)) + ".lnk";
-                                        int iteration = 1;
-                                        while (File.Exists(Path.Combine(Environment.SpecialFolder.Desktop.FullPath(), name)))
-                                        {
-                                            name = Explorip.Constants.Localization.NEW_SHORTCUT_NAME.Replace(" ().lnk", "").Replace("%s", Path.GetFileNameWithoutExtension(fs)) + $" ({iteration}).lnk";
-                                            iteration++;
-                                        }
-                                        shortcut.WriteToFile(Path.Combine(Environment.SpecialFolder.Desktop.FullPath(), name));
-                                    }
-                                }
-                                else
-                                {
-                                    List<string> listPath = selectedItems.Select(fs => fs.FullPath).ToList();
-                                    string args = "\"" + string.Join(" \"", listPath) + "\"";
-                                    string[] listFiles = Directory.GetFiles(Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Windows", "SendTo"));
-                                    foreach (string filename in listFiles)
-                                        if (Path.GetFileNameWithoutExtension(filename) == fullName)
-                                        {
-                                            Process.Start(filename, args);
-                                        }
-                                }
-                                return;
-                            }
-                        }
                         InvokeCommand(nSelected, pointScreen);
-                    }
                 }
             }
 
@@ -606,11 +557,11 @@ public class ShellContextMenu
 
     private void PasteClipboard()
     {
-        System.Windows.DataObject data = (System.Windows.DataObject)System.Windows.Clipboard.GetDataObject();
-        string[] listItems = (string[])data.GetData(System.Windows.DataFormats.FileDrop);
+        DataObject data = (DataObject)Clipboard.GetDataObject();
+        string[] listItems = (string[])data.GetData(DataFormats.FileDrop);
         byte[] buffer = new byte[4];
         bool move = false;
-        if (((MemoryStream)System.Windows.Clipboard.GetData("Preferred DropEffect")).Read(buffer, 0, 4) > 0)
+        if (((MemoryStream)Clipboard.GetData("Preferred DropEffect")).Read(buffer, 0, 4) > 0)
         {
             int dropEffect = BitConverter.ToInt32(buffer, 0);
             if (dropEffect == 2)
@@ -622,18 +573,18 @@ public class ShellContextMenu
                 fileOp.MoveItem(fs, _strCurrentFolder, Path.GetFileName(fs));
             else
                 fileOp.CopyItem(fs, _strCurrentFolder, Path.GetFileName(fs));
-        fileOp.ChangeOperationFlags(Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_RENAMEONCOLLISION |
-            Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_NOCONFIRMMKDIR |
-            Explorip.HookFileOperations.FilesOperations.EFileOperation.FOFX_ADDUNDORECORD);
+        fileOp.ChangeOperationFlags(EFileOperation.FOF_RENAMEONCOLLISION |
+            EFileOperation.FOF_NOCONFIRMMKDIR |
+            EFileOperation.FOFX_ADDUNDORECORD);
         fileOp.PerformOperations();
         fileOp.Dispose();
     }
 
     private void PasteShortcutClipboard()
     {
-        System.Windows.DataObject data = (System.Windows.DataObject)System.Windows.Clipboard.GetDataObject();
-        string[] listItems = (string[])data.GetData(System.Windows.DataFormats.FileDrop);
-        string shortcutLabel = Explorip.Constants.Localization.NEW_SHORTCUT_NAME.Replace(" ().lnk", "");
+        DataObject data = (DataObject)Clipboard.GetDataObject();
+        string[] listItems = (string[])data.GetData(DataFormats.FileDrop);
+        string shortcutLabel = Localization.NEW_SHORTCUT_NAME.Replace(" ().lnk", "");
         Shortcut sc;
         int iteration;
         foreach (string fs in listItems)
@@ -653,7 +604,7 @@ public class ShellContextMenu
     private void RemoveLastEmptyMenuItem(IntPtr pMenu)
     {
         int nbMenu = GetMenuItemCount(pMenu);
-        string? libelle = GetMenuItemString(nbMenu - 1, pMenu, true, out _, out _);
+        string? libelle = GetMenuItemString(nbMenu - 1, pMenu, true, out _);
         if (string.IsNullOrWhiteSpace(libelle))
             RemoveMenu(pMenu, (uint)nbMenu - 1, MF.BYPOSITION);
     }
@@ -663,7 +614,6 @@ public class ShellContextMenu
         _cmdPaste = 0;
         _cmdPasteShortcut = 0;
         _cmdRename = 0;
-        _sendToSubMenu = IntPtr.Zero;
 
         if (pMenu != IntPtr.Zero)
         {
@@ -672,15 +622,15 @@ public class ShellContextMenu
             {
                 for (uint i = 0; i < nbMenu; i++)
                 {
-                    string? libelle = GetMenuItemString((int)i, pMenu, true, out uint cmd, out IntPtr pSubMenu);
+                    string? libelle = GetMenuItemString((int)i, pMenu, true, out uint cmd);
                     if (string.IsNullOrWhiteSpace(libelle))
                         continue;
                     if (background)
                     {
-                        bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE.Trim().ToLower();
+                        bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Localization.PASTE.Trim().ToLower();
                         if (!string.IsNullOrWhiteSpace(libelle) &&
                             (bPaste ||
-                                libelle.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
+                                libelle.Trim().ToLower().Replace("&", "") == Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
                                 PasteAvailable())
                         {
                             MenuItemInfo mi = new()
@@ -697,13 +647,9 @@ public class ShellContextMenu
                         }
                         continue;
                     }
-                    if (libelle!.Trim().ToLower() == Explorip.Constants.Localization.RENAME_MENUITEM.Trim().ToLower())
+                    if (libelle!.Trim().ToLower() == Localization.RENAME_MENUITEM.Trim().ToLower())
                     {
                         _cmdRename = cmd;
-                    }
-                    else if (libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.SEND_TO.Trim().ToLower().Replace("_", ""))
-                    {
-                        _sendToSubMenu = pSubMenu;
                     }
                 }
             }
@@ -712,11 +658,11 @@ public class ShellContextMenu
 
     public static bool PasteAvailable()
     {
-        System.Windows.IDataObject data = System.Windows.Clipboard.GetDataObject();
-        return data.GetDataPresent(System.Windows.DataFormats.FileDrop);
+        IDataObject data = Clipboard.GetDataObject();
+        return data.GetDataPresent(DataFormats.FileDrop);
     }
 
-    private string? GetMenuItemString(int IdOrPositionMenu, IntPtr pMenu, bool usePosition, out uint cmd, out IntPtr pSubMenu)
+    private string? GetMenuItemString(int IdOrPositionMenu, IntPtr pMenu, bool usePosition, out uint cmd)
     {
         try
         {
@@ -724,47 +670,20 @@ public class ShellContextMenu
             {
                 cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
                 dwTypeData = new string('\0', 256),
-                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID | MIIM.SUBMENU,
-                fType = ManagedShell.Interop.NativeMethods.MFT.STRING | ManagedShell.Interop.NativeMethods.MFT.DISABLED | ManagedShell.Interop.NativeMethods.MFT.GRAYED,
+                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID,
+                fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED,
             };
             result.cch = result.dwTypeData.Length - 1;
             if (GetMenuItemInfo(pMenu, (uint)IdOrPositionMenu, usePosition, ref result))
             {
                 cmd = result.wID;
-                pSubMenu = result.hSubMenu;
                 return result.dwTypeData;
             }
         }
         catch (Exception) { /* Ignore errors */ }
         cmd = 0;
-        pSubMenu = IntPtr.Zero;
+
         return null;
-    }
-
-    private bool IsCmdInMenu(IntPtr pMenu, uint cmd, out string? name)
-    {
-        name = null;
-        if (pMenu == IntPtr.Zero)
-            return false;
-
-        int nbMenu = GetMenuItemCount(pMenu);
-        for (int i = 0; i < nbMenu; i++)
-        {
-            MenuItemInfo result = new()
-            {
-                cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
-                dwTypeData = new string('\0', 256),
-                fMask = MIIM.STRING | MIIM.ID,
-            };
-            result.cch = result.dwTypeData.Length - 1;
-            if (GetMenuItemInfo(pMenu, (uint)i, true, ref result) && result.wID == cmd)
-            {
-                name = result.dwTypeData;
-                return true;
-            }
-        }
-
-        return false;
     }
 
     #endregion
