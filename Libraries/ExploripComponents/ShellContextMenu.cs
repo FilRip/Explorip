@@ -486,15 +486,11 @@ public class ShellContextMenu
                 _contextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(_contextMenu3Ptr, typeof(IContextMenu3));
             }
 
-            uint cmdPaste = 0, cmdPasteShortcut = 0;
-            if (background)
-                EnablePaste(_pMenu, out cmdPaste, out cmdPasteShortcut);
-
-            uint nSelected = 0;
+            GetSpecialCmd(_pMenu, background, out uint cmdPaste, out uint cmdPasteShortcut, out uint cmdRename, out uint cmdSendTo);
 
             ExpandSubMenu(_pMenu, _contextMenu2);
 
-            nSelected = TrackPopupMenuEx(
+            uint nSelected = TrackPopupMenuEx(
                 _pMenu,
                 TPM.RETURNCMD | TPM.RIGHTBUTTON,
                 (int)pointScreen.X,
@@ -517,7 +513,12 @@ public class ShellContextMenu
                         InvokeCommand(nSelected, pointScreen);
                 }
                 else
-                    InvokeCommand(nSelected, pointScreen);
+                {
+                    if (nSelected == cmdRename)
+                        ((MainWindow)System.Windows.Application.Current.Windows[0]).MyDataContext.RenameMode();
+                    else
+                        InvokeCommand(nSelected, pointScreen);
+                }
             }
         }
         catch (Exception)
@@ -548,8 +549,8 @@ public class ShellContextMenu
                 IdMenu = GetMenuItemID(pMenu, i);
                 if (IdMenu < 0)
                 {
-                    IntPtr IdSousMenu = GetSubMenu(pMenu, i);
-                    cm2.HandleMenuMsg((int)WM.INITMENUPOPUP, IdSousMenu, (IntPtr)i);
+                    IntPtr IdSubMenu = GetSubMenu(pMenu, i);
+                    cm2.HandleMenuMsg((int)WM.INITMENUPOPUP, IdSubMenu, (IntPtr)i);
                 }
             }
         }
@@ -601,10 +602,12 @@ public class ShellContextMenu
         }
     }
 
-    private void EnablePaste(IntPtr pMenu, out uint cmdPaste, out uint cmdPasteShortcut)
+    private void GetSpecialCmd(IntPtr pMenu, bool background, out uint cmdPaste, out uint cmdPasteShortcut, out uint cmdRename, out uint cmdSendTo)
     {
         cmdPaste = 0;
         cmdPasteShortcut = 0;
+        cmdRename = 0;
+        cmdSendTo = 0;
         if (pMenu != IntPtr.Zero)
         {
             int nbMenu = GetMenuItemCount(pMenu);
@@ -623,23 +626,35 @@ public class ShellContextMenu
                                 RemoveMenu(pMenu, (uint)IdMenu, false);
                             continue;
                         }
-                        bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE.Trim().ToLower();
-                        if (!string.IsNullOrWhiteSpace(libelle) &&
-                            (bPaste ||
-                             libelle.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
-                             PasteAvailable())
+                        if (background)
                         {
-                            MenuItemInfo mi = new()
+                            bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE.Trim().ToLower();
+                            if (!string.IsNullOrWhiteSpace(libelle) &&
+                                (bPaste ||
+                                 libelle.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
+                                 PasteAvailable())
                             {
-                                cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
-                                fMask = MIIM.STATE,
-                                fState = MFS.ENABLED,
-                            };
-                            if (bPaste)
-                                cmdPaste = cmd;
-                            else
-                                cmdPasteShortcut = cmd;
-                            SetMenuItemInfo(pMenu, (uint)IdMenu, false, ref mi);
+                                MenuItemInfo mi = new()
+                                {
+                                    cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
+                                    fMask = MIIM.STATE,
+                                    fState = MFS.ENABLED,
+                                };
+                                if (bPaste)
+                                    cmdPaste = cmd;
+                                else
+                                    cmdPasteShortcut = cmd;
+                                SetMenuItemInfo(pMenu, (uint)IdMenu, false, ref mi);
+                            }
+                            continue;
+                        }
+                        if (libelle!.Trim().ToLower() == Explorip.Constants.Localization.RENAME_MENUITEM.Trim().ToLower())
+                        {
+                            cmdRename = cmd;
+                        }
+                        else if (libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.SEND_TO.Trim().ToLower().Replace("_", ""))
+                        {
+                            cmdSendTo = cmd;
                         }
                     }
                 }
@@ -661,7 +676,7 @@ public class ShellContextMenu
             {
                 cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
                 dwTypeData = new string('\0', 256),
-                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID | MIIM.BITMAP,
+                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID,
                 fType = ManagedShell.Interop.NativeMethods.MFT.STRING | ManagedShell.Interop.NativeMethods.MFT.DISABLED | ManagedShell.Interop.NativeMethods.MFT.GRAYED
             };
             sortie.cch = sortie.dwTypeData.Length - 1;
