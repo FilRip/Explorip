@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Input;
@@ -30,18 +33,22 @@ public class ShellContextMenu
     private string? _strParentFolder;
     private string? _strCurrentFolder;
     private IShellView? _backgroundShellView;
+    private readonly WpfExplorerViewModel _viewModel;
+    private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
+    private IntPtr _sendToSubMenu;
 
     #endregion
 
     #region Constructor
 
     /// <summary>Default constructor</summary>
-    public ShellContextMenu()
+    public ShellContextMenu(WpfExplorerViewModel viewModel)
     {
         _pMenu = IntPtr.Zero;
         _contextMenuPtr = IntPtr.Zero;
         _contextMenu2Ptr = IntPtr.Zero;
         _contextMenu3Ptr = IntPtr.Zero;
+        _viewModel = viewModel;
     }
 
     #endregion
@@ -206,7 +213,7 @@ public class ShellContextMenu
                 (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? CMIC.SHIFT_DOWN : 0),
             ptInvoke = new Point((long)pointInvoke.X, (long)pointInvoke.Y),
             nShow = WindowShowStyle.ShowNormal,
-            hwnd = ((MainWindow)System.Windows.Application.Current.MainWindow).MyDataContext.WindowHandle,
+            hwnd = _viewModel.WindowHandle,
         };
         _contextMenu?.InvokeCommand(ref invoke);
         // TODO : New : https://superuser.com/questions/34704/how-can-i-add-an-item-to-the-new-context-menu
@@ -486,45 +493,86 @@ public class ShellContextMenu
                 _contextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(_contextMenu3Ptr, typeof(IContextMenu3));
             }
 
-            GetSpecialCmd(_pMenu, background, out uint cmdPaste, out uint cmdPasteShortcut, out uint cmdRename, out uint cmdSendTo);
+            RemoveLastEmptyMenuItem(_pMenu);
 
-            ExpandSubMenu(_pMenu, _contextMenu2);
+            ExpandSubMenu(_pMenu);
+
+            GetSpecialCmd(_pMenu, background);
 
             uint nSelected = TrackPopupMenuEx(
                 _pMenu,
                 TPM.RETURNCMD | TPM.RIGHTBUTTON,
                 (int)pointScreen.X,
                 (int)pointScreen.Y,
-                ((MainWindow)System.Windows.Application.Current.Windows[0]).MyDataContext.WindowHandle,
+                _viewModel.WindowHandle,
                 IntPtr.Zero);
-
-            DestroyMenu(_pMenu);
-            _pMenu = IntPtr.Zero;
 
             if (nSelected != 0)
             {
                 if (background)
                 {
-                    if (nSelected == cmdPaste)
+                    if (nSelected == _cmdPaste)
                         PasteClipboard();
-                    else if (nSelected == cmdPasteShortcut)
+                    else if (nSelected == _cmdPasteShortcut)
                         PasteShortcutClipboard();
                     else
                         InvokeCommand(nSelected, pointScreen);
                 }
                 else
                 {
-                    if (nSelected == cmdRename)
-                        ((MainWindow)System.Windows.Application.Current.Windows[0]).MyDataContext.RenameMode();
+                    if (nSelected == _cmdRename)
+                        _viewModel.RenameMode();
                     else
+                    {
+                        if (_sendToSubMenu != IntPtr.Zero)
+                        {
+                            bool isSendTo = IsCmdInMenu(_sendToSubMenu, nSelected, out string? fullName);
+                            if (isSendTo)
+                            {
+                                OneFileSystem[]? selectedItems = _viewModel.GetCurrentSelection();
+                                if (selectedItems == null || selectedItems.Length == 0)
+                                    return;
+                                if (fullName == Explorip.Constants.Localization.SEND_TO_DESKTOP)
+                                {
+                                    foreach (string fs in selectedItems.Select(fs => fs.FullPath))
+                                    {
+                                        Shortcut shortcut = Shortcut.CreateShortcut(fs);
+                                        string name = Explorip.Constants.Localization.NEW_SHORTCUT_NAME.Replace(" ().lnk", "").Replace("%s", Path.GetFileNameWithoutExtension(fs)) + ".lnk";
+                                        int iteration = 1;
+                                        while (File.Exists(Path.Combine(Environment.SpecialFolder.Desktop.FullPath(), name)))
+                                        {
+                                            name = Explorip.Constants.Localization.NEW_SHORTCUT_NAME.Replace(" ().lnk", "").Replace("%s", Path.GetFileNameWithoutExtension(fs)) + $" ({iteration}).lnk";
+                                            iteration++;
+                                        }
+                                        shortcut.WriteToFile(Path.Combine(Environment.SpecialFolder.Desktop.FullPath(), name));
+                                    }
+                                }
+                                else
+                                {
+                                    List<string> listPath = selectedItems.Select(fs => fs.FullPath).ToList();
+                                    string args = "\"" + string.Join(" \"", listPath) + "\"";
+                                    string[] listFiles = Directory.GetFiles(Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Windows", "SendTo"));
+                                    foreach (string filename in listFiles)
+                                        if (Path.GetFileNameWithoutExtension(filename) == fullName)
+                                        {
+                                            Process.Start(filename, args);
+                                        }
+                                }
+                                return;
+                            }
+                        }
                         InvokeCommand(nSelected, pointScreen);
+                    }
                 }
             }
+
+            DestroyMenu(_pMenu);
+            _pMenu = IntPtr.Zero;
         }
         catch (Exception)
         {
-            if (System.Diagnostics.Debugger.IsAttached)
-                System.Diagnostics.Debugger.Break();
+            if (Debugger.IsAttached)
+                Debugger.Break();
         }
         finally
         {
@@ -536,9 +584,9 @@ public class ShellContextMenu
 
     #region Manipulate submenu
 
-    private static void ExpandSubMenu(IntPtr pMenu, IContextMenu2 cm2)
+    private void ExpandSubMenu(IntPtr pMenu)
     {
-        if (pMenu == IntPtr.Zero)
+        if (pMenu == IntPtr.Zero || _contextMenu2 == null)
             return;
         int nbMenu = GetMenuItemCount(pMenu);
         if (nbMenu > 0)
@@ -550,7 +598,7 @@ public class ShellContextMenu
                 if (IdMenu < 0)
                 {
                     IntPtr IdSubMenu = GetSubMenu(pMenu, i);
-                    cm2.HandleMenuMsg((int)WM.INITMENUPOPUP, IdSubMenu, (IntPtr)i);
+                    _contextMenu2.HandleMenuMsg((int)WM.INITMENUPOPUP, IdSubMenu, (IntPtr)i);
                 }
             }
         }
@@ -602,60 +650,60 @@ public class ShellContextMenu
         }
     }
 
-    private void GetSpecialCmd(IntPtr pMenu, bool background, out uint cmdPaste, out uint cmdPasteShortcut, out uint cmdRename, out uint cmdSendTo)
+    private void RemoveLastEmptyMenuItem(IntPtr pMenu)
     {
-        cmdPaste = 0;
-        cmdPasteShortcut = 0;
-        cmdRename = 0;
-        cmdSendTo = 0;
+        int nbMenu = GetMenuItemCount(pMenu);
+        string? libelle = GetMenuItemString(nbMenu - 1, pMenu, true, out _, out _);
+        if (string.IsNullOrWhiteSpace(libelle))
+            RemoveMenu(pMenu, (uint)nbMenu - 1, MF.BYPOSITION);
+    }
+
+    private void GetSpecialCmd(IntPtr pMenu, bool background)
+    {
+        _cmdPaste = 0;
+        _cmdPasteShortcut = 0;
+        _cmdRename = 0;
+        _sendToSubMenu = IntPtr.Zero;
+
         if (pMenu != IntPtr.Zero)
         {
             int nbMenu = GetMenuItemCount(pMenu);
             if (nbMenu > 0)
             {
-                int IdMenu;
-                for (int i = 0; i < nbMenu; i++)
+                for (uint i = 0; i < nbMenu; i++)
                 {
-                    IdMenu = GetMenuItemID(pMenu, i);
-                    if (IdMenu > 0)
+                    string? libelle = GetMenuItemString((int)i, pMenu, true, out uint cmd, out IntPtr pSubMenu);
+                    if (string.IsNullOrWhiteSpace(libelle))
+                        continue;
+                    if (background)
                     {
-                        string? libelle = GetMenuItemString(IdMenu, pMenu, false, out uint cmd);
-                        if (string.IsNullOrWhiteSpace(libelle))
+                        bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE.Trim().ToLower();
+                        if (!string.IsNullOrWhiteSpace(libelle) &&
+                            (bPaste ||
+                                libelle.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
+                                PasteAvailable())
                         {
-                            if (i == nbMenu - 1)
-                                RemoveMenu(pMenu, (uint)IdMenu, false);
-                            continue;
-                        }
-                        if (background)
-                        {
-                            bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE.Trim().ToLower();
-                            if (!string.IsNullOrWhiteSpace(libelle) &&
-                                (bPaste ||
-                                 libelle.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
-                                 PasteAvailable())
+                            MenuItemInfo mi = new()
                             {
-                                MenuItemInfo mi = new()
-                                {
-                                    cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
-                                    fMask = MIIM.STATE,
-                                    fState = MFS.ENABLED,
-                                };
-                                if (bPaste)
-                                    cmdPaste = cmd;
-                                else
-                                    cmdPasteShortcut = cmd;
-                                SetMenuItemInfo(pMenu, (uint)IdMenu, false, ref mi);
-                            }
-                            continue;
+                                cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
+                                fMask = MIIM.STATE,
+                                fState = MFS.ENABLED,
+                            };
+                            if (bPaste)
+                                _cmdPaste = cmd;
+                            else
+                                _cmdPasteShortcut = cmd;
+                            SetMenuItemInfo(pMenu, i, true, ref mi);
                         }
-                        if (libelle!.Trim().ToLower() == Explorip.Constants.Localization.RENAME_MENUITEM.Trim().ToLower())
-                        {
-                            cmdRename = cmd;
-                        }
-                        else if (libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.SEND_TO.Trim().ToLower().Replace("_", ""))
-                        {
-                            cmdSendTo = cmd;
-                        }
+                        continue;
+                    }
+                    if (libelle!.Trim().ToLower() == Explorip.Constants.Localization.RENAME_MENUITEM.Trim().ToLower())
+                    {
+                        _cmdRename = cmd;
+                    }
+                    else if (libelle!.Trim().ToLower().Replace("&", "") == Explorip.Constants.Localization.SEND_TO.Trim().ToLower().Replace("_", ""))
+                    {
+                        _sendToSubMenu = pSubMenu;
                     }
                 }
             }
@@ -668,27 +716,55 @@ public class ShellContextMenu
         return data.GetDataPresent(System.Windows.DataFormats.FileDrop);
     }
 
-    private string? GetMenuItemString(int IdOrPositionMenu, IntPtr pointeurMenu, bool usePosition, out uint cmd)
+    private string? GetMenuItemString(int IdOrPositionMenu, IntPtr pMenu, bool usePosition, out uint cmd, out IntPtr pSubMenu)
     {
         try
         {
-            MenuItemInfo sortie = new()
+            MenuItemInfo result = new()
             {
                 cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
                 dwTypeData = new string('\0', 256),
-                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID,
-                fType = ManagedShell.Interop.NativeMethods.MFT.STRING | ManagedShell.Interop.NativeMethods.MFT.DISABLED | ManagedShell.Interop.NativeMethods.MFT.GRAYED
+                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID | MIIM.SUBMENU,
+                fType = ManagedShell.Interop.NativeMethods.MFT.STRING | ManagedShell.Interop.NativeMethods.MFT.DISABLED | ManagedShell.Interop.NativeMethods.MFT.GRAYED,
             };
-            sortie.cch = sortie.dwTypeData.Length - 1;
-            if (GetMenuItemInfo(pointeurMenu, (uint)IdOrPositionMenu, usePosition, ref sortie))
+            result.cch = result.dwTypeData.Length - 1;
+            if (GetMenuItemInfo(pMenu, (uint)IdOrPositionMenu, usePosition, ref result))
             {
-                cmd = sortie.wID;
-                return sortie.dwTypeData;
+                cmd = result.wID;
+                pSubMenu = result.hSubMenu;
+                return result.dwTypeData;
             }
         }
         catch (Exception) { /* Ignore errors */ }
         cmd = 0;
+        pSubMenu = IntPtr.Zero;
         return null;
+    }
+
+    private bool IsCmdInMenu(IntPtr pMenu, uint cmd, out string? name)
+    {
+        name = null;
+        if (pMenu == IntPtr.Zero)
+            return false;
+
+        int nbMenu = GetMenuItemCount(pMenu);
+        for (int i = 0; i < nbMenu; i++)
+        {
+            MenuItemInfo result = new()
+            {
+                cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
+                dwTypeData = new string('\0', 256),
+                fMask = MIIM.STRING | MIIM.ID,
+            };
+            result.cch = result.dwTypeData.Length - 1;
+            if (GetMenuItemInfo(pMenu, (uint)i, true, ref result) && result.wID == cmd)
+            {
+                name = result.dwTypeData;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #endregion

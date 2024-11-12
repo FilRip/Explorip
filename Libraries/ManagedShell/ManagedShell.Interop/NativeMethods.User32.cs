@@ -12,6 +12,13 @@ public partial class NativeMethods
 
     public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
 
+    [Flags()]
+    public enum MF : uint
+    {
+        BYCOMMAND = 0x00000000,
+        BYPOSITION = 0x00000400,
+    }
+
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     [Flags()]
     public enum MFT : uint
@@ -97,8 +104,8 @@ public partial class NativeMethods
     [DllImport(User32_DllName, CharSet = CharSet.Unicode, SetLastError = true)]
     internal static extern bool SetMenuItemInfo(IntPtr hMenu, uint uItem, bool fByPosition, ref MenuItemInfo lpmii);
 
-    [DllImport(User32_DllName, CharSet = CharSet.Unicode, SetLastError = true)]
-    internal static extern bool RemoveMenu(IntPtr hMenu, uint uItem, bool fByPosition);
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern bool RemoveMenu(IntPtr hMenu, uint uItem, MF fByPosition);
 
     [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
     internal static extern int GetMenuDefaultItem(IntPtr hMenu, bool fByPos, uint gmdiFlags);

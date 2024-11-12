@@ -273,7 +273,7 @@ public partial class OneDirectory : OneFileSystem
     public void ContextMenuFolder()
     {
         // When right click on an item tree view
-        ShellContextMenu scm = new()
+        ShellContextMenu scm = new(GetRootParent().MainViewModel!)
         {
             Root = _specialFolder == Environment.SpecialFolder.MyComputer || _specialFolder == Environment.SpecialFolder.Desktop || FullPath?.StartsWith("::") == true,
         };

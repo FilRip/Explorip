@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -159,7 +160,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         // When right click on empty space in list view
         if (SelectedItems.Count == 0 && !string.IsNullOrWhiteSpace(SelectedFolder?.FullPath))
         {
-            new ShellContextMenu().ShowContextMenu(new DirectoryInfo(SelectedFolder.FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
+            new ShellContextMenu(this).ShowContextMenu(new DirectoryInfo(SelectedFolder!.FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
         }
     }
 
@@ -176,6 +177,16 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
             SelectedItems[0].EditMode(true);
         else if (o is TreeViewItem)
             SelectedFolder?.EditMode(true);
+    }
+
+    public OneFileSystem[]? GetCurrentSelection()
+    {
+        IInputElement o = FocusManager.GetFocusedElement(_control);
+        if (o is ListViewItem)
+            return [.. SelectedItems];
+        else if (o is TreeViewItem && SelectedFolder != null)
+            return [SelectedFolder];
+        return null;
     }
 
     [RelayCommand()]
