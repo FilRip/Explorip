@@ -12,7 +12,7 @@ namespace ManagedShell.ShellFolders.Interfaces;
 public interface IDropTargetHelper
 {
     // Notifies the drag-image manager that the drop target's IDropTarget::DragEnter method has been called
-    [PreserveSig]
+    [PreserveSig()]
     int DragEnter(
         IntPtr hwndTarget,
         IntPtr pDataObject,
@@ -20,24 +20,24 @@ public interface IDropTargetHelper
         DragDropEffects dwEffect);
 
     // Notifies the drag-image manager that the drop target's IDropTarget::DragLeave method has been called
-    [PreserveSig]
+    [PreserveSig()]
     int DragLeave();
 
     // Notifies the drag-image manager that the drop target's IDropTarget::DragOver method has been called
-    [PreserveSig]
+    [PreserveSig()]
     int DragOver(
         ref Point ppt,
         DragDropEffects dwEffect);
 
     // Notifies the drag-image manager that the drop target's IDropTarget::Drop method has been called
-    [PreserveSig]
+    [PreserveSig()]
     int Drop(
         IntPtr pDataObject,
         ref Point ppt,
         DragDropEffects dwEffect);
 
     // Notifies the drag-image manager to show or hide the drag image
-    [PreserveSig]
+    [PreserveSig()]
     int Show(
         bool fShow);
 }

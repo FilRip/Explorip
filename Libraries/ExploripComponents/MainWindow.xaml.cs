@@ -7,6 +7,8 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
+using Explorip.Helpers;
+
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
@@ -157,5 +159,18 @@ namespace ExploripComponents
             }
         }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+    }
+
+    public class ListViewItemTemplateSelector : DataTemplateSelector
+    {
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            FrameworkElement? element = container as FrameworkElement;
+            MainWindow control = element.FindVisualParent<MainWindow>();
+            if (control.MyDataContext.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Small)
+                return (DataTemplate)control.FindResource("DetailsTemplate");
+            else
+                return (DataTemplate)control.FindResource("IconsTemplate");
+        }
     }
 }

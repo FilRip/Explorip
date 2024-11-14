@@ -42,6 +42,7 @@ public partial class OneDirectory : OneFileSystem
     private CancellationTokenSource? _cancellationToken;
     private readonly Environment.SpecialFolder? _specialFolder;
     private readonly object _lockSize = new();
+    private ImageSource? _treeViewIcon;
 
     #endregion
 
@@ -314,7 +315,7 @@ public partial class OneDirectory : OneFileSystem
     {
         get
         {
-            if (_icon == null && (_specialFolder != null || FullPath.StartsWith("::")))
+            if (_icon == null && IsItemVisible && (_specialFolder != null || FullPath.StartsWith("::")))
             {
                 if (!string.IsNullOrWhiteSpace(FullPath))
                 {
@@ -324,7 +325,7 @@ public partial class OneDirectory : OneFileSystem
                         IntPtr pidl = NativeMethods.ILCreateFromPath(FullPath);
                         if (pidl != IntPtr.Zero)
                         {
-                            hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                            hIcon = IconHelper.GetIconByPidl(pidl, GetRootParent().MainViewModel!.CurrentIconSize, out hOverlay);
                             NativeMethods.ILFree(pidl);
                         }
                         else
@@ -334,7 +335,7 @@ public partial class OneDirectory : OneFileSystem
                     }
                     else
                     {
-                        hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                        hIcon = IconHelper.GetIconByFilename(FullPath, GetRootParent().MainViewModel!.CurrentIconSize, out hOverlay);
                     }
                     if (hIcon != IntPtr.Zero)
                     {
@@ -358,7 +359,7 @@ public partial class OneDirectory : OneFileSystem
                     NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
                     if (pidl != IntPtr.Zero)
                     {
-                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, GetRootParent().MainViewModel!.CurrentIconSize, out IntPtr hOverlay);
                         NativeMethods.ILFree(pidl);
                         if (hIcon != IntPtr.Zero)
                         {
@@ -370,6 +371,76 @@ public partial class OneDirectory : OneFileSystem
                 }
             }
             return base.Icon;
+        }
+    }
+
+    public ImageSource? TreeViewIcon
+    {
+        get
+        {
+            if (_treeViewIcon == null && (_specialFolder != null || FullPath.StartsWith("::")))
+            {
+                if (!string.IsNullOrWhiteSpace(FullPath))
+                {
+                    IntPtr hIcon = IntPtr.Zero, hOverlay = IntPtr.Zero;
+                    if (FullPath.StartsWith("::"))
+                    {
+                        IntPtr pidl = NativeMethods.ILCreateFromPath(FullPath);
+                        if (pidl != IntPtr.Zero)
+                        {
+                            hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                            NativeMethods.ILFree(pidl);
+                        }
+                        else
+                        {
+                            _treeViewIcon = IconImageConverter.GetDefaultIcon();
+                        }
+                    }
+                    else
+                    {
+                        hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                    }
+                    if (hIcon != IntPtr.Zero)
+                    {
+                        _treeViewIcon = IconImageConverter.GetImageFromHIcon(hIcon);
+                        if (hOverlay != IntPtr.Zero)
+                            IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+                    }
+                    if (_treeViewIcon == null)
+                    {
+                        System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
+                        if (icon != null)
+                        {
+                            _treeViewIcon = IconManager.Convert(icon);
+                            icon.Dispose();
+                        }
+                    }
+                }
+                else if (_specialFolder == Environment.SpecialFolder.MyComputer)
+                {
+                    IntPtr pidl = IntPtr.Zero;
+                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
+                    if (pidl != IntPtr.Zero)
+                    {
+                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                        NativeMethods.ILFree(pidl);
+                        if (hIcon != IntPtr.Zero)
+                        {
+                            _treeViewIcon = IconImageConverter.GetImageFromHIcon(hIcon);
+                            if (hOverlay != IntPtr.Zero)
+                                IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+                        }
+                    }
+                }
+            }
+            if (_treeViewIcon == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
+            {
+                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                _treeViewIcon = IconImageConverter.GetImageFromHIcon(hIcon);
+                if (hOverlay != IntPtr.Zero)
+                    IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+            }
+            return _treeViewIcon;
         }
     }
 

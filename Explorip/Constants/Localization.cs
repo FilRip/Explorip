@@ -57,6 +57,8 @@ public static class Localization
     public static string RENAME_MENUITEM { get; private set; }
     public static string SEND_TO { get; private set; }
     public static string SEND_TO_DESKTOP { get; private set; }
+    public static string SHOW_SUBMENU { get; private set; }
+    public static string SHOW_DETAILS_SUBMENU { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -110,6 +112,8 @@ public static class Localization
         RENAME_MENUITEM = LoadMenuItem("shell32.dll", 210, 18, "Re&name");
         SEND_TO = Load("shell32.dll", 30312, "Send to");
         SEND_TO_DESKTOP = Load("sendmail.dll", 21, "Desktop (create shortcut)");
+        SHOW_SUBMENU = LoadMenuItem("shell32.dll", 215, 28674, "Show");
+        SHOW_DETAILS_SUBMENU = LoadMenuItem("shell32.dll", 216, 28747, "Show");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

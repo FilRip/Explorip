@@ -210,7 +210,7 @@ internal class ShellContextMenu : NativeWindow
             IShellFolder psf = (IShellFolder)Marshal.GetTypedObjectForIUnknown(opsf, typeof(IShellFolder));
             psf.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
             IShellView pShellView = (IShellView)Marshal.GetTypedObjectForIUnknown(opShellView, typeof(IShellView));
-            pShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
+            object opContextMenu = pShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
             _oContextMenu = (IContextMenu)opContextMenu;
             Marshal.ReleaseComObject(psf);
             Marshal.ReleaseComObject(pShellView);

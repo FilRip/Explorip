@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,6 +28,8 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     private OneDirectory? _selectedFolder;
     [ObservableProperty()]
     private ObservableCollection<OneFileSystem> _selectedItems = [];
+    [ObservableProperty()]
+    private ManagedShell.Common.Enums.IconSize _currentIconSize = ManagedShell.Common.Enums.IconSize.Large;
 
     #endregion
 

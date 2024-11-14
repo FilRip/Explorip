@@ -40,7 +40,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private IShellView? _backgroundShellView;
     private readonly WpfExplorerViewModel _viewModel = viewModel;
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
-
+    
     #endregion
 
     #region Destructor
@@ -145,9 +145,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     #endregion
 
     /// <summary>Gets the interfaces to the context menu</summary>
-    /// <param name="arrPIDLs">PIDLs</param>
     /// <returns>true if it got the interfaces, otherwise false</returns>
-    private bool GetContextMenuInterfaces(out IntPtr ctxMenuPtr)
+    private bool GetContextMenuInterfaces()
     {
         if (_parentFolder == null || _listPIDL == null)
             throw new ExploripCommonException("Parent folder is null");
@@ -158,16 +157,16 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             _listPIDL,
             ref guid,
             IntPtr.Zero,
-            out ctxMenuPtr);
+            out _contextMenuPtr);
 
         if (nResult == (int)HResult.SUCCESS)
         {
-            _contextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
+            _contextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(_contextMenuPtr, typeof(IContextMenu));
             return true;
         }
         else
         {
-            ctxMenuPtr = IntPtr.Zero;
+            _contextMenuPtr = IntPtr.Zero;
             _contextMenu = null;
             return false;
         }
@@ -183,10 +182,13 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         _parentFolder = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
         _parentFolder.CreateViewObject(IntPtr.Zero, guidSv, out IntPtr opShellView);
         _backgroundShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
-        _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID, out object opContextMenu);
-        _contextMenu = (IContextMenu)opContextMenu;
-        _contextMenu2 = (IContextMenu2)opContextMenu;
-        _contextMenu3 = (IContextMenu3)opContextMenu;
+        object opContextMenu = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
+        if (opContextMenu != null)
+        {
+            _contextMenu = (IContextMenu)opContextMenu;
+            _contextMenu2 = (IContextMenu2)opContextMenu;
+            _contextMenu3 = (IContextMenu3)opContextMenu;
+        }
     }
 
     private void InvokeCommand(uint nCmd, System.Windows.Point pointInvoke)
@@ -206,7 +208,6 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             hwnd = _viewModel.WindowHandle,
         };
         _contextMenu?.InvokeCommand(ref invoke);
-        // TODO : New : https://superuser.com/questions/34704/how-can-i-add-an-item-to-the-new-context-menu
     }
 
     /// <summary>
@@ -435,6 +436,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         ShowContextMenu(pointScreen, background);
     }
 
+    #endregion
+
     /// <summary>
     /// Shows the context menu
     /// </summary>
@@ -444,7 +447,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         try
         {
             if ((!background) &&
-                (_listPIDL == null || !GetContextMenuInterfaces(out _contextMenuPtr)))
+                (_listPIDL == null || !GetContextMenuInterfaces()))
             {
                 ReleaseAll();
                 return;
@@ -463,25 +466,25 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                 flag |= CMF.CANRENAME;
             }
 
+            if (_contextMenu2 == null && _contextMenuPtr != IntPtr.Zero)
+            {
+                Guid guid = typeof(IContextMenu2).GUID;
+                Marshal.QueryInterface(_contextMenuPtr, ref guid, out _contextMenu2Ptr);
+                _contextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(_contextMenu2Ptr, typeof(IContextMenu2));
+            }
+            if (_contextMenu3 == null && _contextMenuPtr != IntPtr.Zero)
+            {
+                Guid guid = typeof(IContextMenu3).GUID;
+                Marshal.QueryInterface(_contextMenuPtr, ref guid, out _contextMenu3Ptr);
+                _contextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(_contextMenu3Ptr, typeof(IContextMenu3));
+            }
+
             _contextMenu.QueryContextMenu(
                 _pMenu,
                 0,
                 0,
                 (uint)short.MaxValue,
                 flag);
-
-            if (_contextMenu2 == null)
-            {
-                Guid guid = typeof(IContextMenu2).GUID;
-                Marshal.QueryInterface(_contextMenuPtr, ref guid, out _contextMenu2Ptr);
-                _contextMenu2 = (IContextMenu2)Marshal.GetTypedObjectForIUnknown(_contextMenu2Ptr, typeof(IContextMenu2));
-            }
-            if (_contextMenu3 == null)
-            {
-                Guid guid = typeof(IContextMenu3).GUID;
-                Marshal.QueryInterface(_contextMenuPtr, ref guid, out _contextMenu3Ptr);
-                _contextMenu3 = (IContextMenu3)Marshal.GetTypedObjectForIUnknown(_contextMenu3Ptr, typeof(IContextMenu3));
-            }
 
             RemoveLastEmptyMenuItem(_pMenu);
 
@@ -499,14 +502,20 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
             if (nSelected != 0)
             {
-                if (background)
+                if (background && _backgroundShellView != null)
                 {
                     if (nSelected == _cmdPaste)
                         PasteClipboard();
                     else if (nSelected == _cmdPasteShortcut)
                         PasteShortcutClipboard();
                     else
+                    {
+                        IFolderView folderView = (IFolderView)_backgroundShellView;
+                        FolderViewMode fvm = folderView.GetCurrentViewMode();
                         InvokeCommand(nSelected, pointScreen);
+                        FolderViewMode newfvm = folderView.GetCurrentViewMode();
+                        FolderSettings fs = _backgroundShellView.GetCurrentInfo();
+                    }
                 }
                 else
                 {
@@ -530,8 +539,6 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             CleanUp();
         }
     }
-
-    #endregion
 
     #region Manipulate submenu
 

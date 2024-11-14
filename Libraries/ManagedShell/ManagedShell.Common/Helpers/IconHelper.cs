@@ -114,7 +114,7 @@ public static class IconHelper
                 }
 
                 if (shinfo.hIcon != IntPtr.Zero)
-                    NativeMethods.DestroyIcon(shinfo.hIcon);
+                    DestroyIcon(shinfo.hIcon);
 
                 return GetFromImageList(shinfo.iIcon, size, out hOverlay);
             }

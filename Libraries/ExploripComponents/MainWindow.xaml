@@ -14,8 +14,63 @@
         <ResourceDictionary>
             <local:FileSizeConverter x:Key="sizeConverter"/>
             <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+            <!-- ListView -->
+            <DataTemplate x:Key="IconsTemplate">
+                <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
+                    <Grid>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseRightButtonUp">
+                                <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseMove">
+                                <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="{Binding Icon}" Grid.Row="0"/>
+                        <Image Source="{Binding IconOverlay}" Grid.Row="0"/>
+                        <!-- Name -->
+                        <TextBlock Text="{Binding DisplayText}" Grid.Row="1" Margin="0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
+                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
+                        <!-- End name -->
+                    </Grid>
+                </VirtualizingStackPanel>
+            </DataTemplate>
+            <DataTemplate x:Key="DetailsTemplate">
+                <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
+                    <Grid HorizontalAlignment="Stretch">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseRightButtonUp">
+                                <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="MouseMove">
+                                <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Icon}" Grid.Column="0"/>
+                        <Image Source="{Binding IconOverlay}" Grid.Column="0"/>
+                        <!-- Name -->
+                        <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
+                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
+                        <!-- End name -->
+                        <TextBlock Text="{Binding TypeName}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0"/>
+                        <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Grid.Column="3" HorizontalAlignment="Right"/>
+                    </Grid>
+                </VirtualizingStackPanel>
+            </DataTemplate>
+            <local:ListViewItemTemplateSelector x:Key="ListViewItemTemplateSelector"/>
         </ResourceDictionary>
     </Window.Resources>
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
@@ -27,6 +82,7 @@
             <i:InvokeCommandAction Command="{Binding KeyUpCommand}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.25*"/>
@@ -72,7 +128,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" Margin="0">
-                            <Image Source="{Binding Icon}"/>
+                            <Image Source="{Binding TreeViewIcon}"/>
                             <Image Source="{Binding IconOverlay}"/>
                         </Grid>
                         <TextBlock Grid.Column="2" Text="{Binding DisplayText}" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
@@ -89,7 +145,8 @@
         <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}"
                   SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged"
                   PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver"
-                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged">
+                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged"
+                  ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
                     <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}" PassEventArgsToCommand="True"/>
@@ -98,39 +155,9 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <!--<Setter Property="HorizontalContentAlignment" Value="Stretch"/>-->
                 </Style>
             </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
-                        <Grid HorizontalAlignment="Stretch">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseRightButtonUp">
-                                    <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseMove">
-                                    <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="auto"/>
-                                <ColumnDefinition Width="auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Image Source="{Binding Icon}" Grid.Column="0"/>
-                            <Image Source="{Binding IconOverlay}" Grid.Column="0"/>
-                            <!-- Name -->
-                            <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
-                            <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
-                            <!-- End name -->
-                            <TextBlock Text="{Binding TypeName}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0"/>
-                            <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Grid.Column="3" HorizontalAlignment="Right"/>
-                        </Grid>
-                    </VirtualizingStackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
         </ListView>
         
     </Grid>

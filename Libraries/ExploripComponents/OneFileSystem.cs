@@ -131,7 +131,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         {
             if (_icon == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
             {
-                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, _parentDirectory!.GetRootParent().MainViewModel!.CurrentIconSize, out IntPtr hOverlay);
                 _icon = IconImageConverter.GetImageFromHIcon(hIcon);
                 if (hOverlay != IntPtr.Zero)
                     IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
