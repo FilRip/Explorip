@@ -9,3 +9,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags")]
 [assembly: SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null")]
 [assembly: SuppressMessage("Style", "IDE0251:Définir comme membre 'readonly'")]
+[assembly: SuppressMessage("Major Code Smell", "S1123:\"Obsolete\" attributes should include explanations")]
+[assembly: SuppressMessage("Info Code Smell", "S1133:Deprecated code should be removed")]

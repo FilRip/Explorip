@@ -183,6 +183,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         _parentFolder.CreateViewObject(IntPtr.Zero, guidSv, out IntPtr opShellView);
         _backgroundShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
         object opContextMenu = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
+
         if (opContextMenu != null)
         {
             _contextMenu = (IContextMenu)opContextMenu;
@@ -509,13 +510,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                     else if (nSelected == _cmdPasteShortcut)
                         PasteShortcutClipboard();
                     else
-                    {
-                        IFolderView folderView = (IFolderView)_backgroundShellView;
-                        FolderViewMode fvm = folderView.GetCurrentViewMode();
                         InvokeCommand(nSelected, pointScreen);
-                        FolderViewMode newfvm = folderView.GetCurrentViewMode();
-                        FolderSettings fs = _backgroundShellView.GetCurrentInfo();
-                    }
                 }
                 else
                 {

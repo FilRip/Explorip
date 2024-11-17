@@ -8,6 +8,8 @@ using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.ShellFolders.Interfaces;
 
+#nullable enable
+#pragma warning disable S125 // Sections of code should not be commented out
 [ComImport(), Guid("cde725b0-ccc9-4519-917e-325d72fab4ce"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 public interface IFolderView
 {
@@ -240,7 +242,7 @@ public interface IFolderView2 : IFolderView
     /// <remarks>The property is displayed in the view, but not written to the underlying item.</remarks>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-setviewproperty
     // DEPRECATED_int SetViewProperty( PCUITEMID_CHILD IntPtr, REFPropertyKey propkey, REFPROPVARIANT propvar );
-    [Obsolete]
+    [Obsolete()]
     void SetViewProperty(IntPtr IntPtr, in PropertyKey propkey, object propvar);
 
     /// <summary>
@@ -266,7 +268,7 @@ public interface IFolderView2 : IFolderView
     /// </param>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-getviewproperty
     // DEPRECATED_int GetViewProperty( PCUITEMID_CHILD IntPtr, REFPropertyKey propkey, PROPVARIANT *ppropvar );
-    [Obsolete]
+    [Obsolete()]
     void GetViewProperty(IntPtr IntPtr, in PropertyKey propkey, [In, Out] object ppropvar);
 
     /// <summary>
@@ -293,7 +295,7 @@ public interface IFolderView2 : IFolderView
     /// </remarks>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-settileviewproperties
     // DEPRECATED_int SetTileViewProperties( PCUITEMID_CHILD IntPtr, LPCWSTR pszPropList );
-    [Obsolete]
+    [Obsolete()]
     void SetTileViewProperties(IntPtr IntPtr, [In, MarshalAs(UnmanagedType.LPWStr)] string pszPropList);
 
     /// <summary>
@@ -319,7 +321,7 @@ public interface IFolderView2 : IFolderView
     /// </remarks>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-setextendedtileviewproperties
     // DEPRECATED_int SetExtendedTileViewProperties( PCUITEMID_CHILD IntPtr, LPCWSTR pszPropList );
-    [Obsolete]
+    [Obsolete()]
     void SetExtendedTileViewProperties(IntPtr IntPtr, [In, MarshalAs(UnmanagedType.LPWStr)] string pszPropList);
 
     /// <summary>Sets the default text to be used when there are no items in the view.</summary>
@@ -609,3 +611,4 @@ public interface IFolderView2 : IFolderView
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-dorename int DoRename( );
     void DoRename();
 }
+#pragma warning restore S125 // Sections of code should not be commented out
