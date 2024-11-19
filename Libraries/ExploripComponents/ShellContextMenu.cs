@@ -40,6 +40,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private IShellView? _backgroundShellView;
     private readonly WpfExplorerViewModel _viewModel = viewModel;
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
+    private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo;
     
     #endregion
 
@@ -509,6 +510,14 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                         PasteClipboard();
                     else if (nSelected == _cmdPasteShortcut)
                         PasteShortcutClipboard();
+                    else if (nSelected == _cmdDetails || nSelected == _cmdSmall)
+                        _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.Small;
+                    else if (nSelected == _cmdLarge)
+                        _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.Large;
+                    else if (nSelected == _cmdExtraLarge)
+                        _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.ExtraLarge;
+                    else if (nSelected == _cmdJumbo)
+                        _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.Jumbo;
                     else
                         InvokeCommand(nSelected, pointScreen);
                 }
@@ -624,15 +633,15 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             {
                 for (uint i = 0; i < nbMenu; i++)
                 {
-                    string? libelle = GetMenuItemString((int)i, pMenu, true, out uint cmd);
-                    if (string.IsNullOrWhiteSpace(libelle))
+                    string? label = GetMenuItemStringWithSubmenu((int)i, pMenu, true, out uint cmd, out IntPtr hMenu);
+                    if (string.IsNullOrWhiteSpace(label))
                         continue;
                     if (background)
                     {
-                        bool bPaste = libelle!.Trim().ToLower().Replace("&", "") == Localization.PASTE.Trim().ToLower();
-                        if (!string.IsNullOrWhiteSpace(libelle) &&
+                        bool bPaste = label!.Trim().ToLower().Replace("&", "") == Localization.PASTE.Trim().ToLower();
+                        if (!string.IsNullOrWhiteSpace(label) &&
                             (bPaste ||
-                                libelle.Trim().ToLower().Replace("&", "") == Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
+                                label.Trim().ToLower().Replace("&", "") == Localization.PASTE_SHORTCUT.Trim().ToLower()) &&
                                 PasteAvailable())
                         {
                             MenuItemInfo mi = new()
@@ -646,12 +655,34 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                             else
                                 _cmdPasteShortcut = cmd;
                             SetMenuItemInfo(pMenu, i, true, ref mi);
+                            continue;
+                        }
+                        if ((hMenu != IntPtr.Zero) && (label.Trim().ToLower() == Localization.SHOW_SUBMENU.Trim().ToLower()))
+                        {
+                            int nbSubMenu = GetMenuItemCount(hMenu);
+                            for (int j = 0; j < nbSubMenu; j++)
+                            {
+                                string? subLabel = GetMenuItemString(j, hMenu, true, out uint subCmd);
+                                if (string.IsNullOrWhiteSpace(subLabel))
+                                    continue;
+                                if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_DETAILS_SUBMENU.Trim().ToLower())
+                                    _cmdDetails = subCmd;
+                                else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_SMALL_SUBMENU.Trim().ToLower())
+                                    _cmdSmall = subCmd;
+                                else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_LARGE_SUBMENU.Trim().ToLower())
+                                    _cmdLarge = subCmd;
+                                else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_EXTRALARGE_SUBMENU.Trim().ToLower())
+                                    _cmdExtraLarge = subCmd;
+                                else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_JUMBO_SUBMENU.Trim().ToLower())
+                                    _cmdJumbo = subCmd;
+                            }
                         }
                         continue;
                     }
-                    if (libelle!.Trim().ToLower() == Localization.RENAME_MENUITEM.Trim().ToLower())
+                    if (label!.Trim().ToLower() == Localization.RENAME_MENUITEM.Trim().ToLower())
                     {
                         _cmdRename = cmd;
+                        continue;
                     }
                 }
             }
@@ -684,6 +715,32 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         }
         catch (Exception) { /* Ignore errors */ }
         cmd = 0;
+
+        return null;
+    }
+
+    private string? GetMenuItemStringWithSubmenu(int IdOrPositionMenu, IntPtr pMenu, bool usePosition, out uint cmd, out IntPtr hMenu)
+    {
+        try
+        {
+            MenuItemInfo result = new()
+            {
+                cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
+                dwTypeData = new string('\0', 256),
+                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID | MIIM.SUBMENU,
+                fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED,
+            };
+            result.cch = result.dwTypeData.Length - 1;
+            if (GetMenuItemInfo(pMenu, (uint)IdOrPositionMenu, usePosition, ref result) && result.hSubMenu != IntPtr.Zero)
+            {
+                cmd = result.wID;
+                hMenu = result.hSubMenu;
+                return result.dwTypeData;
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
+        cmd = 0;
+        hMenu = IntPtr.Zero;
 
         return null;
     }

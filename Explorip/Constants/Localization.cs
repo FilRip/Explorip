@@ -59,6 +59,11 @@ public static class Localization
     public static string SEND_TO_DESKTOP { get; private set; }
     public static string SHOW_SUBMENU { get; private set; }
     public static string SHOW_DETAILS_SUBMENU { get; private set; }
+    public static string SHOW_JUMBO_SUBMENU { get; private set; }
+    public static string SHOW_EXTRALARGE_SUBMENU { get; private set; }
+    public static string SHOW_LARGE_SUBMENU { get; private set; }
+    public static string SHOW_MEDIUM_SUBMENU { get; private set; }
+    public static string SHOW_SMALL_SUBMENU { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -113,7 +118,11 @@ public static class Localization
         SEND_TO = Load("shell32.dll", 30312, "Send to");
         SEND_TO_DESKTOP = Load("sendmail.dll", 21, "Desktop (create shortcut)");
         SHOW_SUBMENU = LoadMenuItem("shell32.dll", 215, 28674, "Show");
-        SHOW_DETAILS_SUBMENU = LoadMenuItem("shell32.dll", 216, 28747, "Show");
+        SHOW_DETAILS_SUBMENU = LoadMenuItem("shell32.dll", 216, 28747, "Details", 2).Replace("&", "");
+        SHOW_JUMBO_SUBMENU = LoadMenuItem("shell32.dll", 216, 28749, "Jumbo", 2).Replace("&", "");
+        SHOW_EXTRALARGE_SUBMENU = LoadMenuItem("shell32.dll", 216, 28751, "Extra large", 2).Replace("&", "");
+        SHOW_LARGE_SUBMENU = LoadMenuItem("shell32.dll", 216, 28750, "Large", 2).Replace("&", "");
+        SHOW_SMALL_SUBMENU = LoadMenuItem("shell32.dll", 216, 28752, "Small", 2).Replace("&", "");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
@@ -155,7 +164,7 @@ public static class Localization
         return libraryHandle;
     }
 
-    internal static string LoadMenuItem(string libraryName, uint idMenu, uint idSubMenu, string defaultText)
+    internal static string LoadMenuItem(string libraryName, uint idMenu, uint idSubMenu, string defaultText, int numSubMenu = 0)
     {
         IntPtr libraryHandle = LibraryHandle(libraryName);
         if (libraryHandle != IntPtr.Zero)
@@ -163,7 +172,7 @@ public static class Localization
             IntPtr hMenu = NativeMethods.LoadMenu(libraryHandle, idMenu);
             if (hMenu != IntPtr.Zero)
             {
-                IntPtr hSubMenu = NativeMethods.GetSubMenu(hMenu, 0);
+                IntPtr hSubMenu = NativeMethods.GetSubMenu(hMenu, numSubMenu);
                 if (hSubMenu != IntPtr.Zero)
                 {
                     NativeMethods.MenuItemInfo myMenuItemInfo = new()

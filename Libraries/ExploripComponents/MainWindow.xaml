@@ -155,7 +155,11 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
-                    <!--<Setter Property="HorizontalContentAlignment" Value="Stretch"/>-->
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.CurrentIconSize}" Value="Small">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

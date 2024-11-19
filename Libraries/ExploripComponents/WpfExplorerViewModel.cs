@@ -11,6 +11,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ManagedShell.Common.Enums;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders;
 
@@ -29,7 +30,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     [ObservableProperty()]
     private ObservableCollection<OneFileSystem> _selectedItems = [];
     [ObservableProperty()]
-    private ManagedShell.Common.Enums.IconSize _currentIconSize = ManagedShell.Common.Enums.IconSize.Large;
+    private IconSize _currentIconSize = IconSize.Small;
 
     #endregion
 
@@ -62,7 +63,14 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
                 return 0;
         }
     }
+
     public DragDropKeyStates DragDropKeyStates { get; set; }
+
+    [RelayCommand()]
+    public void MouseUp()
+    {
+        CurrentlyDraging = false;
+    }
 
     #endregion
 
@@ -165,10 +173,9 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         }
     }
 
-    [RelayCommand()]
-    public void MouseUp()
+    partial void OnCurrentIconSizeChanged(IconSize value)
     {
-        CurrentlyDraging = false;
+        SelectedFolder?.Refresh();
     }
 
     public void RenameMode()
