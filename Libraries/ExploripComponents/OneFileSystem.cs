@@ -10,6 +10,8 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ExploripCopy.ViewModels;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
@@ -131,7 +133,8 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         {
             if (_icon == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
             {
-                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, _parentDirectory!.GetRootParent().MainViewModel!.CurrentIconSize, out IntPtr hOverlay);
+                WpfExplorerViewModel vm = _parentDirectory!.GetRootParent().MainViewModel!;
+                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out IntPtr hOverlay);
                 _icon = IconImageConverter.GetImageFromHIcon(hIcon);
                 if (hOverlay != IntPtr.Zero)
                     IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);

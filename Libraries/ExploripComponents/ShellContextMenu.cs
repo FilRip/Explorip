@@ -510,7 +510,9 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                         PasteClipboard();
                     else if (nSelected == _cmdPasteShortcut)
                         PasteShortcutClipboard();
-                    else if (nSelected == _cmdDetails || nSelected == _cmdSmall)
+                    else if (nSelected == _cmdDetails)
+                        _viewModel.ViewDetails = true;
+                    else if (nSelected == _cmdSmall)
                         _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.Small;
                     else if (nSelected == _cmdLarge)
                         _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.Large;
@@ -731,7 +733,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                 fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED,
             };
             result.cch = result.dwTypeData.Length - 1;
-            if (GetMenuItemInfo(pMenu, (uint)IdOrPositionMenu, usePosition, ref result) && result.hSubMenu != IntPtr.Zero)
+            if (GetMenuItemInfo(pMenu, (uint)IdOrPositionMenu, usePosition, ref result))
             {
                 cmd = result.wID;
                 hMenu = result.hSubMenu;

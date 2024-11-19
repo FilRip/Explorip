@@ -113,7 +113,7 @@
                 <HierarchicalDataTemplate 
                     DataType="{x:Type local:OneDirectory}" 
                     ItemsSource="{Binding Children}">
-                    <Grid Margin="0" AllowDrop="True" Name="TreeItemGrid" Drop="TreeItemGrid_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
+                    <Grid Margin="0" AllowDrop="True" Name="TreeItemGrid" Drop="TreeItemGrid_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}" PreviewDragEnter="AllowDrop_PreviewDragEnter">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonUp">
                                 <i:InvokeCommandAction Command="{Binding ContextMenuFolderCommand}"/>
@@ -144,7 +144,7 @@
         <!-- Right part, ListView for files -->
         <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}"
                   SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged"
-                  PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver"
+                  PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver" PreviewDragEnter="AllowDrop_PreviewDragEnter"
                   VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged"
                   ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}">
             <i:Interaction.Triggers>
@@ -156,7 +156,7 @@
                 <Style TargetType="{x:Type ListViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.CurrentIconSize}" Value="Small">
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.ViewDetails}" Value="True">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         </DataTrigger>
                     </Style.Triggers>

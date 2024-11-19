@@ -317,6 +317,7 @@ public partial class OneDirectory : OneFileSystem
         {
             if (_icon == null && IsItemVisible && (_specialFolder != null || FullPath.StartsWith("::")))
             {
+                WpfExplorerViewModel vm = GetRootParent().MainViewModel!;
                 if (!string.IsNullOrWhiteSpace(FullPath))
                 {
                     IntPtr hIcon = IntPtr.Zero, hOverlay = IntPtr.Zero;
@@ -325,7 +326,7 @@ public partial class OneDirectory : OneFileSystem
                         IntPtr pidl = NativeMethods.ILCreateFromPath(FullPath);
                         if (pidl != IntPtr.Zero)
                         {
-                            hIcon = IconHelper.GetIconByPidl(pidl, GetRootParent().MainViewModel!.CurrentIconSize, out hOverlay);
+                            hIcon = IconHelper.GetIconByPidl(pidl, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
                             NativeMethods.ILFree(pidl);
                         }
                         else
@@ -335,7 +336,7 @@ public partial class OneDirectory : OneFileSystem
                     }
                     else
                     {
-                        hIcon = IconHelper.GetIconByFilename(FullPath, GetRootParent().MainViewModel!.CurrentIconSize, out hOverlay);
+                        hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
                     }
                     if (hIcon != IntPtr.Zero)
                     {
@@ -359,7 +360,7 @@ public partial class OneDirectory : OneFileSystem
                     NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
                     if (pidl != IntPtr.Zero)
                     {
-                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, GetRootParent().MainViewModel!.CurrentIconSize, out IntPtr hOverlay);
+                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out IntPtr hOverlay);
                         NativeMethods.ILFree(pidl);
                         if (hIcon != IntPtr.Zero)
                         {

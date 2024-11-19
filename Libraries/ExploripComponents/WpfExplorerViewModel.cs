@@ -31,6 +31,8 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     private ObservableCollection<OneFileSystem> _selectedItems = [];
     [ObservableProperty()]
     private IconSize _currentIconSize = IconSize.Small;
+    [ObservableProperty()]
+    private bool _viewDetails = true;
 
     #endregion
 
@@ -173,8 +175,16 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         }
     }
 
+    partial void OnViewDetailsChanged(bool value)
+    {
+        if (value)
+            CurrentIconSize = IconSize.Small;
+    }
+
     partial void OnCurrentIconSizeChanged(IconSize value)
     {
+        if (value != IconSize.Small && ViewDetails)
+            ViewDetails = false;
         SelectedFolder?.Refresh();
     }
 
@@ -246,6 +256,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     public void ScrollToTop()
     {
         ((MainWindow)_control).FileLV.FindVisualChild<ScrollViewer>()!.ScrollToTop();
+        ((MainWindow)_control).FileLV.InvalidateVisual();
     }
 
     #region Auto refresh by folder watcher

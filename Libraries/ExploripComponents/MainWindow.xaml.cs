@@ -54,6 +54,8 @@ namespace ExploripComponents
                 FileLV.UnselectAll();
         }
 
+        #region Drag'n Drop
+
         private void TreeItemGrid_Drop(object sender, DragEventArgs e)
         {
             HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
@@ -91,6 +93,12 @@ namespace ExploripComponents
             }
         }
 
+        private void AllowDrop_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            if (!MyDataContext.CurrentlyDraging)
+                MyDataContext.CurrentlyDraging = true;
+        }
+
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void Scroll_PreviewDragOver(object sender, DragEventArgs e)
         {
@@ -116,6 +124,8 @@ namespace ExploripComponents
             }
         }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+
+        #endregion
 
         private void FileLV_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -167,7 +177,7 @@ namespace ExploripComponents
         {
             FrameworkElement? element = container as FrameworkElement;
             MainWindow control = element.FindVisualParent<MainWindow>();
-            if (control.MyDataContext.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Small)
+            if (control.MyDataContext.ViewDetails)
                 return (DataTemplate)control.FindResource("DetailsTemplate");
             else
                 return (DataTemplate)control.FindResource("IconsTemplate");
