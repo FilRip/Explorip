@@ -27,14 +27,14 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.IconSizePx}"/>
+                            <RowDefinition Height="48"/>
                         </Grid.RowDefinitions>
-                        <Image Source="{Binding Icon}" Grid.Row="0"/>
-                        <Image Source="{Binding IconOverlay}" Grid.Row="0"/>
+                        <Image Source="{Binding Icon}" Grid.Row="0" Margin="0"/>
+                        <Image Source="{Binding IconOverlay}" Grid.Row="0" Margin="0"/>
                         <!-- Name -->
-                        <TextBlock Text="{Binding DisplayText}" Grid.Row="1" Margin="0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
-                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
+                        <TextBlock Text="{Binding DisplayText}" Grid.Row="1" Margin="0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" Padding="0" TextAlignment="Center"/>
+                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" BorderThickness="0" TextAlignment="Center" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0"/>
                         <!-- End name -->
                     </Grid>
                 </VirtualizingStackPanel>
@@ -51,13 +51,13 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.IconSizePx}"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding Icon}" Grid.Column="0"/>
-                        <Image Source="{Binding IconOverlay}" Grid.Column="0"/>
+                        <Image Source="{Binding Icon}" Grid.Column="0" Margin="0"/>
+                        <Image Source="{Binding IconOverlay}" Grid.Column="0" Margin="0"/>
                         <!-- Name -->
                         <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
                         <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
@@ -132,7 +132,7 @@
                             <Image Source="{Binding IconOverlay}"/>
                         </Grid>
                         <TextBlock Grid.Column="2" Text="{Binding DisplayText}" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
-                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
+                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" BorderThickness="0" VerticalContentAlignment="Center"/>
                     </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>

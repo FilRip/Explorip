@@ -511,15 +511,15 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                     else if (nSelected == _cmdPasteShortcut)
                         PasteShortcutClipboard();
                     else if (nSelected == _cmdDetails)
-                        _viewModel.ViewDetails = true;
+                        _viewModel.ChangeIconSize(true, ManagedShell.Common.Enums.IconSize.Small);
                     else if (nSelected == _cmdSmall)
-                        _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.Small;
+                        _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.Small);
                     else if (nSelected == _cmdLarge)
-                        _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.Large;
+                        _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.Large);
                     else if (nSelected == _cmdExtraLarge)
-                        _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.ExtraLarge;
+                        _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.ExtraLarge);
                     else if (nSelected == _cmdJumbo)
-                        _viewModel.CurrentIconSize = ManagedShell.Common.Enums.IconSize.Jumbo;
+                        _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.Jumbo);
                     else
                         InvokeCommand(nSelected, pointScreen);
                 }
@@ -668,15 +668,30 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                 if (string.IsNullOrWhiteSpace(subLabel))
                                     continue;
                                 if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_DETAILS_SUBMENU.Trim().ToLower())
+                                {
                                     _cmdDetails = subCmd;
+                                    CheckMenuItem(hMenu, (uint)j, true, _viewModel.ViewDetails);
+                                }
                                 else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_SMALL_SUBMENU.Trim().ToLower())
+                                {
                                     _cmdSmall = subCmd;
+                                    CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Small);
+                                }
                                 else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_LARGE_SUBMENU.Trim().ToLower())
+                                {
                                     _cmdLarge = subCmd;
+                                    CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Large);
+                                }
                                 else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_EXTRALARGE_SUBMENU.Trim().ToLower())
+                                {
                                     _cmdExtraLarge = subCmd;
+                                    CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.ExtraLarge);
+                                }
                                 else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_JUMBO_SUBMENU.Trim().ToLower())
+                                {
                                     _cmdJumbo = subCmd;
+                                    CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Jumbo);
+                                }
                             }
                         }
                         continue;
@@ -689,6 +704,17 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                 }
             }
         }
+    }
+
+    private void CheckMenuItem(IntPtr pMenu, uint numMenu, bool usePosition, bool isChecked)
+    {
+        MenuItemInfo mi = new()
+        {
+            cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
+            fMask = MIIM.STATE,
+            fState = (isChecked ? MFS.CHECKED : MFS.UNCHECKED),
+        };
+        SetMenuItemInfo(pMenu, numMenu, usePosition, ref mi);
     }
 
     public static bool PasteAvailable()

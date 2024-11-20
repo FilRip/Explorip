@@ -63,9 +63,34 @@ public partial class OneFile : OneFileSystem
         base.Drop(sender, e);
     }
 
+    public override void EditMode(bool activate)
+    {
+        if (ParentDirectory == null)
+            return;
+
+        if (activate)
+        {
+            if (RenameMode)
+                return;
+            NewName = Path.GetFileName(FullPath);
+            if (_isLink)
+                NewName = NewName.Substring(0, NewName.Length - 4);
+            RenameMode = true;
+            ParentDirectory.GetRootParent().MainViewModel!.SetCurrentlyRenaming(this);
+        }
+        else
+        {
+            ParentDirectory.GetRootParent().MainViewModel!.SetCurrentlyRenaming(null);
+            RenameMode = false;
+        }
+    }
+
     public override void Rename()
     {
-        File.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), NewName));
+        string file = NewName;
+        if (_isLink)
+            file += ".lnk";
+        File.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), file));
         base.Rename();
     }
 }

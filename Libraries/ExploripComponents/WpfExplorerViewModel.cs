@@ -15,9 +15,11 @@ using ManagedShell.Common.Enums;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders;
 
+using WpfToolkit.Controls;
+
 namespace ExploripComponents;
 
-public partial class WpfExplorerViewModel(IntPtr handle, Control control) : ObservableObject
+public partial class WpfExplorerViewModel : ObservableObject
 {
     #region Binding fields
 
@@ -32,12 +34,23 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
     [ObservableProperty()]
     private IconSize _currentIconSize = IconSize.Small;
     [ObservableProperty()]
-    private bool _viewDetails = true;
+    private bool _viewDetails = false;
 
     #endregion
 
-    private readonly Control _control = control;
+    private readonly Control _control;
     private OneFileSystem? _currentlyRenaming;
+    private readonly ItemsPanelTemplate _itemTemplateDetails;
+    private readonly ItemsPanelTemplate _itemTemplateWrap;
+
+    public WpfExplorerViewModel(IntPtr handle, Control control)
+    {
+        _control = control;
+        WindowHandle = handle;
+        _itemTemplateDetails = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
+        _itemTemplateWrap = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingWrapPanel)));
+        ((MainWindow)CurrentControl).FileLV.ItemsPanel = (_viewDetails ? _itemTemplateDetails : _itemTemplateWrap);
+    }
 
     #region Drag'n drop
 
@@ -81,7 +94,7 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         get { return _control; }
     }
 
-    public IntPtr WindowHandle { get; private set; } = handle;
+    public IntPtr WindowHandle { get; private set; }
 
     [RelayCommand()]
     public void Refresh()
@@ -175,17 +188,29 @@ public partial class WpfExplorerViewModel(IntPtr handle, Control control) : Obse
         }
     }
 
-    partial void OnViewDetailsChanged(bool value)
+    public void ChangeIconSize(bool details, IconSize value)
     {
-        if (value)
-            CurrentIconSize = IconSize.Small;
+        ViewDetails = details;
+        CurrentIconSize = value;
+        SelectedFolder?.Refresh();
+        ((MainWindow)CurrentControl).FileLV.ItemsPanel = (details ? _itemTemplateDetails : _itemTemplateWrap);
     }
 
-    partial void OnCurrentIconSizeChanged(IconSize value)
+    public GridLength IconSizePx
     {
-        if (value != IconSize.Small && ViewDetails)
-            ViewDetails = false;
-        SelectedFolder?.Refresh();
+        get
+        {
+            if (ViewDetails)
+                return new GridLength(16, GridUnitType.Pixel);
+            return CurrentIconSize switch
+            {
+                IconSize.Large => new GridLength(32, GridUnitType.Pixel),
+                IconSize.Medium => new GridLength(24, GridUnitType.Pixel),
+                IconSize.ExtraLarge => new GridLength(48, GridUnitType.Pixel),
+                IconSize.Jumbo => new GridLength(96, GridUnitType.Pixel),
+                _ => new GridLength(16, GridUnitType.Pixel),
+            };
+        }
     }
 
     public void RenameMode()
