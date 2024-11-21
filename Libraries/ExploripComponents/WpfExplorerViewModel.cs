@@ -111,7 +111,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         // Add special folder
         void AddChild(Environment.SpecialFolder folder)
         {
-            OneDirectory child = new(folder, null, true) { MainViewModel = this, IsItemVisible = true };
+            OneDirectory child = new(folder, parent, true) { IsItemVisible = true };
             parent.Children.Add(child);
         }
         AddChild(Environment.SpecialFolder.Desktop);

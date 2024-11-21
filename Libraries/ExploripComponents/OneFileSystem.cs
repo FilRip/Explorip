@@ -13,6 +13,8 @@ using CommunityToolkit.Mvvm.Input;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
+using Microsoft.WindowsAPICodePack.Shell.Common;
+
 namespace ExploripComponents;
 
 public abstract partial class OneFileSystem(string fullPath, string displayText, OneDirectory? parentDirectory) : ObservableObject()
@@ -24,6 +26,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     protected ulong? _lastSize;
     private NativeMethods.ShFileInfo _fileInfo = new();
     private FileAttributes _fileAttributes;
+    private ImageSource? _thumbnail;
 
     #region Binding properties
 
@@ -55,6 +58,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         if (value)
         {
             OnPropertyChanged(nameof(Icon));
+            OnPropertyChanged(nameof(Thumbnail));
             OnPropertyChanged(nameof(DisplayText));
             OnPropertyChanged(nameof(Size));
             if (string.IsNullOrWhiteSpace(_fileInfo.szTypeName))
@@ -139,6 +143,36 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
                     IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
             }
             return _icon;
+        }
+    }
+
+    public ImageSource? Thumbnail
+    {
+        get
+        {
+            if (_thumbnail == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
+            {
+                WpfExplorerViewModel vm = _parentDirectory!.GetRootParent().MainViewModel!;
+                ShellObject shellObject = ShellObject.FromParsingName(FullPath);
+                _thumbnail = vm.CurrentIconSize switch
+                {
+                    ManagedShell.Common.Enums.IconSize.Large => shellObject.Thumbnail.LargeBitmapSource,
+                    ManagedShell.Common.Enums.IconSize.ExtraLarge => shellObject.Thumbnail.ExtraLargeBitmapSource,
+                    ManagedShell.Common.Enums.IconSize.Jumbo => shellObject.Thumbnail.ExtraLargeBitmapSource,
+                    ManagedShell.Common.Enums.IconSize.Medium => shellObject.Thumbnail.MediumBitmapSource,
+                    ManagedShell.Common.Enums.IconSize.Small => shellObject.Thumbnail.SmallBitmapSource,
+                    _ => shellObject.Thumbnail.BitmapSource,
+                };
+                shellObject.Dispose();
+                if (IconOverlay == null)
+                {
+                    IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out IntPtr hOverlay);
+                    NativeMethods.DestroyIcon(hIcon);
+                    if (hOverlay != IntPtr.Zero)
+                        IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+                }
+            }
+            return _thumbnail;
         }
     }
 

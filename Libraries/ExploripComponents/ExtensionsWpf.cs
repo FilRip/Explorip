@@ -39,10 +39,4 @@ public static class ExtensionsWpf
 
         return childList;
     }
-
-    internal static Rect GetAbsoluteRectangle(this Control control)
-    {
-        Point location = control.TranslatePoint(new Point(0, 0), control);
-        return new Rect(location, control.RenderSize);
-    }
 }
