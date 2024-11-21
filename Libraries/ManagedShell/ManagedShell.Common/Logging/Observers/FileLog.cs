@@ -101,7 +101,7 @@ public class FileLog(string fileName) : ILog, IDisposable
         if (e.Exception != null)
         {
             stringBuilder.AppendLine("\t:::Exception Details:::");
-            foreach (string line in e.Exception.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+            foreach (string line in e.Exception.ToString().Split([Environment.NewLine], StringSplitOptions.None))
                 stringBuilder.AppendLine("\t" + line);
         }
 

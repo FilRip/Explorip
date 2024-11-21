@@ -99,6 +99,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     [RelayCommand()]
     public void Refresh()
     {
+        ExploripSharedCopy.Constants.Colors.LoadTheme();
         Explorip.Constants.Localization.LoadTranslation();
         FolderTreeView.Clear();
         OneDirectory dir;
@@ -236,14 +237,30 @@ public partial class WpfExplorerViewModel : ObservableObject
     public void KeyUp(KeyEventArgs e)
     {
         IInputElement o = FocusManager.GetFocusedElement(_control);
-        if (e.Key == Key.F5)
-            SelectedFolder?.Refresh();
-        else if (e.Key == Key.F2)
-            RenameMode();
-        else if (e.Key == Key.Escape && _currentlyRenaming != null)
+        if (e.Key == Key.Escape && _currentlyRenaming != null)
+        {
             _currentlyRenaming.EditMode(false);
-        else if ((e.Key == Key.Enter || e.Key == Key.Return) && _currentlyRenaming != null)
+            return;
+        }
+        if ((e.Key == Key.Enter || e.Key == Key.Return) && _currentlyRenaming != null)
+        {
             _currentlyRenaming.Rename();
+            return;
+        }
+        if (SelectedItems.Count > 0 && SelectedItems[0].RenameMode)
+            return;
+        if (SelectedFolder?.RenameMode == true)
+            return;
+        if (e.Key == Key.F5)
+        {
+            SelectedFolder?.Refresh();
+            return;
+        }
+        if (e.Key == Key.F2)
+        {
+            RenameMode();
+            return;
+        }
         else if (e.Key == Key.Delete)
         {
             if (o is ListViewItem && SelectedItems.Count > 0)
@@ -264,8 +281,9 @@ public partial class WpfExplorerViewModel : ObservableObject
                 SelectedFolder!.Children.Clear();
                 SelectedFolder!.LoadChildren();
             }
+            return;
         }
-        else if (e.Key == Key.Back)
+        if (e.Key == Key.Back)
         {
             OneDirectory? parent = ((MainWindow)_control).FolderTV.SelectedItem as OneDirectory;
             if (parent?.ParentDirectory != null)

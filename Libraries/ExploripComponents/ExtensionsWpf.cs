@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace ExploripComponents;
@@ -37,5 +38,11 @@ public static class ExtensionsWpf
         }
 
         return childList;
+    }
+
+    internal static Rect GetAbsoluteRectangle(this Control control)
+    {
+        Point location = control.TranslatePoint(new Point(0, 0), control);
+        return new Rect(location, control.RenderSize);
     }
 }

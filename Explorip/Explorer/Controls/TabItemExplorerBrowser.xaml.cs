@@ -104,7 +104,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 {
                     MyDataContext.EditPath = pathLink;
                     StringBuilder partialPath = new();
-                    foreach (string path in pathLink.Split(new char[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (string path in pathLink.Split([Path.DirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (network && CurrentPath.Inlines.Count == 0)
                             partialPath.Append($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");

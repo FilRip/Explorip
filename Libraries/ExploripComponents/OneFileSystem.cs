@@ -10,8 +10,6 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using ExploripCopy.ViewModels;
-
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
@@ -26,6 +24,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     protected ulong? _lastSize;
     private NativeMethods.ShFileInfo _fileInfo = new();
     private FileAttributes _fileAttributes;
+
     #region Binding properties
 
     [ObservableProperty()]

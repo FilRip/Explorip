@@ -12,6 +12,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
         <ResourceDictionary>
+            <Style TargetType="{x:Type local:ListViewEx}" BasedOn="{StaticResource {x:Type ListView}}" />
             <local:FileSizeConverter x:Key="sizeConverter"/>
             <BooleanToVisibilityConverter x:Key="boolToVisible"/>
             <!-- ListView -->
@@ -142,9 +143,10 @@
         <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"/>
 
         <!-- Right part, ListView for files -->
-        <ListView Grid.Column="1" Background="Transparent" Name="FileLV" ItemsSource="{Binding FileListView}"
+        <local:ListViewEx Grid.Column="1" Background="Transparent" x:Name="FileLV" ItemsSource="{Binding FileListView}"
                   SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged"
                   PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver" PreviewDragEnter="AllowDrop_PreviewDragEnter"
+                  PreviewMouseMove="ListView_PreviewMouseMove" PreviewMouseLeftButtonDown="ListView_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="ListView_PreviewMouseLeftButtonUp"
                   VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged"
                   ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}">
             <i:Interaction.Triggers>
@@ -162,7 +164,7 @@
                     </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
-        </ListView>
+        </local:ListViewEx>
         
     </Grid>
 </Window>
