@@ -11,6 +11,8 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.Helpers;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders;
@@ -104,7 +106,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         FolderTreeView.Clear();
         OneDirectory dir;
         bool hasSubFolder;
-        OneDirectory parent = new(Environment.SpecialFolder.MyComputer, null, true) { MainViewModel = this };
+        OneDirectory parent = new(Environment.SpecialFolder.MyComputer, null, true) { MainViewModel = this, FullPath = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}" };
         FolderTreeView.Add(parent);
         parent.Children.Clear();
 
@@ -185,7 +187,10 @@ public partial class WpfExplorerViewModel : ObservableObject
         // When right click on empty space in list view
         if (SelectedItems.Count == 0 && !string.IsNullOrWhiteSpace(SelectedFolder?.FullPath))
         {
-            new ShellContextMenu(this).ShowContextMenu(new DirectoryInfo(SelectedFolder!.FullPath), Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
+            if (SelectedFolder.FullPath == Environment.SpecialFolder.Desktop.FullPath())
+                new ShellContextMenu(this).ShowContextMenu("::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
+            else
+                new ShellContextMenu(this).ShowContextMenu(SelectedFolder!.FullPath, Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
         }
     }
 

@@ -62,7 +62,6 @@ public static class Localization
     public static string SHOW_JUMBO_SUBMENU { get; private set; }
     public static string SHOW_EXTRALARGE_SUBMENU { get; private set; }
     public static string SHOW_LARGE_SUBMENU { get; private set; }
-    public static string SHOW_MEDIUM_SUBMENU { get; private set; }
     public static string SHOW_SMALL_SUBMENU { get; private set; }
 
     public static void LoadTranslation()

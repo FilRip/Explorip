@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -177,10 +178,15 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     {
         Guid guidSv = typeof(IShellView).GUID;
 
-        IntPtr pItemIDL = ILCreateFromPath(fullPath);
-        GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out IntPtr opsf);
-        ILFree(pItemIDL);
-        _parentFolder = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
+        if (fullPath == "::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}")
+            _parentFolder = GetDesktopFolder();
+        else
+        {
+            IntPtr pItemIDL = ILCreateFromPath(fullPath);
+            GetDesktopFolder().BindToObject(pItemIDL, IntPtr.Zero, typeof(IShellFolder).GUID, out IntPtr opsf);
+            ILFree(pItemIDL);
+            _parentFolder = (IShellFolder)Marshal.GetObjectForIUnknown(opsf);
+        }
         _parentFolder.CreateViewObject(IntPtr.Zero, guidSv, out IntPtr opShellView);
         _backgroundShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
         object opContextMenu = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
@@ -436,6 +442,16 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         else
             GetPIDLs(dir);
         ShowContextMenu(pointScreen, background);
+    }
+
+    public void ShowContextMenu(string dir, System.Windows.Point pointScreen)
+    {
+        ReleaseAll();
+
+        GetContextMenuInterfacesBackground(dir);
+        _strCurrentFolder = dir;
+
+        ShowContextMenu(pointScreen, true);
     }
 
     #endregion
