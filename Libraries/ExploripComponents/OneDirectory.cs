@@ -283,7 +283,7 @@ public partial class OneDirectory : OneFileSystem
             dir = new DirectoryInfo(DisplayText);
         else
             dir = new DirectoryInfo(FullPath);
-        scm.ShowContextMenu(dir, Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)), false);
+        scm.ShowContextMenu(dir, Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
     }
 
     public override void DoubleClickFile()

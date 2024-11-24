@@ -187,7 +187,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         // When right click on empty space in list view
         if (SelectedItems.Count == 0 && !string.IsNullOrWhiteSpace(SelectedFolder?.FullPath))
         {
-            if (SelectedFolder.FullPath == Environment.SpecialFolder.Desktop.FullPath())
+            if (SelectedFolder!.FullPath == Environment.SpecialFolder.Desktop.FullPath())
                 new ShellContextMenu(this).ShowContextMenu("::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
             else
                 new ShellContextMenu(this).ShowContextMenu(SelectedFolder!.FullPath, Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));

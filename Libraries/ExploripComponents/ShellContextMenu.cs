@@ -431,17 +431,11 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     /// <summary>
     /// Show default context menu of folder
     /// </summary>
-    public void ShowContextMenu(DirectoryInfo dir, System.Windows.Point pointScreen, bool background = true)
+    public void ShowContextMenu(DirectoryInfo dir, System.Windows.Point pointScreen)
     {
         ReleaseAll();
-        if (background)
-        {
-            GetContextMenuInterfacesBackground(dir.FullName);
-            _strCurrentFolder = dir.FullName;
-        }
-        else
-            GetPIDLs(dir);
-        ShowContextMenu(pointScreen, background);
+        GetPIDLs(dir);
+        ShowContextMenu(pointScreen);
     }
 
     public void ShowContextMenu(string dir, System.Windows.Point pointScreen)
