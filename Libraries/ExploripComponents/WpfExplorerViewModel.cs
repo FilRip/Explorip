@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -37,6 +39,8 @@ public partial class WpfExplorerViewModel : ObservableObject
     private IconSize _currentIconSize = IconSize.Small;
     [ObservableProperty()]
     private bool _viewDetails = false;
+    [ObservableProperty()]
+    private ICollectionView? _currentGroupBy;
 
     #endregion
 
@@ -155,30 +159,44 @@ public partial class WpfExplorerViewModel : ObservableObject
         ShellItem si = new(specialPath);
         parent = new OneDirectory(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
         FolderTreeView.Add(parent);
+
+        BrowseTo($"c:\\");
     }
 
     public void BrowseTo(string fullPath)
     {
-        string[] folders = fullPath.Split(Path.DirectorySeparatorChar);
-        OneDirectory actualFolder = FolderTreeView[0];
-        string currentPath;
-        foreach (string folder in folders)
+        if (fullPath.StartsWith("\\\\"))
         {
-            foreach (OneDirectory subFolder in actualFolder.Children)
+            // TODO : Network search
+        }
+        else
+        {
+            if (!FolderTreeView[0].IsExpanded)
+                FolderTreeView[0].IsExpanded = true;
+            OneDirectory actualFolder = FolderTreeView[0];
+            if (!string.IsNullOrWhiteSpace(fullPath))
             {
-                currentPath = subFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar);
-                if (subFolder.Drive == null)
-                    currentPath = Path.GetFileName(currentPath);
-
-                if (currentPath == folder)
+                string[] folders = fullPath.Split(Path.DirectorySeparatorChar);
+                string currentPath;
+                foreach (string folder in folders)
                 {
-                    subFolder.IsExpanded = true;
-                    actualFolder = subFolder;
-                    break;
+                    foreach (OneDirectory subFolder in actualFolder.Children)
+                    {
+                        currentPath = subFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar);
+                        if (subFolder.Drive == null)
+                            currentPath = Path.GetFileName(currentPath);
+
+                        if (currentPath.ToLower() == folder.ToLower())
+                        {
+                            subFolder.IsExpanded = true;
+                            actualFolder = subFolder;
+                            break;
+                        }
+                    }
                 }
             }
+            actualFolder.IsSelected = true;
         }
-        actualFolder.IsSelected = true;
     }
 
     [RelayCommand()]
@@ -200,6 +218,12 @@ public partial class WpfExplorerViewModel : ObservableObject
         CurrentIconSize = value;
         SelectedFolder?.Refresh();
         ((MainWindow)CurrentControl).FileLV.ItemsPanel = (details ? _itemTemplateDetails : _itemTemplateWrap);
+        if (details)
+            CurrentGroupBy?.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OneFileSystem.NameFirstLetter)));
+        else if (CurrentGroupBy?.GroupDescriptions.Count > 0)
+            CurrentGroupBy?.GroupDescriptions.Remove(CurrentGroupBy.GroupDescriptions[0]);
+        CurrentGroupBy?.Refresh();
+        OnPropertyChanged(nameof(CurrentGroupBy));
     }
 
     public GridLength IconSizePx
@@ -333,6 +357,8 @@ public partial class WpfExplorerViewModel : ObservableObject
             _fsWatcher.EnableRaisingEvents = false;
         }
         ScrollToTop();
+
+        CurrentGroupBy = (CollectionView)CollectionViewSource.GetDefaultView(FileListView);
     }
 
     private void FsWatcher_Renamed(object sender, RenamedEventArgs e)

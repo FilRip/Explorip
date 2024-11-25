@@ -38,7 +38,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     private bool _isSelected;
     [ObservableProperty()]
     private string _fullPath = fullPath;
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(NameFirstLetter))]
     private string _displayText = displayText;
     [ObservableProperty()]
     private ImageSource? _iconOverlay;
@@ -213,6 +213,11 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     public double Opacity
     {
         get { return Hidden ? 0.75 : 1; }
+    }
+
+    public char NameFirstLetter
+    {
+        get { return DisplayText.ToUpper()[0]; }
     }
 
     #endregion

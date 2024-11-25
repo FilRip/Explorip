@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,8 +7,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-using Explorip.Desktop.Controls;
-using Explorip.Desktop.ViewModels;
 using Explorip.Helpers;
 
 using ExploripSharedCopy.Helpers;
