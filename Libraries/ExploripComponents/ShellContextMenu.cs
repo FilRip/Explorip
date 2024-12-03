@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -42,7 +41,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private readonly WpfExplorerViewModel _viewModel = viewModel;
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
     private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo;
-    
+
     #endregion
 
     #region Destructor
