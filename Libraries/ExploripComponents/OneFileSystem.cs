@@ -27,6 +27,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     private NativeMethods.ShFileInfo _fileInfo = new();
     private FileAttributes _fileAttributes;
     private ImageSource? _thumbnail;
+    private DateTime _lastWriteTime;
 
     #region Binding properties
 
@@ -66,17 +67,25 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
                 _fileInfo = new();
                 NativeMethods.SHGetFileInfo(FullPath, NativeMethods.FILE_ATTRIBUTE.NULL, ref _fileInfo, (uint)Marshal.SizeOf(_fileInfo), NativeMethods.SHGFI.TypeName);
                 if (!FullPath.StartsWith("::"))
+                {
                     try
                     {
                         _fileAttributes = File.GetAttributes(FullPath);
                     }
                     catch (Exception) { /* Ignore errors */ }
+                    try
+                    {
+                        _lastWriteTime = File.GetLastWriteTime(FullPath);
+                    }
+                    catch (Exception) { /* Ignore errors */ }
+                }
             }
             OnPropertyChanged(nameof(TypeName));
             OnPropertyChanged(nameof(FileAttributes));
             OnPropertyChanged(nameof(Hidden));
             OnPropertyChanged(nameof(ReadOnly));
             OnPropertyChanged(nameof(Opacity));
+            OnPropertyChanged(nameof(LastModified));
         }
     }
 
@@ -218,6 +227,11 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     public char NameFirstLetter
     {
         get { return DisplayText.ToUpper()[0]; }
+    }
+
+    public DateTime LastModified
+    {
+        get { return _lastWriteTime; }
     }
 
     #endregion

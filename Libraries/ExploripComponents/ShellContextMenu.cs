@@ -16,6 +16,8 @@ using ManagedShell.ShellFolders.Structs;
 
 using Securify.ShellLink;
 
+using Windows.UI.WebUI;
+
 using static ManagedShell.Interop.NativeMethods;
 
 using Localization = Explorip.Constants.Localization;
@@ -41,6 +43,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private readonly WpfExplorerViewModel _viewModel = viewModel;
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
     private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo;
+    private uint _cmdGbName, _cmdGbType, _cmdGbSize, _cmdGbLastModified, _cmdGbNone;
 
     #endregion
 
@@ -189,13 +192,15 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         _parentFolder.CreateViewObject(IntPtr.Zero, guidSv, out IntPtr opShellView);
         _backgroundShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
         object opContextMenu = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
+        object opContextMenu2 = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu2).GUID);
+        object opContextMenu3 = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu3).GUID);
 
         if (opContextMenu != null)
-        {
             _contextMenu = (IContextMenu)opContextMenu;
-            _contextMenu2 = (IContextMenu2)opContextMenu;
-            _contextMenu3 = (IContextMenu3)opContextMenu;
-        }
+        if (opContextMenu2 != null)
+            _contextMenu2 = (IContextMenu2)opContextMenu2;
+        if (opContextMenu3 != null)
+            _contextMenu3 = (IContextMenu3)opContextMenu3;
     }
 
     private void InvokeCommand(uint nCmd, System.Windows.Point pointInvoke)
@@ -529,6 +534,16 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                         _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.ExtraLarge);
                     else if (nSelected == _cmdJumbo)
                         _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.Jumbo);
+                    else if (nSelected == _cmdGbName)
+                        _viewModel.ChangeGroupBy(GroupBy.NAME);
+                    else if (nSelected == _cmdGbLastModified)
+                        _viewModel.ChangeGroupBy(GroupBy.LAST_MODIFIED);
+                    else if (nSelected == _cmdGbSize)
+                        _viewModel.ChangeGroupBy(GroupBy.SIZE);
+                    else if (nSelected == _cmdGbType)
+                        _viewModel.ChangeGroupBy(GroupBy.TYPE);
+                    else if (nSelected == _cmdGbNone)
+                        _viewModel.ChangeGroupBy(GroupBy.NONE);
                     else
                         InvokeCommand(nSelected, pointScreen);
                 }
@@ -668,44 +683,81 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                             SetMenuItemInfo(pMenu, i, true, ref mi);
                             continue;
                         }
-                        if ((hMenu != IntPtr.Zero) && (label.Trim().ToLower() == Localization.SHOW_SUBMENU.Trim().ToLower()))
+                        if (hMenu != IntPtr.Zero)
                         {
-                            int nbSubMenu = GetMenuItemCount(hMenu);
-                            for (int j = 0; j < nbSubMenu; j++)
+                            if (label.Replace("&", "").Trim().ToLower() == Localization.SHOW_SUBMENU.Trim().ToLower())
                             {
-                                string? subLabel = GetMenuItemString(j, hMenu, true, out uint subCmd);
-                                if (string.IsNullOrWhiteSpace(subLabel))
-                                    continue;
-                                if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_DETAILS_SUBMENU.Trim().ToLower())
+                                int nbSubMenu = GetMenuItemCount(hMenu);
+                                for (int j = 0; j < nbSubMenu; j++)
                                 {
-                                    _cmdDetails = subCmd;
-                                    CheckMenuItem(hMenu, (uint)j, true, _viewModel.ViewDetails);
+                                    string? subLabel = GetMenuItemString(j, hMenu, true, out uint subCmd);
+                                    if (string.IsNullOrWhiteSpace(subLabel))
+                                        continue;
+                                    if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_DETAILS_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdDetails = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.ViewDetails);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_SMALL_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdSmall = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Small);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_LARGE_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdLarge = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Large);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_EXTRALARGE_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdExtraLarge = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.ExtraLarge);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_JUMBO_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdJumbo = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Jumbo);
+                                    }
                                 }
-                                else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_SMALL_SUBMENU.Trim().ToLower())
+                            }
+                            else if (label.Replace("&", "").Trim().ToLower() == Localization.GROUP_BY_SUBMENU.Trim().ToLower())
+                            {
+                                int nbSubMenu = GetMenuItemCount(hMenu);
+                                for (int j = 0; j < nbSubMenu; j++)
                                 {
-                                    _cmdSmall = subCmd;
-                                    CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Small);
-                                }
-                                else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_LARGE_SUBMENU.Trim().ToLower())
-                                {
-                                    _cmdLarge = subCmd;
-                                    CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Large);
-                                }
-                                else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_EXTRALARGE_SUBMENU.Trim().ToLower())
-                                {
-                                    _cmdExtraLarge = subCmd;
-                                    CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.ExtraLarge);
-                                }
-                                else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_JUMBO_SUBMENU.Trim().ToLower())
-                                {
-                                    _cmdJumbo = subCmd;
-                                    CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Jumbo);
+                                    string? subLabel = GetMenuItemString(j, hMenu, true, out uint subCmd);
+                                    if (string.IsNullOrWhiteSpace(subLabel))
+                                        continue;
+                                    if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_NAME_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdGbName = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentGroup == GroupBy.NAME);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_LASTMODIFIED_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdGbLastModified = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentGroup == GroupBy.LAST_MODIFIED);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_TYPE_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdGbType = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentGroup == GroupBy.TYPE);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_SIZE_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdGbSize = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentGroup == GroupBy.SIZE);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_NONE_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdGbNone = subCmd;
+                                    }
                                 }
                             }
                         }
                         continue;
                     }
-                    if (label!.Trim().ToLower() == Localization.RENAME_MENUITEM.Trim().ToLower())
+                    else if (label!.Trim().ToLower() == Localization.RENAME_MENUITEM.Trim().ToLower())
                     {
                         _cmdRename = cmd;
                         continue;

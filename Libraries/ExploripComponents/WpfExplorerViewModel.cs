@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -56,6 +54,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         _itemTemplateDetails = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
         _itemTemplateWrap = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingWrapPanel)));
         ((MainWindow)CurrentControl).FileLV.ItemsPanel = (_viewDetails ? _itemTemplateDetails : _itemTemplateWrap);
+        CurrentGroup = GroupBy.NAME;
     }
 
     #region Drag'n drop
@@ -108,64 +107,23 @@ public partial class WpfExplorerViewModel : ObservableObject
         ExploripSharedCopy.Constants.Colors.LoadTheme();
         Explorip.Constants.Localization.LoadTranslation();
         FolderTreeView.Clear();
-        OneDirectory dir;
-        bool hasSubFolder;
-        OneDirectory parent = new(Environment.SpecialFolder.MyComputer, null, true) { MainViewModel = this, FullPath = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}" };
-        FolderTreeView.Add(parent);
-        parent.Children.Clear();
-
-        // Add special folder
-        void AddChild(Environment.SpecialFolder folder)
-        {
-            OneDirectory child = new(folder, parent, true) { IsItemVisible = true };
-            parent.Children.Add(child);
-        }
-        AddChild(Environment.SpecialFolder.Desktop);
-        AddChild(Environment.SpecialFolder.MyDocuments);
-        AddChild(Environment.SpecialFolder.MyPictures);
-        AddChild(Environment.SpecialFolder.MyMusic);
-        AddChild(Environment.SpecialFolder.MyVideos);
-        // Add special folder "Downloads"
-        Guid guid = new("374DE290-123F-4565-9164-39C4925E467B");
-        NativeMethods.SHGetKnownFolderPath(ref guid, NativeMethods.KnownFolder.None, IntPtr.Zero, out string pathDownload);
-        NativeMethods.ShFileInfo fi = new();
-        NativeMethods.SHGetFileInfo(pathDownload, NativeMethods.FILE_ATTRIBUTE.NORMAL | NativeMethods.FILE_ATTRIBUTE.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), NativeMethods.SHGFI.DisplayName);
-        parent.Children.Add(new OneDirectory(pathDownload, parent, true, fi.szDisplayName) { IsItemVisible = true });
-
-        foreach (DriveInfo di in DriveInfo.GetDrives())
-        {
-            try
-            {
-                if (di.DriveType == DriveType.Fixed)
-                {
-                    FastDirectoryEnumerator.EnumerateFolderContent(di.RootDirectory.FullName, out List<string> subDir, out _);
-                    hasSubFolder = subDir.Count > 0;
-                }
-                else
-                    hasSubFolder = true;
-            }
-            catch (Exception)
-            {
-                hasSubFolder = false;
-            }
-            dir = new OneDirectory(di, parent, hasSubFolder, new ShellItem(di.RootDirectory.FullName).DisplayName) { IsItemVisible = true };
-            parent.Children.Add(dir);
-        }
-
-        SelectedFolder = parent;
+        OneDirectory myComputer = new(Environment.SpecialFolder.MyComputer, null, true) { MainViewModel = this, FullPath = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}" };
+        FolderTreeView.Add(myComputer);
+        myComputer.IsExpanded = true;
 
         // Add Network root
         string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
         ShellItem si = new(specialPath);
-        parent = new OneDirectory(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
-        FolderTreeView.Add(parent);
+        OneDirectory networkNeiborhood = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
+        FolderTreeView.Add(networkNeiborhood);
 
-        BrowseTo($"c:\\");
+        BrowseTo(null);
+        ChangeIconSize(ViewDetails, CurrentIconSize);
     }
 
-    public void BrowseTo(string fullPath)
+    public void BrowseTo(string? fullPath)
     {
-        if (fullPath.StartsWith("\\\\"))
+        if (fullPath?.StartsWith("\\\\") == true)
         {
             // TODO : Network search
         }
@@ -176,7 +134,7 @@ public partial class WpfExplorerViewModel : ObservableObject
             OneDirectory actualFolder = FolderTreeView[0];
             if (!string.IsNullOrWhiteSpace(fullPath))
             {
-                string[] folders = fullPath.Split(Path.DirectorySeparatorChar);
+                string[] folders = fullPath!.Split(Path.DirectorySeparatorChar);
                 string currentPath;
                 foreach (string folder in folders)
                 {
@@ -222,6 +180,33 @@ public partial class WpfExplorerViewModel : ObservableObject
             CurrentGroupBy?.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OneFileSystem.NameFirstLetter)));
         else if (CurrentGroupBy?.GroupDescriptions.Count > 0)
             CurrentGroupBy?.GroupDescriptions.Remove(CurrentGroupBy.GroupDescriptions[0]);
+        CurrentGroupBy?.Refresh();
+        OnPropertyChanged(nameof(CurrentGroupBy));
+    }
+
+    public GroupBy CurrentGroup { get; set; }
+
+    public void ChangeGroupBy(GroupBy newGroup)
+    {
+        CurrentGroupBy ??= (CollectionView)CollectionViewSource.GetDefaultView(FileListView);
+        if (CurrentGroupBy.GroupDescriptions?.Count > 0)
+            CurrentGroupBy.GroupDescriptions.RemoveAt(0);
+        switch (newGroup)
+        {
+            case GroupBy.NAME:
+                CurrentGroupBy.GroupDescriptions!.Add(new PropertyGroupDescription(nameof(OneFileSystem.NameFirstLetter)));
+                break;
+            case GroupBy.SIZE:
+                CurrentGroupBy.GroupDescriptions!.Add(new PropertyGroupDescription(nameof(OneFileSystem.Size)));
+                break;
+            case GroupBy.TYPE:
+                CurrentGroupBy.GroupDescriptions!.Add(new PropertyGroupDescription(nameof(OneFileSystem.TypeName)));
+                break;
+            case GroupBy.LAST_MODIFIED:
+                CurrentGroupBy.GroupDescriptions!.Add(new PropertyGroupDescription(nameof(OneFileSystem.LastModified)));
+                break;
+        }
+        CurrentGroup = newGroup;
         CurrentGroupBy?.Refresh();
         OnPropertyChanged(nameof(CurrentGroupBy));
     }

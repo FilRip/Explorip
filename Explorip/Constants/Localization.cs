@@ -63,6 +63,12 @@ public static class Localization
     public static string SHOW_EXTRALARGE_SUBMENU { get; private set; }
     public static string SHOW_LARGE_SUBMENU { get; private set; }
     public static string SHOW_SMALL_SUBMENU { get; private set; }
+    public static string GROUP_BY_SUBMENU { get; private set; }
+    public static string GROUPBY_NONE_SUBMENU { get; private set; }
+    public static string GROUPBY_NAME_SUBMENU { get; private set; }
+    public static string GROUPBY_LASTMODIFIED_SUBMENU { get; private set; }
+    public static string GROUPBY_TYPE_SUBMENU { get; private set; }
+    public static string GROUPBY_SIZE_SUBMENU { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -116,12 +122,18 @@ public static class Localization
         RENAME_MENUITEM = LoadMenuItem("shell32.dll", 210, 18, "Re&name");
         SEND_TO = Load("shell32.dll", 30312, "Send to");
         SEND_TO_DESKTOP = Load("sendmail.dll", 21, "Desktop (create shortcut)");
-        SHOW_SUBMENU = LoadMenuItem("shell32.dll", 215, 28674, "Show");
+        SHOW_SUBMENU = LoadMenuItem("shell32.dll", 215, 28674, "Show").Replace("&", "");
         SHOW_DETAILS_SUBMENU = LoadMenuItem("shell32.dll", 216, 28747, "Details", 2).Replace("&", "");
         SHOW_JUMBO_SUBMENU = LoadMenuItem("shell32.dll", 216, 28749, "Jumbo", 2).Replace("&", "");
         SHOW_EXTRALARGE_SUBMENU = LoadMenuItem("shell32.dll", 216, 28751, "Extra large", 2).Replace("&", "");
         SHOW_LARGE_SUBMENU = LoadMenuItem("shell32.dll", 216, 28750, "Large", 2).Replace("&", "");
         SHOW_SMALL_SUBMENU = LoadMenuItem("shell32.dll", 216, 28752, "Small", 2).Replace("&", "");
+        GROUP_BY_SUBMENU = LoadMenuItem("shell32.dll", 215, 28676, "Group by").Replace("&", "");
+        GROUPBY_NONE_SUBMENU = LoadMenuItem("shell32.dll", 216, 30210, "(none)", 2).Replace("&", "");
+        GROUPBY_NAME_SUBMENU = Load("wpdshext.dll", 8976, "Name").Replace("&", "");
+        GROUPBY_SIZE_SUBMENU = Load("wpdshext.dll", 8978, "Size").Replace("&", "");
+        GROUPBY_LASTMODIFIED_SUBMENU = Load("wpdshext.dll", 8981, "Modified").Replace("&", "");
+        GROUPBY_TYPE_SUBMENU = Load("wpdshext.dll", 8979, "Type").Replace("&", "");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

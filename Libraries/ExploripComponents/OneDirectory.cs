@@ -16,6 +16,7 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.Helpers;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Interfaces;
 
 using NativeMethods = ManagedShell.Interop.NativeMethods;
@@ -206,7 +207,53 @@ public partial class OneDirectory : OneFileSystem
         if (IsExpanded)
         {
             Children.Clear();
-            LoadChildren();
+            if (_specialFolder == Environment.SpecialFolder.MyComputer)
+            {
+                OneDirectory dir;
+                bool hasSubFolder;
+
+                void AddChild(Environment.SpecialFolder folder)
+                {
+                    OneDirectory child = new(folder, this, true) { IsItemVisible = true };
+                    Children.Add(child);
+                }
+                // Add special folder
+                AddChild(Environment.SpecialFolder.Desktop);
+                AddChild(Environment.SpecialFolder.MyDocuments);
+                AddChild(Environment.SpecialFolder.MyPictures);
+                AddChild(Environment.SpecialFolder.MyMusic);
+                AddChild(Environment.SpecialFolder.MyVideos);
+                // Add special folder "Downloads"
+                Guid guid = new("374DE290-123F-4565-9164-39C4925E467B");
+                NativeMethods.SHGetKnownFolderPath(ref guid, NativeMethods.KnownFolder.None, IntPtr.Zero, out string pathDownload);
+                NativeMethods.ShFileInfo fi = new();
+                NativeMethods.SHGetFileInfo(pathDownload, NativeMethods.FILE_ATTRIBUTE.NORMAL | NativeMethods.FILE_ATTRIBUTE.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), NativeMethods.SHGFI.DisplayName);
+                Children.Add(new OneDirectory(pathDownload, this, true, fi.szDisplayName) { IsItemVisible = true });
+
+                foreach (DriveInfo di in DriveInfo.GetDrives())
+                {
+                    try
+                    {
+                        if (di.DriveType == DriveType.Fixed)
+                        {
+                            FastDirectoryEnumerator.EnumerateFolderContent(di.RootDirectory.FullName, out List<string> subDir, out _);
+                            hasSubFolder = subDir.Count > 0;
+                        }
+                        else
+                            hasSubFolder = true;
+                    }
+                    catch (Exception)
+                    {
+                        hasSubFolder = false;
+                    }
+                    dir = new OneDirectory(di, this, hasSubFolder, new ShellItem(di.RootDirectory.FullName).DisplayName) { IsItemVisible = true };
+                    Children.Add(dir);
+                }
+            }
+            else
+            {
+                LoadChildren();
+            }
         }
         RefreshListView();
         GetRootParent().MainViewModel!.ScrollToTop();
@@ -241,10 +288,17 @@ public partial class OneDirectory : OneFileSystem
             {
                 if (_lastSize == null && (_taskCalculateSize == null || _cancellationToken?.IsCancellationRequested == true))
                 {
-                    _cancellationToken = new CancellationTokenSource();
-                    _taskCalculateSize = new Task(() => CalculateFolderSize(), _cancellationToken.Token);
-                    _taskCalculateSize.ContinueWith(EndCalculationSize);
-                    _taskCalculateSize.Start();
+                    if (Drive == null)
+                    {
+                        _cancellationToken = new CancellationTokenSource();
+                        _taskCalculateSize = new Task(() => CalculateFolderSize(), _cancellationToken.Token);
+                        _taskCalculateSize.ContinueWith(EndCalculationSize);
+                        _taskCalculateSize.Start();
+                    }
+                    else
+                    {
+                        _lastSize = (ulong)Drive.TotalSize - (ulong)Drive.TotalFreeSpace;
+                    }
                 }
             }
             return _lastSize ?? 0;
