@@ -16,8 +16,6 @@ using ManagedShell.ShellFolders.Structs;
 
 using Securify.ShellLink;
 
-using Windows.UI.WebUI;
-
 using static ManagedShell.Interop.NativeMethods;
 
 using Localization = Explorip.Constants.Localization;
@@ -43,7 +41,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private readonly WpfExplorerViewModel _viewModel = viewModel;
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
     private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo;
-    private uint _cmdGbName, _cmdGbType, _cmdGbSize, _cmdGbLastModified, _cmdGbNone;
+    private uint _cmdGbName, _cmdGbType, _cmdGbSize, _cmdGbLastModified, _cmdGbNone = 16385;
 
     #endregion
 
@@ -723,6 +721,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                             else if (label.Replace("&", "").Trim().ToLower() == Localization.GROUP_BY_SUBMENU.Trim().ToLower())
                             {
                                 int nbSubMenu = GetMenuItemCount(hMenu);
+                                bool nonePresent = false;
                                 for (int j = 0; j < nbSubMenu; j++)
                                 {
                                     string? subLabel = GetMenuItemString(j, hMenu, true, out uint subCmd);
@@ -750,8 +749,23 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                     }
                                     else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_NONE_SUBMENU.Trim().ToLower())
                                     {
-                                        _cmdGbNone = subCmd;
+                                        nonePresent = true;
                                     }
+                                }
+
+                                if (!nonePresent && _viewModel.CurrentGroup != GroupBy.NONE)
+                                {
+                                    MenuItemInfo newMenuItem = new()
+                                    {
+                                        dwTypeData = Localization.GROUPBY_NONE_SUBMENU,
+                                        cch = Localization.GROUPBY_NONE_SUBMENU.Length,
+                                        fMask = MIIM.STATE | MIIM.STRING | MIIM.ID,
+                                        fType = MFT.STRING,
+                                        fState = MFS.ENABLED,
+                                        wID = _cmdGbNone,
+                                    };
+                                    newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
+                                    InsertMenuItem(hMenu, (uint)nbSubMenu, true, ref newMenuItem);
                                 }
                             }
                         }

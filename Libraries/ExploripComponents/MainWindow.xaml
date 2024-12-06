@@ -64,7 +64,7 @@
                         <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
                         <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
                         <!-- End name -->
-                        <TextBlock Text="{local:CultureAwareBinding Path=LastModified, StringFormat=d}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0"/>
+                        <TextBlock Text="{local:DateTimeBinding Path=LastModified}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0"/>
                         <TextBlock Text="{Binding TypeName}" Grid.Column="3" HorizontalAlignment="Right" Margin="0 0 10 0"/>
                         <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Grid.Column="4" HorizontalAlignment="Right"/>
                     </Grid>

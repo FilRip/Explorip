@@ -54,7 +54,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         _itemTemplateDetails = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
         _itemTemplateWrap = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingWrapPanel)));
         ((MainWindow)CurrentControl).FileLV.ItemsPanel = (_viewDetails ? _itemTemplateDetails : _itemTemplateWrap);
-        CurrentGroup = GroupBy.NAME;
+        CurrentGroup = GroupBy.NONE;
     }
 
     #region Drag'n drop
@@ -176,12 +176,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         CurrentIconSize = value;
         SelectedFolder?.Refresh();
         ((MainWindow)CurrentControl).FileLV.ItemsPanel = (details ? _itemTemplateDetails : _itemTemplateWrap);
-        if (details)
-            CurrentGroupBy?.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OneFileSystem.NameFirstLetter)));
-        else if (CurrentGroupBy?.GroupDescriptions.Count > 0)
-            CurrentGroupBy?.GroupDescriptions.Remove(CurrentGroupBy.GroupDescriptions[0]);
-        CurrentGroupBy?.Refresh();
-        OnPropertyChanged(nameof(CurrentGroupBy));
+        ChangeGroupBy(CurrentGroup);
     }
 
     public GroupBy CurrentGroup { get; set; }
