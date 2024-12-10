@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -42,19 +43,30 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     #endregion
 
-    private readonly Control _control;
+    private readonly MainWindow _control;
     private OneFileSystem? _currentlyRenaming;
     private readonly ItemsPanelTemplate _itemTemplateDetails;
     private readonly ItemsPanelTemplate _itemTemplateWrap;
+    private double _currentItemWidth, _currentItemHeight;
 
-    public WpfExplorerViewModel(IntPtr handle, Control control)
+    public WpfExplorerViewModel(MainWindow control)
     {
         _control = control;
-        WindowHandle = handle;
+        _control.EndRedraw += WpfExplorerViewModel_EndRedraw;
         _itemTemplateDetails = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
         _itemTemplateWrap = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingWrapPanel)));
-        ((MainWindow)CurrentControl).FileLV.ItemsPanel = (_viewDetails ? _itemTemplateDetails : _itemTemplateWrap);
+        _control.FileLV.ItemsPanel = (_viewDetails ? _itemTemplateDetails : _itemTemplateWrap);
         CurrentGroup = GroupBy.NONE;
+    }
+
+    private void WpfExplorerViewModel_EndRedraw(object sender, EventArgs e)
+    {
+        ListView fileLv = _control.FileLV;
+        if (fileLv.ItemContainerGenerator.ContainerFromIndex(fileLv.Items.Count - 1) is ListViewItem item)
+        {
+            _currentItemWidth = item.ActualWidth;
+            _currentItemHeight = item.ActualHeight;
+        }
     }
 
     #region Drag'n drop
@@ -94,12 +106,10 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     #endregion
 
-    public Control CurrentControl
+    public MainWindow CurrentControl
     {
         get { return _control; }
     }
-
-    public IntPtr WindowHandle { get; private set; }
 
     [RelayCommand()]
     public void Refresh()
@@ -117,7 +127,11 @@ public partial class WpfExplorerViewModel : ObservableObject
         OneDirectory networkNeiborhood = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
         FolderTreeView.Add(networkNeiborhood);
 
-        BrowseTo(null);
+        if (Environment.GetCommandLineArgs().Length > 1)
+            BrowseTo(Environment.GetCommandLineArgs()[1]);
+        else
+            BrowseTo(null);
+
         ChangeIconSize(ViewDetails, CurrentIconSize);
     }
 
@@ -138,6 +152,8 @@ public partial class WpfExplorerViewModel : ObservableObject
                 string currentPath;
                 foreach (string folder in folders)
                 {
+                    if (actualFolder.Children.Count == 0)
+                        actualFolder.Refresh();
                     foreach (OneDirectory subFolder in actualFolder.Children)
                     {
                         currentPath = subFolder.FullPath.TrimEnd(Path.DirectorySeparatorChar);
@@ -175,7 +191,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         ViewDetails = details;
         CurrentIconSize = value;
         SelectedFolder?.Refresh();
-        ((MainWindow)CurrentControl).FileLV.ItemsPanel = (details ? _itemTemplateDetails : _itemTemplateWrap);
+        CurrentControl.FileLV.ItemsPanel = (details ? _itemTemplateDetails : _itemTemplateWrap);
         ChangeGroupBy(CurrentGroup);
     }
 
@@ -184,25 +200,24 @@ public partial class WpfExplorerViewModel : ObservableObject
     public void ChangeGroupBy(GroupBy newGroup)
     {
         CurrentGroupBy ??= (CollectionView)CollectionViewSource.GetDefaultView(FileListView);
-        if (CurrentGroupBy.GroupDescriptions?.Count > 0)
-            CurrentGroupBy.GroupDescriptions.RemoveAt(0);
+        CurrentGroupBy.GroupDescriptions.Clear();
         switch (newGroup)
         {
             case GroupBy.NAME:
-                CurrentGroupBy.GroupDescriptions!.Add(new PropertyGroupDescription(nameof(OneFileSystem.NameFirstLetter)));
+                CurrentGroupBy.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OneFileSystem.NameFirstLetter)));
                 break;
             case GroupBy.SIZE:
-                CurrentGroupBy.GroupDescriptions!.Add(new PropertyGroupDescription(nameof(OneFileSystem.Size)));
+                CurrentGroupBy.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OneFileSystem.Size)));
                 break;
             case GroupBy.TYPE:
-                CurrentGroupBy.GroupDescriptions!.Add(new PropertyGroupDescription(nameof(OneFileSystem.TypeName)));
+                CurrentGroupBy.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OneFileSystem.TypeName)));
                 break;
             case GroupBy.LAST_MODIFIED:
-                CurrentGroupBy.GroupDescriptions!.Add(new PropertyGroupDescription(nameof(OneFileSystem.LastModified)));
+                CurrentGroupBy.GroupDescriptions.Add(new PropertyGroupDescription(nameof(OneFileSystem.LastModified)));
                 break;
         }
         CurrentGroup = newGroup;
-        CurrentGroupBy?.Refresh();
+        CurrentGroupBy.Refresh();
         OnPropertyChanged(nameof(CurrentGroupBy));
     }
 
@@ -243,7 +258,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     }
 
     [RelayCommand()]
-    public void KeyUp(KeyEventArgs e)
+    public async Task KeyUp(KeyEventArgs e)
     {
         IInputElement o = FocusManager.GetFocusedElement(_control);
         if (e.Key == Key.Escape && _currentlyRenaming != null)
@@ -263,6 +278,14 @@ public partial class WpfExplorerViewModel : ObservableObject
         if (e.Key == Key.F5)
         {
             SelectedFolder?.Refresh();
+            await Task.Delay(100);
+            CurrentControl.ForceRefreshVisibleItems();
+            /*if (FileListView.Count > 0 &&
+                FileListView.Count * _currentItemWidth < CurrentControl.FileLV.ActualWidth)
+            {
+                foreach (OneFileSystem file in FileListView)
+                    file.IsItemVisible = true;
+            }*/
             return;
         }
         if (e.Key == Key.F2)
@@ -294,7 +317,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         }
         if (e.Key == Key.Back)
         {
-            OneDirectory? parent = ((MainWindow)_control).FolderTV.SelectedItem as OneDirectory;
+            OneDirectory? parent = _control.FolderTV.SelectedItem as OneDirectory;
             if (parent?.ParentDirectory != null)
                 BrowseTo(parent.ParentDirectory.FullPath);
         }
@@ -307,8 +330,8 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     public void ScrollToTop()
     {
-        ((MainWindow)_control).FileLV.FindVisualChild<ScrollViewer>()!.ScrollToTop();
-        ((MainWindow)_control).FileLV.InvalidateVisual();
+        _control.FileLV.FindVisualChild<ScrollViewer>()!.ScrollToHome();
+        _control.FileLV.InvalidateVisual();
     }
 
     #region Auto refresh by folder watcher
@@ -326,7 +349,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         }
         try
         {
-            if (!string.IsNullOrWhiteSpace(SelectedFolder!.FullPath))
+            if (!string.IsNullOrWhiteSpace(SelectedFolder?.FullPath))
             {
                 _fsWatcher.Path = SelectedFolder!.FullPath;
                 _fsWatcher.EnableRaisingEvents = true;

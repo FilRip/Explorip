@@ -1,7 +1,8 @@
 {
   "profiles": {
     "ExploripComponents": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Tmp"
     }
   }
 }

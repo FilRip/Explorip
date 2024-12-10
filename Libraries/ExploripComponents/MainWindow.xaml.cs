@@ -7,8 +7,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-using Explorip.Helpers;
-
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
@@ -40,7 +38,7 @@ namespace ExploripComponents
                 Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
             }
 
-            DataContext = new WpfExplorerViewModel(_windowHandle, this);
+            DataContext = new WpfExplorerViewModel(this);
         }
 
         #endregion
@@ -50,6 +48,11 @@ namespace ExploripComponents
         public WpfExplorerViewModel MyDataContext
         {
             get { return (WpfExplorerViewModel)DataContext; }
+        }
+
+        public IntPtr Handle
+        {
+            get { return _windowHandle; }
         }
 
         #endregion
@@ -145,7 +148,7 @@ namespace ExploripComponents
 
         #region Refresh visible item after scrolling
 
-        private void FileLV_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        public void ForceRefreshVisibleItems()
         {
             foreach (OneFileSystem item in FileLV.Items)
             {
@@ -153,6 +156,11 @@ namespace ExploripComponents
                 if (container != null && container.DataContext is OneFileSystem file)
                     file.IsItemVisible = IsElementInViewport(container);
             }
+        }
+
+        private void FileLV_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            ForceRefreshVisibleItems();
         }
 
         private bool IsElementInViewport(FrameworkElement element)
@@ -250,22 +258,17 @@ namespace ExploripComponents
         }
 
         #endregion
-    }
 
-    #region Template depend on ViewMode
+        public event EventHandler? EndRedraw;
 
-    public class ListViewItemTemplateSelector : DataTemplateSelector
-    {
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        private void FileLV_LayoutUpdated(object sender, EventArgs e)
         {
-            FrameworkElement? element = container as FrameworkElement;
-            MainWindow control = element.FindVisualParent<MainWindow>();
-            if (control.MyDataContext.ViewDetails)
-                return (DataTemplate)control.FindResource("DetailsTemplate");
-            else
-                return (DataTemplate)control.FindResource("IconsTemplate");
+            if (MyDataContext != null &&
+                FileLV.Items.Count > 0 &&
+                FileLV.ItemContainerGenerator.ContainerFromIndex(FileLV.Items.Count - 1) is ListViewItem)
+            {
+                EndRedraw?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
-
-    #endregion
 }

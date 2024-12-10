@@ -16,16 +16,16 @@ public class Tasks : IDisposable
         _tasksService = tasksService;
         // prepare collections
         GroupedWindows = CollectionViewSource.GetDefaultView(_tasksService.Windows);
-        GroupedWindows.GroupDescriptions.Add(new PropertyGroupDescription("Category"));
+        GroupedWindows.GroupDescriptions.Add(new PropertyGroupDescription(nameof(ApplicationWindow.Category)));
         GroupedWindows.CollectionChanged += GroupedWindows_Changed;
         GroupedWindows.Filter = GroupedWindows_Filter;
 
         if (GroupedWindows is ICollectionViewLiveShaping taskbarItemsView)
         {
             taskbarItemsView.IsLiveFiltering = true;
-            taskbarItemsView.LiveFilteringProperties.Add("ShowInTaskbar");
+            taskbarItemsView.LiveFilteringProperties.Add(nameof(ApplicationWindow.ShowInTaskbar));
             taskbarItemsView.IsLiveGrouping = true;
-            taskbarItemsView.LiveGroupingProperties.Add("Category");
+            taskbarItemsView.LiveGroupingProperties.Add(nameof(ApplicationWindow.Category));
         }
     }
 

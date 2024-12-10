@@ -276,7 +276,7 @@ public class ExplorerBrowserContentOptions
             {
                 try
                 {
-                    HResult hr = iFV2.GetViewModeAndIconSize(out int fvm, out iconSize);
+                    HResult hr = iFV2.GetViewModeAndIconSize(out _, out iconSize);
                     if (hr != HResult.Ok)
                     {
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters

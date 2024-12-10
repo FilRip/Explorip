@@ -216,7 +216,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                 (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? CMIC.SHIFT_DOWN : 0),
             ptInvoke = new Point((long)pointInvoke.X, (long)pointInvoke.Y),
             nShow = WindowShowStyle.ShowNormal,
-            hwnd = _viewModel.WindowHandle,
+            hwnd = _viewModel.CurrentControl.Handle,
         };
         _contextMenu?.InvokeCommand(ref invoke);
     }
@@ -512,7 +512,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                 TPM.RETURNCMD | TPM.RIGHTBUTTON,
                 (int)pointScreen.X,
                 (int)pointScreen.Y,
-                _viewModel.WindowHandle,
+                _viewModel.CurrentControl.Handle,
                 IntPtr.Zero);
 
             if (nSelected != 0)

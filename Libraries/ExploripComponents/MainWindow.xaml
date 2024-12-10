@@ -28,7 +28,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.IconSizePx}"/>
+                            <RowDefinition Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IconSizePx, TargetNullValue=16}"/>
                             <RowDefinition Height="32"/>
                         </Grid.RowDefinitions>
                         <Image Source="{Binding Icon}" Grid.Row="0" Margin="0"/>
@@ -52,7 +52,7 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.IconSizePx}"/>
+                            <ColumnDefinition Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IconSizePx, TargetNullValue=16}"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
@@ -149,7 +149,7 @@
                   SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" Padding="0" Margin="0" BorderThickness="0"
                   PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver" PreviewDragEnter="AllowDrop_PreviewDragEnter"
                   PreviewMouseMove="ListView_PreviewMouseMove" PreviewMouseLeftButtonDown="ListView_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="ListView_PreviewMouseLeftButtonUp"
-                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged"
+                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged" LayoutUpdated="FileLV_LayoutUpdated"
                   ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
@@ -161,7 +161,7 @@
                     <Setter Property="Margin" Value="4"/>
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=DataContext.ViewDetails}" Value="True">
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ViewDetails, TargetNullValue=False}" Value="True">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         </DataTrigger>
                     </Style.Triggers>
