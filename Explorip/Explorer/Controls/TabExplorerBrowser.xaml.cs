@@ -37,7 +37,6 @@ public partial class TabExplorerBrowser : TabControl
         }
     }
 
-#pragma warning disable S3966 // Sonar bug
     public void CloseAllTabs()
     {
         if (MyTabControl.Items.Count > 0)
@@ -45,7 +44,6 @@ public partial class TabExplorerBrowser : TabControl
                 if (MyTabControl.Items[i] is TabItemExplorip tabItem)
                     tabItem.Dispose();
     }
-#pragma warning restore S3966
 
     public void AddNewTab(ShellObject location)
     {

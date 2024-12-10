@@ -307,7 +307,7 @@ public class JumpList
 
         // Native call to start adding items to the taskbar destination list
         HResult hr = customDestinationList.BeginList(
-            out uint maxSlotsInList,
+            out _,
             ref TaskbarNativeMethods.TaskbarGuids.IObjectArray,
             out object removedItems);
 

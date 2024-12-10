@@ -41,7 +41,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private readonly WpfExplorerViewModel _viewModel = viewModel;
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
     private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo;
-    private uint _cmdGbName, _cmdGbType, _cmdGbSize, _cmdGbLastModified, _cmdGbNone = 16385;
+    private uint _cmdGbName, _cmdGbType, _cmdGbSize, _cmdGbLastModified;
+    private readonly uint _cmdGbNone = 16385;
 
     #endregion
 

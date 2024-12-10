@@ -299,7 +299,7 @@ public class ExplorerBrowserContentOptions
             {
                 try
                 {
-                    HResult hr = iFV2.GetViewModeAndIconSize(out int fvm, out int iconSize);
+                    HResult hr = iFV2.GetViewModeAndIconSize(out int fvm, out _);
                     if (hr != HResult.Ok)
                     {
                         throw new CommonControlException(LocalizedMessages.ExplorerBrowserIconSize, hr);

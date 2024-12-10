@@ -80,7 +80,6 @@ public partial class HeaderWithCloseButton : UserControl, INotifyPropertyChanged
         myTabControl.HideTab();
     }
 
-#pragma warning disable S3966 // Sonar bug
     private void CloseAllTab_Click(object sender, RoutedEventArgs e)
     {
         TabExplorerBrowser myTabControl = MyTabControl;
@@ -89,7 +88,6 @@ public partial class HeaderWithCloseButton : UserControl, INotifyPropertyChanged
                 currentTab.Dispose();
         myTabControl.HideTab();
     }
-#pragma warning restore S3966
 
     private void NewTabOther_Click(object sender, RoutedEventArgs e)
     {
