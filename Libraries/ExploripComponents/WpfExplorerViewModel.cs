@@ -47,6 +47,8 @@ public partial class WpfExplorerViewModel : ObservableObject
     private OneFileSystem? _currentlyRenaming;
     private ItemsPanelTemplate? _itemTemplateDetails;
     private ItemsPanelTemplate? _itemTemplateWrap;
+    private readonly Stopwatch _detectRename;
+    private OneFileSystem? _lastSelected;
 
     #region Constructors
 
@@ -55,6 +57,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         _control = control;
         ChangeDisplay();
         CurrentGroup = GroupBy.NONE;
+        _detectRename = Stopwatch.StartNew();
     }
 
     [RelayCommand()]
@@ -113,11 +116,40 @@ public partial class WpfExplorerViewModel : ObservableObject
     public DragDropKeyStates DragDropKeyStates { get; set; }
 
     [RelayCommand()]
-    public void MouseUp()
+    public void DoubleClick(MouseButtonEventArgs e)
+    {
+        _lastSelected = null;
+        _detectRename.Restart();
+    }
+
+    [RelayCommand()]
+    public void MouseUp(MouseButtonEventArgs e)
     {
         CurrentlyDraging = false;
         CurrentControl.FileLV.DrawSelection = false;
         _currentlyRenaming?.Rename();
+        if (_currentlyRenaming == null)
+        {
+            if (SelectedItems.Count == 1)
+            {
+                if (_lastSelected == SelectedItems[0] && _detectRename.ElapsedMilliseconds > 2000)
+                {
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay(500);
+                        if (_lastSelected == SelectedItems[0])
+                            RenameMode();
+                    });
+                }
+                else
+                {
+                    _detectRename.Restart();
+                    _lastSelected = SelectedItems[0];
+                }
+            }
+            else
+                _lastSelected = null;
+        }
     }
 
     #endregion
@@ -260,11 +292,14 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     public void RenameMode()
     {
-        IInputElement o = FocusManager.GetFocusedElement(_control);
-        if ((o is ListViewItem || o is ListView) && SelectedItems.Count > 0)
-            SelectedItems[0].EditMode(true);
-        else if (o is TreeViewItem || o is TreeView)
-            SelectedFolder?.EditMode(true);
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            IInputElement o = FocusManager.GetFocusedElement(_control);
+            if ((o is ListViewItem || o is ListView) && SelectedItems.Count > 0)
+                SelectedItems[0].EditMode(true);
+            else if (o is TreeViewItem || o is TreeView)
+                SelectedFolder?.EditMode(true);
+        });
     }
 
     #endregion

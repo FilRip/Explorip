@@ -79,10 +79,13 @@
             <i:InvokeCommandAction Command="{Binding RefreshCommand}"/>
         </i:EventTrigger>
         <i:EventTrigger EventName="MouseUp">
-            <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+            <i:InvokeCommandAction Command="{Binding MouseUpCommand}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
         <i:EventTrigger EventName="KeyUp">
             <i:InvokeCommandAction Command="{Binding KeyUpCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="MouseDoubleClick">
+            <i:InvokeCommandAction Command="{Binding DoubleClickCommand}" PassEventArgsToCommand="True"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     
