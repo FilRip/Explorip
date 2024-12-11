@@ -45,17 +45,43 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     private readonly MainWindow _control;
     private OneFileSystem? _currentlyRenaming;
-    private readonly ItemsPanelTemplate _itemTemplateDetails;
-    private readonly ItemsPanelTemplate _itemTemplateWrap;
+    private ItemsPanelTemplate? _itemTemplateDetails;
+    private ItemsPanelTemplate? _itemTemplateWrap;
+
+    #region Constructors
 
     public WpfExplorerViewModel(MainWindow control)
     {
         _control = control;
-        _itemTemplateDetails = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
-        _itemTemplateWrap = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingWrapPanel)));
-        _control.FileLV.ItemsPanel = (_viewDetails ? _itemTemplateDetails : _itemTemplateWrap);
+        ChangeDisplay();
         CurrentGroup = GroupBy.NONE;
     }
+
+    [RelayCommand()]
+    public void Refresh()
+    {
+        ExploripSharedCopy.Constants.Colors.LoadTheme();
+        Explorip.Constants.Localization.LoadTranslation();
+        FolderTreeView.Clear();
+        OneDirectory myComputer = new(Environment.SpecialFolder.MyComputer, null, true) { MainViewModel = this, FullPath = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}" };
+        FolderTreeView.Add(myComputer);
+        myComputer.IsExpanded = true;
+
+        // Add Network root
+        string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
+        ShellItem si = new(specialPath);
+        OneDirectory networkNeiborhood = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
+        FolderTreeView.Add(networkNeiborhood);
+
+        if (Environment.GetCommandLineArgs().Length > 1)
+            BrowseTo(Environment.GetCommandLineArgs()[1]);
+        else
+            BrowseTo(null);
+
+        ChangeIconSize(ViewDetails, CurrentIconSize);
+    }
+
+    #endregion
 
     #region Drag'n drop
 
@@ -95,34 +121,14 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     #endregion
 
+    #region Properties
+
     public MainWindow CurrentControl
     {
         get { return _control; }
     }
 
-    [RelayCommand()]
-    public void Refresh()
-    {
-        ExploripSharedCopy.Constants.Colors.LoadTheme();
-        Explorip.Constants.Localization.LoadTranslation();
-        FolderTreeView.Clear();
-        OneDirectory myComputer = new(Environment.SpecialFolder.MyComputer, null, true) { MainViewModel = this, FullPath = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}" };
-        FolderTreeView.Add(myComputer);
-        myComputer.IsExpanded = true;
-
-        // Add Network root
-        string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
-        ShellItem si = new(specialPath);
-        OneDirectory networkNeiborhood = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
-        FolderTreeView.Add(networkNeiborhood);
-
-        if (Environment.GetCommandLineArgs().Length > 1)
-            BrowseTo(Environment.GetCommandLineArgs()[1]);
-        else
-            BrowseTo(null);
-
-        ChangeIconSize(ViewDetails, CurrentIconSize);
-    }
+    #endregion
 
     public void BrowseTo(string? fullPath)
     {
@@ -181,12 +187,21 @@ public partial class WpfExplorerViewModel : ObservableObject
         }
     }
 
+    #region Show Display/Group
+
+    private void ChangeDisplay()
+    {
+        _itemTemplateDetails ??= new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
+        _itemTemplateWrap ??= new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingWrapPanel)));
+        CurrentControl.FileLV.ItemsPanel = (ViewDetails ? _itemTemplateDetails : _itemTemplateWrap);
+    }
+
     public void ChangeIconSize(bool details, IconSize value)
     {
         ViewDetails = details;
         CurrentIconSize = value;
         SelectedFolder?.Refresh();
-        CurrentControl.FileLV.ItemsPanel = (details ? _itemTemplateDetails : _itemTemplateWrap);
+        ChangeDisplay();
         ChangeGroupBy(CurrentGroup);
     }
 
@@ -233,6 +248,15 @@ public partial class WpfExplorerViewModel : ObservableObject
         }
     }
 
+    #endregion
+
+    #region Rename file/folder
+
+    public void SetCurrentlyRenaming(OneFileSystem? fs)
+    {
+        _currentlyRenaming = fs;
+    }
+
     public void RenameMode()
     {
         IInputElement o = FocusManager.GetFocusedElement(_control);
@@ -241,6 +265,8 @@ public partial class WpfExplorerViewModel : ObservableObject
         else if (o is TreeViewItem)
             SelectedFolder?.EditMode(true);
     }
+
+    #endregion
 
     public OneFileSystem[]? GetCurrentSelection()
     {
@@ -321,11 +347,6 @@ public partial class WpfExplorerViewModel : ObservableObject
             if (parent?.ParentDirectory != null)
                 BrowseTo(parent.ParentDirectory.FullPath);
         }
-    }
-
-    public void SetCurrentlyRenaming(OneFileSystem? fs)
-    {
-        _currentlyRenaming = fs;
     }
 
     public void ScrollToFirstItem()
