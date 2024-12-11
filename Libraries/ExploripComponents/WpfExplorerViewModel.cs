@@ -90,6 +90,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     public void MouseUp()
     {
         CurrentlyDraging = false;
+        CurrentControl.FileLV.DrawSelection = false;
     }
 
     #endregion

@@ -149,7 +149,7 @@
                   SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" Padding="0" Margin="0" BorderThickness="0"
                   PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver" PreviewDragEnter="AllowDrop_PreviewDragEnter"
                   PreviewMouseMove="ListView_PreviewMouseMove" PreviewMouseLeftButtonDown="ListView_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="ListView_PreviewMouseLeftButtonUp"
-                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged" LayoutUpdated="FileLV_LayoutUpdated"
+                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged"
                   ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">

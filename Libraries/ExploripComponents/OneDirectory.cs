@@ -541,13 +541,17 @@ public partial class OneDirectory : OneFileSystem
         if (ParentDirectory == null)
             return;
 
+        WpfExplorerViewModel root = ParentDirectory.GetRootParent().MainViewModel!;
+        if (root.CurrentControl.FileLV.DrawSelection)
+            return;
+
         if ((Mouse.LeftButton == MouseButtonState.Pressed || Mouse.RightButton == MouseButtonState.Pressed) &&
-            !ParentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging)
+            !root.CurrentlyDraging)
         {
-            ParentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = true;
+            root.CurrentlyDraging = true;
             DataObject data = new();
             data.SetFileDropList([FullPath]);
-            DragDrop.DoDragDrop(ParentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
+            DragDrop.DoDragDrop(root.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
         }
     }
 
