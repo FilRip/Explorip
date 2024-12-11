@@ -258,17 +258,5 @@ namespace ExploripComponents
         }
 
         #endregion
-
-        public event EventHandler? EndRedraw;
-
-        private void FileLV_LayoutUpdated(object sender, EventArgs e)
-        {
-            if (MyDataContext != null &&
-                FileLV.Items.Count > 0 &&
-                FileLV.ItemContainerGenerator.ContainerFromIndex(FileLV.Items.Count - 1) is ListViewItem)
-            {
-                EndRedraw?.Invoke(this, EventArgs.Empty);
-            }
-        }
     }
 }

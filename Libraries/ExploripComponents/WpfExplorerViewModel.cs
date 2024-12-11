@@ -47,26 +47,14 @@ public partial class WpfExplorerViewModel : ObservableObject
     private OneFileSystem? _currentlyRenaming;
     private readonly ItemsPanelTemplate _itemTemplateDetails;
     private readonly ItemsPanelTemplate _itemTemplateWrap;
-    private double _currentItemWidth, _currentItemHeight;
 
     public WpfExplorerViewModel(MainWindow control)
     {
         _control = control;
-        _control.EndRedraw += WpfExplorerViewModel_EndRedraw;
         _itemTemplateDetails = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
         _itemTemplateWrap = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingWrapPanel)));
         _control.FileLV.ItemsPanel = (_viewDetails ? _itemTemplateDetails : _itemTemplateWrap);
         CurrentGroup = GroupBy.NONE;
-    }
-
-    private void WpfExplorerViewModel_EndRedraw(object sender, EventArgs e)
-    {
-        ListView fileLv = _control.FileLV;
-        if (fileLv.ItemContainerGenerator.ContainerFromIndex(fileLv.Items.Count - 1) is ListViewItem item)
-        {
-            _currentItemWidth = item.ActualWidth;
-            _currentItemHeight = item.ActualHeight;
-        }
     }
 
     #region Drag'n drop
@@ -174,6 +162,12 @@ public partial class WpfExplorerViewModel : ObservableObject
     }
 
     [RelayCommand()]
+    public void SetFocusToListView()
+    {
+        CurrentControl.FileLV.Focus();
+    }
+
+    [RelayCommand()]
     public void ContextMenuBackgroundFolder(MouseButtonEventArgs e)
     {
         // When right click on empty space in list view
@@ -257,6 +251,19 @@ public partial class WpfExplorerViewModel : ObservableObject
         return null;
     }
 
+    public async Task ForceRefresh()
+    {
+        SelectedFolder?.Refresh();
+        await Task.Run(async () =>
+        {
+            await Task.Delay(500);
+            await Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                CurrentControl.ForceRefreshVisibleItems();
+            });
+        });
+    }
+
     [RelayCommand()]
     public async Task KeyUp(KeyEventArgs e)
     {
@@ -277,15 +284,7 @@ public partial class WpfExplorerViewModel : ObservableObject
             return;
         if (e.Key == Key.F5)
         {
-            SelectedFolder?.Refresh();
-            await Task.Delay(100);
-            CurrentControl.ForceRefreshVisibleItems();
-            /*if (FileListView.Count > 0 &&
-                FileListView.Count * _currentItemWidth < CurrentControl.FileLV.ActualWidth)
-            {
-                foreach (OneFileSystem file in FileListView)
-                    file.IsItemVisible = true;
-            }*/
+            await ForceRefresh();
             return;
         }
         if (e.Key == Key.F2)
@@ -328,7 +327,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         _currentlyRenaming = fs;
     }
 
-    public void ScrollToTop()
+    public void ScrollToFirstItem()
     {
         _control.FileLV.FindVisualChild<ScrollViewer>()!.ScrollToHome();
         _control.FileLV.InvalidateVisual();
@@ -359,7 +358,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         {
             _fsWatcher.EnableRaisingEvents = false;
         }
-        ScrollToTop();
+        ScrollToFirstItem();
 
         CurrentGroupBy = (CollectionView)CollectionViewSource.GetDefaultView(FileListView);
     }

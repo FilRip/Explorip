@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -39,7 +40,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private string? _strCurrentFolder;
     private IShellView? _backgroundShellView;
     private readonly WpfExplorerViewModel _viewModel = viewModel;
-    private uint _cmdPaste, _cmdPasteShortcut, _cmdRename;
+    private uint _cmdPaste, _cmdPasteShortcut, _cmdRename, _cmdRefresh;
     private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo;
     private uint _cmdGbName, _cmdGbType, _cmdGbSize, _cmdGbLastModified;
     private readonly uint _cmdGbNone = 16385;
@@ -457,7 +458,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     /// Shows the context menu
     /// </summary>
     /// <param name="pointScreen">Where to show the menu</param>
-    private void ShowContextMenu(System.Windows.Point pointScreen, bool background = false)
+    private async Task ShowContextMenu(System.Windows.Point pointScreen, bool background = false)
     {
         try
         {
@@ -543,6 +544,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                         _viewModel.ChangeGroupBy(GroupBy.TYPE);
                     else if (nSelected == _cmdGbNone)
                         _viewModel.ChangeGroupBy(GroupBy.NONE);
+                    else if (nSelected == _cmdRefresh)
+                        await _viewModel.ForceRefresh();
                     else
                         InvokeCommand(nSelected, pointScreen);
                 }
@@ -680,6 +683,12 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                             else
                                 _cmdPasteShortcut = cmd;
                             SetMenuItemInfo(pMenu, i, true, ref mi);
+                            continue;
+                        }
+                        if (!string.IsNullOrWhiteSpace(label) &&
+                            (label.Trim().ToLower().Replace("&", "") == Localization.REFRESH.Trim().ToLower()))
+                        {
+                            _cmdRefresh = cmd;
                             continue;
                         }
                         if (hMenu != IntPtr.Zero)

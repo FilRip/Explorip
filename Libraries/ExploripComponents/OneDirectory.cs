@@ -256,7 +256,7 @@ public partial class OneDirectory : OneFileSystem
             }
         }
         RefreshListView();
-        GetRootParent().MainViewModel!.ScrollToTop();
+        GetRootParent().MainViewModel!.ScrollToFirstItem();
     }
 
     public override void EditMode(bool activate)
