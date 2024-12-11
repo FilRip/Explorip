@@ -90,7 +90,8 @@ public partial class OneFile : OneFileSystem
         string file = NewName;
         if (_isLink)
             file += ".lnk";
-        File.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), file));
+        if (file != Path.GetFileName(FullPath))
+            File.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), file));
         base.Rename();
     }
 }

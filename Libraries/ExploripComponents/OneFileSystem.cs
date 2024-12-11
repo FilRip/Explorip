@@ -134,7 +134,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
 
     public virtual void Rename()
     {
-        RenameMode = false;
+        EditMode(false);
     }
 
     #region Properties

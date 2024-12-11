@@ -192,15 +192,13 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         _parentFolder.CreateViewObject(IntPtr.Zero, guidSv, out IntPtr opShellView);
         _backgroundShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
         object opContextMenu = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
-        object opContextMenu2 = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu2).GUID);
-        object opContextMenu3 = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu3).GUID);
 
         if (opContextMenu != null)
+        {
             _contextMenu = (IContextMenu)opContextMenu;
-        if (opContextMenu2 != null)
-            _contextMenu2 = (IContextMenu2)opContextMenu2;
-        if (opContextMenu3 != null)
-            _contextMenu3 = (IContextMenu3)opContextMenu3;
+            _contextMenu2 = (IContextMenu2)opContextMenu;
+            _contextMenu3 = (IContextMenu3)opContextMenu;
+        }
     }
 
     private void InvokeCommand(uint nCmd, System.Windows.Point pointInvoke)
@@ -429,7 +427,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     {
         ReleaseAll();
         GetPIDLs(fsi, currentFolder);
-        ShowContextMenu(pointScreen);
+        ShowContextMenu(pointScreen).GetAwaiter();
     }
 
     /// <summary>
@@ -439,7 +437,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     {
         ReleaseAll();
         GetPIDLs(dir);
-        ShowContextMenu(pointScreen);
+        ShowContextMenu(pointScreen).GetAwaiter();
     }
 
     public void ShowContextMenu(string dir, System.Windows.Point pointScreen)
@@ -449,7 +447,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         GetContextMenuInterfacesBackground(dir);
         _strCurrentFolder = dir;
 
-        ShowContextMenu(pointScreen, true);
+        ShowContextMenu(pointScreen, true).GetAwaiter();
     }
 
     #endregion

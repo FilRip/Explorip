@@ -268,14 +268,17 @@ public partial class OneDirectory : OneFileSystem
 
     public override void Rename()
     {
-        Directory.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), NewName));
-        DisplayText = NewName;
-        base.Rename();
-        if (ParentDirectory?.IsExpanded == true)
+        if (NewName != Path.GetFileName(FullPath))
         {
-            ParentDirectory.Children.Clear();
-            ParentDirectory.LoadChildren();
+            Directory.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), NewName));
+            DisplayText = NewName;
+            if (ParentDirectory?.IsExpanded == true)
+            {
+                ParentDirectory.Children.Clear();
+                ParentDirectory.LoadChildren();
+            }
         }
+        base.Rename();
     }
 
     #region Size folder

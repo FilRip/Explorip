@@ -117,6 +117,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     {
         CurrentlyDraging = false;
         CurrentControl.FileLV.DrawSelection = false;
+        _currentlyRenaming?.Rename();
     }
 
     #endregion
@@ -260,9 +261,9 @@ public partial class WpfExplorerViewModel : ObservableObject
     public void RenameMode()
     {
         IInputElement o = FocusManager.GetFocusedElement(_control);
-        if (o is ListViewItem && SelectedItems.Count > 0)
+        if ((o is ListViewItem || o is ListView) && SelectedItems.Count > 0)
             SelectedItems[0].EditMode(true);
-        else if (o is TreeViewItem)
+        else if (o is TreeViewItem || o is TreeView)
             SelectedFolder?.EditMode(true);
     }
 
