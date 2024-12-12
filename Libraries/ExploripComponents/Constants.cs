@@ -3,6 +3,9 @@
 public static class Constants
 {
     public const int DelayIgnoreDrag = 200;
+    public const int DelayIgnoreRename = 500;
+    public const int DelayBeforeForceRefreshItems = 200;
+    public static readonly int DoubleClickDelay = ManagedShell.Interop.NativeMethods.GetDoubleClickTime();
 }
 
 public enum GroupBy

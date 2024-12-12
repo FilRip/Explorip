@@ -150,12 +150,15 @@ namespace ExploripComponents
 
         public void ForceRefreshVisibleItems()
         {
-            foreach (OneFileSystem item in FileLV.Items)
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                ListViewItem container = (ListViewItem)FileLV.ItemContainerGenerator.ContainerFromItem(item);
-                if (container != null && container.DataContext is OneFileSystem file)
-                    file.IsItemVisible = IsElementInViewport(container);
-            }
+                foreach (OneFileSystem item in FileLV.Items)
+                {
+                    ListViewItem container = (ListViewItem)FileLV.ItemContainerGenerator.ContainerFromItem(item);
+                    if (container != null && container.DataContext is OneFileSystem file)
+                        file.IsItemVisible = IsElementInViewport(container);
+                }
+            });
         }
 
         private void FileLV_ScrollChanged(object sender, ScrollChangedEventArgs e)

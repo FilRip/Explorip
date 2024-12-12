@@ -132,11 +132,11 @@ public partial class WpfExplorerViewModel : ObservableObject
         {
             if (SelectedItems.Count == 1)
             {
-                if (_lastSelected == SelectedItems[0] && _detectRename.ElapsedMilliseconds > 2000)
+                if (_lastSelected == SelectedItems[0] && _detectRename.ElapsedMilliseconds > Constants.DoubleClickDelay)
                 {
                     Task.Run(async () =>
                     {
-                        await Task.Delay(500);
+                        await Task.Delay(Constants.DelayIgnoreRename);
                         if (_lastSelected == SelectedItems[0])
                             RenameMode();
                     });
@@ -229,6 +229,20 @@ public partial class WpfExplorerViewModel : ObservableObject
         CurrentControl.FileLV.ItemsPanel = (ViewDetails ? _itemTemplateDetails : _itemTemplateWrap);
     }
 
+    public void SetDisplay(/* TODO : save display style per folder*/)
+    {
+        ChangeDisplay();
+        ChangeGroupBy(CurrentGroup);
+        if (CurrentGroup != GroupBy.NONE)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(Constants.DelayBeforeForceRefreshItems);
+                CurrentControl.ForceRefreshVisibleItems();
+            });
+        }
+    }
+
     public void ChangeIconSize(bool details, IconSize value)
     {
         ViewDetails = details;
@@ -319,11 +333,8 @@ public partial class WpfExplorerViewModel : ObservableObject
         SelectedFolder?.Refresh();
         await Task.Run(async () =>
         {
-            await Task.Delay(500);
-            await Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                CurrentControl.ForceRefreshVisibleItems();
-            });
+            await Task.Delay(Constants.DelayBeforeForceRefreshItems);
+            CurrentControl.ForceRefreshVisibleItems();
         });
     }
 

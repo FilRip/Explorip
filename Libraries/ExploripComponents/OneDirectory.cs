@@ -152,8 +152,9 @@ public partial class OneDirectory : OneFileSystem
                     _items.Add(new OneFile(Path.Combine(FullPath, file), this));
             }
             CancelCalculateSize();
-            GetRootParent().MainViewModel!.FileListView = _items;
-            GetRootParent().MainViewModel!.SelectedFolder = this;
+            WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
+            viewModel.FileListView = _items;
+            viewModel.SelectedFolder = this;
         });
     }
 
@@ -190,6 +191,7 @@ public partial class OneDirectory : OneFileSystem
     protected override void OnSelectIt()
     {
         RefreshListView();
+        GetRootParent().MainViewModel!.SetDisplay();
     }
 
     protected override void DeSelectIt()
@@ -345,7 +347,9 @@ public partial class OneDirectory : OneFileSystem
 
     public override void DoubleClickFile()
     {
-        GetRootParent().MainViewModel!.BrowseTo(FullPath);
+        WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
+        viewModel.BrowseTo(FullPath);
+        viewModel.SetDisplay();
     }
 
     #endregion
