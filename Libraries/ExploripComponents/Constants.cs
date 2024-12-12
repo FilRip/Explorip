@@ -16,3 +16,18 @@ public enum GroupBy
     TYPE = 3,
     LAST_MODIFIED = 4,
 }
+
+public enum OrderBy
+{
+    NONE = 0,
+    NAME = 1,
+    SIZE = 2,
+    TYPE = 3,
+    LAST_MODIFIED = 4,
+}
+
+public enum OrderDirection
+{
+    ASC = 0,
+    DESC = 1,
+}

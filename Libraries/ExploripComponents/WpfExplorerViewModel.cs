@@ -55,8 +55,9 @@ public partial class WpfExplorerViewModel : ObservableObject
     public WpfExplorerViewModel(MainWindow control)
     {
         _control = control;
-        ChangeDisplay();
+        ChangeItemTemplate();
         CurrentGroup = GroupBy.NONE;
+        CurrentOrderBy = OrderBy.NONE;
         _detectRename = Stopwatch.StartNew();
     }
 
@@ -81,7 +82,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         else
             BrowseTo(null);
 
-        ChangeIconSize(ViewDetails, CurrentIconSize);
+        SetDisplay();
     }
 
     #endregion
@@ -220,39 +221,44 @@ public partial class WpfExplorerViewModel : ObservableObject
         }
     }
 
-    #region Show Display/Group
+    #region Show Display/Group/OrderBy
 
-    private void ChangeDisplay()
+    private void ChangeItemTemplate()
     {
         _itemTemplateDetails ??= new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingStackPanel)));
-        _itemTemplateWrap ??= new ItemsPanelTemplate(new FrameworkElementFactory(typeof(VirtualizingWrapPanel)));
+        if (_itemTemplateWrap == null)
+        {
+            FrameworkElementFactory fef = new(typeof(VirtualizingWrapPanel));
+            fef.SetValue(VirtualizingWrapPanel.OrientationProperty, Orientation.Horizontal);
+            fef.SetValue(VirtualizingWrapPanel.SpacingModeProperty, SpacingMode.None);
+            fef.SetValue(VirtualizingWrapPanel.IsGridLayoutEnabledProperty, true);
+            fef.SetValue(VirtualizingWrapPanel.AllowDifferentSizedItemsProperty, true);
+            _itemTemplateWrap = new ItemsPanelTemplate(fef);
+        }
         CurrentControl.FileLV.ItemsPanel = (ViewDetails ? _itemTemplateDetails : _itemTemplateWrap);
     }
 
     public void SetDisplay(/* TODO : save display style per folder*/)
     {
-        ChangeDisplay();
         ChangeGroupBy(CurrentGroup);
-        if (CurrentGroup != GroupBy.NONE)
-        {
-            Task.Run(async () =>
-            {
-                await Task.Delay(Constants.DelayBeforeForceRefreshItems);
-                CurrentControl.ForceRefreshVisibleItems();
-            });
-        }
     }
 
     public void ChangeIconSize(bool details, IconSize value)
     {
         ViewDetails = details;
         CurrentIconSize = value;
+        OnPropertyChanged(nameof(IconSizePx));
+        OnPropertyChanged(nameof(NameSizePx));
         SelectedFolder?.Refresh();
-        ChangeDisplay();
+        ChangeItemTemplate();
         ChangeGroupBy(CurrentGroup);
     }
 
     public GroupBy CurrentGroup { get; set; }
+
+    public OrderBy CurrentOrderBy { get; set; }
+
+    public OrderDirection CurrentOrderDirection { get; set; }
 
     public void ChangeGroupBy(GroupBy newGroup)
     {
@@ -275,7 +281,36 @@ public partial class WpfExplorerViewModel : ObservableObject
         }
         CurrentGroup = newGroup;
         CurrentGroupBy.Refresh();
-        OnPropertyChanged(nameof(CurrentGroupBy));
+    }
+
+    public void ChangeOrderBy(OrderBy newOrderBy)
+    {
+        CurrentOrderBy = newOrderBy;
+        CurrentGroupBy ??= (CollectionView)CollectionViewSource.GetDefaultView(FileListView);
+        CurrentGroupBy.SortDescriptions.Clear();
+        switch (newOrderBy)
+        {
+            case OrderBy.NAME:
+                CurrentGroupBy.SortDescriptions.Add(new SortDescription(nameof(OneFileSystem.NameFirstLetter), CurrentOrderDirection == OrderDirection.ASC ? ListSortDirection.Ascending : ListSortDirection.Descending));
+                break;
+            case OrderBy.SIZE:
+                CurrentGroupBy.SortDescriptions.Add(new SortDescription(nameof(OneFileSystem.Size), CurrentOrderDirection == OrderDirection.ASC ? ListSortDirection.Ascending : ListSortDirection.Descending));
+                break;
+            case OrderBy.TYPE:
+                CurrentGroupBy.SortDescriptions.Add(new SortDescription(nameof(OneFileSystem.TypeName), CurrentOrderDirection == OrderDirection.ASC ? ListSortDirection.Ascending : ListSortDirection.Descending));
+                break;
+            case OrderBy.LAST_MODIFIED:
+                CurrentGroupBy.SortDescriptions.Add(new SortDescription(nameof(OneFileSystem.LastModified), CurrentOrderDirection == OrderDirection.ASC ? ListSortDirection.Ascending : ListSortDirection.Descending));
+                break;
+        }
+        CurrentOrderBy = newOrderBy;
+        CurrentGroupBy.Refresh();
+    }
+
+    public void ChangeOrderByDirection(OrderDirection newOrderDirection)
+    {
+        CurrentOrderDirection = newOrderDirection;
+        ChangeOrderBy(CurrentOrderBy);
     }
 
     public GridLength IconSizePx
@@ -293,6 +328,11 @@ public partial class WpfExplorerViewModel : ObservableObject
                 _ => new GridLength(16, GridUnitType.Pixel),
             };
         }
+    }
+
+    public double NameSizePx
+    {
+        get { return IconSizePx.Value * 4; }
     }
 
     #endregion
@@ -400,6 +440,8 @@ public partial class WpfExplorerViewModel : ObservableObject
     {
         _control.FileLV.FindVisualChild<ScrollViewer>()!.ScrollToHome();
         _control.FileLV.InvalidateVisual();
+        _control.FileLV.InvalidateMeasure();
+        _control.FileLV.InvalidateArrange();
     }
 
     #region Auto refresh by folder watcher

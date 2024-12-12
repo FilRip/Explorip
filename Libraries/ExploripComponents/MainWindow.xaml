@@ -16,8 +16,8 @@
             <local:FileSizeConverter x:Key="sizeConverter"/>
             <BooleanToVisibilityConverter x:Key="boolToVisible"/>
             <!-- ListView -->
-            <DataTemplate x:Key="IconsTemplate">
-                <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
+            <DataTemplate x:Key="IconsTemplate" DataType="local:OneFileSystem">
+                <VirtualizingStackPanel AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
                     <Grid>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonUp">
@@ -29,13 +29,13 @@
                         </i:Interaction.Triggers>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IconSizePx, TargetNullValue=16}"/>
-                            <RowDefinition Height="32"/>
+                            <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
                         <Image Source="{Binding Icon}" Grid.Row="0" Margin="0"/>
                         <Image Source="{Binding IconOverlay}" Grid.Row="0" Margin="0"/>
                         <!-- Name -->
-                        <TextBlock Text="{Binding DisplayText}" Grid.Row="1" Margin="0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" Padding="0" TextAlignment="Center"/>
-                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" BorderThickness="0" TextAlignment="Center" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0"/>
+                        <TextBlock Grid.Row="1" Text="{Binding DisplayText}" Margin="0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" Padding="0" MaxWidth="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NameSizePx, TargetNullValue=16}" TextAlignment="Center"/>
+                        <TextBox Grid.Row="1" Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" BorderThickness="0" TextAlignment="Center" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" MaxWidth="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NameSizePx, TargetNullValue=16}"/>
                         <!-- End name -->
                     </Grid>
                 </VirtualizingStackPanel>
@@ -61,12 +61,12 @@
                         <Image Source="{Binding Icon}" Grid.Column="0" Margin="0"/>
                         <Image Source="{Binding IconOverlay}" Grid.Column="0" Margin="0"/>
                         <!-- Name -->
-                        <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
-                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged"/>
+                        <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="12"/>
+                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" FontSize="12"/>
                         <!-- End name -->
-                        <TextBlock Text="{local:DateTimeBinding Path=LastModified}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0"/>
-                        <TextBlock Text="{Binding TypeName}" Grid.Column="3" HorizontalAlignment="Right" Margin="0 0 10 0"/>
-                        <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Grid.Column="4" HorizontalAlignment="Right"/>
+                        <TextBlock Text="{local:DateTimeBinding Path=LastModified}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="12"/>
+                        <TextBlock Text="{Binding TypeName}" Grid.Column="3" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="12"/>
+                        <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Grid.Column="4" HorizontalAlignment="Right" FontSize="12"/>
                     </Grid>
                 </VirtualizingStackPanel>
             </DataTemplate>
@@ -164,7 +164,7 @@
             </i:Interaction.Triggers>
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
-                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="Margin" Value="0 0 5 5"/>
                     <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.ViewDetails, TargetNullValue=False}" Value="True">

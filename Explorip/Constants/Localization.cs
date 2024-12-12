@@ -70,6 +70,9 @@ public static class Localization
     public static string GROUPBY_TYPE_SUBMENU { get; private set; }
     public static string GROUPBY_SIZE_SUBMENU { get; private set; }
     public static string REFRESH { get; private set; }
+    public static string ORDER_BY_SUBMENU { get; private set; }
+    public static string ORDERBY_ASC_SUBMENU { get; private set; }
+    public static string ORDERBY_DESC_SUBMENU { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -136,6 +139,9 @@ public static class Localization
         GROUPBY_LASTMODIFIED_SUBMENU = Load("wpdshext.dll", 8981, "Modified").Replace("&", "");
         GROUPBY_TYPE_SUBMENU = Load("wpdshext.dll", 8979, "Type").Replace("&", "");
         REFRESH = LoadMenuItem("shell32.dll", 215, 28931, "Refresh").Replace("&", "");
+        ORDER_BY_SUBMENU = LoadMenuItem("shell32.dll", 215, 28673, "Order by").Replace("&", "");
+        ORDERBY_ASC_SUBMENU = LoadMenuItem("shell32.dll", 215, 31488, "Ascending").Replace("&", "");
+        ORDERBY_DESC_SUBMENU = LoadMenuItem("shell32.dll", 215, 31489, "Descending").Replace("&", "");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

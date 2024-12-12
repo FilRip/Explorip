@@ -43,7 +43,9 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename, _cmdRefresh;
     private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo;
     private uint _cmdGbName, _cmdGbType, _cmdGbSize, _cmdGbLastModified;
-    private readonly uint _cmdGbNone = 16385;
+    private uint _cmdOrderByName, _cmdOrderByType, _cmdOrderBySize, _cmdOrderByLastModified;
+    private uint _cmdOrderByAsc, _cmdOrderByDesc;
+    private readonly uint _cmdGbNone = 16385, _cmdOrderByNone = 16386;
 
     #endregion
 
@@ -544,6 +546,20 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                         _viewModel.ChangeGroupBy(GroupBy.NONE);
                     else if (nSelected == _cmdRefresh)
                         await _viewModel.ForceRefresh();
+                    else if (nSelected == _cmdOrderByName)
+                        _viewModel.ChangeOrderBy(OrderBy.NAME);
+                    else if (nSelected == _cmdOrderByLastModified)
+                        _viewModel.ChangeOrderBy(OrderBy.LAST_MODIFIED);
+                    else if (nSelected == _cmdOrderBySize)
+                        _viewModel.ChangeOrderBy(OrderBy.SIZE);
+                    else if (nSelected == _cmdOrderByType)
+                        _viewModel.ChangeOrderBy(OrderBy.TYPE);
+                    else if (nSelected == _cmdOrderByNone)
+                        _viewModel.ChangeOrderBy(OrderBy.NONE);
+                    else if (nSelected == _cmdOrderByAsc)
+                        _viewModel.ChangeOrderByDirection(OrderDirection.ASC);
+                    else if (nSelected == _cmdOrderByDesc)
+                        _viewModel.ChangeOrderByDirection(OrderDirection.DESC);
                     else
                         InvokeCommand(nSelected, pointScreen);
                 }
@@ -765,6 +781,16 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                 {
                                     MenuItemInfo newMenuItem = new()
                                     {
+                                        dwTypeData = "",
+                                        cch = 0,
+                                        fMask = MIIM.FTYPE,
+                                        fType = MFT.SEPARATOR,
+                                    };
+                                    newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
+                                    InsertMenuItem(hMenu, (uint)nbSubMenu, true, ref newMenuItem);
+
+                                    newMenuItem = new()
+                                    {
                                         dwTypeData = Localization.GROUPBY_NONE_SUBMENU,
                                         cch = Localization.GROUPBY_NONE_SUBMENU.Length,
                                         fMask = MIIM.STATE | MIIM.STRING | MIIM.ID,
@@ -773,7 +799,77 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                         wID = _cmdGbNone,
                                     };
                                     newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
+                                    InsertMenuItem(hMenu, (uint)nbSubMenu + 1, true, ref newMenuItem);
+                                }
+                            }
+                            else if (label.Replace("&", "").Trim().ToLower() == Localization.ORDER_BY_SUBMENU.Trim().ToLower())
+                            {
+                                int nbSubMenu = GetMenuItemCount(hMenu);
+                                bool nonePresent = false;
+                                for (int j = 0; j < nbSubMenu; j++)
+                                {
+                                    string? subLabel = GetMenuItemString(j, hMenu, true, out uint subCmd);
+                                    if (string.IsNullOrWhiteSpace(subLabel))
+                                        continue;
+                                    if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_NAME_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdOrderByName = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentOrderBy == OrderBy.NAME);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_LASTMODIFIED_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdOrderByLastModified = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentOrderBy == OrderBy.LAST_MODIFIED);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_TYPE_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdOrderByType = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentOrderBy == OrderBy.TYPE);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_SIZE_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdOrderBySize = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentOrderBy == OrderBy.SIZE);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.GROUPBY_NONE_SUBMENU.Trim().ToLower())
+                                    {
+                                        nonePresent = true;
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.ORDERBY_ASC_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdOrderByAsc = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentOrderDirection == OrderDirection.ASC);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.ORDERBY_DESC_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdOrderByDesc = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.CurrentOrderDirection == OrderDirection.DESC);
+                                    }
+                                }
+
+                                if (!nonePresent && _viewModel.CurrentOrderBy != OrderBy.NONE)
+                                {
+                                    MenuItemInfo newMenuItem = new()
+                                    {
+                                        dwTypeData = "",
+                                        cch = 0,
+                                        fMask = MIIM.FTYPE,
+                                        fType = MFT.SEPARATOR,
+                                    };
+                                    newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
                                     InsertMenuItem(hMenu, (uint)nbSubMenu, true, ref newMenuItem);
+
+                                    newMenuItem = new()
+                                    {
+                                        dwTypeData = Localization.GROUPBY_NONE_SUBMENU,
+                                        cch = Localization.GROUPBY_NONE_SUBMENU.Length,
+                                        fMask = MIIM.STATE | MIIM.STRING | MIIM.ID,
+                                        fType = MFT.STRING,
+                                        fState = MFS.ENABLED,
+                                        wID = _cmdOrderByNone,
+                                    };
+                                    newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
+                                    InsertMenuItem(hMenu, (uint)nbSubMenu + 1, true, ref newMenuItem);
                                 }
                             }
                         }
