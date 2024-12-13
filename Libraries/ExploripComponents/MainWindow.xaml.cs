@@ -208,58 +208,5 @@ namespace ExploripComponents
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
         #endregion
-
-        #region Rectangle selection
-
-        private void ListView_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (FileLV.DrawSelection && SelectInRectangle())
-                return;
-
-            if (Mouse.DirectlyOver is FrameworkElement element && element.DataContext is OneFileSystem)
-                return;
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                return;
-            FileLV.UnselectAll();
-        }
-
-        private bool SelectInRectangle()
-        {
-            FileLV.DrawSelection = false;
-            FileLV.InvalidateVisual();
-            Rect rect = new(FileLV.DrawSelectionStart, Mouse.GetPosition(FileLV));
-            if (rect.Width == 0 && rect.Height == 0)
-                return false;
-            if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
-                FileLV.UnselectAll();
-            foreach (OneFileSystem item in MyDataContext.FileListView.Where(i => i.IsItemVisible))
-            {
-                if (FileLV.ItemContainerGenerator.ContainerFromItem(item) is Control control)
-                {
-                    GeneralTransform transform = control.TransformToAncestor(FileLV);
-                    Rect bounds = transform.TransformBounds(new Rect(new Point(0, 0), control.RenderSize));
-                    if (rect.IntersectsWith(bounds))
-                        FileLV.SelectedItems.Add(item);
-                }
-            }
-            return true;
-        }
-
-        private void ListView_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (FileLV.DrawSelection)
-                FileLV.InvalidateVisual();
-        }
-
-        private void ListView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if ((Mouse.DirectlyOver is not FrameworkElement element || element.DataContext is not OneFileSystem) && !FileLV.DrawSelection)
-            {
-                FileLV.DrawSelection = true;
-                FileLV.DrawSelectionStart = e.GetPosition(FileLV);
-            }
-        }
-
-        #endregion
     }
 }
