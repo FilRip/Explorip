@@ -150,7 +150,7 @@
         <!-- Right part, ListView for files -->
         <local:ListViewEx Grid.Column="1" Background="Transparent" x:Name="FileLV" ItemsSource="{Binding CurrentGroupBy}"
                   SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" Padding="0" Margin="0" BorderThickness="0"
-                  PreviewMouseDown="FileLV_PreviewMouseDown" AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver" PreviewDragEnter="AllowDrop_PreviewDragEnter"
+                  AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver" PreviewDragEnter="AllowDrop_PreviewDragEnter"
                   VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged" VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                   ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}">
             <i:Interaction.Triggers>

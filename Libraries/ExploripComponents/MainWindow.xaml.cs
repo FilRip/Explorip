@@ -64,13 +64,6 @@ namespace ExploripComponents
             MyDataContext.SelectedItems = new ObservableCollection<OneFileSystem>(FileLV.SelectedItems.OfType<OneFileSystem>());
         }
 
-        private void FileLV_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
-            if (r.VisualHit is not FrameworkElement || ((FrameworkElement)r.VisualHit).DataContext is not OneFileSystem)
-                FileLV.UnselectAll();
-        }
-
         #endregion
 
         #region Drag'n Drop
