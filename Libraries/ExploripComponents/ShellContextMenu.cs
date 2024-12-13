@@ -148,6 +148,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
     public bool Root { get; set; } = false;
 
+    public bool RecycledBin { get; set; } = false;
+
     #endregion
 
     /// <summary>Gets the interfaces to the context menu</summary>
@@ -243,7 +245,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     /// <returns>IShellFolder for the folder (relative from the desktop)</returns>
     private void GetParentFolder(string? folderName, bool desktopParent)
     {
-        if (!string.IsNullOrWhiteSpace(folderName) && !Root)
+        if (!string.IsNullOrWhiteSpace(folderName) && !Root && !RecycledBin)
         {
             if (_parentFolder == null)
             {
@@ -281,7 +283,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         }
         else
         {
-            if (desktopParent || Root)
+            if (desktopParent || Root && !RecycledBin)
                 _parentFolder = GetDesktopFolder();
             else
             {
@@ -294,11 +296,15 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
                 info = new ShFileInfo();
                 tempPidl = IntPtr.Zero;
-                SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref tempPidl);
+
+                if (RecycledBin)
+                    SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_BITBUCKET, ref tempPidl);
+                else
+                    SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref tempPidl);
 
                 SHGetFileInfo(tempPidl, 0, ref info, (uint)Marshal.SizeOf(info), SHGFI.PIDL | SHGFI.DisplayName | SHGFI.TypeName);
 
-                string mycompName = info.szDisplayName;
+                string specialName = info.szDisplayName;
 
                 try
                 {
@@ -333,7 +339,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
                                 Marshal.FreeCoTaskMem(strr);
 
-                                if (txt == mycompName)
+                                if (txt == specialName)
                                 {
                                     _parentFolder = (IShellFolder)Marshal.GetObjectForIUnknown(shellFolderPtr);
                                     break;
@@ -413,7 +419,10 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, dirInfo.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
         if (nResult != (int)HResult.SUCCESS && Root)
         {
-            nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
+            if (RecycledBin)
+                nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_BITBUCKET, ref pPIDL);
+            else
+                nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
         }
         if (pPIDL != IntPtr.Zero && nResult == (int)HResult.SUCCESS)
         {

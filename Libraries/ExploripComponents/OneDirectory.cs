@@ -336,6 +336,7 @@ public partial class OneDirectory : OneFileSystem
         ShellContextMenu scm = new(GetRootParent().MainViewModel!)
         {
             Root = _specialFolder == Environment.SpecialFolder.MyComputer || _specialFolder == Environment.SpecialFolder.Desktop || FullPath?.StartsWith("::") == true,
+            RecycledBin = RecycledBin,
         };
         DirectoryInfo dir;
         if (string.IsNullOrWhiteSpace(FullPath) || FullPath?.StartsWith("::") == true)
@@ -369,6 +370,11 @@ public partial class OneDirectory : OneFileSystem
     public DriveInfo? Drive { get; set; }
 
     public bool NetworkRoot { get; set; }
+
+    public bool RecycledBin
+    {
+        get { return FullPath == "::{645FF040-5081-101B-9F08-00AA002F954E}"; }
+    }
 
     public WpfExplorerViewModel? MainViewModel { get; set; }
 

@@ -77,6 +77,12 @@ public partial class WpfExplorerViewModel : ObservableObject
         OneDirectory networkNeiborhood = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
         FolderTreeView.Add(networkNeiborhood);
 
+        // Add recycled bin
+        specialPath = "::{645FF040-5081-101B-9F08-00AA002F954E}";
+        si = new(specialPath);
+        OneDirectory reycledBin = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, IsItemVisible = true };
+        FolderTreeView.Add(reycledBin);
+
         if (Environment.GetCommandLineArgs().Length > 1)
             BrowseTo(Environment.GetCommandLineArgs()[1]);
         else
@@ -382,6 +388,14 @@ public partial class WpfExplorerViewModel : ObservableObject
     public async Task KeyUp(KeyEventArgs e)
     {
         IInputElement o = FocusManager.GetFocusedElement(_control);
+        if (e.Key == Key.Apps)
+        {
+            if (o is TreeView || o is TreeViewItem)
+                SelectedFolder!.ContextMenuFolder();
+            else if (o is ListView || o is ListViewItem || o is OneFileSystem)
+                SelectedItems[0].ContextMenuFiles();
+            return;
+        }
         if (e.Key == Key.Escape && _currentlyRenaming != null)
         {
             _currentlyRenaming.EditMode(false);
