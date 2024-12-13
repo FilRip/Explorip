@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -46,18 +47,26 @@ public class ListViewEx : ListView
         {
             DrawSelection = true;
             DrawSelectionStart = e.GetPosition(this);
+            Mouse.Capture(this);
         }
     }
 
     private bool SelectInRectangle()
     {
         DrawSelection = false;
+        Mouse.Capture(null);
         InvalidateVisual();
         Rect rect = new(DrawSelectionStart, Mouse.GetPosition(this));
         if (rect.Width == 0 && rect.Height == 0)
             return false;
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
             UnselectAll();
+        SelectItems(rect);
+        return true;
+    }
+
+    private void SelectItems(Rect rect)
+    {
         foreach (OneFileSystem item in MainViewModel.FileListView.Where(i => i.IsItemVisible))
         {
             if (ItemContainerGenerator.ContainerFromItem(item) is Control control)
@@ -68,9 +77,7 @@ public class ListViewEx : ListView
                     SelectedItems.Add(item);
             }
         }
-        return true;
     }
-
 
     public bool DrawSelection { get; set; }
 
@@ -82,6 +89,11 @@ public class ListViewEx : ListView
     {
         base.OnRender(drawingContext);
         if (DrawSelection)
-            drawingContext.DrawRectangle(ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject, _selectionPen, new Rect(DrawSelectionStart, Mouse.GetPosition(this)));
+        {
+            Point dest = Mouse.GetPosition(this);
+            dest.X = Math.Max(dest.X, 0);
+            dest.Y = Math.Max(dest.Y, 0);
+            drawingContext.DrawRectangle(ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject, _selectionPen, new Rect(DrawSelectionStart, dest));
+        }
     }
 }
