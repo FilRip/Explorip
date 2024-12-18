@@ -263,9 +263,9 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
                 IntPtr pStrRet = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
                 Marshal.WriteInt32(pStrRet, 0, 0);
-                _ = desktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING, pStrRet);
+                desktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING, pStrRet);
                 StringBuilder strFolder = new(ShellHelper.MAX_PATH);
-                _ = StrRetToBuf(pStrRet, pPIDL, strFolder, ShellHelper.MAX_PATH);
+                StrRetToBuf(pStrRet, pPIDL, strFolder, ShellHelper.MAX_PATH);
                 Marshal.FreeCoTaskMem(pStrRet);
                 _strParentFolder = strFolder.ToString();
 
@@ -283,7 +283,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         }
         else
         {
-            if (desktopParent || Root && !RecycledBin)
+            if (desktopParent || Root || RecycledBin)
                 _parentFolder = GetDesktopFolder();
             else
             {
@@ -398,7 +398,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     /// <summary>
     /// Get the PIDLs
     /// </summary>
-    protected void GetPIDLs(DirectoryInfo dirInfo)
+    protected void GetPIDLs(DirectoryInfo dirInfo, IntPtr[]? pidls = null)
     {
         if (dirInfo == null)
             return;
@@ -411,28 +411,40 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         if (_parentFolder == null)
             throw new ExploripCommonException("Parent folder is null");
 
-        _listPIDL = new IntPtr[1];
+        if (pidls == null)
+        {
+            _listPIDL = new IntPtr[1];
 
-        // Get the file relative to folder
-        uint pchEaten = 0;
-        SFGAO pdwAttributes = 0;
-        int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, dirInfo.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
-        if (nResult != (int)HResult.SUCCESS && Root)
-        {
-            if (RecycledBin)
-                nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_BITBUCKET, ref pPIDL);
-            else
-                nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
+            // Get the file relative to folder
+            uint pchEaten = 0;
+            SFGAO pdwAttributes = 0;
+            int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, dirInfo.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
+            if (nResult != (int)HResult.SUCCESS && Root)
+            {
+                if (RecycledBin)
+                    nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_BITBUCKET, ref pPIDL);
+                else
+                    nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
+            }
+            if (pPIDL != IntPtr.Zero && nResult == (int)HResult.SUCCESS)
+            {
+                _listPIDL[0] = pPIDL;
+            }
         }
-        if (pPIDL != IntPtr.Zero && nResult == (int)HResult.SUCCESS)
-        {
-            _listPIDL[0] = pPIDL;
-        }
+        else
+            _listPIDL = pidls;
     }
 
     #endregion
 
     #region ShowContextMenu()
+
+    public void ShowContextMenu(IntPtr[] pidls, DirectoryInfo currentFolder, System.Windows.Point pointScreen)
+    {
+        ReleaseAll();
+        GetPIDLs(currentFolder, pidls);
+        ShowContextMenu(pointScreen).GetAwaiter();
+    }
 
     public void ShowContextMenu(FileSystemInfo[] fsi, string currentFolder, System.Windows.Point pointScreen)
     {

@@ -22,6 +22,7 @@ namespace ExploripComponents
         #region Fields
 
         private readonly IntPtr _windowHandle;
+        private OneDirectory? _lastSelected;
 
         #endregion
 
@@ -199,6 +200,35 @@ namespace ExploripComponents
             }
         }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+
+        #endregion
+
+        #region Manage blank TreeViewItem
+
+        private bool _currentlyChangingSelection = false;
+        private void FolderTV_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (_currentlyChangingSelection)
+                return;
+
+            if (e.Source is TreeView tv &&
+                tv.SelectedItem is OneDirectory dir)
+            {
+                if (string.IsNullOrWhiteSpace(dir.DisplayText))
+                {
+                    _currentlyChangingSelection = true;
+                    dir.IsSelected = false;
+                    _currentlyChangingSelection = false;
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        if (_lastSelected != null)
+                            _lastSelected.IsSelected = true;
+                    }, System.Windows.Threading.DispatcherPriority.Background);
+                }
+                else
+                    _lastSelected = dir;
+            }
+        }
 
         #endregion
     }

@@ -12,7 +12,7 @@ namespace ExploripComponents;
 
 public class ListViewEx : ListView
 {
-    private IEnumerable<OneFileSystem> _itemsSelectedBefore = [];
+    private List<string> _itemsSelectedBefore = [];
 
     public ListViewEx()
     {
@@ -31,6 +31,7 @@ public class ListViewEx : ListView
         if (DrawSelection)
         {
             DisableSelectInRectangle();
+            e.Handled = true;
             return;
         }
 
@@ -52,11 +53,11 @@ public class ListViewEx : ListView
 
     private void ListView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if ((Mouse.DirectlyOver is not FrameworkElement element || element.DataContext is not OneFileSystem) && !DrawSelection)
+        if ((Mouse.DirectlyOver is not FrameworkElement element || element.DataContext is not OneFileSystem) && !DrawSelection && Mouse.DirectlyOver is not System.Windows.Shapes.Rectangle)
         {
             if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
                 UnselectAll();
-            _itemsSelectedBefore = SelectedItems.OfType<OneFileSystem>();
+            _itemsSelectedBefore = SelectedItems.OfType<OneFileSystem>().Select(i => i.DisplayText).ToList();
             DrawSelection = true;
             DrawSelectionStart = e.GetPosition(this);
             Mouse.Capture(this);
@@ -73,7 +74,8 @@ public class ListViewEx : ListView
     private void SelectItems()
     {
         Rect rect = new(DrawSelectionStart, Mouse.GetPosition(this));
-        foreach (OneFileSystem item in MainViewModel.FileListView.Where(i => i.IsItemVisible && !_itemsSelectedBefore.Contains(i)))
+        SelectedItems.Clear();
+        foreach (OneFileSystem item in MainViewModel.FileListView.Where(i => i.IsItemVisible && !_itemsSelectedBefore.Contains(i.DisplayText)))
         {
             if (ItemContainerGenerator.ContainerFromItem(item) is Control control)
             {
@@ -83,6 +85,8 @@ public class ListViewEx : ListView
                     SelectedItems.Add(item);
             }
         }
+        foreach (OneFileSystem fs in MainViewModel.FileListView.Where(i => _itemsSelectedBefore.Contains(i.DisplayText)))
+            SelectedItems.Add(fs);
     }
 
     public bool DrawSelection { get; set; }

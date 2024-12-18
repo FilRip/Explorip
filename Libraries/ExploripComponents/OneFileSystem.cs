@@ -25,9 +25,10 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     protected ImageSource? _icon;
     protected ulong? _lastSize;
     private NativeMethods.ShFileInfo _fileInfo = new();
-    private FileAttributes _fileAttributes;
+    protected FileAttributes _fileAttributes;
     private ImageSource? _thumbnail;
-    private DateTime _lastWriteTime;
+    protected DateTime _lastWriteTime;
+    protected bool _fromRecycledBin;
 
     #region Binding properties
 
@@ -114,7 +115,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
 
     public virtual void EditMode(bool activate)
     {
-        if (_parentDirectory == null)
+        if (_parentDirectory == null || _fromRecycledBin)
             return;
 
         if (activate)

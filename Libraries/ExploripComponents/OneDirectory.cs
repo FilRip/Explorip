@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,8 +16,10 @@ using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Helpers;
 
+using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
+using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 
 using NativeMethods = ManagedShell.Interop.NativeMethods;
@@ -80,14 +83,14 @@ public partial class OneDirectory : OneFileSystem
         bool hasSubFolder;
         if (Drive != null && !IsSelected && !Drive.IsReady && Drive.DriveType != DriveType.Fixed)
             return;
-        FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listDirectories, out _);
+        ExtensionsDirectory.EnumerateFolderContent(FullPath, out List<string> listDirectories, out _);
         string newFullPath;
         foreach (string directory in listDirectories)
         {
             newFullPath = Path.Combine(FullPath, directory);
             try
             {
-                FastDirectoryEnumerator.EnumerateFolderContent(newFullPath, out List<string> subDir, out _);
+                ExtensionsDirectory.EnumerateFolderContent(newFullPath, out List<string> subDir, out _);
                 hasSubFolder = subDir.Count > 0;
             }
             catch (Exception)
@@ -127,7 +130,7 @@ public partial class OneDirectory : OneFileSystem
 
                 if (networkShellFolder != null)
                 {
-                    networkShellFolder.EnumObjects(IntPtr.Zero, ManagedShell.ShellFolders.Enums.SHCONTF.FOLDERS, out IntPtr data);
+                    networkShellFolder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS, out IntPtr data);
                     IEnumIDList itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(data, typeof(IEnumIDList));
                     while (itemsEnum.Next(1, out IntPtr subItemPtr, out uint fetch) == 0 && fetch == 1)
                     {
@@ -135,7 +138,7 @@ public partial class OneDirectory : OneFileSystem
                         {
                             IShellFolder subSf = (IShellFolder)Marshal.GetTypedObjectForIUnknown(siPtr, typeof(IShellFolder));
                             IntPtr namePtr = IntPtr.Zero;
-                            subSf.GetDisplayNameOf(subItemPtr, ManagedShell.ShellFolders.Enums.SHGDN.NORMAL, namePtr);
+                            subSf.GetDisplayNameOf(subItemPtr, SHGDN.NORMAL, namePtr);
                             string displayName = Marshal.PtrToStringAuto(namePtr);
                             Marshal.FreeCoTaskMem(namePtr);
                             _items.Add(new OneFile(displayName, this));
@@ -145,11 +148,81 @@ public partial class OneDirectory : OneFileSystem
             }
             else
             {
-                FastDirectoryEnumerator.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
-                foreach (string subFolder in listSubFolder)
-                    _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true, subFolder));
-                foreach (string file in listFiles)
-                    _items.Add(new OneFile(Path.Combine(FullPath, file), this));
+                if (RecycledBin)
+                {
+                    IShellFolder? sfDesktop = null;
+                    IShellFolder2? sfRecycledBin = null;
+                    IntPtr pidlDesktop = IntPtr.Zero, pidlRecycledBin = IntPtr.Zero, enumIDList = IntPtr.Zero;
+                    IEnumIDList? itemsEnum = null;
+                    try
+                    {
+                        string recycledBinFullPath = GetRootParent().MainViewModel!.FullPathRecycledBin!;
+                        NativeMethods.SHGetDesktopFolder(out pidlDesktop);
+                        sfDesktop = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlDesktop, typeof(IShellFolder));
+                        NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_BITBUCKET, ref pidlRecycledBin);
+                        Guid guidSF = typeof(IShellFolder2).GUID;
+                        sfDesktop.BindToObject(pidlRecycledBin, IntPtr.Zero, ref guidSF, out IntPtr ptrRecycledBin);
+                        sfRecycledBin = (IShellFolder2)Marshal.GetTypedObjectForIUnknown(ptrRecycledBin, typeof(IShellFolder2));
+                        sfRecycledBin.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS | SHCONTF.INCLUDEHIDDEN, out enumIDList);
+                        itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(enumIDList, typeof(IEnumIDList));
+                        while (itemsEnum.Next(1, out IntPtr pidlItem, out uint fetch) == 0 && fetch == 1)
+                        {
+                            sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.Name, out ShellDetails sd);
+                            string displayName = Marshal.PtrToStringUni(sd.str.OleStr).ConvertFromUniToAscii();
+                            sd.str.Free();
+
+                            sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.Size, out sd);
+                            string sizeStr = Marshal.PtrToStringUni(sd.str.OleStr);
+                            sd.str.Free();
+                            double.TryParse(sizeStr.ConvertFromUniToAscii().RemoveNotDigitOrSeparator(), out double size);
+
+                            sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.DateTimeDeleted, out sd);
+                            string dtDeleteStr = Marshal.PtrToStringUni(sd.str.OleStr);
+                            sd.str.Free();
+                            DateTime.TryParse(dtDeleteStr.ConvertFromUniToAscii(), CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime dtDeleted);
+
+                            sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.DateTimeLastModified, out sd);
+                            string dtLastWriteStr = Marshal.PtrToStringUni(sd.str.OleStr);
+                            sd.str.Free();
+                            DateTime.TryParse(dtLastWriteStr.ConvertFromUniToAscii(), CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime dtLastWrite);
+
+                            sfRecycledBin.GetDetailsOf(pidlItem, 196, out sd);
+                            string realName = Marshal.PtrToStringUni(sd.str.OleStr);
+                            sd.str.Free();
+
+                            realName = Path.Combine(recycledBinFullPath, Path.GetFileName(realName));
+
+                            _items.Add(new OneFile(realName, dtDeleted, dtLastWrite, (ulong)(size * 1024), this) { DisplayText = displayName });
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore errors for this time
+                    }
+                    finally
+                    {
+                        if (enumIDList != IntPtr.Zero)
+                            Marshal.Release(enumIDList);
+                        if (pidlRecycledBin != IntPtr.Zero)
+                            Marshal.Release(pidlRecycledBin);
+                        if (pidlDesktop != IntPtr.Zero)
+                            Marshal.Release(pidlDesktop);
+                        if (sfDesktop != null)
+                            Marshal.ReleaseComObject(sfDesktop);
+                        if (sfRecycledBin != null)
+                            Marshal.ReleaseComObject(sfRecycledBin);
+                        if (itemsEnum != null)
+                            Marshal.ReleaseComObject(itemsEnum);
+                    }
+                }
+                else
+                {
+                    ExtensionsDirectory.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
+                    foreach (string subFolder in listSubFolder)
+                        _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true, subFolder));
+                    foreach (string file in listFiles)
+                        _items.Add(new OneFile(Path.Combine(FullPath, file), this));
+                }
             }
             CancelCalculateSize();
             WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
@@ -238,7 +311,7 @@ public partial class OneDirectory : OneFileSystem
                     {
                         if (di.DriveType == DriveType.Fixed)
                         {
-                            FastDirectoryEnumerator.EnumerateFolderContent(di.RootDirectory.FullName, out List<string> subDir, out _);
+                            ExtensionsDirectory.EnumerateFolderContent(di.RootDirectory.FullName, out List<string> subDir, out _);
                             hasSubFolder = subDir.Count > 0;
                         }
                         else
@@ -320,7 +393,7 @@ public partial class OneDirectory : OneFileSystem
     public Task CalculateFolderSize()
     {
         ulong calculateSize = 0;
-        FastDirectoryEnumerator.FolderSize(FullPath, ref calculateSize, _cancellationToken!.Token);
+        ExtensionsDirectory.FolderSize(FullPath, ref calculateSize, _cancellationToken!.Token);
         _lastSize = calculateSize;
         return Task.CompletedTask;
     }
@@ -393,7 +466,7 @@ public partial class OneDirectory : OneFileSystem
                         IntPtr pidl = NativeMethods.ILCreateFromPath(FullPath);
                         if (pidl != IntPtr.Zero)
                         {
-                            hIcon = IconHelper.GetIconByPidl(pidl, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
+                            hIcon = IconHelper.GetIconByPidl(pidl, (vm.ViewDetails ? IconSize.Small : vm.CurrentIconSize), out hOverlay);
                             NativeMethods.ILFree(pidl);
                         }
                         else
@@ -403,7 +476,7 @@ public partial class OneDirectory : OneFileSystem
                     }
                     else
                     {
-                        hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
+                        hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? IconSize.Small : vm.CurrentIconSize), out hOverlay);
                     }
                     if (hIcon != IntPtr.Zero)
                     {
@@ -427,7 +500,7 @@ public partial class OneDirectory : OneFileSystem
                     NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
                     if (pidl != IntPtr.Zero)
                     {
-                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out IntPtr hOverlay);
+                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, (vm.ViewDetails ? IconSize.Small : vm.CurrentIconSize), out IntPtr hOverlay);
                         NativeMethods.ILFree(pidl);
                         if (hIcon != IntPtr.Zero)
                         {
@@ -456,7 +529,7 @@ public partial class OneDirectory : OneFileSystem
                         IntPtr pidl = NativeMethods.ILCreateFromPath(FullPath);
                         if (pidl != IntPtr.Zero)
                         {
-                            hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                            hIcon = IconHelper.GetIconByPidl(pidl, IconSize.Small, out hOverlay);
                             NativeMethods.ILFree(pidl);
                         }
                         else
@@ -466,7 +539,7 @@ public partial class OneDirectory : OneFileSystem
                     }
                     else
                     {
-                        hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out hOverlay);
+                        hIcon = IconHelper.GetIconByFilename(FullPath, IconSize.Small, out hOverlay);
                     }
                     if (hIcon != IntPtr.Zero)
                     {
@@ -490,7 +563,7 @@ public partial class OneDirectory : OneFileSystem
                     NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
                     if (pidl != IntPtr.Zero)
                     {
-                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                        IntPtr hIcon = IconHelper.GetIconByPidl(pidl, IconSize.Small, out IntPtr hOverlay);
                         NativeMethods.ILFree(pidl);
                         if (hIcon != IntPtr.Zero)
                         {
@@ -503,7 +576,7 @@ public partial class OneDirectory : OneFileSystem
             }
             if (_treeViewIcon == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
             {
-                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.Small, out IntPtr hOverlay);
+                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, IconSize.Small, out IntPtr hOverlay);
                 _treeViewIcon = IconImageConverter.GetImageFromHIcon(hIcon);
                 if (hOverlay != IntPtr.Zero)
                     IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);

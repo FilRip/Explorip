@@ -31,3 +31,16 @@ public enum OrderDirection
     ASC = 0,
     DESC = 1,
 }
+
+public enum RecycledBinColumnName : uint
+{
+    Name = 0,
+    OriginalPath = 1,
+    DateTimeDeleted = 2,
+    Size = 3,
+    Type = 4,
+    DateTimeLastModified = 5,
+    DateTimeCreated = 6,
+    DateTimeLastAccess = 7,
+    Attributes = 8,
+}

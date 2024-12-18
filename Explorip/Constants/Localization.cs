@@ -73,6 +73,7 @@ public static class Localization
     public static string ORDER_BY_SUBMENU { get; private set; }
     public static string ORDERBY_ASC_SUBMENU { get; private set; }
     public static string ORDERBY_DESC_SUBMENU { get; private set; }
+    public static string REGISTRY_EDITOR { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -142,6 +143,7 @@ public static class Localization
         ORDER_BY_SUBMENU = LoadMenuItem("shell32.dll", 215, 28673, "Order by").Replace("&", "");
         ORDERBY_ASC_SUBMENU = LoadMenuItem("shell32.dll", 215, 31488, "Ascending").Replace("&", "");
         ORDERBY_DESC_SUBMENU = LoadMenuItem("shell32.dll", 215, 31489, "Descending").Replace("&", "");
+        REGISTRY_EDITOR = Load("regedit.exe", 16, "Registry editor");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

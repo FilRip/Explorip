@@ -49,6 +49,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     private ItemsPanelTemplate? _itemTemplateWrap;
     private readonly Stopwatch _detectRename;
     private OneFileSystem? _lastSelected;
+    private string? _recycledFullPath;
 
     #region Constructors
 
@@ -80,8 +81,13 @@ public partial class WpfExplorerViewModel : ObservableObject
         // Add recycled bin
         specialPath = "::{645FF040-5081-101B-9F08-00AA002F954E}";
         si = new(specialPath);
-        OneDirectory reycledBin = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, IsItemVisible = true };
-        FolderTreeView.Add(reycledBin);
+        OneDirectory recycledBin = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, IsItemVisible = true };
+        FolderTreeView.Add(recycledBin);
+        string drive = Environment.SpecialFolder.Windows.FullPath().Substring(0, 3);
+        _recycledFullPath = ExtensionsDirectory.SearchRecycledBinPath(drive, si.DisplayName);
+
+        // Add blank line for the horizontal scrollbar
+        FolderTreeView.Add(new OneDirectory("", null, false, "") { Children = [] });
 
         if (Environment.GetCommandLineArgs().Length > 1)
             BrowseTo(Environment.GetCommandLineArgs()[1]);
@@ -132,12 +138,12 @@ public partial class WpfExplorerViewModel : ObservableObject
     [RelayCommand()]
     public void MouseUp(MouseButtonEventArgs e)
     {
-        CurrentlyDraging = false;
-        CurrentControl.FileLV.DrawSelection = false;
+        if (CurrentlyDraging || CurrentControl.FileLV.DrawSelection)
+            return;
         _currentlyRenaming?.Rename();
         if (_currentlyRenaming == null)
         {
-            if (SelectedItems.Count == 1)
+            if (SelectedItems.Count == 1 && e.LeftButton == MouseButtonState.Released)
             {
                 if (_lastSelected == SelectedItems[0] && _detectRename.ElapsedMilliseconds > Constants.DoubleClickDelay)
                 {
@@ -166,6 +172,11 @@ public partial class WpfExplorerViewModel : ObservableObject
     public MainWindow CurrentControl
     {
         get { return _control; }
+    }
+
+    public string? FullPathRecycledBin
+    {
+        get { return _recycledFullPath; }
     }
 
     #endregion
