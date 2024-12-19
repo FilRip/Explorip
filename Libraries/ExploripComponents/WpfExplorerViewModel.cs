@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,8 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.FilesOperations;
+using Explorip.FilesOperations.Interfaces;
 using Explorip.Helpers;
 
 using ManagedShell.Common.Enums;
@@ -471,7 +474,53 @@ public partial class WpfExplorerViewModel : ObservableObject
             if (parent?.ParentDirectory != null)
                 BrowseTo(parent.ParentDirectory.FullPath);
         }
-        // TODO : Cut/Copy/Paste keyboard shortcut
+        else if ((e.Key == Key.C || e.Key == Key.X) && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl)))
+        {
+            string[]? listItems = null;
+            if (o is TreeView || o is TreeViewItem && SelectedFolder != null)
+                listItems = [SelectedFolder!.FullPath];
+            else if (SelectedItems.Count > 0)
+                listItems = [.. SelectedItems.Select(i => i.FullPath)];
+            if (listItems != null && listItems.Length > 0)
+            {
+                DataObject data = new();
+                data.SetFileDropList([.. listItems]);
+                if (e.Key == Key.X)
+                    data.SetData("Preferred DropEffect", new byte[] { 2, 0, 0, 0 });
+                Clipboard.Clear();
+                Clipboard.SetDataObject(data, true);
+            }
+        }
+        else if (e.Key == Key.V && (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl)) &&
+            Clipboard.GetDataObject() is DataObject data && Clipboard.GetFileDropList()?.Count > 0 && SelectedFolder != null)
+        {
+            string[] listItems = (string[])data.GetData(DataFormats.FileDrop);
+            FileOperation fileOp = new(NativeMethods.GetDesktopWindow());
+            fileOp.ChangeOperationFlags(EFileOperation.FOF_RENAMEONCOLLISION |
+                EFileOperation.FOF_NOCONFIRMMKDIR |
+                EFileOperation.FOFX_ADDUNDORECORD);
+            bool move = false;
+            if (Clipboard.GetData("Preferred DropEffect") != null)
+            {
+                try
+                {
+                    byte[] buffer = new byte[4];
+                    if (await ((MemoryStream)Clipboard.GetData("Preferred DropEffect")).ReadAsync(buffer, 0, 4) > 0)
+                    {
+                        int dropEffect = BitConverter.ToInt32(buffer, 0);
+                        move = dropEffect == 2;
+                    }
+                }
+                catch (Exception) { /* Ignore errors */ }
+            }
+            foreach (string item in listItems)
+                if (move)
+                    fileOp.MoveItem(item, SelectedFolder!.FullPath, Path.GetFileName(item));
+                else
+                    fileOp.CopyItem(item, SelectedFolder!.FullPath, Path.GetFileName(item));
+            fileOp.PerformOperations();
+            fileOp.Dispose();
+        }
     }
 
     public void ScrollToFirstItem()

@@ -277,13 +277,14 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         if (_parentDirectory == null)
             return;
 
-        if (_parentDirectory.GetRootParent().MainViewModel!.SelectedItems.Count > 0 && (Mouse.LeftButton == MouseButtonState.Pressed || Mouse.RightButton == MouseButtonState.Pressed) &&
-            !_parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging)
+        WpfExplorerViewModel viewModel = _parentDirectory.GetRootParent().MainViewModel!;
+        if (viewModel.SelectedItems.Count > 0 && (Mouse.LeftButton == MouseButtonState.Pressed || Mouse.RightButton == MouseButtonState.Pressed) &&
+            !viewModel.CurrentlyDraging && viewModel.CurrentlyRenaming == null)
         {
-            _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = true;
+            viewModel.CurrentlyDraging = true;
             DataObject data = new();
-            data.SetFileDropList([.. _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.Select(fs => fs.FullPath)]);
-            DragDrop.DoDragDrop(_parentDirectory.GetRootParent().MainViewModel!.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
+            data.SetFileDropList([.. viewModel.SelectedItems.Select(fs => fs.FullPath)]);
+            DragDrop.DoDragDrop(viewModel.CurrentControl, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
         }
     }
 
