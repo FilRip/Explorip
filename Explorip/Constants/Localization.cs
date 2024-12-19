@@ -74,6 +74,13 @@ public static class Localization
     public static string ORDERBY_ASC_SUBMENU { get; private set; }
     public static string ORDERBY_DESC_SUBMENU { get; private set; }
     public static string REGISTRY_EDITOR { get; private set; }
+    public static string LOCALIZED_BYTE { get; private set; }
+    public static string LOCALIZED_KILO { get; private set; }
+    public static string LOCALIZED_MEGA { get; private set; }
+    public static string LOCALIZED_GIGA { get; private set; }
+    public static string LOCALIZED_TERA { get; private set; }
+    public static string LOCALIZED_PETA { get; private set; }
+    public static string LOCALIZED_EXA { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -144,6 +151,13 @@ public static class Localization
         ORDERBY_ASC_SUBMENU = LoadMenuItem("shell32.dll", 215, 31488, "Ascending").Replace("&", "");
         ORDERBY_DESC_SUBMENU = LoadMenuItem("shell32.dll", 215, 31489, "Descending").Replace("&", "");
         REGISTRY_EDITOR = Load("regedit.exe", 16, "Registry editor");
+        LOCALIZED_BYTE = Load("dskquota.dll", 14472, "bytes");
+        LOCALIZED_KILO = Load("dskquota.dll", 14473, "kilo");
+        LOCALIZED_MEGA = Load("dskquota.dll", 14474, "mega");
+        LOCALIZED_GIGA = Load("dskquota.dll", 14475, "giga");
+        LOCALIZED_TERA = Load("dskquota.dll", 14476, "tera");
+        LOCALIZED_PETA = Load("dskquota.dll", 14477, "peta");
+        LOCALIZED_EXA = Load("dskquota.dll", 14478, "exa");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

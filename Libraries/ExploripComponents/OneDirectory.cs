@@ -168,13 +168,15 @@ public partial class OneDirectory : OneFileSystem
                         while (itemsEnum.Next(1, out IntPtr pidlItem, out uint fetch) == 0 && fetch == 1)
                         {
                             sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.Name, out ShellDetails sd);
-                            string displayName = Marshal.PtrToStringUni(sd.str.OleStr).ConvertFromUniToAscii();
+                            string displayName = Marshal.PtrToStringUni(sd.str.OleStr);
                             sd.str.Free();
 
                             sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.Size, out sd);
                             string sizeStr = Marshal.PtrToStringUni(sd.str.OleStr);
                             sd.str.Free();
                             double.TryParse(sizeStr.ConvertFromUniToAscii().RemoveNotDigitOrSeparator(), out double size);
+                            for (int i = 0; i < ExtensionsDirectory.NumberOfMultiply(sizeStr); i++)
+                                size = size * 1024;
 
                             sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.DateTimeDeleted, out sd);
                             string dtDeleteStr = Marshal.PtrToStringUni(sd.str.OleStr);
@@ -192,7 +194,7 @@ public partial class OneDirectory : OneFileSystem
 
                             realName = Path.Combine(recycledBinFullPath, Path.GetFileName(realName));
 
-                            _items.Add(new OneFile(realName, dtDeleted, dtLastWrite, (ulong)(size * 1024), this)
+                            _items.Add(new OneFile(realName, dtDeleted, dtLastWrite, (ulong)size, this)
                             {
                                 DisplayText = displayName,
                             });

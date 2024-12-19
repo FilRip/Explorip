@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
+using Explorip.Constants;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
@@ -212,5 +214,22 @@ public static class ExtensionsDirectory
             result.Add(numCol, ret);
         }
         return result;
+    }
+
+    public static byte NumberOfMultiply(string currentSize)
+    {
+        if (currentSize.Contains(Localization.LOCALIZED_KILO))
+            return 1;
+        if (currentSize.Contains(Localization.LOCALIZED_MEGA))
+            return 2;
+        if (currentSize.Contains(Localization.LOCALIZED_GIGA))
+            return 3;
+        if (currentSize.Contains(Localization.LOCALIZED_TERA))
+            return 4;
+        if (currentSize.Contains(Localization.LOCALIZED_PETA))
+            return 5;
+        if (currentSize.Contains(Localization.LOCALIZED_EXA))
+            return 6;
+        return 0;
     }
 }
