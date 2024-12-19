@@ -192,7 +192,10 @@ public partial class OneDirectory : OneFileSystem
 
                             realName = Path.Combine(recycledBinFullPath, Path.GetFileName(realName));
 
-                            _items.Add(new OneFile(realName, dtDeleted, dtLastWrite, (ulong)(size * 1024), this) { DisplayText = displayName });
+                            _items.Add(new OneFile(realName, dtDeleted, dtLastWrite, (ulong)(size * 1024), this)
+                            {
+                                DisplayText = displayName,
+                            });
                         }
                     }
                     catch (Exception)

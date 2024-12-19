@@ -10,6 +10,8 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ExploripCopy.ViewModels;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
@@ -108,6 +110,8 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
 
     #endregion
 
+    #region Rename file/folder
+
     partial void OnRenameModeChanged(bool value)
     {
         ReadOnlyBox = !value;
@@ -137,6 +141,8 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         EditMode(false);
     }
+
+    #endregion
 
     #region Properties
 
@@ -244,12 +250,17 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         if (_parentDirectory != null && _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.Count > 0)
         {
+            Point positionPopupMenu = Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow));
+            WpfExplorerViewModel viewModel = _parentDirectory.GetRootParent()!.MainViewModel!;
             List<FileSystemInfo> listFiles = [];
-            foreach (OneFile file in _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.OfType<OneFile>())
+            foreach (OneFile file in viewModel.SelectedItems.OfType<OneFile>())
                 listFiles.Add(new FileInfo(file.FullPath));
-            foreach (OneDirectory file in _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.OfType<OneDirectory>())
+            foreach (OneDirectory file in viewModel.SelectedItems.OfType<OneDirectory>())
                 listFiles.Add(new DirectoryInfo(file.FullPath));
-            new ShellContextMenu(_parentDirectory.GetRootParent().MainViewModel!).ShowContextMenu([.. listFiles], _parentDirectory.FullPath, Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
+            new ShellContextMenu(viewModel)
+            {
+                RecycledBin = _fromRecycledBin,
+            }.ShowContextMenu([.. listFiles], _parentDirectory.FullPath, positionPopupMenu);
         }
     }
 
