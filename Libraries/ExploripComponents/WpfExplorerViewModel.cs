@@ -28,7 +28,7 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     [ObservableProperty()]
     private ObservableCollection<OneDirectory> _folderTreeView = [];
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(NumberOfFiles))]
     private ObservableCollection<OneFileSystem> _fileListView = [];
     [ObservableProperty()]
     private OneDirectory? _selectedFolder;
@@ -90,7 +90,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         FolderTreeView.Add(new OneDirectory("", null, false, "") { Children = [] });
 
         if (Environment.GetCommandLineArgs().Length > 1)
-            BrowseTo(Environment.GetCommandLineArgs()[1]);
+            Application.Current.Dispatcher.BeginInvoke(() => BrowseTo(Environment.GetCommandLineArgs()[1]));
         else
             BrowseTo(null);
 
@@ -138,9 +138,9 @@ public partial class WpfExplorerViewModel : ObservableObject
     [RelayCommand()]
     public void MouseUp(MouseButtonEventArgs e)
     {
-        if (CurrentlyDraging || CurrentControl.FileLV.DrawSelection)
+        if (CurrentControl.FileLV.DrawSelection)
             return;
-        _currentlyRenaming?.Rename();
+        CurrentlyDraging = false;
         if (_currentlyRenaming == null)
         {
             if (SelectedItems.Count == 1 && e.LeftButton == MouseButtonState.Released)
@@ -361,6 +361,11 @@ public partial class WpfExplorerViewModel : ObservableObject
         _currentlyRenaming = fs;
     }
 
+    public OneFileSystem? CurrentlyRenaming
+    {
+        get { return _currentlyRenaming; }
+    }
+
     public void RenameMode()
     {
         Application.Current.Dispatcher.Invoke(() =>
@@ -395,6 +400,11 @@ public partial class WpfExplorerViewModel : ObservableObject
         });
     }
 
+    public string NumberOfFiles
+    {
+        get { return Explorip.Constants.Localization.NUMBER_OF_ELEMENT?.Replace("%s", (FileListView?.Count ?? 0).ToString()) ?? ""; }
+    }
+
     [RelayCommand()]
     public async Task KeyUp(KeyEventArgs e)
     {
@@ -407,9 +417,11 @@ public partial class WpfExplorerViewModel : ObservableObject
                 SelectedItems[0].ContextMenuFiles();
             return;
         }
-        if (e.Key == Key.Escape && _currentlyRenaming != null)
+        if (e.Key == Key.Escape)
         {
-            _currentlyRenaming.EditMode(false);
+            _currentlyDragging = false;
+            CurrentControl.FileLV.ResetCurrentSelection();
+            _currentlyRenaming?.EditMode(false);
             return;
         }
         if ((e.Key == Key.Enter || e.Key == Key.Return) && _currentlyRenaming != null)
@@ -459,6 +471,7 @@ public partial class WpfExplorerViewModel : ObservableObject
             if (parent?.ParentDirectory != null)
                 BrowseTo(parent.ParentDirectory.FullPath);
         }
+        // TODO : Cut/Copy/Paste keyboard shortcut
     }
 
     public void ScrollToFirstItem()

@@ -35,7 +35,7 @@
                         <Image Source="{Binding IconOverlay}" Grid.Row="0" Margin="0"/>
                         <!-- Name -->
                         <TextBlock Grid.Row="1" Text="{Binding DisplayText}" Margin="0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" Padding="0" MaxWidth="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NameSizePx, TargetNullValue=16}" TextAlignment="Center"/>
-                        <TextBox Grid.Row="1" Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" BorderThickness="0" TextAlignment="Center" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" MaxWidth="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NameSizePx, TargetNullValue=16}"/>
+                        <TextBox Grid.Row="1" Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" BorderThickness="0" TextAlignment="Center" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" MaxWidth="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NameSizePx, TargetNullValue=16}" LostFocus="EditNameBox_LostFocus"/>
                         <!-- End name -->
                     </Grid>
                 </VirtualizingStackPanel>
@@ -62,7 +62,7 @@
                         <Image Source="{Binding IconOverlay}" Grid.Column="0" Margin="0"/>
                         <!-- Name -->
                         <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="12"/>
-                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" FontSize="12"/>
+                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" FontSize="12" LostFocus="EditNameBox_LostFocus"/>
                         <!-- End name -->
                         <TextBlock Text="{local:DateTimeBinding Path=LastModified}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="12"/>
                         <TextBlock Text="{Binding TypeName}" Grid.Column="3" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="12"/>
@@ -94,7 +94,11 @@
             <ColumnDefinition Width="0.25*"/>
             <ColumnDefinition Width="0.75*"/>
         </Grid.ColumnDefinitions>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="16"/>
+        </Grid.RowDefinitions>
+        
         <!-- Left part, TreeView for folders -->
         <TreeView Grid.Column="0" Name="FolderTV" ItemsSource="{Binding FolderTreeView}" Margin="0 0 5 0" PreviewDragOver="Scroll_PreviewDragOver" SelectedItemChanged="FolderTV_SelectedItemChanged">
             <TreeView.ItemContainerStyle>
@@ -138,7 +142,7 @@
                             <Image Source="{Binding IconOverlay}"/>
                         </Grid>
                         <TextBlock Grid.Column="2" Text="{Binding DisplayText}" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}"/>
-                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" BorderThickness="0" VerticalContentAlignment="Center"/>
+                        <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" BorderThickness="0" VerticalContentAlignment="Center" LostFocus="EditNameBox_LostFocus"/>
                     </Grid>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
@@ -187,6 +191,10 @@
                 </GroupStyle>
             </ListView.GroupStyle>
         </local:ListViewEx>
-        
+
+        <!-- State bar -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+            <TextBlock Text="{Binding NumberOfFiles}" FontSize="12"/>
+        </StackPanel>
     </Grid>
 </Window>

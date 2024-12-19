@@ -66,9 +66,20 @@ public class ListViewEx : ListView
 
     private void DisableSelectInRectangle()
     {
-        DrawSelection = false;
-        Mouse.Capture(null);
-        InvalidateVisual();
+        if (DrawSelection)
+        {
+            DrawSelection = false;
+            Mouse.Capture(null);
+            InvalidateVisual();
+        }
+    }
+
+    public void ResetCurrentSelection()
+    {
+        DisableSelectInRectangle();
+        SelectedItems.Clear();
+        foreach (OneFileSystem fs in MainViewModel.FileListView.Where(i => _itemsSelectedBefore.Contains(i.DisplayText)))
+            SelectedItems.Add(fs);
     }
 
     private void SelectItems()

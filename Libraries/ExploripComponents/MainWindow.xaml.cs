@@ -231,5 +231,10 @@ namespace ExploripComponents
         }
 
         #endregion
+
+        private void EditNameBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            MyDataContext.CurrentlyRenaming?.Rename();
+        }
     }
 }
