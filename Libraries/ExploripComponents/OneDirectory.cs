@@ -59,6 +59,13 @@ public partial class OneDirectory : OneFileSystem
         _specialFolder = null;
         if (hasSubFolder)
             _children.Add(_dummyDir);
+        if (FullPath?.Contains("$Recycle.Bin") == true && parent != null &&
+            parent.GetRootParent().MainViewModel!.FullPathRecycledBin?.ToLower() == fullPath.ToLower())
+        {
+            DisplayText = parent.GetRootParent().MainViewModel!.LocalizedNameRecycleBin ?? DisplayText;
+            _children.Clear();
+            RecycledBin = true;
+        }
     }
 
     public OneDirectory(string fullPath, OneDirectory? parent, bool hasSubFolder, string displayText) : this(parent, fullPath, hasSubFolder, displayText)
@@ -410,14 +417,20 @@ public partial class OneDirectory : OneFileSystem
     [RelayCommand()]
     public void ContextMenuFolder()
     {
+        bool root = _specialFolder == Environment.SpecialFolder.MyComputer || _specialFolder == Environment.SpecialFolder.Desktop || FullPath?.StartsWith("::") == true;
+        if (RecycledBin && !root)
+        {
+            ContextMenuFilesOrFolder(this);
+            return;
+        }
         // When right click on an item tree view
         ShellContextMenu scm = new(GetRootParent().MainViewModel!)
         {
-            Root = _specialFolder == Environment.SpecialFolder.MyComputer || _specialFolder == Environment.SpecialFolder.Desktop || FullPath?.StartsWith("::") == true,
+            Root = root,
             RecycledBin = RecycledBin,
         };
         DirectoryInfo dir;
-        if (string.IsNullOrWhiteSpace(FullPath) || FullPath?.StartsWith("::") == true)
+        if (string.IsNullOrWhiteSpace(FullPath) || FullPath?.StartsWith("::") == true || RecycledBin)
             dir = new DirectoryInfo(DisplayText);
         else
             dir = new DirectoryInfo(FullPath);
@@ -449,10 +462,7 @@ public partial class OneDirectory : OneFileSystem
 
     public bool NetworkRoot { get; set; }
 
-    public bool RecycledBin
-    {
-        get { return FullPath == "::{645FF040-5081-101B-9F08-00AA002F954E}"; }
-    }
+    public bool RecycledBin { get; set; }
 
     public WpfExplorerViewModel? MainViewModel { get; set; }
 

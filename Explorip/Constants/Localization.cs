@@ -82,6 +82,7 @@ public static class Localization
     public static string LOCALIZED_PETA { get; private set; }
     public static string LOCALIZED_EXA { get; private set; }
     public static string NUMBER_OF_ELEMENT { get; private set; }
+    public static string NUMBER_OF_SELECTED_ELEMENT { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -160,6 +161,7 @@ public static class Localization
         LOCALIZED_PETA = Load("dskquota.dll", 14477, "peta");
         LOCALIZED_EXA = Load("dskquota.dll", 14478, "exa");
         NUMBER_OF_ELEMENT = Load("shell32.dll", 38192, "%s element(s)");
+        NUMBER_OF_SELECTED_ELEMENT = Load("shell32.dll", 38194, "%s selected elements");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

@@ -30,6 +30,7 @@ public class ListViewEx : ListView
     {
         if (DrawSelection)
         {
+            MainViewModel.CurrentlyRenaming?.Rename();
             DisableSelectInRectangle();
             e.Handled = true;
             return;

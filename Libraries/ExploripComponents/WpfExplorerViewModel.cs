@@ -35,7 +35,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     private ObservableCollection<OneFileSystem> _fileListView = [];
     [ObservableProperty()]
     private OneDirectory? _selectedFolder;
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(NumberOfSelectedItems))]
     private ObservableCollection<OneFileSystem> _selectedItems = [];
     [ObservableProperty()]
     private IconSize _currentIconSize = IconSize.Small;
@@ -53,6 +53,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     private readonly Stopwatch _detectRename;
     private OneFileSystem? _lastSelected;
     private string? _recycledFullPath;
+    private string? _localizedNameRecycleBin;
 
     #region Constructors
 
@@ -84,9 +85,10 @@ public partial class WpfExplorerViewModel : ObservableObject
         // Add recycled bin
         specialPath = "::{645FF040-5081-101B-9F08-00AA002F954E}";
         si = new(specialPath);
-        OneDirectory recycledBin = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, IsItemVisible = true };
+        OneDirectory recycledBin = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, IsItemVisible = true, RecycledBin = true };
         FolderTreeView.Add(recycledBin);
         string drive = Environment.SpecialFolder.Windows.FullPath().Substring(0, 3);
+        _localizedNameRecycleBin = si.DisplayName;
         _recycledFullPath = ExtensionsDirectory.SearchRecycledBinPath(drive, si.DisplayName);
 
         // Add blank line for the horizontal scrollbar
@@ -144,28 +146,26 @@ public partial class WpfExplorerViewModel : ObservableObject
         if (CurrentControl.FileLV.DrawSelection)
             return;
         CurrentlyDraging = false;
-        if (_currentlyRenaming == null)
+        if (_currentlyRenaming == null &&
+            SelectedItems.Count == 1 && e.ChangedButton == MouseButton.Left)
         {
-            if (SelectedItems.Count == 1 && e.LeftButton == MouseButtonState.Released)
+            if (_lastSelected == SelectedItems[0] && _detectRename.ElapsedMilliseconds > Constants.DoubleClickDelay)
             {
-                if (_lastSelected == SelectedItems[0] && _detectRename.ElapsedMilliseconds > Constants.DoubleClickDelay)
+                Task.Run(async () =>
                 {
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(Constants.DelayIgnoreRename);
-                        if (_lastSelected == SelectedItems[0])
-                            RenameMode();
-                    });
-                }
-                else
-                {
-                    _detectRename.Restart();
-                    _lastSelected = SelectedItems[0];
-                }
+                    await Task.Delay(Constants.DelayIgnoreRename);
+                    if (_lastSelected == SelectedItems[0])
+                        RenameMode();
+                });
             }
             else
-                _lastSelected = null;
+            {
+                _detectRename.Restart();
+                _lastSelected = SelectedItems[0];
+            }
+            return;
         }
+        _lastSelected = null;
     }
 
     #endregion
@@ -180,6 +180,11 @@ public partial class WpfExplorerViewModel : ObservableObject
     public string? FullPathRecycledBin
     {
         get { return _recycledFullPath; }
+    }
+
+    public string? LocalizedNameRecycleBin
+    {
+        get { return _localizedNameRecycleBin; }
     }
 
     #endregion
@@ -232,8 +237,9 @@ public partial class WpfExplorerViewModel : ObservableObject
     public void ContextMenuBackgroundFolder(MouseButtonEventArgs e)
     {
         // When right click on empty space in list view
-        if (SelectedItems.Count == 0 && !string.IsNullOrWhiteSpace(SelectedFolder?.FullPath))
+        if (!string.IsNullOrWhiteSpace(SelectedFolder?.FullPath))
         {
+            CurrentControl.FileLV.UnselectAll();
             if (SelectedFolder!.FullPath == Environment.SpecialFolder.Desktop.FullPath())
                 new ShellContextMenu(this).ShowContextMenu("::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow)));
             else
@@ -408,6 +414,11 @@ public partial class WpfExplorerViewModel : ObservableObject
         get { return Explorip.Constants.Localization.NUMBER_OF_ELEMENT?.Replace("%s", (FileListView?.Count ?? 0).ToString()) ?? ""; }
     }
 
+    public string NumberOfSelectedItems
+    {
+        get { return ", " + Explorip.Constants.Localization.NUMBER_OF_SELECTED_ELEMENT?.Replace("%s", SelectedItems.Count.ToString()); }
+    }
+
     [RelayCommand()]
     public async Task KeyUp(KeyEventArgs e)
     {
@@ -417,13 +428,14 @@ public partial class WpfExplorerViewModel : ObservableObject
             if (o is TreeView || o is TreeViewItem)
                 SelectedFolder!.ContextMenuFolder();
             else if (o is ListView || o is ListViewItem || o is OneFileSystem)
-                SelectedItems[0].ContextMenuFiles();
+                SelectedItems[0].ContextMenuFilesOrFolder();
             return;
         }
         if (e.Key == Key.Escape)
         {
             _currentlyDragging = false;
-            CurrentControl.FileLV.ResetCurrentSelection();
+            if (CurrentControl.FileLV.DrawSelection)
+                CurrentControl.FileLV.ResetCurrentSelection();
             _currentlyRenaming?.EditMode(false);
             return;
         }

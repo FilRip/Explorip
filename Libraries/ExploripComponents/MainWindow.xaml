@@ -21,7 +21,7 @@
                     <Grid>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonUp">
-                                <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
+                                <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}" PassEventArgsToCommand="True"/>
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseMove">
                                 <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
@@ -45,7 +45,7 @@
                     <Grid HorizontalAlignment="Stretch">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonUp">
-                                <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}"/>
+                                <i:InvokeCommandAction Command="{Binding ContextMenuFilesCommand}" PassEventArgsToCommand="True"/>
                             </i:EventTrigger>
                             <i:EventTrigger EventName="MouseMove">
                                 <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
@@ -100,7 +100,7 @@
         </Grid.RowDefinitions>
         
         <!-- Left part, TreeView for folders -->
-        <TreeView Grid.Column="0" Name="FolderTV" ItemsSource="{Binding FolderTreeView}" Margin="0 0 5 0" PreviewDragOver="Scroll_PreviewDragOver" SelectedItemChanged="FolderTV_SelectedItemChanged">
+        <TreeView Grid.Column="0" Name="FolderTV" ItemsSource="{Binding FolderTreeView}" Margin="0 0 5 0" PreviewDragOver="Scroll_PreviewDragOver" SelectedItemChanged="FolderTV_SelectedItemChanged" Focusable="True">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -156,7 +156,7 @@
                   SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" Padding="0" Margin="0" BorderThickness="0"
                   AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver" PreviewDragEnter="AllowDrop_PreviewDragEnter"
                   VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged" VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                  ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}">
+                  ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}" Focusable="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
                     <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}" PassEventArgsToCommand="True"/>
@@ -193,8 +193,9 @@
         </local:ListViewEx>
 
         <!-- State bar -->
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
-            <TextBlock Text="{Binding NumberOfFiles}" FontSize="12"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Focusable="False">
+            <TextBlock Text="{Binding NumberOfFiles}" FontSize="12" Margin="5,0,0,0"/>
+            <TextBlock Text="{Binding NumberOfSelectedItems}" FontSize="12" Margin="5,0,0,0"/>
         </StackPanel>
     </Grid>
 </Window>

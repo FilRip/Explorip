@@ -246,22 +246,33 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     #region Relay commands
 
     [RelayCommand()]
-    public void ContextMenuFiles()
+    public void ContextMenuFiles(MouseButtonEventArgs e)
     {
         if (_parentDirectory != null && _parentDirectory.GetRootParent().MainViewModel!.SelectedItems.Count > 0)
         {
-            Point positionPopupMenu = Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow));
-            WpfExplorerViewModel viewModel = _parentDirectory.GetRootParent()!.MainViewModel!;
-            List<FileSystemInfo> listFiles = [];
+            ContextMenuFilesOrFolder();
+            e.Handled = true;
+        }
+    }
+
+    public void ContextMenuFilesOrFolder(OneDirectory? forceDirectory = null)
+    {
+        Point positionPopupMenu = Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow));
+        WpfExplorerViewModel viewModel = _parentDirectory!.GetRootParent()!.MainViewModel!;
+        List<FileSystemInfo> listFiles = [];
+        if (forceDirectory is OneDirectory dir)
+            listFiles.Add(new DirectoryInfo(dir.FullPath));
+        else
+        {
             foreach (OneFile file in viewModel.SelectedItems.OfType<OneFile>())
                 listFiles.Add(new FileInfo(file.FullPath));
             foreach (OneDirectory file in viewModel.SelectedItems.OfType<OneDirectory>())
                 listFiles.Add(new DirectoryInfo(file.FullPath));
-            new ShellContextMenu(viewModel)
-            {
-                RecycledBin = _fromRecycledBin,
-            }.ShowContextMenu([.. listFiles], _parentDirectory.FullPath, positionPopupMenu);
         }
+        new ShellContextMenu(viewModel)
+        {
+            RecycledBin = _fromRecycledBin,
+        }.ShowContextMenu([.. listFiles], _parentDirectory.FullPath, positionPopupMenu);
     }
 
     [RelayCommand()]
