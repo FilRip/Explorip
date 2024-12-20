@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
+
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
 // TODO : Hightlight when drag over https://stackoverflow.com/questions/44731343/change-button-image-on-mouse-over-during-drag-and-drop-operation
 
@@ -40,6 +45,7 @@ namespace ExploripComponents
             }
 
             DataContext = new WpfExplorerViewModel(this);
+            MyDataContext.ChangePath += MyDataContext_ChangePath;
         }
 
         #endregion
@@ -236,5 +242,77 @@ namespace ExploripComponents
         {
             MyDataContext.CurrentlyRenaming?.Rename();
         }
+
+        #region Navigation
+
+        private void MyDataContext_ChangePath(object sender, EventArgs e)
+        {
+            MyDataContext.ModeSearch = false;
+            //DisposeSearch();
+            MyDataContext.ModeEditPath = false;
+
+            string pathLink;
+            bool splitPath = true;
+            bool network = false;
+
+            string GetDisplayName()
+            {
+                splitPath = false;
+                return MyDataContext.SelectedFolder?.DisplayText ?? "";
+            }
+
+            try
+            {
+                pathLink = MyDataContext.SelectedFolder?.FullPath ?? "";
+                if (string.IsNullOrWhiteSpace(pathLink) || pathLink.StartsWith("::"))
+                    pathLink = GetDisplayName();
+                /*if (e.NewLocation.IsFileSystemObject)
+                    pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                else
+                    pathLink = e.NewLocation.Name;*/
+                network = pathLink.StartsWith($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
+            }
+            catch (Exception)
+            {
+                pathLink = GetDisplayName();
+            }
+
+            CurrentPath.Inlines.Clear();
+            if (splitPath)
+            {
+                MyDataContext.EditPath = pathLink;
+                StringBuilder partialPath = new();
+                foreach (string path in pathLink.Split([Path.DirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (network && CurrentPath.Inlines.Count == 0)
+                        partialPath.Append($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
+                    partialPath.Append(path + Path.DirectorySeparatorChar);
+                    Hyperlink lb = new()
+                    {
+                        Foreground = Brushes.Yellow,
+                        NavigateUri = new Uri(partialPath.ToString()),
+                    };
+                    lb.RequestNavigate += Lb_RequestNavigate;
+                    lb.Inlines.Add(path);
+                    CurrentPath.Inlines.Add(lb);
+                    CurrentPath.Inlines.Add($" {Path.DirectorySeparatorChar} ");
+                }
+            }
+            else
+            {
+                CurrentPath.Inlines.Add(pathLink);
+                //CurrentPath.Inlines.Add(e.NewLocation.Name);
+            }
+
+            /*MyDataContext.AllowNavigatePrevious = ExplorerBrowser.NavigationLog.CanNavigateBackward;
+            MyDataContext.AllowNavigateNext = ExplorerBrowser.NavigationLog.CanNavigateForward;*/
+        }
+
+        private void Lb_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            MyDataContext.BrowseTo(e.Uri.AbsolutePath);
+        }
+
+        #endregion
     }
 }

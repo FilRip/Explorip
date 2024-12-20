@@ -189,7 +189,7 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     #endregion
 
-    public void BrowseTo(string? fullPath)
+    public void BrowseTo(string? fullPath, bool AddNavigation = true)
     {
         if (fullPath?.StartsWith("\\\\") == true)
         {
@@ -225,6 +225,15 @@ public partial class WpfExplorerViewModel : ObservableObject
             }
             actualFolder.IsSelected = true;
         }
+
+        if (AddNavigation)
+        {
+            if (_navigationItems.Count > 0 && _navigationItems.Count - 1 > _currentPosition)
+                _navigationItems.RemoveRange(_currentPosition + 1, _navigationItems.Count - _currentPosition - 1);
+            _currentPosition++;
+            _navigationItems.Add(fullPath ?? "");
+        }
+        RefreshNavigation();
     }
 
     [RelayCommand()]
@@ -548,6 +557,8 @@ public partial class WpfExplorerViewModel : ObservableObject
     private FileSystemWatcher? _fsWatcher;
     partial void OnSelectedFolderChanged(OneDirectory? value)
     {
+        ChangePath?.Invoke(this, EventArgs.Empty);
+
         if (_fsWatcher == null)
         {
             _fsWatcher = new FileSystemWatcher();

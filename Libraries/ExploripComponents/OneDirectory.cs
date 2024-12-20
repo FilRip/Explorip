@@ -183,7 +183,7 @@ public partial class OneDirectory : OneFileSystem
                             sd.str.Free();
                             double.TryParse(sizeStr.ConvertFromUniToAscii().RemoveNotDigitOrSeparator(), out double size);
                             for (int i = 0; i < ExtensionsDirectory.NumberOfMultiply(sizeStr); i++)
-                                size = size * 1024;
+                                size *= 1024;
 
                             sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.DateTimeDeleted, out sd);
                             string dtDeleteStr = Marshal.PtrToStringUni(sd.str.OleStr);
