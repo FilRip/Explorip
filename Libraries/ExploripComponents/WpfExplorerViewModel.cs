@@ -99,7 +99,10 @@ public partial class WpfExplorerViewModel : ObservableObject
         if (Environment.GetCommandLineArgs().Length > 1)
             Application.Current.Dispatcher.BeginInvoke(() => BrowseTo(Environment.GetCommandLineArgs()[1]));
         else
+        {
             BrowseTo(null);
+            SelectedFolder!.Refresh();
+        }
 
         SetDisplay();
     }
