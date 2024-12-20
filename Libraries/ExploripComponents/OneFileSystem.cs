@@ -10,8 +10,6 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using ExploripCopy.ViewModels;
-
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 

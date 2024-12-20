@@ -73,8 +73,6 @@ public partial class WpfExplorerViewModel : ObservableObject
     [RelayCommand()]
     public void Refresh()
     {
-        ExploripSharedCopy.Constants.Colors.LoadTheme();
-        Explorip.Constants.Localization.LoadTranslation();
         FolderTreeView.Clear();
         OneDirectory myComputer = new(Environment.SpecialFolder.MyComputer, null, true) { MainViewModel = this, FullPath = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}" };
         FolderTreeView.Add(myComputer);
@@ -206,7 +204,9 @@ public partial class WpfExplorerViewModel : ObservableObject
             OneDirectory actualFolder = FolderTreeView[0];
             if (!string.IsNullOrWhiteSpace(fullPath))
             {
-                string[] folders = fullPath!.Split(Path.DirectorySeparatorChar);
+                if (fullPath!.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                    fullPath = fullPath.Substring(0, fullPath.Length - 1);
+                string[] folders = fullPath.Split(Path.DirectorySeparatorChar);
                 string currentPath;
                 foreach (string folder in folders)
                 {
@@ -431,12 +431,12 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     public string NumberOfFiles
     {
-        get { return Explorip.Constants.Localization.NUMBER_OF_ELEMENT?.Replace("%s", (FileListView?.Count ?? 0).ToString()) ?? ""; }
+        get { return Explorip.Constants.Localization.NUMBER_OF_ELEMENT.Replace("%s", (FileListView?.Count ?? 0).ToString()) ?? ""; }
     }
 
     public string NumberOfSelectedItems
     {
-        get { return ", " + Explorip.Constants.Localization.NUMBER_OF_SELECTED_ELEMENT?.Replace("%s", SelectedItems.Count.ToString()); }
+        get { return ", " + Explorip.Constants.Localization.NUMBER_OF_SELECTED_ELEMENT.Replace("%s", SelectedItems.Count.ToString()); }
     }
 
     [RelayCommand()]
@@ -457,6 +457,8 @@ public partial class WpfExplorerViewModel : ObservableObject
             if (CurrentControl.FileLV.DrawSelection)
                 CurrentControl.FileLV.ResetCurrentSelection();
             _currentlyRenaming?.EditMode(false);
+            ModeSearch = false;
+            ModeEditPath = false;
             return;
         }
         if ((e.Key == Key.Enter || e.Key == Key.Return) && _currentlyRenaming != null)
@@ -466,7 +468,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         }
         if (SelectedItems.Count > 0 && SelectedItems[0].RenameMode)
             return;
-        if (SelectedFolder?.RenameMode == true)
+        if (SelectedFolder?.RenameMode == true || ModeEditPath || ModeSearch)
             return;
         if (e.Key == Key.F5)
         {

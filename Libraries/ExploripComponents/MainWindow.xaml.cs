@@ -13,8 +13,6 @@ using System.Windows.Media;
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
-using Microsoft.WindowsAPICodePack.Shell.Common;
-
 // TODO : Hightlight when drag over https://stackoverflow.com/questions/44731343/change-button-image-on-mouse-over-during-drag-and-drop-operation
 
 namespace ExploripComponents
@@ -35,6 +33,8 @@ namespace ExploripComponents
 
         public MainWindow()
         {
+            ExploripSharedCopy.Constants.Colors.LoadTheme();
+            Explorip.Constants.Localization.LoadTranslation();
             InitializeComponent();
 
             _windowHandle = new WindowInteropHelper(this).EnsureHandle();
@@ -310,7 +310,7 @@ namespace ExploripComponents
 
         private void Lb_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            MyDataContext.BrowseTo(e.Uri.AbsolutePath);
+            MyDataContext.BrowseTo(e.Uri.OriginalString);
         }
 
         #endregion

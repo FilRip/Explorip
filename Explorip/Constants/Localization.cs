@@ -83,6 +83,9 @@ public static class Localization
     public static string LOCALIZED_EXA { get; private set; }
     public static string NUMBER_OF_ELEMENT { get; private set; }
     public static string NUMBER_OF_SELECTED_ELEMENT { get; private set; }
+    public static string CONTEXT_MENU_EXPLORER_ADDRESS_BAR_COPY { get; private set; }
+    public static string CONTEXT_MENU_EXPLORER_ADDRESS_BAR_MODIFY { get; private set; }
+    public static string CONTEXT_MENU_EXPLORER_ADDRESS_BAR_DELETE_HISTORY { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -162,6 +165,9 @@ public static class Localization
         LOCALIZED_EXA = Load("dskquota.dll", 14478, "exa");
         NUMBER_OF_ELEMENT = Load("shell32.dll", 38192, "%s element(s)");
         NUMBER_OF_SELECTED_ELEMENT = Load("shell32.dll", 38194, "%s selected elements");
+        CONTEXT_MENU_EXPLORER_ADDRESS_BAR_COPY = LoadMenuItem("explorerframe.dll", 272, 1282, "Copy address as text").Replace("&", "_");
+        CONTEXT_MENU_EXPLORER_ADDRESS_BAR_MODIFY = LoadMenuItem("explorerframe.dll", 272, 1280, "Modify address").Replace("&", "_");
+        CONTEXT_MENU_EXPLORER_ADDRESS_BAR_DELETE_HISTORY = LoadMenuItem("explorerframe.dll", 272, 1283, "Delete history of navigation").Replace("&", "_");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

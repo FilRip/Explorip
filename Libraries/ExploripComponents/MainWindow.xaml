@@ -7,6 +7,8 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:converters="clr-namespace:Explorip.Explorer.Converters;assembly=Explorip"
+        xmlns:constants="clr-namespace:Explorip.Constants;assembly=Explorip"
+        xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:WpfExplorerViewModel}"
         ui:WindowHelper.UseModernWindowStyle="True"
@@ -111,7 +113,7 @@
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Name="PreviousButton" IsEnabled="{Binding AllowNavigatePrevious}" BorderThickness="0" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" IsTabStop="False">
+            <Button Grid.Column="0" Name="PreviousButton" IsEnabled="{Binding AllowNavigatePrevious}" BorderThickness="0" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" IsTabStop="False" Foreground="{x:Static colors:Colors.AccentColorBrush}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding NavigatePreviousCommand}" PassEventArgsToCommand="True"/>
@@ -119,7 +121,7 @@
                 </i:Interaction.Triggers>
             </Button>
 
-            <Button Grid.Column="1" Name="NextButton" IsEnabled="{Binding AllowNavigateNext}" BorderThickness="0" Content="&#xE761;" FontFamily="Segoe MDL2 Assets" FontSize="12" IsTabStop="False">
+            <Button Grid.Column="1" Name="NextButton" IsEnabled="{Binding AllowNavigateNext}" BorderThickness="0" Content="&#xE761;" FontFamily="Segoe MDL2 Assets" FontSize="12" IsTabStop="False" Foreground="{x:Static colors:Colors.AccentColorBrush}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding NavigateNextCommand}" PassEventArgsToCommand="True"/>
@@ -127,8 +129,22 @@
                 </i:Interaction.Triggers>
             </Button>
 
-            <TextBlock Margin="5 0 0 0" Grid.Column="2" Name="CurrentPath" Visibility="{Binding ModeEditPath, Converter={StaticResource inverseBoolToVisibility}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-            <ComboBox Margin="5 0 0 0" Grid.Column="2" Name="EditPath" Visibility="{Binding ModeEditPath, Converter={StaticResource boolToVisible}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" Focusable="True" IsTabStop="False"
+            <TextBlock Margin="5 0 0 0" Grid.Column="2" Name="CurrentPath" Visibility="{Binding ModeEditPath, Converter={StaticResource inverseBoolToVisibility}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding ChangeEditPathCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <TextBlock.ContextMenu>
+                    <ContextMenu Name="ContextMenuAddressBar">
+                        <MenuItem Header="{x:Static constants:Localization.CONTEXT_MENU_EXPLORER_ADDRESS_BAR_COPY}" Command="{Binding CopyCurrentAddressCommand}"/>
+                        <MenuItem Header="{x:Static constants:Localization.CONTEXT_MENU_EXPLORER_ADDRESS_BAR_MODIFY}" Command="{Binding ModifyPathCommand}"/>
+                        <MenuItem Header="{x:Static constants:Localization.CONTEXT_MENU_EXPLORER_ADDRESS_BAR_DELETE_HISTORY}" Command="{Binding DeleteHistoryCommand}"/>
+                    </ContextMenu>
+                </TextBlock.ContextMenu>
+            </TextBlock>
+            <ComboBox Margin="5 0 0 0" Grid.Column="2" Name="EditPath" Visibility="{Binding ModeEditPath, Converter={StaticResource boolToVisible}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" Focusable="True" IsTabStop="False" StaysOpenOnEdit="True"
+                      HorizontalAlignment="Stretch"
                       Foreground="Yellow"
                       IsDropDownOpen="{Binding ShowSuggestions}">
                 <i:Interaction.Triggers>
@@ -139,7 +155,7 @@
                         <i:InvokeCommandAction Command="{Binding LostFocusEditPathCommand}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                     <i:EventTrigger EventName="PreviewMouseDown">
-                        <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" PassEventArgsToCommand="True"/>
+                        <i:InvokeCommandAction Command="{Binding EditPathPreviewMouseDownCommand}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
@@ -210,7 +226,7 @@
         </TreeView>
         
         <!-- Middle, splitter -->
-        <GridSplitter Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5"/>
+        <GridSplitter Grid.Column="0" Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5" Focusable="False" IsTabStop="False"/>
 
         <!-- Right part, ListView for files -->
         <local:ListViewEx Grid.Column="1" Grid.Row="1" Background="Transparent" x:Name="FileLV" ItemsSource="{Binding CurrentGroupBy}"
