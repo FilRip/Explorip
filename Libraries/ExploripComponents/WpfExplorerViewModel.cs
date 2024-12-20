@@ -46,7 +46,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     [ObservableProperty()]
     private bool _errorVisible;
     [ObservableProperty()]
-    private string _errorMessage;
+    private string? _errorMessage;
 
     #endregion
 
@@ -569,6 +569,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     partial void OnSelectedFolderChanged(OneDirectory? value)
     {
         ChangePath?.Invoke(this, EventArgs.Empty);
+        ErrorVisible = false;
 
         if (_fsWatcher == null)
         {
@@ -580,14 +581,17 @@ public partial class WpfExplorerViewModel : ObservableObject
         }
         try
         {
-            if (!string.IsNullOrWhiteSpace(SelectedFolder?.FullPath))
+            if (!string.IsNullOrWhiteSpace(SelectedFolder?.FullPath) && SelectedFolder?.FullPath.StartsWith("::") == false)
             {
-                _fsWatcher.Path = SelectedFolder!.FullPath;
+                Directory.GetDirectories(SelectedFolder.FullPath, ".");
+                _fsWatcher.Path = SelectedFolder.FullPath;
                 _fsWatcher.EnableRaisingEvents = true;
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            ErrorMessage = ex.Message;
+            ErrorVisible = true;
             _fsWatcher.EnableRaisingEvents = false;
         }
         ScrollToFirstItem();
