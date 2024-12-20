@@ -276,7 +276,9 @@ public partial class OneDirectory : OneFileSystem
     protected override void OnSelectIt()
     {
         RefreshListView();
-        GetRootParent().MainViewModel!.SetDisplay();
+        WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
+        viewModel.SetDisplay();
+        viewModel.AddNavigation(FullPath);
     }
 
     protected override void DeSelectIt()

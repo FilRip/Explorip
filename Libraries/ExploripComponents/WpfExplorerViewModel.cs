@@ -43,6 +43,10 @@ public partial class WpfExplorerViewModel : ObservableObject
     private bool _viewDetails = false;
     [ObservableProperty()]
     private ICollectionView? _currentGroupBy;
+    [ObservableProperty()]
+    private bool _errorVisible;
+    [ObservableProperty()]
+    private string _errorMessage;
 
     #endregion
 
@@ -189,7 +193,7 @@ public partial class WpfExplorerViewModel : ObservableObject
 
     #endregion
 
-    public void BrowseTo(string? fullPath, bool AddNavigation = true)
+    public void BrowseTo(string? fullPath, bool addNavigation = true)
     {
         if (fullPath?.StartsWith("\\\\") == true)
         {
@@ -226,13 +230,20 @@ public partial class WpfExplorerViewModel : ObservableObject
             actualFolder.IsSelected = true;
         }
 
-        if (AddNavigation)
-        {
-            if (_navigationItems.Count > 0 && _navigationItems.Count - 1 > _currentPosition)
-                _navigationItems.RemoveRange(_currentPosition + 1, _navigationItems.Count - _currentPosition - 1);
-            _currentPosition++;
-            _navigationItems.Add(fullPath ?? "");
-        }
+        if (addNavigation)
+            AddNavigation(fullPath);
+        else
+            RefreshNavigation();
+    }
+
+    public void AddNavigation(string? fullPath)
+    {
+        if (_currentPosition >= 0 && _navigationItems[_currentPosition] == fullPath)
+            return;
+        if (_navigationItems.Count > 0 && _navigationItems.Count - 1 > _currentPosition)
+            _navigationItems.RemoveRange(_currentPosition + 1, _navigationItems.Count - _currentPosition - 1);
+        _currentPosition++;
+        _navigationItems.Add(fullPath ?? "");
         RefreshNavigation();
     }
 
