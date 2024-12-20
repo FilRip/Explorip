@@ -221,7 +221,8 @@ public partial class WpfExplorerViewModel : ObservableObject
                         if (subFolder.Drive == null)
                             currentPath = Path.GetFileName(currentPath);
 
-                        if (currentPath.ToLower() == folder.ToLower())
+                        if (currentPath.ToLower() == folder.ToLower() ||
+                            (fullPath.StartsWith(((char)255).ToString()) && subFolder.DisplayText == fullPath.Replace(((char)255).ToString(), string.Empty)))
                         {
                             subFolder.IsExpanded = true;
                             actualFolder = subFolder;
@@ -239,14 +240,17 @@ public partial class WpfExplorerViewModel : ObservableObject
             RefreshNavigation();
     }
 
-    public void AddNavigation(string? fullPath)
+    public void AddNavigation(string? fullPath, string? specialFolder = null)
     {
         if (_currentPosition >= 0 && _navigationItems[_currentPosition] == fullPath)
             return;
         if (_navigationItems.Count > 0 && _navigationItems.Count - 1 > _currentPosition)
             _navigationItems.RemoveRange(_currentPosition + 1, _navigationItems.Count - _currentPosition - 1);
         _currentPosition++;
-        _navigationItems.Add(fullPath ?? "");
+        if (string.IsNullOrWhiteSpace(specialFolder))
+            _navigationItems.Add(fullPath ?? "");
+        else
+            _navigationItems.Add(((char)255) + specialFolder);
         RefreshNavigation();
     }
 

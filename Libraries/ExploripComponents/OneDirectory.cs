@@ -278,7 +278,10 @@ public partial class OneDirectory : OneFileSystem
         RefreshListView();
         WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
         viewModel.SetDisplay();
-        viewModel.AddNavigation(FullPath);
+        string? specialFolder = null;
+        if (specialFolder != null || FullPath.StartsWith("::") || RecycledBin)
+            specialFolder = DisplayText;
+        viewModel.AddNavigation(FullPath, specialFolder);
     }
 
     protected override void DeSelectIt()
