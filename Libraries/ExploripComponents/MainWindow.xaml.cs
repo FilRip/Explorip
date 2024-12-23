@@ -248,7 +248,7 @@ namespace ExploripComponents
         private void MyDataContext_ChangePath(object sender, EventArgs e)
         {
             MyDataContext.ModeSearch = false;
-            //DisposeSearch();
+            MyDataContext.DisposeSearch();
             MyDataContext.ModeEditPath = false;
 
             string pathLink;

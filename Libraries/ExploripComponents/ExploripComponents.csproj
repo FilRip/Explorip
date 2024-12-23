@@ -25,4 +25,8 @@
     <ProjectReference Include="..\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
     <ProjectReference Include="..\Securifybv\ShellLink\Securify.ShellLink.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
 </Project>

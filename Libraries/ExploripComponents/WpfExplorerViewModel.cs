@@ -429,6 +429,9 @@ public partial class WpfExplorerViewModel : ObservableObject
     public async Task ForceRefresh()
     {
         SelectedFolder?.Refresh();
+        CurrentGroupBy = (CollectionView)CollectionViewSource.GetDefaultView(FileListView);
+        ChangeGroupBy(CurrentGroup);
+        ChangeOrderBy(CurrentOrderBy);
         await Task.Run(async () =>
         {
             await Task.Delay(Constants.DelayBeforeForceRefreshItems);
@@ -577,6 +580,7 @@ public partial class WpfExplorerViewModel : ObservableObject
     private FileSystemWatcher? _fsWatcher;
     partial void OnSelectedFolderChanged(OneDirectory? value)
     {
+        DisposeSearch();
         ChangePath?.Invoke(this, EventArgs.Empty);
         ErrorVisible = false;
 

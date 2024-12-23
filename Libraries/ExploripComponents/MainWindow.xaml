@@ -159,10 +159,10 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
-            <TextBox Name="SearchText" Grid.Column="2" BorderThickness="2" Visibility="{Binding ModeSearch, Converter={StaticResource boolToVisible}}" Text="{Binding SearchTo}" Focusable="True" IsTabStop="False">
+            <TextBox Name="SearchText" Grid.Column="2" BorderThickness="2" Visibility="{Binding ModeSearch, Converter={StaticResource boolToVisible}}" Text="{Binding SearchTo, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Focusable="True" IsTabStop="False">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="KeyDown">
-                        <i:InvokeCommandAction Command="{Binding SearchTextKeyDownCommand}"/>
+                        <i:InvokeCommandAction Command="{Binding SearchTextKeyDownCommand}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </TextBox>
