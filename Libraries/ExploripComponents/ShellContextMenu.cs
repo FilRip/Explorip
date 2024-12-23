@@ -261,12 +261,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                 if (nResult != (int)HResult.SUCCESS)
                     return;
 
-                IntPtr pStrRet = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
-                Marshal.WriteInt32(pStrRet, 0, 0);
-                desktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING, pStrRet);
-                StringBuilder strFolder = new(ShellHelper.MAX_PATH);
-                StrRetToBuf(pStrRet, pPIDL, strFolder, ShellHelper.MAX_PATH);
-                Marshal.FreeCoTaskMem(pStrRet);
+                string strFolder = desktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING);
                 _strParentFolder = strFolder.ToString();
 
                 // Get the IShellFolder for folder
@@ -329,23 +324,10 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                 ref guid,
                                 out IntPtr shellFolderPtr) == (int)HResult.SUCCESS)
                     {
-                        IntPtr strr = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
-                        Marshal.WriteInt32(strr, 0, 0);
-                        StringBuilder buf = new(ShellHelper.MAX_PATH);
-
                         string txt = "";
-                        if (_parentFolder.GetDisplayNameOf(
+                        txt = _parentFolder.GetDisplayNameOf(
                                         pidlSubItem,
-                                        SHGDN.INFOLDER,
-                                        strr) == (int)HResult.SUCCESS)
-                        {
-                            int nResult = StrRetToBuf(strr, pidlSubItem, buf, ShellHelper.MAX_PATH);
-                            if (nResult == (int)HResult.SUCCESS)
-                                txt = buf.ToString();
-                        }
-
-                        Marshal.FreeCoTaskMem(strr);
-
+                                        SHGDN.INFOLDER);
                         if (txt == specialName)
                         {
                             _parentFolder = (IShellFolder)Marshal.GetObjectForIUnknown(shellFolderPtr);
@@ -373,7 +355,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     /// </summary>
     /// <param name="arrFI">Array of FileInfo</param>
     /// <returns>Array of PIDLs</returns>
-    protected void GetPIDLs(FileSystemInfo[] arrFI, string currentFolder, bool recycledFolder = false)
+    protected void GetPIDLs(FileSystemInfo[]? arrFI, string currentFolder, bool recycledFolder = false, IntPtr[]? pidls = null)
     {
         if (arrFI == null || arrFI.Length == 0)
             return;
@@ -384,6 +366,12 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             GetParentFolder(currentFolder, false);
         if (_parentFolder == null)
             return;
+
+        if (pidls != null)
+        {
+            _listPIDL = pidls;
+            return;
+        }
 
         _listPIDL = new IntPtr[arrFI.Length];
         int n = 0;
@@ -441,6 +429,13 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     #endregion
 
     #region ShowContextMenu()
+
+    public void ShowContextMenu(IntPtr[] pidls, string currentFolder, System.Windows.Point pointScreen)
+    {
+        ReleaseAll();
+        GetPIDLs(null, currentFolder, RecycledBin, pidls);
+        ShowContextMenu(pointScreen).GetAwaiter();
+    }
 
     public void ShowContextMenu(FileSystemInfo[] fsi, string currentFolder, System.Windows.Point pointScreen)
     {

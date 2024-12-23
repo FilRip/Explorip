@@ -8,6 +8,7 @@ using System.Threading;
 using Explorip.Constants;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 
@@ -81,60 +82,6 @@ public static class ExtensionsDirectory
             }
     }
 
-    public static void EnumerateNetworkRoot(ref List<string> elements, NetResource? parentNetResource = null)
-    {
-        // TODO https://stackoverflow.com/questions/2557551/how-get-list-of-local-network-computers
-        try
-        {
-            // WNetOpenEnum not working (seems require SMBv1)
-            /*int result;
-            IntPtr ptrHandle = IntPtr.Zero;
-            parentNetResource ??= new NetResource();
-            result = WNetOpenEnum(ResourceScope.GlobalNetwork, ResourceType.Any, ResourceUsage.All, parentNetResource.Value, ref ptrHandle);
-            if (result != 0)
-            {
-                if (result == (int)WNetOpenEnumError.ERROR_EXTENDED_ERROR)
-                {
-                    StringBuilder sbErrorMsg = new(256);
-                    StringBuilder sbErrorName = new(256);
-                    WNetGetLastError(out uint errorCode, sbErrorMsg, 256, sbErrorName, 256);
-                    elements.Add(sbErrorMsg.ToString());
-                }
-                return;
-            }
-
-            int entries;
-            uint buffer = 16384;
-            IntPtr ptrBuffer = Marshal.AllocHGlobal((int)buffer);
-            NetResource netResource;
-            while (true)
-            {
-                entries = -1;
-                buffer = 16384;
-                result = WNetEnumResource(ptrHandle, ref entries, ptrBuffer, ref buffer);
-                if ((result != 0) || (entries < 1))
-                    break;
-
-                IntPtr ptr = ptrBuffer;
-                for (int i = 0; i < entries; i++)
-                {
-                    netResource = (NetResource)Marshal.PtrToStructure(ptr, typeof(NetResource));
-                    if (netResource.dwUsage.HasFlag(ResourceUsage.Container))
-                    {
-                        //call recursively to get all entries in a container
-                        EnumerateNetworkRoot(ref elements, netResource);
-                    }
-                    ptr += Marshal.SizeOf(netResource);
-                    if (!string.IsNullOrWhiteSpace(netResource.LocalName))
-                        elements.Add(netResource.LocalName);
-                }
-            }
-            Marshal.FreeHGlobal(ptrBuffer);
-            WNetCloseEnum(ptrHandle);*/
-        }
-        catch (Exception) { /* Ignore errors */ }
-    }
-
     public static string SearchRecycledBinPath(string drive, string localizedRecycleName)
     {
         string ret = "";
@@ -159,13 +106,7 @@ public static class ExtensionsDirectory
             SHGetFileInfo(pidlItem, FILE_ATTRIBUTE.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), SHGFI.PIDL | SHGFI.DisplayName);
             if (fi.szDisplayName == localizedRecycleName)
             {
-                IntPtr ptrFolderName = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
-                Marshal.WriteInt32(ptrFolderName, 0, 0);
-                sfRecycledBin.GetDisplayNameOf(pidlItem, SHGDN.FORPARSING, ptrFolderName);
-                StringBuilder strFolder = new(ShellHelper.MAX_PATH);
-                StrRetToBuf(ptrFolderName, pidlItem, strFolder, ShellHelper.MAX_PATH);
-                ret = strFolder.ToString();
-                Marshal.FreeCoTaskMem(ptrFolderName);
+                ret = sfRecycledBin.GetDisplayNameOf(pidlItem, SHGDN.FORPARSING);
                 break;
             }
         }
@@ -231,5 +172,27 @@ public static class ExtensionsDirectory
         if (currentSize.Contains(Localization.LOCALIZED_EXA))
             return 6;
         return 0;
+    }
+
+    public static string GetDisplayNameOf(this IShellFolder sf, IntPtr pidl, SHGDN flags)
+    {
+        IntPtr ptrName = IntPtr.Zero;
+        string ret = "";
+        try
+        {
+            ptrName = Marshal.AllocCoTaskMem(ShellHelper.MAX_PATH * 2 + 4);
+            Marshal.WriteInt32(ptrName, 0, 0);
+            sf.GetDisplayNameOf(pidl, flags, ptrName);
+            StringBuilder sb = new(ShellHelper.MAX_PATH);
+            StrRetToBuf(ptrName, pidl, sb, ShellHelper.MAX_PATH);
+            ret = sb.ToString();
+        }
+        catch (Exception) { /* Ignore errors */ }
+        finally
+        {
+            if (ptrName != IntPtr.Zero)
+                Marshal.FreeCoTaskMem(ptrName);
+        }
+        return ret;
     }
 }

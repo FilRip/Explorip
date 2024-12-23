@@ -127,31 +127,28 @@ public partial class OneDirectory : OneFileSystem
                 // Get IShellFolder from WinApi
                 NativeMethods.SHGetDesktopFolder(out IntPtr pidl);
                 IShellFolder desktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidl, typeof(IShellFolder));
+                Marshal.Release(pidl);
                 NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_NETWORK, ref pidl);
                 desktopFolder.BindToObject(pidl, IntPtr.Zero, ref guidSf, out IntPtr ptrsh);
+                Marshal.ReleaseComObject(desktopFolder);
                 networkShellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrsh, typeof(IShellFolder));
-
-                // Get IShellFolder from ManagedShell
-                /*ShellFolder networkFolder = new(FullPath, IntPtr.Zero);
-                networkShellFolder = networkFolder.ShellFolderInterface;*/
-
+                Marshal.Release(ptrsh);
                 if (networkShellFolder != null)
                 {
-                    networkShellFolder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS, out IntPtr data);
+                    networkShellFolder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS | SHCONTF.INCLUDEHIDDEN | SHCONTF.NETPRINTERSRCH, out IntPtr data);
                     IEnumIDList itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(data, typeof(IEnumIDList));
                     while (itemsEnum.Next(1, out IntPtr subItemPtr, out uint fetch) == 0 && fetch == 1)
                     {
-                        if (networkShellFolder.BindToObject(subItemPtr, IntPtr.Zero, ref guidSf, out IntPtr siPtr) == 0)
-                        {
-                            IShellFolder subSf = (IShellFolder)Marshal.GetTypedObjectForIUnknown(siPtr, typeof(IShellFolder));
-                            IntPtr namePtr = IntPtr.Zero;
-                            subSf.GetDisplayNameOf(subItemPtr, SHGDN.NORMAL, namePtr);
-                            string displayName = Marshal.PtrToStringAuto(namePtr);
-                            Marshal.FreeCoTaskMem(namePtr);
-                            _items.Add(new OneFile(displayName, this));
-                        }
+                        IntPtr absolutePidl = NativeMethods.ILCombine(pidl, subItemPtr);
+                        string name = networkShellFolder.GetDisplayNameOf(subItemPtr, SHGDN.NORMAL);
+                        if (!string.IsNullOrWhiteSpace(name))
+                            _items.Add(new OneFile(name, this, absolutePidl));
                     }
+                    Marshal.ReleaseComObject(itemsEnum);
                 }
+
+                Marshal.Release(pidl);
+                Marshal.ReleaseComObject(networkShellFolder);
             }
             else
             {

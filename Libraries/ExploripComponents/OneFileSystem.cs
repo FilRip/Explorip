@@ -29,6 +29,8 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     private ImageSource? _thumbnail;
     protected DateTime _lastWriteTime;
     protected bool _fromRecycledBin;
+    protected bool _isNetworkResource;
+    protected IntPtr _pidl = IntPtr.Zero;
 
     #region Binding properties
 
@@ -144,15 +146,26 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
 
     #region Properties
 
+    public IntPtr Pidl
+    {
+        get { return _pidl; }
+    }
+
     public virtual ImageSource? Icon
     {
         get
         {
-            if (_icon == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
+            if (_icon == null && IsItemVisible && (!string.IsNullOrWhiteSpace(FullPath) || _pidl != IntPtr.Zero))
             {
                 WpfExplorerViewModel vm = _parentDirectory!.GetRootParent().MainViewModel!;
-                IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out IntPtr hOverlay);
-                _icon = IconImageConverter.GetImageFromHIcon(hIcon);
+                IntPtr hIcon, hOverlay;
+                if (_pidl == IntPtr.Zero)
+                    hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
+                else
+                    hIcon = IconHelper.GetIconByPidl(_pidl, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
+
+                if (hIcon != IntPtr.Zero)
+                    _icon = IconImageConverter.GetImageFromHIcon(hIcon);
                 if (hOverlay != IntPtr.Zero)
                     IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
             }
@@ -257,20 +270,35 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         Point positionPopupMenu = Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow));
         WpfExplorerViewModel viewModel = _parentDirectory!.GetRootParent()!.MainViewModel!;
-        List<FileSystemInfo> listFiles = [];
-        if (forceDirectory is OneDirectory dir)
-            listFiles.Add(new DirectoryInfo(dir.FullPath));
+        if (_pidl == IntPtr.Zero || forceDirectory != null)
+        {
+            List<FileSystemInfo> listFiles = [];
+            if (forceDirectory is OneDirectory dir)
+                listFiles.Add(new DirectoryInfo(dir.FullPath));
+            else
+            {
+                foreach (OneFile file in viewModel.SelectedItems.OfType<OneFile>())
+                    listFiles.Add(new FileInfo(file.FullPath));
+                foreach (OneDirectory file in viewModel.SelectedItems.OfType<OneDirectory>())
+                    listFiles.Add(new DirectoryInfo(file.FullPath));
+            }
+            new ShellContextMenu(viewModel)
+            {
+                RecycledBin = _fromRecycledBin,
+            }.ShowContextMenu([.. listFiles], _parentDirectory.FullPath, positionPopupMenu);
+        }
         else
         {
+            List<IntPtr> listItems = [];
             foreach (OneFile file in viewModel.SelectedItems.OfType<OneFile>())
-                listFiles.Add(new FileInfo(file.FullPath));
+                listItems.Add(file.Pidl);
             foreach (OneDirectory file in viewModel.SelectedItems.OfType<OneDirectory>())
-                listFiles.Add(new DirectoryInfo(file.FullPath));
+                listItems.Add(file.Pidl);
+            new ShellContextMenu(viewModel)
+            {
+                RecycledBin = _fromRecycledBin,
+            }.ShowContextMenu([.. listItems], _parentDirectory.FullPath, positionPopupMenu);
         }
-        new ShellContextMenu(viewModel)
-        {
-            RecycledBin = _fromRecycledBin,
-        }.ShowContextMenu([.. listFiles], _parentDirectory.FullPath, positionPopupMenu);
     }
 
     [RelayCommand()]

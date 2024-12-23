@@ -303,9 +303,6 @@ namespace ExploripComponents
                 CurrentPath.Inlines.Add(pathLink);
                 //CurrentPath.Inlines.Add(e.NewLocation.Name);
             }
-
-            /*MyDataContext.AllowNavigatePrevious = ExplorerBrowser.NavigationLog.CanNavigateBackward;
-            MyDataContext.AllowNavigateNext = ExplorerBrowser.NavigationLog.CanNavigateForward;*/
         }
 
         private void Lb_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)

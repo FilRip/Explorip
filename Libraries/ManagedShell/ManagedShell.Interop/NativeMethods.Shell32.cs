@@ -766,4 +766,7 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
     internal static extern int SHParseDisplayName(string pszName, IntPtr pbc, out IntPtr ppidl, uint sfgaoIn, out uint sfgaoOut);
+
+    [DllImport(Shell32_DllName, ExactSpelling = true, SetLastError = false)]
+    internal static extern IntPtr ILCombine(IntPtr pidl1, IntPtr pidl2);
 }
