@@ -3,14 +3,14 @@ using System.Windows.Controls;
 
 using Explorip.Helpers;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Controls;
 
 public class ListViewItemTemplateSelector : DataTemplateSelector
 {
     public override DataTemplate SelectTemplate(object item, DependencyObject container)
     {
         FrameworkElement? element = container as FrameworkElement;
-        MainWindow control = element.FindVisualParent<MainWindow>();
+        MainWindow control = element!.FindVisualParent<MainWindow>()!;
         if (control.MyDataContext.ViewDetails)
             return (DataTemplate)control.FindResource("DetailsTemplate");
         else

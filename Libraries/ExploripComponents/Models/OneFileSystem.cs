@@ -10,12 +10,15 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ExploripComponents.Helpers;
+using ExploripComponents.ViewModels;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Models;
 
 public abstract partial class OneFileSystem(string fullPath, string displayText, OneDirectory? parentDirectory) : ObservableObject()
 {
@@ -51,6 +54,8 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     private bool _isItemVisible;
     [ObservableProperty()]
     private string _newName = displayText;
+    [ObservableProperty()]
+    private SolidColorBrush _backgroundColor = Brushes.Transparent;
 
     #endregion
 

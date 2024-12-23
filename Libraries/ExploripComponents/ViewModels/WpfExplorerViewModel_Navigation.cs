@@ -10,9 +10,11 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ExploripComponents.Models;
+
 using Microsoft.WindowsAPICodePack.Shell.Common;
 
-namespace ExploripComponents;
+namespace ExploripComponents.ViewModels;
 
 public partial class WpfExplorerViewModel
 {

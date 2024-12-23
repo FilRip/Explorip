@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -10,7 +9,9 @@ using System.Windows.Input;
 using Explorip.Helpers;
 using Explorip.HookFileOperations.FilesOperations;
 
-using ManagedShell.Common.Helpers;
+using ExploripComponents.Exceptions;
+using ExploripComponents.ViewModels;
+
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 using ManagedShell.ShellFolders.Structs;
@@ -23,7 +24,7 @@ using Localization = Explorip.Constants.Localization;
 using MFT = ManagedShell.Interop.NativeMethods.MFT;
 using Point = ManagedShell.Interop.NativeMethods.Point;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Helpers;
 
 /// <summary>Default constructor</summary>
 public class ShellContextMenu(WpfExplorerViewModel viewModel)
@@ -388,7 +389,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                 // Get the file relative to folder
                 uint pchEaten = 0;
                 SFGAO pdwAttributes = 0;
-                int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, (RecycledBin ? fi.FullName : fi.Name), ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
+                int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, RecycledBin ? fi.FullName : fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 if (nResult != (int)HResult.SUCCESS)
                 {
                     FreePIDLs();
@@ -483,7 +484,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     {
         try
         {
-            if ((!background) &&
+            if (!background &&
                 (_listPIDL == null || !GetContextMenuInterfaces()))
             {
                 ReleaseAll();
@@ -721,7 +722,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                             continue;
                         }
                         if (!string.IsNullOrWhiteSpace(label) &&
-                            (label.Trim().ToLower().Replace("&", "") == Localization.REFRESH.Trim().ToLower()))
+                            label.Trim().ToLower().Replace("&", "") == Localization.REFRESH.Trim().ToLower())
                         {
                             _cmdRefresh = cmd;
                             continue;
@@ -912,7 +913,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         {
             cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
             fMask = MIIM.STATE,
-            fState = (isChecked ? MFS.CHECKED : MFS.UNCHECKED),
+            fState = isChecked ? MFS.CHECKED : MFS.UNCHECKED,
         };
         SetMenuItemInfo(pMenu, numMenu, usePosition, ref mi);
     }

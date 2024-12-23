@@ -8,7 +8,10 @@ using System.Windows.Media;
 
 using Explorip.Helpers;
 
-namespace ExploripComponents;
+using ExploripComponents.Models;
+using ExploripComponents.ViewModels;
+
+namespace ExploripComponents.Controls;
 
 public class ListViewEx : ListView
 {
@@ -16,14 +19,14 @@ public class ListViewEx : ListView
 
     public ListViewEx()
     {
-        this.PreviewMouseLeftButtonUp += ListView_PreviewMouseLeftButtonUp;
-        this.PreviewMouseLeftButtonDown += ListView_PreviewMouseLeftButtonDown;
-        this.PreviewMouseMove += ListView_PreviewMouseMove;
+        PreviewMouseLeftButtonUp += ListView_PreviewMouseLeftButtonUp;
+        PreviewMouseLeftButtonDown += ListView_PreviewMouseLeftButtonDown;
+        PreviewMouseMove += ListView_PreviewMouseMove;
     }
 
     public WpfExplorerViewModel MainViewModel
     {
-        get { return this.FindVisualParent<MainWindow>().MyDataContext; }
+        get { return this.FindVisualParent<MainWindow>()!.MyDataContext; }
     }
 
     private void ListView_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)

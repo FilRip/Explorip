@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Controls;
 
 public class DateTimeBinding : Binding
 {

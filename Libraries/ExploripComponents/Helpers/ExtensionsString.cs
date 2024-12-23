@@ -4,7 +4,7 @@ using System.Text;
 
 using ExploripConfig.Helpers;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Helpers;
 
 public static class ExtensionsString
 {
@@ -27,27 +27,27 @@ public static class ExtensionsString
 
     public static string RemoveNotLetter(this string chaine)
     {
-        return RemoveChars(chaine, "abcdefghijklmnopqrstuvwxyz".ToCharArray());
+        return chaine.RemoveChars("abcdefghijklmnopqrstuvwxyz".ToCharArray());
     }
 
     public static string RemoveNotDigit(this string chaine)
     {
-        return RemoveChars(chaine, "0123456789".ToCharArray());
+        return chaine.RemoveChars("0123456789".ToCharArray());
     }
 
     public static string RemoveNotDigitOrSeparator(this string chaine)
     {
-        return RemoveChars(chaine, "0123456789 .,".ToCharArray());
+        return chaine.RemoveChars("0123456789 .,".ToCharArray());
     }
 
     public static string RemoveNotLetterOrDigit(this string chaine)
     {
-        return RemoveChars(chaine, "abcdefghijklmnopqrstuvwxyz0123456789".ToCharArray());
+        return chaine.RemoveChars("abcdefghijklmnopqrstuvwxyz0123456789".ToCharArray());
     }
 
     public static string RemoveNotLetterOrDigitOrSeparator(this string chaine)
     {
-        return RemoveChars(chaine, "abcdefghijklmnopqrstuvwxyz0123456789 .,".ToCharArray());
+        return chaine.RemoveChars("abcdefghijklmnopqrstuvwxyz0123456789 .,".ToCharArray());
     }
 
     public static string RemoveChars(this string chaine, char[] caracteresAutorise)

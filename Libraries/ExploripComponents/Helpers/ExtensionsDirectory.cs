@@ -14,7 +14,7 @@ using ManagedShell.ShellFolders.Interfaces;
 
 using static ManagedShell.Interop.NativeMethods;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Helpers;
 
 public static class ExtensionsDirectory
 {

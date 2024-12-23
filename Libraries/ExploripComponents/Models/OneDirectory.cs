@@ -14,17 +14,17 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Helpers;
+using ExploripComponents.Helpers;
+using ExploripComponents.ViewModels;
 
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
-using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 
 using NativeMethods = ManagedShell.Interop.NativeMethods;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Models;
 
 public partial class OneDirectory : OneFileSystem
 {
@@ -72,7 +72,7 @@ public partial class OneDirectory : OneFileSystem
     {
     }
 
-    public OneDirectory(Environment.SpecialFolder knownFolder, OneDirectory? parent, bool hasSubFolder) : this(parent, Environment.GetFolderPath(knownFolder), hasSubFolder, knownFolder.RealName())
+    public OneDirectory(Environment.SpecialFolder knownFolder, OneDirectory? parent, bool hasSubFolder) : this(parent, Environment.GetFolderPath(knownFolder), hasSubFolder, Explorip.Helpers.ExtensionsDirectory.RealName(knownFolder))
     {
         _specialFolder = knownFolder;
     }
@@ -335,7 +335,7 @@ public partial class OneDirectory : OneFileSystem
                     {
                         hasSubFolder = false;
                     }
-                    dir = new OneDirectory(di, this, hasSubFolder, new ShellItem(di.RootDirectory.FullName).DisplayName) { IsItemVisible = true };
+                    dir = new OneDirectory(di, this, hasSubFolder, new ManagedShell.ShellFolders.ShellItem(di.RootDirectory.FullName).DisplayName) { IsItemVisible = true };
                     Children.Add(dir);
                 }
             }
@@ -506,7 +506,7 @@ public partial class OneDirectory : OneFileSystem
                         System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
                         if (icon != null)
                         {
-                            _icon = IconManager.Convert(icon);
+                            _icon = Explorip.Helpers.IconManager.Convert(icon);
                             icon.Dispose();
                         }
                     }
@@ -569,7 +569,7 @@ public partial class OneDirectory : OneFileSystem
                         System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
                         if (icon != null)
                         {
-                            _treeViewIcon = IconManager.Convert(icon);
+                            _treeViewIcon = Explorip.Helpers.IconManager.Convert(icon);
                             icon.Dispose();
                         }
                     }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Exceptions;
 
 public class ExploripCommonException : Exception
 {

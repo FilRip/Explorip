@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,12 +11,15 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
+using Explorip.Helpers;
+
+using ExploripComponents.Models;
+using ExploripComponents.ViewModels;
+
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
-// TODO : Hightlight when drag over https://stackoverflow.com/questions/44731343/change-button-image-on-mouse-over-during-drag-and-drop-operation
-
-namespace ExploripComponents
+namespace ExploripComponents.Controls
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -311,5 +315,23 @@ namespace ExploripComponents
         }
 
         #endregion
+
+        private void Grid_DragEnter(object sender, DragEventArgs e)
+        {
+            if (sender is FrameworkElement c && c.DataContext is OneFileSystem fs && MyDataContext.CurrentlyDraging)
+            {
+                Debug.WriteLine("Change BackgroundColor for " + fs.DisplayText);
+                fs.BackgroundColor = Brushes.LightGray;
+            }
+        }
+
+        private void Grid_DragLeave(object sender, DragEventArgs e)
+        {
+            if (sender is FrameworkElement c && c.DataContext is OneFileSystem fs && MyDataContext.CurrentlyDraging)
+            {
+                Debug.WriteLine("Reset BackgroundColor for " + fs.DisplayText);
+                fs.BackgroundColor = Brushes.Transparent;
+            }
+        }
     }
 }

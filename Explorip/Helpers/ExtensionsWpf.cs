@@ -6,12 +6,14 @@ using System.Windows.Media;
 
 namespace Explorip.Helpers;
 
+#nullable enable
+
 internal static class ExtensionsWpf
 {
     /// <summary>
     /// Return the first parent of a specified type from a control
     /// </summary>
-    public static T FindVisualParent<T>(this DependencyObject child) where T : DependencyObject
+    public static T? FindVisualParent<T>(this DependencyObject child) where T : DependencyObject
     {
         // get parent item
         DependencyObject parentObject = VisualTreeHelper.GetParent(child);
@@ -26,14 +28,14 @@ internal static class ExtensionsWpf
             return FindVisualParent<T>(parentObject);
     }
 
-    public static T FindVisualChild<T>(this DependencyObject parent) where T : DependencyObject
+    public static T? FindVisualChild<T>(this DependencyObject parent) where T : DependencyObject
     {
         int nbChild;
         if ((nbChild = VisualTreeHelper.GetChildrenCount(parent)) == 0)
             return null;
         for (int i = 0; i < nbChild; i++)
         {
-            DependencyObject childObject = VisualTreeHelper.GetChild(parent, i);
+            DependencyObject? childObject = VisualTreeHelper.GetChild(parent, i);
             if (childObject is T result)
                 return result;
             else
@@ -46,7 +48,7 @@ internal static class ExtensionsWpf
         return null;
     }
 
-    public static T FindControlParent<T>(this FrameworkElement control) where T : FrameworkElement
+    public static T? FindControlParent<T>(this FrameworkElement control) where T : FrameworkElement
     {
         // get parent item
         DependencyObject @object = control.Parent;
@@ -61,7 +63,7 @@ internal static class ExtensionsWpf
             return FindControlParent<T>(parentObject);
     }
 
-    internal static ScrollViewer GetScrollViewer(this Control control)
+    internal static ScrollViewer? GetScrollViewer(this Control control)
     {
         if (VisualTreeHelper.GetChildrenCount(control) == 0)
             return null;

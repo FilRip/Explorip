@@ -17,13 +17,16 @@ using Explorip.FilesOperations;
 using Explorip.FilesOperations.Interfaces;
 using Explorip.Helpers;
 
+using ExploripComponents.Controls;
+using ExploripComponents.Helpers;
+using ExploripComponents.Models;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Interop;
-using ManagedShell.ShellFolders;
 
 using WpfToolkit.Controls;
 
-namespace ExploripComponents;
+namespace ExploripComponents.ViewModels;
 
 public partial class WpfExplorerViewModel : ObservableObject
 {
@@ -80,7 +83,7 @@ public partial class WpfExplorerViewModel : ObservableObject
 
         // Add Network root
         string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
-        ShellItem si = new(specialPath);
+        ManagedShell.ShellFolders.ShellItem si = new(specialPath);
         OneDirectory networkNeiborhood = new(specialPath, null, true, si.DisplayName) { MainViewModel = this, NetworkRoot = true, IsItemVisible = true };
         FolderTreeView.Add(networkNeiborhood);
 
@@ -91,7 +94,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         FolderTreeView.Add(recycledBin);
         string drive = Environment.SpecialFolder.Windows.FullPath().Substring(0, 3);
         _localizedNameRecycleBin = si.DisplayName;
-        _recycledFullPath = ExtensionsDirectory.SearchRecycledBinPath(drive, si.DisplayName);
+        _recycledFullPath = Helpers.ExtensionsDirectory.SearchRecycledBinPath(drive, si.DisplayName);
 
         // Add blank line for the horizontal scrollbar
         FolderTreeView.Add(new OneDirectory("", null, false, "") { Children = [] });

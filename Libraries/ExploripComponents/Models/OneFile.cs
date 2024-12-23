@@ -6,7 +6,7 @@ using System.Windows;
 
 using Securify.ShellLink;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Models;
 
 public partial class OneFile : OneFileSystem
 {

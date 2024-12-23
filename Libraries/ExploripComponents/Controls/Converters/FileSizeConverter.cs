@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace ExploripComponents;
+namespace ExploripComponents.Controls.Converters;
 
 public class FileSizeConverter : IValueConverter
 {
