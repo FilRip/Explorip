@@ -28,10 +28,11 @@ public partial class OneFile : OneFileSystem
         _dtDeleted = DtDeleted;
     }
 
-    public OneFile(string display, OneDirectory networkRoot, IntPtr pidl) : this(display, networkRoot)
+    public OneFile(string display, OneDirectory networkRoot, IntPtr pidl, IntPtr relativePidl) : this(display, networkRoot)
     {
         _isNetworkResource = true;
         _pidl = pidl;
+        _pidlRelative = relativePidl;
     }
 
     public DateTime? DtDeleted

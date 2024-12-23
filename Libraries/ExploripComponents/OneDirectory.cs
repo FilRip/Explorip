@@ -142,7 +142,7 @@ public partial class OneDirectory : OneFileSystem
                         IntPtr absolutePidl = NativeMethods.ILCombine(pidl, subItemPtr);
                         string name = networkShellFolder.GetDisplayNameOf(subItemPtr, SHGDN.NORMAL);
                         if (!string.IsNullOrWhiteSpace(name))
-                            _items.Add(new OneFile(name, this, absolutePidl));
+                            _items.Add(new OneFile(name, this, absolutePidl, subItemPtr));
                     }
                     Marshal.ReleaseComObject(itemsEnum);
                 }

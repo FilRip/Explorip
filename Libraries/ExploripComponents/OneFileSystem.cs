@@ -31,6 +31,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     protected bool _fromRecycledBin;
     protected bool _isNetworkResource;
     protected IntPtr _pidl = IntPtr.Zero;
+    protected IntPtr _pidlRelative = IntPtr.Zero;
 
     #region Binding properties
 
@@ -149,6 +150,11 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     public IntPtr Pidl
     {
         get { return _pidl; }
+    }
+
+    public IntPtr RelativePidl
+    {
+        get { return _pidlRelative; }
     }
 
     public virtual ImageSource? Icon
@@ -270,7 +276,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         Point positionPopupMenu = Application.Current.MainWindow.PointToScreen(Mouse.GetPosition(Application.Current.MainWindow));
         WpfExplorerViewModel viewModel = _parentDirectory!.GetRootParent()!.MainViewModel!;
-        if (_pidl == IntPtr.Zero || forceDirectory != null)
+        if (_pidlRelative == IntPtr.Zero || forceDirectory != null)
         {
             List<FileSystemInfo> listFiles = [];
             if (forceDirectory is OneDirectory dir)
@@ -291,12 +297,14 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         {
             List<IntPtr> listItems = [];
             foreach (OneFile file in viewModel.SelectedItems.OfType<OneFile>())
-                listItems.Add(file.Pidl);
+                listItems.Add(file.RelativePidl);
             foreach (OneDirectory file in viewModel.SelectedItems.OfType<OneDirectory>())
-                listItems.Add(file.Pidl);
+                listItems.Add(file.RelativePidl);
             new ShellContextMenu(viewModel)
             {
                 RecycledBin = _fromRecycledBin,
+                NetworkNeighbohood = _isNetworkResource,
+                ReleasePidls = false,
             }.ShowContextMenu([.. listItems], _parentDirectory.FullPath, positionPopupMenu);
         }
     }

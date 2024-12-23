@@ -63,6 +63,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     /// </summary>
     protected void FreePIDLs()
     {
+        if (!ReleasePidls)
+            return;
         if (_listPIDL?.Length > 0)
         {
             for (int n = 0; n < _listPIDL.Length; n++)
@@ -135,7 +137,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             Marshal.ReleaseComObject(_backgroundShellView);
             _backgroundShellView = null;
         }
-        if (_listPIDL != null)
+        if (_listPIDL != null && ReleasePidls)
         {
             FreePIDLs();
             _listPIDL = null;
@@ -149,6 +151,10 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     public bool Root { get; set; } = false;
 
     public bool RecycledBin { get; set; } = false;
+
+    public bool NetworkNeighbohood { get; set; } = false;
+
+    public bool ReleasePidls { get; set; } = true;
 
     #endregion
 
@@ -301,6 +307,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
         if (RecycledBin)
             SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_BITBUCKET, ref tempPidl);
+        else if (NetworkNeighbohood)
+            SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_NETWORK, ref tempPidl);
         else
             SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref tempPidl);
 
@@ -355,12 +363,12 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     /// </summary>
     /// <param name="arrFI">Array of FileInfo</param>
     /// <returns>Array of PIDLs</returns>
-    protected void GetPIDLs(FileSystemInfo[]? arrFI, string currentFolder, bool recycledFolder = false, IntPtr[]? pidls = null)
+    protected void GetPIDLs(FileSystemInfo[]? arrFI, string currentFolder, IntPtr[]? pidls = null)
     {
-        if (arrFI == null || arrFI.Length == 0)
+        if ((arrFI == null || arrFI.Length == 0) && (pidls == null || pidls.Length == 0))
             return;
 
-        if (recycledFolder)
+        if (RecycledBin || NetworkNeighbohood)
             GetSpecialParentFolder();
         else
             GetParentFolder(currentFolder, false);
@@ -370,24 +378,25 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         if (pidls != null)
         {
             _listPIDL = pidls;
-            return;
         }
-
-        _listPIDL = new IntPtr[arrFI.Length];
-        int n = 0;
-        foreach (FileSystemInfo fi in arrFI)
+        else if (arrFI != null)
         {
-            // Get the file relative to folder
-            uint pchEaten = 0;
-            SFGAO pdwAttributes = 0;
-            int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, (RecycledBin ? fi.FullName : fi.Name), ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
-            if (nResult != (int)HResult.SUCCESS)
+            _listPIDL = new IntPtr[arrFI.Length];
+            int n = 0;
+            foreach (FileSystemInfo fi in arrFI)
             {
-                FreePIDLs();
-                return;
+                // Get the file relative to folder
+                uint pchEaten = 0;
+                SFGAO pdwAttributes = 0;
+                int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, (RecycledBin ? fi.FullName : fi.Name), ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
+                if (nResult != (int)HResult.SUCCESS)
+                {
+                    FreePIDLs();
+                    return;
+                }
+                _listPIDL[n] = pPIDL;
+                n++;
             }
-            _listPIDL[n] = pPIDL;
-            n++;
         }
     }
 
@@ -433,14 +442,14 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     public void ShowContextMenu(IntPtr[] pidls, string currentFolder, System.Windows.Point pointScreen)
     {
         ReleaseAll();
-        GetPIDLs(null, currentFolder, RecycledBin, pidls);
+        GetPIDLs(null, currentFolder, pidls);
         ShowContextMenu(pointScreen).GetAwaiter();
     }
 
     public void ShowContextMenu(FileSystemInfo[] fsi, string currentFolder, System.Windows.Point pointScreen)
     {
         ReleaseAll();
-        GetPIDLs(fsi, currentFolder, RecycledBin);
+        GetPIDLs(fsi, currentFolder);
         ShowContextMenu(pointScreen).GetAwaiter();
     }
 
