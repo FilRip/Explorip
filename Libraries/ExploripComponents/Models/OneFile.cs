@@ -4,6 +4,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 
+using ExploripComponents.Helpers;
+
 using Securify.ShellLink;
 
 namespace ExploripComponents.Models;
@@ -47,6 +49,13 @@ public partial class OneFile : OneFileSystem
             Shortcut shortcut = Shortcut.ReadFromFile(FullPath);
             if (Directory.Exists(shortcut.Target))
                 ParentDirectory!.GetRootParent().MainViewModel!.BrowseTo(shortcut.Target);
+            return;
+        }
+
+        if (_isNetworkResource)
+        {
+            ShellContextMenu menu = new(ParentDirectory!.GetRootParent().MainViewModel!);
+            menu.ShowContextMenu([_pidlRelative], ParentDirectory.FullPath, new Point(0, 0), true);
             return;
         }
 

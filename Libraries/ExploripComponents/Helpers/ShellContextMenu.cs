@@ -440,11 +440,11 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
     #region ShowContextMenu()
 
-    public void ShowContextMenu(IntPtr[] pidls, string currentFolder, System.Windows.Point pointScreen)
+    public void ShowContextMenu(IntPtr[] pidls, string currentFolder, System.Windows.Point pointScreen, bool invokeDefaultMenuItem = false)
     {
         ReleaseAll();
         GetPIDLs(null, currentFolder, pidls);
-        ShowContextMenu(pointScreen).GetAwaiter();
+        ShowContextMenu(pointScreen, invokeDefaultMenuItem: invokeDefaultMenuItem).GetAwaiter();
     }
 
     public void ShowContextMenu(FileSystemInfo[] fsi, string currentFolder, System.Windows.Point pointScreen)
@@ -480,7 +480,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     /// Shows the context menu
     /// </summary>
     /// <param name="pointScreen">Where to show the menu</param>
-    private async Task ShowContextMenu(System.Windows.Point pointScreen, bool background = false)
+    private async Task ShowContextMenu(System.Windows.Point pointScreen, bool background = false, bool invokeDefaultMenuItem = false)
     {
         try
         {
@@ -530,13 +530,21 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
             GetSpecialCmd(_pMenu, background);
 
-            uint nSelected = TrackPopupMenuEx(
-                _pMenu,
-                TPM.RETURNCMD | TPM.RIGHTBUTTON,
-                (int)pointScreen.X,
-                (int)pointScreen.Y,
-                _viewModel.CurrentControl.Handle,
-                IntPtr.Zero);
+            uint nSelected;
+            if (invokeDefaultMenuItem)
+            {
+                nSelected = (uint)GetMenuDefaultItem(_pMenu, false, 0);
+            }
+            else
+            {
+                nSelected = TrackPopupMenuEx(
+                    _pMenu,
+                    TPM.RETURNCMD | TPM.RIGHTBUTTON,
+                    (int)pointScreen.X,
+                    (int)pointScreen.Y,
+                    _viewModel.CurrentControl.Handle,
+                    IntPtr.Zero);
+            }
 
             if (nSelected != 0)
             {
