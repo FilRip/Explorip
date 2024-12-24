@@ -203,7 +203,8 @@
                 <HierarchicalDataTemplate 
                     DataType="{x:Type models:OneDirectory}" 
                     ItemsSource="{Binding Children}">
-                    <Grid Margin="0" AllowDrop="True" Name="TreeItemGrid" Drop="TreeItemGrid_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}" PreviewDragEnter="AllowDrop_PreviewDragEnter">
+                    <Grid Margin="0" AllowDrop="True" Name="TreeItemGrid" Drop="TreeItemGrid_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}"
+                          PreviewDragEnter="AllowDrop_PreviewDragEnter" DragEnter="Grid_DragEnter" DragLeave="Grid_DragLeave" Background="{Binding BackgroundColor}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseRightButtonUp">
                                 <i:InvokeCommandAction Command="{Binding ContextMenuFolderCommand}"/>
@@ -236,7 +237,7 @@
                   SelectionMode="Extended" SelectionChanged="FileLV_SelectionChanged" Padding="0" Margin="0" BorderThickness="0"
                   AllowDrop="True" Drop="ListView_Drop" DragOver="AllowDrop_DragOver" PreviewDragOver="Scroll_PreviewDragOver" PreviewDragEnter="AllowDrop_PreviewDragEnter"
                   VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.ScrollChanged="FileLV_ScrollChanged" VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                  ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}" Focusable="True" Visibility="{Binding ErrorVisible, Converter={StaticResource inverseBoolToVisibility}}">
+                  ItemTemplateSelector="{StaticResource ListViewItemTemplateSelector}" Focusable="True" Visibility="{Binding ListViewVisible, Converter={StaticResource boolToVisible}}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseRightButtonUp">
                     <i:InvokeCommandAction Command="{Binding ContextMenuBackgroundFolderCommand}" PassEventArgsToCommand="True"/>
@@ -271,7 +272,12 @@
                 </GroupStyle>
             </ListView.GroupStyle>
         </local:ListViewEx>
+        <!-- Error message -->
         <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ErrorMessage}" Visibility="{Binding ErrorVisible, Converter={StaticResource boolToVisible}}" TextWrapping="Wrap"/>
+        <!-- Progress ring -->
+        <StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding PleaseWait, Converter={StaticResource boolToVisible}}">
+            <ui:ProgressRing IsActive="{Binding PleaseWait}" Height="60" Width="60"/>
+        </StackPanel>
         
         <!-- State bar -->
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Focusable="False">

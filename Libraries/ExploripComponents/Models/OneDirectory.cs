@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -42,11 +43,13 @@ public partial class OneDirectory : OneFileSystem
     #endregion
 
     private readonly ObservableCollection<OneFileSystem> _items;
+    private readonly ObservableCollection<OneFileSystem> _networkItems;
     private Task? _taskCalculateSize;
     private CancellationTokenSource? _cancellationToken;
     private readonly Environment.SpecialFolder? _specialFolder;
     private readonly object _lockSize = new();
     private ImageSource? _treeViewIcon;
+    private Task? _taskSearchNetwork;
 
     #endregion
 
@@ -56,6 +59,7 @@ public partial class OneDirectory : OneFileSystem
     {
         _children = [];
         _items = [];
+        _networkItems = [];
         _specialFolder = null;
         if (hasSubFolder)
             _children.Add(_dummyDir);
@@ -113,6 +117,7 @@ public partial class OneDirectory : OneFileSystem
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
+            WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
             _items.Clear();
             if (_specialFolder == Environment.SpecialFolder.MyComputer)
             {
@@ -121,123 +126,167 @@ public partial class OneDirectory : OneFileSystem
             }
             else if (NetworkRoot)
             {
-                IShellFolder? networkShellFolder = null;
-                Guid guidSf = typeof(IShellFolder).GUID;
-
-                // Get IShellFolder from WinApi
-                NativeMethods.SHGetDesktopFolder(out IntPtr pidl);
-                IShellFolder desktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidl, typeof(IShellFolder));
-                Marshal.Release(pidl);
-                NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_NETWORK, ref pidl);
-                desktopFolder.BindToObject(pidl, IntPtr.Zero, ref guidSf, out IntPtr ptrsh);
-                Marshal.ReleaseComObject(desktopFolder);
-                networkShellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrsh, typeof(IShellFolder));
-                Marshal.Release(ptrsh);
-                if (networkShellFolder != null)
+                viewModel.SelectedFolder = this;
+                viewModel.PleaseWait = true;
+                if (_taskSearchNetwork == null || _taskSearchNetwork.Status != TaskStatus.Running)
                 {
-                    networkShellFolder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS | SHCONTF.INCLUDEHIDDEN | SHCONTF.NETPRINTERSRCH, out IntPtr data);
-                    IEnumIDList itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(data, typeof(IEnumIDList));
-                    while (itemsEnum.Next(1, out IntPtr subItemPtr, out uint fetch) == 0 && fetch == 1)
+                    _taskSearchNetwork = new Task(() =>
                     {
-                        IntPtr absolutePidl = NativeMethods.ILCombine(pidl, subItemPtr);
-                        string name = networkShellFolder.GetDisplayNameOf(subItemPtr, SHGDN.NORMAL);
-                        if (!string.IsNullOrWhiteSpace(name))
-                            _items.Add(new OneFile(name, this, absolutePidl, subItemPtr));
-                    }
-                    Marshal.ReleaseComObject(itemsEnum);
-                }
+                        try
+                        {
+                            Application.Current.Dispatcher.Invoke(() => _networkItems.Clear());
+                            IShellFolder? networkShellFolder = null;
+                            Guid guidSf = typeof(IShellFolder).GUID;
 
-                Marshal.Release(pidl);
-                Marshal.ReleaseComObject(networkShellFolder);
+                            // Get IShellFolder from WinApi
+                            NativeMethods.SHGetDesktopFolder(out IntPtr pidl);
+                            IShellFolder desktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidl, typeof(IShellFolder));
+                            Marshal.Release(pidl);
+                            NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_NETWORK, ref pidl);
+                            desktopFolder.BindToObject(pidl, IntPtr.Zero, ref guidSf, out IntPtr ptrsh);
+                            Marshal.ReleaseComObject(desktopFolder);
+                            networkShellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrsh, typeof(IShellFolder));
+                            Marshal.Release(ptrsh);
+                            if (networkShellFolder != null)
+                            {
+                                networkShellFolder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS | SHCONTF.INCLUDEHIDDEN | SHCONTF.NETPRINTERSRCH, out IntPtr data);
+                                IEnumIDList itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(data, typeof(IEnumIDList));
+                                while (itemsEnum.Next(1, out IntPtr subItemPtr, out uint fetch) == 0 && fetch == 1)
+                                {
+                                    IntPtr absolutePidl = NativeMethods.ILCombine(pidl, subItemPtr);
+                                    string name = networkShellFolder.GetDisplayNameOf(subItemPtr, SHGDN.NORMAL);
+                                    if (!string.IsNullOrWhiteSpace(name))
+                                        Application.Current.Dispatcher.Invoke(() => _networkItems.Add(new OneFile(name, this, absolutePidl, subItemPtr)));
+                                        
+                                }
+                                Marshal.ReleaseComObject(itemsEnum);
+                            }
+
+                            Marshal.Release(pidl);
+                            Marshal.ReleaseComObject(networkShellFolder);
+                        }
+                        catch (Exception)
+                        {
+                            if (Debugger.IsAttached)
+                                Debugger.Break();
+                        }
+                    });
+                    _taskSearchNetwork.ContinueWith(SetNewListItems);
+                    _taskSearchNetwork.Start();
+                    viewModel.SelectedFolder = this;
+                    return;
+                }
+                else
+                    return;
+            }
+            else if (RecycledBin)
+            {
+                IShellFolder? sfDesktop = null;
+                IShellFolder2? sfRecycledBin = null;
+                IntPtr pidlDesktop = IntPtr.Zero, pidlRecycledBin = IntPtr.Zero, enumIDList = IntPtr.Zero;
+                IEnumIDList? itemsEnum = null;
+                try
+                {
+                    string recycledBinFullPath = GetRootParent().MainViewModel!.FullPathRecycledBin!;
+                    NativeMethods.SHGetDesktopFolder(out pidlDesktop);
+                    sfDesktop = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlDesktop, typeof(IShellFolder));
+                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_BITBUCKET, ref pidlRecycledBin);
+                    Guid guidSF = typeof(IShellFolder2).GUID;
+                    sfDesktop.BindToObject(pidlRecycledBin, IntPtr.Zero, ref guidSF, out IntPtr ptrRecycledBin);
+                    sfRecycledBin = (IShellFolder2)Marshal.GetTypedObjectForIUnknown(ptrRecycledBin, typeof(IShellFolder2));
+                    sfRecycledBin.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS | SHCONTF.INCLUDEHIDDEN, out enumIDList);
+                    itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(enumIDList, typeof(IEnumIDList));
+                    while (itemsEnum.Next(1, out IntPtr pidlItem, out uint fetch) == 0 && fetch == 1)
+                    {
+                        sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.Name, out ShellDetails sd);
+                        string displayName = Marshal.PtrToStringUni(sd.str.OleStr);
+                        sd.str.Free();
+
+                        sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.Size, out sd);
+                        string sizeStr = Marshal.PtrToStringUni(sd.str.OleStr);
+                        sd.str.Free();
+                        double.TryParse(sizeStr.ConvertFromUniToAscii().RemoveNotDigitOrSeparator(), out double size);
+                        for (int i = 0; i < ExtensionsDirectory.NumberOfMultiply(sizeStr); i++)
+                            size *= 1024;
+
+                        sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.DateTimeDeleted, out sd);
+                        string dtDeleteStr = Marshal.PtrToStringUni(sd.str.OleStr);
+                        sd.str.Free();
+                        DateTime.TryParse(dtDeleteStr.ConvertFromUniToAscii(), CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime dtDeleted);
+
+                        sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.DateTimeLastModified, out sd);
+                        string dtLastWriteStr = Marshal.PtrToStringUni(sd.str.OleStr);
+                        sd.str.Free();
+                        DateTime.TryParse(dtLastWriteStr.ConvertFromUniToAscii(), CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime dtLastWrite);
+
+                        sfRecycledBin.GetDetailsOf(pidlItem, 196, out sd);
+                        string realName = Marshal.PtrToStringUni(sd.str.OleStr);
+                        sd.str.Free();
+
+                        realName = Path.Combine(recycledBinFullPath, Path.GetFileName(realName));
+
+                        _items.Add(new OneFile(realName, dtDeleted, dtLastWrite, (ulong)size, this)
+                        {
+                            DisplayText = displayName,
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+                    // Ignore errors for this time
+                }
+                finally
+                {
+                    if (enumIDList != IntPtr.Zero)
+                        Marshal.Release(enumIDList);
+                    if (pidlRecycledBin != IntPtr.Zero)
+                        Marshal.Release(pidlRecycledBin);
+                    if (pidlDesktop != IntPtr.Zero)
+                        Marshal.Release(pidlDesktop);
+                    if (sfDesktop != null)
+                        Marshal.ReleaseComObject(sfDesktop);
+                    if (sfRecycledBin != null)
+                        Marshal.ReleaseComObject(sfRecycledBin);
+                    if (itemsEnum != null)
+                        Marshal.ReleaseComObject(itemsEnum);
+                }
             }
             else
             {
-                if (RecycledBin)
-                {
-                    IShellFolder? sfDesktop = null;
-                    IShellFolder2? sfRecycledBin = null;
-                    IntPtr pidlDesktop = IntPtr.Zero, pidlRecycledBin = IntPtr.Zero, enumIDList = IntPtr.Zero;
-                    IEnumIDList? itemsEnum = null;
-                    try
-                    {
-                        string recycledBinFullPath = GetRootParent().MainViewModel!.FullPathRecycledBin!;
-                        NativeMethods.SHGetDesktopFolder(out pidlDesktop);
-                        sfDesktop = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlDesktop, typeof(IShellFolder));
-                        NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_BITBUCKET, ref pidlRecycledBin);
-                        Guid guidSF = typeof(IShellFolder2).GUID;
-                        sfDesktop.BindToObject(pidlRecycledBin, IntPtr.Zero, ref guidSF, out IntPtr ptrRecycledBin);
-                        sfRecycledBin = (IShellFolder2)Marshal.GetTypedObjectForIUnknown(ptrRecycledBin, typeof(IShellFolder2));
-                        sfRecycledBin.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS | SHCONTF.INCLUDEHIDDEN, out enumIDList);
-                        itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(enumIDList, typeof(IEnumIDList));
-                        while (itemsEnum.Next(1, out IntPtr pidlItem, out uint fetch) == 0 && fetch == 1)
-                        {
-                            sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.Name, out ShellDetails sd);
-                            string displayName = Marshal.PtrToStringUni(sd.str.OleStr);
-                            sd.str.Free();
-
-                            sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.Size, out sd);
-                            string sizeStr = Marshal.PtrToStringUni(sd.str.OleStr);
-                            sd.str.Free();
-                            double.TryParse(sizeStr.ConvertFromUniToAscii().RemoveNotDigitOrSeparator(), out double size);
-                            for (int i = 0; i < ExtensionsDirectory.NumberOfMultiply(sizeStr); i++)
-                                size *= 1024;
-
-                            sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.DateTimeDeleted, out sd);
-                            string dtDeleteStr = Marshal.PtrToStringUni(sd.str.OleStr);
-                            sd.str.Free();
-                            DateTime.TryParse(dtDeleteStr.ConvertFromUniToAscii(), CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime dtDeleted);
-
-                            sfRecycledBin.GetDetailsOf(pidlItem, (uint)RecycledBinColumnName.DateTimeLastModified, out sd);
-                            string dtLastWriteStr = Marshal.PtrToStringUni(sd.str.OleStr);
-                            sd.str.Free();
-                            DateTime.TryParse(dtLastWriteStr.ConvertFromUniToAscii(), CultureInfo.CurrentCulture, DateTimeStyles.AssumeLocal, out DateTime dtLastWrite);
-
-                            sfRecycledBin.GetDetailsOf(pidlItem, 196, out sd);
-                            string realName = Marshal.PtrToStringUni(sd.str.OleStr);
-                            sd.str.Free();
-
-                            realName = Path.Combine(recycledBinFullPath, Path.GetFileName(realName));
-
-                            _items.Add(new OneFile(realName, dtDeleted, dtLastWrite, (ulong)size, this)
-                            {
-                                DisplayText = displayName,
-                            });
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // Ignore errors for this time
-                    }
-                    finally
-                    {
-                        if (enumIDList != IntPtr.Zero)
-                            Marshal.Release(enumIDList);
-                        if (pidlRecycledBin != IntPtr.Zero)
-                            Marshal.Release(pidlRecycledBin);
-                        if (pidlDesktop != IntPtr.Zero)
-                            Marshal.Release(pidlDesktop);
-                        if (sfDesktop != null)
-                            Marshal.ReleaseComObject(sfDesktop);
-                        if (sfRecycledBin != null)
-                            Marshal.ReleaseComObject(sfRecycledBin);
-                        if (itemsEnum != null)
-                            Marshal.ReleaseComObject(itemsEnum);
-                    }
-                }
-                else
-                {
-                    ExtensionsDirectory.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
-                    foreach (string subFolder in listSubFolder)
-                        _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true, subFolder));
-                    foreach (string file in listFiles)
-                        _items.Add(new OneFile(Path.Combine(FullPath, file), this));
-                }
+                ExtensionsDirectory.EnumerateFolderContent(FullPath, out List<string> listSubFolder, out List<string> listFiles);
+                foreach (string subFolder in listSubFolder)
+                    _items.Add(new OneDirectory(Path.Combine(FullPath, subFolder), this, true, subFolder));
+                foreach (string file in listFiles)
+                    _items.Add(new OneFile(Path.Combine(FullPath, file), this));
             }
             CancelCalculateSize();
-            WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
             viewModel.FileListView = _items;
             viewModel.SelectedFolder = this;
+            viewModel.PleaseWait = false;
         });
+    }
+
+    private void SetNewListItems(Task task)
+    {
+        try
+        {
+            WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
+            if (viewModel.SelectedFolder!.NetworkRoot)
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    viewModel.FileListView = _networkItems;
+                    viewModel.PleaseWait = false;
+                    viewModel.ForceSelectedFolder();
+                });
+            }
+            task?.Dispose();
+        }
+        catch (Exception)
+        {
+            if (Debugger.IsAttached)
+                Debugger.Break();
+        }
     }
 
     public OneDirectory GetRootParent()
@@ -618,16 +667,30 @@ public partial class OneDirectory : OneFileSystem
 
     public override void Drop(object sender, DragEventArgs e)
     {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop) && GetRootParent().MainViewModel!.NbMillisecondsStartDragging > Constants.DelayIgnoreDrag)
+        WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
+        if (e.Data.GetDataPresent(DataFormats.FileDrop) && viewModel.NbMillisecondsStartDragging > Constants.DelayIgnoreDrag)
         {
             List<string> filesAndFolders = ((DataObject)e.Data).GetFileDropList().OfType<string>().ToList();
-            if (GetRootParent().MainViewModel!.DragDropKeyStates.HasFlag(DragDropKeyStates.LeftMouseButton))
+            if (viewModel.DragDropKeyStates.HasFlag(DragDropKeyStates.LeftMouseButton))
             {
-                if (filesAndFolders[0] != FullPath)
+                if (Path.GetDirectoryName(filesAndFolders[0]) != FullPath || viewModel.DragDropKeyStates.HasFlag(DragDropKeyStates.ControlKey))
+                {
+                    Explorip.HookFileOperations.FilesOperations.FileOperation fileOp = new(NativeMethods.GetDesktopWindow());
+                    fileOp.ChangeOperationFlags(Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_RENAMEONCOLLISION |
+                        Explorip.HookFileOperations.FilesOperations.EFileOperation.FOFX_ADDUNDORECORD |
+                        Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_NOCONFIRMMKDIR);
                     foreach (string fs in filesAndFolders)
-                        File.Copy(fs, Path.Combine(FullPath, Path.GetFileName(fs)));
+                    {
+                        if (viewModel.DragDropKeyStates.HasFlag(DragDropKeyStates.ControlKey))
+                            fileOp.CopyItem(fs, FullPath, Path.GetFileName(fs));
+                        else
+                            fileOp.MoveItem(fs, FullPath, Path.GetFileName(fs));
+                    }
+                    fileOp.PerformOperations();
+                    fileOp.Dispose();
+                }
             }
-            else if (GetRootParent().MainViewModel!.DragDropKeyStates.HasFlag(DragDropKeyStates.RightMouseButton))
+            else if (viewModel.DragDropKeyStates.HasFlag(DragDropKeyStates.RightMouseButton))
             {
                 DragDropHelper.GetInstance().DragDrop(GetRootParent().MainViewModel!.DragDropKeyStates,
                                                       Application.Current.MainWindow.PointToScreen(e.GetPosition(Application.Current.MainWindow)),

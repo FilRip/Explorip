@@ -46,10 +46,12 @@ public partial class WpfExplorerViewModel : ObservableObject
     private bool _viewDetails = false;
     [ObservableProperty()]
     private ICollectionView? _currentGroupBy;
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(ListViewVisible))]
     private bool _errorVisible;
     [ObservableProperty()]
     private string? _errorMessage;
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(ListViewVisible))]
+    private bool _pleaseWait;
 
     #endregion
 
@@ -107,6 +109,7 @@ public partial class WpfExplorerViewModel : ObservableObject
             SelectedFolder!.Refresh();
         }
 
+        OnPropertyChanged(nameof(ListViewVisible));
         SetDisplay();
     }
 
@@ -193,6 +196,11 @@ public partial class WpfExplorerViewModel : ObservableObject
     public string? LocalizedNameRecycleBin
     {
         get { return _localizedNameRecycleBin; }
+    }
+
+    public bool ListViewVisible
+    {
+        get { return !ErrorVisible && !PleaseWait; }
     }
 
     #endregion
@@ -586,6 +594,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         DisposeSearch();
         ChangePath?.Invoke(this, EventArgs.Empty);
         ErrorVisible = false;
+        PleaseWait = false;
 
         if (_fsWatcher == null)
         {
@@ -611,8 +620,12 @@ public partial class WpfExplorerViewModel : ObservableObject
             _fsWatcher.EnableRaisingEvents = false;
         }
         ScrollToFirstItem();
-
         CurrentGroupBy = (CollectionView)CollectionViewSource.GetDefaultView(FileListView);
+    }
+
+    public void ForceSelectedFolder()
+    {
+        OnSelectedFolderChanged(SelectedFolder);
     }
 
     private void FsWatcher_Renamed(object sender, RenamedEventArgs e)

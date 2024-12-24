@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -270,10 +269,6 @@ namespace ExploripComponents.Controls
                 pathLink = MyDataContext.SelectedFolder?.FullPath ?? "";
                 if (string.IsNullOrWhiteSpace(pathLink) || pathLink.StartsWith("::"))
                     pathLink = GetDisplayName();
-                /*if (e.NewLocation.IsFileSystemObject)
-                    pathLink = e.NewLocation.GetDisplayName(DisplayNameType.FileSystemPath);
-                else
-                    pathLink = e.NewLocation.Name;*/
                 network = pathLink.StartsWith($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
             }
             catch (Exception)
@@ -305,7 +300,6 @@ namespace ExploripComponents.Controls
             else
             {
                 CurrentPath.Inlines.Add(pathLink);
-                //CurrentPath.Inlines.Add(e.NewLocation.Name);
             }
         }
 
@@ -320,7 +314,6 @@ namespace ExploripComponents.Controls
         {
             if (sender is FrameworkElement c && c.DataContext is OneFileSystem fs && MyDataContext.CurrentlyDraging)
             {
-                Debug.WriteLine("Change BackgroundColor for " + fs.DisplayText);
                 fs.BackgroundColor = Brushes.LightGray;
             }
         }
@@ -329,7 +322,6 @@ namespace ExploripComponents.Controls
         {
             if (sender is FrameworkElement c && c.DataContext is OneFileSystem fs && MyDataContext.CurrentlyDraging)
             {
-                Debug.WriteLine("Reset BackgroundColor for " + fs.DisplayText);
                 fs.BackgroundColor = Brushes.Transparent;
             }
         }

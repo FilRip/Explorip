@@ -71,7 +71,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
             OnPropertyChanged(nameof(Thumbnail));
             OnPropertyChanged(nameof(DisplayText));
             OnPropertyChanged(nameof(Size));
-            if (string.IsNullOrWhiteSpace(_fileInfo.szTypeName))
+            if (string.IsNullOrWhiteSpace(_fileInfo.szTypeName) && !_isNetworkResource)
             {
                 _fileInfo = new();
                 NativeMethods.SHGetFileInfo(FullPath, NativeMethods.FILE_ATTRIBUTE.NULL, ref _fileInfo, (uint)Marshal.SizeOf(_fileInfo), NativeMethods.SHGFI.TypeName);
@@ -188,7 +188,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         get
         {
-            if (_thumbnail == null && IsItemVisible && !string.IsNullOrWhiteSpace(FullPath))
+            if (_thumbnail == null && IsItemVisible && (!string.IsNullOrWhiteSpace(FullPath) || _pidl != IntPtr.Zero))
             {
                 WpfExplorerViewModel vm = _parentDirectory!.GetRootParent().MainViewModel!;
                 ShellObject shellObject = ShellObject.FromParsingName(FullPath);
@@ -204,10 +204,17 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
                 shellObject.Dispose();
                 if (IconOverlay == null)
                 {
-                    IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out IntPtr hOverlay);
-                    NativeMethods.DestroyIcon(hIcon);
-                    if (hOverlay != IntPtr.Zero)
-                        IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+                    IntPtr hIcon, hOverlay;
+                    if (_pidl == IntPtr.Zero)
+                        hIcon = IconHelper.GetIconByFilename(FullPath, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
+                    else
+                        hIcon = IconHelper.GetIconByPidl(_pidl, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
+                    if (hIcon != IntPtr.Zero)
+                    {
+                        NativeMethods.DestroyIcon(hIcon);
+                        if (hOverlay != IntPtr.Zero)
+                            IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
+                    }
                 }
             }
             return _thumbnail;
@@ -342,7 +349,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         if (_parentDirectory == null)
             return;
-
+        BackgroundColor = Brushes.Transparent;
         _parentDirectory.GetRootParent().MainViewModel!.CurrentlyDraging = false;
     }
 
