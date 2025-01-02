@@ -147,13 +147,13 @@
                     </ContextMenu>
                 </TextBlock.ContextMenu>
             </TextBlock>
-            <ComboBox Margin="5 0 0 0" Grid.Column="2" Name="EditPath" Visibility="{Binding ModeEditPath, Converter={StaticResource boolToVisible}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" Focusable="True" IsTabStop="False" StaysOpenOnEdit="True"
+            <ComboBox Margin="5 0 0 0" Grid.Column="2" Name="EditPath" Visibility="{Binding ModeEditPath, Converter={StaticResource boolToVisible}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" IsEditable="True" Focusable="True" IsTabStop="False" StaysOpenOnEdit="True"
                       HorizontalAlignment="Stretch"
                       Foreground="Yellow"
                       IsDropDownOpen="{Binding ShowSuggestions}">
                 <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="KeyDown">
-                        <i:InvokeCommandAction Command="{Binding EditPathKeyDownCommand}" PassEventArgsToCommand="True"/>
+                    <i:EventTrigger EventName="KeyUp">
+                        <i:InvokeCommandAction Command="{Binding EditPathKeyUpCommand}" PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                     <i:EventTrigger EventName="LostFocus">
                         <i:InvokeCommandAction Command="{Binding LostFocusEditPathCommand}" PassEventArgsToCommand="True"/>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,7 +33,7 @@ public partial class WpfExplorerViewModel
     [ObservableProperty()]
     private string? _editPath;
     [ObservableProperty()]
-    private string? _comboBoxEditPath;
+    private string[]? _comboBoxEditPath;
 
     #endregion
 
@@ -94,7 +95,7 @@ public partial class WpfExplorerViewModel
     }
 
     [RelayCommand()]
-    public void EditPathKeyDown(KeyEventArgs e)
+    public void EditPathKeyUp(KeyEventArgs e)
     {
         if (e.Key == Key.Enter || e.Key == Key.Return)
         {
@@ -111,6 +112,39 @@ public partial class WpfExplorerViewModel
             catch (Exception)
             {
                 MessageBox.Show(Explorip.Constants.Localization.ERROR_PATH_NOT_FOUND.Replace("%1", EditPath), Assembly.GetEntryAssembly().GetName().Name);
+            }
+            e.Handled = true;
+        }
+        else if (EditPath?.EndsWith("\\") == true)
+        {
+            try
+            {
+                string path = EditPath!;
+                string startWith = "";
+                if (path.StartsWith("%"))
+                    path = Environment.ExpandEnvironmentVariables(path);
+                if (path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                {
+                    startWith = path.Substring(path.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                    path = path.Substring(0, path.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                }
+                string[] suggestions = Directory.GetDirectories(path);
+                if (!string.IsNullOrWhiteSpace(startWith))
+                    suggestions = suggestions.Where(p => p.StartsWith(startWith)).ToArray();
+                ComboBoxEditPath = suggestions;
+                ShowSuggestions = true;
+                TextBox? txt = CurrentControl.EditPath.Template.FindName("PART_EditableTextBox", CurrentControl.EditPath) as TextBox;
+                if (txt != null)
+                {
+                    txt.SelectionStart = txt.Text.Length;
+                    txt.SelectionLength = 0;
+                }
+                e.Handled = true;
+            }
+            catch (Exception)
+            {
+                ComboBoxEditPath = null;
+                ShowSuggestions = false;
             }
         }
     }
