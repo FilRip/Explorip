@@ -133,8 +133,7 @@ public partial class WpfExplorerViewModel
                     suggestions = suggestions.Where(p => p.StartsWith(startWith)).ToArray();
                 ComboBoxEditPath = suggestions;
                 ShowSuggestions = true;
-                TextBox? txt = CurrentControl.EditPath.Template.FindName("PART_EditableTextBox", CurrentControl.EditPath) as TextBox;
-                if (txt != null)
+                if (CurrentControl.EditPath.Template.FindName("PART_EditableTextBox", CurrentControl.EditPath) is TextBox txt)
                 {
                     txt.SelectionStart = txt.Text.Length;
                     txt.SelectionLength = 0;

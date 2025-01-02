@@ -29,7 +29,7 @@ namespace ExploripComponents.Controls
 
         private readonly IntPtr _windowHandle;
         private OneDirectory? _lastSelected;
-        private string _lastPathLink;
+        private string? _lastPathLink;
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace ExploripComponents.Controls
             get { return _windowHandle; }
         }
 
-        public string CurrentFullPath
+        public string? CurrentFullPath
         {
             get { return _lastPathLink; }
         }
