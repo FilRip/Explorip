@@ -36,6 +36,7 @@ public class ListViewEx : ListView
             MainViewModel.CurrentlyRenaming?.Rename();
             DisableSelectInRectangle();
             e.Handled = true;
+            MainViewModel.ModeEditPath = false;
             return;
         }
 

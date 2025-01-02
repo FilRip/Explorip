@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -99,10 +100,18 @@ public partial class WpfExplorerViewModel
         {
             try
             {
-                if (Directory.Exists(EditPath))
-                    BrowseTo(EditPath);
+                string path = EditPath!;
+                if (path.StartsWith("%"))
+                    path = Environment.ExpandEnvironmentVariables(path);
+                if (Directory.Exists(path))
+                    BrowseTo(path);
+                else
+                    throw new DirectoryNotFoundException();
             }
-            catch (Exception) { /* Ignore errors */ }
+            catch (Exception)
+            {
+                MessageBox.Show(Explorip.Constants.Localization.ERROR_PATH_NOT_FOUND.Replace("%1", EditPath), Assembly.GetEntryAssembly().GetName().Name);
+            }
         }
     }
 
@@ -136,6 +145,7 @@ public partial class WpfExplorerViewModel
     public void ChangeEditPath(MouseEventArgs e)
     {
         ModeEditPath = true;
+        EditPath = CurrentControl.CurrentFullPath;
         TextBox txt = (TextBox)CurrentControl.EditPath.Template.FindName("PART_EditableTextBox", CurrentControl.EditPath);
         txt.Focus();
     }

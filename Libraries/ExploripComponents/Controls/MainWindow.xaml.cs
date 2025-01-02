@@ -29,6 +29,7 @@ namespace ExploripComponents.Controls
 
         private readonly IntPtr _windowHandle;
         private OneDirectory? _lastSelected;
+        private string _lastPathLink;
 
         #endregion
 
@@ -63,6 +64,11 @@ namespace ExploripComponents.Controls
         public IntPtr Handle
         {
             get { return _windowHandle; }
+        }
+
+        public string CurrentFullPath
+        {
+            get { return _lastPathLink; }
         }
 
         #endregion
@@ -254,9 +260,9 @@ namespace ExploripComponents.Controls
             MyDataContext.DisposeSearch();
             MyDataContext.ModeEditPath = false;
 
-            string pathLink;
             bool splitPath = true;
             bool network = false;
+            _lastPathLink = "";
 
             string GetDisplayName()
             {
@@ -266,22 +272,22 @@ namespace ExploripComponents.Controls
 
             try
             {
-                pathLink = MyDataContext.SelectedFolder?.FullPath ?? "";
-                if (string.IsNullOrWhiteSpace(pathLink) || pathLink.StartsWith("::"))
-                    pathLink = GetDisplayName();
-                network = pathLink.StartsWith($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
+                _lastPathLink = MyDataContext.SelectedFolder?.FullPath ?? "";
+                if (string.IsNullOrWhiteSpace(_lastPathLink) || _lastPathLink.StartsWith("::"))
+                    _lastPathLink = GetDisplayName();
+                network = _lastPathLink.StartsWith($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
             }
             catch (Exception)
             {
-                pathLink = GetDisplayName();
+                _lastPathLink = GetDisplayName();
             }
 
             CurrentPath.Inlines.Clear();
             if (splitPath)
             {
-                MyDataContext.EditPath = pathLink;
+                MyDataContext.EditPath = _lastPathLink;
                 StringBuilder partialPath = new();
-                foreach (string path in pathLink.Split([Path.DirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries))
+                foreach (string path in _lastPathLink.Split([Path.DirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (network && CurrentPath.Inlines.Count == 0)
                         partialPath.Append($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}");
@@ -299,7 +305,7 @@ namespace ExploripComponents.Controls
             }
             else
             {
-                CurrentPath.Inlines.Add(pathLink);
+                CurrentPath.Inlines.Add(_lastPathLink);
             }
         }
 
