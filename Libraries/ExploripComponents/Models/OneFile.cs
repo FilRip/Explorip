@@ -128,23 +128,28 @@ public partial class OneFile : OneFileSystem
         base.Rename();
     }
 
-    public override string Duration
+    public override string? Duration
     {
         get
         {
-            ShellObject? so = ShellObject.FromParsingName(FullPath);
-            if (so?.Properties?.System?.Media?.Duration.Value != null)
+            if (_duration == null)
             {
-                if (so.Properties.System.Media.Duration.Value! <= long.MaxValue)
+                ShellObject? so = ShellObject.FromParsingName(FullPath);
+                if (so?.Properties?.System?.Media?.Duration.Value != null)
                 {
-                    long val = (long)so.Properties.System.Media.Duration.Value!;
-                    so.Dispose();
-                    return new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddTicks(val).ToString("HH:mm:ss");
+                    if (so.Properties.System.Media.Duration.Value! <= long.MaxValue)
+                    {
+                        long val = (long)so.Properties.System.Media.Duration.Value!;
+                        so.Dispose();
+                        _duration = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddTicks(val).ToString("HH:mm:ss");
+                    }
+                    else
+                        _duration = "+99:99:99";
                 }
                 else
-                    return "+99:99:99";
+                    _duration = "";
             }
-            return "";
+            return _duration;
         }
     }
 }

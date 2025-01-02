@@ -34,6 +34,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     protected bool _isNetworkResource;
     protected IntPtr _pidl = IntPtr.Zero;
     protected IntPtr _pidlRelative = IntPtr.Zero;
+    protected string? _duration = null;
 
     #region Binding properties
 
@@ -296,9 +297,9 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
         get { return _lastWriteTime; }
     }
 
-    public virtual string Duration
+    public virtual string? Duration
     {
-        get { return null; }
+        get { return _duration; }
     }
 
     #endregion
