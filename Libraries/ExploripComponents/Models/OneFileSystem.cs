@@ -93,6 +93,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
             OnPropertyChanged(nameof(ReadOnly));
             OnPropertyChanged(nameof(Opacity));
             OnPropertyChanged(nameof(LastModified));
+            OnPropertyChanged(nameof(Duration));
         }
     }
 
@@ -293,6 +294,11 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     public DateTime LastModified
     {
         get { return _lastWriteTime; }
+    }
+
+    public virtual string Duration
+    {
+        get { return null; }
     }
 
     #endregion

@@ -565,7 +565,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                     else if (nSelected == _cmdJumbo)
                         _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.Jumbo);
                     else if (nSelected == _cmdThumbnail)
-                        _viewModel.ChangeIconSize(false, _viewModel.CurrentIconSize, !_viewModel.ShowThumbnail);
+                        _viewModel.ChangeIconSize(_viewModel.ViewDetails, _viewModel.CurrentIconSize, !_viewModel.ShowThumbnail);
                     else if (nSelected == _cmdGbName)
                         _viewModel.ChangeGroupBy(GroupBy.NAME);
                     else if (nSelected == _cmdGbLastModified)

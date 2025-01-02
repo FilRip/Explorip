@@ -455,6 +455,8 @@ public partial class WpfExplorerViewModel : ObservableObject
         });
     }
 
+    #region State bar
+
     public string NumberOfFiles
     {
         get { return Explorip.Constants.Localization.NUMBER_OF_ELEMENT.Replace("%s", (FileListView?.Count ?? 0).ToString()) ?? ""; }
@@ -464,6 +466,8 @@ public partial class WpfExplorerViewModel : ObservableObject
     {
         get { return ", " + Explorip.Constants.Localization.NUMBER_OF_SELECTED_ELEMENT.Replace("%s", SelectedItems.Count.ToString()); }
     }
+
+    #endregion
 
     [RelayCommand()]
     public async Task KeyUp(KeyEventArgs e)
@@ -652,6 +656,12 @@ public partial class WpfExplorerViewModel : ObservableObject
     {
         SelectedFolder!.RefreshListView();
     }
+
+    #endregion
+
+    #region Columns in details mode
+
+    public bool DurationVisible { get; set; } = true;
 
     #endregion
 }

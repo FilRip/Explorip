@@ -6,6 +6,8 @@ using System.Windows;
 
 using ExploripComponents.Helpers;
 
+using Microsoft.WindowsAPICodePack.Shell.Common;
+
 using Securify.ShellLink;
 
 namespace ExploripComponents.Models;
@@ -124,5 +126,25 @@ public partial class OneFile : OneFileSystem
         if (file != Path.GetFileName(FullPath))
             File.Move(FullPath, Path.Combine(Path.GetDirectoryName(FullPath), file));
         base.Rename();
+    }
+
+    public override string Duration
+    {
+        get
+        {
+            ShellObject? so = ShellObject.FromParsingName(FullPath);
+            if (so?.Properties?.System?.Media?.Duration.Value != null)
+            {
+                if (so.Properties.System.Media.Duration.Value! <= long.MaxValue)
+                {
+                    long val = (long)so.Properties.System.Media.Duration.Value!;
+                    so.Dispose();
+                    return new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddTicks(val).ToString("HH:mm:ss");
+                }
+                else
+                    return "+99:99:99";
+            }
+            return "";
+        }
     }
 }

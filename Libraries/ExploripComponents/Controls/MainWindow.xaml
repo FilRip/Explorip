@@ -64,6 +64,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding IconOrThumbnail}" Grid.Column="0" Margin="0"/>
                         <Image Source="{Binding IconOverlay}" Grid.Column="0" Margin="0"/>
@@ -73,7 +74,8 @@
                         <!-- End name -->
                         <TextBlock Text="{local:DateTimeBinding Path=LastModified}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="12"/>
                         <TextBlock Text="{Binding TypeName}" Grid.Column="3" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="12"/>
-                        <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Grid.Column="4" HorizontalAlignment="Right" FontSize="12"/>
+                        <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Margin="0 0 10 0" Grid.Column="4" HorizontalAlignment="Right" FontSize="12"/>
+                        <TextBlock Text="{Binding Duration}" Grid.Column="5" Margin="0 0 10 0" HorizontalAlignment="Right" Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.DurationVisible, TargetNullValue=Hidden, Converter={StaticResource boolToVisible}}" FontSize="12"/>
                     </Grid>
                 </VirtualizingStackPanel>
             </DataTemplate>
