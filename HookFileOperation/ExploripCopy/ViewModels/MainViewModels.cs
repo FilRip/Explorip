@@ -269,7 +269,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                             try
                             {
                                 if (isDirectory)
-                                    Directory.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.Source));
+                                    Directory.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.NewName));
                                 else
                                     File.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.NewName));
                             }
