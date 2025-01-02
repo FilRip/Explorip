@@ -74,10 +74,10 @@ public partial class WpfExplorerBrowser : Window
 
         if (_mainSession && string.IsNullOrWhiteSpace(dir))
         {
-            foreach (string path in ConfigManager.LeftTabs)
+            foreach (string path in ConfigManager.LeftTabs.Where(p => Directory.Exists(p)))
                 LeftTab.AddNewTab(ShellObject.FromParsingName(path));
 
-            foreach (string path in ConfigManager.RightTabs)
+            foreach (string path in ConfigManager.RightTabs.Where(p => Directory.Exists(p)))
                 RightTab.AddNewTab(ShellObject.FromParsingName(path));
         }
         if (string.IsNullOrWhiteSpace(dir))
