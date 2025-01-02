@@ -42,7 +42,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
     private IShellView? _backgroundShellView;
     private readonly WpfExplorerViewModel _viewModel = viewModel;
     private uint _cmdPaste, _cmdPasteShortcut, _cmdRename, _cmdRefresh;
-    private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo;
+    private uint _cmdDetails, _cmdSmall, _cmdLarge, _cmdExtraLarge, _cmdJumbo, _cmdThumbnail;
     private uint _cmdGbName, _cmdGbType, _cmdGbSize, _cmdGbLastModified;
     private uint _cmdOrderByName, _cmdOrderByType, _cmdOrderBySize, _cmdOrderByLastModified;
     private uint _cmdOrderByAsc, _cmdOrderByDesc;
@@ -564,6 +564,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                         _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.ExtraLarge);
                     else if (nSelected == _cmdJumbo)
                         _viewModel.ChangeIconSize(false, ManagedShell.Common.Enums.IconSize.Jumbo);
+                    else if (nSelected == _cmdThumbnail)
+                        _viewModel.ChangeIconSize(false, _viewModel.CurrentIconSize, !_viewModel.ShowThumbnail);
                     else if (nSelected == _cmdGbName)
                         _viewModel.ChangeGroupBy(GroupBy.NAME);
                     else if (nSelected == _cmdGbLastModified)
@@ -769,6 +771,11 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                     {
                                         _cmdJumbo = subCmd;
                                         CheckMenuItem(hMenu, (uint)j, true, !_viewModel.ViewDetails && _viewModel.CurrentIconSize == ManagedShell.Common.Enums.IconSize.Jumbo);
+                                    }
+                                    else if (subLabel!.Trim().ToLower().Replace("&", "") == Localization.SHOW_MOSAIC_SUBMENU.Trim().ToLower())
+                                    {
+                                        _cmdThumbnail = subCmd;
+                                        CheckMenuItem(hMenu, (uint)j, true, _viewModel.ShowThumbnail);
                                     }
                                 }
                             }

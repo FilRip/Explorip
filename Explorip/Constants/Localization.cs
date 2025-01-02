@@ -86,6 +86,7 @@ public static class Localization
     public static string CONTEXT_MENU_EXPLORER_ADDRESS_BAR_COPY { get; private set; }
     public static string CONTEXT_MENU_EXPLORER_ADDRESS_BAR_MODIFY { get; private set; }
     public static string CONTEXT_MENU_EXPLORER_ADDRESS_BAR_DELETE_HISTORY { get; private set; }
+    public static string SHOW_MOSAIC_SUBMENU { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -168,6 +169,7 @@ public static class Localization
         CONTEXT_MENU_EXPLORER_ADDRESS_BAR_COPY = LoadMenuItem("explorerframe.dll", 272, 1282, "Copy address as text").Replace("&", "_");
         CONTEXT_MENU_EXPLORER_ADDRESS_BAR_MODIFY = LoadMenuItem("explorerframe.dll", 272, 1280, "Modify address").Replace("&", "_");
         CONTEXT_MENU_EXPLORER_ADDRESS_BAR_DELETE_HISTORY = LoadMenuItem("explorerframe.dll", 272, 1283, "Delete history of navigation").Replace("&", "_");
+        SHOW_MOSAIC_SUBMENU = LoadMenuItem("shell32.dll", 216, 28748, "Mosaic", 2).Replace("&", "");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

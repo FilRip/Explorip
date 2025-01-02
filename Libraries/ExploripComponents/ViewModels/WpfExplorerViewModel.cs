@@ -307,16 +307,21 @@ public partial class WpfExplorerViewModel : ObservableObject
         ChangeGroupBy(CurrentGroup);
     }
 
-    public void ChangeIconSize(bool details, IconSize value)
+    public void ChangeIconSize(bool details, IconSize value, bool? withThumbnail = null)
     {
         ViewDetails = details;
         CurrentIconSize = value;
+        ShowThumbnail = withThumbnail ?? ShowThumbnail;
         OnPropertyChanged(nameof(IconSizePx));
         OnPropertyChanged(nameof(NameSizePx));
         SelectedFolder?.Refresh();
         ChangeItemTemplate();
         ChangeGroupBy(CurrentGroup);
+        if (withThumbnail != null)
+            ForceRefresh().GetAwaiter();
     }
+
+    public bool ShowThumbnail { get; set; }
 
     public GroupBy CurrentGroup { get; set; }
 

@@ -15,8 +15,7 @@ using ExploripComponents.ViewModels;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
-
-using Microsoft.WindowsAPICodePack.Shell.Common;
+using ManagedShell.ShellFolders.Interfaces;
 
 namespace ExploripComponents.Models;
 
@@ -67,8 +66,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
     {
         if (value)
         {
-            OnPropertyChanged(nameof(Icon));
-            OnPropertyChanged(nameof(Thumbnail));
+            OnPropertyChanged(nameof(IconOrThumbnail));
             OnPropertyChanged(nameof(DisplayText));
             OnPropertyChanged(nameof(Size));
             if (string.IsNullOrWhiteSpace(_fileInfo.szTypeName) && !_isNetworkResource)
@@ -191,17 +189,30 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
             if (_thumbnail == null && IsItemVisible && (!string.IsNullOrWhiteSpace(FullPath) || _pidl != IntPtr.Zero))
             {
                 WpfExplorerViewModel vm = _parentDirectory!.GetRootParent().MainViewModel!;
-                ShellObject shellObject = ShellObject.FromParsingName(FullPath);
-                _thumbnail = vm.CurrentIconSize switch
+                if (!string.IsNullOrWhiteSpace(FullPath))
                 {
-                    ManagedShell.Common.Enums.IconSize.Large => shellObject.Thumbnail.LargeBitmapSource,
-                    ManagedShell.Common.Enums.IconSize.ExtraLarge => shellObject.Thumbnail.ExtraLargeBitmapSource,
-                    ManagedShell.Common.Enums.IconSize.Jumbo => shellObject.Thumbnail.ExtraLargeBitmapSource,
-                    ManagedShell.Common.Enums.IconSize.Medium => shellObject.Thumbnail.MediumBitmapSource,
-                    ManagedShell.Common.Enums.IconSize.Small => shellObject.Thumbnail.SmallBitmapSource,
-                    _ => shellObject.Thumbnail.BitmapSource,
-                };
-                shellObject.Dispose();
+                    try
+                    {
+                        Guid guid = typeof(IShellItem).GUID;
+                        NativeMethods.SHCreateItemFromParsingName(FullPath, IntPtr.Zero, ref guid, out IntPtr ptrSi);
+                        if (ptrSi != IntPtr.Zero)
+                        {
+                            IShellItemImageFactory factory = (IShellItemImageFactory)Marshal.GetObjectForIUnknown(ptrSi);
+                            factory.GetImage(new ManagedShell.ShellFolders.Interfaces.Size((int)vm.IconSizePx.Value, (int)vm.IconSizePx.Value), ManagedShell.ShellFolders.Enums.SIIGBF.THUMBNAILONLY, out IntPtr hIcon);
+                            if (hIcon != IntPtr.Zero)
+                            {
+                                _thumbnail = IconImageConverter.GetImageFromHBitmap(hIcon);
+                                NativeMethods.DestroyIcon(hIcon);
+                            }
+                            Marshal.ReleaseComObject(factory);
+                            Marshal.Release(ptrSi);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        _thumbnail = Icon;
+                    }
+                }
                 if (IconOverlay == null)
                 {
                     IntPtr hIcon, hOverlay;
@@ -211,6 +222,8 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
                         hIcon = IconHelper.GetIconByPidl(_pidl, (vm.ViewDetails ? ManagedShell.Common.Enums.IconSize.Small : vm.CurrentIconSize), out hOverlay);
                     if (hIcon != IntPtr.Zero)
                     {
+                        if (_pidl != IntPtr.Zero)
+                            _thumbnail = IconImageConverter.GetImageFromHIcon(hIcon);
                         NativeMethods.DestroyIcon(hIcon);
                         if (hOverlay != IntPtr.Zero)
                             IconOverlay = IconImageConverter.GetImageFromHIcon(hOverlay);
@@ -218,6 +231,18 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
                 }
             }
             return _thumbnail;
+        }
+    }
+
+    public ImageSource? IconOrThumbnail
+    {
+        get
+        {
+            WpfExplorerViewModel vm = _parentDirectory!.GetRootParent().MainViewModel!;
+            if (vm.ShowThumbnail)
+                return Thumbnail;
+            else
+                return Icon;
         }
     }
 

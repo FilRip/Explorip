@@ -21,7 +21,7 @@
             <Style TargetType="{x:Type local:ListViewEx}" BasedOn="{StaticResource {x:Type ListView}}" />
             <myconverters:FileSizeConverter x:Key="sizeConverter"/>
             <BooleanToVisibilityConverter x:Key="boolToVisible"/>
-            <!-- ListView -->
+            <!-- Icons view -->
             <DataTemplate x:Key="IconsTemplate" DataType="local:OneFileSystem">
                 <VirtualizingStackPanel AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}" Background="{Binding BackgroundColor}">
                     <Grid DragEnter="Grid_DragEnter" DragLeave="Grid_DragLeave" Background="{Binding BackgroundColor}">
@@ -37,7 +37,7 @@
                             <RowDefinition Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.IconSizePx, TargetNullValue=16}"/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <Image Source="{Binding Icon}" Grid.Row="0" Margin="0"/>
+                        <Image Source="{Binding IconOrThumbnail}" Grid.Row="0" Margin="0"/>
                         <Image Source="{Binding IconOverlay}" Grid.Row="0" Margin="0"/>
                         <!-- Name -->
                         <TextBlock Grid.Row="1" Text="{Binding DisplayText}" Margin="0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="14" TextWrapping="Wrap" Padding="0" MaxWidth="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.NameSizePx, TargetNullValue=16}" TextAlignment="Center"/>
@@ -46,6 +46,7 @@
                     </Grid>
                 </VirtualizingStackPanel>
             </DataTemplate>
+            <!-- Details view -->
             <DataTemplate x:Key="DetailsTemplate">
                 <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
                     <Grid DragEnter="Grid_DragEnter" DragLeave="Grid_DragLeave" Background="{Binding BackgroundColor}" HorizontalAlignment="Stretch">
@@ -64,7 +65,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding Icon}" Grid.Column="0" Margin="0"/>
+                        <Image Source="{Binding IconOrThumbnail}" Grid.Column="0" Margin="0"/>
                         <Image Source="{Binding IconOverlay}" Grid.Column="0" Margin="0"/>
                         <!-- Name -->
                         <TextBlock Text="{Binding DisplayText}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="12"/>

@@ -731,6 +731,10 @@ public partial class NativeMethods
     [return: MarshalAs(UnmanagedType.Interface)]
     internal static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IBindCtx pbc, ref Guid riid);
 
+    [DllImport(Shell32_DllName, SetLastError = true, CharSet = CharSet.Unicode, PreserveSig = false)]
+    [return: MarshalAs(UnmanagedType.Interface)]
+    internal static extern object SHCreateItemFromParsingName([MarshalAs(UnmanagedType.LPWStr)] string pszPath, IntPtr pbc, ref Guid riid, out IntPtr shellItem);
+
     [DllImport(Shell32_DllName, ExactSpelling = true, PreserveSig = false)]
     internal static extern void SHBindToParent(
         IntPtr pidl,
