@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -157,9 +158,9 @@ namespace ExploripComponents.Controls
 
         #region Refresh visible item after scrolling
 
-        public void ForceRefreshVisibleItems()
+        public async Task ForceRefreshVisibleItems()
         {
-            Application.Current.Dispatcher.BeginInvoke(() =>
+            await Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 foreach (OneFileSystem item in FileLV.Items)
                 {
@@ -172,9 +173,9 @@ namespace ExploripComponents.Controls
 
         private void FileLV_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            ForceRefreshVisibleItems();
+            ForceRefreshVisibleItems().GetAwaiter();
             if (e.VerticalChange != 0)
-                FileLV.Scroll(e);
+                FileLV.Scrolling(e);
         }
 
         private bool IsElementInViewport(FrameworkElement element)

@@ -227,8 +227,7 @@ public abstract class TabItemExplorip : TabItem, IDisposable
 
     public void Dispose()
     {
-        // Ne changez pas ce code. Placez le code de nettoyage dans la méthode 'Dispose(bool disposing)'
-        Dispose(disposing: true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 

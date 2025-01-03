@@ -16,6 +16,7 @@ namespace ExploripComponents.Controls;
 public class ListViewEx : ListView
 {
     private List<string> _itemsSelectedBefore = [];
+    private int _numFirstItem, _numLastItem;
 
     public ListViewEx()
     {
@@ -93,6 +94,7 @@ public class ListViewEx : ListView
             DrawSelection = false;
             Mouse.Capture(null);
             InvalidateVisual();
+            _scrolledSelectedElements.Clear();
         }
     }
 
@@ -120,6 +122,8 @@ public class ListViewEx : ListView
         }
         foreach (OneFileSystem fs in MainViewModel.FileListView.Where(i => _itemsSelectedBefore.Contains(i.DisplayText)))
             SelectedItems.Add(fs);
+        foreach (OneFileSystem fs in _scrolledSelectedElements)
+            SelectedItems.Add(fs);
     }
 
     public bool DrawSelection { get; set; }
@@ -140,24 +144,23 @@ public class ListViewEx : ListView
         }
     }
 
-    private List<OneFileSystem> _scrolledSelectedElements = [];
-    public void Scroll(ScrollChangedEventArgs e)
+    private readonly List<OneFileSystem> _scrolledSelectedElements = [];
+    public void Scrolling(ScrollChangedEventArgs e)
     {
+        SetVisibleItem(e);
         if (DrawSelection && e.VerticalChange != 0)
         {
-            SelectItems();
-            /*int i = 0;
-            while (i != e.VerticalOffset + e.VerticalOffset)
-            {
-                OneFileSystem fs = Items.OfType<OneFileSystem>().ElementAt(i);
-                if (!fs.IsItemVisible &&
-                    SelectedItems.Contains(fs) &&
-                    !_scrolledSelectedElements.Contains(fs))
-                {
+            foreach (OneFileSystem fs in SelectedItems.OfType<OneFileSystem>())
+                if (!_scrolledSelectedElements.Contains(fs))
                     _scrolledSelectedElements.Add(fs);
-                }
-                i += (int)e.VerticalChange;
-            }*/
+            InvalidateVisual();
+            SelectItems();
         }
+    }
+
+    public void SetVisibleItem(ScrollChangedEventArgs e)
+    {
+        _numFirstItem = (int)e.VerticalOffset;
+        _numLastItem = (int)e.VerticalOffset + (int)e.ViewportHeight;
     }
 }

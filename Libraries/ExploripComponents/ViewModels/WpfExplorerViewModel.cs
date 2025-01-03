@@ -451,7 +451,7 @@ public partial class WpfExplorerViewModel : ObservableObject
         await Task.Run(async () =>
         {
             await Task.Delay(Constants.DelayBeforeForceRefreshItems);
-            CurrentControl.ForceRefreshVisibleItems();
+            await CurrentControl.ForceRefreshVisibleItems();
         });
     }
 
