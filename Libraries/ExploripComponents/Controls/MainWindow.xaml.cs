@@ -173,6 +173,8 @@ namespace ExploripComponents.Controls
         private void FileLV_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             ForceRefreshVisibleItems();
+            if (e.VerticalChange != 0)
+                FileLV.Scroll(e);
         }
 
         private bool IsElementInViewport(FrameworkElement element)

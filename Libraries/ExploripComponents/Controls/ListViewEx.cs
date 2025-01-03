@@ -31,6 +31,8 @@ public class ListViewEx : ListView
 
     private void ListView_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
+        if (ClickOnScrollStep(e))
+            return;
         if (DrawSelection)
         {
             MainViewModel.CurrentlyRenaming?.Rename();
@@ -47,6 +49,19 @@ public class ListViewEx : ListView
         UnselectAll();
     }
 
+    private bool ClickOnScrollStep(MouseEventArgs e)
+    {
+        Point mousePos = e.GetPosition(this);
+        ScrollViewer? sv = this.FindVisualChild<ScrollViewer>();
+        if ((sv != null && sv.Visibility == Visibility.Visible) &&
+            (mousePos.X > ActualWidth - SystemParameters.ScrollWidth ||
+            mousePos.Y > ActualHeight - SystemParameters.ScrollHeight))
+        {
+            return true;
+        }
+        return false;
+    }
+
     private void ListView_PreviewMouseMove(object sender, MouseEventArgs e)
     {
         if (DrawSelection)
@@ -58,6 +73,8 @@ public class ListViewEx : ListView
 
     private void ListView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if (ClickOnScrollStep(e))
+            return;
         if ((Mouse.DirectlyOver is not FrameworkElement element || element.DataContext is not OneFileSystem) && !DrawSelection && Mouse.DirectlyOver is not System.Windows.Shapes.Rectangle)
         {
             if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
@@ -120,6 +137,27 @@ public class ListViewEx : ListView
             dest.X = Math.Max(dest.X, 0);
             dest.Y = Math.Max(dest.Y, 0);
             drawingContext.DrawRectangle(ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject, _selectionPen, new Rect(DrawSelectionStart, dest));
+        }
+    }
+
+    private List<OneFileSystem> _scrolledSelectedElements = [];
+    public void Scroll(ScrollChangedEventArgs e)
+    {
+        if (DrawSelection && e.VerticalChange != 0)
+        {
+            SelectItems();
+            /*int i = 0;
+            while (i != e.VerticalOffset + e.VerticalOffset)
+            {
+                OneFileSystem fs = Items.OfType<OneFileSystem>().ElementAt(i);
+                if (!fs.IsItemVisible &&
+                    SelectedItems.Contains(fs) &&
+                    !_scrolledSelectedElements.Contains(fs))
+                {
+                    _scrolledSelectedElements.Add(fs);
+                }
+                i += (int)e.VerticalChange;
+            }*/
         }
     }
 }
