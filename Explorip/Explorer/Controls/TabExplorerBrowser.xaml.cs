@@ -61,6 +61,12 @@ public partial class TabExplorerBrowser : TabControl
         AddNewTab(ShellObject.FromParsingName(path));
     }
 
+    public void AddNewTab(TabItemExplorip tab)
+    {
+        Items.Insert(Items.Count - 1, tab);
+        SelectedItem = tab;
+    }
+
     #endregion
 
     #region Properties

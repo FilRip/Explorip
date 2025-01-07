@@ -71,6 +71,11 @@ public partial class HeaderWithCloseButton : UserControl, INotifyPropertyChanged
             MyTabControl.AddNewTab(CurrentTabExplorer.ExplorerBrowser.NavigationLog.CurrentLocation);
     }
 
+    private void NewRegistryEditorTab_Click(object sender, RoutedEventArgs e)
+    {
+        MyTabControl.AddNewTab(new TabItemRegedit());
+    }
+
     private void CloseTab_Click(object sender, RoutedEventArgs e)
     {
         TabExplorerBrowser myTabControl = MyTabControl;

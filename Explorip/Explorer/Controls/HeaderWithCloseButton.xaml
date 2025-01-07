@@ -33,6 +33,8 @@
             <Separator/>
             <MenuItem Header="{x:Static constants:Localization.COMMANDLINE_ADMIN}" Name="NewAdminConsoleTab" Click="NewAdminConsoleTab_Click"/>
             <MenuItem Header="{x:Static constants:Localization.POWER_SHELL_ADMIN}" Name="NewAdminPowerShellTab" Click="NewAdminPowerShellTab_Click"/>
+            <Separator/>
+            <MenuItem Header="{x:Static constants:Localization.REGISTRY_EDITOR}" Name="NewRegistryEditorTab" Click="NewRegistryEditorTab_Click"/>
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid Margin="0">

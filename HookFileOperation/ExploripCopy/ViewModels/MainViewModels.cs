@@ -269,9 +269,9 @@ public partial class MainViewModels : ObservableObject, IDisposable
                             try
                             {
                                 if (isDirectory)
-                                    Directory.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.NewName));
+                                    MoveSameDriveHelper.MoveDirectory(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.NewName), Callback_Operation);
                                 else
-                                    File.Move(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.NewName));
+                                    MoveSameDriveHelper.MoveFile(operation.Source, destDir.FullName + Path.DirectorySeparatorChar + Path.GetFileName(operation.NewName), Callback_Operation);
                             }
                             catch (Exception ex)
                             {

@@ -220,7 +220,7 @@ internal static class CopyHelper
         return null;
     }
 
-    private static void EndReportProgress(IAsyncResult ar)
+    public static void EndReportProgress(IAsyncResult ar)
     {
         try
         {
