@@ -203,8 +203,8 @@
             </TreeView.ItemContainerStyle>
 
             <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate 
-                    DataType="{x:Type models:OneDirectory}" 
+                <HierarchicalDataTemplate
+                    DataType="{x:Type models:OneDirectory}"
                     ItemsSource="{Binding Children}">
                     <Grid Margin="0" AllowDrop="True" Name="TreeItemGrid" Drop="TreeItemGrid_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}"
                           PreviewDragEnter="AllowDrop_PreviewDragEnter" DragEnter="Grid_DragEnter" DragLeave="Grid_DragLeave" Background="{Binding BackgroundColor}">
@@ -276,7 +276,7 @@
             </ListView.GroupStyle>
         </local:ListViewEx>
         <!-- Error message -->
-        <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ErrorMessage}" Visibility="{Binding ErrorVisible, Converter={StaticResource boolToVisible}}" TextWrapping="Wrap"/>
+        <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ErrorMessage}" Visibility="{Binding ErrorVisible, Converter={StaticResource boolToVisible}}" TextWrapping="Wrap" Foreground="Red"/>
         <!-- Progress ring -->
         <StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding PleaseWait, Converter={StaticResource boolToVisible}}">
             <ui:ProgressRing IsActive="{Binding PleaseWait}" Height="60" Width="60"/>

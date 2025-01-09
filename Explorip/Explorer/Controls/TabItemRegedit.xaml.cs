@@ -1,62 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System.Windows;
+using System.Windows.Controls;
 
-namespace Explorip.Explorer.Controls
+namespace Explorip.Explorer.Controls;
+
+/// <summary>
+/// Logique d'interaction pour TabItemRegedit.xaml
+/// </summary>
+public partial class TabItemRegedit : TabItemExplorip
 {
-    /// <summary>
-    /// Logique d'interaction pour TabItemRegedit.xaml
-    /// </summary>
-    public partial class TabItemRegedit : TabItemExplorip
+    public TabItemRegedit()
     {
-        private readonly List<string> _historic = [];
+        InitializeComponent();
+        InitializeExplorip();
+        SetTitle(Constants.Localization.REGISTRY_EDITOR);
+    }
 
-        public TabItemRegedit()
+    private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (sender is Grid myGrid && myGrid.ColumnDefinitions.Count > 0)
         {
-            InitializeComponent();
-            InitializeExplorip();
-            SetTitle("Regedit");
+            int sizeCol = (int)(MainGrid.ColumnDefinitions[1].ActualWidth / 2) - 100;
+            myGrid.ColumnDefinitions[0].Width = new GridLength(sizeCol);
+            myGrid.ColumnDefinitions[1].Width = new GridLength(100);
+            myGrid.ColumnDefinitions[2].Width = new GridLength(sizeCol);
         }
-
-        #region Search
-
-        private void SearchText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            // TODO
-        }
-
-        private void EditPath_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        {
-            // TODO
-        }
-
-        private void EditPath_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            // TODO
-        }
-
-        private void EditPath_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            // TODO
-        }
-
-        private void SearchButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            // TODO
-        }
-
-        #endregion
-
-        #region Navigation
-
-        private void NextButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            // TODO
-        }
-
-        private void PreviousButton_Click(object sender, System.Windows.RoutedEventArgs e)
-        {
-            // TODO
-        }
-
-        #endregion
     }
 }

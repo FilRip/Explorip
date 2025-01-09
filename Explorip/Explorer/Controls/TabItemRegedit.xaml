@@ -8,17 +8,24 @@
              xmlns:Constants="clr-namespace:Explorip.Constants"
              xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" IsTabStop="False" Style="{DynamicResource CustomTabItem}"
              d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
     <local:TabItemExplorip.Resources>
         <ResourceDictionary>
+            <Style TargetType="ScrollBar">
+                <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
+            </Style>
             <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibility"/>
             <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
+            <converters:TreeViewLineConverter x:Key="LineConverter"/>
         </ResourceDictionary>
     </local:TabItemExplorip.Resources>
+    
     <TabItem.DataContext>
         <viewmodels:TabItemRegeditViewModel/>
     </TabItem.DataContext>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -33,7 +40,12 @@
                 <ColumnDefinition Width="22"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" Name="PreviousButton" Click="PreviousButton_Click" IsEnabled="{Binding AllowNavigatePrevious}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundPrevious}" IsTabStop="False">
+            <Button Grid.Column="0" Name="PreviousButton" IsEnabled="{Binding AllowNavigatePrevious}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundPrevious}" IsTabStop="False">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding GotoPreviousCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="Transparent"/>
@@ -60,7 +72,12 @@
                 </Button.Style>
             </Button>
 
-            <Button Grid.Column="1" Name="NextButton" Click="NextButton_Click" IsEnabled="{Binding AllowNavigateNext}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE761;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundNext}" IsTabStop="False">
+            <Button Grid.Column="1" Name="NextButton" IsEnabled="{Binding AllowNavigateNext}" BorderThickness="0" Margin="0 5 5 5" Content="&#xE761;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding ForegroundNext}" IsTabStop="False">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding GotoNextCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="Transparent"/>
@@ -87,15 +104,37 @@
                 </Button.Style>
             </Button>
 
-            <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={StaticResource inverseBoolToVisibility}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-            <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={StaticResource boolToVisibility}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" KeyDown="EditPath_KeyDown" LostFocus="EditPath_LostFocus" Focusable="True" IsTabStop="False"
+            <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={StaticResource inverseBoolToVisibility}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding CurrentSelectedKey}"/>
+            <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={StaticResource boolToVisibility}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" Focusable="True" IsTabStop="False"
                       Foreground="Yellow"
                       Style="{DynamicResource MyComboBox}"
-                      PreviewMouseDown="EditPath_PreviewMouseDown"
-                      IsDropDownOpen="{Binding ShowSuggestions}"/>
-            <TextBox Name="SearchText" Grid.Column="2" BorderThickness="2" Foreground="White" Background="Black" Visibility="{Binding ModeSearch, Converter={StaticResource boolToVisibility}}" Text="{Binding SearchTo}" Focusable="True" IsTabStop="False" KeyDown="SearchText_KeyDown"/>
+                      IsDropDownOpen="{Binding ShowSuggestions}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseDown">
+                        <i:InvokeCommandAction Command="{Binding EditPath_PreviewMouseDownCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="KeyDown">
+                        <i:InvokeCommandAction Command="{Binding EditPath_KeyDownCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="LostFocus">
+                        <i:InvokeCommandAction Command="{Binding EditPath_LostFocusCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <TextBox Name="SearchText" Grid.Column="2" BorderThickness="2" Foreground="White" Background="Black" Visibility="{Binding ModeSearch, Converter={StaticResource boolToVisibility}}" Text="{Binding SearchTo}" Focusable="True" IsTabStop="False">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyDown">
+                        <i:InvokeCommandAction Command="{Binding SearchText_KeyDownCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
 
-            <Button Name="SearchButton" Grid.Column="3" Content="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{x:Static colors:Colors.AccentColorBrush}" Click="SearchButton_Click" BorderBrush="{Binding DisabledButtonColor}" BorderThickness="2" IsTabStop="False" Focusable="False">
+            <Button Name="SearchButton" Grid.Column="3" Content="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{x:Static colors:Colors.AccentColorBrush}" BorderBrush="{Binding DisabledButtonColor}" BorderThickness="2" IsTabStop="False" Focusable="False">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding SearchButton_ClickCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <Button.Style>
                     <Style TargetType="{x:Type Button}">
                         <Setter Property="Background" Value="Transparent"/>
@@ -119,18 +158,89 @@
 
         </Grid>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" x:Name="MainGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.25*"/>
                 <ColumnDefinition Width="0.75*"/>
             </Grid.ColumnDefinitions>
             
-            <TreeView Grid.Column="0"/>
+            <!-- TreeView -->
+            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}"
+                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemEx}">
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                        <Setter Property="FontWeight" Value="Normal" />
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="0,2,0,2"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="MinHeight" Value="0"/>
+                        <Setter Property="Foreground" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate
+                        DataType="{x:Type viewmodels:OneRegistryKey}"
+                        ItemsSource="{Binding Children}">
+                        <Grid Margin="0" Name="TreeItemGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding DisplayText}" Visibility="{Binding EditMode, Converter={StaticResource inverseBoolToVisibility}}"/>
+                            <!--<TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding EditMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" BorderThickness="0" VerticalContentAlignment="Center" LostFocus="EditNameBox_LostFocus"/>-->
+                        </Grid>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
 
             <!-- Middle, splitter -->
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5" Focusable="False" IsTabStop="False"/>
 
-            <ListView Grid.Column="1"/>
+            <!-- ListView -->
+            <ListView Grid.Column="1" Background="{x:Static colors:Colors.BackgroundColorBrush}" ItemsSource="{Binding ListViewItems}"
+                      Visibility="{Binding ErrorVisible, Converter={StaticResource inverseBoolToVisibility}}"
+                      Foreground="{x:Static colors:Colors.ForegroundColorBrush}">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type viewmodels:OneRegistryValue}">
+                        <Grid SizeChanged="ListView_SizeChanged">
+                            <Grid.ContextMenu>
+                                <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
+                                    <ContextMenu.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
+                                        </ItemsPanelTemplate>
+                                    </ContextMenu.ItemsPanel>
+                                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_MODIFY_VALUE}" Command="{Binding ModifyCommand}"/>
+                                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_MODIFY_VALUE_BINARY}" Command="{Binding ModifyBinaryCommand}"/>
+                                    <Separator/>
+                                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_DELETE_VALUE}" Command="{Binding DeleteCommand}"/>
+                                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_RENAME_VALUE}" Command="{Binding RenameCommand}"/>
+                                </ContextMenu>
+                            </Grid.ContextMenu>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="0.45*"/>
+                                <ColumnDefinition Width="0.1*"/>
+                                <ColumnDefinition Width="0.45*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" Visibility="{Binding EditMode, Converter={StaticResource inverseBoolToVisibility}}"/>
+                            <TextBox Grid.Column="0" Text="{Binding NewName}" Visibility="{Binding EditMode, Converter={StaticResource boolToVisibility}}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Type}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Value}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <!-- Error message -->
+            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ErrorMessage}" Visibility="{Binding ErrorVisible, Converter={StaticResource boolToVisibility}}" TextWrapping="Wrap"
+                       Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="Red"/>
         </Grid>
         
     </Grid>

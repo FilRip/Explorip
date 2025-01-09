@@ -88,7 +88,12 @@ public static class Localization
     public static string CONTEXT_MENU_EXPLORER_ADDRESS_BAR_DELETE_HISTORY { get; private set; }
     public static string SHOW_MOSAIC_SUBMENU { get; private set; }
     public static string ERROR_PATH_NOT_FOUND { get; private set; }
-    public static string COLUMN_DURATION {  get; private set; }
+    public static string COLUMN_DURATION { get; private set; }
+    public static string REGEDIT_MODIFY_VALUE { get; private set; }
+    public static string REGEDIT_MODIFY_VALUE_BINARY { get; private set; }
+    public static string REGEDIT_DELETE_VALUE { get; private set; }
+    public static string REGEDIT_RENAME_VALUE { get; private set; }
+    public static string REGEDIT_CONFIRM_DELETE_VALUE { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -174,6 +179,11 @@ public static class Localization
         SHOW_MOSAIC_SUBMENU = LoadMenuItem("shell32.dll", 216, 28748, "Mosaic", 2).Replace("&", "");
         ERROR_PATH_NOT_FOUND = Load("shell32.dll", 12353, "Windows can't find %1. Check syntax");
         COLUMN_DURATION = Load("shell32.dll", 34828, "Duration");
+        REGEDIT_MODIFY_VALUE = LoadMenuItem("regedit.exe", 105, 912, "Modify...").Replace("&", "");
+        REGEDIT_MODIFY_VALUE_BINARY = LoadMenuItem("regedit.exe", 105, 917, "Modify binary data...").Replace("&", "");
+        REGEDIT_DELETE_VALUE = LoadMenuItem("regedit.exe", 105, 913, "Delete").Replace("&", "");
+        REGEDIT_RENAME_VALUE = LoadMenuItem("regedit.exe", 105, 914, "Rename").Replace("&", "");
+        REGEDIT_CONFIRM_DELETE_VALUE = Load("regedit.exe", 50, "Delete some values of registry can do unsable system. Are you sure you want to delete this value ?");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

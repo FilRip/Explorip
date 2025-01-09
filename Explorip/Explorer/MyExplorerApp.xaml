@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="Styles/StyleTabItem.xaml"/>
                 <ResourceDictionary Source="Styles/StyleComboBox.xaml"/>
                 <ResourceDictionary Source="Styles/StyleButton.xaml"/>
+                <ResourceDictionary Source="Styles/StyleTreeViewItem.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

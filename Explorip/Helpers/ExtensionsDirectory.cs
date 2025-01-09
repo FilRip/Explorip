@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+using Microsoft.Win32;
+
 using static ManagedShell.Interop.NativeMethods;
 
 namespace Explorip.Helpers;
@@ -56,5 +58,20 @@ public static class ExtensionsDirectory
         }
         catch (Exception) { /* Ignore errors */ }
         return Path.GetFileName(path);
+    }
+
+    public static string RealName(this RegistryHive registry)
+    {
+        return registry switch
+        {
+            RegistryHive.ClassesRoot => "HKEY_CLASSES_ROOT",
+            RegistryHive.CurrentUser => "HKEY_CURRENT_USER",
+            RegistryHive.LocalMachine => "HKEY_LOCAL_MACHINE",
+            RegistryHive.Users => "HKEY_USERS",
+            RegistryHive.PerformanceData => "HKEY_PERFORMANCE_DATA",
+            RegistryHive.CurrentConfig => "HKEY_CURRENT_CONFIG",
+            RegistryHive.DynData => "HKEY_DYN_DATA",
+            _ => "ERROR?",
+        };
     }
 }
