@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -9,6 +10,8 @@ using Explorip.Helpers;
 using ExploripApi;
 
 using ExploripConfig.Configuration;
+
+using ManagedShell.Interop;
 
 using Microsoft.Win32;
 

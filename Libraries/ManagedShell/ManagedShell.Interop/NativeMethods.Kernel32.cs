@@ -330,16 +330,25 @@ public partial class NativeMethods
     [DllImport(Kernel32_DllName)]
     internal static extern uint GetLastError();
 
-    [DllImport("kernel32.dll")]
+    [DllImport(Kernel32_DllName)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool FindClose(IntPtr handle);
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    [DllImport(Kernel32_DllName, CharSet = CharSet.Auto, SetLastError = true)]
     internal static extern SafeSearchHandle FindFirstFile(string fileName, out Win32FindData data);
 
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    [DllImport(Kernel32_DllName, CharSet = CharSet.Auto, SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool FindNextFile(SafeSearchHandle hndFindFile, out Win32FindData lpFindFileData);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct LcId
+    {
+        public uint _value;
+    }
+
+    [DllImport(Kernel32_DllName, CharSet = CharSet.Auto, SetLastError = true)]
+    internal static extern bool SetThreadLocale(LcId locate);
 
     public sealed class SafeSearchHandle : SafeHandleZeroOrMinusOneIsInvalid
     {

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Helpers;
-
-using ExploripCopy.ViewModels;
 
 using Microsoft.Win32;
 
@@ -40,7 +41,9 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
     [ObservableProperty()]
     private bool _isSelected;
     [ObservableProperty()]
-    private bool _editMode;
+    private bool _editKeyName;
+    [ObservableProperty()]
+    private string? _newKeyName;
 
     #endregion
 
@@ -53,7 +56,7 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
         _machineName = machineName;
         _hive = hive;
         _key = subKey?.Trim('\\');
-        _editMode = false;
+        _editKeyName = false;
         if (displayText == null)
         {
             if (!string.IsNullOrWhiteSpace(subKey))
@@ -199,6 +202,70 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
         return _fullPath!;
     }
 
+    #region RelayCommand
+
+    [RelayCommand()]
+    private void VisibleEditMode()
+    {
+        NewKeyName = DisplayText;
+    }
+
+    [RelayCommand()]
+    private void NewNameKeyDown(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            NewKeyName = DisplayText;
+            EditKeyName = false;
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Enter || e.Key == Key.Return)
+        {
+            NewNameLostFocus();
+            EditKeyName = false;
+            e.Handled = true;
+        }
+        else if (e.Key == Key.F2 && !EditKeyName)
+        {
+            EditKeyName = true;
+            e.Handled = true;
+        }
+    }
+
+    [RelayCommand()]
+    private void NewNameLostFocus()
+    {
+        if (NewKeyName != DisplayText)
+        {
+            try
+            {
+                Parent!.CurrentKey.RenameSubKey(DisplayText, NewKeyName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
+    [RelayCommand()]
+    private void DeleteSubKey()
+    {
+        if (MessageBox.Show(Constants.Localization.REGEDIT_CONFIRM_DELETE_KEY, Constants.Localization.REGISTRY_EDITOR, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+        {
+            try
+            {
+                Parent!.CurrentKey!.DeleteSubKeyTree(DisplayText);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+    }
+
+    #endregion
+
     #region Properties
 
     public OneRegistryKey? Parent { get; set; }
@@ -213,6 +280,11 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
     public RegistryKey? CurrentKey
     {
         get { return _currentRegistryKey; }
+    }
+
+    public string? CurrentPath
+    {
+        get { return _key; }
     }
 
     #endregion

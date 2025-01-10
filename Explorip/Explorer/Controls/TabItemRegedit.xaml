@@ -194,8 +194,27 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding DisplayText}" Visibility="{Binding EditMode, Converter={StaticResource inverseBoolToVisibility}}"/>
-                            <!--<TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding EditMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" BorderThickness="0" VerticalContentAlignment="Center" LostFocus="EditNameBox_LostFocus"/>-->
+                            <TextBlock Grid.Column="0" Text="{Binding DisplayText}" Visibility="{Binding EditKeyName, Converter={StaticResource inverseBoolToVisibility}}" Focusable="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="KeyDown">
+                                        <i:InvokeCommandAction Command="{Binding NewNameKeyDownCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBlock>
+                            <TextBox Text="{Binding NewKeyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding EditKeyName, Converter={StaticResource boolToVisibility}}" Margin="0" x:Name="EditNameBox" Padding="0" BorderThickness="0" VerticalContentAlignment="Center" Focusable="True"
+                                     IsVisibleChanged="IsVisibleChanged_SetFocus">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="IsVisibleChanged">
+                                        <i:InvokeCommandAction Command="{Binding VisibleEditModeCommand}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="KeyDown">
+                                        <i:InvokeCommandAction Command="{Binding NewNameKeyDownCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding NewNameLostFocusCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
                         </Grid>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
@@ -211,6 +230,11 @@
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:OneRegistryValue}">
                         <Grid SizeChanged="ListView_SizeChanged">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}" PassEventArgsToCommand="True"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                             <Grid.ContextMenu>
                                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
                                     <ContextMenu.ItemsPanel>
@@ -230,8 +254,25 @@
                                 <ColumnDefinition Width="0.1*"/>
                                 <ColumnDefinition Width="0.45*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" Visibility="{Binding EditMode, Converter={StaticResource inverseBoolToVisibility}}"/>
-                            <TextBox Grid.Column="0" Text="{Binding NewName}" Visibility="{Binding EditMode, Converter={StaticResource boolToVisibility}}"/>
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" Visibility="{Binding EditValueName, Converter={StaticResource inverseBoolToVisibility}}" Focusable="True">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="KeyDown">
+                                        <i:InvokeCommandAction Command="{Binding EditNameKeyDownCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBlock>
+                            <TextBox Grid.Column="0" Text="{Binding NewName}" Visibility="{Binding EditValueName, Converter={StaticResource boolToVisibility}}" Focusable="True"
+                                     Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
+                                     IsVisibleChanged="IsVisibleChanged_SetFocus">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:InvokeCommandAction Command="{Binding EditNameLostFocusCommand}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="KeyDown">
+                                        <i:InvokeCommandAction Command="{Binding EditNameKeyDownCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBox>
                             <TextBlock Grid.Column="1" Text="{Binding Type}"/>
                             <TextBlock Grid.Column="2" Text="{Binding Value}"/>
                         </Grid>
