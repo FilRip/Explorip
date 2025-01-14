@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 
-using Microsoft.Win32;
-
 using static ManagedShell.Interop.NativeMethods;
 
 namespace Explorip.Helpers;

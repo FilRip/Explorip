@@ -13,9 +13,9 @@ public partial class TabItemPlusExplorerBrowser : TabItem
         InitializeComponent();
         HeaderWithCloseButton closableTabHeader = new();
         Header = closableTabHeader;
-        MyHeader.PlusButton = true;
-        closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
-        MyHeader.Label_TabTitle.Content = "";
+        MyHeader.MyDataContext.PlusButton = true;
+        closableTabHeader.lblTitle.SizeChanged += TabTitle_SizeChanged;
+        MyHeader.lblTitle.Content = "";
     }
 
     public TabExplorerBrowser MyTabControl
@@ -30,6 +30,6 @@ public partial class TabItemPlusExplorerBrowser : TabItem
 
     private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        MyHeader.ButtonNewTab.Margin = new Thickness(MyHeader.Label_TabTitle.ActualWidth + 5, 3, 0, 0);
+        MyHeader.ButtonNewTab.Margin = new Thickness(MyHeader.lblTitle.ActualWidth + 5, 3, 0, 0);
     }
 }

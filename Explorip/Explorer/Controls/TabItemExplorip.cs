@@ -16,14 +16,14 @@ public abstract class TabItemExplorip : TabItem, IDisposable
         HeaderWithCloseButton closableTabHeader = new();
         Header = closableTabHeader;
         MyHeader.DragOver += MyHeader_DragOver;
-        closableTabHeader.Label_TabTitle.SizeChanged += TabTitle_SizeChanged;
+        closableTabHeader.lblTitle.SizeChanged += TabTitle_SizeChanged;
         Drop += TabItem_Drop;
         PreviewMouseMove += TabItem_PreviewMouseMove;
     }
 
     private void TabTitle_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        MyHeader.ButtonClose.Margin = new Thickness(MyHeader.Label_TabTitle.ActualWidth + 5, 3, 0, 0);
+        MyHeader.ButtonClose.Margin = new Thickness(MyHeader.lblTitle.ActualWidth + 5, 3, 0, 0);
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public abstract class TabItemExplorip : TabItem, IDisposable
     protected void SetTitle(string newTitle)
     {
         if (MyHeader != null)
-            MyHeader.Label_TabTitle.Content = newTitle.Replace("_", "__");
+            MyHeader.MyDataContext.Title = newTitle.Replace("_", "__");
     }
 
     #region Events for selecting/deselecting
@@ -57,12 +57,12 @@ public abstract class TabItemExplorip : TabItem, IDisposable
 
     #region Properties
 
-    protected HeaderWithCloseButton MyHeader
+    public HeaderWithCloseButton MyHeader
     {
         get { return (HeaderWithCloseButton)Header; }
     }
 
-    protected TabExplorerBrowser MyTabControl
+    public TabExplorerBrowser MyTabControl
     {
         get { return (TabExplorerBrowser)Parent; }
     }
@@ -218,7 +218,7 @@ public abstract class TabItemExplorip : TabItem, IDisposable
                 MyHeader.DragOver -= MyHeader_DragOver;
                 Drop -= TabItem_Drop;
                 PreviewMouseMove -= TabItem_PreviewMouseMove;
-                MyHeader.Label_TabTitle.SizeChanged -= TabTitle_SizeChanged;
+                MyHeader.lblTitle.SizeChanged -= TabTitle_SizeChanged;
                 Header = null;
             }
             disposedValue = true;

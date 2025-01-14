@@ -28,6 +28,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     private SearchCondition _searchQuery;
     private ShellSearchFolder _searchShell;
     private string _searchDirectory;
+    private string _tempTitle;
 
     public TabItemExplorerBrowser() : base()
     {
@@ -51,6 +52,11 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     public ShellObject CurrentDirectory
     {
         get { return ExplorerBrowser.NavigationLog.CurrentLocation; }
+    }
+
+    public void SetTempTitle(string newTempTitle)
+    {
+        _tempTitle = newTempTitle;
     }
 
     #region Navigation file explorer
@@ -319,5 +325,10 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             DisposeSearch();
             ExplorerBrowser.Dispose();
         }
+    }
+
+    private void TabItemExplorip_Loaded(object sender, RoutedEventArgs e)
+    {
+        MyHeader.MyDataContext.Title = _tempTitle;
     }
 }

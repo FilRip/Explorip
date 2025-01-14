@@ -75,10 +75,10 @@ public partial class WpfExplorerBrowser : Window
         if (_mainSession && string.IsNullOrWhiteSpace(dir))
         {
             foreach (string path in ConfigManager.LeftTabs.Where(p => Directory.Exists(p)))
-                LeftTab.AddNewTab(ShellObject.FromParsingName(path));
+                LeftTab.AddNewTab(ShellObject.FromParsingName(path), Path.GetFileName(path));
 
             foreach (string path in ConfigManager.RightTabs.Where(p => Directory.Exists(p)))
-                RightTab.AddNewTab(ShellObject.FromParsingName(path));
+                RightTab.AddNewTab(ShellObject.FromParsingName(path), Path.GetFileName(path));
         }
         if (string.IsNullOrWhiteSpace(dir))
         {
@@ -88,7 +88,7 @@ public partial class WpfExplorerBrowser : Window
                 RightTab.AddNewTab((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.KnownFolders.Desktop);
         }
         if ((!ConfigManager.StartTwoExplorer && RightTab.Visibility == Visibility.Visible) && !newInstance)
-            HideRightTab();
+            HideRightTab(newInstance);
 
         Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
@@ -104,7 +104,9 @@ public partial class WpfExplorerBrowser : Window
             WindowState = ConfigManager.ExplorerWindowState;
         if (WindowState == WindowState.Minimized && newInstance)
             WindowState = WindowState.Normal;
-        _firstLeftTabWidth = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab")?.ReadInteger("Width") ?? 0;
+
+        if (RightTab.Visibility == Visibility.Visible)
+            _firstLeftTabWidth = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab")?.ReadInteger("Width") ?? 0;
     }
 
     public WpfExplorerBrowserViewModel MyDataContext
@@ -199,12 +201,13 @@ public partial class WpfExplorerBrowser : Window
 
     #region Manage TabControl
 
-    public void HideRightTab()
+    public void HideRightTab(bool newInstance = false)
     {
         RightGrid.Width = new GridLength(0);
         RightTab.Visibility = Visibility.Hidden;
         LeftTab.SetValue(Grid.ColumnSpanProperty, 6);
-        ConfigManager.StartTwoExplorer = false;
+        if (!newInstance)
+            ConfigManager.StartTwoExplorer = false;
     }
 
     public void ShowRightTab()
@@ -359,9 +362,9 @@ public partial class WpfExplorerBrowser : Window
     {
         if (_mainSession)
         {
-            ConfigManager.LeftTabs = LeftTab.Items.OfType<TabItemExplorerBrowser>().Select(tab => tab.CurrentDirectory.ParsingName).ToArray();
+            ConfigManager.LeftTabs = LeftTab.Items.OfType<TabItemExplorerBrowser>().Where(tab => tab.CurrentDirectory?.ParsingName != null).Select(tab => tab.CurrentDirectory.ParsingName).ToArray();
             if (RightTab.Visibility == Visibility.Visible)
-                ConfigManager.RightTabs = RightTab.Items.OfType<TabItemExplorerBrowser>().Select(tab => tab.CurrentDirectory.ParsingName).ToArray();
+                ConfigManager.RightTabs = RightTab.Items.OfType<TabItemExplorerBrowser>().Where(tab => tab.CurrentDirectory?.ParsingName != null).Select(tab => tab.CurrentDirectory.ParsingName).ToArray();
         }
         LeftTab.CloseAllTabs();
         RightTab.CloseAllTabs();

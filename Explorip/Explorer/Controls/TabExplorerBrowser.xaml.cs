@@ -45,15 +45,16 @@ public partial class TabExplorerBrowser : TabControl
                     tabItem.Dispose();
     }
 
-    public void AddNewTab(ShellObject location)
+    public void AddNewTab(ShellObject location, string title = "")
     {
         TabItemExplorerBrowser item = new();
+        item.SetTempTitle(title);
         item.Navigation(location);
         Items.Insert(Items.Count - 1, item);
-        SelectedItem = item;
         WpfExplorerBrowser window = (WpfExplorerBrowser)Window.GetWindow(this);
         if (window.RightTab == MyTabControl && MyTabControl.Items.Count > 1)
             window.ShowRightTab();
+        SelectedItem = item;
     }
 
     public void AddNewTab(string path)
