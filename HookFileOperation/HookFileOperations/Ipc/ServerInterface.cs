@@ -5,7 +5,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-using Explorip.HookFileOperations.FilesOperations;
 using Explorip.HookFileOperations.Models;
 
 using EFileOperation = Explorip.HookFileOperations.Models.EFileOperation;

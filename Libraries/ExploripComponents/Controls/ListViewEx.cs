@@ -163,4 +163,19 @@ public class ListViewEx : ListView
         _numFirstItem = (int)e.VerticalOffset;
         _numLastItem = (int)e.VerticalOffset + (int)e.ViewportHeight;
     }
+
+    public int FirstVisibleIndex
+    {
+        get { return _numFirstItem; }
+    }
+
+    public int NbVisibileItem
+    {
+        get { return _numLastItem - _numFirstItem; }
+    }
+
+    public int LastVisibleIndex
+    {
+        get { return _numLastItem; }
+    }
 }

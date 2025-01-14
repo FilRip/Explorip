@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Windows.Input;
 
 using ManagedShell.ShellFolders.Interfaces;
 

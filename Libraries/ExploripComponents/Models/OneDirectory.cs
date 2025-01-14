@@ -157,7 +157,7 @@ public partial class OneDirectory : OneFileSystem
                                     string name = networkShellFolder.GetDisplayNameOf(subItemPtr, SHGDN.NORMAL);
                                     if (!string.IsNullOrWhiteSpace(name))
                                         Application.Current.Dispatcher.Invoke(() => _networkItems.Add(new OneFile(name, this, absolutePidl, subItemPtr)));
-                                        
+
                                 }
                                 Marshal.ReleaseComObject(itemsEnum);
                             }

@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Windows.Interop;
-using ManagedShell.ShellFolders.Structs;
+
 using ManagedShell.ShellFolders.Enums;
+using ManagedShell.ShellFolders.Structs;
 
 namespace ManagedShell.ShellFolders.Interfaces;
 

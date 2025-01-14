@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Markup;
 
-using Microsoft.WindowsAPICodePack.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs.Common;
 using Microsoft.WindowsAPICodePack.Interop;
 using Microsoft.WindowsAPICodePack.Interop.Dialogs;

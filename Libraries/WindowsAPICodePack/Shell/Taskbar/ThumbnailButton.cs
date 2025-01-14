@@ -2,7 +2,6 @@
 using System.Drawing;
 
 using Microsoft.WindowsAPICodePack.Interop;
-using Microsoft.WindowsAPICodePack.Shell;
 using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 

@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 
 using Microsoft.WindowsAPICodePack.AppRestartRecovery;
-using Microsoft.WindowsAPICodePack.Interop;
 
 namespace Microsoft.WindowsAPICodePack.Interop.AppRestartRecovery;
 

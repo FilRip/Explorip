@@ -12,6 +12,7 @@
         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         xmlns:viewmodels="clr-namespace:ExploripComponents.ViewModels"
         xmlns:models="clr-namespace:ExploripComponents.Models"
+        xmlns:behaviors="clr-namespace:ExploripComponents.Controls.Behaviors"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:WpfExplorerViewModel}"
         ui:WindowHelper.UseModernWindowStyle="True"
@@ -186,6 +187,7 @@
         <TreeView Grid.Column="0" Grid.Row="1" Name="FolderTV" ItemsSource="{Binding FolderTreeView}" Margin="0 0 5 0" PreviewDragOver="Scroll_PreviewDragOver" SelectedItemChanged="FolderTV_SelectedItemChanged" Focusable="True">
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
+                    <Setter Property="behaviors:BringSelectedItemIntoViewBehavior.IsBringSelectedIntoView" Value="True"/>
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                     <Setter Property="FontWeight" Value="Normal" />

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using Microsoft.WindowsAPICodePack.Interop;
-
 namespace Microsoft.WindowsAPICodePack.Interop.TaskDialogs;
 
 

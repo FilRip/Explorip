@@ -8,7 +8,6 @@ using System.Threading;
 using Explorip.Constants;
 
 using ManagedShell.Common.Helpers;
-using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
 
