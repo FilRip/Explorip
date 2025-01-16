@@ -46,6 +46,10 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     private List<OneRegistryValue> _listViewItems;
     [ObservableProperty()]
     private List<OneRegistryKey> _regKeyItems;
+    [ObservableProperty()]
+    private bool _showModifyValue = false;
+    [ObservableProperty()]
+    private string _newValue = "";
 
     #endregion
 
@@ -199,7 +203,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
 
     private void CreateBaseLocalRegistry()
     {
-        RegKeyItems.Add(new OneRegistryKey(null, null, null, displayText: Environment.SpecialFolder.MyComputer.RealName()) { MainViewModel = this, IsExpanded = true });
+        RegKeyItems.Add(new OneRegistryKey(null, null, null, displayText: Environment.SpecialFolder.MyComputer.RealName()) { MainViewModel = this, IsExpanded = true, IsSelected = true });
         CurrentSelectedKey = RegKeyItems[0];
     }
 

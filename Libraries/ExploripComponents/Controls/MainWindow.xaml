@@ -12,7 +12,7 @@
         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         xmlns:viewmodels="clr-namespace:ExploripComponents.ViewModels"
         xmlns:models="clr-namespace:ExploripComponents.Models"
-        xmlns:behaviors="clr-namespace:ExploripComponents.Controls.Behaviors"
+        xmlns:behaviors="clr-namespace:Explorip.Explorer.Behaviors;assembly=Explorip"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:WpfExplorerViewModel}"
         ui:WindowHelper.UseModernWindowStyle="True"

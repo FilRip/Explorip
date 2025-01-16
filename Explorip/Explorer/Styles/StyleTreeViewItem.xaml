@@ -5,6 +5,7 @@
     <converters:TreeViewLineConverter x:Key="LineConverter"/>
     <Style x:Key="DefaultExpandCollapseToggleStyle" TargetType="ToggleButton">
         <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
@@ -69,7 +70,7 @@
                         <!-- Connecting Lines -->
                         <Rectangle x:Name="HorLn" Margin="9,1,0,0" Height="1" Stroke="#C0C0C0" SnapsToDevicePixels="True" Opacity="0.5"/>
                         <Rectangle x:Name="VerLn" Width="1" Stroke="#C0C0C0" Margin="0,0,1,0" Grid.RowSpan="2" SnapsToDevicePixels="true" Fill="White" Opacity="0.5"/>
-                        <ToggleButton Margin="-1,0,0,0" x:Name="Expander" Style="{StaticResource DefaultExpandCollapseToggleStyle}" IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                        <ToggleButton Margin="-1,0,0,0" x:Name="Expander" Style="{StaticResource DefaultExpandCollapseToggleStyle}" IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" IsTabStop="False"/>
                         <Border Name="Bd" Grid.Column="1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
                             <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" MinWidth="20"/>
                         </Border>

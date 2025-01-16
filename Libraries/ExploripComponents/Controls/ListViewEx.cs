@@ -85,6 +85,8 @@ public class ListViewEx : ListView
             DrawSelectionStart = e.GetPosition(this);
             Mouse.Capture(this);
         }
+        Focus();
+        Keyboard.Focus(this);
     }
 
     private void DisableSelectInRectangle()

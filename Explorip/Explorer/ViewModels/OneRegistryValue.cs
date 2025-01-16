@@ -40,7 +40,7 @@ public partial class OneRegistryValue(string name, RegistryValueKind type, objec
     [RelayCommand()]
     public void Modify()
     {
-        // TODO
+        _parent.GetRootParent().MainViewModel!.ShowModifyValue = true;
     }
 
     [RelayCommand()]

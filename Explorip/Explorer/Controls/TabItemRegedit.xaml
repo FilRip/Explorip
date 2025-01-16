@@ -9,8 +9,10 @@
              xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behaviors="clr-namespace:Explorip.Explorer.Behaviors"
              mc:Ignorable="d" IsTabStop="False" Style="{DynamicResource CustomTabItem}"
              d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
+    
     <local:TabItemExplorip.Resources>
         <ResourceDictionary>
             <Style TargetType="ScrollBar">
@@ -158,17 +160,18 @@
 
         </Grid>
 
-        <Grid Grid.Row="1" x:Name="MainGrid">
+        <Grid Grid.Row="1" x:Name="MainGrid" MouseMove="TextBlock_MouseMove" MouseLeftButtonUp="TextBlock_MouseLeftButtonUp">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.25*"/>
                 <ColumnDefinition Width="0.75*"/>
             </Grid.ColumnDefinitions>
             
             <!-- TreeView -->
-            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}"
-                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling">
+            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Focusable="True"
+                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" KeyUp="TreeView_KeyUp" Name="KeyTV">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemEx}">
+                        <Setter Property="behaviors:BringSelectedItemIntoViewBehavior.IsBringSelectedIntoView" Value="True"/>
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                         <Setter Property="FontWeight" Value="Normal" />
@@ -194,14 +197,14 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding DisplayText}" Visibility="{Binding EditKeyName, Converter={StaticResource inverseBoolToVisibility}}" Focusable="True">
+                            <TextBlock Grid.Column="0" Text="{Binding DisplayText}" Visibility="{Binding EditKeyName, Converter={StaticResource inverseBoolToVisibility}}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="KeyDown">
                                         <i:InvokeCommandAction Command="{Binding NewNameKeyDownCommand}" PassEventArgsToCommand="True"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBlock>
-                            <TextBox Text="{Binding NewKeyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="2" Visibility="{Binding EditKeyName, Converter={StaticResource boolToVisibility}}" Margin="0" x:Name="EditNameBox" Padding="0" BorderThickness="0" VerticalContentAlignment="Center" Focusable="True"
+                            <TextBox Grid.Column="0" Text="{Binding NewKeyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding EditKeyName, Converter={StaticResource boolToVisibility}}" Margin="0" x:Name="EditNameBox" Padding="0" BorderThickness="0" VerticalContentAlignment="Center" Focusable="True"
                                      IsVisibleChanged="IsVisibleChanged_SetFocus">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="IsVisibleChanged">
@@ -224,7 +227,7 @@
             <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5" Focusable="False" IsTabStop="False"/>
 
             <!-- ListView -->
-            <ListView Grid.Column="1" Background="{x:Static colors:Colors.BackgroundColorBrush}" ItemsSource="{Binding ListViewItems}"
+            <ListView Grid.Column="1" Background="{x:Static colors:Colors.BackgroundColorBrush}" ItemsSource="{Binding ListViewItems}" Focusable="True"
                       Visibility="{Binding ErrorVisible, Converter={StaticResource inverseBoolToVisibility}}"
                       Foreground="{x:Static colors:Colors.ForegroundColorBrush}">
                 <ListView.ItemTemplate>
@@ -282,6 +285,27 @@
             <!-- Error message -->
             <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ErrorMessage}" Visibility="{Binding ErrorVisible, Converter={StaticResource boolToVisibility}}" TextWrapping="Wrap"
                        Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="Red"/>
+            <!-- Edit value -->
+            <StackPanel Grid.Column="1" Visibility="{Binding ShowModifyValue, Converter={StaticResource boolToVisibility}}" Width="300" Height="55" Background="{x:Static colors:Colors.BackgroundColorBrush}"
+                        Name="SPModifyValue">
+                <Border BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" BorderThickness="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="Nom :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Type :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                        <TextBlock Grid.Column="0" Grid.Row="2" Text="Nouvelle valeur :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                        <TextBox Grid.Column="1" Grid.Row="2" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding NewValue}"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
         </Grid>
         
     </Grid>
