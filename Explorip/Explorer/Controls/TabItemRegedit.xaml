@@ -10,7 +10,7 @@
              xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:behaviors="clr-namespace:Explorip.Explorer.Behaviors"
-             mc:Ignorable="d" IsTabStop="False" Style="{DynamicResource CustomTabItem}"
+             mc:Ignorable="d" IsTabStop="False" Style="{StaticResource CustomTabItem}"
              d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
     
     <local:TabItemExplorip.Resources>
@@ -20,7 +20,6 @@
             </Style>
             <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibility"/>
             <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
-            <converters:TreeViewLineConverter x:Key="LineConverter"/>
         </ResourceDictionary>
     </local:TabItemExplorip.Resources>
     
@@ -109,7 +108,7 @@
             <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={StaticResource inverseBoolToVisibility}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding CurrentSelectedKey}"/>
             <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={StaticResource boolToVisibility}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" Focusable="True" IsTabStop="False"
                       Foreground="Yellow"
-                      Style="{DynamicResource MyComboBox}"
+                      Style="{StaticResource MyComboBox}"
                       IsDropDownOpen="{Binding ShowSuggestions}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseDown">
@@ -168,10 +167,10 @@
             
             <!-- TreeView -->
             <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Focusable="True" SelectedItemChanged="KeyTV_SelectedItemChanged"
-                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" KeyUp="TreeView_KeyUp" Name="KeyTV">
+                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="100" VirtualizingPanel.CacheLengthUnit="Item" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling" KeyUp="TreeView_KeyUp" Name="KeyTV">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemEx}">
-                        <Setter Property="behaviors:BringSelectedItemIntoViewBehavior.IsBringSelectedIntoView" Value="True"/>
+                        <Setter Property="behaviors:PerTreeViewItemHelper.BringSelectedItemIntoView" Value="True"/>
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                         <Setter Property="FontWeight" Value="Normal" />

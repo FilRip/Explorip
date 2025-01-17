@@ -23,8 +23,8 @@ public static class BringSelectedItemIntoViewBehavior
         if (dependencyObject is not TreeViewItem treeViewItem)
             return;
 
-        if (!((bool)dependencyPropertyChangedEventArgs.OldValue) &&
-            ((bool)dependencyPropertyChangedEventArgs.NewValue))
+        if (!(bool)dependencyPropertyChangedEventArgs.OldValue &&
+            (bool)dependencyPropertyChangedEventArgs.NewValue)
         {
             treeViewItem.Unloaded += TreeViewItemOnUnloaded;
             treeViewItem.Selected += TreeViewItemOnSelected;

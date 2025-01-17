@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Explorip.Explorer.Behaviors;
 
-// http://peregrinesview.uk/wpf-behaviors-part-2-treeview/
 public static class PerTreeViewItemHelper
 {
     public static bool GetBringSelectedItemIntoView(TreeViewItem treeViewItem)
@@ -49,7 +48,7 @@ public static class PerTreeViewItemHelper
         if (sender is TreeViewItem item)
         {
             // use DispatcherPriority.ApplicationIdle so this occurs after all operations related to tree item expansion
-            PerDispatcherHelper.AddToQueue(() => item.BringIntoView(), DispatcherPriority.ApplicationIdle);
+            PerDispatcherHelper.AddToQueue(item.BringIntoView, DispatcherPriority.ApplicationIdle);
         }
     }
 
@@ -105,7 +104,7 @@ public static class PerTreeViewItemHelper
         PerDispatcherHelper.AddToQueue(action, DispatcherPriority.ContextIdle);
 
         // then bring the expanded item (back) into view
-        action = () => { item.BringIntoView(); };
+        action = item.BringIntoView;
 
         PerDispatcherHelper.AddToQueue(action, DispatcherPriority.ContextIdle);
     }
@@ -440,9 +439,7 @@ public static class PerDispatcherHelper
     /// <summary>
     /// Internal class representing a queued dispatcher operation.
     /// </summary>
-#pragma warning disable S1210, S3260
-    private class PerDispatcherItemPair(Action action, DispatcherPriority dispatcherPriority) : IComparable<PerDispatcherItemPair>
-#pragma warning restore S1210, S3260
+    private sealed class PerDispatcherItemPair(Action action, DispatcherPriority dispatcherPriority) : IComparable<PerDispatcherItemPair>
     {
         public Action Action { get; } = action;
 
@@ -459,6 +456,58 @@ public static class PerDispatcherHelper
                 result = ItemIndex.CompareTo(other.ItemIndex);
 
             return result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return CompareTo(obj as PerDispatcherItemPair) == 0;
+        }
+
+        public static bool operator ==(PerDispatcherItemPair left, PerDispatcherItemPair right)
+        {
+            if (left is null && right is null)
+                return true;
+            if (left is null)
+                return false;
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PerDispatcherItemPair left, PerDispatcherItemPair right)
+        {
+            return !(left == right);
+        }
+
+        public static bool operator <(PerDispatcherItemPair left, PerDispatcherItemPair right)
+        {
+            if (left is null || right is null)
+                return false;
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator >(PerDispatcherItemPair left, PerDispatcherItemPair right)
+        {
+            if (left is null || right is null)
+                return false;
+            return left.CompareTo(right) > 0;
+        }
+
+        public static bool operator <=(PerDispatcherItemPair left, PerDispatcherItemPair right)
+        {
+            if (left is null || right is null)
+                return false;
+            return left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator >=(PerDispatcherItemPair left, PerDispatcherItemPair right)
+        {
+            if (left is null || right is null)
+                return false;
+            return left.CompareTo(right) >= 0;
+        }
+
+        public override int GetHashCode()
+        {
+            return ItemIndex.GetHashCode() + DispatcherPriority.GetHashCode();
         }
     }
 }
