@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -136,7 +137,7 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
             string[] listSubKey;
             List<OneRegistryKey> items = [];
             listSubKey = _currentRegistryKey.GetSubKeyNames();
-            foreach (string key in listSubKey)
+            foreach (string key in listSubKey.OrderBy(name => name))
                 items.Add(new OneRegistryKey(this, _hive, _key + @"\" + key));
             Children = new ObservableCollection<OneRegistryKey>(items);
         }
@@ -183,7 +184,7 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
     public void RefreshValues()
     {
         List<OneRegistryValue> items = [];
-        foreach (string valueName in _currentRegistryKey!.GetValueNames())
+        foreach (string valueName in _currentRegistryKey!.GetValueNames().OrderBy(name => name))
             items.Add(new OneRegistryValue(valueName, _currentRegistryKey.GetValueKind(valueName), _currentRegistryKey.GetValue(valueName), this));
         GetRootParent().MainViewModel!.ListViewItems = items;
     }

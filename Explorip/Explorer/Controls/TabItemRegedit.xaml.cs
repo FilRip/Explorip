@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -71,42 +72,42 @@ public partial class TabItemRegedit : TabItemExplorip
         _moveSP = false;
     }
 
+#nullable enable
+
     private void TreeView_KeyUp(object sender, KeyEventArgs e)
     {
         if (e.Key.ToString().Length == 1 && KeyTV.SelectedItem is OneRegistryKey current)
         {
-            FindNextOne(current, e.Key.ToString());
+            OneRegistryKey? find = FindNextOne(current, e.Key.ToString().ToLower());
+            find ??= FindNextOne((OneRegistryKey)KeyTV.Items[0], e.Key.ToString().ToLower());
+
+            if (find != null)
+                find.IsSelected = true;
         }
     }
 
-    private bool FindNextOne(OneRegistryKey current, string name)
+    private OneRegistryKey? FindNextOne(OneRegistryKey current, string name)
     {
         // Check the entry one
-        if (!current.IsSelected && current.DisplayText.StartsWith(name))
-        {
-            current.IsSelected = true;
-            return true;
-        }
+        if (!current.IsSelected && current.DisplayText.ToLower().StartsWith(name))
+            return current;
 
         // Check if the entry one has opened child
         if (current.IsExpanded && current.Children.Count > 0)
         {
-            bool find = FindNextOne(current.Children[0], name);
-            if (find)
-                return true;
+            OneRegistryKey? find = FindNextOne(current.Children[0], name);
+            if (find != null)
+                return find;
         }
 
         // Check next one in the same parent has the entry one
         if (current.Parent == null)
-            return false;
+            return null;
         for (int i = current.Parent.Children.IndexOf(current) + 1; i < current.Parent.Children.Count; i++)
         {
             OneRegistryKey currentLoop = current.Parent.Children[i];
-            if (currentLoop.DisplayText.StartsWith(name))
-            {
-                currentLoop.IsSelected = true;
-                return true;
-            }
+            if (currentLoop.DisplayText.ToLower().StartsWith(name))
+                return currentLoop;
             if (currentLoop.IsExpanded)
                 return FindNextOne(currentLoop, name);
         }
@@ -119,6 +120,11 @@ public partial class TabItemRegedit : TabItemExplorip
                 return FindNextOne(current.Parent.Parent.Children[next], name);
         }
 
-        return false;
+        return null;
+    }
+
+    private void KeyTV_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    {
+        Debug.WriteLine("Selected key : " + KeyTV.SelectedItem.ToString());
     }
 }

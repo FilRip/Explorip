@@ -184,7 +184,8 @@
         </Grid>
 
         <!-- Left part, TreeView for folders -->
-        <TreeView Grid.Column="0" Grid.Row="1" Name="FolderTV" ItemsSource="{Binding FolderTreeView}" Margin="0 0 5 0" PreviewDragOver="Scroll_PreviewDragOver" SelectedItemChanged="FolderTV_SelectedItemChanged" Focusable="True">
+        <TreeView Grid.Column="0" Grid.Row="1" Name="FolderTV" ItemsSource="{Binding FolderTreeView}" Margin="0 0 5 0" PreviewDragOver="Scroll_PreviewDragOver" SelectedItemChanged="FolderTV_SelectedItemChanged" Focusable="True"
+                  VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" >
             <TreeView.ItemContainerStyle>
                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource DefaultTreeViewItemStyle}">
                     <Setter Property="behaviors:BringSelectedItemIntoViewBehavior.IsBringSelectedIntoView" Value="True"/>

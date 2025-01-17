@@ -167,7 +167,7 @@
             </Grid.ColumnDefinitions>
             
             <!-- TreeView -->
-            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Focusable="True"
+            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Focusable="True" SelectedItemChanged="KeyTV_SelectedItemChanged"
                       VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" KeyUp="TreeView_KeyUp" Name="KeyTV">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemEx}">
