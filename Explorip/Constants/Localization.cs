@@ -95,6 +95,17 @@ public static class Localization
     public static string REGEDIT_RENAME_VALUE { get; private set; }
     public static string REGEDIT_CONFIRM_DELETE_VALUE { get; private set; }
     public static string REGEDIT_CONFIRM_DELETE_KEY { get; private set; }
+    public static string REGEDIT_STRING_DEFAULT { get; private set; }
+    public static string REGEDIT_NEW_KEY { get; private set; }
+    public static string REGEDIT_NEW_STRING { get; private set; }
+    public static string REGEDIT_NEW_BINARY { get; private set; }
+    public static string REGEDIT_NEW_DWORD_32 { get; private set; }
+    public static string REGEDIT_NEW_DWORD_64 { get; private set; }
+    public static string REGEDIT_NEW_MULTIPLE_STRING { get; private set; }
+    public static string REGEDIT_NEW_EXTENDED_STRING { get; private set; }
+    public static string REGEDIT_NEW { get; private set; }
+    public static string REGEDIT_NEW_KEY_NAME { get; private set; }
+    public static string REGEDIT_NEW_VALUE_NAME { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -186,6 +197,17 @@ public static class Localization
         REGEDIT_RENAME_VALUE = LoadMenuItem("regedit.exe", 105, 914, "Rename").Replace("&", "_");
         REGEDIT_CONFIRM_DELETE_VALUE = Load("regedit.exe", 50, "Delete some values of registry can do unsable system. Are you sure you want to delete this value ?");
         REGEDIT_CONFIRM_DELETE_KEY = Load("regedit.exe", 48, "Are you sure you want to delete this key (and all of his subkey) ?");
+        REGEDIT_STRING_DEFAULT = Load("regedit.exe", 20, "(by default)");
+        REGEDIT_NEW = LoadMenuItem("regedit.exe", 106, 516, "New").Replace("&", "_");
+        REGEDIT_NEW_KEY = LoadMenuItem("regedit.exe", 106, 663, "Key", 0).Replace("&", "_");
+        REGEDIT_NEW_STRING = LoadMenuItem("regedit.exe", 106, 664, "String", 0).Replace("&", "_");
+        REGEDIT_NEW_BINARY = LoadMenuItem("regedit.exe", 106, 665, "Binary", 1).Replace("&", "_");
+        REGEDIT_NEW_DWORD_32 = LoadMenuItem("regedit.exe", 106, 674, "Dword (32)", 1).Replace("&", "_");
+        REGEDIT_NEW_DWORD_64 = LoadMenuItem("regedit.exe", 106, 688, "Dword (64)", 1).Replace("&", "_");
+        REGEDIT_NEW_MULTIPLE_STRING = LoadMenuItem("regedit.exe", 106, 676, "Multiple string", 1).Replace("&", "_");
+        REGEDIT_NEW_EXTENDED_STRING = LoadMenuItem("regedit.exe", 106, 677, "Extended string", 1).Replace("&", "_");
+        REGEDIT_NEW_KEY_NAME = Load("regedit.exe", 23, "New key #%%u");
+        REGEDIT_NEW_VALUE_NAME = Load("regedit.exe", 24, "New value #%%u");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

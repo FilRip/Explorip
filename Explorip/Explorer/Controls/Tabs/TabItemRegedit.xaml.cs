@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using Explorip.Explorer.ViewModels;
+using Explorip.Explorer.ViewModels.Registry;
 
 namespace Explorip.Explorer.Controls;
 

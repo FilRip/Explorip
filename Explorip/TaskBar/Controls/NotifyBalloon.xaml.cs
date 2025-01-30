@@ -108,9 +108,7 @@ public partial class NotifyBalloon : UserControl
         _balloonInfo.SetVisibility(BalloonVisibility.TimedOut);
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void ContentControl_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         // Prevent taskbar context menu from appearing
         e.Handled = true;

@@ -10,6 +10,7 @@
              xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:behaviors="clr-namespace:Explorip.Explorer.Behaviors"
+             xmlns:registryviewmodels="clr-namespace:Explorip.Explorer.ViewModels.Registry"
              mc:Ignorable="d" IsTabStop="False" Style="{StaticResource CustomTabItem}"
              d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
     
@@ -20,6 +21,30 @@
             </Style>
             <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibility"/>
             <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
+            <converters:InverseBooleanConverter x:Key="inverseBool"/>
+
+            <ContextMenu x:Key="NewContextMenu" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
+                <ContextMenu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
+                    </ItemsPanelTemplate>
+                </ContextMenu.ItemsPanel>
+                <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW}">
+                    <MenuItem.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
+                        </ItemsPanelTemplate>
+                    </MenuItem.ItemsPanel>
+                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_KEY}" Command="{Binding AddNewKeyCommand}"/>
+                    <Separator/>
+                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_STRING}" Command="{Binding AddNewValueStringCommand}"/>
+                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_BINARY}" Command="{Binding AddNewValueBinaryCommand}"/>
+                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_DWORD_32}" Command="{Binding AddNewValueDword32Command}"/>
+                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_DWORD_64}" Command="{Binding AddNewValueDword64Command}"/>
+                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_MULTIPLE_STRING}" Command="{Binding AddNewValueMultipleStringCommand}"/>
+                    <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_EXTENDED_STRING}" Command="{Binding AddNewValueExtendedStringCommand}"/>
+                </MenuItem>
+            </ContextMenu>
         </ResourceDictionary>
     </local:TabItemExplorip.Resources>
     
@@ -166,8 +191,13 @@
             </Grid.ColumnDefinitions>
             
             <!-- TreeView -->
-            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Focusable="True" SelectedItemChanged="KeyTV_SelectedItemChanged"
+            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Focusable="True" SelectedItemChanged="KeyTV_SelectedItemChanged" ContextMenu="{StaticResource NewContextMenu}"
                       VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="100" VirtualizingPanel.CacheLengthUnit="Item" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling" KeyUp="TreeView_KeyUp" Name="KeyTV">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewKeyUp">
+                        <i:InvokeCommandAction Command="{Binding }" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="TreeViewItem" BasedOn="{StaticResource TreeViewItemEx}">
                         <Setter Property="behaviors:PerTreeViewItemHelper.BringSelectedItemIntoView" Value="True"/>
@@ -190,7 +220,7 @@
 
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate
-                        DataType="{x:Type viewmodels:OneRegistryKey}"
+                        DataType="{x:Type registryviewmodels:OneRegistryKey}"
                         ItemsSource="{Binding Children}">
                         <Grid Margin="0" Name="TreeItemGrid">
                             <Grid.ColumnDefinitions>
@@ -227,16 +257,11 @@
 
             <!-- ListView -->
             <ListView Grid.Column="1" Background="{x:Static colors:Colors.BackgroundColorBrush}" ItemsSource="{Binding ListViewItems}" Focusable="True"
-                      Visibility="{Binding ErrorVisible, Converter={StaticResource inverseBoolToVisibility}}"
+                      Visibility="{Binding ErrorVisible, Converter={StaticResource inverseBoolToVisibility}}" ContextMenu="{StaticResource NewContextMenu}"
                       Foreground="{x:Static colors:Colors.ForegroundColorBrush}">
                 <ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:OneRegistryValue}">
+                    <DataTemplate DataType="{x:Type registryviewmodels:OneRegistryValue}">
                         <Grid SizeChanged="ListView_SizeChanged">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseDoubleClick">
-                                    <i:InvokeCommandAction Command="{Binding MouseDownCommand}" PassEventArgsToCommand="True"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
                             <Grid.ContextMenu>
                                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
                                     <ContextMenu.ItemsPanel>
@@ -256,10 +281,13 @@
                                 <ColumnDefinition Width="0.1*"/>
                                 <ColumnDefinition Width="0.45*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" Visibility="{Binding EditValueName, Converter={StaticResource inverseBoolToVisibility}}" Focusable="True">
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" Visibility="{Binding EditValueName, Converter={StaticResource inverseBoolToVisibility}}" Focusable="True" Name="ValueName">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="KeyDown">
                                         <i:InvokeCommandAction Command="{Binding EditNameKeyDownCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseDown">
+                                        <i:InvokeCommandAction Command="{Binding MouseDownCommand}" PassEventArgsToCommand="True"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBlock>
@@ -275,8 +303,20 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBox>
-                            <TextBlock Grid.Column="1" Text="{Binding Type}"/>
-                            <TextBlock Grid.Column="2" Text="{Binding Value}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Type}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDown">
+                                        <i:InvokeCommandAction Command="{Binding MouseDownCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBlock>
+                            <TextBlock Grid.Column="2" Text="{Binding Value}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDown">
+                                        <i:InvokeCommandAction Command="{Binding MouseDownCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </TextBlock>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -285,7 +325,7 @@
             <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ErrorMessage}" Visibility="{Binding ErrorVisible, Converter={StaticResource boolToVisibility}}" TextWrapping="Wrap"
                        Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="Red"/>
             <!-- Edit value -->
-            <StackPanel Grid.Column="1" Visibility="{Binding ShowModifyValue, Converter={StaticResource boolToVisibility}}" Width="300" Height="55" Background="{x:Static colors:Colors.BackgroundColorBrush}"
+            <StackPanel Grid.Column="1" Visibility="{Binding ShowModifyValue, Converter={StaticResource boolToVisibility}}" Width="300" Height="85" Background="{x:Static colors:Colors.BackgroundColorBrush}"
                         Name="SPModifyValue">
                 <Border BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" BorderThickness="2">
                     <Grid>
@@ -297,11 +337,35 @@
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Column="0" Grid.Row="0" Text="Nom :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
-                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Type :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                        <TextBlock Grid.Column="0" Grid.Row="2" Text="Nouvelle valeur :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                        <TextBox Grid.Column="1" Grid.Row="2" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding NewValue}"/>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="Type :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                        <TextBlock Grid.Column="0" Grid.Row="2" Text="Nouvelle valeur :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                        <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CurrentValueChange.Name}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding CurrentValueChange.Type}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                        <TextBox Grid.Column="1" Grid.Row="2" Foreground="{x:Static colors:Colors.BackgroundColorBrush}" Background="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding NewValue}" Margin="0,0,5,0"/>
+                        <Grid Grid.Row="3" Grid.ColumnSpan="2" Margin="0 5 0 5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="1" Content="{x:Static Constants:Localization.OK}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding ModifyValueCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                            <Button Grid.Column="2" Content="{x:Static Constants:Localization.CANCEL}" Margin="5 0 5 0">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding CancelModifyValueCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Border>
             </StackPanel>

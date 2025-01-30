@@ -29,9 +29,7 @@ public partial class Clock : UserControl
         ShellHelper.StartProcess("timedate.cpl");
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void Clock_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         if (EnvironmentHelper.IsWindows11OrBetter)
         {
@@ -51,9 +49,7 @@ public partial class Clock : UserControl
         e.Handled = true;
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void MenuItem_OnClick(object sender, RoutedEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         OpenDateTimeCpl();
     }

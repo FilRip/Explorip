@@ -92,9 +92,7 @@ public partial class StartButton : System.Windows.Controls.UserControl
         allowOpenStart = (Start.IsChecked == false);
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void Start_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         if (EnvironmentHelper.IsWindows10OrBetter)
         {

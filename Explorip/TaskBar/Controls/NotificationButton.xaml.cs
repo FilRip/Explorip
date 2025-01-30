@@ -15,9 +15,7 @@ public partial class NotificationButton : UserControl
         InitializeComponent();
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void Notification_OnClick(object sender, RoutedEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         if (EnvironmentHelper.IsWindows11OrBetter)
         {

@@ -128,7 +128,6 @@ namespace ExploripComponents.Controls
                 MyDataContext.CurrentlyDraging = true;
         }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void Scroll_PreviewDragOver(object sender, DragEventArgs e)
         {
             if (sender is not FrameworkElement control)
@@ -152,7 +151,6 @@ namespace ExploripComponents.Controls
                 scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + offsetChange);
             }
         }
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
         #endregion
 
@@ -195,13 +193,11 @@ namespace ExploripComponents.Controls
 
         #region Double click action on item in ListView
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void ListViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             if (sender is ListViewItem item && item.DataContext is OneFileSystem file)
                 file.DoubleClickFileCommand.Execute(null);
         }
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
         #endregion
 

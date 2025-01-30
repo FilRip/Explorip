@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.Explorer.ViewModels.Registry;
 using Explorip.Helpers;
 
 namespace Explorip.Explorer.ViewModels;
@@ -19,6 +21,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     private readonly List<OneRegistryKey> _historic;
     private int _currentNavigation;
     private bool disposedValue;
+    private OneRegistryValue? _currentValueChange;
 
     #endregion
 
@@ -50,6 +53,8 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     private bool _showModifyValue = false;
     [ObservableProperty()]
     private string _newValue = "";
+    [ObservableProperty()]
+    private bool _editValueBinary = false;
 
     #endregion
 
@@ -67,6 +72,13 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     #endregion
 
     #region Properties
+
+    public OneRegistryValue? CurrentValueChange
+    {
+        get { return _currentValueChange; }
+    }
+
+    public OneRegistryValue? ValueKeySelected { get; set; }
 
     public bool AllowNavigatePrevious
     {
@@ -184,6 +196,97 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
 
     #endregion
 
+    #region Modify key/value
+
+    [RelayCommand()]
+    public void ModifyValue()
+    {
+        if (!ShowModifyValue)
+            return;
+        _currentValueChange?.ModifyValue(NewValue);
+    }
+
+    [RelayCommand()]
+    public void CancelModifyValue()
+    {
+        ShowModifyValue = false;
+    }
+
+    [RelayCommand()]
+    public void KeyUp(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            if (CurrentSelectedKey?.EditKeyName == true)
+                CurrentSelectedKey.EditKeyName = false;
+            if (CurrentValueChange?.EditValueName == true)
+                CurrentValueChange.EditValueName = false;
+        }
+    }
+
+    [RelayCommand()]
+    public void AddNewKey()
+    {
+        try
+        {
+            string name = Constants.Localization.REGEDIT_NEW_KEY_NAME;
+            int i = 1;
+            CurrentSelectedKey!.IsExpanded = true;
+            while (CurrentSelectedKey.Children.Any(k => k.DisplayText == name.Replace("%%u", i.ToString())))
+            {
+                i++;
+            }
+            string definitiveName = name.Replace("%%u", i.ToString());
+            CurrentSelectedKey.CreateSubKey(definitiveName);
+            CurrentSelectedKey.RefreshSubKey();
+            foreach (OneRegistryKey key in CurrentSelectedKey.Children)
+                if (key.DisplayText == definitiveName)
+                {
+                    CurrentSelectedKey = key;
+                    CurrentSelectedKey.IsSelected = true;
+                    CurrentSelectedKey.RenameMode();
+                    break;
+                }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            ErrorVisible = true;
+        }
+    }
+
+    [RelayCommand()]
+    public void AddNewValueString()
+    {
+    }
+
+    [RelayCommand()]
+    public void AddNewValueBinary()
+    {
+    }
+
+    [RelayCommand()]
+    public void AddNewValueDword32()
+    {
+    }
+
+    [RelayCommand()]
+    public void AddNewValueDword64()
+    {
+    }
+
+    [RelayCommand()]
+    public void AddNewMultipleString()
+    {
+    }
+
+    [RelayCommand()]
+    public void AddNewExtendedString()
+    {
+    }
+
+    #endregion
+
     #endregion
 
     private void BrowseTo(OneRegistryKey registryKey, bool addToHistoric = true)
@@ -205,6 +308,17 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     {
         RegKeyItems.Add(new OneRegistryKey(null, null, null, displayText: Environment.SpecialFolder.MyComputer.RealName()) { MainViewModel = this, IsExpanded = true, IsSelected = true });
         CurrentSelectedKey = RegKeyItems[0];
+    }
+
+    public void SetModifyValue(OneRegistryValue keyToChange, bool binary = false)
+    {
+        if (ShowModifyValue)
+            return;
+        _currentValueChange = keyToChange;
+        NewValue = keyToChange.Value.ToString();
+        EditValueBinary = binary;
+        ShowModifyValue = true;
+        OnPropertyChanged(nameof(CurrentValueChange));
     }
 
     #region Destructor

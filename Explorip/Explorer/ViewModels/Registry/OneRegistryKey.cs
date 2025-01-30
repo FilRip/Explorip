@@ -12,7 +12,7 @@ using Explorip.Helpers;
 
 using Microsoft.Win32;
 
-namespace Explorip.Explorer.ViewModels;
+namespace Explorip.Explorer.ViewModels.Registry;
 
 #nullable enable
 
@@ -184,8 +184,16 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
     public void RefreshValues()
     {
         List<OneRegistryValue> items = [];
+        bool defaultAlreadyExist = false;
         foreach (string valueName in _currentRegistryKey!.GetValueNames().OrderBy(name => name))
+        {
+            if (valueName == "")
+                defaultAlreadyExist = true;
             items.Add(new OneRegistryValue(valueName, _currentRegistryKey.GetValueKind(valueName), _currentRegistryKey.GetValue(valueName), this));
+        }
+        // Special case, the default value of this key
+        if (!defaultAlreadyExist)
+            items.Insert(0, new OneRegistryValue("", RegistryValueKind.String, _currentRegistryKey!.GetValue(""), this));
         GetRootParent().MainViewModel!.ListViewItems = items;
     }
 
@@ -201,6 +209,19 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
                 _fullPath += @"\" + _key;
         }
         return _fullPath!;
+    }
+
+    public void CreateSubKey(string name)
+    {
+        RegistryKey key = Parent!.CurrentKey!.OpenSubKey(DisplayText, true);
+        key.CreateSubKey(name);
+        key.Close();
+    }
+
+    public void RenameMode()
+    {
+        NewKeyName = DisplayText;
+        EditKeyName = true;
     }
 
     #region RelayCommand
