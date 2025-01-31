@@ -64,7 +64,7 @@ public partial class OneRegistryValue(string name, RegistryValueKind type, objec
     }
 
     [RelayCommand()]
-    public void Rename()
+    public void RenameMode()
     {
         NewName = _name;
         EditValueName = true;
@@ -133,7 +133,7 @@ public partial class OneRegistryValue(string name, RegistryValueKind type, objec
             _swRenameValue.ElapsedMilliseconds > NativeMethods.GetDoubleClickTime() && e.ChangedButton == MouseButton.Left &&
             _parent.GetRootParent().MainViewModel!.ValueKeySelected == this)
         {
-            Rename();
+            RenameMode();
             e.Handled = true;
             return;
         }

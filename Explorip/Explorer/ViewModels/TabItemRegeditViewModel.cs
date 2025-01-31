@@ -7,8 +7,11 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.Explorer.Controls;
 using Explorip.Explorer.ViewModels.Registry;
 using Explorip.Helpers;
+
+using Microsoft.Win32;
 
 namespace Explorip.Explorer.ViewModels;
 
@@ -22,6 +25,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     private int _currentNavigation;
     private bool disposedValue;
     private OneRegistryValue? _currentValueChange;
+    private readonly TabItemRegedit _currentControl;
 
     #endregion
 
@@ -53,15 +57,14 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     private bool _showModifyValue = false;
     [ObservableProperty()]
     private string _newValue = "";
-    [ObservableProperty()]
-    private bool _editValueBinary = false;
 
     #endregion
 
     #region Constructors
 
-    public TabItemRegeditViewModel() : base()
+    public TabItemRegeditViewModel(TabItemRegedit control) : base()
     {
+        _currentControl = control;
         _historic = [];
         _currentNavigation = 0;
         _listViewItems = [];
@@ -72,6 +75,11 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     #endregion
 
     #region Properties
+
+    public TabItemRegedit CurrentControl
+    {
+        get { return _currentControl; }
+    }
 
     public OneRegistryValue? CurrentValueChange
     {
@@ -110,6 +118,16 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
             else
                 return DisabledButtonColor;
         }
+    }
+
+    public bool EditValueMultiLines
+    {
+        get { return _currentValueChange!.Type == RegistryValueKind.ExpandString || _currentValueChange!.Type == RegistryValueKind.MultiString; }
+    }
+
+    public bool EditValueBinary
+    {
+        get { return _currentValueChange!.Type == RegistryValueKind.Binary; }
     }
 
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
@@ -213,14 +231,32 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     }
 
     [RelayCommand()]
-    public void KeyUp(KeyEventArgs e)
+    public void KeyUpTV(KeyEventArgs e)
     {
-        if (e.Key == Key.Escape)
+        if (e.Key == Key.Escape &&
+            CurrentSelectedKey?.EditKeyName == true)
         {
-            if (CurrentSelectedKey?.EditKeyName == true)
-                CurrentSelectedKey.EditKeyName = false;
-            if (CurrentValueChange?.EditValueName == true)
-                CurrentValueChange.EditValueName = false;
+            CurrentSelectedKey.CancelRenameMode();
+        }
+        else if (e.Key == Key.F2 &&
+            CurrentSelectedKey?.EditKeyName == false)
+        {
+            CurrentSelectedKey.RenameMode();
+        }
+        else if (e.Key == Key.F5 && CurrentSelectedKey != null)
+        {
+            CurrentSelectedKey.RefreshSubKey();
+            CurrentSelectedKey.RefreshValues();
+        }
+    }
+
+    [RelayCommand()]
+    public void KeyUpLV(KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape &&
+            CurrentValueChange?.EditValueName == true)
+        {
+            CurrentValueChange.EditValueName = false;
         }
     }
 
@@ -255,34 +291,69 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
         }
     }
 
+    private void CreateNewValue(RegistryValueKind type)
+    {
+        if (ListViewItems == null || CurrentSelectedKey?.CurrentKey == null)
+            return;
+        string name = Constants.Localization.REGEDIT_NEW_VALUE_NAME;
+        int i = 1;
+        while (ListViewItems.Any(v => v.Name == name.Replace("%%u", i.ToString())))
+        {
+            i++;
+        }
+        try
+        {
+            CurrentSelectedKey.CurrentKey.SetValue(name, null, type);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            ErrorVisible = true;
+        }
+        CurrentSelectedKey.RefreshValues();
+        foreach (OneRegistryValue value in ListViewItems)
+            if (value.Name == name)
+            {
+                Keyboard.Focus(CurrentControl.ValueLV);
+                value.RenameMode();
+                break;
+            }
+    }
+
     [RelayCommand()]
     public void AddNewValueString()
     {
+        CreateNewValue(RegistryValueKind.String);
     }
 
     [RelayCommand()]
     public void AddNewValueBinary()
     {
+        CreateNewValue(RegistryValueKind.Binary);
     }
 
     [RelayCommand()]
     public void AddNewValueDword32()
     {
+        CreateNewValue(RegistryValueKind.DWord);
     }
 
     [RelayCommand()]
     public void AddNewValueDword64()
     {
+        CreateNewValue(RegistryValueKind.QWord);
     }
 
     [RelayCommand()]
     public void AddNewMultipleString()
     {
+        CreateNewValue(RegistryValueKind.MultiString);
     }
 
     [RelayCommand()]
     public void AddNewExtendedString()
     {
+        CreateNewValue(RegistryValueKind.ExpandString);
     }
 
     #endregion
@@ -310,13 +381,12 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
         CurrentSelectedKey = RegKeyItems[0];
     }
 
-    public void SetModifyValue(OneRegistryValue keyToChange, bool binary = false)
+    public void SetModifyValue(OneRegistryValue keyToChange)
     {
         if (ShowModifyValue)
             return;
         _currentValueChange = keyToChange;
         NewValue = keyToChange.Value.ToString();
-        EditValueBinary = binary;
         ShowModifyValue = true;
         OnPropertyChanged(nameof(CurrentValueChange));
     }

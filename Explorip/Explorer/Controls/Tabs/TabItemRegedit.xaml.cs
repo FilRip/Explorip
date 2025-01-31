@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Explorip.Explorer.ViewModels;
 using Explorip.Explorer.ViewModels.Registry;
 
 namespace Explorip.Explorer.Controls;
@@ -17,9 +18,15 @@ public partial class TabItemRegedit : TabItemExplorip
 
     public TabItemRegedit()
     {
+        DataContext = new TabItemRegeditViewModel(this);
         InitializeComponent();
         InitializeExplorip();
         SetTitle(Constants.Localization.REGISTRY_EDITOR);
+    }
+
+    public TabItemRegeditViewModel MyDataContext
+    {
+        get { return (TabItemRegeditViewModel)DataContext; }
     }
 
     private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)

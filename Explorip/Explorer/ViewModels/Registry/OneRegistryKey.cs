@@ -224,6 +224,12 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
         EditKeyName = true;
     }
 
+    public void CancelRenameMode()
+    {
+        NewKeyName = DisplayText;
+        EditKeyName = false;
+    }
+
     #region RelayCommand
 
     [RelayCommand()]
@@ -237,8 +243,7 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
     {
         if (e.Key == Key.Escape)
         {
-            NewKeyName = DisplayText;
-            EditKeyName = false;
+            CancelRenameMode();
             e.Handled = true;
         }
         else if (e.Key == Key.Enter || e.Key == Key.Return)
