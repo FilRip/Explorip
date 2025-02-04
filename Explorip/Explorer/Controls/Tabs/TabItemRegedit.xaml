@@ -13,7 +13,7 @@
              xmlns:registryviewmodels="clr-namespace:Explorip.Explorer.ViewModels.Registry"
              mc:Ignorable="d" IsTabStop="False" Style="{StaticResource CustomTabItem}"
              d:DataContext="{d:DesignInstance Type=viewmodels:TabItemRegeditViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800" Header="{Binding TabTitle}">
+             d:DesignHeight="450" d:DesignWidth="800">
     
     <local:TabItemExplorip.Resources>
         <ResourceDictionary>
@@ -189,8 +189,8 @@
             </Grid.ColumnDefinitions>
             
             <!-- TreeView -->
-            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Focusable="True" SelectedItemChanged="KeyTV_SelectedItemChanged" ContextMenu="{StaticResource NewContextMenu}"
-                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="100" VirtualizingPanel.CacheLengthUnit="Item" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling" KeyUp="TreeView_KeyUp" Name="KeyTV">
+            <TreeView Grid.Column="0" ItemsSource="{Binding RegKeyItems}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Focusable="True" ContextMenu="{StaticResource NewContextMenu}"
+                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.CacheLength="50" VirtualizingPanel.CacheLengthUnit="Item" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling" KeyUp="TreeView_KeyUp" Name="KeyTV">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewKeyUp">
                         <i:InvokeCommandAction Command="{Binding KeyUpTVCommand}" PassEventArgsToCommand="True"/>
@@ -316,7 +316,7 @@
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </TextBlock>
-                            <TextBlock Grid.Column="2" Text="{Binding Value}">
+                            <TextBlock Grid.Column="2" Text="{Binding DisplayValue}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="MouseDown">
                                         <i:InvokeCommandAction Command="{Binding MouseDownCommand}" PassEventArgsToCommand="True"/>
@@ -350,13 +350,19 @@
                             <RowDefinition/>
                             <RowDefinition Height="5"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Column="1" Grid.Row="1" Text="Nom :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
-                        <TextBlock Grid.Column="1" Grid.Row="2" Text="Type :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
-                        <TextBlock Grid.Column="1" Grid.Row="3" Text="Nouvelle valeur :" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Text="{x:Static Constants:Localization.REGEDIT_VALUE_NAME}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                        <TextBlock Grid.Column="1" Grid.Row="2" Text="{x:Static Constants:Localization.REGEDIT_TYPE_NAME}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+                        <TextBlock Grid.Column="1" Grid.Row="3" Text="{x:Static Constants:Localization.REGEDIT_DATA_NAME}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
                         <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding CurrentValueChange.Name}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
                         <TextBlock Grid.Column="2" Grid.Row="2" Text="{Binding CurrentValueChange.Type}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
                         <TextBox Grid.Column="2" Grid.Row="3" Foreground="{x:Static colors:Colors.BackgroundColorBrush}" Background="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding NewValue}"
-                                 HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" AcceptsReturn="{Binding EditValueMultiLines}" IsVisibleChanged="IsVisibleChanged_SetFocus"/>
+                                 HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" TextWrapping="NoWrap" AcceptsReturn="{Binding EditValueMultiLines}" IsVisibleChanged="IsVisibleChanged_SetFocus">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="PreviewKeyDown">
+                                    <i:InvokeCommandAction Command="{Binding EditValue_PreviewKeyDownCommand}" PassEventArgsToCommand="True"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
                         <Grid Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>

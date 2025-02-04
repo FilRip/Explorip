@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -128,10 +127,5 @@ public partial class TabItemRegedit : TabItemExplorip
         }
 
         return null;
-    }
-
-    private void KeyTV_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-    {
-        Debug.WriteLine("Selected key : " + KeyTV.SelectedItem.ToString());
     }
 }

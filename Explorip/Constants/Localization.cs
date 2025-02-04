@@ -106,6 +106,11 @@ public static class Localization
     public static string REGEDIT_NEW { get; private set; }
     public static string REGEDIT_NEW_KEY_NAME { get; private set; }
     public static string REGEDIT_NEW_VALUE_NAME { get; private set; }
+    public static string REGEDIT_ERROR_DWORD32 { get; private set; }
+    public static string REGEDIT_ERROR_DWORD64 { get; private set; }
+    public static string REGEDIT_VALUE_NAME { get; private set; }
+    public static string REGEDIT_DATA_NAME { get; private set; }
+    public static string REGEDIT_TYPE_NAME { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -208,6 +213,11 @@ public static class Localization
         REGEDIT_NEW_EXTENDED_STRING = LoadMenuItem("regedit.exe", 106, 677, "Extended string", 1).Replace("&", "_");
         REGEDIT_NEW_KEY_NAME = Load("regedit.exe", 23, "New key #%%u");
         REGEDIT_NEW_VALUE_NAME = Load("regedit.exe", 24, "New value #%%u");
+        REGEDIT_ERROR_DWORD32 = Load("regedit.exe", 30, "Value dword 32 bits invalid");
+        REGEDIT_ERROR_DWORD64 = Load("regedit.exe", 33, "Value dword 64 bits invalid");
+        REGEDIT_VALUE_NAME = Load("regedit.exe", 17, "Name");
+        REGEDIT_TYPE_NAME = Load("regedit.exe", 31, "Type");
+        REGEDIT_DATA_NAME = Load("regedit.exe", 18, "Data");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

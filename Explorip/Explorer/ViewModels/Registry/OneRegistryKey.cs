@@ -178,6 +178,7 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
                 _mainViewModel.ErrorVisible = false;
             RefreshValues();
             _mainViewModel.CurrentSelectedKey = this;
+            _mainViewModel.BrowseTo(this.ToString());
         }
     }
 
@@ -213,9 +214,14 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
 
     public void CreateSubKey(string name)
     {
-        RegistryKey key = Parent!.CurrentKey!.OpenSubKey(DisplayText, true);
+        RegistryKey key = GetWriteKey();
         key.CreateSubKey(name);
         key.Close();
+    }
+
+    public RegistryKey GetWriteKey()
+    {
+        return Parent!.CurrentKey!.OpenSubKey(DisplayText, true);
     }
 
     public void RenameMode()

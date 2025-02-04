@@ -38,6 +38,8 @@
             <MenuItem Header="{x:Static constants:Localization.POWER_SHELL_ADMIN}" Name="NewAdminPowerShellTab" Command="{Binding NewAdminPowerShellTabCommand}"/>
             <Separator/>
             <MenuItem Header="{x:Static constants:Localization.REGISTRY_EDITOR}" Name="NewRegistryEditorTab" Command="{Binding NewRegistryEditorTabCommand}"/>
+            <Separator/>
+            <MenuItem Header="Embedded Window" Name="NewEmbeddedWindowTab" Command="{Binding NewEmbeddedWindowTabCommand}"/>
         </ContextMenu>
     </UserControl.ContextMenu>
     

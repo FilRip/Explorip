@@ -21,11 +21,12 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
 {
     #region Fields
 
-    private readonly List<OneRegistryKey> _historic;
+    private readonly List<string> _historic;
     private int _currentNavigation;
     private bool disposedValue;
     private OneRegistryValue? _currentValueChange;
     private readonly TabItemRegedit _currentControl;
+    private bool _forceBinary;
 
     #endregion
 
@@ -122,19 +123,12 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
 
     public bool EditValueMultiLines
     {
-        get { return _currentValueChange!.Type == RegistryValueKind.ExpandString || _currentValueChange!.Type == RegistryValueKind.MultiString; }
+        get { return _currentValueChange?.Type == RegistryValueKind.ExpandString || _currentValueChange?.Type == RegistryValueKind.MultiString; }
     }
 
     public bool EditValueBinary
     {
-        get { return _currentValueChange!.Type == RegistryValueKind.Binary; }
-    }
-
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
-    public string TabTitle
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
-    {
-        get { return Constants.Localization.REGISTRY_EDITOR; }
+        get { return _forceBinary || _currentValueChange?.Type == RegistryValueKind.Binary; }
     }
 
     #endregion
@@ -170,7 +164,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     {
         _currentNavigation = 0;
         _historic.Clear();
-        _historic.Add(CurrentSelectedKey!);
+        _historic.Add(CurrentSelectedKey!.ToString());
         RefreshNavigation();
     }
 
@@ -258,6 +252,10 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
         {
             CurrentValueChange.EditValueName = false;
         }
+        else if (e.Key == Key.F5 && CurrentSelectedKey != null)
+        {
+            CurrentSelectedKey.RefreshValues();
+        }
     }
 
     [RelayCommand()]
@@ -265,9 +263,11 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     {
         try
         {
+            if (CurrentSelectedKey?.Parent == null)
+                return;
             string name = Constants.Localization.REGEDIT_NEW_KEY_NAME;
             int i = 1;
-            CurrentSelectedKey!.IsExpanded = true;
+            CurrentSelectedKey.IsExpanded = true;
             while (CurrentSelectedKey.Children.Any(k => k.DisplayText == name.Replace("%%u", i.ToString())))
             {
                 i++;
@@ -291,9 +291,17 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
         }
     }
 
+    [RelayCommand()]
+    private void EditValue_PreviewKeyDown(KeyEventArgs e)
+    {
+        string key = e.Key.ToString().ToUpper();
+        if (EditValueBinary && (key.Length > 1 || !char.IsLetter(key, 0) || key[0] > 'F' || key[0] < 'A'))
+            e.Handled = true;
+    }
+
     private void CreateNewValue(RegistryValueKind type)
     {
-        if (ListViewItems == null || CurrentSelectedKey?.CurrentKey == null)
+        if (ListViewItems == null || CurrentSelectedKey?.CurrentKey == null || CurrentSelectedKey?.Parent == null)
             return;
         string name = Constants.Localization.REGEDIT_NEW_VALUE_NAME;
         int i = 1;
@@ -360,35 +368,65 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
 
     #endregion
 
-    private void BrowseTo(OneRegistryKey registryKey, bool addToHistoric = true)
+    public void BrowseTo(string registryKey, bool addToHistoric = true)
     {
-        // TODO
         if (addToHistoric)
-            _historic.Add(registryKey);
-        _currentNavigation++;
+        {
+            if (_historic[_currentNavigation] != registryKey)
+            {
+                _currentNavigation++;
+                if (_historic.Count > _currentNavigation)
+                    _historic.RemoveRange(_currentNavigation, _historic.Count - _currentNavigation);
+                _historic.Add(registryKey);
+            }
+        }
+        else
+        {
+            string[] splitter = registryKey.Split('\\');
+            OneRegistryKey? currentKey = null;
+            foreach (string key in splitter)
+            {
+                if (currentKey == null)
+                    currentKey = RegKeyItems[0];
+                else
+                {
+                    if (!currentKey.IsExpanded)
+                        currentKey.IsExpanded = true;
+                    currentKey = currentKey.Children.FirstOrDefault(k => k.DisplayText == key);
+                }
+            }
+            if (currentKey != null)
+                currentKey.IsSelected = true;
+        }
         RefreshNavigation();
     }
 
     public void RefreshNavigation()
     {
         OnPropertyChanged(nameof(AllowNavigateNext));
+        OnPropertyChanged(nameof(ForegroundNext));
         OnPropertyChanged(nameof(AllowNavigatePrevious));
+        OnPropertyChanged(nameof(ForegroundPrevious));
     }
 
     private void CreateBaseLocalRegistry()
     {
         RegKeyItems.Add(new OneRegistryKey(null, null, null, displayText: Environment.SpecialFolder.MyComputer.RealName()) { MainViewModel = this, IsExpanded = true, IsSelected = true });
         CurrentSelectedKey = RegKeyItems[0];
+        _historic.Add(CurrentSelectedKey.ToString());
     }
 
-    public void SetModifyValue(OneRegistryValue keyToChange)
+    public void SetModifyValue(OneRegistryValue keyToChange, bool forceBinary = false)
     {
         if (ShowModifyValue)
             return;
         _currentValueChange = keyToChange;
-        NewValue = keyToChange.Value.ToString();
+        NewValue = keyToChange.DisplayValue?.ToString() ?? "";
         ShowModifyValue = true;
+        _forceBinary = forceBinary;
         OnPropertyChanged(nameof(CurrentValueChange));
+        OnPropertyChanged(nameof(EditValueBinary));
+        OnPropertyChanged(nameof(EditValueMultiLines));
     }
 
     #region Destructor

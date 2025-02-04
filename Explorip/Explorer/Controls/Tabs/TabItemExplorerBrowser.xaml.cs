@@ -137,8 +137,8 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         }
         catch (Exception)
         {
-            if (System.Diagnostics.Debugger.IsAttached)
-                System.Diagnostics.Debugger.Break();
+            if (Debugger.IsAttached)
+                Debugger.Break();
         }
     }
 

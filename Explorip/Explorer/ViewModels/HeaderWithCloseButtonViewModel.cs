@@ -104,5 +104,11 @@ public partial class HeaderWithCloseButtonViewModel(HeaderWithCloseButton contro
         _control.MyTabControl.SelectedIndex = _control.MyTabControl.Items.Count - 2;
     }
 
+    [RelayCommand()]
+    private void NewEmbeddedWindowTab()
+    {
+        _control.MyTabControl.AddNewTab(new TabItemWindowEmbedded());
+    }
+
     #endregion
 }

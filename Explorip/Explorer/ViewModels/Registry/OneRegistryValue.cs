@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
+using Explorip.Exceptions;
 
 using ManagedShell.Interop;
 
@@ -45,6 +48,30 @@ public partial class OneRegistryValue(string name, RegistryValueKind type, objec
     {
         get { return (_name == "" ? Constants.Localization.REGEDIT_STRING_DEFAULT : _name); }
         set { _name = value; }
+    }
+
+    public string? DisplayValue
+    {
+        get
+        {
+            if (Type == RegistryValueKind.Binary)
+            {
+                byte[]? bin = (byte[])Value;
+                if (bin != null && bin.Length > 0)
+                {
+                    StringBuilder sb = new();
+                    foreach (byte b in bin)
+                    {
+                        if (sb.Length > 0)
+                            sb.Append(' ');
+                        sb.Append(b.ToString("X2"));
+                    }
+                    return sb.ToString();
+                }
+                return "";
+            }
+            return Value as string;
+        }
     }
 
     #endregion
@@ -145,14 +172,59 @@ public partial class OneRegistryValue(string name, RegistryValueKind type, objec
         }
     }
 
+    [RelayCommand()]
+    private void Rename()
+    {
+        RenameMode();
+    }
+
     #endregion
 
     public void ModifyValue(object newValue)
     {
         if (_parent?.CurrentKey != null)
         {
-            _parent.CurrentKey.SetValue(Name, newValue);
-            Value = newValue;
+            try
+            {
+                RegistryKey writeKey = _parent.GetWriteKey();
+                switch (Type)
+                {
+                    case RegistryValueKind.Binary:
+                        string[] splitter = newValue.ToString().Split(' ');
+                        byte[] bytes = new byte[splitter.Length];
+                        for (int i = 0; i < splitter.Length; i++)
+                            bytes[i] = Convert.ToByte(splitter[i], 16);
+                        writeKey.SetValue(Name, bytes);
+                        break;
+                    case RegistryValueKind.DWord:
+                        if (!double.TryParse(newValue.ToString(), out double d) || d < int.MinValue || d > int.MaxValue)
+                            throw new ExploripException(Constants.Localization.REGEDIT_ERROR_DWORD32);
+                        writeKey.SetValue(Name, (int)d);
+                        break;
+                    case RegistryValueKind.QWord:
+                        if (!double.TryParse(newValue.ToString(), out double ld) || ld < long.MinValue || ld > long.MaxValue)
+                            throw new ExploripException(Constants.Localization.REGEDIT_ERROR_DWORD64);
+                        writeKey.SetValue(Name, (long)ld);
+                        break;
+                    case RegistryValueKind.Unknown:
+                        writeKey.SetValue(Name, newValue);
+                        break;
+                    case RegistryValueKind.None:
+                        break;
+                    default:
+                        writeKey.SetValue(Name, newValue as string);
+                        break;
+                }
+                Value = newValue;
+                writeKey.Close();
+            }
+            catch (Exception ex)
+            {
+                _parent.GetRootParent().MainViewModel!.ErrorMessage = ex.Message;
+                _parent.GetRootParent().MainViewModel!.ErrorVisible = true;
+            }
         }
+        if (_parent != null)
+            _parent.GetRootParent().MainViewModel!.ShowModifyValue = false;
     }
 }
