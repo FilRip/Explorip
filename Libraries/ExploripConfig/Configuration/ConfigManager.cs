@@ -20,262 +20,405 @@ public static class ConfigManager
     private const string HKeyRoot = "Software\\CoolBytes\\Explorip";
 
     public static bool AllowWrite { get; set; }
-    private static RegistryKey _registryKey;
+    private static RegistryKey _registryKeyExplorer, _registryDesktop, _registryTaskbar;
 
     public static void Init(bool allowWrite = true)
     {
         AllowWrite = allowWrite && !ArgumentExists("disablewriteconfig");
-        _registryKey = Registry.CurrentUser.CreateSubKey(HKeyRoot, true);
-        if (_registryKey == null)
+        _registryKeyExplorer = Registry.CurrentUser.CreateSubKey(HKeyRoot, true);
+        if (_registryKeyExplorer == null)
             AllowWrite = false;
+        _registryDesktop = _registryKeyExplorer?.CreateSubKey("Desktop");
+        _registryTaskbar = _registryKeyExplorer?.CreateSubKey("Taskbar");
 
-        if (allowWrite && _registryKey != null)
+        if (allowWrite && _registryKeyExplorer != null)
         {
-            // If empty config ini file, set default settings
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("Theme", "").ToString()))
-                _registryKey.SetValue("Theme", "System");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ShowClock", "").ToString()))
-                _registryKey.SetValue("ShowClock", "True");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ShowQuickLaunch", "").ToString()))
-                _registryKey.SetValue("ShowQuickLaunch", "True");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("QuickLaunchPath", "").ToString()))
-                _registryKey.SetValue("QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("CollapseNotifyIcons", "").ToString()))
-                _registryKey.SetValue("CollapseNotifyIcons", "True");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("AllowFontSmoothing", "").ToString()))
-                _registryKey.SetValue("AllowFontSmoothing", "True");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("Language", "").ToString()))
-                _registryKey.SetValue("Language", "System");
-            string edge = _registryKey.GetValue("Edge", "").ToString();
+            // If empty config in registry, set default settings
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Theme", "").ToString()))
+                _registryKeyExplorer.SetValue("Theme", "System");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowClock", "").ToString()))
+                _registryTaskbar.SetValue("ShowClock", "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowQuickLaunch", "").ToString()))
+                _registryTaskbar.SetValue("ShowQuickLaunch", "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("QuickLaunchPath", "").ToString()))
+                _registryTaskbar.SetValue("QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("CollapseNotifyIcons", "").ToString()))
+                _registryTaskbar.SetValue("CollapseNotifyIcons", "True");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("AllowFontSmoothing", "").ToString()))
+                _registryKeyExplorer.SetValue("AllowFontSmoothing", "True");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Language", "").ToString()))
+                _registryKeyExplorer.SetValue("Language", "System");
+            string edge = _registryTaskbar.GetValue("Edge", "").ToString();
             if (string.IsNullOrWhiteSpace(edge) || !Enum.TryParse<AppBarEdge>(edge, out _))
                 Edge = AppBarEdge.Bottom;
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("HookCopy", "").ToString()))
-                _registryKey.SetValue("HookCopy", "True");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("UseOwnCopier", "").ToString()))
-                _registryKey.SetValue("UseOwnCopier", "True");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("StartTwoExplorer", "").ToString()))
-                _registryKey.SetValue("StartTwoExplorer", "True");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ShowNotificationCopyOperation", "").ToString()))
-                _registryKey.SetValue("ShowNotificationCopyOperation", "True");
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("HideDesktopBackground", "").ToString()))
-                _registryKey.SetValue("HideDesktopBackground", "False");
-            string ws = _registryKey.GetValue("ExplorerWindowState", "").ToString();
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("HookCopy", "").ToString()))
+                _registryKeyExplorer.SetValue("HookCopy", "True");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("UseOwnCopier", "").ToString()))
+                _registryKeyExplorer.SetValue("UseOwnCopier", "True");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("StartTwoExplorer", "").ToString()))
+                _registryKeyExplorer.SetValue("StartTwoExplorer", "True");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("ShowNotificationCopyOperation", "").ToString()))
+                _registryKeyExplorer.SetValue("ShowNotificationCopyOperation", "True");
+            string ws = _registryKeyExplorer.GetValue("ExplorerWindowState", "").ToString();
             if (string.IsNullOrWhiteSpace(ws) || !Enum.TryParse<WindowState>(ws, out _))
                 ExplorerWindowState = WindowState.Normal;
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ExplorerPosX", "").ToString()))
-                _registryKey.SetValue("ExplorerPosX", (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ExplorerPosY", "").ToString()))
-                _registryKey.SetValue("ExplorerPosY", (Screen.PrimaryScreen.WpfWorkingArea.Y + 50).ToString());
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ExplorerSizeX", "").ToString()))
-                _registryKey.SetValue("ExplorerSizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
-            if (string.IsNullOrWhiteSpace(_registryKey.GetValue("ExplorerSizeY", "").ToString()))
-                _registryKey.SetValue("ExplorerSizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("ExplorerPosX", "").ToString()))
+                _registryKeyExplorer.SetValue("ExplorerPosX", (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("ExplorerPosY", "").ToString()))
+                _registryKeyExplorer.SetValue("ExplorerPosY", (Screen.PrimaryScreen.WpfWorkingArea.Y + 50).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("ExplorerSizeX", "").ToString()))
+                _registryKeyExplorer.SetValue("ExplorerSizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("ExplorerSizeY", "").ToString()))
+                _registryKeyExplorer.SetValue("ExplorerSizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
         }
     }
 
     public static string Theme
     {
-        get { return _registryKey.GetValue("Theme", "").ToString(); }
+        get { return _registryKeyExplorer.GetValue("Theme", "").ToString(); }
         set
         {
             if (Theme != value && AllowWrite)
-                _registryKey.SetValue("Theme", value);
+                _registryKeyExplorer.SetValue("Theme", value);
         }
     }
 
     public static bool ShowClock
     {
-        get { return _registryKey.ReadBoolean("ShowClock", true); }
+        get { return _registryTaskbar.ReadBoolean("ShowClock", true); }
         set
         {
             if (ShowClock != value && AllowWrite)
-                _registryKey.SetValue("ShowClock", value.ToString());
+                _registryTaskbar.SetValue("ShowClock", value.ToString());
         }
     }
 
     public static bool ShowQuickLaunch
     {
-        get { return _registryKey.ReadBoolean("ShowQuickLaunch", true); }
+        get { return _registryTaskbar.ReadBoolean("ShowQuickLaunch", true); }
         set
         {
             if (ShowQuickLaunch != value && AllowWrite)
-                _registryKey.SetValue("ShowQuickLaunch", value.ToString());
+                _registryTaskbar.SetValue("ShowQuickLaunch", value.ToString());
         }
     }
 
     public static string QuickLaunchPath
     {
-        get { return _registryKey.GetValue("QuickLaunchPath", "").ToString(); }
+        get { return _registryTaskbar.GetValue("QuickLaunchPath", "").ToString(); }
         set
         {
             if (QuickLaunchPath != value && AllowWrite)
-                _registryKey.SetValue("QuickLaunchPath", value);
+                _registryTaskbar.SetValue("QuickLaunchPath", value);
         }
     }
 
     public static bool CollapseNotifyIcons
     {
-        get { return _registryKey.ReadBoolean("CollapseNotifyIcons"); }
+        get { return _registryTaskbar.ReadBoolean("CollapseNotifyIcons"); }
         set
         {
             if (CollapseNotifyIcons != value && AllowWrite)
-                _registryKey.SetValue("CollapseNotifyIcons", value.ToString());
+                _registryTaskbar.SetValue("CollapseNotifyIcons", value.ToString());
         }
     }
 
     public static bool AllowFontSmoothing
     {
-        get { return _registryKey.ReadBoolean("AllowFontSmoothing"); }
+        get { return _registryKeyExplorer.ReadBoolean("AllowFontSmoothing"); }
         set
         {
             if (AllowFontSmoothing != value && AllowWrite)
-                _registryKey.SetValue("AllowFontSmoothing", value.ToString());
+                _registryKeyExplorer.SetValue("AllowFontSmoothing", value.ToString());
         }
     }
 
     public static string Language
     {
-        get { return _registryKey.GetValue("Language", "").ToString(); }
+        get { return _registryKeyExplorer.GetValue("Language", "").ToString(); }
         set
         {
             if (Language != value && AllowWrite)
-                _registryKey.SetValue("Language", value);
+                _registryKeyExplorer.SetValue("Language", value);
         }
     }
 
     public static AppBarEdge Edge
     {
-        get { return _registryKey.ReadEnum<AppBarEdge>("Edge"); }
+        get { return _registryTaskbar.ReadEnum<AppBarEdge>("Edge"); }
         set
         {
             if (Edge != value && AllowWrite)
-                _registryKey.SetValue("Edge", ((int)value).ToString());
+                _registryTaskbar.SetValue("Edge", ((int)value).ToString());
         }
     }
 
     public static bool ShowNotificationCopyOperation
     {
-        get { return _registryKey.ReadBoolean("ShowNotificationCopyOperation"); }
+        get { return _registryKeyExplorer.ReadBoolean("ShowNotificationCopyOperation"); }
         set
         {
             if (ShowNotificationCopyOperation != value && AllowWrite)
-                _registryKey.SetValue("ShowNotificationCopyOperation", value.ToString());
+                _registryKeyExplorer.SetValue("ShowNotificationCopyOperation", value.ToString());
         }
     }
 
     public static bool HookCopy
     {
-        get { return _registryKey.ReadBoolean("HookCopy") && !ArgumentExists("withouthook"); }
+        get { return _registryKeyExplorer.ReadBoolean("HookCopy") && !ArgumentExists("withouthook"); }
         set
         {
             if (HookCopy != value && !ArgumentExists("withouthook") && AllowWrite)
-                _registryKey.SetValue("HookCopy", value.ToString());
+                _registryKeyExplorer.SetValue("HookCopy", value.ToString());
         }
     }
 
     public static bool UseOwnCopier
     {
-        get { return _registryKey.ReadBoolean("UseOwnCopier") || ArgumentExists("useowncopier"); }
+        get { return _registryKeyExplorer.ReadBoolean("UseOwnCopier") || ArgumentExists("useowncopier"); }
         set
         {
             if (UseOwnCopier != value && !ArgumentExists("useowncopier") && AllowWrite)
-                _registryKey.SetValue("UseOwnCopier", value.ToString());
+                _registryKeyExplorer.SetValue("UseOwnCopier", value.ToString());
         }
     }
 
     public static bool StartTwoExplorer
     {
-        get { return _registryKey.ReadBoolean("StartTwoExplorer"); }
+        get { return _registryKeyExplorer.ReadBoolean("StartTwoExplorer"); }
         set
         {
             if (StartTwoExplorer != value && AllowWrite)
-                _registryKey.SetValue("StartTwoExplorer", value.ToString());
-        }
-    }
-
-    public static bool HideDesktopBackground
-    {
-        get { return _registryKey.ReadBoolean("HideDesktopBackground"); }
-        set
-        {
-            if (HideDesktopBackground != value && AllowWrite)
-                _registryKey.SetValue("HideDesktopBackground", value.ToString());
+                _registryKeyExplorer.SetValue("StartTwoExplorer", value.ToString());
         }
     }
 
     public static WindowState ExplorerWindowState
     {
-        get { return _registryKey.ReadEnum<WindowState>("ExplorerWindowState"); }
+        get { return _registryKeyExplorer.ReadEnum<WindowState>("ExplorerWindowState"); }
         set
         {
             if (ExplorerWindowState != value && AllowWrite)
-                _registryKey.SetValue("ExplorerWindowState", ((int)value).ToString());
+                _registryKeyExplorer.SetValue("ExplorerWindowState", ((int)value).ToString());
         }
     }
 
     public static int ExplorerPosX
     {
-        get { return _registryKey.ReadInteger("ExplorerPosX"); }
+        get { return _registryKeyExplorer.ReadInteger("ExplorerPosX"); }
         set
         {
             if (ExplorerPosX != value && AllowWrite)
-                _registryKey.SetValue("ExplorerPosX", value.ToString());
+                _registryKeyExplorer.SetValue("ExplorerPosX", value.ToString());
         }
     }
 
     public static int ExplorerPosY
     {
-        get { return _registryKey.ReadInteger("ExplorerPosY"); }
+        get { return _registryKeyExplorer.ReadInteger("ExplorerPosY"); }
         set
         {
             if (ExplorerPosY != value && AllowWrite)
-                _registryKey.SetValue("ExplorerPosY", value.ToString());
+                _registryKeyExplorer.SetValue("ExplorerPosY", value.ToString());
         }
     }
 
     public static int ExplorerSizeX
     {
-        get { return _registryKey.ReadInteger("ExplorerSizeX"); }
+        get { return _registryKeyExplorer.ReadInteger("ExplorerSizeX"); }
         set
         {
             if (ExplorerSizeX != value && AllowWrite)
-                _registryKey.SetValue("ExplorerSizeX", value.ToString());
+                _registryKeyExplorer.SetValue("ExplorerSizeX", value.ToString());
         }
     }
 
     public static int ExplorerSizeY
     {
-        get { return _registryKey.ReadInteger("ExplorerSizeY"); }
+        get { return _registryKeyExplorer.ReadInteger("ExplorerSizeY"); }
         set
         {
             if (ExplorerSizeY != value && AllowWrite)
-                _registryKey.SetValue("ExplorerSizeY", value.ToString());
+                _registryKeyExplorer.SetValue("ExplorerSizeY", value.ToString());
         }
     }
 
-    public static bool ShowLargeIcon
+    public static int NbToolBar
     {
-        get { return _registryKey.ReadBoolean("ShowLargeIcon"); }
+        get { return _registryTaskbar.ReadInteger("NbToolbar"); }
         set
         {
-            if (ShowLargeIcon != value && AllowWrite)
-                _registryKey.SetValue("ShowLargeIcon", value.ToString());
+            if (NbToolBar != value && AllowWrite)
+                _registryTaskbar.SetValue("NbToolbar", value.ToString());
         }
     }
 
-    public static bool ShowTitle
+    public static double TaskbarHeight
     {
-        get { return _registryKey.ReadBoolean("ShowTitle"); }
+        get { return _registryTaskbar.ReadDouble("TaskbarHeight"); }
         set
         {
-            if (ShowTitle != value && AllowWrite)
-                _registryKey.SetValue("ShowTitle", value.ToString());
+            if (TaskbarHeight != value && AllowWrite)
+                _registryTaskbar.SetValue("TaskbarHeight", value.ToString());
         }
+    }
+
+    public static double TaskbarWidth
+    {
+        get { return _registryTaskbar.ReadDouble("TaskbarWidth"); }
+        set
+        {
+            if (TaskbarWidth != value && AllowWrite)
+                _registryTaskbar.SetValue("TaskbarWidth", value.ToString());
+        }
+    }
+
+    public static bool ShowTaskbarOnAllScreens
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowTaskbarOnAllScreens"); }
+        set
+        {
+            if (ShowTaskbarOnAllScreens != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowTaskbarOnAllScreens", value.ToString());
+        }
+    }
+
+    private const string ToolBarNameInRegistry = "Toolbar";
+    public static string[] ToolbarsPath
+    {
+        get
+        {
+            // Loop to find all toolbars path
+            string[] listNames = [];
+            _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v => _registryTaskbar.OpenSubKey(v).GetValue("Path"));
+            return listNames;
+        }
+        set
+        {
+            // First, remove all olders toolbars path
+            _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v => _registryTaskbar.DeleteSubKey(v));
+            // Then loop to save each new one
+            int i = 0;
+            value.ToList().ForEach(s =>
+            {
+                _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})").SetValue("Path", value[i]);
+                i++;
+            });
+        }
+    }
+
+    public static void ToolbarPosition(string path, Point position)
+    {
+        int i = ToolbarNumber(path);
+        if (i < 0)
+        {
+            i = MaxToolbar();
+            i++;
+            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true);
+        }
+        RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
+        currentToolbar.SetValue("X", position.X.ToString());
+        currentToolbar.SetValue("Y", position.Y.ToString());
+    }
+
+    public static Point ToolbarPosition(string path)
+    {
+        Point ret = new();
+        int i = ToolbarNumber(path);
+        if (i >= 0)
+        {
+            RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})");
+            ret.X = currentToolbar.ReadDouble("X");
+            ret.Y = currentToolbar.ReadDouble("Y");
+        }
+        return ret;
+    }
+
+    public static void ToolbarSmallSizeIcon(string path, bool smallSize)
+    {
+        int i = ToolbarNumber(path);
+        if (i < 0)
+        {
+            i = MaxToolbar();
+            i++;
+            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true);
+        }
+        RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
+        currentToolbar.SetValue("SmallSizeIcon", smallSize.ToString());
+    }
+
+    public static bool ToolbarSmallSizeIcon(string path)
+    {
+        bool ret = true;
+        int i = ToolbarNumber(path);
+        if (i >= 0)
+        {
+            RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})");
+            ret = currentToolbar.ReadBoolean("SmallSizeIcon");
+        }
+        return ret;
+    }
+
+    public static void ToolbarShowTitle(string path, bool showTitle)
+    {
+        int i = ToolbarNumber(path);
+        if (i < 0)
+        {
+            i = MaxToolbar();
+            i++;
+            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true);
+        }
+        RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
+        currentToolbar.SetValue("ShowTitle", showTitle.ToString());
+    }
+
+    public static bool ToolbarShowTitle(string path)
+    {
+        bool ret = true;
+        int i = ToolbarNumber(path);
+        if (i >= 0)
+        {
+            RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})");
+            ret = currentToolbar.ReadBoolean("ShowTitle");
+        }
+        return ret;
+    }
+
+    private static int ToolbarNumber(string path)
+    {
+        int pos = -1;
+        _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v =>
+        {
+            if (_registryTaskbar.OpenSubKey(v).GetValue("Path").ToString() == path)
+                pos = int.Parse(v.Replace($"{ToolBarNameInRegistry}(", "").Replace(")", ""));
+        });
+        return pos;
+    }
+
+    private static int MaxToolbar()
+    {
+        int max = -1;
+        _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v =>
+        {
+            int pos = int.Parse(v.Replace($"{ToolBarNameInRegistry}(", "").Replace(")", ""));
+            max = Math.Max(max, pos);
+        });
+        return max;
     }
 
     public static RegistryKey MyRegistryKey
     {
-        get { return _registryKey; }
+        get { return _registryKeyExplorer; }
+    }
+
+    public static RegistryKey DesktopRegistryKey
+    {
+        get { return _registryDesktop; }
+    }
+
+    public static RegistryKey TaskbarRegistryKey
+    {
+        get { return _registryTaskbar; }
     }
 
     public static string[] LeftTabs

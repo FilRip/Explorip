@@ -22,6 +22,13 @@ public static class ExtensionsRegistry
         return defaultValue;
     }
 
+    public static double ReadDouble(this RegistryKey registryKey, string keyName, double defaultValue = 0)
+    {
+        if (double.TryParse(registryKey.GetValue(keyName, defaultValue.ToString()).ToString(), out double result))
+            return result;
+        return defaultValue;
+    }
+
     public static T ReadEnum<T>(this RegistryKey registryKey, string keyName) where T : struct, Enum
     {
         if (Enum.TryParse(registryKey.GetValue(keyName, default(T)).ToString(), out T result))

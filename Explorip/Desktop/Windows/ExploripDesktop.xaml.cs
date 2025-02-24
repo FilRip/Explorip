@@ -45,7 +45,7 @@ public partial class ExploripDesktop : Window
             WindowsSettings.UseImmersiveDarkMode(GetHandle(), true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
-        DesktopRegistryKey = ConfigManager.MyRegistryKey.CreateSubKey(ScreenId);
+        DesktopRegistryKey = ConfigManager.DesktopRegistryKey.CreateSubKey(ScreenId);
         if (DesktopRegistryKey.GetValueNames().Contains("HideBackgroundDesktop", StringComparer.InvariantCultureIgnoreCase))
             Background = new SolidColorBrush(DesktopRegistryKey.ReadColor("BackgroundColor", ExploripSharedCopy.Constants.Colors.BackgroundColor));
     }

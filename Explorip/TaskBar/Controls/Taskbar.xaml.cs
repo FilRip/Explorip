@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -49,7 +52,7 @@ public partial class Taskbar : AppBarWindow
         if (DpiHelper.DpiScale % 1 != 0)
             UseLayoutRounding = false;
 
-        if (ConfigManager.ShowQuickLaunch)
+        if (ConfigManager.ShowQuickLaunch && Directory.Exists(Environment.ExpandEnvironmentVariables(ConfigManager.QuickLaunchPath)))
         {
             QuickLaunchToolbar.Visibility = Visibility.Visible;
             DesiredHeight += 16;
@@ -111,7 +114,7 @@ public partial class Taskbar : AppBarWindow
 
     private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        // TODO : Method Not more used
+        // TODO : Method No more used
         if (e.PropertyName == "Theme")
         {
             bool newTransparency = Application.Current.FindResource("AllowsTransparency") as bool? ?? false;
@@ -148,7 +151,7 @@ public partial class Taskbar : AppBarWindow
         }
         else if (e.PropertyName == "ShowQuickLaunch")
         {
-            if (ConfigManager.ShowQuickLaunch)
+            if (ConfigManager.ShowQuickLaunch && Directory.Exists(Environment.ExpandEnvironmentVariables(ConfigManager.QuickLaunchPath)))
             {
                 QuickLaunchToolbar.Visibility = Visibility.Visible;
                 DesiredHeight += 16;
@@ -254,6 +257,8 @@ public partial class Taskbar : AppBarWindow
         DesiredHeight = height;
         DesiredWidth = width;
         _appBarManager.SetWorkArea(Screen);
+        ConfigManager.TaskbarHeight = DesiredHeight;
+        ConfigManager.TaskbarWidth = DesiredWidth;
     }
 
     private void UnlockTaskbar_Click(object sender, RoutedEventArgs e)
@@ -300,6 +305,9 @@ public partial class Taskbar : AppBarWindow
             Height += 22;
             DesiredHeight = Height;
             _appBarManager.SetWorkArea(Screen);
+            ConfigManager.NbToolBar = ToolsBars.RowDefinitions.Count;
+            ConfigManager.TaskbarHeight = DesiredHeight;
+            ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.Path)];
         }
     }
 

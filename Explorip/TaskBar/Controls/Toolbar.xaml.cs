@@ -22,7 +22,7 @@ public partial class Toolbar : UserControl
 {
     private enum MenuItem : uint
     {
-        OpenParentFolder = CommonContextMenuItem.Paste + 1
+        OpenParentFolder = CommonContextMenuItem.Paste + 1,
     }
 
     public readonly static DependencyProperty PathProperty = DependencyProperty.Register("Path", typeof(string), typeof(Toolbar), new PropertyMetadata(OnPathChanged));
@@ -67,9 +67,12 @@ public partial class Toolbar : UserControl
         {
             Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
             Title.Content = Folder.DisplayName;
-            if (ConfigManager.ShowLargeIcon && !CurrentShowLargeIcon)
+            if (!ConfigManager.ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
                 ShowLargeIcon_Click(null, null);
-            Title.Visibility = ConfigManager.ShowTitle ? Visibility.Visible : Visibility.Collapsed;
+            Title.Visibility = ConfigManager.ToolbarShowTitle(Path) ? Visibility.Visible : Visibility.Collapsed;
+            Point point = ConfigManager.ToolbarPosition(Path);
+            MyRenderTransform.X = point.X;
+            MyRenderTransform.Y = point.Y;
         }
     }
 
@@ -220,6 +223,7 @@ public partial class Toolbar : UserControl
     {
         ReleaseMouseCapture();
         Mouse.OverrideCursor = null;
+        ConfigManager.ToolbarPosition(Path, new Point(MyRenderTransform.X, MyRenderTransform.Y));
     }
 
     private void UserControl_MouseMove(object sender, MouseEventArgs e)
@@ -285,7 +289,7 @@ public partial class Toolbar : UserControl
             Title.Visibility = Visibility.Collapsed;
         else
             Title.Visibility = Visibility.Visible;
-        ConfigManager.ShowTitle = Title.Visibility == Visibility.Visible;
+        ConfigManager.ToolbarShowTitle(Path, Title.Visibility == Visibility.Visible);
     }
 
     public bool CurrentShowLargeIcon { get; private set; }
@@ -303,7 +307,7 @@ public partial class Toolbar : UserControl
         else
             newHeight -= 16;
         parentTaskbar.ChangeDesiredSize(newHeight, parentTaskbar.Width);
-        ConfigManager.ShowLargeIcon = CurrentShowLargeIcon;
+        ConfigManager.ToolbarSmallSizeIcon(Path, !CurrentShowLargeIcon);
     }
 }
 

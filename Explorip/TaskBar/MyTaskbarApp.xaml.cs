@@ -79,21 +79,32 @@ public partial class MyTaskbarApp : Application
             WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(taskBar).EnsureHandle(), true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
-        if (ExtensionsCommandLineArguments.ArgumentExists("taskbars"))
+        if (ExtensionsCommandLineArguments.ArgumentExists("taskbars") || ConfigManager.ShowTaskbarOnAllScreens)
             ShowTaskbarOnAllOthersScreen();
     }
 
     public void ShowTaskbarOnAllOthersScreen()
     {
-        if (_taskbarList.Count == 1 && WpfScreenHelper.Screen.AllScreens.Count() > 1)
+        if (ConfigManager.ShowTaskbarOnAllScreens)
         {
-            Taskbar taskBar;
-            List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
-            foreach (AppBarScreen appBarScreen in appBarScreens)
+            ConfigManager.ShowTaskbarOnAllScreens = false;
+            foreach (Taskbar taskbar in _taskbarList)
+                if (!taskbar.MainScreen)
+                    taskbar.Close();
+        }
+        else
+        {
+            if (_taskbarList.Count == 1 && WpfScreenHelper.Screen.AllScreens.Count() > 1)
             {
-                taskBar = new Taskbar(_startMenuMonitor, appBarScreen, ConfigManager.Edge);
-                taskBar.Show();
-                _taskbarList.Add(taskBar);
+                ConfigManager.ShowTaskbarOnAllScreens = true;
+                Taskbar taskBar;
+                List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
+                foreach (AppBarScreen appBarScreen in appBarScreens)
+                {
+                    taskBar = new Taskbar(_startMenuMonitor, appBarScreen, ConfigManager.Edge);
+                    taskBar.Show();
+                    _taskbarList.Add(taskBar);
+                }
             }
         }
     }
