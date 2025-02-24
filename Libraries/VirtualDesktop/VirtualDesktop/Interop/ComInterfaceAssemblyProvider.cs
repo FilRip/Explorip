@@ -15,7 +15,7 @@ using WindowsDesktop.Properties;
 
 namespace WindowsDesktop.Interop
 {
-    internal class ComInterfaceAssemblyProvider
+    internal class ComInterfaceAssemblyProvider(string assemblyDirectoryPath)
     {
         private const string _placeholderGuid = "00000000-0000-0000-0000-000000000000";
         private const string _assemblyName = "VirtualDesktop.{0}.generated.dll";
@@ -25,12 +25,7 @@ namespace WindowsDesktop.Interop
         private static readonly Version _requireVersion = new("1.0");
         private static readonly int[] _interfaceVersions = [10240, 20231, 21313, 21359, 22449, 22631, 26100];
 
-        private readonly string _assemblyDirectoryPath;
-
-        public ComInterfaceAssemblyProvider(string assemblyDirectoryPath)
-        {
-            _assemblyDirectoryPath = assemblyDirectoryPath ?? _defaultAssemblyDirectoryPath;
-        }
+        private readonly string _assemblyDirectoryPath = assemblyDirectoryPath ?? _defaultAssemblyDirectoryPath;
 
         public Assembly GetAssembly()
         {
@@ -86,11 +81,10 @@ namespace WindowsDesktop.Interop
             int interfaceVersion = _interfaceVersions
                 .Reverse()
                 .First(build => build <= ProductInfo.OSBuild);
-            string[] interfaceNames = executingAssembly
+            string[] interfaceNames = [.. executingAssembly
                 .GetTypes()
                 .SelectMany(x => x.GetComInterfaceNamesIfWrapper(interfaceVersion))
-                .Where(x => x != null)
-                .ToArray();
+                .Where(x => x != null)];
             Dictionary<string, Guid> iids = IiD.GetIIDs(interfaceNames);
             List<string> compileTargets = [];
 
@@ -132,7 +126,7 @@ namespace WindowsDesktop.Interop
                 compileTargets.Add(sourceCode);
             }
 
-            return Compile(compileTargets.ToArray());
+            return Compile([.. compileTargets]);
         }
 
         private Assembly Compile(IEnumerable<string> sources)
@@ -155,7 +149,7 @@ namespace WindowsDesktop.Interop
             cp.ReferencedAssemblies.Add("System.dll");
             cp.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);
 
-            CompilerResults result = provider.CompileAssemblyFromSource(cp, sources.ToArray());
+            CompilerResults result = provider.CompileAssemblyFromSource(cp, [.. sources]);
             if (result.Errors.Count > 0)
             {
                 string message = $"Failed to compile COM interfaces assembly.{Environment.NewLine}{string.Join(Environment.NewLine, result.Errors.OfType<CompilerError>().Select(x => $"  {x}"))}";

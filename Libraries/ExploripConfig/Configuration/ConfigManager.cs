@@ -305,7 +305,7 @@ public static class ConfigManager
         if (hkey != null)
             foreach (string name in hkey.GetValueNames().Where(name => name.StartsWith("Tab(")))
                 allTabs.Add(hkey.GetValue(name).ToString());
-        return allTabs.ToArray();
+        return [.. allTabs];
     }
 
     private static void SaveAllTabs(string hkeyPath, string[] listTabs)

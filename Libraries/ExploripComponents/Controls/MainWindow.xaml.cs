@@ -78,7 +78,7 @@ namespace ExploripComponents.Controls
 
         private void FileLV_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            MyDataContext.SelectedItems = new ObservableCollection<OneFileSystem>(FileLV.SelectedItems.OfType<OneFileSystem>());
+            MyDataContext.SelectedItems = [.. FileLV.SelectedItems.OfType<OneFileSystem>()];
         }
 
         #endregion

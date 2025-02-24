@@ -100,7 +100,7 @@ public class IntegerName : SerializedPropertyValue
 
         IntegerName.ID = BitConverter.ToUInt32(ba, 4);
         PropertyType Type = (PropertyType)BitConverter.ToUInt16(ba, 9);
-        byte[] Value = ba.Skip(13).Take((int)(valueSize - 13)).ToArray();
+        byte[] Value = [.. ba.Skip(13).Take((int)(valueSize - 13))];
         IntegerName.TypedPropertyValue = new TypedPropertyValue(Type, Value);
 
         return IntegerName;

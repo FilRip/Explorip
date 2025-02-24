@@ -243,18 +243,18 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         if (IsPinned && position != PinOrder)
         {
             // already pinned, just moving
-            List<string> icons = _notificationArea.PinnedNotifyIcons.ToList();
+            List<string> icons = [.. _notificationArea.PinnedNotifyIcons];
             icons.Remove(Identifier);
             icons.Insert(position, Identifier);
-            _notificationArea.PinnedNotifyIcons = icons.ToArray();
+            _notificationArea.PinnedNotifyIcons = [.. icons];
             updated = true;
         }
         else if (!IsPinned)
         {
             // newly pinned. welcome to the party!
-            List<string> icons = _notificationArea.PinnedNotifyIcons.ToList();
+            List<string> icons = [.. _notificationArea.PinnedNotifyIcons];
             icons.Insert(position, Identifier);
-            _notificationArea.PinnedNotifyIcons = icons.ToArray();
+            _notificationArea.PinnedNotifyIcons = [.. icons];
             updated = true;
         }
 
@@ -268,9 +268,9 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     {
         if (IsPinned)
         {
-            List<string> icons = _notificationArea.PinnedNotifyIcons.ToList();
+            List<string> icons = [.. _notificationArea.PinnedNotifyIcons];
             icons.Remove(Identifier);
-            _notificationArea.PinnedNotifyIcons = icons.ToArray();
+            _notificationArea.PinnedNotifyIcons = [.. icons];
 
             IsPinned = false;
             PinOrder = 0;

@@ -54,7 +54,7 @@ internal class EnumUnknownClass : IEnumUnknown
 
     public HResult Clone(out IEnumUnknown result)
     {
-        result = new EnumUnknownClass(conditionList.ToArray());
+        result = new EnumUnknownClass([.. conditionList]);
         return HResult.Ok;
     }
 

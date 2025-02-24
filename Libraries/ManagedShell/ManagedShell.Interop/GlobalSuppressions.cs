@@ -8,4 +8,3 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"")]
 [assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags")]
 [assembly: SuppressMessage("Info Code Smell", "S1133:Deprecated code should be removed")]
-[assembly: SuppressMessage("Style", "IDE0305:Simplifier l'initialisation des collections")]

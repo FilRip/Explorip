@@ -36,7 +36,7 @@ public static class ScreenManager
     public static Screen[] ListScreenExceptPrimary()
     {
         IEnumerable<Screen> result = Screen.AllScreens.Where(s => !s.Primary);
-        return result.ToArray();
+        return [.. result];
     }
 
     public static Screen GetLeftScreen()
@@ -82,7 +82,7 @@ public static class ScreenManager
         if (nbEvenScreen == 0)
             return Screen.PrimaryScreen; // A voir si on retourne une exception ou l'écran principal quand il n'y a pas d'écran central (nombre paire d'écran)
         List<Screen> OrderedScreen;
-        OrderedScreen = Screen.AllScreens.OrderBy(item => item.WorkingArea.Location.X).ToList();
+        OrderedScreen = [.. Screen.AllScreens.OrderBy(item => item.WorkingArea.Location.X)];
         while (OrderedScreen.Count > 1)
         {
             OrderedScreen.RemoveAt(0);

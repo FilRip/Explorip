@@ -5,21 +5,15 @@ using System.Reflection;
 
 namespace WindowsDesktop.Interop
 {
-    internal class ComInterfaceAssembly
+    internal class ComInterfaceAssembly(Assembly compiledAssembly)
     {
         private readonly Dictionary<string, Type> _knownTypes = [];
-        private readonly Assembly _compiledAssembly;
-
-        public ComInterfaceAssembly(Assembly compiledAssembly)
-        {
-            _compiledAssembly = compiledAssembly;
-        }
 
         internal Type GetType(string typeName)
         {
             if (!_knownTypes.TryGetValue(typeName, out Type type))
             {
-                type = _knownTypes[typeName] = _compiledAssembly
+                type = _knownTypes[typeName] = compiledAssembly
                     .GetTypes()
                     .SingleOrDefault(x => x.Name.Split('.')[x.Name.Split('.').Length - 1] == typeName);
             }

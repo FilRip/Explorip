@@ -225,7 +225,7 @@ public partial class WpfExplorerBrowser : Window
 
     private static void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
     {
-        ShellObject[] listeItems = tabSource.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
+        ShellObject[] listeItems = [.. tabSource.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()];
         string destination = tabDestination.CurrentTabExplorer.ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
         Task.Run(() =>
         {
@@ -269,7 +269,7 @@ public partial class WpfExplorerBrowser : Window
 
     private static void DeleteSelectTab(TabExplorerBrowser tab)
     {
-        ShellObject[] listeItems = tab.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.ToArray();
+        ShellObject[] listeItems = [.. tab.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()];
         Task.Run(() =>
         {
             FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
@@ -362,9 +362,9 @@ public partial class WpfExplorerBrowser : Window
     {
         if (_mainSession)
         {
-            ConfigManager.LeftTabs = LeftTab.Items.OfType<TabItemExplorerBrowser>().Where(tab => tab.CurrentDirectory?.ParsingName != null).Select(tab => tab.CurrentDirectory.ParsingName).ToArray();
+            ConfigManager.LeftTabs = [.. LeftTab.Items.OfType<TabItemExplorerBrowser>().Where(tab => tab.CurrentDirectory?.ParsingName != null).Select(tab => tab.CurrentDirectory.ParsingName)];
             if (RightTab.Visibility == Visibility.Visible)
-                ConfigManager.RightTabs = RightTab.Items.OfType<TabItemExplorerBrowser>().Where(tab => tab.CurrentDirectory?.ParsingName != null).Select(tab => tab.CurrentDirectory.ParsingName).ToArray();
+                ConfigManager.RightTabs = [.. RightTab.Items.OfType<TabItemExplorerBrowser>().Where(tab => tab.CurrentDirectory?.ParsingName != null).Select(tab => tab.CurrentDirectory.ParsingName)];
         }
         LeftTab.CloseAllTabs();
         RightTab.CloseAllTabs();

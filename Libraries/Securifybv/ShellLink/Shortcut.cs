@@ -413,7 +413,7 @@ public class Shortcut : ShellLinkHeader
         lnk.IconIndex = Header.IconIndex;
         lnk.ShowCommand = Header.ShowCommand;
         lnk.HotKey = Header.HotKey;
-        ba = ba.Skip((int)HeaderSize).ToArray();
+        ba = [.. ba.Skip((int)HeaderSize)];
         #endregion // SHELL_LINK_HEADER
 
         #region LINKTARGET_IDLIST
@@ -421,7 +421,7 @@ public class Shortcut : ShellLinkHeader
         {
             lnk.LinkTargetIDList = LinkTargetIDList.FromByteArray(ba);
             ushort IDListSize = BitConverter.ToUInt16(ba, 0);
-            ba = ba.Skip(IDListSize + 2).ToArray();
+            ba = [.. ba.Skip(IDListSize + 2)];
         }
         #endregion // LINKTARGET_IDLIST
 
@@ -430,7 +430,7 @@ public class Shortcut : ShellLinkHeader
         {
             lnk.LinkInfo = LinkInfo.FromByteArray(ba);
             uint LinkInfoSize = BitConverter.ToUInt32(ba, 0);
-            ba = ba.Skip((int)LinkInfoSize).ToArray();
+            ba = [.. ba.Skip((int)LinkInfoSize)];
         }
         #endregion // LINKINFO
 
@@ -442,13 +442,13 @@ public class Shortcut : ShellLinkHeader
             ushort CountCharacters = BitConverter.ToUInt16(ba, 0);
             if (IsUnicode)
             {
-                lnk.StringData.NameString = Encoding.Unicode.GetString(ba.Skip(2).Take(CountCharacters * 2).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters * 2 + 2).ToArray();
+                lnk.StringData.NameString = Encoding.Unicode.GetString([.. ba.Skip(2).Take(CountCharacters * 2)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters * 2 + 2)];
             }
             else
             {
-                lnk.StringData.NameString = Encoding.Default.GetString(ba.Skip(2).Take(CountCharacters).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters + 2).ToArray();
+                lnk.StringData.NameString = Encoding.Default.GetString([.. ba.Skip(2).Take(CountCharacters)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters + 2)];
             }
 
         }
@@ -460,13 +460,13 @@ public class Shortcut : ShellLinkHeader
             ushort CountCharacters = BitConverter.ToUInt16(ba, 0);
             if (IsUnicode)
             {
-                lnk.StringData.RelativePath = Encoding.Unicode.GetString(ba.Skip(2).Take(CountCharacters * 2).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters * 2 + 2).ToArray();
+                lnk.StringData.RelativePath = Encoding.Unicode.GetString([.. ba.Skip(2).Take(CountCharacters * 2)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters * 2 + 2)];
             }
             else
             {
-                lnk.StringData.RelativePath = Encoding.Default.GetString(ba.Skip(2).Take(CountCharacters).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters + 2).ToArray();
+                lnk.StringData.RelativePath = Encoding.Default.GetString([.. ba.Skip(2).Take(CountCharacters)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters + 2)];
             }
         }
 
@@ -477,13 +477,13 @@ public class Shortcut : ShellLinkHeader
             ushort CountCharacters = BitConverter.ToUInt16(ba, 0);
             if (IsUnicode)
             {
-                lnk.StringData.WorkingDir = Encoding.Unicode.GetString(ba.Skip(2).Take(CountCharacters * 2).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters * 2 + 2).ToArray();
+                lnk.StringData.WorkingDir = Encoding.Unicode.GetString([.. ba.Skip(2).Take(CountCharacters * 2)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters * 2 + 2)];
             }
             else
             {
-                lnk.StringData.WorkingDir = Encoding.Default.GetString(ba.Skip(2).Take(CountCharacters).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters + 2).ToArray();
+                lnk.StringData.WorkingDir = Encoding.Default.GetString([.. ba.Skip(2).Take(CountCharacters)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters + 2)];
             }
         }
 
@@ -494,13 +494,13 @@ public class Shortcut : ShellLinkHeader
             ushort CountCharacters = BitConverter.ToUInt16(ba, 0);
             if (IsUnicode)
             {
-                lnk.StringData.CommandLineArguments = Encoding.Unicode.GetString(ba.Skip(2).Take(CountCharacters * 2).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters * 2 + 2).ToArray();
+                lnk.StringData.CommandLineArguments = Encoding.Unicode.GetString([.. ba.Skip(2).Take(CountCharacters * 2)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters * 2 + 2)];
             }
             else
             {
-                lnk.StringData.CommandLineArguments = Encoding.Default.GetString(ba.Skip(2).Take(CountCharacters).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters + 2).ToArray();
+                lnk.StringData.CommandLineArguments = Encoding.Default.GetString([.. ba.Skip(2).Take(CountCharacters)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters + 2)];
             }
         }
 
@@ -511,13 +511,13 @@ public class Shortcut : ShellLinkHeader
             ushort CountCharacters = BitConverter.ToUInt16(ba, 0);
             if (IsUnicode)
             {
-                lnk.StringData.IconLocation = Encoding.Unicode.GetString(ba.Skip(2).Take(CountCharacters * 2).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters * 2 + 2).ToArray();
+                lnk.StringData.IconLocation = Encoding.Unicode.GetString([.. ba.Skip(2).Take(CountCharacters * 2)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters * 2 + 2)];
             }
             else
             {
-                lnk.StringData.IconLocation = Encoding.Default.GetString(ba.Skip(2).Take(CountCharacters).ToArray()).TrimEnd((char)0);
-                ba = ba.Skip(CountCharacters + 2).ToArray();
+                lnk.StringData.IconLocation = Encoding.Default.GetString([.. ba.Skip(2).Take(CountCharacters)]).TrimEnd((char)0);
+                ba = [.. ba.Skip(CountCharacters + 2)];
             }
         }
         #endregion // STRING_DATA

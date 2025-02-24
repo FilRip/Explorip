@@ -2,13 +2,8 @@
 
 namespace WindowsDesktop
 {
-    public class VirtualDesktopSwitchedEventArgs : EventArgs
+    public class VirtualDesktopSwitchedEventArgs(VirtualDesktop desktop) : EventArgs
     {
-        public VirtualDesktop Desktop { get; }
-
-        public VirtualDesktopSwitchedEventArgs(VirtualDesktop desktop)
-        {
-            Desktop = desktop;
-        }
+        public VirtualDesktop Desktop { get; } = desktop;
     }
 }

@@ -670,7 +670,7 @@ public partial class OneDirectory : OneFileSystem
         WpfExplorerViewModel viewModel = GetRootParent().MainViewModel!;
         if (e.Data.GetDataPresent(DataFormats.FileDrop) && viewModel.NbMillisecondsStartDragging > Constants.DelayIgnoreDrag)
         {
-            List<string> filesAndFolders = ((DataObject)e.Data).GetFileDropList().OfType<string>().ToList();
+            List<string> filesAndFolders = [.. ((DataObject)e.Data).GetFileDropList().OfType<string>()];
             if (viewModel.DragDropKeyStates.HasFlag(DragDropKeyStates.LeftMouseButton))
             {
                 if (Path.GetDirectoryName(filesAndFolders[0]) != FullPath || viewModel.DragDropKeyStates.HasFlag(DragDropKeyStates.ControlKey))

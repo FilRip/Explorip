@@ -712,8 +712,8 @@ internal static class TaskbarWindowManager
     {
         // Add the buttons
         // Get the array of thumbnail buttons in native format
-        ThumbButton[] nativeButtons = (from thumbButton in taskbarWindow.ThumbnailButtons
-                                       select thumbButton.Win32ThumbButton).ToArray();
+        ThumbButton[] nativeButtons = [.. (from thumbButton in taskbarWindow.ThumbnailButtons
+                                       select thumbButton.Win32ThumbButton)];
 
         // Add the buttons on the taskbar
         HResult hr = TaskbarList.Instance.ThumbBarAddButtons(taskbarWindow.WindowToTellTaskbarAbout, (uint)taskbarWindow.ThumbnailButtons.Length, nativeButtons);

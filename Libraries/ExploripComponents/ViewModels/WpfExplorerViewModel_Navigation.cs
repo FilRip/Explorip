@@ -130,7 +130,7 @@ public partial class WpfExplorerViewModel
                 }
                 string[] suggestions = Directory.GetDirectories(path);
                 if (!string.IsNullOrWhiteSpace(startWith))
-                    suggestions = suggestions.Where(p => p.StartsWith(startWith)).ToArray();
+                    suggestions = [.. suggestions.Where(p => p.StartsWith(startWith))];
                 ComboBoxEditPath = suggestions;
                 ShowSuggestions = true;
                 if (CurrentControl.EditPath.Template.FindName("PART_EditableTextBox", CurrentControl.EditPath) is TextBox txt)
@@ -264,7 +264,7 @@ public partial class WpfExplorerViewModel
             else
                 items.Add(new OneFile(item.ParsingName, SelectedFolder!));
         }
-        FileListView = new System.Collections.ObjectModel.ObservableCollection<OneFileSystem>(items);
+        FileListView = [.. items];
         CurrentGroupBy = (CollectionView)CollectionViewSource.GetDefaultView(FileListView);
     }
 

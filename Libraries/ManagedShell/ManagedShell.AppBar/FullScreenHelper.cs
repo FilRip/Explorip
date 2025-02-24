@@ -92,7 +92,7 @@ public sealed class FullScreenHelper : IDisposable
             GetWindowRect(hWnd, out rect);
         }
 
-        List<ScreenInfo> allScreens = Screen.AllScreens.Select(ScreenInfo.Create).ToList();
+        List<ScreenInfo> allScreens = [.. Screen.AllScreens.Select(ScreenInfo.Create)];
         if (allScreens.Count > 1) allScreens.Add(ScreenInfo.CreateVirtualScreen());
 
         // check if this is a fullscreen app

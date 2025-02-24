@@ -160,7 +160,7 @@ public sealed class ComTaskScheduler : TaskScheduler, IDisposable
     {
         this.VerifyNotDisposed();
 
-        return this._tasks.ToArray();
+        return [.. this._tasks];
     }
 
     private void ThreadStart()

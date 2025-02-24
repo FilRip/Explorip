@@ -3,15 +3,8 @@ using System.Collections.Generic;
 
 namespace WindowsDesktop.Interop
 {
-    internal abstract class VirtualDesktopManagerInternal : ComInterfaceWrapperBase
+    internal abstract class VirtualDesktopManagerInternal(ComInterfaceAssembly assembly, uint latestVersion = 1) : ComInterfaceWrapperBase(assembly, "IVirtualDesktopManagerInternal", latestVersion, service: ClSid.VirtualDesktopAPIUnknown)
     {
-#pragma warning disable S3442 // "abstract" classes should not have "public" constructors
-        public VirtualDesktopManagerInternal(ComInterfaceAssembly assembly, uint latestVersion = 1)
-            : base(assembly, "IVirtualDesktopManagerInternal", latestVersion, service: ClSid.VirtualDesktopAPIUnknown)
-        {
-        }
-#pragma warning restore S3442 // "abstract" classes should not have "public" constructors
-
         public abstract void MoveViewToDesktop(ApplicationView pView, VirtualDesktop desktop);
 
         public abstract VirtualDesktop GetCurrentDesktop();

@@ -258,19 +258,19 @@ public class CommonNetworkRelativeLink : Structure
             deviceNameOffsetUnicode = BitConverter.ToUInt32(ba, 24);
         }
 
-        byte[] tmp = ba.Skip((int)netNameOffset).ToArray();
-        CommonNetworkRelativeLink.NetName = Encoding.Default.GetString(tmp.Take(Array.IndexOf(tmp, (byte)0x00) + 1).ToArray()).TrimEnd((char)0);
+        byte[] tmp = [.. ba.Skip((int)netNameOffset)];
+        CommonNetworkRelativeLink.NetName = Encoding.Default.GetString([.. tmp.Take(Array.IndexOf(tmp, (byte)0x00) + 1)]).TrimEnd((char)0);
 
         if (commonNetworkRelativeLinkFlags.HasFlag(ECommonNetworkRelativeLink.ValidDevice))
         {
-            tmp = ba.Skip((int)deviceNameOffset).ToArray();
-            CommonNetworkRelativeLink.DeviceName = Encoding.Default.GetString(tmp.Take(Array.IndexOf(tmp, (byte)0x00) + 1).ToArray()).TrimEnd((char)0);
+            tmp = [.. ba.Skip((int)deviceNameOffset)];
+            CommonNetworkRelativeLink.DeviceName = Encoding.Default.GetString([.. tmp.Take(Array.IndexOf(tmp, (byte)0x00) + 1)]).TrimEnd((char)0);
         }
 
         if (netNameOffset > 0x14)
         {
             int Index = 0;
-            tmp = ba.Skip((int)netNameOffsetUnicode).ToArray();
+            tmp = [.. ba.Skip((int)netNameOffsetUnicode)];
             for (int i = 0; i < tmp.Length - 1; i++)
             {
                 if (tmp[i] == 0x00 && tmp[i + 1] == 0x00)
@@ -279,11 +279,11 @@ public class CommonNetworkRelativeLink : Structure
                     break;
                 }
             }
-            CommonNetworkRelativeLink.NetNameUnicode = Encoding.Unicode.GetString(tmp.Take(Index + 1).ToArray()).TrimEnd((char)0);
+            CommonNetworkRelativeLink.NetNameUnicode = Encoding.Unicode.GetString([.. tmp.Take(Index + 1)]).TrimEnd((char)0);
 
             if (commonNetworkRelativeLinkFlags.HasFlag(ECommonNetworkRelativeLink.ValidDevice))
             {
-                tmp = ba.Skip((int)deviceNameOffsetUnicode).ToArray();
+                tmp = [.. ba.Skip((int)deviceNameOffsetUnicode)];
                 for (int i = 0; i < tmp.Length - 1; i++)
                 {
                     if (tmp[i] == 0x00 && tmp[i + 1] == 0x00)
@@ -292,7 +292,7 @@ public class CommonNetworkRelativeLink : Structure
                         break;
                     }
                 }
-                CommonNetworkRelativeLink.DeviceNameUnicode = Encoding.Unicode.GetString(tmp.Take(Index + 1).ToArray()).TrimEnd((char)0);
+                CommonNetworkRelativeLink.DeviceNameUnicode = Encoding.Unicode.GetString([.. tmp.Take(Index + 1)]).TrimEnd((char)0);
             }
         }
 

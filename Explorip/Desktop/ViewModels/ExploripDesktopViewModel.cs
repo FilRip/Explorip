@@ -151,12 +151,12 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 
     internal List<OneDesktopItem> ListItems()
     {
-        return _parentDesktop.MainGrid.Children.OfType<OneDesktopItem>().ToList();
+        return [.. _parentDesktop.MainGrid.Children.OfType<OneDesktopItem>()];
     }
 
     internal FileSystemInfo[] ListSelectedItem()
     {
-        return ListItems().Where(i => i.MyDataContext.IsSelected && i.MyDataContext.FileSystemIO != null).Select(i => i.MyDataContext.FileSystemIO).ToArray();
+        return [.. ListItems().Where(i => i.MyDataContext.IsSelected && i.MyDataContext.FileSystemIO != null).Select(i => i.MyDataContext.FileSystemIO)];
     }
 
     [RelayCommand()]

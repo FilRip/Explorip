@@ -35,7 +35,7 @@ namespace WindowsDesktop
         {
             VirtualDesktopHelper.ThrowIfNotSupported();
 
-            return ComInterface.VirtualDesktopManagerInternal.GetDesktops().ToArray();
+            return [.. ComInterface.VirtualDesktopManagerInternal.GetDesktops()];
         }
 
         /// <summary>

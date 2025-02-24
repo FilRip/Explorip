@@ -45,7 +45,7 @@ namespace WindowsDesktop.Interop
                 }
             }
 
-            string[] except = targets.Except(known.Keys).ToArray();
+            string[] except = [.. targets.Except(known.Keys)];
             if (except.Length > 0)
             {
                 Dictionary<string, Guid> fromRegistry = GetIIDsFromRegistry(except);

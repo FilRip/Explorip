@@ -56,14 +56,14 @@ public class LinkTargetIDList : IDList
         }
 
         IDListSize -= 2;
-        ba = ba.Skip(2).ToArray();
+        ba = [.. ba.Skip(2)];
         while (IDListSize > 2)
         {
             ItemID itemId = ItemID.FromByteArray(ba);
             ushort ItemIDSize = BitConverter.ToUInt16(ba, 0);
             IdList.ItemIDList.Add(itemId);
             IDListSize -= ItemIDSize;
-            ba = ba.Skip(ItemIDSize).ToArray();
+            ba = [.. ba.Skip(ItemIDSize)];
         }
 
         return IdList;

@@ -6,5 +6,3 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Major Code Smell", "S4220:Events should have proper arguments")]
-[assembly: SuppressMessage("Style", "IDE0290:Utiliser le constructeur principal")]
-[assembly: SuppressMessage("Style", "IDE0305:Simplifier l'initialisation des collections")]

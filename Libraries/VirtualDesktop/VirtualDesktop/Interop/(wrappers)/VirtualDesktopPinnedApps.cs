@@ -1,11 +1,8 @@
 ﻿namespace WindowsDesktop.Interop
 {
     [ComInterfaceWrapper]
-    internal class VirtualDesktopPinnedApps : ComInterfaceWrapperBase
+    internal class VirtualDesktopPinnedApps(ComInterfaceAssembly assembly) : ComInterfaceWrapperBase(assembly, service: ClSid.VirtualDesktopPinnedApps)
     {
-        public VirtualDesktopPinnedApps(ComInterfaceAssembly assembly)
-            : base(assembly, service: ClSid.VirtualDesktopPinnedApps) { }
-
         public bool IsViewPinned(ApplicationView applicationView)
         {
             return this.Invoke<bool>(Args(applicationView.ComObject));

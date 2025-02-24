@@ -75,10 +75,9 @@ public class JumpListCustomCategory
 
     internal void RemoveJumpListItem(string path)
     {
-        List<IJumpListItem> itemsToRemove = new(
-            from i in JumpListItems
+        List<IJumpListItem> itemsToRemove = [.. from i in JumpListItems
             where string.Equals(path, i.Path, StringComparison.OrdinalIgnoreCase)
-            select i);
+            select i];
 
         // Remove matching items
         for (int i = 0; i < itemsToRemove.Count; i++)

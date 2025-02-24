@@ -5,28 +5,21 @@ namespace WindowsDesktop
     /// <summary>
     /// Provides data for the <see cref="VirtualDesktop.WallpaperChanged" /> event.
     /// </summary>
-    public class VirtualDesktopWallpaperChangedEventArgs : EventArgs
+    public class VirtualDesktopWallpaperChangedEventArgs(VirtualDesktop source, string oldPath, string newPath) : EventArgs
     {
         /// <summary>
         /// Gets the virtual desktop whose wallpaper path was changed.
         /// </summary>
-        public VirtualDesktop Source { get; }
+        public VirtualDesktop Source { get; } = source;
 
         /// <summary>
         /// Gets the old wallpaper path of the virtual desktop.
         /// </summary>
-        public string OldPath { get; }
+        public string OldPath { get; } = oldPath;
 
         /// <summary>
         /// Gets the new wallpaper path of the virtual desktop.
         /// </summary>
-        public string NewPath { get; }
-
-        public VirtualDesktopWallpaperChangedEventArgs(VirtualDesktop source, string oldPath, string newPath)
-        {
-            Source = source;
-            OldPath = oldPath;
-            NewPath = newPath;
-        }
+        public string NewPath { get; } = newPath;
     }
 }

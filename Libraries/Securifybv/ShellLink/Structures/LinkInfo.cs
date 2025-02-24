@@ -384,18 +384,18 @@ public class LinkInfo : Structure
         byte[] tmp;
         if (linkInfoFlags.HasFlag(ELinkInfo.VolumeIDAndLocalBasePath))
         {
-            tmp = ba.Skip((int)volumeIDOffset).ToArray();
+            tmp = [.. ba.Skip((int)volumeIDOffset)];
             LinkInfo.VolumeID = VolumeID.FromByteArray(tmp);
-            tmp = ba.Skip((int)localBasePathOffset).ToArray();
-            LinkInfo.LocalBasePath = Encoding.Default.GetString(tmp.Take(Array.IndexOf(tmp, (byte)0x00) + 1).ToArray()).TrimEnd((char)0);
+            tmp = [.. ba.Skip((int)localBasePathOffset)];
+            LinkInfo.LocalBasePath = Encoding.Default.GetString([.. tmp.Take(Array.IndexOf(tmp, (byte)0x00) + 1)]).TrimEnd((char)0);
         }
 
         if (linkInfoFlags.HasFlag(ELinkInfo.CommonNetworkRelativeLinkAndPathSuffix))
         {
-            tmp = ba.Skip((int)commonNetworkRelativeLinkOffset).ToArray();
+            tmp = [.. ba.Skip((int)commonNetworkRelativeLinkOffset)];
             LinkInfo.CommonNetworkRelativeLink = CommonNetworkRelativeLink.FromByteArray(tmp);
-            tmp = ba.Skip((int)commonPathSuffixOffset).ToArray();
-            LinkInfo.CommonPathSuffix = Encoding.Default.GetString(tmp.Take(Array.IndexOf(tmp, (byte)0x00) + 1).ToArray()).TrimEnd((char)0);
+            tmp = [.. ba.Skip((int)commonPathSuffixOffset)];
+            LinkInfo.CommonPathSuffix = Encoding.Default.GetString([.. tmp.Take(Array.IndexOf(tmp, (byte)0x00) + 1)]).TrimEnd((char)0);
         }
 
         if (linkInfoHeaderSize >= 0x24)
@@ -403,7 +403,7 @@ public class LinkInfo : Structure
             if (linkInfoFlags.HasFlag(ELinkInfo.VolumeIDAndLocalBasePath))
             {
                 int Index = 0;
-                tmp = ba.Skip((int)localBasePathOffsetUnicode).ToArray();
+                tmp = [.. ba.Skip((int)localBasePathOffsetUnicode)];
                 for (int i = 0; i < tmp.Length - 1; i++)
                 {
                     if (tmp[i] == 0x00 && tmp[i + 1] == 0x00)
@@ -413,13 +413,13 @@ public class LinkInfo : Structure
                     }
                 }
 
-                LinkInfo.LocalBasePathUnicode = Encoding.Unicode.GetString(tmp.Take(Index + 1).ToArray()).TrimEnd((char)0);
+                LinkInfo.LocalBasePathUnicode = Encoding.Unicode.GetString([.. tmp.Take(Index + 1)]).TrimEnd((char)0);
             }
 
             if (linkInfoFlags.HasFlag(ELinkInfo.CommonNetworkRelativeLinkAndPathSuffix))
             {
                 int Index = 0;
-                tmp = ba.Skip((int)commonPathSuffixOffsetUnicode).ToArray();
+                tmp = [.. ba.Skip((int)commonPathSuffixOffsetUnicode)];
                 for (int i = 0; i < tmp.Length - 1; i++)
                 {
                     if (tmp[i] == 0x00 && tmp[i + 1] == 0x00)
@@ -428,7 +428,7 @@ public class LinkInfo : Structure
                         break;
                     }
                 }
-                LinkInfo.CommonPathSuffixUnicode = Encoding.Unicode.GetString(tmp.Take(Index + 1).ToArray()).TrimEnd((char)0);
+                LinkInfo.CommonPathSuffixUnicode = Encoding.Unicode.GetString([.. tmp.Take(Index + 1)]).TrimEnd((char)0);
             }
         }
 

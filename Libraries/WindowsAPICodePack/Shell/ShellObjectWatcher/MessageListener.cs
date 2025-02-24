@@ -166,8 +166,7 @@ internal class MessageListener : IDisposable
             case (uint)WindowMessage.Destroy:
                 break;
             default:
-                MessageListener listener;
-                if (_listeners.TryGetValue(hwnd, out listener))
+                if (_listeners.TryGetValue(hwnd, out MessageListener listener))
                 {
                     Message message = new(hwnd, msg, wparam, lparam, 0, new NativePoint());
                     listener.MessageReceived?.SafeRaise(listener, new WindowMessageEventArgs(message));

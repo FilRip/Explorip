@@ -137,7 +137,7 @@ public class SerializedPropertyStorage : Structure
         Buffer.BlockCopy(ba, 8, formatID, 0, formatID.Length);
         SerializedPropertyStorage.FormatID = new Guid(formatID);
 
-        ba = ba.Skip(24).ToArray();
+        ba = [.. ba.Skip(24)];
         uint ValueSize = BitConverter.ToUInt32(ba, 0);
         while (ValueSize > 5)
         {
@@ -151,7 +151,7 @@ public class SerializedPropertyStorage : Structure
                 PropertyValue = IntegerName.FromByteArray(ba);
             }
             SerializedPropertyStorage.PropertyStorage.Add(PropertyValue);
-            ba = ba.Skip((int)ValueSize).ToArray();
+            ba = [.. ba.Skip((int)ValueSize)];
             ValueSize = BitConverter.ToUInt32(ba, 0);
         }
 

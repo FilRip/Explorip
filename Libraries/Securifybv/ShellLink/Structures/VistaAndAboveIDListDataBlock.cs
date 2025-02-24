@@ -97,7 +97,7 @@ public class VistaAndAboveIDListDataBlock : ExtraDataBlock
             throw new ArgumentException(string.Format("BlockSignature is {0} is incorrect (expected {1})", blockSignature, VistaAndAboveIDListDataBlock.BlockSignature));
         }
 
-        ba = ba.Skip(8).ToArray();
+        ba = [.. ba.Skip(8)];
         uint Count = blockSize - 8;
         while (Count > 0)
         {
@@ -108,7 +108,7 @@ public class VistaAndAboveIDListDataBlock : ExtraDataBlock
                 Buffer.BlockCopy(ba, 2, itemID, 0, itemID.Length);
                 Count -= ItemIDSize;
                 VistaAndAboveIDListDataBlock.IDList.ItemIDList.Add(new ItemID(itemID));
-                ba = ba.Skip(ItemIDSize).ToArray();
+                ba = [.. ba.Skip(ItemIDSize)];
             }
             else
             {

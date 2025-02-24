@@ -54,13 +54,13 @@ public class SerializedPropertyStore : Structure
             throw new ArgumentException(string.Format("Size of the SerializedPropertyStore is less than {0} ({1})", storeSize, ba.Length));
         }
 
-        ba = ba.Skip(4).ToArray();
+        ba = [.. ba.Skip(4)];
         uint StorageSize = BitConverter.ToUInt32(ba, 0);
         while (StorageSize > 5)
         {
             SerializedPropertyStorage propertyStorage = SerializedPropertyStorage.FromByteArray(ba);
             PropertyStore.PropertyStorage.Add(propertyStorage);
-            ba = ba.Skip((int)StorageSize).ToArray();
+            ba = [.. ba.Skip((int)StorageSize)];
             StorageSize = BitConverter.ToUInt32(ba, 0);
         }
 

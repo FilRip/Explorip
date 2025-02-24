@@ -58,8 +58,8 @@ public class TypedPropertyValue(PropertyType Type, byte[] Value) : Structure()
                 PropertyType.VT_R8 => BitConverter.ToDouble(_Value, 0),
                 PropertyType.VT_DATE or PropertyType.VT_FILETIME => DateTime.FromFileTimeUtc(BitConverter.ToInt64(_Value, 0)),
                 PropertyType.VT_BOOL => (_Value[0] != 0x00 || _Value[1] != 0x00),
-                PropertyType.VT_LPSTR => Encoding.Default.GetString(_Value.Skip(4).ToArray()).TrimEnd((char)0),
-                PropertyType.VT_LPWSTR => Encoding.Unicode.GetString(_Value.Skip(4).ToArray()).TrimEnd((char)0),
+                PropertyType.VT_LPSTR => Encoding.Default.GetString([.. _Value.Skip(4)]).TrimEnd((char)0),
+                PropertyType.VT_LPWSTR => Encoding.Unicode.GetString([.. _Value.Skip(4)]).TrimEnd((char)0),
                 PropertyType.VT_CLSID => new Guid(_Value),
                 // Not supported
                 _ => _Value,

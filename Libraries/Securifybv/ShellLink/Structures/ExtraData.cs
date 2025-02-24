@@ -308,7 +308,7 @@ public class ExtraData : Structure
                 default:
                     throw new ArgumentException(string.Format("BlockSignature is {0} is incorrect", BlockSignature));
             }
-            ba = ba.Skip((int)BlockSize).ToArray();
+            ba = [.. ba.Skip((int)BlockSize)];
             BlockSize = BitConverter.ToUInt32(ba, 0);
         }
 

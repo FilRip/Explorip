@@ -114,11 +114,11 @@ public class StringName : SerializedPropertyValue
             throw new ArgumentException(string.Format("Size of the NameSize is not equal to {0} ({1})", valueSize, ba.Length - 8));
         }
 
-        byte[] name = ba.Skip(9).Take((int)nameSize).ToArray();
+        byte[] name = [.. ba.Skip(9).Take((int)nameSize)];
         StringName.Name = Encoding.Unicode.GetString(name).TrimEnd((char)0);
 
         PropertyType Type = (PropertyType)BitConverter.ToUInt16(ba, 9);
-        byte[] Value = ba.Skip(9 + (int)nameSize).Take((int)(valueSize - 9 - (int)nameSize)).ToArray();
+        byte[] Value = [.. ba.Skip(9 + (int)nameSize).Take((int)(valueSize - 9 - (int)nameSize))];
         StringName.TypedPropertyValue = new TypedPropertyValue(Type, Value);
 
         return StringName;

@@ -2,13 +2,8 @@
 
 namespace WindowsDesktop
 {
-    public class VirtualDesktopRemoteConnectedEventArgs : EventArgs
+    public class VirtualDesktopRemoteConnectedEventArgs(VirtualDesktop desktop) : EventArgs
     {
-        public VirtualDesktop Desktop { get; }
-
-        public VirtualDesktopRemoteConnectedEventArgs(VirtualDesktop desktop)
-        {
-            Desktop = desktop;
-        }
+        public VirtualDesktop Desktop { get; } = desktop;
     }
 }

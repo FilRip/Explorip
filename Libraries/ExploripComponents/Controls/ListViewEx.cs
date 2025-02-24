@@ -80,7 +80,7 @@ public class ListViewEx : ListView
         {
             if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
                 UnselectAll();
-            _itemsSelectedBefore = SelectedItems.OfType<OneFileSystem>().Select(i => i.DisplayText).ToList();
+            _itemsSelectedBefore = [.. SelectedItems.OfType<OneFileSystem>().Select(i => i.DisplayText)];
             DrawSelection = true;
             DrawSelectionStart = e.GetPosition(this);
             Mouse.Capture(this);

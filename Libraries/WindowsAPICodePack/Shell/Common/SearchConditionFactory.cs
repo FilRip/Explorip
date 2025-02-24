@@ -301,7 +301,7 @@ public static class SearchConditionFactory
                 }
             }
 
-            IEnumUnknown subConditions = new EnumUnknownClass(conditionList.ToArray());
+            IEnumUnknown subConditions = new EnumUnknownClass([.. conditionList]);
 
             HResult hr = nativeConditionFactory.MakeAndOr(conditionType, subConditions, simplify, out result);
 

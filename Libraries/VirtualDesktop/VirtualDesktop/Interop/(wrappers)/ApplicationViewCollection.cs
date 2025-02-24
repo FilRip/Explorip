@@ -3,11 +3,8 @@
 namespace WindowsDesktop.Interop
 {
     [ComInterfaceWrapper]
-    internal class ApplicationViewCollection : ComInterfaceWrapperBase
+    internal class ApplicationViewCollection(ComInterfaceAssembly assembly) : ComInterfaceWrapperBase(assembly)
     {
-        public ApplicationViewCollection(ComInterfaceAssembly assembly)
-            : base(assembly) { }
-
         public ApplicationView GetViewForHwnd(IntPtr hWnd)
         {
             object[] param = Args(hWnd, null);

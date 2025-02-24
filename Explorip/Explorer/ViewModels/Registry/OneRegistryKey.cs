@@ -139,7 +139,7 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
             listSubKey = _currentRegistryKey.GetSubKeyNames();
             foreach (string key in listSubKey.OrderBy(name => name))
                 items.Add(new OneRegistryKey(this, _hive, _key + @"\" + key));
-            Children = new ObservableCollection<OneRegistryKey>(items);
+            Children = [.. items];
         }
     }
 

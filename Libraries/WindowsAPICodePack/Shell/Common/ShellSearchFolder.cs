@@ -85,7 +85,7 @@ public class ShellSearchFolder : ShellSearchCollection
         }
         private set
         {
-            searchScopePaths = value.ToArray();
+            searchScopePaths = [.. value];
             List<IShellItem> shellItems = new(searchScopePaths.Length);
 
             Guid shellItemGuid = new(ShellIidGuid.IShellItem);
@@ -101,7 +101,7 @@ public class ShellSearchFolder : ShellSearchCollection
             }
 
             // Create a new IShellItemArray
-            IShellItemArray scopeShellItemArray = new ShellItemArray(shellItems.ToArray());
+            IShellItemArray scopeShellItemArray = new ShellItemArray([.. shellItems]);
 
             // Set the scope on the native ISearchFolderItemFactory
             HResult hResult = NativeSearchFolderItemFactory.SetScope(scopeShellItemArray);
