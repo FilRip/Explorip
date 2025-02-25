@@ -9,6 +9,7 @@
                 <ResourceDictionary Source="Styles/StyleBrush.xaml"/>
                 <ResourceDictionary Source="Styles/StyleMenuItem.xaml"/>
                 <ResourceDictionary Source="Styles/SystrayIcon.xaml"/>
+                <ResourceDictionary Source="Styles/StyleProgressbar.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

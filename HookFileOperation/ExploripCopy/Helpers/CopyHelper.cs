@@ -235,26 +235,18 @@ internal static class CopyHelper
     {
         long result = 0;
 
-        foreach (string file in Directory.GetFiles(dir))
+        foreach (string file in Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories))
         {
             FileInfo fi = new(file);
             result += fi.Length;
         }
-        foreach (string subdir in Directory.GetDirectories(dir))
-            result += TotalSizeDirectory(subdir);
 
         return result;
     }
 
     internal static int TotalNbFiles(string dir)
     {
-        int nbFiles = 0;
-
-        nbFiles += Directory.GetFiles(dir).Length;
-        foreach (string subdir in Directory.GetDirectories(dir))
-            nbFiles += TotalNbFiles(subdir);
-
-        return nbFiles;
+        return Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories).Length;
     }
 
     internal static string SizeInText(double size, string fullText)

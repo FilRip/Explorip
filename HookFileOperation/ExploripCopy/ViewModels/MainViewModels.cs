@@ -58,7 +58,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(ColorGlobalReport))]
     private string _globalReport;
 
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(CurrentProgressPercent))]
     private double _currentProgress;
 
     [ObservableProperty()]
@@ -153,6 +153,11 @@ public partial class MainViewModels : ObservableObject, IDisposable
             diff = fullSize;
         CurrentProgress = diff / (double)fullSize * 100; // Convert in percent
         GlobalProgress += nbBytesRead;
+    }
+
+    public string CurrentProgressPercent
+    {
+        get { return Math.Round(CurrentProgress).ToString() + "%"; }
     }
 
     private void FinishCurrent()

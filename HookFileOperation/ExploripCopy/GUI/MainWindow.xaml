@@ -54,11 +54,12 @@
             
             <!-- Current progress -->
             <TextBlock Grid.Row="0" Text="{Binding CurrentFile, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <ProgressBar Grid.Row="1" Name="ReportCurrentProgress" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{x:Static colors:Colors.AccentColorBrush}"/>
-            <TextBlock Grid.Row="1" Text="{Binding ElementName=ReportCurrentProgress, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <ProgressBar Grid.Row="1" TextBlock.FontWeight="Bold" Name="ReportCurrentProgress" Tag="{Binding CurrentProgressPercent, UpdateSourceTrigger=PropertyChanged}" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{x:Static colors:Colors.AccentColorBrush}" Style="{DynamicResource MyProgressBarStyle}"/>
+            <!-- Global progress -->
             <TextBlock Grid.Row="2" Text="{Binding GlobalReport, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{Binding ColorGlobalReport}" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-            <ProgressBar Grid.Row="3" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MaxGlobalProgress}" Foreground="{x:Static colors:Colors.AccentColorBrush}"/>
-            <TextBlock Grid.Row="3" Text="{Binding TxtGlobalReport, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <ProgressBar Grid.Row="3" TextBlock.FontWeight="Bold" Tag="{Binding TxtGlobalReport, UpdateSourceTrigger=PropertyChanged}" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MaxGlobalProgress}" Foreground="{x:Static colors:Colors.AccentColorBrush}" Style="{DynamicResource MyProgressBarStyle}"/>
+            
+            <!-- Buttons -->
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
