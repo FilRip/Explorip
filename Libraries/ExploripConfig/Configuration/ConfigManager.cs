@@ -283,6 +283,26 @@ public static class ConfigManager
         }
     }
 
+    public static bool ShowTaskManButton
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowTaskMan"); }
+        set
+        {
+            if (ShowTaskManButton != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowTaskMan", value.ToString());
+        }
+    }
+
+    public static bool ShowSearchButton
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowSearch"); }
+        set
+        {
+            if (ShowSearchButton != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowSearch", value.ToString());
+        }
+    }
+
     private const string ToolBarNameInRegistry = "Toolbar";
     public static string[] ToolbarsPath
     {
@@ -301,7 +321,7 @@ public static class ConfigManager
             int i = 0;
             value.ToList().ForEach(s =>
             {
-                _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})").SetValue("Path", value[i]);
+                _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", value[i]);
                 i++;
             });
         }
@@ -314,7 +334,7 @@ public static class ConfigManager
         {
             i = MaxToolbar();
             i++;
-            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true);
+            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", path);
         }
         RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
         currentToolbar.SetValue("X", position.X.ToString());
@@ -341,7 +361,7 @@ public static class ConfigManager
         {
             i = MaxToolbar();
             i++;
-            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true);
+            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", path);
         }
         RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
         currentToolbar.SetValue("SmallSizeIcon", smallSize.ToString());
@@ -366,7 +386,7 @@ public static class ConfigManager
         {
             i = MaxToolbar();
             i++;
-            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true);
+            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", path);
         }
         RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
         currentToolbar.SetValue("ShowTitle", showTitle.ToString());
@@ -389,7 +409,7 @@ public static class ConfigManager
         int pos = -1;
         _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v =>
         {
-            if (_registryTaskbar.OpenSubKey(v).GetValue("Path").ToString() == path)
+            if (_registryTaskbar.OpenSubKey(v).GetValue("Path")?.ToString() == path)
                 pos = int.Parse(v.Replace($"{ToolBarNameInRegistry}(", "").Replace(")", ""));
         });
         return pos;

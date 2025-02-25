@@ -103,7 +103,7 @@
                                  RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                         </StackPanel.Orientation>
                         <controls:NotifyIconList VerticalAlignment="Center"
-                                             NotificationArea="{Binding NotificationArea}"></controls:NotifyIconList>
+                                             NotificationArea="{Binding NotificationArea}"/>
                         <controls:Clock VerticalAlignment="Center"/>
                     </StackPanel>
                 </GroupBox>
@@ -147,8 +147,11 @@
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
             <MenuItem Header="{x:Static localization:Localization.UNLOCK_TASKBAR}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
-            <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAjoutToolbar" Click="AddToolbar_Click"/>
+            <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAddToolbar" Click="AddToolbar_Click"/>
             <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Click="MenuShowTabTip_Click"/>
+            <Separator/>
+            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH}" Name="MenuShowSearch" Click="MenuShowSearch_Click"/>
+            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Click="MenuShowTaskmgr_Click"/>
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -57,8 +56,19 @@ public partial class Taskbar : AppBarWindow
             QuickLaunchToolbar.Visibility = Visibility.Visible;
             DesiredHeight += 16;
         }
-
         MinHeight = DesiredHeight;
+
+        DesiredHeight = Math.Max(ConfigManager.TaskbarHeight, DesiredHeight);
+        DesiredWidth = Math.Max(ConfigManager.TaskbarWidth, DesiredWidth);
+        string[] listToolbars = ConfigManager.ToolbarsPath;
+        if (listToolbars?.Length > 0)
+            foreach (string path in listToolbars)
+                AddToolbar(path);
+
+        if (!ConfigManager.ShowTaskManButton)
+            SetShowTaskMan(false);
+        if (!ConfigManager.ShowSearchButton)
+            SetShowSearch(false);
     }
 
     public bool MainScreen
@@ -286,6 +296,21 @@ public partial class Taskbar : AppBarWindow
 
     #region Manage toolbar
 
+    private void AddToolbar(string path)
+    {
+        ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+        Toolbar newToolbar = new()
+        {
+            Path = path,
+        };
+        Grid.SetRow(newToolbar, ToolsBars.RowDefinitions.Count - 1);
+        Grid.SetColumn(newToolbar, 0);
+        ToolsBars.Children.Add(newToolbar);
+        Height += 22;
+        DesiredHeight = Height;
+        _appBarManager.SetWorkArea(Screen);
+    }
+
     private void AddToolbar_Click(object sender, RoutedEventArgs e)
     {
         CommonOpenFileDialog dialog = new()
@@ -294,20 +319,13 @@ public partial class Taskbar : AppBarWindow
         };
         if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
         {
-            ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-            Toolbar newToolbar = new()
+            AddToolbar(dialog.FileName);
+            if (MainScreen)
             {
-                Path = dialog.FileName,
-            };
-            Grid.SetRow(newToolbar, ToolsBars.RowDefinitions.Count - 1);
-            Grid.SetColumn(newToolbar, 0);
-            ToolsBars.Children.Add(newToolbar);
-            Height += 22;
-            DesiredHeight = Height;
-            _appBarManager.SetWorkArea(Screen);
-            ConfigManager.NbToolBar = ToolsBars.RowDefinitions.Count;
-            ConfigManager.TaskbarHeight = DesiredHeight;
-            ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.Path)];
+                ConfigManager.NbToolBar = ToolsBars.RowDefinitions.Count;
+                ConfigManager.TaskbarHeight = DesiredHeight;
+                ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Where(tb => tb.Name != "QuickLaunchToolbar").Select(tb => tb.Path)];
+            }
         }
     }
 
@@ -333,4 +351,28 @@ public partial class Taskbar : AppBarWindow
     }
 
     #endregion
+
+    private void SetShowSearch(bool state)
+    {
+        SearchButton.Visibility = (state ? Visibility.Visible : Visibility.Collapsed);
+        MenuShowSearch.IsChecked = state;
+    }
+
+    private void MenuShowSearch_Click(object sender, RoutedEventArgs e)
+    {
+        ConfigManager.ShowSearchButton = !ConfigManager.ShowSearchButton;
+        SetShowSearch(ConfigManager.ShowSearchButton);
+    }
+
+    private void SetShowTaskMan(bool state)
+    {
+        TaskManButton.Visibility = (state ? Visibility.Visible : Visibility.Collapsed);
+        MenuShowTaskmgr.IsChecked = state;
+    }
+
+    private void MenuShowTaskmgr_Click(object sender, RoutedEventArgs e)
+    {
+        ConfigManager.ShowTaskManButton = !ConfigManager.ShowTaskManButton;
+        SetShowTaskMan(ConfigManager.ShowTaskManButton);
+    }
 }

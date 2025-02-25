@@ -80,7 +80,19 @@ public partial class MyTaskbarApp : Application
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
         if (ExtensionsCommandLineArguments.ArgumentExists("taskbars") || ConfigManager.ShowTaskbarOnAllScreens)
-            ShowTaskbarOnAllOthersScreen();
+            MakeTaskbarOnAllScreen();
+    }
+
+    private void MakeTaskbarOnAllScreen()
+    {
+        Taskbar taskBar;
+        List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
+        foreach (AppBarScreen appBarScreen in appBarScreens)
+        {
+            taskBar = new Taskbar(_startMenuMonitor, appBarScreen, ConfigManager.Edge);
+            taskBar.Show();
+            _taskbarList.Add(taskBar);
+        }
     }
 
     public void ShowTaskbarOnAllOthersScreen()
@@ -97,14 +109,7 @@ public partial class MyTaskbarApp : Application
             if (_taskbarList.Count == 1 && WpfScreenHelper.Screen.AllScreens.Count() > 1)
             {
                 ConfigManager.ShowTaskbarOnAllScreens = true;
-                Taskbar taskBar;
-                List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
-                foreach (AppBarScreen appBarScreen in appBarScreens)
-                {
-                    taskBar = new Taskbar(_startMenuMonitor, appBarScreen, ConfigManager.Edge);
-                    taskBar.Show();
-                    _taskbarList.Add(taskBar);
-                }
+                MakeTaskbarOnAllScreen();
             }
         }
     }

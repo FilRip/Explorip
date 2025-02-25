@@ -111,6 +111,8 @@ public static class Localization
     public static string REGEDIT_VALUE_NAME { get; private set; }
     public static string REGEDIT_DATA_NAME { get; private set; }
     public static string REGEDIT_TYPE_NAME { get; private set; }
+    public static string TASKBAR_SHOW_TASKMGR { get; private set; }
+    public static string TASKBAR_SHOW_SEARCH { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -218,6 +220,8 @@ public static class Localization
         REGEDIT_VALUE_NAME = Load("regedit.exe", 17, "Name");
         REGEDIT_TYPE_NAME = Load("regedit.exe", 31, "Type");
         REGEDIT_DATA_NAME = Load("regedit.exe", 18, "Data");
+        TASKBAR_SHOW_TASKMGR = LoadMenuItem("explorer.exe", 205, 430, "Show active application button").Replace("&", "_");
+        TASKBAR_SHOW_SEARCH = LoadMenuItem("explorer.exe", 205, 448, "Show search button").Replace("&", "_");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
