@@ -7,7 +7,8 @@
              IsVisibleChanged="UserControl_IsVisibleChanged"
              MouseDown="UserControl_MouseDown"
              MouseUp="UserControl_MouseUp"
-             MouseMove="UserControl_MouseMove">
+             MouseMove="UserControl_MouseMove"
+             Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <DataTemplate x:Key="SmallIconTemplate">
             <local:ToolbarButton DataContext="{Binding}"
@@ -25,6 +26,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0">
             <Label.ContextMenu>
@@ -48,5 +50,6 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
+        <Button Content=">>" Name="MoreItems" Click="MoreItems_Click" Visibility="Collapsed" Grid.Column="2" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
     </Grid>
 </UserControl>

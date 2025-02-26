@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,7 +22,9 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class Toolbar : UserControl
 {
-    private enum MenuItem : uint
+    private readonly ContextMenu moreItems;
+
+    private enum MenuItemId : uint
     {
         OpenParentFolder = CommonContextMenuItem.Paste + 1,
     }
@@ -52,12 +56,12 @@ public partial class Toolbar : UserControl
     public Toolbar()
     {
         InitializeComponent();
-        RenderTransform = new TranslateTransform();
-    }
-
-    public TranslateTransform MyRenderTransform
-    {
-        get { return (TranslateTransform)RenderTransform; }
+        moreItems = new ContextMenu()
+        {
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            Margin = new Thickness(0, 0, 0, 0),
+        };
     }
 
     private void SetupFolder(string path)
@@ -71,8 +75,7 @@ public partial class Toolbar : UserControl
                 ShowLargeIcon_Click(null, null);
             Title.Visibility = ConfigManager.ToolbarShowTitle(Path) ? Visibility.Visible : Visibility.Collapsed;
             Point point = ConfigManager.ToolbarPosition(Path);
-            MyRenderTransform.X = point.X;
-            MyRenderTransform.Y = point.Y;
+            Margin = new Thickness(point.X, point.Y, Margin.Right, Margin.Bottom);
         }
     }
 
@@ -91,7 +94,62 @@ public partial class Toolbar : UserControl
         if (Folder != null)
         {
             ToolbarItems.ItemsSource = Folder.Files;
+            UpdateInvisibleIcons();
         }
+    }
+
+    private void MoreItems_Click(object sender, RoutedEventArgs e)
+    {
+        moreItems.IsOpen = true;
+    }
+
+    private void UpdateInvisibleIcons()
+    {
+        Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            double maxWidth = ToolbarItems.ActualWidth - (CurrentShowLargeIcon ? 32 : 16);
+            if (Title.Visibility == Visibility.Visible)
+                maxWidth -= Title.ActualWidth;
+            double currentWidth = 0;
+            moreItems.Items.Clear();
+            foreach (ShellItem item in ToolbarItems.ItemsSource.OfType<ShellFile>())
+            {
+                currentWidth += (CurrentShowLargeIcon ? 32 : 16);
+                if (currentWidth > maxWidth)
+                {
+                    item.AllowAsync = false;
+                    MenuItem mi = new()
+                    {
+                        Header = item.DisplayName,
+                        Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+                        Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+                        Icon = new Image()
+                        {
+                            Source = item.SmallIcon,
+                        },
+                        BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+                        Margin = new Thickness(0, 0, 0, 0),
+                        Tag = item,
+                    };
+                    mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
+                    mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
+                    moreItems.Items.Add(mi);
+                }
+            }
+            MoreItems.Visibility = (moreItems.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed);
+        });
+    }
+
+    private void Mi_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, true))
+            e.Handled = true;
+    }
+
+    private void Mi_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, false))
+            e.Handled = true;
     }
 
     #region Events
@@ -174,7 +232,7 @@ public partial class Toolbar : UserControl
         {
             Flags = MFT.BYCOMMAND,
             Label = (string)FindResource("open_folder"),
-            UID = (uint)MenuItem.OpenParentFolder
+            UID = (uint)MenuItemId.OpenParentFolder
         });
 
         return builder;
@@ -193,7 +251,7 @@ public partial class Toolbar : UserControl
 
     private bool HandleFileAction(string action, ShellItem[] items, bool allFolders)
     {
-        if (action == ((uint)MenuItem.OpenParentFolder).ToString())
+        if (action == ((uint)MenuItemId.OpenParentFolder).ToString())
         {
             ManagedShell.Common.Helpers.ShellHelper.StartProcess(Folder.Path);
             return true;
@@ -212,8 +270,8 @@ public partial class Toolbar : UserControl
             return;
 
         Grid myGrid = this.FindVisualParent<Grid>();
-        _startX = Mouse.GetPosition(myGrid).X - MyRenderTransform.X;
-        _startY = Mouse.GetPosition(myGrid).Y - MyRenderTransform.Y;
+        _startX = Mouse.GetPosition(myGrid).X - Margin.Left;
+        _startY = Mouse.GetPosition(myGrid).Y - Margin.Top;
 
         Mouse.OverrideCursor = Cursors.ScrollAll;
         CaptureMouse();
@@ -223,7 +281,7 @@ public partial class Toolbar : UserControl
     {
         ReleaseMouseCapture();
         Mouse.OverrideCursor = null;
-        ConfigManager.ToolbarPosition(Path, new Point(MyRenderTransform.X, MyRenderTransform.Y));
+        ConfigManager.ToolbarPosition(Path, new Point(Margin.Left, Margin.Top));
     }
 
     private void UserControl_MouseMove(object sender, MouseEventArgs e)
@@ -232,11 +290,11 @@ public partial class Toolbar : UserControl
             return;
 
         Grid myGrid = this.FindVisualParent<Grid>();
-        MyRenderTransform.X = Math.Max(0, Mouse.GetPosition(myGrid).X - _startX);
+        Margin = new Thickness(Math.Max(0, Mouse.GetPosition(myGrid).X - _startX), Margin.Top, Margin.Right, Margin.Bottom);
         HitTestResult result = VisualTreeHelper.HitTest(myGrid, e.GetPosition(myGrid));
         if (result?.VisualHit != null)
         {
-            if (MyRenderTransform.X == 0)
+            if (Margin.Left == 0)
             {
                 Toolbar parent = result.VisualHit.FindVisualParent<Toolbar>();
                 if (parent != null)
@@ -252,7 +310,7 @@ public partial class Toolbar : UserControl
             }
             else
             {
-                MyRenderTransform.Y = Mouse.GetPosition(myGrid).Y - _startY;
+                Margin = new Thickness(Margin.Left, Mouse.GetPosition(myGrid).Y - _startY, Margin.Right, Margin.Bottom);
                 Toolbar parent = result.VisualHit.FindVisualParent<Toolbar>();
                 if (parent != null)
                 {
@@ -267,7 +325,7 @@ public partial class Toolbar : UserControl
                             Grid.SetRow(this, newRow);
                             myGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
                             Grid.SetColumn(this, myGrid.ColumnDefinitions.Count - 1);
-                            MyRenderTransform.X = 0;
+                            Margin = new Thickness(0, Margin.Top, Margin.Right, Margin.Bottom);
                             _startX = 0;
                         }
                         else
@@ -279,6 +337,7 @@ public partial class Toolbar : UserControl
                 }
             }
         }
+        UpdateInvisibleIcons();
     }
 
     #endregion
@@ -293,6 +352,15 @@ public partial class Toolbar : UserControl
     }
 
     public bool CurrentShowLargeIcon { get; private set; }
+
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        Task.Run(async () =>
+        {
+            await Task.Delay(5000);
+            UpdateInvisibleIcons();
+        });
+    }
 
     public void ShowLargeIcon_Click(object sender, RoutedEventArgs e)
     {
