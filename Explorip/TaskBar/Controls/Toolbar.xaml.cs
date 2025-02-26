@@ -301,12 +301,15 @@ public partial class Toolbar : UserControl
         ToolbarItems.ItemTemplateSelector = null;
         ToolbarItems.ItemTemplateSelector = dts;
         Taskbar parentTaskbar = this.FindVisualParent<Taskbar>();
-        double newHeight = parentTaskbar.Height;
-        if (CurrentShowLargeIcon)
-            newHeight += 16;
-        else
-            newHeight -= 16;
-        parentTaskbar.ChangeDesiredSize(newHeight, parentTaskbar.Width);
+        if (parentTaskbar != null)
+        {
+            double newHeight = parentTaskbar.Height;
+            if (CurrentShowLargeIcon)
+                newHeight += 16;
+            else
+                newHeight -= 16;
+            parentTaskbar.ChangeDesiredSize(newHeight, parentTaskbar.Width);
+        }
         ConfigManager.ToolbarSmallSizeIcon(Path, !CurrentShowLargeIcon);
     }
 }

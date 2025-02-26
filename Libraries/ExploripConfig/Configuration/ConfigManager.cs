@@ -38,10 +38,6 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue("Theme", "System");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowClock", "").ToString()))
                 _registryTaskbar.SetValue("ShowClock", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowQuickLaunch", "").ToString()))
-                _registryTaskbar.SetValue("ShowQuickLaunch", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("QuickLaunchPath", "").ToString()))
-                _registryTaskbar.SetValue("QuickLaunchPath", "%USERPROFILE%\\QuickLaunch");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("CollapseNotifyIcons", "").ToString()))
                 _registryTaskbar.SetValue("CollapseNotifyIcons", "True");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("AllowFontSmoothing", "").ToString()))
@@ -90,26 +86,6 @@ public static class ConfigManager
         {
             if (ShowClock != value && AllowWrite)
                 _registryTaskbar.SetValue("ShowClock", value.ToString());
-        }
-    }
-
-    public static bool ShowQuickLaunch
-    {
-        get { return _registryTaskbar.ReadBoolean("ShowQuickLaunch", true); }
-        set
-        {
-            if (ShowQuickLaunch != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowQuickLaunch", value.ToString());
-        }
-    }
-
-    public static string QuickLaunchPath
-    {
-        get { return _registryTaskbar.GetValue("QuickLaunchPath", "").ToString(); }
-        set
-        {
-            if (QuickLaunchPath != value && AllowWrite)
-                _registryTaskbar.SetValue("QuickLaunchPath", value);
         }
     }
 
@@ -303,6 +279,16 @@ public static class ConfigManager
         }
     }
 
+    public static bool ShowWidgetButton
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowWidget"); }
+        set
+        {
+            if (ShowWidgetButton != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowWidget", value.ToString());
+        }
+    }
+
     private const string ToolBarNameInRegistry = "Toolbar";
     public static string[] ToolbarsPath
     {
@@ -310,7 +296,7 @@ public static class ConfigManager
         {
             // Loop to find all toolbars path
             string[] listNames = [];
-            _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v => _registryTaskbar.OpenSubKey(v).GetValue("Path"));
+            _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v => listNames = listNames.Add(_registryTaskbar.OpenSubKey(v).GetValue("Path")));
             return listNames;
         }
         set

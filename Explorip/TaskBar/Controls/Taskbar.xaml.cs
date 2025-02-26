@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -51,24 +52,17 @@ public partial class Taskbar : AppBarWindow
         if (DpiHelper.DpiScale % 1 != 0)
             UseLayoutRounding = false;
 
-        if (ConfigManager.ShowQuickLaunch && Directory.Exists(Environment.ExpandEnvironmentVariables(ConfigManager.QuickLaunchPath)))
-        {
-            QuickLaunchToolbar.Visibility = Visibility.Visible;
-            DesiredHeight += 16;
-        }
         MinHeight = DesiredHeight;
 
         DesiredHeight = Math.Max(ConfigManager.TaskbarHeight, DesiredHeight);
         DesiredWidth = Math.Max(ConfigManager.TaskbarWidth, DesiredWidth);
-        string[] listToolbars = ConfigManager.ToolbarsPath;
-        if (listToolbars?.Length > 0)
-            foreach (string path in listToolbars)
-                AddToolbar(path);
 
         if (!ConfigManager.ShowTaskManButton)
             SetShowTaskMan(false);
         if (!ConfigManager.ShowSearchButton)
             SetShowSearch(false);
+        if (!ConfigManager.ShowWidgetButton)
+            SetShowWidget(false);
     }
 
     public bool MainScreen
@@ -159,19 +153,6 @@ public partial class Taskbar : AppBarWindow
         {
             SetFontSmoothing();
         }
-        else if (e.PropertyName == "ShowQuickLaunch")
-        {
-            if (ConfigManager.ShowQuickLaunch && Directory.Exists(Environment.ExpandEnvironmentVariables(ConfigManager.QuickLaunchPath)))
-            {
-                QuickLaunchToolbar.Visibility = Visibility.Visible;
-                DesiredHeight += 16;
-            }
-            else
-            {
-                QuickLaunchToolbar.Visibility = Visibility.Collapsed;
-                DesiredHeight -= 16;
-            }
-        }
         else if (e.PropertyName == "Edge")
         {
             AppBarEdge = ConfigManager.Edge;
@@ -236,17 +217,17 @@ public partial class Taskbar : AppBarWindow
 
     protected override void CustomClosing()
     {
-        if (AllowClose)
+        if (AllowClose && !_isReopening)
         {
-            if (!_isReopening)
-                _explorerHelper.HideExplorerTaskbar = false;
-            QuickLaunchToolbar.Visibility = Visibility.Collapsed;
+            _explorerHelper.HideExplorerTaskbar = false;
         }
     }
 
     private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
     {
         if (_mainScreen)
+        {
+            MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
             try
             {
                 WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
@@ -255,7 +236,21 @@ public partial class Taskbar : AppBarWindow
             {
                 MessageBox.Show("Error during initialization of VirtualDesktop support." + Environment.NewLine + "VirtualDesktop will not be supported");
             }
-        MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
+        }
+        string[] listToolbars = ConfigManager.ToolbarsPath;
+        if (listToolbars?.Length > 0)
+        {
+            double newHeight = 52;
+            Debug.WriteLine("Height before toolbar : " + newHeight.ToString());
+            foreach (string path in listToolbars)
+            {
+                AddToolbar(path, false);
+                newHeight += (ConfigManager.ToolbarSmallSizeIcon(path) ? 16 : 32);
+            }
+            Debug.WriteLine("Height after toolbar : " + newHeight.ToString());
+            Height = newHeight;
+            DesiredHeight = newHeight;
+        }
     }
 
     #region Move/stretch
@@ -296,8 +291,10 @@ public partial class Taskbar : AppBarWindow
 
     #region Manage toolbar
 
-    private void AddToolbar(string path)
+    private void AddToolbar(string path, bool resize = true)
     {
+        if (!Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
+            return;
         ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
         Toolbar newToolbar = new()
         {
@@ -306,8 +303,11 @@ public partial class Taskbar : AppBarWindow
         Grid.SetRow(newToolbar, ToolsBars.RowDefinitions.Count - 1);
         Grid.SetColumn(newToolbar, 0);
         ToolsBars.Children.Add(newToolbar);
-        Height += 22;
-        DesiredHeight = Height;
+        if (resize)
+        {
+            Height += 22;
+            DesiredHeight = Height;
+        }
         _appBarManager.SetWorkArea(Screen);
     }
 
@@ -324,7 +324,7 @@ public partial class Taskbar : AppBarWindow
             {
                 ConfigManager.NbToolBar = ToolsBars.RowDefinitions.Count;
                 ConfigManager.TaskbarHeight = DesiredHeight;
-                ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Where(tb => tb.Name != "QuickLaunchToolbar").Select(tb => tb.Path)];
+                ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.Path)];
             }
         }
     }
@@ -374,5 +374,17 @@ public partial class Taskbar : AppBarWindow
     {
         ConfigManager.ShowTaskManButton = !ConfigManager.ShowTaskManButton;
         SetShowTaskMan(ConfigManager.ShowTaskManButton);
+    }
+
+    private void SetShowWidget(bool state)
+    {
+        WidgetsButton.Visibility = (state ? Visibility.Visible : Visibility.Collapsed);
+        MenuShowWidget.IsChecked = state;
+    }
+
+    private void MenuShowWidget_Click(object sender, RoutedEventArgs e)
+    {
+        ConfigManager.ShowWidgetButton = !ConfigManager.ShowWidgetButton;
+        SetShowWidget(ConfigManager.ShowWidgetButton);
     }
 }

@@ -80,13 +80,6 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <controls:Toolbar x:Name="QuickLaunchToolbar" Grid.Column="0" Grid.Row="0"
-                              Visibility="Collapsed"
-                              Path="{x:Static Config:ConfigManager.QuickLaunchPath}">
-                    </controls:Toolbar>
                 </Grid>
                 <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="ListeDesTaches" MainScreen="{Binding MainScreen}" TaskbarParent="{Binding .}"/>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
@@ -152,6 +145,7 @@
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH}" Name="MenuShowSearch" Click="MenuShowSearch_Click"/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Click="MenuShowTaskmgr_Click"/>
+            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_WIDGET}" Name="MenuShowWidget" Click="MenuShowWidget_Click"/>
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>
