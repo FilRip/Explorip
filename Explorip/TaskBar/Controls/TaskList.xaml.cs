@@ -30,7 +30,6 @@ public partial class TaskList : UserControl
     private readonly object _lockChangeDesktop;
 
     public readonly static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
-    public readonly static DependencyProperty MainScreenProperty = DependencyProperty.Register(nameof(MainScreen), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
     public readonly static DependencyProperty TaskbarParentProperty = DependencyProperty.Register(nameof(TaskbarParent), typeof(bool), typeof(TaskList), new PropertyMetadata(new bool()));
 
     public TaskList()
@@ -44,8 +43,6 @@ public partial class TaskList : UserControl
         get { return (double)GetValue(ButtonWidthProperty); }
         set { SetValue(ButtonWidthProperty, value); }
     }
-
-    public bool MainScreen { get; set; }
 
     public Taskbar TaskbarParent { get; set; }
 
