@@ -15,6 +15,8 @@ using ExploripConfig.Configuration;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 
+using Securify.ShellLink;
+
 namespace Explorip.TaskBar.Controls;
 
 /// <summary>
@@ -112,43 +114,92 @@ public partial class Toolbar : UserControl
                 maxWidth -= Title.ActualWidth;
             double currentWidth = 0;
             moreItems.Items.Clear();
-            foreach (ShellItem item in ToolbarItems.ItemsSource.OfType<ShellFile>())
+            ShellFile lastVisible = null;
+            foreach (ShellFile item in ToolbarItems.ItemsSource.OfType<ShellFile>())
             {
                 currentWidth += (CurrentShowLargeIcon ? 32 : 16);
                 if (currentWidth > maxWidth)
-                {
-                    item.AllowAsync = false;
-                    MenuItem mi = new()
-                    {
-                        Header = item.DisplayName,
-                        Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-                        Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-                        Icon = new Image()
-                        {
-                            Source = item.SmallIcon,
-                        },
-                        BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-                        Margin = new Thickness(0, 0, 0, 0),
-                        Tag = item,
-                    };
-                    mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
-                    mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
-                    moreItems.Items.Add(mi);
-                }
+                    AddMenuItem(item);
+                else
+                    lastVisible = item;
             }
+            if (moreItems.Items.Count > 0 && lastVisible != null)
+                AddMenuItem(lastVisible, true);
             MoreItems.Visibility = (moreItems.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed);
         });
     }
 
+    private void AddMenuItem(ShellFile item, bool atStart = false)
+    {
+        if (item == null)
+            return;
+        MenuItem mi = CreateMenuItem(item);
+        if (atStart)
+            moreItems.Items.Insert(0, mi);
+        else
+            moreItems.Items.Add(mi);
+        if (System.IO.Path.GetExtension(item.FileName) == ".lnk")
+        {
+            try
+            {
+                Shortcut sc = Shortcut.ReadFromFile(item.Path);
+                string newPath = sc.Target;
+                if (!string.IsNullOrWhiteSpace(newPath) && Directory.Exists(newPath))
+                {
+                    ShellFolder sf = new(newPath, IntPtr.Zero);
+                    ExpandFolder(mi, sf);
+                }
+            }
+            catch (Exception) { /* Ignore errors */ }
+        }
+        else if (item.IsFolder)
+            ExpandFolder(mi, (ShellFolder)item.ShellFolder);
+    }
+
+    private MenuItem CreateMenuItem(ShellFile item)
+    {
+        item.AllowAsync = false;
+        MenuItem mi = new()
+        {
+            Header = item.DisplayName,
+            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+            Icon = new Image()
+            {
+                Source = item.SmallIcon,
+            },
+            BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            Margin = new Thickness(0, 0, 0, 0),
+            Tag = item,
+        };
+        mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
+        mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
+        return mi;
+    }
+
+    private const int MaxRecursive = 5;
+    private void ExpandFolder(MenuItem mi, ShellFolder folder, int nbRecursive = 1)
+    {
+        if (nbRecursive > MaxRecursive || folder == null)
+            return;
+        foreach (ShellFile sf in folder.Files)
+        {
+            MenuItem subMenu = CreateMenuItem(sf);
+            mi.Items.Add(subMenu);
+            if (sf.IsFolder)
+                ExpandFolder(subMenu, new ShellFolder(sf.Path, IntPtr.Zero), nbRecursive++);
+        }
+    }
+
     private void Mi_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, true))
+        if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, true, new ShellFolder(System.IO.Path.GetDirectoryName(sf.Path), IntPtr.Zero)))
             e.Handled = true;
     }
 
     private void Mi_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, false))
+        if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, false, new ShellFolder(System.IO.Path.GetDirectoryName(sf.Path), IntPtr.Zero)))
             e.Handled = true;
     }
 
@@ -238,14 +289,14 @@ public partial class Toolbar : UserControl
         return builder;
     }
 
-    private bool InvokeContextMenu(ShellFile file, bool isInteractive)
+    private bool InvokeContextMenu(ShellFile file, bool isInteractive, ShellFolder parentFolder = null)
     {
         if (file == null)
         {
             return false;
         }
 
-        _ = new ShellItemContextMenu([file], Folder, IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
+        _ = new ShellItemContextMenu([file], (parentFolder ?? Folder), IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
         return true;
     }
 
@@ -351,7 +402,7 @@ public partial class Toolbar : UserControl
         ConfigManager.ToolbarShowTitle(Path, Title.Visibility == Visibility.Visible);
     }
 
-    public bool CurrentShowLargeIcon { get; private set; }
+    public bool CurrentShowLargeIcon { get; set; }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
@@ -360,6 +411,13 @@ public partial class Toolbar : UserControl
             await Task.Delay(5000);
             UpdateInvisibleIcons();
         });
+    }
+
+    private void CloseToolbar_Click(object sender, RoutedEventArgs e)
+    {
+        Taskbar parentTaskbar = this.FindVisualParent<Taskbar>();
+        if (parentTaskbar != null)
+            parentTaskbar.ToolsBars.Children.Remove(this);
     }
 
     public void ShowLargeIcon_Click(object sender, RoutedEventArgs e)

@@ -62,6 +62,7 @@ public partial class MyTaskbarApp : Application
     {
         foreach (Taskbar taskbar in _taskbarList)
         {
+            taskbar.IsReopening = true;
             taskbar.AllowClose = true;
             taskbar.Close();
         }

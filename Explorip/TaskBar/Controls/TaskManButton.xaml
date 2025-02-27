@@ -1,10 +1,12 @@
 ﻿<UserControl x:Class="Explorip.TaskBar.Controls.TaskManButton"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
     <ToggleButton ToolTip="{DynamicResource TaskManButtonTip}"
-            Click="TaskMan_OnClick"
-            Name="TaskMan"
-            Style="{DynamicResource TaskManButton}">
-          <Image Style="{DynamicResource TaskManIcon}"/>
+                  Background="Transparent"
+                  Click="TaskMan_OnClick"
+                  Name="TaskMan"
+                  Style="{DynamicResource TaskManButton}">
+        <Image Style="{DynamicResource TaskManIcon}"/>
     </ToggleButton>
 </UserControl>

@@ -8,7 +8,8 @@
              xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              MouseLeftButtonDown="Clock_OnMouseLeftButtonDown"
              MouseDoubleClick="Clock_OnMouseDoubleClick"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             Background="Transparent">
     <UserControl.DataContext>
         <viewmodels:ClockViewModel/>
     </UserControl.DataContext>

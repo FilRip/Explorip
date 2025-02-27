@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 
 using ExploripConfig.Helpers;
 
@@ -40,8 +41,8 @@ public static class ConfigManager
                 _registryTaskbar.SetValue("ShowClock", "True");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("CollapseNotifyIcons", "").ToString()))
                 _registryTaskbar.SetValue("CollapseNotifyIcons", "True");
-            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("AllowFontSmoothing", "").ToString()))
-                _registryKeyExplorer.SetValue("AllowFontSmoothing", "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("AllowFontSmoothing", "").ToString()))
+                _registryTaskbar.SetValue("AllowFontSmoothing", "True");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Language", "").ToString()))
                 _registryKeyExplorer.SetValue("Language", "System");
             string edge = _registryTaskbar.GetValue("Edge", "").ToString();
@@ -101,11 +102,11 @@ public static class ConfigManager
 
     public static bool AllowFontSmoothing
     {
-        get { return _registryKeyExplorer.ReadBoolean("AllowFontSmoothing"); }
+        get { return _registryTaskbar.ReadBoolean("AllowFontSmoothing"); }
         set
         {
             if (AllowFontSmoothing != value && AllowWrite)
-                _registryKeyExplorer.SetValue("AllowFontSmoothing", value.ToString());
+                _registryTaskbar.SetValue("AllowFontSmoothing", value.ToString());
         }
     }
 
@@ -219,16 +220,6 @@ public static class ConfigManager
         }
     }
 
-    public static int NbToolBar
-    {
-        get { return _registryTaskbar.ReadInteger("NbToolbar"); }
-        set
-        {
-            if (NbToolBar != value && AllowWrite)
-                _registryTaskbar.SetValue("NbToolbar", value.ToString());
-        }
-    }
-
     public static double TaskbarHeight
     {
         get { return _registryTaskbar.ReadDouble("TaskbarHeight"); }
@@ -246,6 +237,44 @@ public static class ConfigManager
         {
             if (TaskbarWidth != value && AllowWrite)
                 _registryTaskbar.SetValue("TaskbarWidth", value.ToString());
+        }
+    }
+
+    public static Brush TaskbarBackground
+    {
+        get
+        {
+            string bgColor = _registryTaskbar.GetValue("BackgroundColor")?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                string[] splitter = bgColor.Split(',');
+                byte a, r, g, b;
+                if (splitter.Length == 3)
+                    splitter = splitter.Insert("255", 0);
+                if (splitter.Length == 4)
+                {
+                    try
+                    {
+                        a = byte.Parse(splitter[0]);
+                        r = byte.Parse(splitter[1]);
+                        g = byte.Parse(splitter[2]);
+                        b = byte.Parse(splitter[3]);
+                        return new SolidColorBrush(Color.FromArgb(a, r, g, b));
+                    }
+                    catch (Exception) { /* Ignore errors, most of time can't cast value as string to byte */ }
+                }
+            }
+            return null;
+        }
+    }
+
+    public static bool TaskbarAllowsTransparency
+    {
+        get { return _registryTaskbar.ReadBoolean("AllowsTransparency"); }
+        set
+        {
+            if (TaskbarAllowsTransparency != value && AllowWrite)
+                _registryTaskbar.SetValue("AllowsTransparency", value.ToString());
         }
     }
 

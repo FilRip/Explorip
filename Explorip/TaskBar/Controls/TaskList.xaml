@@ -5,7 +5,8 @@
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
              Loaded="TaskList_OnLoaded"
              Unloaded="TaskList_OnUnloaded"
-             SizeChanged="TaskList_OnSizeChanged">
+             SizeChanged="TaskList_OnSizeChanged"
+             Background="Transparent">
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:EdgeOrientationConverter x:Key="orientationConverter" />

@@ -16,6 +16,7 @@
                      AllowDrop="True"
                      PreviewMouseDown="Taskbar_MouseDown"
                      UseLayoutRounding="True"
+                     Background="Transparent"
                      Style="{DynamicResource TaskbarWindow}">
     <WindowChrome.WindowChrome>
         <WindowChrome ResizeBorderThickness="0,3,0,0"

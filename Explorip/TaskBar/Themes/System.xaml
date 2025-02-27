@@ -38,18 +38,6 @@
     <BitmapImage x:Key="WidgetsIconImage"
                  UriSource="/Taskbar/Resources/widget11.png"/>
 
-    <Style TargetType="Image"
-           x:Key="PropertiesImage">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding ElementName=cbShowClock, Path=IsChecked}" Value="True">
-                <Setter Property="Source" Value="{DynamicResource properties_95}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding ElementName=cbShowClock, Path=IsChecked}" Value="False">
-                <Setter Property="Source" Value="{DynamicResource properties_95_noclock}" />
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
     <system:Double x:Key="GlobalFontSize">11</system:Double>
 
     <system:Boolean x:Key="AllowsTransparency">False</system:Boolean>
@@ -80,28 +68,13 @@
     </Style>
 
     <Style TargetType="Window"
-           x:Key="PropertiesWindow"
-           BasedOn="{StaticResource GlobalFonts}">
-        <Setter Property="UseLayoutRounding"
-                Value="True" />
-        <Setter Property="TextOptions.TextFormattingMode"
-                Value="Display" />
-        <Setter Property="Background"
-                Value="Black" />
-    </Style>
-
-    <Style TargetType="Window"
            x:Key="TaskbarWindow">
         <Setter Property="TextOptions.TextFormattingMode"
                 Value="Display" />
-        <Setter Property="Background"
-                Value="Black" />
     </Style>
 
     <Style TargetType="ContentControl"
            x:Key="Taskbar">
-        <Setter Property="Background"
-                Value="Black"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContentControl">
@@ -110,7 +83,7 @@
                             Name="OuterBorder">
                         <Border BorderThickness="0,0,0,0"
                                 BorderBrush="{DynamicResource ButtonHighlight}"
-                                Background="Black"
+                                Background="Transparent"
                                 Name="InnerBorder">
                             <ContentPresenter />
                         </Border>
@@ -171,6 +144,8 @@
            x:Key="Tray">
         <Setter Property="OverridesDefaultStyle"
                 Value="True" />
+        <Setter Property="Background"
+                Value="Transparent"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GroupBox">
@@ -180,7 +155,7 @@
                                 BorderBrush="{DynamicResource ButtonHighlight}">
                             <Border BorderThickness="0,0,0,0"
                                     BorderBrush="{DynamicResource ButtonShadow}"
-                                    Background="Black"
+                                    Background="Transparent"
                                     Padding="2">
                                 <ContentPresenter />
                             </Border>
@@ -196,7 +171,7 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="True" />
         <Setter Property="Background"
-                Value="Black" />
+                Value="Transparent" />
         <Setter Property="Margin"
                 Value="{DynamicResource TaskButtonMargin}" />
         <Setter Property="Template">
@@ -303,7 +278,7 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="True" />
         <Setter Property="Background"
-                Value="Black" />
+                Value="Transparent" />
         <Setter Property="Foreground"
                 Value="White" />
         <Setter Property="TextOptions.TextRenderingMode"
@@ -470,7 +445,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
-                    <Border x:Name="MainBorder" Background="{x:Static colors:Colors.BackgroundColorBrush}">
+                    <Border x:Name="MainBorder" Background="Transparent">
                         <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -654,7 +629,7 @@
         <Setter Property="TextAlignment"
                 Value="Center" />
         <Setter Property="Background"
-                Value="Black"/>
+                Value="Transparent"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
@@ -670,8 +645,6 @@
            x:Key="ToolbarButton">
         <Setter Property="OverridesDefaultStyle"
                 Value="True" />
-        <Setter Property="Background"
-                Value="Black" />
         <Setter Property="Margin"
                 Value="0" />
         <Setter Property="Template">
@@ -701,7 +674,7 @@
                                  Value="True">
                             <Setter TargetName="ButtonLeftTopBorder"
                                     Property="Background"
-                                    Value="DarkBlue" />
+                                    Value="{x:Static colors:Colors.AccentColorBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -738,7 +711,7 @@
         <Setter Property="Margin"
                 Value="0,0,4,0" />
         <Setter Property="Background"
-                Value="Black" />
+                Value="Transparent" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
@@ -755,7 +728,7 @@
         <Setter Property="OverridesDefaultStyle"
                 Value="True" />
         <Setter Property="Background"
-                Value="Black" />
+                Value="Transparent" />
         <Setter Property="Foreground"
                 Value="White"/>
         <Setter Property="Margin"

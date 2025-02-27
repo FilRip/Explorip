@@ -1,10 +1,12 @@
 ﻿<UserControl x:Class="Explorip.TaskBar.Controls.NotificationButton"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
     <ToggleButton ToolTip="{DynamicResource NotificationButtonTip}"
-            Click="Notification_OnClick"
-            Name="NotificationCenter"
-            Style="{DynamicResource NotificationButton}">
+                  Background="Transparent"
+                  Click="Notification_OnClick"
+                  Name="NotificationCenter"
+                  Style="{DynamicResource NotificationButton}">
         <Image Style="{DynamicResource NotificationIcon}"/>
     </ToggleButton>
 </UserControl>

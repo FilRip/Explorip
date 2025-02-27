@@ -8,7 +8,8 @@
              MouseDown="UserControl_MouseDown"
              MouseUp="UserControl_MouseUp"
              MouseMove="UserControl_MouseMove"
-             Loaded="UserControl_Loaded">
+             Loaded="UserControl_Loaded"
+             Background="Transparent">
     <UserControl.Resources>
         <DataTemplate x:Key="SmallIconTemplate">
             <local:ToolbarButton DataContext="{Binding}"
@@ -38,6 +39,7 @@
                     </ContextMenu.ItemsPanel>
                     <MenuItem Header="{x:Static constants:Localization.SHOW_TITLE}" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>
                     <MenuItem Header="{x:Static constants:Localization.LARGE_ICON}" Name="ShowLargeIcon" Click="ShowLargeIcon_Click"/>
+                    <MenuItem Header="{x:Static constants:Localization.CLOSE}" Name="CloseToolbar" Click="CloseToolbar_Click"/>
                 </ContextMenu>
             </Label.ContextMenu>
         </Label>
@@ -50,6 +52,6 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-        <Button Content=">>" Name="MoreItems" Click="MoreItems_Click" Visibility="Collapsed" Grid.Column="2" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+        <Button Content=">>" Name="MoreItems" Click="MoreItems_Click" Visibility="Collapsed" Grid.Column="2" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
     </Grid>
 </UserControl>

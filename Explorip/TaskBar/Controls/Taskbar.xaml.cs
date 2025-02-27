@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -27,7 +26,6 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class Taskbar : AppBarWindow
 {
-    private bool _isReopening;
     private readonly bool _mainScreen;
 
     public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
@@ -40,10 +38,7 @@ public partial class Taskbar : AppBarWindow
         DataContext = MyTaskbarApp.MyShellManager;
         StartButton.StartMenuMonitor = startMenuMonitor;
 
-        DesiredHeight = Application.Current.FindResource("TaskbarHeight") as double? ?? 0;
-        DesiredWidth = Application.Current.FindResource("TaskbarWidth") as double? ?? 0;
-
-        AllowsTransparency = Application.Current.FindResource("AllowsTransparency") as bool? ?? false;
+        AllowsTransparency = ConfigManager.TaskbarAllowsTransparency;
         SetFontSmoothing();
 
         _explorerHelper.HideExplorerTaskbar = true;
@@ -54,8 +49,10 @@ public partial class Taskbar : AppBarWindow
 
         MinHeight = DesiredHeight;
 
-        DesiredHeight = Math.Max(ConfigManager.TaskbarHeight, DesiredHeight);
-        DesiredWidth = Math.Max(ConfigManager.TaskbarWidth, DesiredWidth);
+        if (ConfigManager.TaskbarHeight > 0)
+            DesiredHeight = ConfigManager.TaskbarHeight;
+        if (ConfigManager.TaskbarWidth > 0)
+            DesiredWidth = ConfigManager.TaskbarWidth;
 
         if (!ConfigManager.ShowTaskManButton)
             SetShowTaskMan(false);
@@ -63,12 +60,19 @@ public partial class Taskbar : AppBarWindow
             SetShowSearch(false);
         if (!ConfigManager.ShowWidgetButton)
             SetShowWidget(false);
+
+        if (ConfigManager.TaskbarBackground != null)
+            Background = ConfigManager.TaskbarBackground;
+        else
+            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
     }
 
     public bool MainScreen
     {
         get { return _mainScreen; }
     }
+
+    public bool IsReopening { get; set; }
 
     protected override void OnSourceInitialized(object sender, EventArgs e)
     {
@@ -114,50 +118,6 @@ public partial class Taskbar : AppBarWindow
     private void SetFontSmoothing()
     {
         VisualTextRenderingMode = ConfigManager.AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
-    }
-
-    private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        // TODO : Method No more used
-        if (e.PropertyName == "Theme")
-        {
-            bool newTransparency = Application.Current.FindResource("AllowsTransparency") as bool? ?? false;
-            double newHeight = Application.Current.FindResource("TaskbarHeight") as double? ?? 0;
-            double newWidth = Application.Current.FindResource("TaskbarWidth") as double? ?? 0;
-            bool heightChanged = newHeight != DesiredHeight;
-            bool widthChanged = newWidth != DesiredWidth;
-
-            if (AllowsTransparency != newTransparency)
-            {
-                // Transparency cannot be changed on an open window.
-                _isReopening = true;
-                ((MyTaskbarApp)Application.Current).ReopenTaskbar();
-                return;
-            }
-
-            DesiredHeight = newHeight;
-            DesiredWidth = newWidth;
-
-            if (Orientation == Orientation.Horizontal && heightChanged)
-            {
-                Height = DesiredHeight;
-                SetScreenPosition();
-            }
-            else if (Orientation == Orientation.Vertical && widthChanged)
-            {
-                Width = DesiredWidth;
-                SetScreenPosition();
-            }
-        }
-        else if (e.PropertyName == "AllowFontSmoothing")
-        {
-            SetFontSmoothing();
-        }
-        else if (e.PropertyName == "Edge")
-        {
-            AppBarEdge = ConfigManager.Edge;
-            SetScreenPosition();
-        }
     }
 
     private void Taskbar_OnLocationChanged(object sender, EventArgs e)
@@ -217,7 +177,7 @@ public partial class Taskbar : AppBarWindow
 
     protected override void CustomClosing()
     {
-        if (AllowClose && !_isReopening)
+        if (AllowClose && !IsReopening)
         {
             _explorerHelper.HideExplorerTaskbar = false;
         }
@@ -241,15 +201,11 @@ public partial class Taskbar : AppBarWindow
         if (listToolbars?.Length > 0)
         {
             double newHeight = 52;
-            Debug.WriteLine("Height before toolbar : " + newHeight.ToString());
             foreach (string path in listToolbars)
             {
                 AddToolbar(path, false);
                 newHeight += (ConfigManager.ToolbarSmallSizeIcon(path) ? 16 : 32);
             }
-            Debug.WriteLine("Height after toolbar : " + newHeight.ToString());
-            Height = newHeight;
-            DesiredHeight = newHeight;
         }
     }
 
@@ -291,10 +247,10 @@ public partial class Taskbar : AppBarWindow
 
     #region Manage toolbar
 
-    private void AddToolbar(string path, bool resize = true)
+    private Toolbar AddToolbar(string path, bool resize = true)
     {
         if (!Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
-            return;
+            return null;
         ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
         Toolbar newToolbar = new()
         {
@@ -309,6 +265,7 @@ public partial class Taskbar : AppBarWindow
             DesiredHeight = Height;
         }
         _appBarManager.SetWorkArea(Screen);
+        return newToolbar;
     }
 
     private void AddToolbar_Click(object sender, RoutedEventArgs e)
@@ -319,12 +276,17 @@ public partial class Taskbar : AppBarWindow
         };
         if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
         {
-            AddToolbar(dialog.FileName);
-            if (MainScreen)
+            Toolbar newTb = AddToolbar(dialog.FileName);
+            if (newTb != null)
             {
-                ConfigManager.NbToolBar = ToolsBars.RowDefinitions.Count;
-                ConfigManager.TaskbarHeight = DesiredHeight;
-                ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.Path)];
+                if (MainScreen)
+                {
+                    ConfigManager.TaskbarHeight = DesiredHeight;
+                    ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.Path)];
+                }
+                newTb.ShowHideTitle_Click(null, null);
+                newTb.CurrentShowLargeIcon = true;
+                newTb.ShowLargeIcon_Click(null, null);
             }
         }
     }
