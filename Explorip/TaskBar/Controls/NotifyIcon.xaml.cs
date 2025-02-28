@@ -4,6 +4,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Explorip.Helpers;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
@@ -104,5 +106,21 @@ public partial class NotifyIcon : UserControl
     {
         e.Handled = true;
         TrayIcon?.IconMouseMove(MouseHelper.GetCursorPositionParam());
+    }
+
+    private void NotifyIconBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if ((e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down))) && TrayIcon != null)
+        {
+            NotifyIconList parent = this.FindVisualParent<NotifyIconList>();
+            parent.ChangePinItem(TrayIcon);
+            e.Handled = true;
+        }
+    }
+
+    private void NotifyIconBorder_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down)))
+            e.Handled = true;
     }
 }

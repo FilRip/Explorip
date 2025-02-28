@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,42 +37,53 @@ public partial class NotifyIconList : UserControl
         InitializeComponent();
     }
 
-    private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    public void ChangePinItem(ManagedShell.WindowsTray.NotifyIcon item)
     {
-        if (e.PropertyName == "CollapseNotifyIcons")
+        if (promotedIcons.Contains(item))
         {
-            if (ConfigManager.CollapseNotifyIcons)
-            {
-                NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;
-                SetToggleVisibility();
-            }
-            else
-            {
-                NotifyIconToggleButton.IsChecked = false;
-                NotifyIconToggleButton.Visibility = Visibility.Collapsed;
-
-                NotifyIcons.ItemsSource = allNotifyIconsSource.View;
-            }
+            promotedIcons.Remove(item);
+            ConfigManager.RemovePinnedSystray(item.Path);
         }
+        else
+        {
+            promotedIcons.Add(item);
+            ConfigManager.AddPinnedSystray(item.Path, item.PinOrder);
+        }
+        CompositeCollection pinnedNotifyIcons =
+        [
+            new CollectionContainer { Collection = promotedIcons },
+            new CollectionContainer { Collection = NotificationArea.PinnedIcons },
+        ];
+        pinnedNotifyIconsSource = new CollectionViewSource() { Source = pinnedNotifyIcons };
     }
 
     private void NotifyIconList_OnLoaded(object sender, RoutedEventArgs e)
     {
         if (!isLoaded && NotificationArea != null)
         {
+            string[] pinnedPath = ConfigManager.AllPinnedSystray();
+
             CompositeCollection allNotifyIcons =
             [
                 new CollectionContainer { Collection = NotificationArea.UnpinnedIcons },
-                new CollectionContainer { Collection = NotificationArea.PinnedIcons }
+                new CollectionContainer { Collection = NotificationArea.PinnedIcons },
             ];
-            allNotifyIconsSource = new CollectionViewSource { Source = allNotifyIcons };
+            allNotifyIconsSource = new CollectionViewSource() { Source = allNotifyIcons };
+
+            if (pinnedPath?.Length > 0 && promotedIcons.Count == 0)
+                foreach (string path in pinnedPath)
+                {
+                    ManagedShell.WindowsTray.NotifyIcon ni = NotificationArea.UnpinnedIcons.OfType<ManagedShell.WindowsTray.NotifyIcon>().SingleOrDefault(i => i.Path == path);
+                    if (ni != null)
+                        promotedIcons.Add(ni);
+                }
 
             CompositeCollection pinnedNotifyIcons =
             [
                 new CollectionContainer { Collection = promotedIcons },
-                new CollectionContainer { Collection = NotificationArea.PinnedIcons }
+                new CollectionContainer { Collection = NotificationArea.PinnedIcons },
             ];
-            pinnedNotifyIconsSource = new CollectionViewSource { Source = pinnedNotifyIcons };
+            pinnedNotifyIconsSource = new CollectionViewSource() { Source = pinnedNotifyIcons };
 
             NotificationArea.UnpinnedIcons.CollectionChanged += UnpinnedIcons_CollectionChanged;
             NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;

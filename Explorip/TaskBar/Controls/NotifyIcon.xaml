@@ -16,7 +16,9 @@
                 MouseDown="NotifyIcon_OnMouseDown"
                 MouseEnter="NotifyIcon_OnMouseEnter"
                 MouseLeave="NotifyIcon_OnMouseLeave"
-                MouseMove="NotifyIcon_OnMouseMove">
+                MouseMove="NotifyIcon_OnMouseMove"
+                PreviewMouseDown="NotifyIconBorder_PreviewMouseDown"
+                PreviewMouseUp="NotifyIconBorder_PreviewMouseUp">
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
                    Focusable="True"
                    Style="{DynamicResource NotifyIcon}" />

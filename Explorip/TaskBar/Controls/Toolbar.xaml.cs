@@ -416,8 +416,7 @@ public partial class Toolbar : UserControl
     private void CloseToolbar_Click(object sender, RoutedEventArgs e)
     {
         Taskbar parentTaskbar = this.FindVisualParent<Taskbar>();
-        if (parentTaskbar != null)
-            parentTaskbar.ToolsBars.Children.Remove(this);
+        parentTaskbar?.ToolsBars.Children.Remove(this);
     }
 
     public void ShowLargeIcon_Click(object sender, RoutedEventArgs e)

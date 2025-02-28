@@ -495,4 +495,53 @@ public static class ConfigManager
         foreach (string path in listTabs)
             hkey.SetValue($"Tab({i++})", path);
     }
+
+    public static string[] AllPinnedSystray()
+    {
+        string[] ret = [];
+        RegistryKey key = _registryTaskbar.CreateSubKey("Systray");
+        foreach (string name in key.GetValueNames())
+        {
+            ret = ret.Add(key.GetValue(name));
+        }
+        return ret;
+    }
+
+    public static void RemovePinnedSystray(string path)
+    {
+        RegistryKey key = _registryTaskbar.CreateSubKey("Systray");
+        foreach (string name in key.GetValueNames())
+            if (key.GetValue(name).ToString() == path)
+                key.DeleteValue(name);
+    }
+
+    public static void AddPinnedSystray(string path, int order = -1)
+    {
+        RegistryKey key = _registryTaskbar.CreateSubKey("Systray", true);
+
+        foreach (string name in key.GetValueNames())
+            if (key.GetValue(name).ToString() == path)
+                key.DeleteValue(name);
+
+        if (order >= 0 && key.GetValueNames().Contains(order.ToString()))
+        {
+            string previousPath = key.GetValue(order.ToString()).ToString();
+            int i;
+            for (i = order; i <= 256; i++)
+                if (!key.GetValueNames().Contains(i.ToString()))
+                    break;
+            if (i == 256)
+                return;
+            key.SetValue(i.ToString(), previousPath);
+            key.SetValue(order.ToString(), path);
+            return;
+        }
+
+        if (order < 0 || key.GetValueNames().Contains(order.ToString()))
+            foreach (string name in key.GetValueNames())
+                if (int.TryParse(name, out int current))
+                    order = Math.Max(order, current);
+
+        key.SetValue(order.ToString(), path);
+    }
 }
