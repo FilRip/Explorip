@@ -193,14 +193,6 @@ public partial class TaskButton : UserControl
         }
     }
 
-    private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName == "Theme")
-        {
-            SetStyle();
-        }
-    }
-
     public ApplicationWindow ApplicationWindow
     {
         get { return Window; }
