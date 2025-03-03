@@ -425,12 +425,12 @@
         </Style.Triggers>
     </Style>
 
-    <ToolTip x:Key="StartButtonTip" Content="{DynamicResource start_button_tip}" />
-    <ToolTip x:Key="SearchButtonTip" Content="{DynamicResource search_button_tip}" />
-    <ToolTip x:Key="TaskManButtonTip" Content="{DynamicResource taskman_button_tip}" />
-    <ToolTip x:Key="NotificationButtonTip" Content="{DynamicResource notification_button_tip}" />
-    <ToolTip x:Key="TabTipButtonTip" Content="{DynamicResource tabtip_button_tip}"/>
-    <ToolTip x:Key="WidgetsButtonTip" Content="{DynamicResource widgets_button_tip}"/>
+    <ToolTip x:Key="StartButtonTip" Content="{x:Static constants:Localization.START}" />
+    <ToolTip x:Key="SearchButtonTip" Content="{x:Static constants:Localization.SEARCH_TIP}" />
+    <ToolTip x:Key="TaskManButtonTip" Content="{x:Static constants:Localization.SHOW_TASKMAN_TIP}" />
+    <ToolTip x:Key="NotificationButtonTip" Content="{x:Static constants:Localization.SHOW_NOTIFICATION_TIP}" />
+    <ToolTip x:Key="TabTipButtonTip" Content="{x:Static constants:Localization.SHOW_VISUAL_KEYBOARD}"/>
+    <ToolTip x:Key="WidgetsButtonTip" Content="{x:Static constants:Localization.WIDGETS}"/>
     
     <Style TargetType="ToggleButton"
            x:Key="StartButton">
@@ -612,7 +612,7 @@
            x:Key="StartLabel"
            BasedOn="{StaticResource TaskLabel}">
         <Setter Property="Text"
-                Value="{DynamicResource start_text}" />
+                Value="{x:Static constants:Localization.START}" />
         <Setter Property="FontWeight"
                 Value="Bold" />
     </Style>
@@ -857,10 +857,10 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="ToolTip" Value="{DynamicResource hide}" />
+                <Setter Property="ToolTip" Value="{x:Static constants:Localization.HIDE}" />
             </Trigger>
             <Trigger Property="IsChecked" Value="False">
-                <Setter Property="ToolTip" Value="{DynamicResource show_hidden}" />
+                <Setter Property="ToolTip" Value="{x:Static constants:Localization.SHOW_HIDDEN_ICONS}" />
             </Trigger>
             <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">

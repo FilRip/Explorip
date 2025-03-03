@@ -114,6 +114,14 @@ public static class Localization
     public static string TASKBAR_SHOW_TASKMGR { get; private set; }
     public static string TASKBAR_SHOW_SEARCH { get; private set; }
     public static string TASKBAR_SHOW_WIDGET { get; private set; }
+    public static string SHOW_HIDDEN_ICONS { get; private set; }
+    public static string HIDE { get; private set; }
+    public static string SEARCH_TIP { get; private set; }
+    public static string SHOW_TASKMAN_TIP { get; private set; }
+    public static string SHOW_NOTIFICATION_TIP { get; private set; }
+    public static string SHOW_TACTILE_KEYBOARD { get; private set; }
+    public static string WIDGETS { get; private set; }
+    public static string OPEN_FOLDER { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -224,6 +232,14 @@ public static class Localization
         TASKBAR_SHOW_TASKMGR = LoadMenuItem("explorer.exe", 205, 430, "Show active application button").Replace("&", "_");
         TASKBAR_SHOW_SEARCH = LoadMenuItem("explorer.exe", 205, 448, "Show search button").Replace("&", "_");
         TASKBAR_SHOW_WIDGET = Load("explorerframe.dll", 50259, "Show") + " " + Load("mshtml.dll", 53857, "widget").ToLower();
+        SHOW_HIDDEN_ICONS = Load("explorer.exe", 543, "Show hidden icons");
+        HIDE = Load("explorer.exe", 542, "Hide");
+        SEARCH_TIP = Load("explorer.exe", 907, "Enter here to start a search");
+        SHOW_TASKMAN_TIP = Load("explorer.exe", 900, "Show tasks");
+        SHOW_NOTIFICATION_TIP = Load("explorer.exe", 852, "Show notifications");
+        SHOW_TACTILE_KEYBOARD = Load("explorer.exe", 905, "Visual keyboard");
+        WIDGETS = Load("mshtml.dll", 53857, "Widgets");
+        OPEN_FOLDER = Load("shell32.dll", 32960, "Open the folder");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

@@ -282,7 +282,7 @@ public partial class Toolbar : UserControl
         builder.AddCommand(new ShellMenuCommand()
         {
             Flags = MFT.BYCOMMAND,
-            Label = (string)FindResource("open_folder"),
+            Label = Constants.Localization.OPEN_FOLDER,
             UID = (uint)MenuItemId.OpenParentFolder
         });
 

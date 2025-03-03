@@ -1,19 +1,14 @@
-﻿<Application x:Class="Explorip.Explorer.MyExplorerApp"
+﻿<Application x:Class="Explorip.StartMenu.MyStartMenuApp"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             StartupUri="Windows/WpfExplorerBrowser.xaml"
+             StartupUri="Window/StartMenuWindow.xaml"
              mc:Ignorable="d">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/StyleWindow.xaml"/>
-                <ResourceDictionary Source="Styles/StyleBrush.xaml"/>
-                <ResourceDictionary Source="Styles/StyleTabItem.xaml"/>
-                <ResourceDictionary Source="Styles/StyleComboBox.xaml"/>
-                <ResourceDictionary Source="Styles/StyleButton.xaml"/>
-                <ResourceDictionary Source="Styles/StyleTreeViewItem.xaml"/>
+                <ResourceDictionary Source="Styles/StyleScrollViewer.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

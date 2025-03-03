@@ -7,7 +7,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Languages/francais.xaml" />
                 <ResourceDictionary Source="Themes/System.xaml" />
                 <ResourceDictionary Source="Styles/StyleContextMenu"/>
             </ResourceDictionary.MergedDictionaries>

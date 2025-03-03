@@ -1,0 +1,82 @@
+﻿<Window x:Class="Explorip.StartMenu.Window.StartMenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Explorip.StartMenu"
+        xmlns:viewmodels="clr-namespace:Explorip.StartMenu.ViewModels"
+        xmlns:constants="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Height="640" Width="1175" Background="{x:Static constants:Colors.BackgroundColorBrush}" KeyUp="Window_KeyUp">
+    <Window.DataContext>
+        <viewmodels:StartMenuViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="270"/>
+            <ColumnDefinition Width="430"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- First column, quick button -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+
+            <Button Background="Transparent" BorderThickness="0" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE748;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
+            <Button Background="Transparent" BorderThickness="0" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE713;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}"/>
+            <Button Background="Transparent" BorderThickness="0" Grid.Row="4" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE7E8;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Click="Button_Click"/>
+        </Grid>
+
+        <!-- Second column, list of items in Start Menu -->
+        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1">
+            <ItemsControl.Template>
+                <ControlTemplate TargetType="ItemsControl">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Style="{DynamicResource MyScrollViewerStyle}">
+                        <ItemsPresenter/>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="5"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="32"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Icon}" Grid.Row="1"/>
+                        <TextBlock Text="{Binding Name}" Margin="5 0 0 0" Grid.Row="1" Grid.Column="1" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96E;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding HasChild, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
+        <!-- Third column, some free shortcut panel -->
+        <Grid Grid.Column="2">
+            
+        </Grid>
+    </Grid>
+</Window>

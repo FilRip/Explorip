@@ -45,9 +45,9 @@ public static class IconManager
         }
     }
 
-    public static ImageSource GetIconFromFile(string filename, int index)
+    public static ImageSource GetIconFromFile(string filename, int index, bool large = true)
     {
-        Icon icon = Extract(filename, index, true);
+        Icon icon = Extract(filename, index, large);
         if (icon != null)
             return Convert(icon);
         return null;

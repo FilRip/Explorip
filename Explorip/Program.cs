@@ -41,6 +41,13 @@ public static class Program
         Constants.Icons.Init();
         ConfigManager.Init();
 
+        if (ArgumentExists("testStartMenu"))
+        {
+            _WpfHost = new StartMenu.MyStartMenuApp();
+            _WpfHost.Run();
+            return;
+        }
+
         if (ArgumentExists("desktop") || ArgumentExists("desktops"))
         {
             mutexProcess = new Mutex(true, "ExploripDesktop", out bool processNotLaunched);
