@@ -46,7 +46,7 @@ public partial class StartMenuViewModel : ObservableObject
                     alreadyExist.LoadChildren(new ShellFolder(sf.Path, IntPtr.Zero));
             }
             else
-                StartMenuItems.Add(new StartMenuItemViewModel(sf));
+                StartMenuItems.Add(new StartMenuItemViewModel(sf, 0));
         }
 
         return ret;

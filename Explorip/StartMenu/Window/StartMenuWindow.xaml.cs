@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Controls;
 
 using Explorip.StartMenu.ViewModels;
 
@@ -27,6 +28,16 @@ namespace Explorip.StartMenu.Window
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             Environment.Exit(0);
+        }
+
+        private void ScrollViewer_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            ((ScrollViewer)sender).VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+        }
+
+        private void ScrollViewer_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            ((ScrollViewer)sender).VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
         }
     }
 }

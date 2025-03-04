@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Explorip.StartMenu"
         xmlns:viewmodels="clr-namespace:Explorip.StartMenu.ViewModels"
         xmlns:constants="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -15,6 +16,47 @@
     </Window.DataContext>
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+        <DataTemplate x:Key="MyDataTemplate" DataType="{x:Type viewmodels:StartMenuItemViewModel}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Background="{Binding BackgroundItem}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseUp">
+                            <i:InvokeCommandAction Command="{Binding MouseUpCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="MouseLeave">
+                            <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="{Binding SizeNameColumn}"/>
+                            <ColumnDefinition Width="32"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding Icon}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Name}" Margin="5 0 0 0" Grid.Column="1" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96E;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowDown, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96D;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowUp, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    </Grid>
+                </StackPanel>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Children}" Visibility="{Binding IsExpanded, Converter={StaticResource boolToVisible}}" ItemTemplate="{DynamicResource MyDataTemplate}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -40,10 +82,10 @@
         </Grid>
 
         <!-- Second column, list of items in Start Menu -->
-        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1">
+        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}">
             <ItemsControl.Template>
                 <ControlTemplate TargetType="ItemsControl">
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Style="{DynamicResource MyScrollViewerStyle}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Style="{DynamicResource MyScrollViewerStyle}" MouseEnter="ScrollViewer_MouseEnter" MouseLeave="ScrollViewer_MouseLeave">
                         <ItemsPresenter/>
                     </ScrollViewer>
                 </ControlTemplate>
@@ -53,25 +95,6 @@
                     <StackPanel Orientation="Vertical"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="5"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="5"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="32"/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="{Binding Icon}" Grid.Row="1"/>
-                        <TextBlock Text="{Binding Name}" Margin="5 0 0 0" Grid.Row="1" Grid.Column="1" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Row="1" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96E;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding HasChild, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center"/>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
         </ItemsControl>
         
         <!-- Third column, some free shortcut panel -->
