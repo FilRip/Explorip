@@ -544,4 +544,14 @@ public static class ConfigManager
 
         key.SetValue(order.ToString(), path);
     }
+
+    public static bool TaskbarReplaceStartMenu
+    {
+        get { return _registryTaskbar.ReadBoolean("ReplaceStartMenu"); }
+        set
+        {
+            if (ShowSearchButton != value && AllowWrite)
+                _registryTaskbar.SetValue("ReplaceStartMenu", value.ToString());
+        }
+    }
 }

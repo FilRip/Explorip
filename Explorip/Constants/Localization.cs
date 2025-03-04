@@ -122,6 +122,14 @@ public static class Localization
     public static string SHOW_TACTILE_KEYBOARD { get; private set; }
     public static string WIDGETS { get; private set; }
     public static string OPEN_FOLDER { get; private set; }
+    public static string START_STOP { get; private set; }
+    public static string SETTINGS { get; private set; }
+    public static string LOCK { get; private set; }
+    public static string DISCONNECT { get; private set; }
+    public static string CHANGE_USER { get; private set; }
+    public static string PUT_HYBERNATE { get; private set; }
+    public static string SHUTDOWN { get; private set; }
+    public static string RESTART { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -240,6 +248,14 @@ public static class Localization
         SHOW_TACTILE_KEYBOARD = Load("explorer.exe", 905, "Visual keyboard");
         WIDGETS = Load("mshtml.dll", 53857, "Widgets");
         OPEN_FOLDER = Load("shell32.dll", 32960, "Open the folder");
+        START_STOP = Load("dinput.dll", 734, "Start/Shutdown");
+        SETTINGS = Load("twinui.dll", 5621, "Settings");
+        DISCONNECT = Load("shutdownux.dll", 3034, "Disconnecting");
+        LOCK = Load("shutdownux.dll", 3042, "Lock");
+        CHANGE_USER = Load("consolelogon.dll", 114, "Switch user");
+        PUT_HYBERNATE = Load("shutdownux.dll", 3019, "Go to sleep mode");
+        SHUTDOWN = Load("shutdownux.dll", 3013, "Shutdown");
+        RESTART = Load("shutdownux.dll", 3016, "Restart");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

@@ -16,13 +16,16 @@ public partial class StartMenuViewModel : ObservableObject
 {
     [ObservableProperty()]
     private ObservableCollection<StartMenuItemViewModel> _startMenuItems;
+    [ObservableProperty()]
+    private ObservableCollection<PinnedShortutViewModel> _pinnedShortcut;
 
     public StartMenuViewModel()
     {
-        Refresh();
+        RefreshPrograms();
+        RefreshPinnedShortcut();
     }
 
-    public void Refresh()
+    public void RefreshPrograms()
     {
         StartMenuItems = [];
         string commonSMFolder = Path.Combine(Environment.SpecialFolder.CommonStartMenu.FullPath(), "Programs");
@@ -50,5 +53,16 @@ public partial class StartMenuViewModel : ObservableObject
         }
 
         return ret;
+    }
+
+    private void RefreshPinnedShortcut()
+    {
+        PinnedShortcut = [];
+        string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "CoolBytes", "Explorip", "StartMenu");
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+        ShellFolder sf = new(path, IntPtr.Zero);
+        foreach (ShellFile file in sf.Files)
+            PinnedShortcut.Add(new PinnedShortutViewModel(file));
     }
 }

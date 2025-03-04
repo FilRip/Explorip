@@ -272,6 +272,11 @@ public static class ShellHelper
         ShellKeyCombo(VK.LWIN, VK.KEY_X);
     }
 
+    public static void ShowConfigPanel()
+    {
+        ShellKeyCombo(VK.LWIN, VK.KEY_I);
+    }
+
     /// <summary>
     /// Send file to recycle bin
     /// </summary>
