@@ -16,6 +16,7 @@ public partial class StartMenuItemViewModel : ObservableObject
 {
     private readonly ShellFile _shellFile;
     private readonly int _deep;
+    private readonly StartMenuViewModel _window;
     private bool _mouseOver;
 
     [ObservableProperty()]
@@ -29,12 +30,13 @@ public partial class StartMenuItemViewModel : ObservableObject
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(ShowDown), nameof(ShowUp))]
     private bool _isExpanded;
 
-    public StartMenuItemViewModel(ShellFile sf, int deep)
+    public StartMenuItemViewModel(ShellFile sf, int deep, StartMenuViewModel window)
     {
         _deep = deep;
         _children = [];
         _shellFile = sf;
         _name = sf.DisplayName;
+        _window = window;
         if (sf.IsFolder)
         {
             _icon = Constants.Icons.Folder;
@@ -48,7 +50,7 @@ public partial class StartMenuItemViewModel : ObservableObject
     {
         foreach (ShellFile item in sf.Files)
             if (!Children.Any(i => i.Name == sf.DisplayName))
-                Children.Add(new StartMenuItemViewModel(item, _deep + 1));
+                Children.Add(new StartMenuItemViewModel(item, _deep + 1, _window));
     }
 
     public bool ShowDown
@@ -72,8 +74,14 @@ public partial class StartMenuItemViewModel : ObservableObject
         else
         {
             if (e.ChangedButton == MouseButton.Left)
-                ManagedShell.Common.Helpers.ShellHelper.StartProcess(_shellFile.Path);
-            // TODO : Context menu when right click
+            {
+                if (ManagedShell.Common.Helpers.ShellHelper.StartProcess(_shellFile.Path, useShellExecute: true))
+                    _window.HideWindow();
+            }
+            else if (e.ChangedButton == MouseButton.Right)
+            {
+                // TODO : Context menu when right click
+            }
         }
     }
 

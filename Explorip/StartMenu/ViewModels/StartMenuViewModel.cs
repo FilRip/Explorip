@@ -19,6 +19,9 @@ public partial class StartMenuViewModel : ObservableObject
     [ObservableProperty()]
     private ObservableCollection<PinnedShortutViewModel> _pinnedShortcut;
 
+    public Action ShowWindow { get; set; }
+    public Action HideWindow { get; set; }
+
     public StartMenuViewModel()
     {
         RefreshPrograms();
@@ -49,7 +52,7 @@ public partial class StartMenuViewModel : ObservableObject
                     alreadyExist.LoadChildren(new ShellFolder(sf.Path, IntPtr.Zero));
             }
             else
-                StartMenuItems.Add(new StartMenuItemViewModel(sf, 0));
+                StartMenuItems.Add(new StartMenuItemViewModel(sf, 0, this));
         }
 
         return ret;
@@ -63,6 +66,6 @@ public partial class StartMenuViewModel : ObservableObject
             Directory.CreateDirectory(path);
         ShellFolder sf = new(path, IntPtr.Zero);
         foreach (ShellFile file in sf.Files)
-            PinnedShortcut.Add(new PinnedShortutViewModel(file));
+            PinnedShortcut.Add(new PinnedShortutViewModel(file, this));
     }
 }

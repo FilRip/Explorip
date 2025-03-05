@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 
 using Explorip.Helpers;
+using Explorip.StartMenu.ViewModels;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
+
+using WpfScreenHelper;
 
 namespace Explorip.StartMenu.Window
 {
@@ -14,6 +19,8 @@ namespace Explorip.StartMenu.Window
     public partial class StartMenuWindow : System.Windows.Window
     {
         private readonly ContextMenu _cmUser, _cmStart;
+        private IntPtr _keyboardHookPtr, _windowsStartMenu;
+        public static StartMenuWindow MyStartMenu { get; private set; }
 
         public StartMenuWindow()
         {
@@ -40,6 +47,27 @@ namespace Explorip.StartMenu.Window
             _cmStart.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
             _cmStart.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);
             _cmStart.AddEntry(Constants.Localization.RESTART, Restart);
+
+            MyDataContext.HideWindow = Hide;
+            MyDataContext.ShowWindow = Show;
+
+#if DEBUG
+            Topmost = false;
+            ShowInTaskbar = true;
+#endif
+            HideWindowsStartMenu();
+            SetMyStartMenu(this);
+            HookWinKey();
+        }
+
+        private static void SetMyStartMenu(StartMenuWindow startMenuWindow)
+        {
+            MyStartMenu = startMenuWindow;
+        }
+
+        public StartMenuViewModel MyDataContext
+        {
+            get { return (StartMenuViewModel)DataContext; }
         }
 
         private static void Hybernate()
@@ -57,7 +85,7 @@ namespace Explorip.StartMenu.Window
             ShellHelper.StartProcess("shutdown /r /t 0", hidden: true);
         }
 
-        private void StartMenuWindow_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void StartMenuWindow_Click(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }
@@ -72,19 +100,77 @@ namespace Explorip.StartMenu.Window
             ((ScrollViewer)sender).VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
         }
 
-        private void ParamButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void ParamButton_Click(object sender, RoutedEventArgs e)
         {
             ShellHelper.ShowConfigPanel();
         }
 
-        private void StopButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void StopButton_Click(object sender, RoutedEventArgs e)
         {
             _cmStart.IsOpen = true;
         }
 
-        private void UserButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Window_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Hide();
+        }
+
+        private void UserButton_Click(object sender, RoutedEventArgs e)
         {
             _cmUser.IsOpen = true;
+        }
+
+        private void HookWinKey()
+        {
+            _keyboardHookPtr = NativeMethods.SetWindowsHookEx(NativeMethods.HookType.WH_KEYBOARD_LL, MyKeyboardHook, IntPtr.Zero, 0);
+        }
+
+        private static int _lastPressedKey;
+        private static int MyKeyboardHook(int code, int wParam, ref NativeMethods.KeyboardHookStruct lParam)
+        {
+            if (code >= 0 && wParam == (int)NativeMethods.WM.KEYDOWN)
+            {
+                _lastPressedKey = lParam.vkCode;
+            }
+            else if (code >=0 && wParam == (int)NativeMethods.WM.KEYUP &&
+                _lastPressedKey == lParam.vkCode && (lParam.vkCode == (int)NativeMethods.VK.LWIN || lParam.vkCode == (int)NativeMethods.VK.RWIN))
+            {
+                if (MyStartMenu.IsVisible)
+                    MyStartMenu.Hide();
+                else
+                {
+                    MyStartMenu.Show();
+                    MyStartMenu.Activate();
+                }
+            }
+            return NativeMethods.CallNextHookEx(IntPtr.Zero, code, wParam, ref lParam);
+        }
+
+        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (IsVisible)
+            {
+                System.Drawing.Point p = new();
+                NativeMethods.GetCursorPos(ref p);
+                Screen screen = Screen.FromPoint(new Point(p.X, p.Y));
+                Left = screen.WorkingArea.X;
+                Top = (int)screen.WorkingArea.Bottom - Height;
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            if (_keyboardHookPtr != IntPtr.Zero)
+                NativeMethods.UnhookWindowsHookEx(_keyboardHookPtr);
+            if (_windowsStartMenu != IntPtr.Zero)
+                NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.ShowNormal);
+        }
+
+        private void HideWindowsStartMenu()
+        {
+            _windowsStartMenu = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
+            if (_windowsStartMenu != IntPtr.Zero)
+                NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.Hide);
         }
     }
 }

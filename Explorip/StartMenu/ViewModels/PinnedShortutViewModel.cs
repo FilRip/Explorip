@@ -8,9 +8,10 @@ using ManagedShell.ShellFolders;
 
 namespace Explorip.StartMenu.ViewModels;
 
-public partial class PinnedShortutViewModel(ShellFile sf) : ObservableObject
+public partial class PinnedShortutViewModel(ShellFile sf, StartMenuViewModel window) : ObservableObject
 {
     private readonly ShellFile _shellFile = sf;
+    private readonly StartMenuViewModel _window = window;
     private bool _mouseOver;
 
     [ObservableProperty()]
@@ -26,8 +27,14 @@ public partial class PinnedShortutViewModel(ShellFile sf) : ObservableObject
     private void MouseUp(MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
-            ManagedShell.Common.Helpers.ShellHelper.StartProcess(_shellFile.Path);
-        // TODO : Context menu when right click
+        {
+            if (ManagedShell.Common.Helpers.ShellHelper.StartProcess(_shellFile.Path, useShellExecute: true))
+                _window.HideWindow();
+        }
+        else if (e.ChangedButton == MouseButton.Right)
+        {
+            // TODO : Context menu when right click
+        }
     }
 
     [RelayCommand()]

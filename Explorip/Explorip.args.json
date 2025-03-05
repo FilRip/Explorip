@@ -4,7 +4,7 @@
   "Items": [
     {
       "Id": "3858ca9e-53bc-464b-89ce-88efbeea8f79",
-      "Command": "testStartMenu"
+      "Command": "StartMenu"
     },
     {
       "Id": "76a8226b-d72c-4056-be9c-17ffe10368f3",
