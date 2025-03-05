@@ -41,7 +41,6 @@ public partial class MyTaskbarApp : Application
         DictionaryManager = new DictionaryManager();
 
         // Startup
-        DictionaryManager.SetLanguageFromSettings();
         DictionaryManager.SetThemeFromSettings();
         OpenTaskbar();
     }

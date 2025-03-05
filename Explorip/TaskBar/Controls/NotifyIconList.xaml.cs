@@ -157,10 +157,39 @@ public partial class NotifyIconList : UserControl
         isLoaded = false;
     }
 
+#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
     private void UnpinnedIcons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        bool refreshList = false;
+        if (e.Action == NotifyCollectionChangedAction.Remove)
+        {
+            foreach (ManagedShell.WindowsTray.NotifyIcon item in e.OldItems)
+                if (promotedIcons.Remove(item))
+                    refreshList = true;
+        }
+        else if (e.Action == NotifyCollectionChangedAction.Add)
+        {
+            string[] pinnedPath = ConfigManager.AllPinnedSystray();
+            foreach (ManagedShell.WindowsTray.NotifyIcon item in e.NewItems)
+                if (pinnedPath.Contains(item.Path))
+                {
+                    refreshList = true;
+                    promotedIcons.Add(item);
+                }
+        }
+        if (refreshList)
+        {
+            CompositeCollection pinnedNotifyIcons =
+            [
+                new CollectionContainer { Collection = promotedIcons },
+                new CollectionContainer { Collection = NotificationArea.PinnedIcons },
+            ];
+            pinnedNotifyIconsSource = new CollectionViewSource() { Source = pinnedNotifyIcons };
+            NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;
+        }
         SetToggleVisibility();
     }
+#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
 
     private void NotifyIconToggleButton_OnClick(object sender, RoutedEventArgs e)
     {

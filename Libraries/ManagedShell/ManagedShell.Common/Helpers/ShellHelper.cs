@@ -59,13 +59,16 @@ public static class ShellHelper
         }
     }
 
-    public static bool StartProcess(string filename)
+    public static bool StartProcess(string filename, string args = null, bool hidden = false, bool useShellExecute = false, string verb = null)
     {
         try
         {
             ProcessStartInfo psi = new()
             {
-                UseShellExecute = true,
+                UseShellExecute = useShellExecute,
+                CreateNoWindow = hidden,
+                WindowStyle = hidden ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
+                Verb = verb,
             };
 
             if (filename.StartsWith("appx:"))
@@ -90,6 +93,7 @@ public static class ShellHelper
                 else
                 {
                     psi.FileName = filename;
+                    psi.Arguments = args;
                 }
             }
 
@@ -236,7 +240,7 @@ public static class ShellHelper
 
     public static void StartTaskManager()
     {
-        StartProcess("taskmgr.exe");
+        StartProcess("taskmgr.exe", useShellExecute: false);
     }
 
     public static void ShowRunDialog(string title, string info)

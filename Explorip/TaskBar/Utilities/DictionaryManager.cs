@@ -14,11 +14,6 @@ public class DictionaryManager : IDisposable
     private const string DICT_DEFAULT = "System";
     private const string DICT_EXT = "xaml";
 
-    private const string LANG_DEFAULT = DICT_DEFAULT;
-    private const string LANG_FALLBACK = "francais";
-    private const string LANG_FOLDER = "Taskbar\\Languages";
-    private const string LANG_EXT = DICT_EXT;
-
     public const string THEME_DEFAULT = DICT_DEFAULT;
     private const string THEME_FOLDER = "Taskbar\\Themes";
     private const string THEME_EXT = DICT_EXT;
@@ -60,29 +55,6 @@ public class DictionaryManager : IDisposable
         }
     }
 
-    public void SetLanguageFromSettings()
-    {
-        SetLanguage(LANG_FALLBACK);
-        if (ConfigManager.Language == LANG_DEFAULT)
-        {
-            System.Globalization.CultureInfo currentUICulture = System.Globalization.CultureInfo.CurrentUICulture;
-            string systemLanguageParent = currentUICulture.Parent.NativeName;
-            string systemLanguage = currentUICulture.NativeName;
-            ManagedShell.Common.Logging.ShellLogger.Info($"Loading system language (if available): {systemLanguageParent}, {systemLanguage}");
-            SetLanguage(systemLanguageParent);
-            SetLanguage(systemLanguage);
-        }
-        else
-        {
-            SetLanguage(ConfigManager.Language);
-        }
-    }
-
-    private void SetLanguage(string language)
-    {
-        SetDictionary(language, LANG_FOLDER, LANG_FALLBACK, LANG_EXT, 1);
-    }
-
     private void SetDictionary(string dictionary, string dictFolder, string dictDefault, string dictExtension, int dictType)
     {
         string dictFilePath;
@@ -119,16 +91,6 @@ public class DictionaryManager : IDisposable
     public static List<string> GetThemes()
     {
         return GetDictionaries(THEME_DEFAULT, THEME_FOLDER, THEME_EXT);
-    }
-
-    public static List<string> GetLanguages()
-    {
-        List<string> languages =
-        [
-            LANG_DEFAULT,
-            .. GetDictionaries(LANG_FALLBACK, LANG_FOLDER, LANG_EXT)
-        ];
-        return languages;
     }
 
     private static List<string> GetDictionaries(string dictDefault, string dictFolder, string dictExtension)

@@ -205,9 +205,9 @@ public partial class OneRegistryKey : ObservableObject, IDisposable
             OneRegistryKey parent = GetRootParent();
             _fullPath = parent.MachineName ?? Environment.SpecialFolder.MyComputer.RealName();
             if (_hive != null)
-                _fullPath += @"\" + _hive!.Value.RealName();
+                _fullPath += $"\\" + _hive!.Value.RealName();
             if (!string.IsNullOrWhiteSpace(_key))
-                _fullPath += @"\" + _key;
+                _fullPath += $"\\" + _key;
         }
         return _fullPath!;
     }

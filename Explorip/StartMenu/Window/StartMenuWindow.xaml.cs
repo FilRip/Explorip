@@ -30,7 +30,6 @@ namespace Explorip.StartMenu.Window
             };
             _cmUser.AddEntry(Constants.Localization.LOCK, ShellHelper.Lock);
             _cmUser.AddEntry(Constants.Localization.DISCONNECT, ShellHelper.Logoff);
-            _cmUser.AddEntry(Constants.Localization.CHANGE_USER, SwitchUser);
 
             _cmStart = new()
             {
@@ -43,24 +42,19 @@ namespace Explorip.StartMenu.Window
             _cmStart.AddEntry(Constants.Localization.RESTART, Restart);
         }
 
-        private static void SwitchUser()
-        {
-            ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LCONTROL, ManagedShell.Interop.NativeMethods.VK.LMENU, ManagedShell.Interop.NativeMethods.VK.DELETE);
-        }
-
         private static void Hybernate()
         {
-            ShellHelper.StartProcess("shutdown /h");
+            ShellHelper.StartProcess("shutdown /h", hidden: true);
         }
 
         private static void Shutdown()
         {
-            ShellHelper.StartProcess("shutdown /s /t 0");
+            ShellHelper.StartProcess("shutdown /s /t 0", hidden: true);
         }
 
         private static void Restart()
         {
-            ShellHelper.StartProcess("shutdown /r /t 0");
+            ShellHelper.StartProcess("shutdown /r /t 0", hidden: true);
         }
 
         private void StartMenuWindow_Click(object sender, System.Windows.RoutedEventArgs e)

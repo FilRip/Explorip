@@ -67,6 +67,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue("ExplorerSizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("ExplorerSizeY", "").ToString()))
                 _registryKeyExplorer.SetValue("ExplorerSizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
+                _registryTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
         }
     }
 
@@ -552,6 +554,16 @@ public static class ConfigManager
         {
             if (ShowSearchButton != value && AllowWrite)
                 _registryTaskbar.SetValue("ReplaceStartMenu", value.ToString());
+        }
+    }
+
+    public static int TaskbarDelayBeforeShowThumbnail
+    {
+        get { return _registryTaskbar.ReadInteger("DelayBeforeShowThumbnail"); }
+        set
+        {
+            if (TaskbarDelayBeforeShowThumbnail != value && AllowWrite)
+                _registryTaskbar.SetValue("DelayBeforeShowThumbnail", value.ToString());
         }
     }
 }
