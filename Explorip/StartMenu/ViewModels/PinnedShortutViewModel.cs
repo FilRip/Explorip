@@ -8,10 +8,11 @@ using ManagedShell.ShellFolders;
 
 namespace Explorip.StartMenu.ViewModels;
 
-public partial class PinnedShortutViewModel(ShellFile sf, StartMenuViewModel window) : ObservableObject
+public partial class PinnedShortutViewModel(ShellFile sf, StartMenuViewModel window, bool panel2 = false) : ObservableObject
 {
     private readonly ShellFile _shellFile = sf;
     private readonly StartMenuViewModel _window = window;
+    private readonly bool _panel2 = panel2;
     private bool _mouseOver;
 
     [ObservableProperty()]
@@ -59,6 +60,28 @@ public partial class PinnedShortutViewModel(ShellFile sf, StartMenuViewModel win
                 return ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
             else
                 return Brushes.Transparent;
+        }
+    }
+
+    public double IconSizeWidth
+    {
+        get
+        {
+            if (_panel2)
+                return _window.IconSizeWidth2;
+            else
+                return _window.IconSizeWidth;
+        }
+    }
+
+    public double IconSizeHeight
+    {
+        get
+        {
+            if (_panel2)
+                return _window.IconSizeHeight2;
+            else
+                return _window.IconSizeHeight;
         }
     }
 }

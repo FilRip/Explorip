@@ -8,24 +8,38 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using Explorip.Helpers;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.ShellFolders;
 
 namespace Explorip.StartMenu.ViewModels;
 
 public partial class StartMenuViewModel : ObservableObject
 {
+    private readonly double _iconSizeWidth, _iconSizeHeight, _iconSizeWidth2, _iconSizeHeight2;
+
     [ObservableProperty()]
     private ObservableCollection<StartMenuItemViewModel> _startMenuItems;
     [ObservableProperty()]
     private ObservableCollection<PinnedShortutViewModel> _pinnedShortcut;
+    [ObservableProperty()]
+    private ObservableCollection<PinnedShortutViewModel> _pinnedShortcut2;
+    [ObservableProperty()]
+    private bool _showPanel2;
 
     public Action ShowWindow { get; set; }
     public Action HideWindow { get; set; }
 
     public StartMenuViewModel()
     {
+        _iconSizeHeight = ConfigManager.StartMenuIconSizeHeight;
+        _iconSizeWidth = ConfigManager.StartMenuIconSizeWidth;
+        _iconSizeHeight2 = ConfigManager.StartMenuIconSizeHeight2;
+        _iconSizeWidth2 = ConfigManager.StartMenuIconSizeWidth2;
+        _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
         RefreshPrograms();
         RefreshPinnedShortcut();
+        RefreshPinnedShortcut2();
     }
 
     public void RefreshPrograms()
@@ -61,11 +75,42 @@ public partial class StartMenuViewModel : ObservableObject
     private void RefreshPinnedShortcut()
     {
         PinnedShortcut = [];
-        string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "CoolBytes", "Explorip", "StartMenu");
+        string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenuPinnedShortcutPath);
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
         ShellFolder sf = new(path, IntPtr.Zero);
         foreach (ShellFile file in sf.Files)
             PinnedShortcut.Add(new PinnedShortutViewModel(file, this));
+    }
+
+    private void RefreshPinnedShortcut2()
+    {
+        PinnedShortcut2 = [];
+        string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenuPinnedShortcutPath2);
+        if (!Directory.Exists(path))
+            Directory.CreateDirectory(path);
+        ShellFolder sf = new(path, IntPtr.Zero);
+        foreach (ShellFile file in sf.Files)
+            PinnedShortcut.Add(new PinnedShortutViewModel(file, this, true));
+    }
+
+    public double IconSizeWidth
+    {
+        get { return _iconSizeWidth; }
+    }
+
+    public double IconSizeHeight
+    {
+        get { return _iconSizeHeight; }
+    }
+
+    public double IconSizeWidth2
+    {
+        get { return _iconSizeWidth2; }
+    }
+
+    public double IconSizeHeight2
+    {
+        get { return _iconSizeHeight2; }
     }
 }

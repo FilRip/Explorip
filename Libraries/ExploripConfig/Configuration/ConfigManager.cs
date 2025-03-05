@@ -21,7 +21,7 @@ public static class ConfigManager
     private const string HKeyRoot = "Software\\CoolBytes\\Explorip";
 
     public static bool AllowWrite { get; set; }
-    private static RegistryKey _registryKeyExplorer, _registryDesktop, _registryTaskbar;
+    private static RegistryKey _registryKeyExplorer, _registryDesktop, _registryTaskbar, _registryStartMenu;
 
     public static void Init(bool allowWrite = true)
     {
@@ -31,6 +31,7 @@ public static class ConfigManager
             AllowWrite = false;
         _registryDesktop = _registryKeyExplorer?.CreateSubKey("Desktop");
         _registryTaskbar = _registryKeyExplorer?.CreateSubKey("Taskbar");
+        _registryStartMenu = _registryKeyExplorer?.CreateSubKey("StartMenu");
 
         if (allowWrite && _registryKeyExplorer != null)
         {
@@ -69,6 +70,20 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue("ExplorerSizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
                 _registryTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("PinnedAppPath", "").ToString()))
+                _registryStartMenu.SetValue("PinnedAppPath", @"%APPDATA%\CoolBytes\Explorip\StartMenu\PinnedApp");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("IconSizeWidth", "").ToString()))
+                _registryStartMenu.SetValue("IconSizeWidth", "100");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("IconSizeHeight", "").ToString()))
+                _registryStartMenu.SetValue("IconSizeHeight", "100");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("PinnedAppPath2", "").ToString()))
+                _registryStartMenu.SetValue("PinnedAppPath2", @"%APPDATA%\CoolBytes\Explorip\StartMenu\PinnedApp2");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("IconSizeWidth2", "").ToString()))
+                _registryStartMenu.SetValue("IconSizeWidth2", "50");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("IconSizeHeight2", "").ToString()))
+                _registryStartMenu.SetValue("IconSizeHeight2", "50");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("ShowPinnedApp2", "").ToString()))
+                _registryStartMenu.SetValue("ShowPinnedApp2", "True");
         }
     }
 
@@ -564,6 +579,104 @@ public static class ConfigManager
         {
             if (TaskbarDelayBeforeShowThumbnail != value && AllowWrite)
                 _registryTaskbar.SetValue("DelayBeforeShowThumbnail", value.ToString());
+        }
+    }
+
+    public static bool StartMenuShowPinnedApp2
+    {
+        get { return _registryStartMenu.ReadBoolean("ShowPinnedApp2"); }
+        set
+        {
+            if (StartMenuShowPinnedApp2 != value && AllowWrite)
+                _registryStartMenu.SetValue("ShowPinnedApp2", value.ToString());
+        }
+    }
+
+    public static string StartMenuPinnedShortcutPath
+    {
+        get { return _registryStartMenu.GetValue("PinnedAppPath", "").ToString(); }
+        set
+        {
+            if (StartMenuPinnedShortcutPath != value && AllowWrite)
+                _registryStartMenu.SetValue("PinnedAppPath", value);
+        }
+    }
+
+    public static string StartMenuPinnedShortcutPath2
+    {
+        get { return _registryStartMenu.GetValue("PinnedAppPath2", "").ToString(); }
+        set
+        {
+            if (StartMenuPinnedShortcutPath2 != value && AllowWrite)
+                _registryStartMenu.SetValue("PinnedAppPath2", value);
+        }
+    }
+
+    public static double StartMenuIconSizeWidth
+    {
+        get { return _registryStartMenu.ReadDouble("IconSizeWidth"); }
+        set
+        {
+            if (StartMenuIconSizeWidth != value && AllowWrite)
+                _registryStartMenu.SetValue("IconSizeWidth", value.ToString());
+        }
+    }
+
+    public static double StartMenuIconSizeHeight
+    {
+        get { return _registryStartMenu.ReadDouble("IconSizeHeight"); }
+        set
+        {
+            if (StartMenuIconSizeHeight != value && AllowWrite)
+                _registryStartMenu.SetValue("IconSizeHeight", value.ToString());
+        }
+    }
+
+    public static double StartMenuIconSizeWidth2
+    {
+        get { return _registryStartMenu.ReadDouble("IconSizeWidth2"); }
+        set
+        {
+            if (StartMenuIconSizeWidth2 != value && AllowWrite)
+                _registryStartMenu.SetValue("IconSizeWidth2", value.ToString());
+        }
+    }
+
+    public static double StartMenuIconSizeHeight2
+    {
+        get { return _registryStartMenu.ReadDouble("IconSizeHeight2"); }
+        set
+        {
+            if (StartMenuIconSizeHeight2 != value && AllowWrite)
+                _registryStartMenu.SetValue("IconSizeHeight2", value.ToString());
+        }
+    }
+
+    public static Brush StartMenuBackground
+    {
+        get
+        {
+            string bgColor = _registryStartMenu.GetValue("BackgroundColor")?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                string[] splitter = bgColor.Split(',');
+                byte a, r, g, b;
+                if (splitter.Length == 3)
+                    splitter = splitter.Insert("255", 0);
+                if (splitter.Length == 4)
+                {
+                    try
+                    {
+                        a = byte.Parse(splitter[0]);
+                        r = byte.Parse(splitter[1]);
+                        g = byte.Parse(splitter[2]);
+                        b = byte.Parse(splitter[3]);
+                        return new SolidColorBrush(Color.FromArgb(a, r, g, b));
+                    }
+                    catch (Exception) { /* Ignore errors, most of time can't cast value as string to byte */ }
+                }
+            }
+            return null;
         }
     }
 }

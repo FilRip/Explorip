@@ -29,6 +29,7 @@ public partial class TaskButton : UserControl
     private TaskThumbButton _thumb;
     private bool _isLoaded;
     private Timer _timerBeforeShowThumbnail;
+    private bool _mouseOver;
 
     public TaskButton()
     {
@@ -238,6 +239,7 @@ public partial class TaskButton : UserControl
 
     private void AppButton_MouseEnter(object sender, MouseEventArgs e)
     {
+        _mouseOver = true;
         if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
             return;
 
@@ -246,6 +248,8 @@ public partial class TaskButton : UserControl
 
     private void ShowThumbnail(object userData)
     {
+        if (!_mouseOver)
+            return;
         Application.Current.Dispatcher.Invoke(() =>
         {
             _thumb?.Close();
@@ -256,6 +260,7 @@ public partial class TaskButton : UserControl
 
     private void AppButton_MouseLeave(object sender, MouseEventArgs e)
     {
+        _mouseOver = false;
         if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
         {
             CloseThumbnail();

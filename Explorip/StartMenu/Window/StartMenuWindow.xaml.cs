@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using System.Windows.Media;
 
 using Explorip.Helpers;
 using Explorip.StartMenu.ViewModels;
+
+using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
@@ -20,7 +24,6 @@ namespace Explorip.StartMenu.Window
     {
         private readonly ContextMenu _cmUser, _cmStart;
         private IntPtr _keyboardHookPtr, _windowsStartMenu;
-        public static StartMenuWindow MyStartMenu { get; private set; }
 
         public StartMenuWindow()
         {
@@ -51,14 +54,17 @@ namespace Explorip.StartMenu.Window
             MyDataContext.HideWindow = Hide;
             MyDataContext.ShowWindow = Show;
 
-#if DEBUG
-            Topmost = false;
-            ShowInTaskbar = true;
-#endif
             HideWindowsStartMenu();
             SetMyStartMenu(this);
             HookWinKey();
+            Application.Current.Deactivated += Current_Deactivated;
+            if (ConfigManager.StartMenuShowPinnedApp2)
+                Width = 1175;
+            if (ConfigManager.StartMenuBackground != null)
+                Background = ConfigManager.StartMenuBackground;
         }
+
+        public static StartMenuWindow MyStartMenu { get; private set; }
 
         private static void SetMyStartMenu(StartMenuWindow startMenuWindow)
         {
@@ -110,11 +116,6 @@ namespace Explorip.StartMenu.Window
             _cmStart.IsOpen = true;
         }
 
-        private void Window_LostFocus(object sender, RoutedEventArgs e)
-        {
-            Hide();
-        }
-
         private void UserButton_Click(object sender, RoutedEventArgs e)
         {
             _cmUser.IsOpen = true;
@@ -126,6 +127,18 @@ namespace Explorip.StartMenu.Window
         }
 
         private static int _lastPressedKey;
+        private static Stopwatch _waitForOpen;
+
+        private void Current_Deactivated(object sender, EventArgs e)
+        {
+            Debug.WriteLine("LOST APPLICATION ACTIVATION");
+            if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
+                return;
+            _cmStart.IsOpen = false;
+            _cmUser.IsOpen = false;
+            Hide();
+        }
+
         private static int MyKeyboardHook(int code, int wParam, ref NativeMethods.KeyboardHookStruct lParam)
         {
             if (code >= 0 && wParam == (int)NativeMethods.WM.KEYDOWN)
@@ -139,6 +152,7 @@ namespace Explorip.StartMenu.Window
                     MyStartMenu.Hide();
                 else
                 {
+                    _waitForOpen = Stopwatch.StartNew();
                     MyStartMenu.Show();
                     MyStartMenu.Activate();
                 }
@@ -164,6 +178,7 @@ namespace Explorip.StartMenu.Window
                 NativeMethods.UnhookWindowsHookEx(_keyboardHookPtr);
             if (_windowsStartMenu != IntPtr.Zero)
                 NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.ShowNormal);
+            Application.Current.Deactivated -= Current_Deactivated;
         }
 
         private void HideWindowsStartMenu()
