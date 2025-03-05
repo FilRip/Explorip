@@ -11,6 +11,8 @@ using System.Windows.Threading;
 using Explorip.Helpers;
 using Explorip.TaskBar.Converters;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
@@ -26,6 +28,7 @@ public partial class TaskButton : UserControl
     private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
     private TaskThumbButton _thumb;
     private bool _isLoaded;
+    private Timer _timerBeforeShowThumbnail;
 
     public TaskButton()
     {
@@ -238,24 +241,42 @@ public partial class TaskButton : UserControl
         if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
             return;
 
-        _thumb?.Close();
-        _thumb = new TaskThumbButton(this);
-        _thumb.Show();
+        _timerBeforeShowThumbnail = new Timer(ShowThumbnail, null, ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
+    }
+
+    private void ShowThumbnail(object userData)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            _thumb?.Close();
+            _thumb = new TaskThumbButton(this);
+            _thumb.Show();
+        });
     }
 
     private void AppButton_MouseLeave(object sender, MouseEventArgs e)
     {
         if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
         {
-            _thumb?.Close();
+            CloseThumbnail();
             return;
         }
 
-        Task.Run(() =>
+        Task.Run(async () =>
         {
-            Thread.Sleep(200);
+            await Task.Delay(200);
             if (_thumb != null && !_thumb.MouseIn)
-                Application.Current.Dispatcher.Invoke(() => { _thumb.Close(); });
+                CloseThumbnail();
+        });
+    }
+
+    private void CloseThumbnail()
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            _timerBeforeShowThumbnail?.Change(Timeout.Infinite, Timeout.Infinite);
+            _timerBeforeShowThumbnail?.Dispose();
+            _thumb?.Close();
         });
     }
 

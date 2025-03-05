@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+
+using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
@@ -23,6 +26,7 @@ public partial class TaskThumbButton : Window
     private const int ThumbWidth = 250;
     private IntPtr _lastPeek;
     private bool _showContextMenu;
+    private readonly Timer _timerBeforePreviewWindow;
 
     public TaskThumbButton(TaskButton parent)
     {
@@ -39,6 +43,8 @@ public partial class TaskThumbButton : Window
         Point positionParent = _parent.PointToScreen(Mouse.GetPosition(this));
         Left = (int)((positionParent.X - (Width / 2)) / VisualTreeHelper.GetDpi(this).DpiScaleX);
         Top = _parent.TaskbarParent.Top - Height;
+        _timerBeforePreviewWindow = new Timer(ShowPreviewWindow, null, Timeout.Infinite, Timeout.Infinite);
+        _lastPeek = IntPtr.Zero;
     }
 
     private void Window_MouseLeave(object sender, MouseEventArgs e)
@@ -159,23 +165,39 @@ public partial class TaskThumbButton : Window
         if (_showContextMenu)
             return;
         MouseIn = true;
-        IntPtr newPeek = IntPtr.Zero;
-        if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
-            newPeek = _parent.ApplicationWindow.Handle;
+        if (_lastPeek == IntPtr.Zero)
+            _timerBeforePreviewWindow.Change(ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
         else
+            ShowPreviewWindow(null);
+    }
+
+    private void ShowPreviewWindow(object userData)
+    {
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            Point p = Mouse.GetPosition(this);
-            int index = (int)Math.Floor(p.X / ThumbWidth);
-            if (index < _parent.ApplicationWindow.ListWindows.Count)
-                newPeek = _parent.ApplicationWindow.ListWindows[index];
-        }
-        if (newPeek != _lastPeek)
-        {
-            if (_lastPeek != IntPtr.Zero)
-                WindowHelper.PeekWindow(false, _lastPeek, _parent.TaskbarParent.Handle);
-            _lastPeek = newPeek;
-            if (newPeek != IntPtr.Zero)
-                WindowHelper.PeekWindow(true, _lastPeek, _parent.TaskbarParent.Handle);
-        }
+            IntPtr newPeek = IntPtr.Zero;
+            if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
+                newPeek = _parent.ApplicationWindow.Handle;
+            else
+            {
+                Point p = Mouse.GetPosition(this);
+                int index = (int)Math.Floor(p.X / ThumbWidth);
+                if (index < _parent.ApplicationWindow.ListWindows.Count)
+                    newPeek = _parent.ApplicationWindow.ListWindows[index];
+            }
+            if (newPeek != _lastPeek)
+            {
+                if (_lastPeek != IntPtr.Zero)
+                    WindowHelper.PeekWindow(false, _lastPeek, _parent.TaskbarParent.Handle);
+                _lastPeek = newPeek;
+                if (newPeek != IntPtr.Zero)
+                    WindowHelper.PeekWindow(true, _lastPeek, _parent.TaskbarParent.Handle);
+            }
+        });
+    }
+
+    private void Window_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _timerBeforePreviewWindow.Dispose();
     }
 }

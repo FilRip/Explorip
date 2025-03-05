@@ -19,6 +19,7 @@
         MouseLeftButtonUp="Window_MouseLeftButtonUp"
         MouseRightButtonDown="Window_MouseRightButtonDown"
         ContentRendered="Window_ContentRendered"
+        Unloaded="Window_Unloaded"
         Background="{x:Static colors:Colors.BackgroundColorBrush}"
         Height="150" Width="250" Margin="0" Padding="0">
     <Grid x:Name="MainGrid">
