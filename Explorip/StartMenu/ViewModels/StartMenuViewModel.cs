@@ -37,6 +37,11 @@ public partial class StartMenuViewModel : ObservableObject
         _iconSizeHeight2 = ConfigManager.StartMenuIconSizeHeight2;
         _iconSizeWidth2 = ConfigManager.StartMenuIconSizeWidth2;
         _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
+        RefreshAll();
+    }
+
+    public void RefreshAll()
+    {
         RefreshPrograms();
         RefreshPinnedShortcut();
         RefreshPinnedShortcut2();
@@ -72,7 +77,7 @@ public partial class StartMenuViewModel : ObservableObject
         return ret;
     }
 
-    private void RefreshPinnedShortcut()
+    public void RefreshPinnedShortcut()
     {
         PinnedShortcut = [];
         string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenuPinnedShortcutPath);
@@ -83,7 +88,7 @@ public partial class StartMenuViewModel : ObservableObject
             PinnedShortcut.Add(new PinnedShortutViewModel(file, this));
     }
 
-    private void RefreshPinnedShortcut2()
+    public void RefreshPinnedShortcut2()
     {
         PinnedShortcut2 = [];
         string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenuPinnedShortcutPath2);

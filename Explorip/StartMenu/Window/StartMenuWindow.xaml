@@ -7,6 +7,7 @@
         xmlns:viewmodels="clr-namespace:Explorip.StartMenu.ViewModels"
         xmlns:constants="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:localization="clr-namespace:Explorip.Constants"
         mc:Ignorable="d"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -171,6 +172,15 @@
                 </Grid>
             </Grid>
         </DataTemplate>
+        <ContextMenu x:Key="CmPanel">
+            <ContextMenu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
+                </ItemsPanelTemplate>
+            </ContextMenu.ItemsPanel>
+            <MenuItem Header="{x:Static localization:Localization.RENAME_MENUITEM}" Name="RenameItem" Command="{Binding RenameCommand}"/>
+            <MenuItem Header="{x:Static localization:Localization.DELETE}" Name="DeleteItem" Command="{Binding DeleteCommand}"/>
+        </ContextMenu>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -189,7 +199,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
-
+            <Button Background="Transparent" BorderThickness="0" Grid.Row="0" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE700;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StartButton" Click="StartButton_Click" Focusable="True"/>
             <Button Background="Transparent" BorderThickness="0" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE748;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="UserButton" Click="UserButton_Click" Focusable="True"/>
             <Button Background="Transparent" BorderThickness="0" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE713;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="ParamButton" Click="ParamButton_Click" Focusable="True"/>
             <Button Background="Transparent" BorderThickness="0" Grid.Row="4" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE7E8;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StopButton" Click="StopButton_Click" Focusable="True"/>
@@ -213,7 +223,7 @@
         
         <!-- Third column, some free shortcut panel -->
         <Grid Grid.Column="2">
-            <ListView ItemsSource="{Binding PinnedShortcut}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" HorizontalAlignment="Center" Focusable="True">
+            <ListView ItemsSource="{Binding PinnedShortcut}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" HorizontalAlignment="Center" Focusable="True" AllowDrop="True" Name="FirstPanel" Drop="FirstPanel_Drop">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>
@@ -221,7 +231,7 @@
                 </ListView.ItemsPanel>
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:PinnedShortutViewModel}">
-                        <Grid Width="{Binding IconSizeWidth}" Height="{Binding IconSizeHeight}" Focusable="True">
+                        <Grid Width="{Binding IconSizeWidth}" Height="{Binding IconSizeHeight}" Focusable="True" ContextMenu="{StaticResource CmPanel}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseUp">
                                     <i:InvokeCommandAction Command="{Binding MouseUpCommand}" PassEventArgsToCommand="True"/>
@@ -257,7 +267,7 @@
 
         <!-- Fourth column, some more free shortcut panel -->
         <Grid Grid.Column="3" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}">
-            <ListView ItemsSource="{Binding PinnedShortcut2}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Center" Focusable="True">
+            <ListView ItemsSource="{Binding PinnedShortcut2}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Center" Focusable="True" AllowDrop="True" Drop="SecondPanel_Drop"  Name="SecondPanel">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>
@@ -265,7 +275,7 @@
                 </ListView.ItemsPanel>
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="{x:Type viewmodels:PinnedShortutViewModel}">
-                        <Grid Width="{Binding IconSizeWidth}" Height="{Binding IconSizeHeight}" Focusable="True">
+                        <Grid Width="{Binding IconSizeWidth}" Height="{Binding IconSizeHeight}" Focusable="True" ContextMenu="{StaticResource CmPanel}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="MouseUp">
                                     <i:InvokeCommandAction Command="{Binding MouseUpCommand}" PassEventArgsToCommand="True"/>

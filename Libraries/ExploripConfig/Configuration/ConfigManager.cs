@@ -88,6 +88,8 @@ public static class ConfigManager
                 _registryTaskbar.SetValue("TaskbarThumbHeight", "150");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarThumbWidth", "").ToString()))
                 _registryTaskbar.SetValue("TaskbarThumbWidth", "250");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarDisableThumb", "").ToString()))
+                _registryTaskbar.SetValue("TaskbarDisableThumb", "False");
         }
     }
 
@@ -701,6 +703,16 @@ public static class ConfigManager
                 }
             }
             return null;
+        }
+    }
+
+    public static bool TaskbarDisableThumb
+    {
+        get { return _registryTaskbar.ReadBoolean("DisableThumb"); }
+        set
+        {
+            if (TaskbarDisableThumb != value && AllowWrite)
+                _registryTaskbar.SetValue("DisableThumb", value.ToString());
         }
     }
 }

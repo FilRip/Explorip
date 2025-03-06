@@ -130,6 +130,7 @@ public static class Localization
     public static string PUT_HYBERNATE { get; private set; }
     public static string SHUTDOWN { get; private set; }
     public static string RESTART { get; private set; }
+    public static string DELETE { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -256,6 +257,7 @@ public static class Localization
         PUT_HYBERNATE = Load("shutdownux.dll", 3019, "Go to sleep mode");
         SHUTDOWN = Load("shutdownux.dll", 3013, "Shutdown");
         RESTART = Load("shutdownux.dll", 3016, "Restart");
+        DELETE = Load("shell32.dll", 31252, "Delete");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

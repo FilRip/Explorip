@@ -1,8 +1,11 @@
-﻿using System.Windows.Input;
+﻿using System.IO;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
+using ExploripSharedCopy.Controls;
 
 using ManagedShell.ShellFolders;
 
@@ -83,5 +86,27 @@ public partial class PinnedShortutViewModel(ShellFile sf, StartMenuViewModel win
             else
                 return _window.IconSizeHeight;
         }
+    }
+
+    [RelayCommand()]
+    private void Rename()
+    {
+        InputBoxWindow inputBox = new();
+        bool? dr = inputBox.ShowModal(Constants.Localization.RENAME_MENUITEM, Path.GetFileNameWithoutExtension(_shellFile.Path), Path.GetFileNameWithoutExtension(_shellFile.Path));
+        if (dr == true)
+        {
+            if (Path.GetFileNameWithoutExtension(_shellFile.Path).ToLower() != inputBox.UserEdit.ToLower())
+                File.Move(_shellFile.Path, Path.Combine(Path.GetDirectoryName(_shellFile.Path), inputBox.UserEdit, Path.GetExtension(_shellFile.Path)));
+        }
+    }
+
+    [RelayCommand()]
+    private void Delete()
+    {
+        File.Delete(_shellFile.Path);
+        if (_panel2)
+            _window.RefreshPinnedShortcut2();
+        else
+            _window.RefreshPinnedShortcut();
     }
 }

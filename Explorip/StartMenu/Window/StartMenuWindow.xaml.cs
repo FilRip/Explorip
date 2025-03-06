@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -12,6 +13,8 @@ using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+
+using Securify.ShellLink;
 
 using WpfScreenHelper;
 
@@ -185,6 +188,46 @@ namespace Explorip.StartMenu.Window
                 Screen screen = Screen.FromPoint(new Point(p.X, p.Y));
                 Left = screen.WorkingArea.X;
                 Top = (int)screen.WorkingArea.Bottom - Height;
+            }
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            MyDataContext.RefreshAll();
+        }
+
+        private void SecondPanel_Drop(object sender, DragEventArgs e)
+        {
+            DropToPanel(e, ConfigManager.StartMenuPinnedShortcutPath2, MyDataContext.RefreshPinnedShortcut2);
+        }
+
+        private void FirstPanel_Drop(object sender, DragEventArgs e)
+        {
+            DropToPanel(e, ConfigManager.StartMenuPinnedShortcutPath, MyDataContext.RefreshPinnedShortcut);
+        }
+
+        private static void DropToPanel(DragEventArgs e, string path, Action refresh)
+        {
+            path = Environment.ExpandEnvironmentVariables(path);
+            if (e.Data is DataObject data && data.GetDataPresent(DataFormats.FileDrop))
+            {
+                foreach (string file in data.GetFileDropList())
+                {
+                    string dest = Path.Combine(path, Path.GetFileName(file));
+                    if (Path.GetExtension(file) == ".lnk")
+                    {
+                        if (!File.Exists(dest))
+                            File.Copy(file, dest);
+                    }
+                    else
+                    {
+                        Shortcut sc = Shortcut.CreateShortcut(file);
+                        dest = Path.Combine(path, Path.GetFileNameWithoutExtension(file) + ".lnk");
+                        if (!File.Exists(dest))
+                            sc.WriteToFile(dest);
+                    }
+                }
+                refresh();
             }
         }
 

@@ -100,6 +100,8 @@ public partial class TaskButton : UserControl
         }
 
         _isLoaded = false;
+        _mouseOver = false;
+        CloseThumbnail();
     }
 
     #region System context menu
@@ -243,12 +245,15 @@ public partial class TaskButton : UserControl
         if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
             return;
 
+        if (ConfigManager.TaskbarDisableThumb)
+            return;
+
         _timerBeforeShowThumbnail = new Timer(ShowThumbnail, null, ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
     }
 
     private void ShowThumbnail(object userData)
     {
-        if (!_mouseOver)
+        if (!_mouseOver || !_isLoaded)
             return;
         Application.Current.Dispatcher.Invoke(() =>
         {
@@ -277,7 +282,7 @@ public partial class TaskButton : UserControl
 
     private void CloseThumbnail()
     {
-        Application.Current.Dispatcher.Invoke(() =>
+        Application.Current?.Dispatcher?.Invoke(() =>
         {
             _timerBeforeShowThumbnail?.Change(Timeout.Infinite, Timeout.Infinite);
             _timerBeforeShowThumbnail?.Dispose();
