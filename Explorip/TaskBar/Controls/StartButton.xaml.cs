@@ -54,10 +54,6 @@ public partial class StartButton : System.Windows.Controls.UserControl
             catch (Exception) { /* Ignore errors */ }
         };
         _replaceStartMenu = ConfigManager.TaskbarReplaceStartMenu;
-        if (_replaceStartMenu)
-        {
-            _ = new StartMenuWindow();
-        }
     }
 
     public void SetStartMenuState(bool opened)

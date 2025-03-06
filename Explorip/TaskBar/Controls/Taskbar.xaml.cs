@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Explorip.Helpers;
+using Explorip.StartMenu.Window;
 using Explorip.TaskBar.Utilities;
 using Explorip.TaskBar.ViewModels;
 
@@ -64,6 +65,11 @@ public partial class Taskbar : AppBarWindow
             Background = ConfigManager.TaskbarBackground;
         else
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
+
+        if (_mainScreen && ConfigManager.TaskbarReplaceStartMenu)
+        {
+            _ = new StartMenuWindow();
+        }
     }
 
     public bool MainScreen

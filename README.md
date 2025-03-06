@@ -1,6 +1,6 @@
 Windows Shell/Explorer Replacement. All languages supported.
 
-100% in C# and User mode (no administrator privilege required)
+100% in C# (and PInvoke) and User mode (no administrator privilege required)
 
 ------------
 
@@ -32,11 +32,9 @@ Launch Explorip with "desktops" as command line arguments to use the new desktop
 
 
 
-Warning :
----------------------
-Windows 11 23H2 build 22621 ; Integrated Windows Defender doesn't like Explorer with hooking copy (report as a virus/trojan). Autorize it in Settings of Windows Defender to fully use it. Of course, it's NOT a virus (compile it yourself if you want to be sure). VirusTotal report zero virus too. You can send it to check yourself.
-
-(or launch Explorer with "withouthook" arguments command line to use Explorip File Explorer, but without hooking copy (so use explorer original windows copy)
+StartMenu
+---------
+Replace StartMenu of Windows by the one integrate in Explorip. Model take from Windows 10
 
 
 

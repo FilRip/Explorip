@@ -47,7 +47,7 @@ public static class Program
             _WpfHost.Run();
             return;
         }
-        
+
         if (ArgumentExists("desktop") || ArgumentExists("desktops"))
         {
             mutexProcess = new Mutex(true, "ExploripDesktop", out bool processNotLaunched);

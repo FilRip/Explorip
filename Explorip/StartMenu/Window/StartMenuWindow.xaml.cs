@@ -3,10 +3,10 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using System.Windows.Media;
 
 using Explorip.Helpers;
 using Explorip.StartMenu.ViewModels;
+using Explorip.TaskBar;
 
 using ExploripConfig.Configuration;
 
@@ -62,6 +62,22 @@ namespace Explorip.StartMenu.Window
                 Width = 1175;
             if (ConfigManager.StartMenuBackground != null)
                 Background = ConfigManager.StartMenuBackground;
+            if (MyStartMenuApp.MyShellManager == null)
+                MyTaskbarApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
+            else
+                MyStartMenuApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
+        }
+
+        private void TasksService_WindowActivated(IntPtr windowHandle)
+        {
+            if (IsVisible && windowHandle != IntPtr.Zero)
+            {
+                if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
+                    return;
+                NativeMethods.GetWindowThreadProcessId(windowHandle, out uint pid);
+                if (pid != Process.GetCurrentProcess().Id)
+                    Hide();
+            }
         }
 
         public static StartMenuWindow MyStartMenu { get; private set; }
@@ -145,7 +161,7 @@ namespace Explorip.StartMenu.Window
             {
                 _lastPressedKey = lParam.vkCode;
             }
-            else if (code >=0 && wParam == (int)NativeMethods.WM.KEYUP &&
+            else if (code >= 0 && wParam == (int)NativeMethods.WM.KEYUP &&
                 _lastPressedKey == lParam.vkCode && (lParam.vkCode == (int)NativeMethods.VK.LWIN || lParam.vkCode == (int)NativeMethods.VK.RWIN))
             {
                 if (MyStartMenu.IsVisible)

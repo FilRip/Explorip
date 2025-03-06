@@ -48,6 +48,9 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         TASKBARBUTTONCREATEDMESSAGE = RegisterWindowMessage("TaskbarButtonCreated");
     }
 
+    public delegate void DelegateWindowActivated(IntPtr windowHandle);
+    public event DelegateWindowActivated WindowActivated;
+
     internal void Initialize()
     {
         if (IsInitialized)
@@ -362,6 +365,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                     }
                                 }
                             }
+                            WindowActivated?.Invoke(msg.LParam);
                             break;
 
                         case HSHELL.FLASH:
