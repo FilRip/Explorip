@@ -84,6 +84,10 @@ public static class ConfigManager
                 _registryStartMenu.SetValue("IconSizeHeight2", "50");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("ShowPinnedApp2", "").ToString()))
                 _registryStartMenu.SetValue("ShowPinnedApp2", "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarThumbHeight", "").ToString()))
+                _registryTaskbar.SetValue("TaskbarThumbHeight", "150");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarThumbWidth", "").ToString()))
+                _registryTaskbar.SetValue("TaskbarThumbWidth", "250");
         }
     }
 
@@ -579,6 +583,26 @@ public static class ConfigManager
         {
             if (TaskbarDelayBeforeShowThumbnail != value && AllowWrite)
                 _registryTaskbar.SetValue("DelayBeforeShowThumbnail", value.ToString());
+        }
+    }
+
+    public static int TaskbarThumbHeight
+    {
+        get { return _registryTaskbar.ReadInteger("TaskbarThumbHeight"); }
+        set
+        {
+            if (TaskbarThumbHeight != value && AllowWrite)
+                _registryTaskbar.SetValue("TaskbarThumbHeight", value.ToString());
+        }
+    }
+
+    public static int TaskbarThumbWidth
+    {
+        get { return _registryTaskbar.ReadInteger("TaskbarThumbWidth"); }
+        set
+        {
+            if (TaskbarThumbWidth != value && AllowWrite)
+                _registryTaskbar.SetValue("TaskbarThumbWidth", value.ToString());
         }
     }
 

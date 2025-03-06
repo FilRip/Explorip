@@ -10,7 +10,7 @@ Launch Explorip without command line arguments (or a path to a folder) to use th
 
 You can manage explorer with tabs, and 2 explorer in same screen to more easily copy/paste between them.
 
-You can open command prompt or powershell too in any tabs
+You can open command prompt or powershell too in any tabs. Same for a registry editor, and to embed any other window in a tab of Explorip (except window of UWP application, like calc.exe)
 
 Launch explorip with "useowncopier" in command line argument to intercept copy/paste with an icon in notification zone (like SuperCopier/UltraCopier/TeraCopy/...)
 

@@ -22,8 +22,9 @@ public partial class MyStartMenuApp : Application
 
     private ShellManager SetupManagedShell()
     {
+#if DEBUG
         _logger = new ManagedShellLogger();
-
+#endif
         ShellConfig config = new()
         {
             EnableTasksService = true,
@@ -37,6 +38,6 @@ public partial class MyStartMenuApp : Application
 
     private void Application_Exit(object sender, ExitEventArgs e)
     {
-        _logger.Dispose();
+        _logger?.Dispose();
     }
 }

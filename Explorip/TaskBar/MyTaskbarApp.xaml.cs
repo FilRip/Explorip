@@ -128,7 +128,9 @@ public partial class MyTaskbarApp : Application
     {
         EnvironmentHelper.IsAppRunningAsShell = NativeMethods.GetShellWindow() == IntPtr.Zero;
 
+#if DEBUG
         _logger = new ManagedShellLogger();
+#endif
 
         ShellConfig config = new()
         {
@@ -150,7 +152,7 @@ public partial class MyTaskbarApp : Application
         DictionaryManager.Dispose();
         MyShellManager.Dispose();
         _startMenuMonitor.Dispose();
-        _logger.Dispose();
+        _logger?.Dispose();
     }
 
     public Taskbar MainTaskbar
