@@ -327,13 +327,22 @@ public partial class NativeMethods
         ICON_MASK = 0x0000000F,
     }
 
+    [Flags()]
+    public enum NIS
+    {
+        /// <summary>The icon is hidden.</summary>
+        NIS_HIDDEN = 0x00000001,
+        /// <summary>The icon resource is shared between multiple icons.</summary>
+        NIS_SHAREDICON = 0x00000002
+    }
+
     /// <summary>
     /// Notify icon data structure type
     /// </summary>
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct NotifyIconData
     {
-        public int cbSize;
+        public uint cbSize;
         public uint hWnd;
         public uint uID;
         public NIF uFlags;
@@ -341,11 +350,11 @@ public partial class NativeMethods
         public uint hIcon;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
         public string szTip;
-        public int dwState;
-        public int dwStateMask;
+        public NIS dwState;
+        public NIS dwStateMask;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
         public string szInfo;
-        public uint uVersion;  // used with NIM_SETVERSION, values 0, 3 and 4
+        public uint uTimeoutOrVersion;  // used with NIM_SETVERSION, values 0, 3 and 4
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string szInfoTitle;
         public NIIF dwInfoFlags;
@@ -773,4 +782,7 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName, ExactSpelling = true, SetLastError = false)]
     internal static extern IntPtr ILCombine(IntPtr pidl1, IntPtr pidl2);
+
+    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
+    internal static extern bool Shell_NotifyIcon(NIM dwMessage, ref NotifyIconData lpData);
 }

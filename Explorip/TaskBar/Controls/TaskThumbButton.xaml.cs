@@ -161,9 +161,24 @@ public partial class TaskThumbButton : Window
         catch (Exception) { /* Ignore errors */ }
     }
 
+    private int NumColumn
+    {
+        get
+        {
+            Point p = Mouse.GetPosition(this);
+            return (int)Math.Floor(p.X / ThumbWidth);
+        }
+    }
+
     private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        _parent.ApplicationWindow.BringToFront(_lastPeek);
+        IntPtr window;
+        if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
+            window = _parent.ApplicationWindow.Handle;
+        else
+            window = _parent.ApplicationWindow.ListWindows[NumColumn];
+        if (window != IntPtr.Zero)
+            _parent.ApplicationWindow.BringToFront(window);
         this.Close();
     }
 
@@ -205,16 +220,11 @@ public partial class TaskThumbButton : Window
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            IntPtr newPeek = IntPtr.Zero;
+            IntPtr newPeek;
             if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
                 newPeek = _parent.ApplicationWindow.Handle;
             else
-            {
-                Point p = Mouse.GetPosition(this);
-                int index = (int)Math.Floor(p.X / ThumbWidth);
-                if (index < _parent.ApplicationWindow.ListWindows.Count)
-                    newPeek = _parent.ApplicationWindow.ListWindows[index];
-            }
+                newPeek = _parent.ApplicationWindow.ListWindows[NumColumn];
             if (newPeek != _lastPeek)
             {
                 if (_lastPeek != IntPtr.Zero)

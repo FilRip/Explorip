@@ -185,7 +185,7 @@ public class ExplorerTrayService
             hIcon = trayItem.hIcon,
             uVersion = trayItem.uVersion,
             guidItem = trayItem.guidItem,
-            dwState = (int)trayItem.dwState,
+            dwState = (trayItem.dwState == 1 ? NIS.NIS_HIDDEN : NIS.NIS_SHAREDICON),
             uFlags = NIF.GUID | NIF.MESSAGE | NIF.TIP | NIF.STATE
         };
 

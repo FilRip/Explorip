@@ -17,6 +17,6 @@
                   Style="{DynamicResource NotificationButton}">
             <Image Style="{DynamicResource NotificationIcon}"/>
         </ToggleButton>
-        <TextBlock Background="Transparent" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="NumberOfNotifications"/>
+        <TextBlock Background="Transparent" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="NumberOfNotifications" Text="" FontSize="14" FontWeight="Bold" Margin="0,0,10,10"/>
     </Grid>
 </UserControl>

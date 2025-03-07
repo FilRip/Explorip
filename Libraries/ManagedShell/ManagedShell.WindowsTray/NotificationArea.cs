@@ -286,7 +286,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
                     }
 
                     if ((NIF.STATE & nicData.uFlags) != 0)
-                        trayIcon.IsHidden = nicData.dwState == 1;
+                        trayIcon.IsHidden = nicData.dwState == NIS.NIS_HIDDEN;
 
                     if ((NIF.TIP & nicData.uFlags) != 0 && !string.IsNullOrEmpty(nicData.szTip))
                         trayIcon.Title = nicData.szTip;
@@ -338,7 +338,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
 
                         TrayIcons.Add(trayIcon);
 
-                        if ((NIF.INFO & nicData.uFlags) != 0)
+                        if (nicData.uFlags.HasFlag(NIF.INFO))
                             HandleBalloonData(nicData, trayIcon);
 
                         ShellLogger.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID} Version: {trayIcon.Version}");
@@ -351,7 +351,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
                     }
                     else
                     {
-                        if ((NIF.INFO & nicData.uFlags) != 0)
+                        if (nicData.uFlags.HasFlag(NIF.INFO))
                             HandleBalloonData(nicData, trayIcon);
 
                         ShellLogger.Debug($"NotificationArea: Modified: {trayIcon.Title}");
@@ -403,7 +403,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
 
     private void HandleBalloonData(SafeNotifyIconData nicData, NotifyIcon notifyIcon)
     {
-        if (string.IsNullOrEmpty(nicData.szInfoTitle))
+        if (string.IsNullOrEmpty(nicData.szInfoTitle) && (string.IsNullOrWhiteSpace(notifyIcon.Title) || string.IsNullOrWhiteSpace(notifyIcon.Path)))
         {
             return;
         }
@@ -411,7 +411,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         NotificationBalloon balloonInfo = new(nicData, notifyIcon);
         NotificationBalloonEventArgs args = new()
         {
-            Balloon = balloonInfo
+            Balloon = balloonInfo,
         };
 
         ShellLogger.Debug($"NotificationArea: Received notification \"{balloonInfo.Title}\" for {notifyIcon.Title}");

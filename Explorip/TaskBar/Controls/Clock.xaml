@@ -17,6 +17,9 @@
                Text="{Binding ClockText}"
                ToolTip="{Binding ClockTip}"
                Name="ClockTextBlock"
+               FontSize="12"
+               LineStackingStrategy="BlockLineHeight"
+               LineHeight="20"
                Visibility="{Binding ClockVisibility}" />
     <UserControl.ContextMenu>
         <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">

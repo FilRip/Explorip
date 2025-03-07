@@ -284,8 +284,12 @@ public partial class TaskButton : UserControl
     {
         Application.Current?.Dispatcher?.Invoke(() =>
         {
-            _timerBeforeShowThumbnail?.Change(Timeout.Infinite, Timeout.Infinite);
-            _timerBeforeShowThumbnail?.Dispose();
+            try
+            {
+                _timerBeforeShowThumbnail?.Change(Timeout.Infinite, Timeout.Infinite);
+                _timerBeforeShowThumbnail?.Dispose();
+            }
+            catch (Exception) { /* Ignore errors */ }
             _thumb?.Close();
         });
     }

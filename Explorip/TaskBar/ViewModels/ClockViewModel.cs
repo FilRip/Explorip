@@ -98,7 +98,7 @@ public partial class ClockViewModel : ObservableObject
     {
         DateTime now = DateTime.Now;
 
-        ClockText = System.Globalization.DateTimeFormatInfo.CurrentInfo.GetDayName(now.DayOfWeek) + Environment.NewLine + now.Hour.ToString("00") + ":" + now.Minute.ToString("00") + Environment.NewLine + now.Day.ToString("00") + "/" + now.Month.ToString("00") + now.Year.ToString("00");
+        ClockText = System.Globalization.DateTimeFormatInfo.CurrentInfo.GetDayName(now.DayOfWeek) + Environment.NewLine + now.Hour.ToString("00") + ":" + now.Minute.ToString("00") + Environment.NewLine + now.Day.ToString("00") + "/" + now.Month.ToString("00") + "/" + now.Year.ToString("00");
         ClockTip = now.ToLongDateString();
     }
 }

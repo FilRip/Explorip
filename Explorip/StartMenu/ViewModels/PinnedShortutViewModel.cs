@@ -93,10 +93,9 @@ public partial class PinnedShortutViewModel(ShellFile sf, StartMenuViewModel win
     {
         InputBoxWindow inputBox = new();
         bool? dr = inputBox.ShowModal(Constants.Localization.RENAME_MENUITEM, Path.GetFileNameWithoutExtension(_shellFile.Path), Path.GetFileNameWithoutExtension(_shellFile.Path));
-        if (dr == true)
+        if (dr == true && Path.GetFileNameWithoutExtension(_shellFile.Path).ToLower() != inputBox.UserEdit.ToLower())
         {
-            if (Path.GetFileNameWithoutExtension(_shellFile.Path).ToLower() != inputBox.UserEdit.ToLower())
-                File.Move(_shellFile.Path, Path.Combine(Path.GetDirectoryName(_shellFile.Path), inputBox.UserEdit, Path.GetExtension(_shellFile.Path)));
+            File.Move(_shellFile.Path, Path.Combine(Path.GetDirectoryName(_shellFile.Path), inputBox.UserEdit, Path.GetExtension(_shellFile.Path)));
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -25,6 +26,8 @@ public class NotificationBalloon
 
     public DateTime Received { get; internal set; }
 
+    public IntPtr HandleWindow { get; internal set; }
+
     public readonly NotifyIcon NotifyIcon;
 
     public NotificationBalloon() { }
@@ -37,7 +40,14 @@ public class NotificationBalloon
         Info = nicData.szInfo;
         Flags = nicData.dwInfoFlags;
         Timeout = (int)nicData.uVersion;
+        HandleWindow = nicData.hWnd;
+
         Received = DateTime.Now;
+
+        if (string.IsNullOrWhiteSpace(Title))
+            Title = notifyIcon.Title;
+        if (string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(notifyIcon.Path))
+            Title = Path.GetFileNameWithoutExtension(notifyIcon.Path);
 
         if (Flags.HasFlag(NIIF.ERROR))
         {

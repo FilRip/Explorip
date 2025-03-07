@@ -9,15 +9,15 @@ namespace ManagedShell.WindowsTray;
 #pragma warning disable S1104 // Fields should not have public accessibility
 public class SafeNotifyIconData
 {
-    public int cbSize;
+    public uint cbSize;
     public IntPtr hWnd;
     public uint uID;
     public NIF uFlags;
     public uint uCallbackMessage;
     public IntPtr hIcon;
     public string szTip;
-    public int dwState;
-    public int dwStateMask;
+    public NIS dwState;
+    public NIS dwStateMask;
     public string szInfo;
     public uint uVersion;  // used with NIM_SETVERSION, values 0, 3 and 4
     public string szInfoTitle;
@@ -48,7 +48,7 @@ public class SafeNotifyIconData
         dwState = nid.dwState;
         dwStateMask = nid.dwStateMask;
         szInfo = nid.szInfo;
-        uVersion = nid.uVersion;
+        uVersion = nid.uTimeoutOrVersion;
         szInfoTitle = nid.szInfoTitle;
         dwInfoFlags = nid.dwInfoFlags;
         guidItem = nid.guidItem;
