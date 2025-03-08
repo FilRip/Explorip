@@ -187,7 +187,7 @@ namespace Explorip.StartMenu.Window
                 NativeMethods.GetCursorPos(ref p);
                 Screen screen = Screen.FromPoint(new Point(p.X, p.Y));
                 Left = screen.WorkingArea.X;
-                Top = (int)screen.WorkingArea.Bottom - Height;
+                Top = (int)(screen.WorkingArea.Bottom / screen.ScaleFactor) - Height;
             }
         }
 
