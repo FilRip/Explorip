@@ -12,7 +12,9 @@ namespace Explorip.StartMenu;
 public partial class MyStartMenuApp : Application
 {
     public static ShellManager MyShellManager { get; private set; }
+#if DEBUG
     private ManagedShellLogger _logger;
+#endif
 
     public MyStartMenuApp()
     {
@@ -38,6 +40,8 @@ public partial class MyStartMenuApp : Application
 
     private void Application_Exit(object sender, ExitEventArgs e)
     {
+#if DEBUG
         _logger?.Dispose();
+#endif
     }
 }

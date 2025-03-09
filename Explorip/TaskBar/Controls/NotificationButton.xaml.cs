@@ -1,12 +1,12 @@
-﻿using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
-using Hardcodet.Wpf.TaskbarNotification.Interop;
+using Explorip.Helpers;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace Explorip.TaskBar.Controls;
 
@@ -21,7 +21,6 @@ public partial class NotificationButton : UserControl
     {
         InitializeComponent();
         _nbNotif = 0;
-        MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
     }
 
     private void Notification_OnClick(object sender, RoutedEventArgs e)
@@ -42,18 +41,21 @@ public partial class NotificationButton : UserControl
     {
         _nbNotif++;
         NumberOfNotifications.Text = _nbNotif.ToString();
-        NativeMethods.NotifyIconData nid = new()
-        {
-            cbSize = (uint)Marshal.SizeOf<NotifyIconData>(),
-            hWnd = (uint)e.Balloon.HandleWindow,
-            uID = 1,
-            uFlags = NativeMethods.NIF.MESSAGE | NativeMethods.NIF.TIP | NativeMethods.NIF.INFO | NativeMethods.NIF.ICON,
-            hIcon = (uint)SystemIcons.Information.Handle,
-            szTip = e.Balloon.Title,
-            szInfo = e.Balloon.Info,
-            szInfoTitle = e.Balloon.Title,
-            dwInfoFlags = NativeMethods.NIIF.INFO,
-        };
-        NativeMethods.Shell_NotifyIcon(NativeMethods.NIM.NIM_ADD, ref nid);
+        new ToastContentBuilder()
+            .AddText(e.Balloon.Title)
+            .AddText(e.Balloon.Info)
+            .Show();
+    }
+
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (this.FindVisualParent<Taskbar>().MainScreen)
+            MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
+    }
+
+    private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (this.FindVisualParent<Taskbar>().MainScreen)
+            MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
     }
 }
