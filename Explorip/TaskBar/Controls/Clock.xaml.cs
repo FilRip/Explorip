@@ -31,7 +31,7 @@ public partial class Clock : UserControl
 
     private static void OpenDateTimeCpl()
     {
-        ShellHelper.StartProcess("start timedate.cpl");
+        ShellHelper.StartProcess("timedate.cpl", useShellExecute: true);
     }
 
     private void Clock_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
