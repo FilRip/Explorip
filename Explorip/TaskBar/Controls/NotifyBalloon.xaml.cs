@@ -4,6 +4,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Threading;
 
+using Explorip.Helpers;
+
 using ExploripConfig.Configuration;
 
 using ManagedShell.AppBar;
@@ -46,7 +48,7 @@ public partial class NotifyBalloon : UserControl
     public CustomPopupPlacement[] PlacePopup(Size popupSize, Size targetSize, Point offset)
     {
         DpiScale dpiScale = VisualTreeHelper.GetDpi(this);
-        CustomPopupPlacement placement = ConfigManager.Edge switch
+        CustomPopupPlacement placement = ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).Edge switch
         {
             AppBarEdge.Top => new CustomPopupPlacement(new Point((popupSize.Width * -1) + (offset.X * dpiScale.DpiScaleX),
                                    targetSize.Height + (offset.Y * dpiScale.DpiScaleY)),

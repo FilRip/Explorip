@@ -23,14 +23,17 @@ public partial class ClockViewModel : ObservableObject
     private readonly DispatcherTimer singleClick = new(DispatcherPriority.Input);
     private Dispatcher _dispatcher;
 
-    public ClockViewModel() : base()
+    public void ShowClock()
     {
-        if (ConfigManager.ShowClock)
-        {
-            StartClock();
-        }
-
+        StartClock();
         Microsoft.Win32.SystemEvents.TimeChanged += TimeChanged;
+    }
+
+    public void HideClock()
+    {
+        clock.Stop();
+        singleClick.Stop();
+        Microsoft.Win32.SystemEvents.TimeChanged -= TimeChanged;
     }
 
     public void SetDispatcher(Dispatcher dispatcher)
@@ -98,6 +101,7 @@ public partial class ClockViewModel : ObservableObject
     {
         DateTime now = DateTime.Now;
 
+        // TODO : Localized clock
         ClockText = System.Globalization.DateTimeFormatInfo.CurrentInfo.GetDayName(now.DayOfWeek) + Environment.NewLine + now.Hour.ToString("00") + ":" + now.Minute.ToString("00") + Environment.NewLine + now.Day.ToString("00") + "/" + now.Month.ToString("00") + "/" + now.Year.ToString("00");
         ClockTip = now.ToLongDateString();
     }

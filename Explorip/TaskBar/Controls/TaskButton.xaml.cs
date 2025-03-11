@@ -245,7 +245,7 @@ public partial class TaskButton : UserControl
         if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
             return;
 
-        if (ConfigManager.TaskbarDisableThumb)
+        if (ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).TaskbarDisableThumb)
             return;
 
         _timerBeforeShowThumbnail = new Timer(ShowThumbnail, null, ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);

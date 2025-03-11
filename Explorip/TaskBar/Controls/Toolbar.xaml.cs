@@ -8,7 +8,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Explorip.Helpers;
-using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
 
@@ -43,6 +42,8 @@ public partial class Toolbar : UserControl
         }
     }
 
+    public Taskbar ParentTaskbar { get; set; }
+
     private static readonly DependencyProperty FolderProperty = DependencyProperty.Register("Folder", typeof(ShellFolder), typeof(Toolbar));
 
     private ShellFolder Folder
@@ -69,14 +70,14 @@ public partial class Toolbar : UserControl
     private void SetupFolder(string path)
     {
         Folder?.Dispose();
-        if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
+        if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)) && ParentTaskbar != null)
         {
             Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
             Title.Content = Folder.DisplayName;
-            if (!ConfigManager.ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
+            if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
                 ShowLargeIcon_Click(null, null);
-            Title.Visibility = ConfigManager.ToolbarShowTitle(Path) ? Visibility.Visible : Visibility.Collapsed;
-            Point point = ConfigManager.ToolbarPosition(Path);
+            Title.Visibility = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path) ? Visibility.Visible : Visibility.Collapsed;
+            Point point = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Path);
             Margin = new Thickness(point.X, point.Y, Margin.Right, Margin.Bottom);
         }
     }
@@ -317,7 +318,7 @@ public partial class Toolbar : UserControl
     private double _startX, _startY;
     private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        if (!TaskbarViewModel.Instance.ResizeOn)
+        if (!this.FindVisualParent<Taskbar>().MyDataContext.ResizeOn)
             return;
 
         Grid myGrid = this.FindVisualParent<Grid>();
@@ -332,7 +333,7 @@ public partial class Toolbar : UserControl
     {
         ReleaseMouseCapture();
         Mouse.OverrideCursor = null;
-        ConfigManager.ToolbarPosition(Path, new Point(Margin.Left, Margin.Top));
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Path, new Point(Margin.Left, Margin.Top));
     }
 
     private void UserControl_MouseMove(object sender, MouseEventArgs e)
@@ -399,13 +400,14 @@ public partial class Toolbar : UserControl
             Title.Visibility = Visibility.Collapsed;
         else
             Title.Visibility = Visibility.Visible;
-        ConfigManager.ToolbarShowTitle(Path, Title.Visibility == Visibility.Visible);
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path, Title.Visibility == Visibility.Visible);
     }
 
     public bool CurrentShowLargeIcon { get; set; }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
+        SetupFolder(Path);
         Task.Run(async () =>
         {
             await Task.Delay(5000);
@@ -435,7 +437,7 @@ public partial class Toolbar : UserControl
                 newHeight -= 16;
             parentTaskbar.ChangeDesiredSize(newHeight, parentTaskbar.Width);
         }
-        ConfigManager.ToolbarSmallSizeIcon(Path, !CurrentShowLargeIcon);
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(Path, !CurrentShowLargeIcon);
     }
 }
 

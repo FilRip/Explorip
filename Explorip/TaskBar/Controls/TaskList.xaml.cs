@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using Explorip.Helpers;
+using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
 
@@ -38,6 +39,11 @@ public partial class TaskList : UserControl
         _lockChangeDesktop = new object();
     }
 
+    public TaskListViewModel MyDataContext
+    {
+        get { return (TaskListViewModel)DataContext; }
+    }
+
     public double ButtonWidth
     {
         get { return (double)GetValue(ButtonWidthProperty); }
@@ -51,7 +57,7 @@ public partial class TaskList : UserControl
         DefaultButtonWidth = Application.Current.FindResource("TaskButtonWidth") as double? ?? 0;
         Thickness buttonMargin;
 
-        if (ConfigManager.Edge == AppBarEdge.Left || ConfigManager.Edge == AppBarEdge.Right)
+        if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Left || ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Right)
         {
             buttonMargin = Application.Current.FindResource("TaskButtonVerticalMargin") as Thickness? ?? new Thickness();
         }
@@ -71,6 +77,8 @@ public partial class TaskList : UserControl
 
         if (!isLoaded && MyTaskbarApp.MyShellManager.Tasks != null)
         {
+            MyDataContext.ChangeEdge(this.FindControlParent<Taskbar>().AppBarEdge);
+
             InsertPinnedApp();
 
             TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
@@ -203,7 +211,7 @@ public partial class TaskList : UserControl
 
     private void SetTaskButtonWidth()
     {
-        if (ConfigManager.Edge == AppBarEdge.Left || ConfigManager.Edge == AppBarEdge.Right)
+        if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Left || ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Right)
         {
             ButtonWidth = ActualWidth;
             return;

@@ -49,13 +49,13 @@ public partial class NotificationButton : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
-        if (this.FindVisualParent<Taskbar>().MainScreen)
+        if (this.FindControlParent<Taskbar>().MainScreen)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
     }
 
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)
     {
-        if (this.FindVisualParent<Taskbar>().MainScreen)
+        if (this.FindControlParent<Taskbar>().MainScreen)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
     }
 }

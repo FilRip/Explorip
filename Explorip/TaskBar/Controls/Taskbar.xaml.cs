@@ -27,18 +27,21 @@ namespace Explorip.TaskBar.Controls;
 public partial class Taskbar : AppBarWindow
 {
     private readonly bool _mainScreen;
+    private readonly string _screenName;
 
     public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
         : base(MyTaskbarApp.MyShellManager.AppBarManager, MyTaskbarApp.MyShellManager.ExplorerHelper, MyTaskbarApp.MyShellManager.FullScreenHelper, screen, edge, 0)
     {
-        _ = TaskbarViewModel.Instance;
         InitializeComponent();
 
         _mainScreen = screen.Primary;
-        DataContext = MyTaskbarApp.MyShellManager;
+        _screenName = screen.DeviceName.TrimStart('.', '\\');
+
+        DataContext = new TaskbarViewModel(this);
+
         StartButton.StartMenuMonitor = startMenuMonitor;
 
-        AllowsTransparency = ConfigManager.TaskbarAllowsTransparency;
+        AllowsTransparency = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarAllowsTransparency;
         SetFontSmoothing();
 
         _explorerHelper.HideExplorerTaskbar = true;
@@ -49,20 +52,20 @@ public partial class Taskbar : AppBarWindow
 
         MinHeight = Math.Max(52, DesiredHeight);
 
-        if (ConfigManager.TaskbarHeight > 0)
-            DesiredHeight = ConfigManager.TaskbarHeight;
-        if (ConfigManager.TaskbarWidth > 0)
-            DesiredWidth = ConfigManager.TaskbarWidth;
+        if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight > 0)
+            DesiredHeight = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight;
+        if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth > 0)
+            DesiredWidth = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth;
 
-        if (!ConfigManager.ShowTaskManButton)
+        if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton)
             SetShowTaskMan(false);
-        if (!ConfigManager.ShowSearchButton)
+        if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowSearchButton)
             SetShowSearch(false);
-        if (!ConfigManager.ShowWidgetButton)
+        if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton)
             SetShowWidget(false);
 
-        if (ConfigManager.TaskbarBackground != null)
-            Background = ConfigManager.TaskbarBackground;
+        if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarBackground != null)
+            Background = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarBackground;
         else
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
 
@@ -72,9 +75,19 @@ public partial class Taskbar : AppBarWindow
         }
     }
 
+    public TaskbarViewModel MyDataContext
+    {
+        get { return (TaskbarViewModel)DataContext; }
+    }
+
     public bool MainScreen
     {
         get { return _mainScreen; }
+    }
+
+    public string ScreenName
+    {
+        get { return _screenName; }
     }
 
     public bool IsReopening { get; set; }
@@ -122,7 +135,7 @@ public partial class Taskbar : AppBarWindow
 
     private void SetFontSmoothing()
     {
-        VisualTextRenderingMode = ConfigManager.AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
+        VisualTextRenderingMode = ConfigManager.GetTaskbarConfig(ScreenName).AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
     }
 
     private void Taskbar_OnLocationChanged(object sender, EventArgs e)
@@ -173,9 +186,9 @@ public partial class Taskbar : AppBarWindow
 
     private void MenuShowTabTip_Click(object sender, RoutedEventArgs e)
     {
-        TaskbarViewModel.Instance.ShowTabTip = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
-        MenuShowTabTip.IsChecked = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible;
-        ColumnVirtualKeyboard.Width = TaskbarViewModel.Instance.ShowTabTip == Visibility.Visible ? GridLength.Auto : new GridLength(0);
+        MyDataContext.ShowTabTip = MyDataContext.ShowTabTip == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+        MenuShowTabTip.IsChecked = MyDataContext.ShowTabTip == Visibility.Visible;
+        ColumnVirtualKeyboard.Width = MyDataContext.ShowTabTip == Visibility.Visible ? GridLength.Auto : new GridLength(0);
     }
 
     #endregion
@@ -190,6 +203,7 @@ public partial class Taskbar : AppBarWindow
 
     private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        MyDataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
         {
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
@@ -206,10 +220,10 @@ public partial class Taskbar : AppBarWindow
         if (listToolbars?.Length > 0)
         {
             double newHeight = 52;
-            foreach (string path in listToolbars)
+            foreach (string path in listToolbars.Where(p => ConfigManager.GetTaskbarConfig(ScreenName).ToolbarVisible(p)))
             {
                 AddToolbar(path, false);
-                newHeight += (ConfigManager.ToolbarSmallSizeIcon(path) ? 16 : 32);
+                newHeight += (ConfigManager.GetTaskbarConfig(ScreenName).ToolbarSmallSizeIcon(path) ? 16 : 32);
             }
         }
     }
@@ -223,8 +237,8 @@ public partial class Taskbar : AppBarWindow
         DesiredHeight = height;
         DesiredWidth = width;
         _appBarManager.SetWorkArea(Screen);
-        ConfigManager.TaskbarHeight = DesiredHeight;
-        ConfigManager.TaskbarWidth = DesiredWidth;
+        ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
+        ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth = DesiredWidth;
     }
 
     private void UnlockTaskbar_Click(object sender, RoutedEventArgs e)
@@ -232,12 +246,12 @@ public partial class Taskbar : AppBarWindow
         if (ResizeMode == ResizeMode.NoResize)
         {
             ResizeMode = ResizeMode.CanResizeWithGrip;
-            TaskbarViewModel.Instance.ResizeOn = true;
+            MyDataContext.ResizeOn = true;
         }
         else
         {
             ResizeMode = ResizeMode.NoResize;
-            TaskbarViewModel.Instance.ResizeOn = false;
+            MyDataContext.ResizeOn = false;
             DesiredHeight = Height;
             _appBarManager.SetWorkArea(Screen);
         }
@@ -260,6 +274,7 @@ public partial class Taskbar : AppBarWindow
         Toolbar newToolbar = new()
         {
             Path = path,
+            ParentTaskbar = this,
         };
         Grid.SetRow(newToolbar, ToolsBars.RowDefinitions.Count - 1);
         Grid.SetColumn(newToolbar, 0);
@@ -286,7 +301,7 @@ public partial class Taskbar : AppBarWindow
             {
                 if (MainScreen)
                 {
-                    ConfigManager.TaskbarHeight = DesiredHeight;
+                    ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
                     ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.Path)];
                 }
                 newTb.ShowHideTitle_Click(null, null);
@@ -327,8 +342,8 @@ public partial class Taskbar : AppBarWindow
 
     private void MenuShowSearch_Click(object sender, RoutedEventArgs e)
     {
-        ConfigManager.ShowSearchButton = !ConfigManager.ShowSearchButton;
-        SetShowSearch(ConfigManager.ShowSearchButton);
+        ConfigManager.GetTaskbarConfig(ScreenName).ShowSearchButton = !ConfigManager.GetTaskbarConfig(ScreenName).ShowSearchButton;
+        SetShowSearch(ConfigManager.GetTaskbarConfig(ScreenName).ShowSearchButton);
     }
 
     private void SetShowTaskMan(bool state)
@@ -339,8 +354,8 @@ public partial class Taskbar : AppBarWindow
 
     private void MenuShowTaskmgr_Click(object sender, RoutedEventArgs e)
     {
-        ConfigManager.ShowTaskManButton = !ConfigManager.ShowTaskManButton;
-        SetShowTaskMan(ConfigManager.ShowTaskManButton);
+        ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton = !ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton;
+        SetShowTaskMan(ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton);
     }
 
     private void SetShowWidget(bool state)
@@ -351,7 +366,7 @@ public partial class Taskbar : AppBarWindow
 
     private void MenuShowWidget_Click(object sender, RoutedEventArgs e)
     {
-        ConfigManager.ShowWidgetButton = !ConfigManager.ShowWidgetButton;
-        SetShowWidget(ConfigManager.ShowWidgetButton);
+        ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton = !ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton;
+        SetShowWidget(ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton);
     }
 }

@@ -1,8 +1,13 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
+
+using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
 
@@ -26,7 +31,7 @@ public partial class Clock : UserControl
 
     private static void OpenDateTimeCpl()
     {
-        ShellHelper.StartProcess("timedate.cpl");
+        ShellHelper.StartProcess("start timedate.cpl");
     }
 
     private void Clock_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -52,5 +57,17 @@ public partial class Clock : UserControl
     private void MenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         OpenDateTimeCpl();
+    }
+
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).ShowClock)
+            MyDataContext.ShowClock();
+    }
+
+    private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).ShowClock)
+            MyDataContext.HideClock();
     }
 }

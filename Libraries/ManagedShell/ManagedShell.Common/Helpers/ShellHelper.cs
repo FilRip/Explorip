@@ -240,7 +240,7 @@ public static class ShellHelper
 
     public static void StartTaskManager()
     {
-        StartProcess("taskmgr.exe", useShellExecute: false);
+        StartProcess("start taskmgr.exe");
     }
 
     public static void ShowRunDialog(string title, string info)

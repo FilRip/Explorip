@@ -3,19 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
+             xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              Loaded="NotifyIconList_OnLoaded"
              Unloaded="NotifyIconList_OnUnloaded">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <converters:EdgeOrientationConverter x:Key="edgeOrientationConverter" />
-        </ResourceDictionary>
-    </UserControl.Resources>
-    <StackPanel>
-        <StackPanel.Orientation>
-            <Binding Converter="{StaticResource edgeOrientationConverter}"
-                     Path="Orientation"
-                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
-        </StackPanel.Orientation>
+    <UserControl.DataContext>
+        <viewmodels:NotifyIconListViewModel/>
+    </UserControl.DataContext>
+    <StackPanel Orientation="{Binding StackPanelOrientation}">
         <ToggleButton Name="NotifyIconToggleButton"
                       Visibility="Collapsed"
                       Click="NotifyIconToggleButton_OnClick"

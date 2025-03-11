@@ -6,8 +6,6 @@ using System.Windows.Media;
 
 using ExploripConfig.Helpers;
 
-using ManagedShell.AppBar;
-
 using Microsoft.Win32;
 
 using WpfScreenHelper;
@@ -18,10 +16,12 @@ namespace ExploripConfig.Configuration;
 
 public static class ConfigManager
 {
-    private const string HKeyRoot = "Software\\CoolBytes\\Explorip";
+    internal const string HKeyRoot = "Software\\CoolBytes\\Explorip";
+    internal const string ToolBarNameInRegistry = "Toolbar";
 
     public static bool AllowWrite { get; set; }
-    private static RegistryKey _registryKeyExplorer, _registryDesktop, _registryTaskbar, _registryStartMenu;
+    private static RegistryKey _registryKeyExplorer, _registryDesktop, _registryRootTaskbar, _registryStartMenu;
+    private static readonly List<TaskbarConfig> _listScreens = [];
 
     public static void Init(bool allowWrite = true)
     {
@@ -30,7 +30,7 @@ public static class ConfigManager
         if (_registryKeyExplorer == null)
             AllowWrite = false;
         _registryDesktop = _registryKeyExplorer?.CreateSubKey("Desktop");
-        _registryTaskbar = _registryKeyExplorer?.CreateSubKey("Taskbar");
+        _registryRootTaskbar = _registryKeyExplorer?.CreateSubKey("Taskbars");
         _registryStartMenu = _registryKeyExplorer?.CreateSubKey("StartMenu");
 
         if (allowWrite && _registryKeyExplorer != null)
@@ -38,17 +38,8 @@ public static class ConfigManager
             // If empty config in registry, set default settings
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Theme", "").ToString()))
                 _registryKeyExplorer.SetValue("Theme", "System");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowClock", "").ToString()))
-                _registryTaskbar.SetValue("ShowClock", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("CollapseNotifyIcons", "").ToString()))
-                _registryTaskbar.SetValue("CollapseNotifyIcons", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("AllowFontSmoothing", "").ToString()))
-                _registryTaskbar.SetValue("AllowFontSmoothing", "True");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Language", "").ToString()))
                 _registryKeyExplorer.SetValue("Language", "System");
-            string edge = _registryTaskbar.GetValue("Edge", "").ToString();
-            if (string.IsNullOrWhiteSpace(edge) || !Enum.TryParse<AppBarEdge>(edge, out _))
-                Edge = AppBarEdge.Bottom;
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("HookCopy", "").ToString()))
                 _registryKeyExplorer.SetValue("HookCopy", "True");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("UseOwnCopier", "").ToString()))
@@ -68,8 +59,6 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue("ExplorerSizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("ExplorerSizeY", "").ToString()))
                 _registryKeyExplorer.SetValue("ExplorerSizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
-                _registryTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("PinnedAppPath", "").ToString()))
                 _registryStartMenu.SetValue("PinnedAppPath", @"%APPDATA%\CoolBytes\Explorip\StartMenu\PinnedApp");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("IconSizeWidth", "").ToString()))
@@ -84,13 +73,27 @@ public static class ConfigManager
                 _registryStartMenu.SetValue("IconSizeHeight2", "50");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("ShowPinnedApp2", "").ToString()))
                 _registryStartMenu.SetValue("ShowPinnedApp2", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarThumbHeight", "").ToString()))
-                _registryTaskbar.SetValue("TaskbarThumbHeight", "150");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarThumbWidth", "").ToString()))
-                _registryTaskbar.SetValue("TaskbarThumbWidth", "250");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarDisableThumb", "").ToString()))
-                _registryTaskbar.SetValue("TaskbarDisableThumb", "False");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
+                _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
+
+            foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
+            {
+                TaskbarConfig tbc = new();
+                tbc.Init(screenName, _registryRootTaskbar, true);
+                _listScreens.Add(tbc);
+            }
         }
+    }
+
+    public static TaskbarConfig GetTaskbarConfig(string screenName)
+    {
+        TaskbarConfig tbc = _listScreens.SingleOrDefault(tbc => tbc.TaskbarName == screenName);
+        if (tbc != null)
+            return tbc;
+        tbc = new();
+        tbc.Init(screenName, _registryRootTaskbar, AllowWrite);
+        _listScreens.Add(tbc);
+        return tbc;
     }
 
     public static string Theme
@@ -103,36 +106,6 @@ public static class ConfigManager
         }
     }
 
-    public static bool ShowClock
-    {
-        get { return _registryTaskbar.ReadBoolean("ShowClock", true); }
-        set
-        {
-            if (ShowClock != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowClock", value.ToString());
-        }
-    }
-
-    public static bool CollapseNotifyIcons
-    {
-        get { return _registryTaskbar.ReadBoolean("CollapseNotifyIcons"); }
-        set
-        {
-            if (CollapseNotifyIcons != value && AllowWrite)
-                _registryTaskbar.SetValue("CollapseNotifyIcons", value.ToString());
-        }
-    }
-
-    public static bool AllowFontSmoothing
-    {
-        get { return _registryTaskbar.ReadBoolean("AllowFontSmoothing"); }
-        set
-        {
-            if (AllowFontSmoothing != value && AllowWrite)
-                _registryTaskbar.SetValue("AllowFontSmoothing", value.ToString());
-        }
-    }
-
     public static string Language
     {
         get { return _registryKeyExplorer.GetValue("Language", "").ToString(); }
@@ -140,16 +113,6 @@ public static class ConfigManager
         {
             if (Language != value && AllowWrite)
                 _registryKeyExplorer.SetValue("Language", value);
-        }
-    }
-
-    public static AppBarEdge Edge
-    {
-        get { return _registryTaskbar.ReadEnum<AppBarEdge>("Edge"); }
-        set
-        {
-            if (Edge != value && AllowWrite)
-                _registryTaskbar.SetValue("Edge", ((int)value).ToString());
         }
     }
 
@@ -243,224 +206,52 @@ public static class ConfigManager
         }
     }
 
-    public static double TaskbarHeight
-    {
-        get { return _registryTaskbar.ReadDouble("TaskbarHeight"); }
-        set
-        {
-            if (TaskbarHeight != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarHeight", value.ToString());
-        }
-    }
-
-    public static double TaskbarWidth
-    {
-        get { return _registryTaskbar.ReadDouble("TaskbarWidth"); }
-        set
-        {
-            if (TaskbarWidth != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarWidth", value.ToString());
-        }
-    }
-
-    public static Brush TaskbarBackground
-    {
-        get
-        {
-            string bgColor = _registryTaskbar.GetValue("BackgroundColor")?.ToString();
-            if (!string.IsNullOrWhiteSpace(bgColor))
-            {
-                string[] splitter = bgColor.Split(',');
-                byte a, r, g, b;
-                if (splitter.Length == 3)
-                    splitter = splitter.Insert("255", 0);
-                if (splitter.Length == 4)
-                {
-                    try
-                    {
-                        a = byte.Parse(splitter[0]);
-                        r = byte.Parse(splitter[1]);
-                        g = byte.Parse(splitter[2]);
-                        b = byte.Parse(splitter[3]);
-                        return new SolidColorBrush(Color.FromArgb(a, r, g, b));
-                    }
-                    catch (Exception) { /* Ignore errors, most of time can't cast value as string to byte */ }
-                }
-            }
-            return null;
-        }
-    }
-
-    public static bool TaskbarAllowsTransparency
-    {
-        get { return _registryTaskbar.ReadBoolean("AllowsTransparency"); }
-        set
-        {
-            if (TaskbarAllowsTransparency != value && AllowWrite)
-                _registryTaskbar.SetValue("AllowsTransparency", value.ToString());
-        }
-    }
-
-    public static bool ShowTaskbarOnAllScreens
-    {
-        get { return _registryTaskbar.ReadBoolean("ShowTaskbarOnAllScreens"); }
-        set
-        {
-            if (ShowTaskbarOnAllScreens != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowTaskbarOnAllScreens", value.ToString());
-        }
-    }
-
-    public static bool ShowTaskManButton
-    {
-        get { return _registryTaskbar.ReadBoolean("ShowTaskMan"); }
-        set
-        {
-            if (ShowTaskManButton != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowTaskMan", value.ToString());
-        }
-    }
-
-    public static bool ShowSearchButton
-    {
-        get { return _registryTaskbar.ReadBoolean("ShowSearch"); }
-        set
-        {
-            if (ShowSearchButton != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowSearch", value.ToString());
-        }
-    }
-
-    public static bool ShowWidgetButton
-    {
-        get { return _registryTaskbar.ReadBoolean("ShowWidget"); }
-        set
-        {
-            if (ShowWidgetButton != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowWidget", value.ToString());
-        }
-    }
-
-    private const string ToolBarNameInRegistry = "Toolbar";
     public static string[] ToolbarsPath
     {
         get
         {
             // Loop to find all toolbars path
             string[] listNames = [];
-            _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v => listNames = listNames.Add(_registryTaskbar.OpenSubKey(v).GetValue("Path")));
+            _registryRootTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v => listNames = listNames.Add(_registryRootTaskbar.OpenSubKey(v).GetValue("Path")));
             return listNames;
         }
         set
         {
             // First, remove all olders toolbars path
-            _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v => _registryTaskbar.DeleteSubKey(v));
+            _registryRootTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v => _registryRootTaskbar.DeleteSubKey(v));
             // Then loop to save each new one
             int i = 0;
             value.ToList().ForEach(s =>
             {
-                _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", value[i]);
+                _registryRootTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", value[i]);
                 i++;
             });
         }
     }
 
-    public static void ToolbarPosition(string path, Point position)
-    {
-        int i = ToolbarNumber(path);
-        if (i < 0)
-        {
-            i = MaxToolbar();
-            i++;
-            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", path);
-        }
-        RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
-        currentToolbar.SetValue("X", position.X.ToString());
-        currentToolbar.SetValue("Y", position.Y.ToString());
-    }
-
-    public static Point ToolbarPosition(string path)
-    {
-        Point ret = new();
-        int i = ToolbarNumber(path);
-        if (i >= 0)
-        {
-            RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})");
-            ret.X = currentToolbar.ReadDouble("X");
-            ret.Y = currentToolbar.ReadDouble("Y");
-        }
-        return ret;
-    }
-
-    public static void ToolbarSmallSizeIcon(string path, bool smallSize)
-    {
-        int i = ToolbarNumber(path);
-        if (i < 0)
-        {
-            i = MaxToolbar();
-            i++;
-            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", path);
-        }
-        RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
-        currentToolbar.SetValue("SmallSizeIcon", smallSize.ToString());
-    }
-
-    public static bool ToolbarSmallSizeIcon(string path)
-    {
-        bool ret = true;
-        int i = ToolbarNumber(path);
-        if (i >= 0)
-        {
-            RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})");
-            ret = currentToolbar.ReadBoolean("SmallSizeIcon");
-        }
-        return ret;
-    }
-
-    public static void ToolbarShowTitle(string path, bool showTitle)
-    {
-        int i = ToolbarNumber(path);
-        if (i < 0)
-        {
-            i = MaxToolbar();
-            i++;
-            _registryTaskbar.CreateSubKey($"{ToolBarNameInRegistry}({i})", true).SetValue("Path", path);
-        }
-        RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})", true);
-        currentToolbar.SetValue("ShowTitle", showTitle.ToString());
-    }
-
-    public static bool ToolbarShowTitle(string path)
-    {
-        bool ret = true;
-        int i = ToolbarNumber(path);
-        if (i >= 0)
-        {
-            RegistryKey currentToolbar = _registryTaskbar.OpenSubKey($"{ToolBarNameInRegistry}({i})");
-            ret = currentToolbar.ReadBoolean("ShowTitle");
-        }
-        return ret;
-    }
-
-    private static int ToolbarNumber(string path)
+    internal static int ToolbarNumber(string path)
     {
         int pos = -1;
-        _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v =>
+        _registryRootTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v =>
         {
-            if (_registryTaskbar.OpenSubKey(v).GetValue("Path")?.ToString() == path)
+            if (_registryRootTaskbar.OpenSubKey(v).GetValue("Path")?.ToString() == path)
                 pos = int.Parse(v.Replace($"{ToolBarNameInRegistry}(", "").Replace(")", ""));
         });
         return pos;
     }
 
-    private static int MaxToolbar()
+    internal static int MaxToolbar()
     {
         int max = -1;
-        _registryTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v =>
+        int min = -1;
+        _registryRootTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v =>
         {
             int pos = int.Parse(v.Replace($"{ToolBarNameInRegistry}(", "").Replace(")", ""));
             max = Math.Max(max, pos);
+            min = Math.Min(min, pos);
         });
+        if (min > 0)
+            return min - 1;
         return max;
     }
 
@@ -476,7 +267,7 @@ public static class ConfigManager
 
     public static RegistryKey TaskbarRegistryKey
     {
-        get { return _registryTaskbar; }
+        get { return _registryRootTaskbar; }
     }
 
     public static string[] LeftTabs
@@ -522,7 +313,7 @@ public static class ConfigManager
     public static string[] AllPinnedSystray()
     {
         string[] ret = [];
-        RegistryKey key = _registryTaskbar.CreateSubKey("Systray");
+        RegistryKey key = _registryRootTaskbar.CreateSubKey("Systray");
         foreach (string name in key.GetValueNames())
         {
             ret = ret.Add(key.GetValue(name));
@@ -532,7 +323,7 @@ public static class ConfigManager
 
     public static void RemovePinnedSystray(string path)
     {
-        RegistryKey key = _registryTaskbar.CreateSubKey("Systray");
+        RegistryKey key = _registryRootTaskbar.CreateSubKey("Systray");
         foreach (string name in key.GetValueNames())
             if (key.GetValue(name).ToString() == path)
                 key.DeleteValue(name);
@@ -540,7 +331,7 @@ public static class ConfigManager
 
     public static void AddPinnedSystray(string path, int order = -1)
     {
-        RegistryKey key = _registryTaskbar.CreateSubKey("Systray", true);
+        RegistryKey key = _registryRootTaskbar.CreateSubKey("Systray", true);
 
         foreach (string name in key.GetValueNames())
             if (key.GetValue(name).ToString() == path)
@@ -570,41 +361,21 @@ public static class ConfigManager
 
     public static bool TaskbarReplaceStartMenu
     {
-        get { return _registryTaskbar.ReadBoolean("ReplaceStartMenu"); }
+        get { return _registryRootTaskbar.ReadBoolean("ReplaceStartMenu"); }
         set
         {
-            if (ShowSearchButton != value && AllowWrite)
-                _registryTaskbar.SetValue("ReplaceStartMenu", value.ToString());
+            if (TaskbarReplaceStartMenu != value && AllowWrite)
+                _registryRootTaskbar.SetValue("ReplaceStartMenu", value.ToString());
         }
     }
 
     public static int TaskbarDelayBeforeShowThumbnail
     {
-        get { return _registryTaskbar.ReadInteger("DelayBeforeShowThumbnail"); }
+        get { return _registryRootTaskbar.ReadInteger("DelayBeforeShowThumbnail"); }
         set
         {
             if (TaskbarDelayBeforeShowThumbnail != value && AllowWrite)
-                _registryTaskbar.SetValue("DelayBeforeShowThumbnail", value.ToString());
-        }
-    }
-
-    public static int TaskbarThumbHeight
-    {
-        get { return _registryTaskbar.ReadInteger("TaskbarThumbHeight"); }
-        set
-        {
-            if (TaskbarThumbHeight != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarThumbHeight", value.ToString());
-        }
-    }
-
-    public static int TaskbarThumbWidth
-    {
-        get { return _registryTaskbar.ReadInteger("TaskbarThumbWidth"); }
-        set
-        {
-            if (TaskbarThumbWidth != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarThumbWidth", value.ToString());
+                _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", value.ToString());
         }
     }
 
@@ -703,16 +474,6 @@ public static class ConfigManager
                 }
             }
             return null;
-        }
-    }
-
-    public static bool TaskbarDisableThumb
-    {
-        get { return _registryTaskbar.ReadBoolean("DisableThumb"); }
-        set
-        {
-            if (TaskbarDisableThumb != value && AllowWrite)
-                _registryTaskbar.SetValue("DisableThumb", value.ToString());
         }
     }
 }

@@ -3,15 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
+             xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              Loaded="TaskList_OnLoaded"
              Unloaded="TaskList_OnUnloaded"
              SizeChanged="TaskList_OnSizeChanged"
              Background="Transparent">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <converters:EdgeOrientationConverter x:Key="orientationConverter" />
-        </ResourceDictionary>
-    </UserControl.Resources>
+    <UserControl.DataContext>
+        <viewmodels:TaskListViewModel/>
+    </UserControl.DataContext>
     <ScrollViewer Style="{DynamicResource TaskListScrollViewer}"
                   Focusable="False"
                   VerticalScrollBarVisibility="Auto">
@@ -20,13 +19,7 @@
                       HorizontalAlignment="Stretch">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel>
-                        <WrapPanel.Orientation>
-                            <Binding Converter="{StaticResource orientationConverter}"
-                                     Path="Orientation"
-                                     RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
-                        </WrapPanel.Orientation>
-                    </WrapPanel>
+                    <WrapPanel Orientation="{Binding PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TaskList}}"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

@@ -8,6 +8,8 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
+using Explorip.Helpers;
+
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
@@ -36,6 +38,9 @@ public partial class TaskThumbButton : Window
             return;
 
         _thumbPtr = [];
+        Background = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarBackground;
+        ThumbWidth = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbWidth;
+        ThumbHeight = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbHeight;
         Width = ThumbWidth;
         Height = ThumbHeight;
         MainGrid.ColumnDefinitions[0].Width = new GridLength(ThumbWidth, GridUnitType.Pixel);
@@ -46,19 +51,17 @@ public partial class TaskThumbButton : Window
             Width *= parent.ApplicationWindow.ListWindows.Count;
         }
         _parent = parent;
-        Owner = _parent.TaskbarParent;
+        Owner = parent.TaskbarParent;
         Point positionParent = _parent.PointToScreen(Mouse.GetPosition(this));
         Left = (int)((positionParent.X - (Width / 2)) / VisualTreeHelper.GetDpi(this).DpiScaleX);
-        Top = _parent.TaskbarParent.Top - Height;
+        Top = parent.TaskbarParent.Top - Height;
         _timerBeforePreviewWindow = new Timer(ShowPreviewWindow, null, Timeout.Infinite, Timeout.Infinite);
         _lastPeek = IntPtr.Zero;
         _handle = new WindowInteropHelper(this).EnsureHandle();
-        if (ConfigManager.TaskbarBackground != null)
-            Background = ConfigManager.TaskbarBackground;
     }
 
-    public double ThumbWidth { get; set; } = ConfigManager.TaskbarThumbWidth;
-    public double ThumbHeight { get; set; } = ConfigManager.TaskbarThumbHeight;
+    public double ThumbWidth { get; set; }
+    public double ThumbHeight { get; set; }
 
     private void Window_MouseLeave(object sender, MouseEventArgs e)
     {

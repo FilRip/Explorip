@@ -17,6 +17,7 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\HookFileOperation\ExploripSharedCopy\ExploripSharedCopy.csproj" />
     <ProjectReference Include="..\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj" />
     <ProjectReference Include="..\WpfScreenHelper\WpfScreenHelper.csproj" />
   </ItemGroup>

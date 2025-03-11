@@ -150,7 +150,9 @@ namespace Explorip.StartMenu.Window
 
         private void Current_Deactivated(object sender, EventArgs e)
         {
+#if DEBUG
             Debug.WriteLine("LOST APPLICATION ACTIVATION");
+#endif
             if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
                 return;
             _cmStart.IsOpen = false;

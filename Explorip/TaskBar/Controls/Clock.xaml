@@ -9,7 +9,9 @@
              MouseLeftButtonDown="Clock_OnMouseLeftButtonDown"
              MouseDoubleClick="Clock_OnMouseDoubleClick"
              mc:Ignorable="d"
-             Background="Transparent">
+             Background="Transparent"
+             Loaded="UserControl_Loaded"
+             Unloaded="UserControl_Unloaded">
     <UserControl.DataContext>
         <viewmodels:ClockViewModel/>
     </UserControl.DataContext>

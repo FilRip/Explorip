@@ -7,6 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
 
+using Explorip.Helpers;
+using Explorip.TaskBar.ViewModels;
+
 using ExploripConfig.Configuration;
 
 using ManagedShell.WindowsTray;
@@ -23,17 +26,17 @@ public partial class NotifyIconList : UserControl
     private CollectionViewSource pinnedNotifyIconsSource;
     private readonly ObservableCollection<ManagedShell.WindowsTray.NotifyIcon> promotedIcons = [];
 
-    public readonly static DependencyProperty NotificationAreaProperty = DependencyProperty.Register("NotificationArea", typeof(NotificationArea), typeof(NotifyIconList));
-
-    public NotificationArea NotificationArea
-    {
-        get { return (NotificationArea)GetValue(NotificationAreaProperty); }
-        set { SetValue(NotificationAreaProperty, value); }
-    }
+    public NotificationArea NotificationArea { get; private set; }
 
     public NotifyIconList()
     {
         InitializeComponent();
+        NotificationArea = MyTaskbarApp.MyShellManager.NotificationArea;
+    }
+
+    public NotifyIconListViewModel MyDataContext
+    {
+        get { return (NotifyIconListViewModel)DataContext; }
     }
 
     public void ChangePinItem(ManagedShell.WindowsTray.NotifyIcon item)
@@ -60,6 +63,8 @@ public partial class NotifyIconList : UserControl
     {
         if (!isLoaded && NotificationArea != null)
         {
+            MyDataContext.ChangeEdge(this.FindControlParent<Taskbar>().AppBarEdge);
+
             string[] pinnedPath = ConfigManager.AllPinnedSystray();
 
             CompositeCollection allNotifyIcons =
@@ -87,7 +92,7 @@ public partial class NotifyIconList : UserControl
             NotificationArea.UnpinnedIcons.CollectionChanged += UnpinnedIcons_CollectionChanged;
             NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
 
-            if (ConfigManager.CollapseNotifyIcons)
+            if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).CollapseNotifyIcons)
             {
                 NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;
                 SetToggleVisibility();
@@ -206,7 +211,7 @@ public partial class NotifyIconList : UserControl
 
     private void SetToggleVisibility()
     {
-        if (!ConfigManager.CollapseNotifyIcons)
+        if (!ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).CollapseNotifyIcons)
             return;
 
         if (NotificationArea.UnpinnedIcons.IsEmpty)
