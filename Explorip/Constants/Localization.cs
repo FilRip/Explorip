@@ -131,6 +131,12 @@ public static class Localization
     public static string SHUTDOWN { get; private set; }
     public static string RESTART { get; private set; }
     public static string DELETE { get; private set; }
+    public static string PIN_TO_TASKBAR { get; private set; }
+    public static string UNPIN_FROM_TASKBAR { get; private set; }
+    public static string PIN_TO_STARTMENU { get; private set; }
+    public static string UNPIN_FROM_STARTMENU { get; private set; }
+    public static string OPEN_NEW_WINDOW { get; private set; }
+    public static string CLOSE_ALL_WINDOW { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -258,6 +264,12 @@ public static class Localization
         SHUTDOWN = Load("shutdownux.dll", 3013, "Shutdown");
         RESTART = Load("shutdownux.dll", 3016, "Restart");
         DELETE = Load("shell32.dll", 31252, "Delete");
+        PIN_TO_TASKBAR = Load("starttiledata.dll", 1009, "Pin to taskbar");
+        UNPIN_FROM_TASKBAR = Load("starttiledata.dll", 1010, "Unpin from taskbar");
+        PIN_TO_STARTMENU = Load("starttiledata.dll", 1007, "Pin to Start Menu");
+        UNPIN_FROM_STARTMENU = Load("starttiledata.dll", 1008, "Unpin from Start Menu");
+        OPEN_NEW_WINDOW = Load("starttiledata.dll", 1001, "Open a new window");
+        CLOSE_ALL_WINDOW = LoadMenuItem("explorer.exe", 12000, 65491, "Close all windows").Replace("&", "_");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

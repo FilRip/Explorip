@@ -187,20 +187,24 @@ public partial class TaskThumbButton : Window
     {
         try
         {
+            IntPtr window;
+            if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
+                window = _parent.ApplicationWindow.Handle;
+            else
+                window = _parent.ApplicationWindow.ListWindows[NumColumn];
             _showContextMenu = true;
-            if (_lastPeek != IntPtr.Zero)
-                WindowHelper.PeekWindow(false, _lastPeek, _parent.TaskbarParent.Handle);
-            IntPtr wMenu = NativeMethods.GetSystemMenu(_lastPeek, false);
+            if (window != IntPtr.Zero)
+                WindowHelper.PeekWindow(false, window, _parent.TaskbarParent.Handle);
+            IntPtr wMenu = NativeMethods.GetSystemMenu(window, false);
             // Display the menu
             Point posMouse = PointToScreen(Mouse.GetPosition(this));
             uint command = NativeMethods.TrackPopupMenuEx(wMenu,
                 NativeMethods.TPM.RIGHTBUTTON | NativeMethods.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, _handle, IntPtr.Zero);
             if (command != 0)
-                NativeMethods.PostMessage(_lastPeek, NativeMethods.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+                NativeMethods.PostMessage(window, NativeMethods.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
         }
         finally
         {
-            _lastPeek = IntPtr.Zero;
             _showContextMenu = false;
         }
         Close();

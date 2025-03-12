@@ -261,10 +261,10 @@ public static class ShellHelper
 
     public static void ShowNotificationCenter()
     {
-        if (!EnvironmentHelper.IsWindows11OrBetter)
-            return;
-
-        ShellKeyCombo(VK.LWIN, VK.KEY_N);
+        if (EnvironmentHelper.IsWindows11OrBetter)
+            ShellKeyCombo(VK.LWIN, VK.KEY_N);
+        else
+            ShellKeyCombo(VK.LWIN, VK.KEY_A);
     }
 
     public static void ShowStartMenu()

@@ -138,6 +138,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
     public int Position { get; set; }
 
+    public bool MultipleInstanceLaunched
+    {
+        get { return ListWindows?.Count > 1; }
+    }
+
     public string Category
     {
         get
@@ -790,6 +795,8 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     }
 
     public bool IsPinnedApp { get; set; }
+
+    public string PinnedShortcut { get; set; }
 
     private NativeMethods.IPropertyStore _propStore;
     public NativeMethods.IPropertyStore PropertyStore

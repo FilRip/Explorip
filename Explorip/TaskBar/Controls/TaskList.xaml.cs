@@ -155,17 +155,18 @@ public partial class TaskList : UserControl
                 appWin = new ApplicationWindow(MyTaskbarApp.MyShellManager.TasksService, IntPtr.Zero);
                 appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
                 appWin.IsPinnedApp = true;
+                appWin.PinnedShortcut = file;
                 appWin.WinFileName = pinnedApp.Target;
                 if (string.IsNullOrWhiteSpace(appWin.WinFileName))
                 {
                     Console.WriteLine($"Unable to add {file} as pinned app");
                     continue;
                 }
-                if (string.IsNullOrWhiteSpace(pinnedApp.StringData.IconLocation))
+                if (string.IsNullOrWhiteSpace(pinnedApp.StringData?.IconLocation))
                     appWin.Icon = IconManager.Convert(IconManager.Extract(appWin.WinFileName, 0, true));
                 else
                     appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
-                appWin.Arguments = pinnedApp.StringData.CommandLineArguments;
+                appWin.Arguments = pinnedApp.StringData?.CommandLineArguments;
                 if (numPinnedApp > MyTaskbarApp.MyShellManager.TasksService.Windows.Count)
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Add(appWin);
                 else

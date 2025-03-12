@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using Explorip.Helpers;
 
 using ManagedShell.Common.Helpers;
-using ManagedShell.Interop;
 
 using Microsoft.Toolkit.Uwp.Notifications;
 
@@ -25,14 +24,7 @@ public partial class NotificationButton : UserControl
 
     private void Notification_OnClick(object sender, RoutedEventArgs e)
     {
-        if (EnvironmentHelper.IsWindows11OrBetter)
-        {
-            ShellHelper.ShowNotificationCenter();
-        }
-        else
-        {
-            ShellHelper.ShellKeyCombo(NativeMethods.VK.LWIN, NativeMethods.VK.KEY_A);
-        }
+        ShellHelper.ShowNotificationCenter();
         NumberOfNotifications.Text = "";
         _nbNotif = 0;
     }
@@ -42,7 +34,7 @@ public partial class NotificationButton : UserControl
         _nbNotif++;
         NumberOfNotifications.Text = _nbNotif.ToString();
         new ToastContentBuilder()
-            .AddText(e.Balloon.Title)
+            .AddHeader(e.Balloon.Title, e.Balloon.Title, "")
             .AddText(e.Balloon.Info)
             .Show();
     }

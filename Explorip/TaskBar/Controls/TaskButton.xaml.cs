@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,8 +14,11 @@ using Explorip.TaskBar.Converters;
 
 using ExploripConfig.Configuration;
 
+using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
+
+using Securify.ShellLink;
 
 namespace Explorip.TaskBar.Controls;
 
@@ -103,58 +107,6 @@ public partial class TaskButton : UserControl
         _mouseOver = false;
         CloseThumbnail();
     }
-
-    #region System context menu
-
-    private void AppButton_OnContextMenuOpening(object sender, ContextMenuEventArgs e)
-    {
-        if (Window == null)
-        {
-            return;
-        }
-
-        NativeMethods.WindowShowStyle wss = Window.ShowStyle;
-        int ws = Window.WindowStyles;
-
-        // disable window operations depending on current window state. originally tried implementing via bindings but found there is no notification we get regarding maximized state
-        MaximizeMenuItem.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMaximized && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;
-        MinimizeMenuItem.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowMinimized && (ws & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0;
-        RestoreMenuItem.IsEnabled = wss != NativeMethods.WindowShowStyle.ShowNormal;
-        MoveMenuItem.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal;
-        SizeMenuItem.IsEnabled = wss == NativeMethods.WindowShowStyle.ShowNormal && (ws & (int)NativeMethods.WindowStyles.WS_MAXIMIZEBOX) != 0;
-    }
-
-    private void CloseMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        Window?.Close();
-    }
-
-    private void RestoreMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        Window?.Restore();
-    }
-
-    private void MoveMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        Window?.Move();
-    }
-
-    private void SizeMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        Window?.Size();
-    }
-
-    private void MinimizeMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        Window?.Minimize();
-    }
-
-    private void MaximizeMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        Window?.Maximize();
-    }
-
-    #endregion
 
     private void AppButton_OnClick(object sender, RoutedEventArgs e)
     {
@@ -302,5 +254,46 @@ public partial class TaskButton : UserControl
         {
             return this.FindVisualParent<Taskbar>();
         }
+    }
+
+    private void UnpinMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        ApplicationWindow.IsPinnedApp = false;
+        ApplicationWindow.OnPropertyChanged(nameof(ApplicationWindow.IsPinnedApp));
+        if (string.IsNullOrWhiteSpace(ApplicationWindow.PinnedShortcut))
+            return;
+        if (File.Exists(ApplicationWindow.PinnedShortcut))
+            File.Delete(ApplicationWindow.PinnedShortcut);
+        if (!ApplicationWindow.Launched)
+        {
+            MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(ApplicationWindow);
+            ApplicationWindow.Dispose();
+        }
+    }
+
+    private void PinMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        Shortcut sc = Shortcut.CreateShortcut(ApplicationWindow.WinFileName, ApplicationWindow.Arguments);
+        string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
+        path = Path.Combine(path, Path.GetFileNameWithoutExtension(ApplicationWindow.WinFileName) + ".lnk");
+        if (!File.Exists(path))
+            sc.WriteToFile(path);
+        ApplicationWindow.IsPinnedApp = true;
+        ApplicationWindow.PinnedShortcut = path;
+        ApplicationWindow.OnPropertyChanged(nameof(ApplicationWindow.IsPinnedApp));
+    }
+
+    private void StartNewInstanceMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        ShellHelper.StartProcess(ApplicationWindow.WinFileName, ApplicationWindow.Arguments);
+    }
+
+    private void CloseMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (ApplicationWindow.Handle != IntPtr.Zero)
+            NativeMethods.SendMessage(ApplicationWindow.Handle, NativeMethods.WM.CLOSE, 0, 0);
+        if (ApplicationWindow.ListWindows?.Count > 0)
+            foreach (IntPtr handle in ApplicationWindow.ListWindows)
+                NativeMethods.SendMessage(handle, NativeMethods.WM.CLOSE, 0, 0);
     }
 }

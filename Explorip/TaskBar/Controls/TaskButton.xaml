@@ -6,12 +6,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:windowstask="clr-namespace:ManagedShell.WindowsTasks;assembly=ManagedShell.WindowsTasks"
+             xmlns:explorerConverters="clr-namespace:Explorip.Explorer.Converters"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
              Loaded="TaskButton_OnLoaded"
              Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <explorerConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -24,7 +26,6 @@
             Click="AppButton_OnClick"
             MouseUp="AppButton_OnMouseUp"
             PreviewMouseDown="AppButton_OnPreviewMouseDown"
-            ContextMenuOpening="AppButton_OnContextMenuOpening"
             DragEnter="AppButton_OnDragEnter"
             DragLeave="AppButton_OnDragLeave">
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
@@ -36,65 +37,11 @@
                             <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
                         </ItemsPanelTemplate>
                     </ContextMenu.ItemsPanel>
-                    <MenuItem Header="{x:Static constants:Localization.RESTORE}" BorderThickness="0"
-                          Click="RestoreMenuItem_OnClick"
-                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
-                          Name="RestoreMenuItem">
-                        <MenuItem.Icon>
-                            <TextBlock FontFamily="Marlett"
-                                   Text="&#x32;"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="{x:Static constants:Localization.MOVE}" BorderThickness="0"
-                          Click="MoveMenuItem_OnClick"
-                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
-                          Name="MoveMenuItem" />
-                    <MenuItem Header="{DynamicResource size}" BorderThickness="0"
-                          Click="SizeMenuItem_OnClick"
-                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
-                          Name="SizeMenuItem" />
-                    <MenuItem Header="{x:Static constants:Localization.MINIMIZE}" BorderThickness="0"
-                          Click="MinimizeMenuItem_OnClick"
-                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
-                          Name="MinimizeMenuItem">
-                        <MenuItem.Icon>
-                            <TextBlock FontFamily="Marlett"
-                                   Text="&#x30;"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="{x:Static constants:Localization.MAXIMIZE}" BorderThickness="0"
-                          Click="MaximizeMenuItem_OnClick"
-                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
-                          Name="MaximizeMenuItem">
-                        <MenuItem.Icon>
-                            <TextBlock FontFamily="Marlett"
-                                   Text="&#x31;"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <Separator BorderThickness="0"/>
-                    <MenuItem Header="{x:Static constants:Localization.CLOSE}" BorderThickness="0"
-                          FontWeight="Bold"
-                          Background="{x:Static colors:Colors.BackgroundColorBrush}"
-                          Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
-                          Click="CloseMenuItem_OnClick">
-                        <MenuItem.Icon>
-                            <TextBlock FontFamily="Marlett" 
-                                   Text="&#x72;"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
-                        </MenuItem.Icon>
-                    </MenuItem>
+                    <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_WINDOW}" Name="StartNewInstanceMenuItem" Click="StartNewInstanceMenuItem_Click"/>
+                    <MenuItem Header="{x:Static constants:Localization.UNPIN_FROM_TASKBAR}" Visibility="{Binding IsPinnedApp, Converter={StaticResource BoolToVisibility}}" Name="UnpinMenuItem" Click="UnpinMenuItem_Click"/>
+                    <MenuItem Header="{x:Static constants:Localization.PIN_TO_TASKBAR}" Visibility="{Binding IsPinnedApp, Converter={StaticResource InverseBoolToVisibility}}" Name="PinMenuItem" Click="PinMenuItem_Click"/>
+                    <MenuItem Header="{x:Static constants:Localization.CLOSE}" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource InverseBoolToVisibility}}" Name="CloseMenuItem" Click="CloseMenuItem_Click"/>
+                    <MenuItem Header="{x:Static constants:Localization.CLOSE_ALL_WINDOW}" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}" Name="CloseAllMenuItem" Click="CloseMenuItem_Click"/>
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
