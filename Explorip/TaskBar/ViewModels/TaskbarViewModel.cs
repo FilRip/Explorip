@@ -7,7 +7,6 @@ using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Helpers;
 
 using ManagedShell.AppBar;
-using ManagedShell.WindowsTray;
 
 namespace Explorip.TaskBar.ViewModels;
 
@@ -18,7 +17,7 @@ public partial class TaskbarViewModel : ObservableObject
     public TaskbarViewModel(Taskbar parentControl) : base()
     {
         _parentTaskbar = parentControl;
-        ShowTabTip = Visibility.Hidden;
+        ShowTabTip = Visibility.Collapsed;
     }
 
     public void ChangeEdge(AppBarEdge newEdge)

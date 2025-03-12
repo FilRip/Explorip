@@ -8,8 +8,6 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-using Explorip.Helpers;
-
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;

@@ -12,8 +12,6 @@ using ExploripConfig.Configuration;
 
 using Microsoft.Win32;
 
-using WpfScreenHelper;
-
 using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
 
 namespace Explorip;

@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
-
-using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
 
@@ -46,7 +46,7 @@ public partial class ClockViewModel : ObservableObject
     {
         SetTime();
 
-        clock.Interval = TimeSpan.FromMilliseconds(500);
+        clock.Interval = TimeSpan.FromMilliseconds(1000);
         clock.Tick += Clock_Tick;
         clock.Start();
 
@@ -101,8 +101,11 @@ public partial class ClockViewModel : ObservableObject
     {
         DateTime now = DateTime.Now;
 
-        // TODO : Localized clock
-        ClockText = System.Globalization.DateTimeFormatInfo.CurrentInfo.GetDayName(now.DayOfWeek) + Environment.NewLine + now.Hour.ToString("00") + ":" + now.Minute.ToString("00") + Environment.NewLine + now.Day.ToString("00") + "/" + now.Month.ToString("00") + "/" + now.Year.ToString("00");
-        ClockTip = now.ToLongDateString();
+        StringBuilder sb = new();
+        sb.AppendLine(DateTimeFormatInfo.CurrentInfo.GetDayName(now.DayOfWeek));
+        sb.AppendLine(now.ToString("t", CultureInfo.CurrentCulture));
+        sb.AppendLine(now.ToString("d", CultureInfo.CurrentCulture));
+        ClockText = sb.ToString();
+        ClockTip = now.ToString("f", CultureInfo.CurrentCulture);
     }
 }

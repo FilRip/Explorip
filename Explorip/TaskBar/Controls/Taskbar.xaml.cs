@@ -188,7 +188,6 @@ public partial class Taskbar : AppBarWindow
     {
         MyDataContext.ShowTabTip = MyDataContext.ShowTabTip == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
         MenuShowTabTip.IsChecked = MyDataContext.ShowTabTip == Visibility.Visible;
-        ColumnVirtualKeyboard.Width = MyDataContext.ShowTabTip == Visibility.Visible ? GridLength.Auto : new GridLength(0);
     }
 
     #endregion
