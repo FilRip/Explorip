@@ -110,7 +110,12 @@ public partial class TaskButton : UserControl
 
     private void AppButton_OnClick(object sender, RoutedEventArgs e)
     {
-        if (Window.ListWindows.Count == 1 || Window.Handle != IntPtr.Zero)
+        try
+        {
+            _timerBeforeShowThumbnail?.Change(ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
+        }
+        catch (Exception) { /* Ignore errors */ }
+        if (Window.ListWindows.Count == 1)
         {
             if (PressedWindowState == ApplicationWindow.WindowState.Active)
             {
@@ -146,7 +151,6 @@ public partial class TaskButton : UserControl
             }
 
             ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
-            // TODO : Update Handle and State
             Window.OnPropertyChanged(nameof(ApplicationWindow.Handle));
         }
     }
@@ -266,9 +270,10 @@ public partial class TaskButton : UserControl
             File.Delete(ApplicationWindow.PinnedShortcut);
         if (!ApplicationWindow.Launched)
         {
+            TaskList parentList = this.FindVisualParent<TaskList>();
             MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(ApplicationWindow);
             ApplicationWindow.Dispose();
-            this.FindVisualParent<TaskList>().Refresh(true);
+            parentList.Refresh(true);
         }
     }
 

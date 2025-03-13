@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -79,14 +80,16 @@ public partial class TaskList : UserControl
         {
             MyDataContext.ChangeEdge(this.FindControlParent<Taskbar>().AppBarEdge);
 
-            InsertPinnedApp();
-
-            TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
-            if (MyTaskbarApp.MyShellManager.Tasks.GroupedWindows != null)
-                MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
-
-            if (VirtualDesktopProvider.Default.Initialized && this.FindControlParent<Taskbar>().MainScreen)
-                VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
+            if (this.FindControlParent<Taskbar>().MainScreen)
+            {
+                if (VirtualDesktopProvider.Default.Initialized)
+                    VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
+                Task.Run(async () =>
+                {
+                    await Task.Delay(100);
+                    Refresh(true);
+                });
+            }
 
             isLoaded = true;
         }

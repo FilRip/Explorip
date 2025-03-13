@@ -236,10 +236,12 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         win = new(this, hWnd);
 
         // set window state if a non-default value is provided
-        if (initialState != ApplicationWindow.WindowState.Inactive) win.State = initialState;
+        if (initialState != ApplicationWindow.WindowState.Inactive)
+            win.State = initialState;
 
         // add window unless we need to validate it is eligible to show in taskbar
-        if (!sanityCheck || win.CanAddToTaskbar) Windows.Add(win);
+        if (!sanityCheck || win.CanAddToTaskbar)
+            Windows.Add(win);
 
         // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
         // This is because if Explorer is running, it will send the message, so we don't need to
@@ -250,24 +252,17 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
 
     private void RemoveWindow(IntPtr hWnd)
     {
-        ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.Handle == hWnd || wnd.ListWindows.Contains(hWnd));
+        ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(hWnd));
         if (win != null)
         {
             bool disposeWindow = false;
-            if (win.Handle == hWnd)
+            win.ListWindows.Remove(hWnd);
+            if (win.ListWindows.Count == 0)
                 disposeWindow = true;
-            else if (win.ListWindows.Contains(hWnd))
-            {
-                win.ListWindows.Remove(hWnd);
-                if (win.ListWindows.Count == 0)
-                    disposeWindow = true;
-                else if (win.ListWindows.Count == 1)
-                    win.State = ApplicationWindow.WindowState.Active;
-            }
+            else if (win.ListWindows.Count == 1)
+                win.State = ApplicationWindow.WindowState.Active;
             if (disposeWindow && !win.IsPinnedApp)
             {
-                if (win.Handle == IntPtr.Zero)
-                    win.Handle = hWnd;
                 Windows.Remove(win);
                 win.Dispose();
             }

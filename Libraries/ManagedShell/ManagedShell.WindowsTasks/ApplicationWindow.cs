@@ -50,8 +50,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         _isUWP = null;
         _lockUpdate = new object();
         _windows = [];
+        if (handle != IntPtr.Zero)
+            _windows.Add(handle);
         _tasksService = tasksService;
-        Handle = handle;
         State = WindowState.Inactive;
     }
 
@@ -81,7 +82,15 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
-    public IntPtr Handle { get; set; }
+    public IntPtr Handle
+    {
+        get
+        {
+            if (_windows.Count > 0)
+                return _windows[0];
+            return IntPtr.Zero;
+        }
+    }
 
     public string AppUserModelID
     {
@@ -359,7 +368,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     {
         get
         {
-            if (Handle == IntPtr.Zero && _windows.Count == 0)
+            if (_windows.Count == 0)
                 return 0;
             return NativeMethods.GetWindowLong(Handle == IntPtr.Zero ? _windows[0] : Handle, NativeMethods.GWL.GWL_EXSTYLE);
         }
@@ -369,7 +378,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     {
         get
         {
-            if (Handle == IntPtr.Zero && _windows.Count == 0)
+            if (_windows.Count == 0)
                 return true;
             int extendedWindowStyles = ExtendedWindowStyles;
             bool isWindow = NativeMethods.IsWindow(Handle == IntPtr.Zero ? _windows[0] : Handle);
@@ -617,11 +626,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             if (handle != IntPtr.Zero && !_windows.Contains(handle))
             {
                 _windows.Add(handle);
-                if (Handle != IntPtr.Zero)
-                {
-                    _windows.Insert(0, Handle);
-                    Handle = IntPtr.Zero;
-                }
             }
             if (_windows.Count > 1)
                 State = WindowState.Unknown;
@@ -751,7 +755,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
     public bool Launched
     {
-        get { return Handle != IntPtr.Zero || _windows.Count > 0; }
+        get { return _windows.Count > 0; }
     }
 
     public List<IntPtr> ListWindows

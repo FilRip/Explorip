@@ -44,7 +44,7 @@ public partial class TaskThumbButton : Window
         MainGrid.ColumnDefinitions[0].Width = new GridLength(ThumbWidth, GridUnitType.Pixel);
 
         TitleFirst.Width = ThumbWidth - CloseButtonSize;
-        if (parent.ApplicationWindow.Handle == IntPtr.Zero && parent.ApplicationWindow.ListWindows.Count > 0)
+        if (parent.ApplicationWindow.ListWindows.Count > 0)
         {
             Width *= parent.ApplicationWindow.ListWindows.Count;
         }
@@ -87,24 +87,7 @@ public partial class TaskThumbButton : Window
         try
         {
             WindowHelper.ExcludeWindowFromPeek(_handle);
-            if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
-            {
-                int result = NativeMethods.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.Handle, out IntPtr thumbPtr);
-                if (result == (int)NativeMethods.HResult.SUCCESS)
-                {
-                    NativeMethods.DwmThumbnailProperties thumbProp = new()
-                    {
-                        dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.OPACITY,
-                        fVisible = true,
-                        opacity = 255,
-                        rcDestination = new NativeMethods.Rect() { Left = 0, Top = (int)(TitleFirst.ActualHeight * VisualTreeHelper.GetDpi(this).DpiScaleY), Right = (int)(Width * VisualTreeHelper.GetDpi(this).DpiScaleX), Bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
-                    };
-                    TitleFirst.Text = _parent.ApplicationWindow.Title;
-                    NativeMethods.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
-                    _thumbPtr.Add(thumbPtr);
-                }
-            }
-            else if (_parent.ApplicationWindow.ListWindows.Count > 0)
+            if (_parent.ApplicationWindow.ListWindows.Count > 0)
             {
                 for (int i = 0; i < _parent.ApplicationWindow.ListWindows.Count; i++)
                 {
@@ -174,10 +157,7 @@ public partial class TaskThumbButton : Window
     private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
         IntPtr window;
-        if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
-            window = _parent.ApplicationWindow.Handle;
-        else
-            window = _parent.ApplicationWindow.ListWindows[NumColumn];
+        window = _parent.ApplicationWindow.ListWindows[NumColumn];
         if (window != IntPtr.Zero)
             _parent.ApplicationWindow.BringToFront(window);
         this.Close();
@@ -188,10 +168,7 @@ public partial class TaskThumbButton : Window
         try
         {
             IntPtr window;
-            if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
-                window = _parent.ApplicationWindow.Handle;
-            else
-                window = _parent.ApplicationWindow.ListWindows[NumColumn];
+            window = _parent.ApplicationWindow.ListWindows[NumColumn];
             _showContextMenu = true;
             if (window != IntPtr.Zero)
                 WindowHelper.PeekWindow(false, window, _parent.TaskbarParent.Handle);
@@ -226,10 +203,7 @@ public partial class TaskThumbButton : Window
         Application.Current.Dispatcher.Invoke(() =>
         {
             IntPtr newPeek;
-            if (_parent.ApplicationWindow.Handle != IntPtr.Zero)
-                newPeek = _parent.ApplicationWindow.Handle;
-            else
-                newPeek = _parent.ApplicationWindow.ListWindows[NumColumn];
+            newPeek = _parent.ApplicationWindow.ListWindows[NumColumn];
             if (newPeek != _lastPeek)
             {
                 if (_lastPeek != IntPtr.Zero)
