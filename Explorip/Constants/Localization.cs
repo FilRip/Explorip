@@ -137,6 +137,9 @@ public static class Localization
     public static string UNPIN_FROM_STARTMENU { get; private set; }
     public static string OPEN_NEW_WINDOW { get; private set; }
     public static string CLOSE_ALL_WINDOW { get; private set; }
+    public static string RENAME_MENUITEM_WPF { get; private set; }
+    public static string ASK_INSTALL_NEW_VERSION { get; private set; }
+    public static string ASK_DOWNLOAD_NEW_VERSION { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -270,6 +273,9 @@ public static class Localization
         UNPIN_FROM_STARTMENU = Load("starttiledata.dll", 1008, "Unpin from Start Menu");
         OPEN_NEW_WINDOW = Load("starttiledata.dll", 1001, "Open a new window");
         CLOSE_ALL_WINDOW = LoadMenuItem("explorer.exe", 12000, 65491, "Close all windows").Replace("&", "_");
+        RENAME_MENUITEM_WPF = RENAME_MENUITEM.Replace("&", "_");
+        ASK_DOWNLOAD_NEW_VERSION = Load("wscapi.dll", 6104, "Do you want to update %1");
+        ASK_INSTALL_NEW_VERSION = Load("wscapi.dll", 6101, "Click to install the new version of %1");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

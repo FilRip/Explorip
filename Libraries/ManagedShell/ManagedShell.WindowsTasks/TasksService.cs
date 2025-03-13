@@ -226,7 +226,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     public static void SendTaskbarButtonCreatedMessage(IntPtr hWnd)
     {
         // Server Core doesn't support ITaskbarList, so sending this message on that OS could cause some assuming apps to crash
-        if (!EnvironmentHelper.IsServerCore) SendNotifyMessage(hWnd, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
+        if (!EnvironmentHelper.IsServerCore)
+            SendNotifyMessage(hWnd, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
     }
 
     private ApplicationWindow AddWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
@@ -249,8 +250,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
 
     private void RemoveWindow(IntPtr hWnd)
     {
-        ApplicationWindow win;
-        while ((win = Windows.FirstOrDefault(wnd => wnd.Handle == hWnd || wnd.ListWindows.Contains(hWnd))) != null)
+        ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.Handle == hWnd || wnd.ListWindows.Contains(hWnd));
+        if (win != null)
         {
             bool disposeWindow = false;
             if (win.Handle == hWnd)
@@ -263,7 +264,6 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 else if (win.ListWindows.Count == 1)
                     win.State = ApplicationWindow.WindowState.Active;
             }
-            win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
             if (disposeWindow && !win.IsPinnedApp)
             {
                 if (win.Handle == IntPtr.Zero)
@@ -271,6 +271,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 Windows.Remove(win);
                 win.Dispose();
             }
+            else
+                win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
         }
     }
 

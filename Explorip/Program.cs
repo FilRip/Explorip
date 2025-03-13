@@ -1,10 +1,13 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows;
 
 using Explorip.Helpers;
+using Explorip.Updater;
 
 using ExploripApi;
 
@@ -27,6 +30,14 @@ public static class Program
     [STAThread()]
     public static void Main(string[] args)
     {
+#if !DEBUG
+        if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), AutoUpdater.UpdateFolder)))
+        {
+            Process.Start("autoupdate.cmd", AutoUpdater.UpdateFolder);
+            return;
+        }
+        AutoUpdater.SearchNewVersion(true);
+#endif
         ModeShell = true;
         Mutex mutexProcess;
 

@@ -19,9 +19,9 @@
     <ProjectReference Include="..\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\ManagedShell.WindowsTasks\ManagedShell.WindowsTasks.csproj" PrivateAssets="all" />
     <ProjectReference Include="..\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj" PrivateAssets="all" />
-    <PackageReference Include="System.Data.OleDb" Version="9.0.2" />
+    <PackageReference Include="System.Data.OleDb" Version="9.0.3" />
     <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.0.2" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.0.3" />
   </ItemGroup>
 
   <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">

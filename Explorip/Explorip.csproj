@@ -87,6 +87,8 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="System.Text.Json" Version="9.0.3" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TaskBar\Resources\tabtip.png" />
@@ -98,5 +100,10 @@
     <Resource Include="TaskBar\Resources\search11.png" />
     <Resource Include="TaskBar\Resources\start11.png" />
     <Resource Include="TaskBar\Resources\taskman11.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="autoupdate.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

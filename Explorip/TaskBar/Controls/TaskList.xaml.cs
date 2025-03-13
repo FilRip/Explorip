@@ -85,7 +85,7 @@ public partial class TaskList : UserControl
             if (MyTaskbarApp.MyShellManager.Tasks.GroupedWindows != null)
                 MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
 
-            if (VirtualDesktopProvider.Default.Initialized)
+            if (VirtualDesktopProvider.Default.Initialized && this.FindControlParent<Taskbar>().MainScreen)
                 VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
 
             isLoaded = true;
@@ -100,14 +100,8 @@ public partial class TaskList : UserControl
         {
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                if (MyTaskbarApp.MyShellManager.TasksService.Windows != null)
-                {
-                    MyTaskbarApp.MyShellManager.TasksService.Windows.Clear();
-                }
-                else
-                {
-                    MyTaskbarApp.MyShellManager.TasksService.Windows = [];
-                }
+                MyTaskbarApp.MyShellManager.TasksService.Windows?.Clear();
+                MyTaskbarApp.MyShellManager.TasksService.Windows = [];
 
                 NativeMethods.EnumWindows((hwnd, lParam) =>
                 {
@@ -136,9 +130,21 @@ public partial class TaskList : UserControl
 
                 System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
                 MyTaskbarApp.MyShellManager.Tasks.GroupedWindows = nouvelleListeGroupedWindows;
-                TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
+                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
+                {
+                    tb.MyTaskList.Refresh();
+                }
             }));
         }
+    }
+
+    public void Refresh(bool forceRebuild = false)
+    {
+        if (forceRebuild)
+        {
+            VirtualDesktop_CurrentChanged(null, null);
+        }
+        TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
     }
 
     private static void InsertPinnedApp()

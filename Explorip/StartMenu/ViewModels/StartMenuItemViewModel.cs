@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -8,7 +9,11 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.ShellFolders;
+
+using Securify.ShellLink;
 
 namespace Explorip.StartMenu.ViewModels;
 
@@ -73,16 +78,34 @@ public partial class StartMenuItemViewModel : ObservableObject
         }
         else
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton == MouseButton.Left &&
+                ManagedShell.Common.Helpers.ShellHelper.StartProcess(_shellFile.Path, useShellExecute: true))
             {
-                if (ManagedShell.Common.Helpers.ShellHelper.StartProcess(_shellFile.Path, useShellExecute: true))
-                    _window.HideWindow();
-            }
-            else if (e.ChangedButton == MouseButton.Right)
-            {
-                // TODO : Context menu when right click
+                _window.HideWindow();
             }
         }
+    }
+
+    [RelayCommand()]
+    private void PinToStartMenu()
+    {
+        string path = ConfigManager.StartMenuPinnedShortcutPath;
+        path = Environment.ExpandEnvironmentVariables(path);
+        string file = _shellFile.Path;
+        string dest = Path.Combine(path, Path.GetFileName(file));
+        if (Path.GetExtension(file) == ".lnk")
+        {
+            if (!File.Exists(dest))
+                File.Copy(file, dest);
+        }
+        else
+        {
+            Shortcut sc = Shortcut.CreateShortcut(file);
+            dest = Path.Combine(path, Path.GetFileNameWithoutExtension(file) + ".lnk");
+            if (!File.Exists(dest))
+                sc.WriteToFile(dest);
+        }
+        _window.RefreshPinnedShortcut();
     }
 
     public GridLength SizeNameColumn

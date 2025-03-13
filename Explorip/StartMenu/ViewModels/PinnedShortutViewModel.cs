@@ -92,7 +92,7 @@ public partial class PinnedShortutViewModel(ShellFile sf, StartMenuViewModel win
     private void Rename()
     {
         InputBoxWindow inputBox = new();
-        bool? dr = inputBox.ShowModal(Constants.Localization.RENAME_MENUITEM, Path.GetFileNameWithoutExtension(_shellFile.Path), Path.GetFileNameWithoutExtension(_shellFile.Path));
+        bool? dr = inputBox.ShowModal(Constants.Localization.RENAME_MENUITEM.Replace("&", ""), Path.GetFileNameWithoutExtension(_shellFile.Path), Path.GetFileNameWithoutExtension(_shellFile.Path));
         if (dr == true && Path.GetFileNameWithoutExtension(_shellFile.Path).ToLower() != inputBox.UserEdit.ToLower())
         {
             File.Move(_shellFile.Path, Path.Combine(Path.GetDirectoryName(_shellFile.Path), inputBox.UserEdit, Path.GetExtension(_shellFile.Path)));

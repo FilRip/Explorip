@@ -123,7 +123,7 @@ public partial class TaskButton : UserControl
         }
         else if (Window.ListWindows.Count == 0)
         {
-            ManagedShell.Common.Helpers.ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
+            ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
             Window.OnPropertyChanged(nameof(ApplicationWindow.Handle));
         }
     }
@@ -145,7 +145,7 @@ public partial class TaskButton : UserControl
                 return;
             }
 
-            ManagedShell.Common.Helpers.ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
+            ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
             // TODO : Update Handle and State
             Window.OnPropertyChanged(nameof(ApplicationWindow.Handle));
         }
@@ -268,6 +268,7 @@ public partial class TaskButton : UserControl
         {
             MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(ApplicationWindow);
             ApplicationWindow.Dispose();
+            this.FindVisualParent<TaskList>().Refresh(true);
         }
     }
 
@@ -281,6 +282,7 @@ public partial class TaskButton : UserControl
         ApplicationWindow.IsPinnedApp = true;
         ApplicationWindow.PinnedShortcut = path;
         ApplicationWindow.OnPropertyChanged(nameof(ApplicationWindow.IsPinnedApp));
+        this.FindVisualParent<TaskList>().Refresh();
     }
 
     private void StartNewInstanceMenuItem_Click(object sender, RoutedEventArgs e)
