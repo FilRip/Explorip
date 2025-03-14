@@ -322,7 +322,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
         double dpiScale = 1;
         Rect rc = GetWorkArea(ref dpiScale, screen, false, true);
 
-        SystemParametersInfo((int)SPI.SETWORKAREA, 1, ref rc, (uint)(SPIF.UPDATEINIFILE | SPIF.SENDWININICHANGE));
+        SystemParametersInfo((int)SPI.SETWORKAREA, 1, ref rc, (uint)(SPIF.UPDATEINIFILE | SPIF.SENDWININICHANGE | SPIF.SENDCHANGE));
     }
 
     public static void ResetWorkArea()
