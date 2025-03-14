@@ -77,14 +77,15 @@ public partial class WpfExplorerBrowser : Window
             foreach (string path in ConfigManager.LeftTabs.Where(p => Directory.Exists(p)))
                 LeftTab.AddNewTab(ShellObject.FromParsingName(path), Path.GetFileName(path));
 
-            foreach (string path in ConfigManager.RightTabs.Where(p => Directory.Exists(p)))
-                RightTab.AddNewTab(ShellObject.FromParsingName(path), Path.GetFileName(path));
+            if (ConfigManager.StartTwoExplorer)
+                foreach (string path in ConfigManager.RightTabs.Where(p => Directory.Exists(p)))
+                    RightTab.AddNewTab(ShellObject.FromParsingName(path), Path.GetFileName(path));
         }
         if (string.IsNullOrWhiteSpace(dir))
         {
             if (LeftTab.Items.Count == 1)
                 LeftTab.AddNewTab((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.KnownFolders.Desktop);
-            if (RightTab.Items.Count == 1)
+            if (RightTab.Items.Count == 1 && ConfigManager.StartTwoExplorer)
                 RightTab.AddNewTab((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.KnownFolders.Desktop);
         }
         if (!ConfigManager.StartTwoExplorer && !newInstance)
