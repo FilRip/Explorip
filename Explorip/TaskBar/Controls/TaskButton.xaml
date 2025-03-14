@@ -10,7 +10,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
              Loaded="TaskButton_OnLoaded"
-             Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave">
+             Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave" PreviewMouseUp="AppButton_OnMouseUp">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
         <explorerConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility"/>
@@ -24,7 +24,6 @@
             Grid.Row="0"
             ToolTip="{Binding Path=Title}"
             Click="AppButton_OnClick"
-            MouseUp="AppButton_OnMouseUp"
             PreviewMouseDown="AppButton_OnPreviewMouseDown"
             DragEnter="AppButton_OnDragEnter"
             DragLeave="AppButton_OnDragLeave">

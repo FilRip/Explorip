@@ -222,11 +222,10 @@ public partial class TaskThumbButton : Window
 
     private void CloseButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button btn)
+        if (sender is Button btn &&
+            btn.Tag is int numWindow)
         {
-            IntPtr windowHandle = _parent.ApplicationWindow.Handle;
-            if (btn.Tag is int numWindow)
-                windowHandle = _parent.ApplicationWindow.ListWindows[numWindow];
+            IntPtr windowHandle = _parent.ApplicationWindow.ListWindows[numWindow];
             if (windowHandle == IntPtr.Zero)
                 return;
             if (_lastPeek == windowHandle)

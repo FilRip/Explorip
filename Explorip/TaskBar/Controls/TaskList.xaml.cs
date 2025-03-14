@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -80,6 +81,9 @@ public partial class TaskList : UserControl
         {
             MyDataContext.ChangeEdge(this.FindControlParent<Taskbar>().AppBarEdge);
 
+            MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
+            MyTaskbarApp.MyShellManager.TasksService.RemoveAppWindow += TasksService_RemoveAppWindow;
+
             if (this.FindControlParent<Taskbar>().MainScreen)
             {
                 if (VirtualDesktopProvider.Default.Initialized)
@@ -95,6 +99,11 @@ public partial class TaskList : UserControl
         }
 
         SetStyles();
+    }
+
+    private void TasksService_RemoveAppWindow(object sender, EventArgs e)
+    {
+        MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.Refresh();
     }
 
     private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
@@ -115,7 +124,7 @@ public partial class TaskList : UserControl
                         if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyTaskbarApp.MyShellManager.TasksService.Windows.Contains(win))
                         {
                             MyTaskbarApp.MyShellManager.TasksService.Windows.Add(win);
-                            TasksService.SendTaskbarButtonCreatedMessage(win.Handle);
+                            TasksService.SendTaskbarButtonCreatedMessage(hwnd);
                         }
                     }
                     return true;
@@ -124,21 +133,34 @@ public partial class TaskList : UserControl
                 InsertPinnedApp();
 
                 IntPtr hWndForeground = NativeMethods.GetForegroundWindow();
-                if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(i => (i.Handle == hWndForeground || i.ListWindows.Contains(hWndForeground)) && i.ShowInTaskbar))
+                if (hWndForeground != IntPtr.Zero)
                 {
-                    ApplicationWindow win = MyTaskbarApp.MyShellManager.TasksService.Windows.First(wnd => (wnd.Handle == hWndForeground || wnd.ListWindows.Contains(hWndForeground)));
-                    win.State = ApplicationWindow.WindowState.Active;
-                    win.SetShowInTaskbar();
+                    ApplicationWindow win = MyTaskbarApp.MyShellManager.TasksService.Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(hWndForeground));
+                    if (win != null && win.ShowInTaskbar)
+                    {
+                        win.State = ApplicationWindow.WindowState.Active;
+                        win.SetShowInTaskbar();
+                    }
                 }
 
-                System.ComponentModel.ICollectionView nouvelleListeGroupedWindows = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
-                MyTaskbarApp.MyShellManager.Tasks.GroupedWindows = nouvelleListeGroupedWindows;
+                System.ComponentModel.ICollectionView newGroupedListAppWindow = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
+                newGroupedListAppWindow.SortDescriptions.Add(new System.ComponentModel.SortDescription(nameof(ApplicationWindow.Position), System.ComponentModel.ListSortDirection.Ascending));
+                newGroupedListAppWindow.Filter = FilterAppWindow;
+                MyTaskbarApp.MyShellManager.Tasks.GroupedWindows = newGroupedListAppWindow;
                 foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
                 {
                     tb.MyTaskList.Refresh();
                 }
             }));
         }
+    }
+
+    private static bool FilterAppWindow(object item)
+    {
+        if (item is ApplicationWindow window && window.ShowInTaskbar && !window.IsDisposed)
+            return true;
+
+        return false;
     }
 
     public void Refresh(bool forceRebuild = false)
@@ -153,6 +175,23 @@ public partial class TaskList : UserControl
     private static void InsertPinnedApp()
     {
         string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
+        Dictionary<string, int> orders = [];
+        try
+        {
+            string exploripConfigFile = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Config", "exploripTaskbar.ini");
+            if (File.Exists(exploripConfigFile))
+            {
+                string[] lines = File.ReadAllLines(exploripConfigFile);
+                string[] splitter;
+                foreach (string line in lines)
+                {
+                    splitter = line.Split('|');
+                    if (splitter.Length == 2 && int.TryParse(splitter[0], out int position))
+                        orders.Add(splitter[1], position);
+                }
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
         if (Directory.Exists(path))
         {
             int numPinnedApp = 0;
@@ -161,11 +200,15 @@ public partial class TaskList : UserControl
             foreach (string file in Directory.GetFiles(path, "*.lnk").Where(file => !MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.Title == Path.GetFileNameWithoutExtension(file))))
             {
                 pinnedApp = Shortcut.ReadFromFile(file);
-                appWin = new ApplicationWindow(MyTaskbarApp.MyShellManager.TasksService, IntPtr.Zero);
+                appWin = new ApplicationWindow(MyTaskbarApp.MyShellManager.TasksService, IntPtr.Zero)
+                {
+                    IsPinnedApp = true,
+                    PinnedShortcut = file,
+                    WinFileName = pinnedApp.Target,
+                };
                 appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
-                appWin.IsPinnedApp = true;
-                appWin.PinnedShortcut = file;
-                appWin.WinFileName = pinnedApp.Target;
+                if (orders.TryGetValue(Path.GetFileName(file), out int position))
+                    appWin.Position = position;
                 if (string.IsNullOrWhiteSpace(appWin.WinFileName))
                 {
                     Console.WriteLine($"Unable to add {file} as pinned app");
@@ -182,18 +225,22 @@ public partial class TaskList : UserControl
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
                 if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
                 {
+                    List<ApplicationWindow> toDispose = [];
                     foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw.WinFileName == appWin.WinFileName).ToList())
                     {
                         if (win != appWin)
                         {
+                            toDispose.Add(win);
                             MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
-                            appWin.ListWindows.Add(win.Handle);
+                            appWin.ListWindows.AddRange(win.ListWindows);
                             if (appWin.ListWindows.Count > 1)
                                 appWin.State = ApplicationWindow.WindowState.Unknown;
                             else
                                 appWin.State = win.State;
                         }
                     }
+                    foreach (ApplicationWindow win in toDispose)
+                        win.Dispose();
                 }
             }
         }
@@ -204,6 +251,7 @@ public partial class TaskList : UserControl
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
         MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
+        MyTaskbarApp.MyShellManager.TasksService.RemoveAppWindow -= TasksService_RemoveAppWindow;
         if (VirtualDesktopProvider.Default.Initialized)
             VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
         isLoaded = false;

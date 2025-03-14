@@ -1,13 +1,16 @@
 using System;
 using System.Diagnostics;
+#if !DEBUG
 using System.IO;
+#endif
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows;
 
 using Explorip.Helpers;
+#if !DEBUG
 using Explorip.Updater;
+#endif
 
 using ExploripApi;
 

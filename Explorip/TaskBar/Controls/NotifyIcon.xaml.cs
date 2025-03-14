@@ -110,7 +110,7 @@ public partial class NotifyIcon : UserControl
 
     private void NotifyIconBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
-        if ((e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down))) && TrayIcon != null)
+        if ((e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down) || Keyboard.GetKeyStates(Key.RightCtrl).HasFlag(KeyStates.Down)))) && TrayIcon != null)
         {
             NotifyIconList parent = this.FindVisualParent<NotifyIconList>();
             parent.ChangePinItem(TrayIcon);
@@ -120,7 +120,7 @@ public partial class NotifyIcon : UserControl
 
     private void NotifyIconBorder_PreviewMouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down)))
+        if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down) || Keyboard.GetKeyStates(Key.RightCtrl).HasFlag(KeyStates.Down))))
             e.Handled = true;
     }
 }

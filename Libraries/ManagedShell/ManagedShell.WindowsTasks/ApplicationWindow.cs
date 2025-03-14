@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -54,6 +55,8 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             _windows.Add(handle);
         _tasksService = tasksService;
         State = WindowState.Inactive;
+        if (tasksService.Windows.Count > 0)
+            Position = tasksService.Windows.Max(aw => aw.Position) + 1;
     }
 
     private bool _isDisposed;
@@ -630,6 +633,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             if (_windows.Count > 1)
                 State = WindowState.Unknown;
             OnPropertyChanged(nameof(Launched));
+            OnPropertyChanged(nameof(MultipleInstanceLaunched));
             SetTitle();
             SetShowInTaskbar();
             SetIcon();

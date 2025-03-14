@@ -118,18 +118,13 @@ public partial class TaskButton : UserControl
         if (Window.ListWindows.Count == 1)
         {
             if (PressedWindowState == ApplicationWindow.WindowState.Active)
-            {
                 Window.Minimize();
-            }
             else if (Window.State != ApplicationWindow.WindowState.Unknown)
-            {
                 Window.BringToFront();
-            }
         }
         else if (Window.ListWindows.Count == 0)
         {
             ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
-            Window.OnPropertyChanged(nameof(ApplicationWindow.Handle));
         }
     }
 
@@ -143,15 +138,11 @@ public partial class TaskButton : UserControl
 
     private void AppButton_OnMouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (e.ChangedButton == MouseButton.Middle)
+        if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl) == KeyStates.Down || Keyboard.GetKeyStates(Key.RightCtrl) == KeyStates.Down)))
         {
             if (Window == null)
-            {
                 return;
-            }
-
             ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
-            Window.OnPropertyChanged(nameof(ApplicationWindow.Handle));
         }
     }
 
@@ -198,7 +189,7 @@ public partial class TaskButton : UserControl
     private void AppButton_MouseEnter(object sender, MouseEventArgs e)
     {
         _mouseOver = true;
-        if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
+        if (Window.ListWindows.Count == 0)
             return;
 
         if (ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).TaskbarDisableThumb)
@@ -222,7 +213,7 @@ public partial class TaskButton : UserControl
     private void AppButton_MouseLeave(object sender, MouseEventArgs e)
     {
         _mouseOver = false;
-        if (Window.Handle == IntPtr.Zero && Window.ListWindows.Count == 0)
+        if (Window.ListWindows.Count == 0)
         {
             CloseThumbnail();
             return;
@@ -297,8 +288,6 @@ public partial class TaskButton : UserControl
 
     private void CloseMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        if (ApplicationWindow.Handle != IntPtr.Zero)
-            NativeMethods.SendMessage(ApplicationWindow.Handle, NativeMethods.WM.CLOSE, 0, 0);
         if (ApplicationWindow.ListWindows?.Count > 0)
             foreach (IntPtr handle in ApplicationWindow.ListWindows)
                 NativeMethods.SendMessage(handle, NativeMethods.WM.CLOSE, 0, 0);

@@ -245,10 +245,13 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
 
         // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
         // This is because if Explorer is running, it will send the message, so we don't need to
-        if (EnvironmentHelper.IsAppRunningAsShell) SendTaskbarButtonCreatedMessage(win.Handle);
+        if (EnvironmentHelper.IsAppRunningAsShell)
+            SendTaskbarButtonCreatedMessage(win.Handle);
 
         return win;
     }
+
+    public event EventHandler<EventArgs> RemoveAppWindow;
 
     private void RemoveWindow(IntPtr hWnd)
     {
@@ -265,6 +268,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             {
                 Windows.Remove(win);
                 win.Dispose();
+                RemoveAppWindow?.Invoke(this, EventArgs.Empty);
             }
             else
                 win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
@@ -298,15 +302,11 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     {
                         case HSHELL.WINDOWCREATED:
                             ShellLogger.Debug("TasksService: Created: " + msg.LParam);
-                            if (!Windows.Any(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam) || i.WinFileName == winFileName))
-                            {
+                            ApplicationWindow appWin = win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
+                            if (appWin == null)
                                 AddWindow(msg.LParam);
-                            }
                             else
-                            {
-                                win = Windows.First(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
                                 win.UpdateProperties(msg.LParam);
-                            }
                             break;
 
                         case HSHELL.WINDOWDESTROYED:
