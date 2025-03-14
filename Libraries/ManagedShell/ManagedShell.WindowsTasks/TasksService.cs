@@ -240,7 +240,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             win.State = initialState;
 
         // add window unless we need to validate it is eligible to show in taskbar
-        if (!sanityCheck || win.CanAddToTaskbar)
+        if ((!sanityCheck || win.CanAddToTaskbar) && win.ClassName != "Windows.UI.Core.CoreWindow")
             Windows.Add(win);
 
         // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
