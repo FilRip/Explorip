@@ -303,6 +303,9 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
             OnPropertyChanged();
         }
     }
+
+    public int Position { get; set; }
+
     #endregion
 
     public ShellItem(IShellItem shellItem)

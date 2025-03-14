@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Helpers;
 
 using ManagedShell.AppBar;
@@ -17,6 +18,8 @@ public partial class TaskListViewModel : ObservableObject
         _currentEdge = newEdge;
         OnPropertyChanged(nameof(PanelOrientation));
     }
+
+    public Taskbar TaskbarParent { get; set; }
 
     public Orientation PanelOrientation
     {

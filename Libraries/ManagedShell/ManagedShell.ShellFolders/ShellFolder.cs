@@ -209,7 +209,7 @@ public class ShellFolder : ShellItem
             }
             else
             {
-                ShellLogger.Error($"ShellFolder: Unable to enumerate IShellFolder");
+                ShellLogger.Error($"ShellFolder: Unable to enumerate IShellFolder of " + Path);
             }
         }
         catch (Exception e)

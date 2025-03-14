@@ -2,9 +2,11 @@
 using System.Globalization;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using ManagedShell.Common.Helpers;
 
@@ -107,5 +109,38 @@ public partial class ClockViewModel : ObservableObject
         sb.AppendLine(now.ToString("d", CultureInfo.CurrentCulture));
         ClockText = sb.ToString();
         ClockTip = now.ToString("f", CultureInfo.CurrentCulture);
+    }
+
+    private static void OpenDateTimeCpl()
+    {
+        ShellHelper.StartProcess("timedate.cpl", useShellExecute: true);
+    }
+
+    [RelayCommand()]
+    private void ShowConfigClock()
+    {
+        OpenDateTimeCpl();
+    }
+
+    [RelayCommand()]
+    private void MouseDoubleClick(MouseButtonEventArgs e)
+    {
+        SingleClickStop();
+        OpenDateTimeCpl();
+
+        e.Handled = true;
+    }
+
+    [RelayCommand()]
+    private void MouseLeftButtonDown()
+    {
+        if (EnvironmentHelper.IsWindows11OrBetter)
+        {
+            ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.KEY_A);
+        }
+        else
+        {
+            ShellHelper.ShellKeyCombo(ManagedShell.Interop.NativeMethods.VK.LWIN, ManagedShell.Interop.NativeMethods.VK.LMENU, ManagedShell.Interop.NativeMethods.VK.KEY_D);
+        }
     }
 }

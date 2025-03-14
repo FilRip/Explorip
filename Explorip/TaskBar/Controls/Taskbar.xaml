@@ -42,22 +42,22 @@
                 </Grid.RowDefinitions>
                 <controls:StartButton x:Name="StartButton" Grid.Column="0" Grid.RowSpan="2">
                     <DockPanel.Dock>
-                        <Binding Path="LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:StartButton>
                 <controls:SearchButton x:Name="SearchButton" Grid.Column="1" Grid.RowSpan="2">
                     <DockPanel.Dock>
-                        <Binding Path="LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:SearchButton>
                 <controls:TaskManButton x:Name="TaskManButton" Grid.Column="2" Grid.RowSpan="2">
                     <DockPanel.Dock>
-                        <Binding Path="LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:TaskManButton>
                 <controls:WidgetsButton x:Name="WidgetsButton" Grid.Column="3" Grid.RowSpan="2">
                     <DockPanel.Dock>
-                        <Binding Path="LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:WidgetsButton>
                 <Grid Grid.Column="4" Grid.Row="0" Name="ToolsBars">
@@ -68,7 +68,7 @@
                 <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="MyTaskList" TaskbarParent="{Binding ParentTaskbar}"/>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
                     <DockPanel.Dock>
-                        <Binding Path="TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                        <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                     <StackPanel Orientation="{Binding PanelOrientation}">
                         <controls:NotifyIconList VerticalAlignment="Center"/>
@@ -77,12 +77,12 @@
                 </GroupBox>
                 <controls:TabTipButton x:Name="TabTipButton" Grid.Column="6" Grid.RowSpan="2" Visibility="{Binding ShowTabTip}">
                     <DockPanel.Dock>
-                        <Binding Path="LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:TabTipButton>
                 <controls:NotificationButton x:Name="NotificationButton" Grid.Column="7" Grid.RowSpan="2">
                     <DockPanel.Dock>
-                        <Binding Path="LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:NotificationButton>
             </Grid>

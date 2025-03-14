@@ -1,9 +1,13 @@
 ﻿<UserControl x:Class="Explorip.TaskBar.Controls.SearchButton"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              Background="Transparent">
+    <UserControl.DataContext>
+        <viewmodels:SearchButtonViewModel/>
+    </UserControl.DataContext>
     <ToggleButton ToolTip="{DynamicResource SearchButtonTip}"
-                  Click="Search_OnClick"
+                  Command="{Binding ShowSearchCommand}"
                   Name="Search"
                   Background="Transparent"
                   Style="{DynamicResource SearchButton}">

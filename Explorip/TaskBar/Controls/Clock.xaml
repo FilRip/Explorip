@@ -6,12 +6,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
-             MouseLeftButtonDown="Clock_OnMouseLeftButtonDown"
-             MouseDoubleClick="Clock_OnMouseDoubleClick"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              Background="Transparent"
              Loaded="UserControl_Loaded"
              Unloaded="UserControl_Unloaded">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseDoubleClick">
+            <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="MouseLeftButtonDown">
+            <i:InvokeCommandAction Command="{Binding MouseLeftButtonDownCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.DataContext>
         <viewmodels:ClockViewModel/>
     </UserControl.DataContext>
@@ -30,7 +37,7 @@
                     <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
                 </ItemsPanelTemplate>
             </ContextMenu.ItemsPanel>
-            <MenuItem Header="{x:Static constants:Localization.ADJUST_DATE_TIME}" Click="MenuItem_OnClick" />
+            <MenuItem Header="{x:Static constants:Localization.ADJUST_DATE_TIME}" Command="{Binding ShowConfigClockCommand}" />
         </ContextMenu>
     </UserControl.ContextMenu>
 </UserControl>

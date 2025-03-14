@@ -229,7 +229,7 @@ public static class ConfigManager
         }
     }
 
-    internal static int ToolbarNumber(string path)
+    public static int ToolbarNumber(string path)
     {
         int pos = -1;
         _registryRootTaskbar.GetSubKeyNames().Where(s => s.Contains($"{ToolBarNameInRegistry}(")).ToList().ForEach(v =>

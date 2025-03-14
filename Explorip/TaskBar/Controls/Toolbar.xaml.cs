@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -96,7 +99,26 @@ public partial class Toolbar : UserControl
     {
         if (Folder != null)
         {
-            ToolbarItems.ItemsSource = Folder.Files;
+            Dictionary<string, int> orders = [];
+            string config = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Config", "exploripToolbar" + ConfigManager.ToolbarNumber(Path) + ".ini");
+            if (File.Exists(config))
+            {
+                string[] lines = File.ReadAllLines(config);
+                string[] splitter;
+                foreach (string line in lines)
+                {
+                    splitter = line.Split('|');
+                    if (splitter.Length == 2 && int.TryParse(splitter[0], out int position))
+                        orders.Add(splitter[1], position);
+                }
+                if (Folder?.Files?.Count > 0)
+                    foreach (ShellItem si in Folder.Files)
+                        if (orders.TryGetValue(System.IO.Path.GetFileName(si.Path), out int position))
+                            si.Position = position;
+            }
+            ICollectionView newCollection = CollectionViewSource.GetDefaultView(Folder.Files);
+            newCollection.SortDescriptions.Add(new SortDescription(nameof(ShellItem.Position), ListSortDirection.Ascending));
+            ToolbarItems.ItemsSource = newCollection;
             UpdateInvisibleIcons();
         }
     }
@@ -110,6 +132,8 @@ public partial class Toolbar : UserControl
     {
         Application.Current.Dispatcher.BeginInvoke(() =>
         {
+            if (Folder == null)
+                return;
             double maxWidth = ToolbarItems.ActualWidth - (CurrentShowLargeIcon ? 32 : 16);
             if (Title.Visibility == Visibility.Visible)
                 maxWidth -= Title.ActualWidth;
@@ -255,16 +279,12 @@ public partial class Toolbar : UserControl
             if (visible)
             {
                 if (Folder != null)
-                {
                     return;
-                }
 
                 SetupFolder(Path);
             }
             else
-            {
                 UnloadFolder();
-            }
         }
     }
     #endregion

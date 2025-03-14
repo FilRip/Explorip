@@ -19,7 +19,7 @@
                       HorizontalAlignment="Stretch">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel Orientation="{Binding PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TaskList}}"/>
+                    <WrapPanel Orientation="{Binding DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TaskList}}"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>

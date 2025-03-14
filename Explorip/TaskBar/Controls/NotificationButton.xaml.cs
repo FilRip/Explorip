@@ -2,8 +2,7 @@
 using System.Windows.Controls;
 
 using Explorip.Helpers;
-
-using ManagedShell.Common.Helpers;
+using Explorip.TaskBar.ViewModels;
 
 using Microsoft.Toolkit.Uwp.Notifications;
 
@@ -14,25 +13,19 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class NotificationButton : UserControl
 {
-    private int _nbNotif;
-
     public NotificationButton()
     {
         InitializeComponent();
-        _nbNotif = 0;
     }
 
-    private void Notification_OnClick(object sender, RoutedEventArgs e)
+    public NotificationButtonViewModel MyDataContext
     {
-        ShellHelper.ShowNotificationCenter();
-        NumberOfNotifications.Text = "";
-        _nbNotif = 0;
+        get { return (NotificationButtonViewModel)DataContext; }
     }
 
     private void NotificationArea_NotificationBalloonShown(object sender, ManagedShell.WindowsTray.NotificationBalloonEventArgs e)
     {
-        _nbNotif++;
-        NumberOfNotifications.Text = _nbNotif.ToString();
+        MyDataContext.IncreaseNumberOfNotifications();
         new ToastContentBuilder()
             .AddHeader(e.Balloon.Title, e.Balloon.Title, "")
             .AddText(e.Balloon.Info)
