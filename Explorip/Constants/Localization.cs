@@ -247,8 +247,8 @@ public static class Localization
         REGEDIT_VALUE_NAME = Load("regedit.exe", 17, "Name");
         REGEDIT_TYPE_NAME = Load("regedit.exe", 31, "Type");
         REGEDIT_DATA_NAME = Load("regedit.exe", 18, "Data");
-        TASKBAR_SHOW_TASKMGR = LoadMenuItem("explorer.exe", 205, 430, "Show active application button").Replace("&", "_");
-        TASKBAR_SHOW_SEARCH = LoadMenuItem("explorer.exe", 205, 448, "Show search button").Replace("&", "_");
+        TASKBAR_SHOW_TASKMGR = Load("explorerframe.dll", 50259, "Show") + " " + Load("twinui.pcshell.dll", 34304, "actives applications").ToLower();
+        TASKBAR_SHOW_SEARCH = Load("explorerframe.dll", 50259, "Show") + " " + Load("explorerframe.dll", 34304, "search window").ToLower();
         TASKBAR_SHOW_WIDGET = Load("explorerframe.dll", 50259, "Show") + " " + Load("mshtml.dll", 53857, "widget").ToLower();
         SHOW_HIDDEN_ICONS = Load("explorer.exe", 543, "Show hidden icons");
         HIDE = Load("explorer.exe", 542, "Hide");
