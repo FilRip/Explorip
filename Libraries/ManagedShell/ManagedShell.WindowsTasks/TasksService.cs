@@ -130,20 +130,22 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             {
                 Windows.Add(win);
 
-                SendTaskbarButtonCreatedMessage(win.Handle);
+                SendTaskbarButtonCreatedMessage(win.ListWindows[0]);
             }
 
             return true;
         }, 0);
 
         IntPtr hWndForeground = GetForegroundWindow();
-        if (Windows.Any(i => i.Handle == hWndForeground && i.ShowInTaskbar))
+        ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.ListWindows?.Count > 0 && wnd.ListWindows[0] == hWndForeground);
+        if (win != null && win.ShowInTaskbar)
         {
-            ApplicationWindow win = Windows.First(wnd => wnd.Handle == hWndForeground);
             win.State = ApplicationWindow.WindowState.Active;
             win.SetShowInTaskbar();
         }
     }
+
+    #region IDisposable
 
     private bool _isDisposed;
     public bool IsDisposed
@@ -176,6 +178,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             _isDisposed = true;
         }
     }
+
+    #endregion
 
     private void CategoriesChanged()
     {
@@ -217,9 +221,12 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     {
         if (window.DoClose() != IntPtr.Zero)
         {
+            bool raiseEvent = window.ShowInTaskbar;
             ShellLogger.Debug($"TasksService: Removing window {window.Title} from collection due to no response");
-            window.Dispose();
             Windows.Remove(window);
+            window.Dispose();
+            if (raiseEvent)
+                WindowDestroy?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -230,7 +237,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             SendNotifyMessage(hWnd, (uint)TASKBARBUTTONCREATEDMESSAGE, UIntPtr.Zero, IntPtr.Zero);
     }
 
-    private ApplicationWindow AddWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
+    public ApplicationWindow AddWindow(IntPtr hWnd, ApplicationWindow.WindowState initialState = ApplicationWindow.WindowState.Inactive, bool sanityCheck = false)
     {
         ApplicationWindow win;
         win = new(this, hWnd);
@@ -246,32 +253,46 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         // Only send TaskbarButtonCreated if we are shell, and if OS is not Server Core
         // This is because if Explorer is running, it will send the message, so we don't need to
         if (EnvironmentHelper.IsAppRunningAsShell)
-            SendTaskbarButtonCreatedMessage(win.Handle);
+            SendTaskbarButtonCreatedMessage(win.ListWindows[0]);
+
+        if (win.ShowInTaskbar)
+            WindowCreate?.Invoke(this, EventArgs.Empty);
 
         return win;
     }
 
-    public event EventHandler<EventArgs> RemoveAppWindow;
+    public event EventHandler<EventArgs> WindowDestroy;
+    public event EventHandler<EventArgs> WindowCreate;
 
-    private void RemoveWindow(IntPtr hWnd)
+    internal void RemoveWindow(ApplicationWindow window)
+    {
+        Windows.Remove(window);
+        if (window.ShowInTaskbar)
+            WindowDestroy?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void RemoveWindow(IntPtr hWnd)
     {
         ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(hWnd));
         if (win != null)
         {
-            bool disposeWindow = false;
-            win.ListWindows.Remove(hWnd);
-            if (win.ListWindows.Count == 0)
-                disposeWindow = true;
-            else if (win.ListWindows.Count == 1)
+            bool disposeWindow = (win.ListWindows.Count == 1);
+            if (win.ListWindows.Count == 2)
                 win.State = ApplicationWindow.WindowState.Active;
             if (disposeWindow && !win.IsPinnedApp)
             {
+                bool raiseEvent = win.ShowInTaskbar;
                 Windows.Remove(win);
                 win.Dispose();
-                RemoveAppWindow?.Invoke(this, EventArgs.Empty);
+                if (raiseEvent)
+                    WindowDestroy?.Invoke(this, EventArgs.Empty);
             }
             else
+            {
+                win.ListWindows.Remove(hWnd);
                 win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
+                win.OnPropertyChanged(nameof(ApplicationWindow.MultipleInstanceLaunched));
+            }
         }
     }
 
@@ -281,7 +302,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
 
         foreach (ApplicationWindow wind in Windows)
         {
-            if (wind.WinFileName == win.WinFileName && wind.Handle != win.Handle)
+            if (wind.WinFileName == win.WinFileName && wind.ListWindows.Count > 0 && wind.ListWindows[0] != win.ListWindows[0])
             {
                 wind.UpdateProperties();
             }
@@ -302,36 +323,32 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     {
                         case HSHELL.WINDOWCREATED:
                             ShellLogger.Debug("TasksService: Created: " + msg.LParam);
-                            ApplicationWindow appWin = win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
-                            if (appWin == null)
+                            win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
+                            if (win == null)
                                 AddWindow(msg.LParam);
                             else
                                 win.UpdateProperties(msg.LParam);
                             break;
-
                         case HSHELL.WINDOWDESTROYED:
                             ShellLogger.Debug("TasksService: Destroyed: " + msg.LParam);
                             RemoveWindow(msg.LParam);
                             break;
-
                         case HSHELL.WINDOWREPLACING:
                             ShellLogger.Debug("TasksService: Replacing: " + msg.LParam);
-                            if ((win = Windows.FirstOrDefault(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam))) != null)
+                            win = Windows.FirstOrDefault(i => i.ListWindows.Contains(msg.LParam));
+                            if (win != null)
                             {
                                 win.State = ApplicationWindow.WindowState.Inactive;
                                 win.SetShowInTaskbar();
                             }
                             else
-                            {
                                 AddWindow(msg.LParam);
-                            }
                             break;
                         case HSHELL.WINDOWREPLACED:
                             ShellLogger.Debug("TasksService: Replaced: " + msg.LParam);
                             // TODO: If a window gets replaced, we lose app-level state such as overlay icons.
                             RemoveWindow(msg.LParam);
                             break;
-
                         case HSHELL.WINDOWACTIVATED:
                         case HSHELL.RUDEAPPACTIVATED:
                             ShellLogger.Debug("TasksService: Activated: " + msg.LParam);
@@ -343,7 +360,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
 
                             if (msg.LParam != IntPtr.Zero)
                             {
-                                if ((win = Windows.FirstOrDefault(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam))) != null)
+                                win = Windows.FirstOrDefault(i => i.ListWindows.Contains(msg.LParam));
+                                if (win != null)
                                 {
                                     win.State = ApplicationWindow.WindowState.Active;
                                     win.SetShowInTaskbar();
@@ -357,17 +375,17 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                 {
                                     foreach (ApplicationWindow wind in Windows)
                                     {
-                                        if (wind.WinFileName == win.WinFileName && wind.Handle != win.Handle)
+                                        if (wind.WinFileName == win.WinFileName && wind.ListWindows.Count > 0 && win.ListWindows.Count > 0 && wind.ListWindows[0] != win.ListWindows[0])
                                             wind.SetShowInTaskbar();
                                     }
                                 }
                             }
                             WindowActivated?.Invoke(msg.LParam);
                             break;
-
                         case HSHELL.FLASH:
                             ShellLogger.Debug("TasksService: Flashing window: " + msg.LParam);
-                            if ((win = Windows.FirstOrDefault(i => i.Handle == msg.LParam || i.ListWindows.Contains(msg.LParam))) != null)
+                            win = Windows.FirstOrDefault(i => i.ListWindows.Contains(msg.LParam));
+                            if (win != null)
                             {
                                 if (win.State != ApplicationWindow.WindowState.Active)
                                 {
@@ -381,16 +399,13 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                 AddWindow(msg.LParam, ApplicationWindow.WindowState.Flashing, true);
                             }
                             break;
-
                         case HSHELL.ACTIVATESHELLWINDOW:
                             ShellLogger.Debug("TasksService: Activate shell window called.");
                             break;
-
                         case HSHELL.ENDTASK:
                             ShellLogger.Debug("TasksService: EndTask called: " + msg.LParam);
                             RemoveWindow(msg.LParam);
                             break;
-
                         case HSHELL.GETMINRECT:
                             ShellLogger.Debug("TasksService: GetMinRect called: " + msg.LParam);
                             ShellHookInfo winHandle = (ShellHookInfo)Marshal.PtrToStructure(msg.LParam, typeof(ShellHookInfo));
@@ -398,10 +413,10 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             Marshal.StructureToPtr(winHandle, msg.LParam, true);
                             msg.Result = winHandle.hwnd;
                             return; // return here so the result isnt reset to DefWindowProc
-
                         case HSHELL.REDRAW:
                             ShellLogger.Debug("TasksService: Redraw called: " + msg.LParam);
-                            if ((win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.LParam || wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName)) != null)
+                            win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
+                            if (win != null)
                             {
                                 if (win.State == ApplicationWindow.WindowState.Flashing)
                                 {
@@ -415,14 +430,12 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                 AddWindow(msg.LParam, ApplicationWindow.WindowState.Inactive, true);
                             }
                             break;
-
 #pragma warning disable S125 // Sections of code should not be commented out
                         // TaskMan needs to return true if we provide our own task manager to prevent explorers.
                         // case HSHELL.TASKMAN:
                         //     SingletonLogger.Instance.Info("TaskMan Message received.");
                         //     break;
 #pragma warning restore S125 // Sections of code should not be commented out
-
                         default:
                             break;
                     }
@@ -462,7 +475,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     // SetProgressValue
                     ShellLogger.Debug("TasksService: ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
 
-                    win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
+                    win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
                     if (win != null)
                         win.ProgressValue = (int)msg.LParam;
 
@@ -472,7 +485,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     // SetProgressState
                     ShellLogger.Debug("TasksService: ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
 
-                    win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
+                    win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
                     if (win != null)
                         win.ProgressState = (TBPFLAG)msg.LParam;
 
@@ -522,7 +535,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     // SetOverlayIcon - Icon
                     ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
 
-                    win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
+                    win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
                     win?.SetOverlayIcon(msg.LParam);
 
                     msg.Result = IntPtr.Zero;
@@ -541,7 +554,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     // SetOverlayIcon - Description
                     ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Description HWND:" + msg.WParam);
 
-                    win = Windows.FirstOrDefault(wnd => wnd.Handle == msg.WParam || wnd.ListWindows.Contains(msg.WParam));
+                    win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
                     win?.SetOverlayIconDescription(msg.LParam);
 
                     msg.Result = IntPtr.Zero;
@@ -559,9 +572,9 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
 
     private void UncloakEventCallback(IntPtr hWinEventHook, uint eventType, IntPtr hWnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
     {
-        if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && Windows.Any(i => i.Handle == hWnd || i.ListWindows.Contains(hWnd)))
+        ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(hWnd));
+        if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && win != null)
         {
-            ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.Handle == hWnd);
             win?.Uncloak();
         }
     }

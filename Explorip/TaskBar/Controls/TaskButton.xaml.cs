@@ -260,12 +260,7 @@ public partial class TaskButton : UserControl
         if (File.Exists(ApplicationWindow.PinnedShortcut))
             File.Delete(ApplicationWindow.PinnedShortcut);
         if (!ApplicationWindow.Launched)
-        {
-            TaskList parentList = this.FindVisualParent<TaskList>();
-            MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(ApplicationWindow);
             ApplicationWindow.Dispose();
-            parentList.Refresh(true);
-        }
     }
 
     private void PinMenuItem_Click(object sender, RoutedEventArgs e)
@@ -278,7 +273,6 @@ public partial class TaskButton : UserControl
         ApplicationWindow.IsPinnedApp = true;
         ApplicationWindow.PinnedShortcut = path;
         ApplicationWindow.OnPropertyChanged(nameof(ApplicationWindow.IsPinnedApp));
-        this.FindVisualParent<TaskList>().Refresh();
     }
 
     private void StartNewInstanceMenuItem_Click(object sender, RoutedEventArgs e)

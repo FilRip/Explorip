@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -79,10 +80,11 @@ public partial class TaskList : UserControl
 
         if (!isLoaded && MyTaskbarApp.MyShellManager.Tasks != null)
         {
+            isLoaded = true;
             MyDataContext.ChangeEdge(this.FindControlParent<Taskbar>().AppBarEdge);
 
-            MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged += GroupedWindows_CollectionChanged;
-            MyTaskbarApp.MyShellManager.TasksService.RemoveAppWindow += TasksService_RemoveAppWindow;
+            MyTaskbarApp.MyShellManager.TasksService.WindowDestroy += RefreshTaskList;
+            MyTaskbarApp.MyShellManager.TasksService.WindowCreate += RefreshTaskList;
 
             if (this.FindControlParent<Taskbar>().MainScreen)
             {
@@ -90,20 +92,18 @@ public partial class TaskList : UserControl
                     VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
                 Task.Run(async () =>
                 {
-                    await Task.Delay(100);
-                    Refresh(true);
+                    await Task.Delay(1000);
+                    VirtualDesktop_CurrentChanged(null, null);
                 });
             }
-
-            isLoaded = true;
         }
 
         SetStyles();
     }
 
-    private void TasksService_RemoveAppWindow(object sender, EventArgs e)
+    private void RefreshTaskList(object sender, EventArgs e)
     {
-        MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.Refresh();
+        RefreshCollectionView();
     }
 
     private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
@@ -143,16 +143,23 @@ public partial class TaskList : UserControl
                     }
                 }
 
-                System.ComponentModel.ICollectionView newGroupedListAppWindow = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
-                newGroupedListAppWindow.SortDescriptions.Add(new System.ComponentModel.SortDescription(nameof(ApplicationWindow.Position), System.ComponentModel.ListSortDirection.Ascending));
-                newGroupedListAppWindow.Filter = FilterAppWindow;
-                MyTaskbarApp.MyShellManager.Tasks.GroupedWindows = newGroupedListAppWindow;
-                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
-                {
-                    tb.MyTaskList.Refresh();
-                }
+                RefreshCollectionView();
             }));
         }
+    }
+
+    private static void RefreshCollectionView()
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            System.ComponentModel.ICollectionView newGroupedListAppWindow = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
+            newGroupedListAppWindow.SortDescriptions.Add(new System.ComponentModel.SortDescription(nameof(ApplicationWindow.Position), System.ComponentModel.ListSortDirection.Ascending));
+            newGroupedListAppWindow.Filter = FilterAppWindow;
+            foreach (TaskList tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList))
+            {
+                tl.TasksList.ItemsSource = newGroupedListAppWindow;
+            }
+        });
     }
 
     private static bool FilterAppWindow(object item)
@@ -163,18 +170,8 @@ public partial class TaskList : UserControl
         return false;
     }
 
-    public void Refresh(bool forceRebuild = false)
+    private void InsertPinnedApp()
     {
-        if (forceRebuild)
-        {
-            VirtualDesktop_CurrentChanged(null, null);
-        }
-        TasksList.ItemsSource = MyTaskbarApp.MyShellManager.Tasks.GroupedWindows;
-    }
-
-    private static void InsertPinnedApp()
-    {
-        string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
         Dictionary<string, int> orders = [];
         try
         {
@@ -192,6 +189,8 @@ public partial class TaskList : UserControl
             }
         }
         catch (Exception) { /* Ignore errors */ }
+
+        string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
         if (Directory.Exists(path))
         {
             int numPinnedApp = 0;
@@ -239,8 +238,6 @@ public partial class TaskList : UserControl
                                 appWin.State = win.State;
                         }
                     }
-                    foreach (ApplicationWindow win in toDispose)
-                        win.Dispose();
                 }
             }
         }
@@ -250,16 +247,11 @@ public partial class TaskList : UserControl
     {
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
-        MyTaskbarApp.MyShellManager.Tasks.GroupedWindows.CollectionChanged -= GroupedWindows_CollectionChanged;
-        MyTaskbarApp.MyShellManager.TasksService.RemoveAppWindow -= TasksService_RemoveAppWindow;
+        MyTaskbarApp.MyShellManager.TasksService.WindowDestroy -= RefreshTaskList;
+        MyTaskbarApp.MyShellManager.TasksService.WindowCreate -= RefreshTaskList;
         if (VirtualDesktopProvider.Default.Initialized)
             VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
         isLoaded = false;
-    }
-
-    private void GroupedWindows_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-        SetTaskButtonWidth();
     }
 
     private void TaskList_OnSizeChanged(object sender, SizeChangedEventArgs e)
@@ -280,12 +272,8 @@ public partial class TaskList : UserControl
         double defaultWidth = DefaultButtonWidth + margin;
 
         if (maxWidth > defaultWidth)
-        {
             ButtonWidth = DefaultButtonWidth;
-        }
         else
-        {
             ButtonWidth = Math.Floor(maxWidth);
-        }
     }
 }

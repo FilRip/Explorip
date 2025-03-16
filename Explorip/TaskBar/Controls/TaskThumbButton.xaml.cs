@@ -228,6 +228,7 @@ public partial class TaskThumbButton : Window
             IntPtr windowHandle = _parent.ApplicationWindow.ListWindows[numWindow];
             if (windowHandle == IntPtr.Zero)
                 return;
+            Close();
             if (_lastPeek == windowHandle)
             {
                 WindowHelper.PeekWindow(false, windowHandle, _parent.TaskbarParent.Handle);
