@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 
+using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
 namespace Explorip.Constants;
@@ -272,7 +273,10 @@ public static class Localization
         PIN_TO_STARTMENU = Load("starttiledata.dll", 1007, "Pin to Start Menu");
         UNPIN_FROM_STARTMENU = Load("starttiledata.dll", 1008, "Unpin from Start Menu");
         OPEN_NEW_WINDOW = Load("starttiledata.dll", 1001, "Open a new window");
-        CLOSE_ALL_WINDOW = LoadMenuItem("explorer.exe", 12000, 65491, "Close all windows").Replace("&", "_");
+        if (EnvironmentHelper.IsWindows11OrBetter)
+            CLOSE_ALL_WINDOW = LoadMenuItem("taskbar.dll", 12000, 65491, "Close all windows").Replace("&", "_");
+        else
+            CLOSE_ALL_WINDOW = LoadMenuItem("explorer.exe", 12000, 65491, "Close all windows").Replace("&", "_");
         RENAME_MENUITEM_WPF = RENAME_MENUITEM.Replace("&", "_");
         ASK_DOWNLOAD_NEW_VERSION = Load("wscapi.dll", 6104, "Do you want to update %1");
         ASK_INSTALL_NEW_VERSION = Load("wscapi.dll", 6101, "Click to install the new version of %1");
