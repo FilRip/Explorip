@@ -622,7 +622,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         }
     }
 
-    private readonly DependencyProperty windowsProperty = DependencyProperty.Register("Windows",
+    private readonly DependencyProperty windowsProperty = DependencyProperty.Register(nameof(Windows),
         typeof(ObservableCollection<ApplicationWindow>), typeof(TasksService),
         new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
 }

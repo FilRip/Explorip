@@ -152,6 +152,7 @@ public partial class TaskButton : UserControl
     }
 
     #region Drag
+
     private bool inDrag;
     private DispatcherTimer dragTimer;
 
@@ -182,6 +183,7 @@ public partial class TaskButton : UserControl
             inDrag = false;
         }
     }
+
     #endregion
 
     #region Thumbnail
@@ -251,6 +253,8 @@ public partial class TaskButton : UserControl
         }
     }
 
+    #region Context menu
+
     private void UnpinMenuItem_Click(object sender, RoutedEventArgs e)
     {
         ApplicationWindow.IsPinnedApp = false;
@@ -286,4 +290,6 @@ public partial class TaskButton : UserControl
             foreach (IntPtr handle in ApplicationWindow.ListWindows)
                 NativeMethods.SendMessage(handle, NativeMethods.WM.CLOSE, 0, 0);
     }
+
+    #endregion
 }

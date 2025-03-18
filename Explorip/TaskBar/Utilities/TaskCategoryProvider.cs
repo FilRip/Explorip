@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 using ManagedShell.WindowsTasks;
 
@@ -15,7 +16,7 @@ public class TaskCategoryProvider : ITaskCategoryProvider
 
     public void SetCategoryChangeDelegate(TaskCategoryChangeDelegate changeDelegate)
     {
-        Console.WriteLine("SetCategoryChangeDelegate");
+        Debug.WriteLine("SetCategoryChangeDelegate");
     }
 
     public bool IsDisposed

@@ -106,7 +106,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     {
         get
         {
-            _isUWP ??= WinFileName.ToLower().Contains("applicationframehost.exe");
+            _isUWP ??= string.Compare(System.IO.Path.GetFileName(WinFileName), "applicationframehost.exe", StringComparison.OrdinalIgnoreCase) == 0;
 
             return (bool)_isUWP;
         }
@@ -445,7 +445,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                     return false;
                 }
             }
-            else if (!EnvironmentHelper.IsWindows10OrBetter && (className == "ImmersiveBackgroundWindow" || className == "SearchPane" || className == "NativeHWNDHost" || className == "Shell_CharmWindow" || className == "ImmersiveLauncher") && WinFileName.ToLower().Contains("explorer.exe"))
+            else if (!EnvironmentHelper.IsWindows10OrBetter && (className == "ImmersiveBackgroundWindow" || className == "SearchPane" || className == "NativeHWNDHost" || className == "Shell_CharmWindow" || className == "ImmersiveLauncher") && string.Compare(System.IO.Path.GetFileName(WinFileName), "explorer.exe", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 ShellLogger.Debug($"ApplicationWindow: Hiding immersive shell window {Title}");
                 return false;

@@ -47,7 +47,7 @@ public static class Program
         Process[] process = Process.GetProcessesByName("explorer");
         if (process != null && process.Length > 0)
         {
-            ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Environment.SpecialFolder.Windows.FullPath() + "\\explorer.exe"));
+            ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", System.IO.Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe")));
         }
 
         Constants.Localization.LoadTranslation();

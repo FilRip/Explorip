@@ -61,13 +61,9 @@ public partial class TaskList : UserControl
         Thickness buttonMargin;
 
         if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Left || ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Right)
-        {
             buttonMargin = Application.Current.FindResource("TaskButtonVerticalMargin") as Thickness? ?? new Thickness();
-        }
         else
-        {
             buttonMargin = Application.Current.FindResource("TaskButtonMargin") as Thickness? ?? new Thickness();
-        }
 
         TaskButtonLeftMargin = buttonMargin.Left;
         TaskButtonRightMargin = buttonMargin.Right;
@@ -108,9 +104,9 @@ public partial class TaskList : UserControl
 
     private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
     {
-        lock (_lockChangeDesktop)
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            Application.Current.Dispatcher.Invoke(new Action(() =>
+            lock (_lockChangeDesktop)
             {
                 MyTaskbarApp.MyShellManager.TasksService.Windows?.Clear();
                 MyTaskbarApp.MyShellManager.TasksService.Windows = [];
@@ -132,6 +128,10 @@ public partial class TaskList : UserControl
 
                 InsertPinnedApp();
 
+                int lastPosition = MyTaskbarApp.MyShellManager.TasksService.Windows.Where(w => w.IsPinnedApp).Max(w => w.Position);
+                foreach (ApplicationWindow appWin in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(w => !w.IsPinnedApp))
+                    appWin.Position = ++lastPosition;
+
                 IntPtr hWndForeground = NativeMethods.GetForegroundWindow();
                 if (hWndForeground != IntPtr.Zero)
                 {
@@ -144,20 +144,23 @@ public partial class TaskList : UserControl
                 }
 
                 RefreshCollectionView();
-            }));
-        }
+            }
+        });
     }
 
-    private static void RefreshCollectionView()
+    private void RefreshCollectionView()
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            System.ComponentModel.ICollectionView newGroupedListAppWindow = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
-            newGroupedListAppWindow.SortDescriptions.Add(new System.ComponentModel.SortDescription(nameof(ApplicationWindow.Position), System.ComponentModel.ListSortDirection.Ascending));
-            newGroupedListAppWindow.Filter = FilterAppWindow;
-            foreach (TaskList tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList))
+            lock (_lockChangeDesktop)
             {
-                tl.TasksList.ItemsSource = newGroupedListAppWindow;
+                System.ComponentModel.ICollectionView newGroupedListAppWindow = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
+                newGroupedListAppWindow.SortDescriptions.Add(new System.ComponentModel.SortDescription(nameof(ApplicationWindow.Position), System.ComponentModel.ListSortDirection.Ascending));
+                newGroupedListAppWindow.Filter = FilterAppWindow;
+                foreach (TaskList tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList))
+                {
+                    tl.TasksList.ItemsSource = newGroupedListAppWindow;
+                }
             }
         });
     }
@@ -210,7 +213,7 @@ public partial class TaskList : UserControl
                     appWin.Position = position;
                 if (string.IsNullOrWhiteSpace(appWin.WinFileName))
                 {
-                    Console.WriteLine($"Unable to add {file} as pinned app");
+                    Debug.WriteLine($"Unable to add {file} as pinned app");
                     continue;
                 }
                 if (string.IsNullOrWhiteSpace(pinnedApp.StringData?.IconLocation))
@@ -222,14 +225,12 @@ public partial class TaskList : UserControl
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Add(appWin);
                 else
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
-                if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => win.WinFileName == appWin.WinFileName))
+                if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => string.Compare(win.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0))
                 {
-                    List<ApplicationWindow> toDispose = [];
-                    foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw.WinFileName == appWin.WinFileName).ToList())
+                    foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => string.Compare(aw.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0).ToList())
                     {
                         if (win != appWin)
                         {
-                            toDispose.Add(win);
                             MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
                             appWin.ListWindows.AddRange(win.ListWindows);
                             if (appWin.ListWindows.Count > 1)
