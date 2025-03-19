@@ -65,7 +65,7 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                 </Grid>
-                <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="MyTaskList" TaskbarParent="{Binding ParentTaskbar}"/>
+                <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="MyTaskList"/>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />

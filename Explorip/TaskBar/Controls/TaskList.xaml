@@ -5,7 +5,6 @@
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              Loaded="TaskList_OnLoaded"
-             Unloaded="TaskList_OnUnloaded"
              SizeChanged="TaskList_OnSizeChanged"
              Background="Transparent">
     <UserControl.DataContext>
@@ -16,6 +15,7 @@
                   VerticalScrollBarVisibility="Auto">
         <ItemsControl x:Name="TasksList"
                       Focusable="False"
+                      ItemsSource="{Binding TaskListCollection}"
                       HorizontalAlignment="Stretch">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

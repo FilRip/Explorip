@@ -94,9 +94,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get
         {
             if (string.IsNullOrEmpty(_appUserModelId) && _windows.Count > 0)
-            {
                 _appUserModelId = ShellHelper.GetAppUserModelIdPropertyForHandle(_windows[0]);
-            }
 
             return _appUserModelId;
         }
@@ -117,18 +115,14 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get
         {
             if (string.IsNullOrEmpty(_winFileName) && _windows.Count > 0)
-            {
                 _winFileName = ShellHelper.GetPathForHandle(_windows[0]);
-            }
 
             return _winFileName;
         }
         set
         {
             if (_winFileName != value)
-            {
                 _winFileName = value;
-            }
         }
     }
 
@@ -170,9 +164,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get
         {
             if (_title == null)
-            {
                 SetTitle();
-            }
 
             return _title;
         }
@@ -196,9 +188,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         catch { /* Ignore errors */ }
 
         if (_title != title)
-        {
             Title = title;
-        }
     }
 
     public void SetTitle(string newTitle)
@@ -211,9 +201,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get
         {
             if (_className == null)
-            {
                 SetClassName();
-            }
             return _className;
         }
         private set
@@ -288,15 +276,12 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             return _progressState;
         }
-
         set
         {
             _progressState = value;
 
             if (value == NativeMethods.TBPFLAG.TBPF_NOPROGRESS)
-            {
                 ProgressValue = 0;
-            }
 
             OnPropertyChanged();
         }
@@ -308,7 +293,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             return _progressValue;
         }
-
         set
         {
             _progressValue = value;
@@ -322,7 +306,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             return _state;
         }
-
         set
         {
             _state = value;
@@ -393,9 +376,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get
         {
             if (_showInTaskbar == null)
-            {
                 SetShowInTaskbar();
-            }
 
             return (bool)_showInTaskbar;
         }
@@ -411,9 +392,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
             // If we are becoming visible in the taskbar, get the category if it hasn't been set yet
             if (_showInTaskbar == true && Category == null)
-            {
                 Category = _tasksService.TaskCategoryProvider?.GetCategory(this);
-            }
 
             OnPropertyChanged(nameof(ShowInTaskbar));
         }
@@ -478,17 +457,14 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                         UWPInterop.StoreApp storeApp = UWPInterop.StoreAppHelper.AppList.GetAppByAumid(AppUserModelID);
 
                         if (storeApp != null)
-                        {
                             Icon = storeApp.GetIconImageSource(_tasksService.TaskIconSize);
-                        }
                         else
-                        {
                             Icon = IconImageConverter.GetDefaultIcon();
-                        }
                     }
-                    catch
+                    catch (Exception)
                     {
-                        if (_icon == null) Icon = IconImageConverter.GetDefaultIcon();
+                        if (_icon == null)
+                            Icon = IconImageConverter.GetDefaultIcon();
                     }
                 }
                 else
@@ -508,9 +484,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                             NativeMethods.SendMessageTimeout(_windows[0], WM_GETICON, 0, 0, 2, 1000, ref hIco);
                     }
                     else
-                    {
                         NativeMethods.SendMessageTimeout(_windows[0], WM_GETICON, 1, 0, 2, 1000, ref hIco);
-                    }
 
                     if (hIco == IntPtr.Zero && sizeSetting == IconSize.Small)
                     {
@@ -529,9 +503,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                     }
 
                     if (hIco == IntPtr.Zero && _windows.Count > 0)
-                    {
                         NativeMethods.SendMessageTimeout(_windows[0], WM_QUERYDRAGICON, 0, 0, 0, 1000, ref hIco);
-                    }
 
                     if (hIco == IntPtr.Zero && _icon == null && ShellHelper.Exists(WinFileName))
                     {
@@ -557,9 +529,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                             }
                         }
                         else
-                        {
                             NativeMethods.DestroyIcon(hIco);
-                        }
                     }
                 }
 
@@ -591,16 +561,12 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             if (ProcId is uint procId)
             {
                 if (lParam == IntPtr.Zero)
-                {
                     return;
-                }
 
                 IntPtr hShared = NativeMethods.SHLockShared(lParam, procId);
 
                 if (hShared == IntPtr.Zero)
-                {
                     return;
-                }
 
                 string str = Marshal.PtrToStringAuto(hShared);
                 NativeMethods.SHUnlockShared(hShared);
@@ -619,9 +585,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         lock (_lockUpdate)
         {
             if (handle != IntPtr.Zero && !_windows.Contains(handle))
-            {
                 _windows.Add(handle);
-            }
             if (_windows.Count > 1)
                 State = WindowState.Unknown;
             OnPropertyChanged(nameof(Launched));
@@ -640,9 +604,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
         // call restore if window is minimized
         if (IsMinimized(handle))
-        {
             Restore(handle);
-        }
         else
         {
             NativeMethods.ShowWindow(handle, NativeMethods.WindowShowStyle.Show);
@@ -723,9 +685,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 {
                     Process process = Process.GetProcessById((int)_procId.Value);
                     if (process != null)
-                    {
                         _dateStart = process.StartTime;
-                    }
                 }
             }
 
