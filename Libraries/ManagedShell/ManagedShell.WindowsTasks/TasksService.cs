@@ -184,19 +184,15 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     private void CategoriesChanged()
     {
         foreach (ApplicationWindow window in Windows)
-        {
             if (window.ShowInTaskbar)
-            {
                 window.Category = TaskCategoryProvider?.GetCategory(window);
-            }
-        }
     }
 
     private void SetMinimizedMetrics()
     {
         MinimizedMetrics mm = new()
         {
-            cbSize = (uint)Marshal.SizeOf(typeof(MinimizedMetrics))
+            cbSize = (uint)Marshal.SizeOf(typeof(MinimizedMetrics)),
         };
 
         IntPtr mmPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MinimizedMetrics)));
@@ -301,12 +297,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         win.UpdateProperties();
 
         foreach (ApplicationWindow wind in Windows)
-        {
             if (wind.WinFileName == win.WinFileName && wind.ListWindows.Count > 0 && wind.ListWindows[0] != win.ListWindows[0])
-            {
                 wind.UpdateProperties();
-            }
-        }
     }
 
     private void ShellWinProc(Message msg)
@@ -372,13 +364,9 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                 }
 
                                 if (win != null)
-                                {
                                     foreach (ApplicationWindow wind in Windows)
-                                    {
                                         if (wind.WinFileName == win.WinFileName && wind.ListWindows.Count > 0 && win.ListWindows.Count > 0 && wind.ListWindows[0] != win.ListWindows[0])
                                             wind.SetShowInTaskbar();
-                                    }
-                                }
                             }
                             WindowActivated?.Invoke(msg.LParam);
                             break;
@@ -388,16 +376,12 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             if (win != null)
                             {
                                 if (win.State != ApplicationWindow.WindowState.Active)
-                                {
                                     win.State = ApplicationWindow.WindowState.Flashing;
-                                }
 
                                 RedrawWindow(win);
                             }
                             else
-                            {
                                 AddWindow(msg.LParam, ApplicationWindow.WindowState.Flashing, true);
-                            }
                             break;
                         case HSHELL.ACTIVATESHELLWINDOW:
                             ShellLogger.Debug("TasksService: Activate shell window called.");
@@ -419,16 +403,12 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             if (win != null)
                             {
                                 if (win.State == ApplicationWindow.WindowState.Flashing)
-                                {
                                     win.State = ApplicationWindow.WindowState.Inactive;
-                                }
 
                                 RedrawWindow(win);
                             }
                             else
-                            {
                                 AddWindow(msg.LParam, ApplicationWindow.WindowState.Inactive, true);
-                            }
                             break;
 #pragma warning disable S125 // Sections of code should not be commented out
                         // TaskMan needs to return true if we provide our own task manager to prevent explorers.
@@ -576,6 +556,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && win != null)
         {
             win?.Uncloak();
+            WindowActivated?.Invoke(hWnd);
         }
     }
 
@@ -604,9 +585,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             }
 
             if (hwndHook != IntPtr.Zero)
-            {
                 SetProp(taskbarHwnd, "TaskbandHWND", hwndHook);
-            }
         }
     }
 
