@@ -89,13 +89,13 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                         VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
                     MyTaskbarApp.MyShellManager.TasksService.WindowDestroy += RefreshAllCollectionView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowCreate += RefreshAllCollectionView;
-                    MyTaskbarApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
+                    MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += TasksService_WindowUncloaked;
                 }
             }
         }
     }
 
-    private static void TasksService_WindowActivated(IntPtr windowHandle)
+    private static void TasksService_WindowUncloaked(IntPtr windowHandle)
     {
         RefreshAllCollectionView(null, EventArgs.Empty);
     }
@@ -104,7 +104,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         MyTaskbarApp.MyShellManager.TasksService.WindowDestroy -= RefreshAllCollectionView;
         MyTaskbarApp.MyShellManager.TasksService.WindowCreate -= RefreshAllCollectionView;
-        MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
+        MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= TasksService_WindowUncloaked;
     }
 
     private static bool FilterAppWindow(object item)

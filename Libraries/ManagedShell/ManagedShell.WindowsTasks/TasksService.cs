@@ -50,6 +50,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
 
     public delegate void DelegateWindowActivated(IntPtr windowHandle);
     public event DelegateWindowActivated WindowActivated;
+    public event DelegateWindowActivated WindowUncloaked;
 
     internal void Initialize()
     {
@@ -556,7 +557,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && win != null)
         {
             win?.Uncloak();
-            WindowActivated?.Invoke(hWnd);
+            WindowUncloaked?.Invoke(hWnd);
         }
     }
 

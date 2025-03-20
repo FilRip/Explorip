@@ -21,12 +21,12 @@
             <RowDefinition Height="2"/>
         </Grid.RowDefinitions>
         <Button Name="AppButton" BorderThickness="0"
-            Grid.Row="0"
-            ToolTip="{Binding Path=Title}"
-            Click="AppButton_OnClick"
-            PreviewMouseDown="AppButton_OnPreviewMouseDown"
-            DragEnter="AppButton_OnDragEnter"
-            DragLeave="AppButton_OnDragLeave">
+                Grid.Row="0"
+                ToolTip="{Binding Path=Title}"
+                Click="AppButton_OnClick"
+                PreviewMouseDown="AppButton_OnPreviewMouseDown"
+                DragEnter="AppButton_OnDragEnter"
+            	DragLeave="AppButton_OnDragLeave">
             <Image Source="{Binding Path=Icon, Mode=OneWay}"
                    Style="{DynamicResource TaskIcon}"/>
             <Button.ContextMenu>

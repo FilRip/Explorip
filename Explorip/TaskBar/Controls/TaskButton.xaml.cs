@@ -48,7 +48,10 @@ public partial class TaskButton : UserControl
             Converter = StyleConverter,
         };
 
-        multiBinding.Bindings.Add(new Binding { RelativeSource = RelativeSource.Self });
+        multiBinding.Bindings.Add(new Binding()
+        {
+            RelativeSource = RelativeSource.Self,
+        });
         multiBinding.Bindings.Add(new Binding("State"));
 
         AppButton.SetBinding(StyleProperty, multiBinding);
@@ -57,14 +60,10 @@ public partial class TaskButton : UserControl
     private void ScrollIntoView()
     {
         if (Window == null)
-        {
             return;
-        }
 
         if (Window.State == ApplicationWindow.WindowState.Active)
-        {
             BringIntoView();
-        }
     }
 
     private void TaskButton_OnLoaded(object sender, RoutedEventArgs e)
@@ -76,9 +75,7 @@ public partial class TaskButton : UserControl
         dragTimer.Tick += DragTimer_Tick;
 
         if (Window != null)
-        {
             Window.PropertyChanged += Window_PropertyChanged;
-        }
 
         _isLoaded = true;
     }
@@ -86,22 +83,16 @@ public partial class TaskButton : UserControl
     private void Window_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == "State")
-        {
             ScrollIntoView();
-        }
     }
 
     private void TaskButton_OnUnloaded(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded)
-        {
             return;
-        }
 
         if (Window != null)
-        {
             Window.PropertyChanged -= Window_PropertyChanged;
-        }
 
         _isLoaded = false;
         _mouseOver = false;
@@ -123,17 +114,13 @@ public partial class TaskButton : UserControl
                 Window.BringToFront();
         }
         else if (Window.ListWindows.Count == 0)
-        {
             ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
-        }
     }
 
     private void AppButton_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
-        {
             PressedWindowState = Window.State;
-        }
     }
 
     private void AppButton_OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -159,9 +146,7 @@ public partial class TaskButton : UserControl
     private void DragTimer_Tick(object sender, EventArgs e)
     {
         if (inDrag)
-        {
             Window?.BringToFront();
-        }
 
         dragTimer.Stop();
     }
@@ -247,10 +232,7 @@ public partial class TaskButton : UserControl
 
     public Taskbar TaskbarParent
     {
-        get
-        {
-            return this.FindVisualParent<Taskbar>();
-        }
+        get { return this.FindVisualParent<Taskbar>(); }
     }
 
     #region Context menu
