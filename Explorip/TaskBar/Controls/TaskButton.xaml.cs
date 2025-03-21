@@ -7,8 +7,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Threading;
 
+using Explorip.Constants;
 using Explorip.Helpers;
 using Explorip.TaskBar.Converters;
 
@@ -34,6 +34,7 @@ public partial class TaskButton : UserControl
     private bool _isLoaded;
     private Timer _timerBeforeShowThumbnail;
     private bool _mouseOver;
+    private bool _startDrag;
 
     public TaskButton()
     {
@@ -52,7 +53,7 @@ public partial class TaskButton : UserControl
         {
             RelativeSource = RelativeSource.Self,
         });
-        multiBinding.Bindings.Add(new Binding("State"));
+        multiBinding.Bindings.Add(new Binding(nameof(ApplicationWindow.State)));
 
         AppButton.SetBinding(StyleProperty, multiBinding);
     }
@@ -70,10 +71,6 @@ public partial class TaskButton : UserControl
     {
         Window = DataContext as ApplicationWindow;
 
-        // drag support - delayed activation using system setting
-        dragTimer = new DispatcherTimer { Interval = SystemParameters.MouseHoverTime };
-        dragTimer.Tick += DragTimer_Tick;
-
         if (Window != null)
             Window.PropertyChanged += Window_PropertyChanged;
 
@@ -82,7 +79,7 @@ public partial class TaskButton : UserControl
 
     private void Window_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == "State")
+        if (e.PropertyName == nameof(ApplicationWindow.State))
             ScrollIntoView();
     }
 
@@ -120,10 +117,13 @@ public partial class TaskButton : UserControl
     private void AppButton_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
+        {
             PressedWindowState = Window.State;
+            DragMouseDown();
+        }
     }
 
-    private void AppButton_OnMouseUp(object sender, MouseButtonEventArgs e)
+    private void AppButton_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl) == KeyStates.Down || Keyboard.GetKeyStates(Key.RightCtrl) == KeyStates.Down)))
         {
@@ -131,41 +131,60 @@ public partial class TaskButton : UserControl
                 return;
             ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
         }
+        DragMouseUp();
     }
+
+    #region Properties
 
     public ApplicationWindow ApplicationWindow
     {
         get { return Window; }
     }
 
+    public Taskbar TaskbarParent
+    {
+        get { return this.FindVisualParent<Taskbar>(); }
+    }
+
+    #endregion
+
     #region Drag
 
-    private bool inDrag;
-    private DispatcherTimer dragTimer;
-
-    private void DragTimer_Tick(object sender, EventArgs e)
+    private void DragMouseDown()
     {
-        if (inDrag)
-            Window?.BringToFront();
+        _startDrag = true;
+#pragma warning disable CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
+        StartDrag();
+#pragma warning restore CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
+    }
 
-        dragTimer.Stop();
+    private void DragMouseUp()
+    {
+        _startDrag = false;
     }
 
     private void AppButton_OnDragEnter(object sender, DragEventArgs e)
     {
-        if (!inDrag)
+        if (e.Data is DataObject data)
         {
-            inDrag = true;
-            dragTimer.Start();
+            ApplicationWindow appWin = (ApplicationWindow)data.GetData(typeof(ApplicationWindow));
+            if (appWin != ApplicationWindow)
+            {
+                (ApplicationWindow.Position, appWin.Position) = (appWin.Position, ApplicationWindow.Position);
+                this.FindVisualParent<TaskList>().MyDataContext.RefreshMyCollectionView();
+            }
         }
     }
 
-    private void AppButton_OnDragLeave(object sender, DragEventArgs e)
+    private async Task StartDrag()
     {
-        if (inDrag)
+        await Task.Delay(WindowsConstants.DelayIgnoreDrag);
+        if (_startDrag)
         {
-            dragTimer.Stop();
-            inDrag = false;
+            DataObject data = new();
+            data.SetData(ApplicationWindow);
+            DragDrop.DoDragDrop(this, ApplicationWindow, DragDropEffects.Move);
+            _startDrag = true;
         }
     }
 
@@ -229,11 +248,6 @@ public partial class TaskButton : UserControl
     }
 
     #endregion
-
-    public Taskbar TaskbarParent
-    {
-        get { return this.FindVisualParent<Taskbar>(); }
-    }
 
     #region Context menu
 

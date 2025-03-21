@@ -10,7 +10,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
              Loaded="TaskButton_OnLoaded"
-             Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave" PreviewMouseUp="AppButton_OnMouseUp">
+             Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave" PreviewMouseUp="AppButton_OnPreviewMouseUp">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
         <explorerConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility"/>
@@ -20,14 +20,13 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="2"/>
         </Grid.RowDefinitions>
-        <Button Name="AppButton" BorderThickness="0"
+        <Button Name="AppButton" BorderThickness="0" AllowDrop="True"
                 Grid.Row="0"
-                ToolTip="{Binding Path=Title}"
+                ToolTip="{Binding Title}"
                 Click="AppButton_OnClick"
                 PreviewMouseDown="AppButton_OnPreviewMouseDown"
-                DragEnter="AppButton_OnDragEnter"
-            	DragLeave="AppButton_OnDragLeave">
-            <Image Source="{Binding Path=Icon, Mode=OneWay}"
+                DragEnter="AppButton_OnDragEnter">
+            <Image Source="{Binding Icon, Mode=OneWay}"
                    Style="{DynamicResource TaskIcon}"/>
             <Button.ContextMenu>
                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">

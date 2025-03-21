@@ -42,6 +42,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private DateTime? _dateStart;
     private readonly List<IntPtr> _windows;
     private readonly object _lockUpdate;
+    private int _position;
 
     public ApplicationWindow(TasksService tasksService, IntPtr handle)
     {
@@ -56,7 +57,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         _tasksService = tasksService;
         State = WindowState.Inactive;
         if (tasksService.Windows.Count > 0)
-            Position = tasksService.Windows.Max(aw => aw.Position) + 1;
+            _position = tasksService.Windows.Max(aw => aw.Position) + 1;
     }
 
     #region IDisposable
@@ -136,7 +137,16 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
-    public int Position { get; set; }
+
+    public int Position
+    {
+        get { return _position; }
+        set
+        {
+            _position = value;
+            OnPropertyChanged(nameof(Position));
+        }
+    }
 
     public bool MultipleInstanceLaunched
     {
