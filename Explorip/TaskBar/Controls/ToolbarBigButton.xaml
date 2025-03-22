@@ -9,9 +9,9 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=shellfolders:ShellFile}"
              Background="Transparent">
-    <Button ToolTip="{Binding Path=DisplayName}"
+    <Button ToolTip="{Binding DisplayName}"
             Style="{DynamicResource ToolbarButton}">
-        <Image Source="{Binding Path=LargeIcon, Mode=OneWay}"
+        <Image Source="{Binding LargeIcon, Mode=OneWay}"
                Style="{DynamicResource ToolbarBigIcon}" />
     </Button>
 </UserControl>

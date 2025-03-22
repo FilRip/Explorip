@@ -17,6 +17,7 @@ namespace WindowsDesktop
         #endregion
 
         private Task _initializationTask;
+        private Task _initializationTerminatedTask;
         private ComObjects _comObjects;
         private bool disposedValue;
 
@@ -45,10 +46,10 @@ namespace WindowsDesktop
             if (_initializationTask == null)
             {
                 _initializationTask = Task.Run(() => Core());
-
+                _initializationTerminatedTask = Task.CompletedTask;
                 if (AutoRestart && scheduler != null)
                 {
-                    _initializationTask.ContinueWith(ContinueTask,
+                    _initializationTerminatedTask = _initializationTask.ContinueWith(ContinueTask,
                         CancellationToken.None,
                         TaskContinuationOptions.OnlyOnRanToCompletion,
                         scheduler);
@@ -64,6 +65,11 @@ namespace WindowsDesktop
 
                 ComObjects = new ComObjects(assembly);
             }
+        }
+
+        public Task TerminatedInitializedTask
+        {
+            get { return _initializationTerminatedTask; }
         }
 
         private void ContinueTask(Task task)

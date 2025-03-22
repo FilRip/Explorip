@@ -4,22 +4,38 @@
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:constants="clr-namespace:Explorip.Constants"
              xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
-             IsVisibleChanged="UserControl_IsVisibleChanged"
-             MouseDown="UserControl_MouseDown"
-             MouseUp="UserControl_MouseUp"
-             MouseMove="UserControl_MouseMove"
+             xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              Loaded="UserControl_Loaded"
-             Background="Transparent">
+             Background="Transparent"
+             Margin="{Binding Margin}">
+    <UserControl.DataContext>
+        <viewmodels:ToolbarViewModel/>
+    </UserControl.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="MouseDown">
+            <i:InvokeCommandAction Command="{Binding MouseDownCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="MouseUp">
+            <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="MouseMove">
+            <i:InvokeCommandAction Command="{Binding MouseMoveCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="IsVisibleChanged">
+            <i:InvokeCommandAction Command="{Binding IsVisibleChangedCommand}" PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.Resources>
         <DataTemplate x:Key="SmallIconTemplate">
             <local:ToolbarButton DataContext="{Binding}"
-                                     PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp"
-                                     PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp"/>
+                                 PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp"
+                                 PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp"/>
         </DataTemplate>
         <DataTemplate x:Key="LargeIconTemplate">
             <local:ToolbarBigButton DataContext="{Binding}"
-                                     PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp"
-                                     PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp"/>
+                                    PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp"
+                                    PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp"/>
         </DataTemplate>
         <local:IconFileDataTemplateSelector x:Key="MyDataTemplateSelector"/>
     </UserControl.Resources>
@@ -29,7 +45,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0">
+        <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0" Visibility="{Binding TitleVisibility}" Content="{Binding Title}">
             <Label.ContextMenu>
                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
                     <ContextMenu.ItemsPanel>
@@ -37,14 +53,14 @@
                             <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
                         </ItemsPanelTemplate>
                     </ContextMenu.ItemsPanel>
-                    <MenuItem Header="{x:Static constants:Localization.SHOW_TITLE}" Name="ShowHideTitle" Click="ShowHideTitle_Click"/>
-                    <MenuItem Header="{x:Static constants:Localization.LARGE_ICON}" Name="ShowLargeIcon" Click="ShowLargeIcon_Click"/>
-                    <MenuItem Header="{x:Static constants:Localization.CLOSE}" Name="CloseToolbar" Click="CloseToolbar_Click"/>
+                    <MenuItem Header="{x:Static constants:Localization.SHOW_TITLE}" Name="ShowHideTitle" Command="{Binding ShowHideTitleCommand}"/>
+                    <MenuItem Header="{x:Static constants:Localization.LARGE_ICON}" Name="ShowLargeIcon" Command="{Binding ShowLargeIconCommand}"/>
+                    <MenuItem Header="{x:Static constants:Localization.CLOSE}" Name="CloseToolbar" Command="{Binding CloseToolbarCommand}"/>
                 </ContextMenu>
             </Label.ContextMenu>
         </Label>
         <ItemsControl x:Name="ToolbarItems" Grid.Column="1"
-                  Focusable="False"
+                  Focusable="False" ItemsSource="{Binding ToolbarItems}"
                   Style="{DynamicResource ToolbarItems}" ItemTemplateSelector="{StaticResource MyDataTemplateSelector}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -52,6 +68,6 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-        <Button Content=">>" Name="MoreItems" Click="MoreItems_Click" Visibility="Collapsed" Grid.Column="2" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+        <Button Content=">>" Name="MoreItems" Command="{Binding ShowMoreItemsCommand}" Visibility="{Binding MoreItemsVisibility}" Grid.Column="2" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
     </Grid>
 </UserControl>

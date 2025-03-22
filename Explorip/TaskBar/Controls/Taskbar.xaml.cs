@@ -19,6 +19,8 @@ using ManagedShell.WindowsTray;
 
 using Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
+using WindowsDesktop;
+
 namespace Explorip.TaskBar.Controls;
 
 /// <summary>
@@ -208,7 +210,10 @@ public partial class Taskbar : AppBarWindow
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
             try
             {
-                WindowsDesktop.VirtualDesktopProvider.Default.Initialize().Wait();
+                VirtualDesktopProvider.Default.Initialize().Wait();
+                VirtualDesktopProvider.Default.TerminatedInitializedTask.Wait();
+                if (!VirtualDesktopProvider.Default.Initialized)
+                    throw new Exceptions.ExploripException("VirtualDesktop not initialized");
             }
             catch (Exception)
             {
@@ -270,11 +275,8 @@ public partial class Taskbar : AppBarWindow
         if (!Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
             return null;
         ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-        Toolbar newToolbar = new()
-        {
-            Path = path,
-            ParentTaskbar = this,
-        };
+        Toolbar newToolbar = new();
+        newToolbar.MyDataContext.Path = path;
         Grid.SetRow(newToolbar, ToolsBars.RowDefinitions.Count - 1);
         Grid.SetColumn(newToolbar, 0);
         ToolsBars.Children.Add(newToolbar);
@@ -301,11 +303,11 @@ public partial class Taskbar : AppBarWindow
                 if (MainScreen)
                 {
                     ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
-                    ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.Path)];
+                    ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.MyDataContext.Path)];
                 }
-                newTb.ShowHideTitle_Click(null, null);
-                newTb.CurrentShowLargeIcon = true;
-                newTb.ShowLargeIcon_Click(null, null);
+                newTb.MyDataContext.ShowHideTitle();
+                newTb.MyDataContext.CurrentShowLargeIcon = true;
+                newTb.MyDataContext.ShowLargeIcon();
             }
         }
     }
@@ -317,7 +319,7 @@ public partial class Taskbar : AppBarWindow
         if (result?.VisualHit != null)
         {
             Toolbar toolbar = result.VisualHit.FindVisualParent<Toolbar>();
-            toolbar?.ShowHideTitle_Click(sender, e);
+            toolbar?.MyDataContext.ShowHideTitle();
         }
     }
 
@@ -327,7 +329,7 @@ public partial class Taskbar : AppBarWindow
         if (result?.VisualHit != null)
         {
             Toolbar toolbar = result.VisualHit.FindVisualParent<Toolbar>();
-            toolbar?.ShowLargeIcon_Click(sender, e);
+            toolbar?.MyDataContext.ShowLargeIcon();
         }
     }
 
