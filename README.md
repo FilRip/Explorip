@@ -1,6 +1,8 @@
 Windows Shell/Explorer Replacement. All languages supported.
 
-100% in C# (and PInvoke) and User mode (no administrator privilege required)
+100% in C# (and PInvoke) and User mode (no administrator privilege required) and fully customizable
+
+Look at Settings in Wiki : https://github.com/FilRip/Explorip/wiki/Settings for a short description (will be more fill later)
 
 ------------
 
