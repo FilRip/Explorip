@@ -62,8 +62,6 @@ public partial class Toolbar : UserControl
         }
     }
 
-    #endregion
-
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded)
@@ -72,4 +70,6 @@ public partial class Toolbar : UserControl
             MyDataContext.Init(this);
         }
     }
+
+    #endregion
 }

@@ -1,13 +1,11 @@
-﻿using System.Windows.Controls;
-
-namespace Explorip.TaskBar.Controls;
+﻿namespace Explorip.TaskBar.Controls;
 
 /// <summary>
 /// Interaction logic for ToolbarButton.xaml
 /// </summary>
-public partial class ToolbarButton : UserControl
+public partial class ToolbarButton : ToolbarBaseButton
 {
-    public ToolbarButton()
+    public ToolbarButton() : base()
     {
         InitializeComponent();
     }

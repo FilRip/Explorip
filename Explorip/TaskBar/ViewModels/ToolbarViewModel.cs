@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -92,7 +93,7 @@ public partial class ToolbarViewModel : ObservableObject
         Task.Run(async () =>
         {
             await Task.Delay(5000);
-            UpdateInvisibleIcons();
+            SetItemsSource();
         });
     }
 
@@ -115,6 +116,7 @@ public partial class ToolbarViewModel : ObservableObject
     {
         if (Folder != null)
         {
+            int lastPosition = -1;
             Dictionary<string, int> orders = [];
             string config = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Config", "exploripToolbar" + ConfigManager.ToolbarNumber(Path) + ".ini");
             if (File.Exists(config))
@@ -130,14 +132,26 @@ public partial class ToolbarViewModel : ObservableObject
                 if (Folder?.Files?.Count > 0)
                     foreach (ShellItem si in Folder.Files)
                         if (orders.TryGetValue(System.IO.Path.GetFileName(si.Path), out int position))
+                        {
                             si.Position = position;
+                            lastPosition = Math.Max(lastPosition, position);
+                        }
             }
-            ICollectionView newCollection = CollectionViewSource.GetDefaultView(Folder.Files);
-            newCollection.SortDescriptions.Add(new SortDescription(nameof(ShellItem.Position), ListSortDirection.Ascending));
-            ToolbarItems = newCollection;
+            foreach (ShellItem si in Folder.Files.Where(sf => sf.Position == 0))
+                si.Position = ++lastPosition;
+            ToolbarItems = CollectionViewSource.GetDefaultView(Folder.Files);
+            ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.Position), ListSortDirection.Ascending));
             UpdateInvisibleIcons();
+            RefreshMyCollectionView();
         }
     }
+
+    public void RefreshMyCollectionView()
+    {
+        ToolbarItems?.Refresh();
+    }
+
+    #region Expand toolbar
 
     private void UpdateInvisibleIcons()
     {
@@ -151,7 +165,7 @@ public partial class ToolbarViewModel : ObservableObject
             double currentWidth = 0;
             moreItems.Items.Clear();
             ShellFile lastVisible = null;
-            foreach (ShellFile item in ToolbarItems)
+            foreach (ShellFile item in Folder.Files.OrderBy(sf => sf.Position))
             {
                 currentWidth += (CurrentShowLargeIcon ? 32 : 16);
                 if (currentWidth > maxWidth)
@@ -281,6 +295,14 @@ public partial class ToolbarViewModel : ObservableObject
         return builder;
     }
 
+    [RelayCommand()]
+    private void ShowMoreItems()
+    {
+        moreItems.IsOpen = true;
+    }
+
+    #endregion
+
     private void UnloadFolder()
     {
         try
@@ -289,12 +311,6 @@ public partial class ToolbarViewModel : ObservableObject
         }
         catch (Exception) { /* Ignore errors */ }
         Folder = null;
-    }
-
-    [RelayCommand()]
-    private void ShowMoreItems()
-    {
-        moreItems.IsOpen = true;
     }
 
     [RelayCommand()]
@@ -332,6 +348,8 @@ public partial class ToolbarViewModel : ObservableObject
     {
         ParentTaskbar?.ToolsBars.Children.Remove(_parentControl);
     }
+
+    #region Drag'n drop toolbar in taskbar
 
     [RelayCommand()]
     private void MouseDown()
@@ -411,6 +429,8 @@ public partial class ToolbarViewModel : ObservableObject
         }
         UpdateInvisibleIcons();
     }
+
+    #endregion
 
     [RelayCommand()]
     private void IsVisibleChanged(DependencyPropertyChangedEventArgs e)
