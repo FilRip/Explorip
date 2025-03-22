@@ -18,7 +18,7 @@ Launch explorip with "useowncopier" in command line argument to intercept copy/p
 
 Taskbar
 -------
-Launch Explorip with "taskbars" as command line arguments to use the new Taskbar Manager
+Launch Explorip with "<b>taskbars</b>" as command line arguments to use the new Taskbar Manager
 
 Ideal to Windows 11 users to have a taskbar like Windows 10 and with toolbar
 
@@ -28,7 +28,7 @@ Support multi virtual desktop too
 
 Desktop
 -------
-Launch Explorip with "desktops" as command line arguments to use the new desktop background
+Launch Explorip with "<b>desktops</b>" as command line arguments to use the new desktop background
 
 
 
@@ -41,4 +41,4 @@ Replace StartMenu of Windows by the one integrate in Explorip. Model take from W
 Tested under
 ------------
 - Windows 10 22H2 build 19041
-- Windows 11 24H2 build 22631
+- Windows 11 24H2 build 26100
