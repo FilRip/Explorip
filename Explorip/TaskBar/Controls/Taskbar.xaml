@@ -19,6 +19,11 @@
                      UseLayoutRounding="True"
                      Background="Transparent"
                      Style="{DynamicResource TaskbarWindow}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome ResizeBorderThickness="0,3,0,0"
                       CaptionHeight="0"/>
@@ -33,7 +38,8 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="auto" x:Name="ColumnVirtualKeyboard"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -75,12 +81,17 @@
                         <controls:Clock VerticalAlignment="Center"/>
                     </StackPanel>
                 </GroupBox>
-                <controls:TabTipButton x:Name="TabTipButton" Grid.Column="6" Grid.RowSpan="2" Visibility="{Binding ShowTabTip}">
+                <controls:TabTipButton x:Name="TabTipButton" Grid.Column="6" Grid.RowSpan="2" Visibility="{Binding DataContext.TabTipVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:TabTipButton>
-                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="7" Grid.RowSpan="2">
+                <controls:LanguageButton x:Name="LanguageLayoutButton" Grid.Column="7" Grid.RowSpan="2" Visibility="{Binding DataContext.KeyboardLayoutVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                    <DockPanel.Dock>
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                    </DockPanel.Dock>
+                </controls:LanguageButton>
+                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="8" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
@@ -110,11 +121,12 @@
             <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
             <MenuItem Header="{x:Static localization:Localization.UNLOCK_TASKBAR}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAddToolbar" Click="AddToolbar_Click"/>
-            <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Click="MenuShowTabTip_Click"/>
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH}" Name="MenuShowSearch" Click="MenuShowSearch_Click"/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Click="MenuShowTaskmgr_Click"/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_WIDGET}" Name="MenuShowWidget" Click="MenuShowWidget_Click"/>
+            <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Command="{Binding ShowHideTabTipCommand}"/>
+            <MenuItem Header="{x:Static localization:Localization.CHOICE_KEYBOARD_LAYOUT}" Name="MenuShowKeyboardLayout" Command="{Binding ShowKeyboardLayoutCommand}"/>
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>

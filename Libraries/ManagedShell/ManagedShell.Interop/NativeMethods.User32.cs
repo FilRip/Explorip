@@ -4168,4 +4168,10 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName, CharSet = CharSet.Auto, ExactSpelling = true)]
     internal static extern int GetDoubleClickTime();
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr GetKeyboardLayout(uint threadId);
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr ActivateKeyboardLayout(IntPtr hkl, uint flags);
 }

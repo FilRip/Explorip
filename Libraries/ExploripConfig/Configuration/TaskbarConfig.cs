@@ -192,6 +192,26 @@ public class TaskbarConfig
         }
     }
 
+    public bool ShowKeyboardLayout
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowKeyboardLayout"); }
+        set
+        {
+            if (ShowKeyboardLayout != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowKeyboardLayout", value.ToString());
+        }
+    }
+
+    public bool ShowTabTip
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowTabTip"); }
+        set
+        {
+            if (ShowTabTip != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowTabTip", value.ToString());
+        }
+    }
+
     public int TaskbarThumbHeight
     {
         get { return _registryTaskbar.ReadInteger("TaskbarThumbHeight"); }

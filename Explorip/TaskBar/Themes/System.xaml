@@ -491,6 +491,11 @@
     </Style>
 
     <Style TargetType="ToggleButton"
+           x:Key="LanguageButton"
+           BasedOn="{StaticResource StartButton}">
+    </Style>
+
+    <Style TargetType="ToggleButton"
            x:Key="WidgetsButton"
            BasedOn="{StaticResource StartButton}">
     </Style>

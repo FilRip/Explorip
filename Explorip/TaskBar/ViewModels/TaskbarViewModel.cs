@@ -1,10 +1,12 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Helpers;
+
+using ExploripConfig.Configuration;
 
 using ManagedShell.AppBar;
 
@@ -17,7 +19,6 @@ public partial class TaskbarViewModel : ObservableObject
     public TaskbarViewModel(Taskbar parentControl) : base()
     {
         _parentTaskbar = parentControl;
-        ShowTabTip = Visibility.Collapsed;
     }
 
     public void ChangeEdge(AppBarEdge newEdge)
@@ -57,10 +58,24 @@ public partial class TaskbarViewModel : ObservableObject
 
     [ObservableProperty()]
     private Taskbar _parentTaskbar;
-
     [ObservableProperty()]
     private bool _resizeOn;
-
     [ObservableProperty()]
-    private Visibility _showTabTip;
+    private bool _tabTipVisible;
+    [ObservableProperty()]
+    private bool _keyboardLayoutVisible;
+
+    [RelayCommand()]
+    private void ShowHideTabTip()
+    {
+        TabTipVisible = !TabTipVisible;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowTabTip = TabTipVisible;
+    }
+
+    [RelayCommand()]
+    private void ShowKeyboardLayout()
+    {
+        KeyboardLayoutVisible = !KeyboardLayoutVisible;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowKeyboardLayout = KeyboardLayoutVisible;
+    }
 }

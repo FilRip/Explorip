@@ -141,6 +141,7 @@ public static class Localization
     public static string RENAME_MENUITEM_WPF { get; private set; }
     public static string ASK_INSTALL_NEW_VERSION { get; private set; }
     public static string ASK_DOWNLOAD_NEW_VERSION { get; private set; }
+    public static string CHOICE_KEYBOARD_LAYOUT { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -280,6 +281,7 @@ public static class Localization
         RENAME_MENUITEM_WPF = RENAME_MENUITEM.Replace("&", "_");
         ASK_DOWNLOAD_NEW_VERSION = Load("wscapi.dll", 6104, "Do you want to update %1");
         ASK_INSTALL_NEW_VERSION = Load("wscapi.dll", 6101, "Click to install the new version of %1");
+        CHOICE_KEYBOARD_LAYOUT = Load("bootux.dll", 1634, "Choice the keyboard layout");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

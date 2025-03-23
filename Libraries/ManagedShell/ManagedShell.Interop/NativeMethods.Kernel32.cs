@@ -84,6 +84,9 @@ public partial class NativeMethods
     [DllImport(Kernel32_DllName)]
     internal static extern uint GetCurrentProcessId();
 
+    [DllImport(Kernel32_DllName)]
+    internal static extern uint GetCurrentThreadId();
+
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern IntPtr OpenProcess(ProcessAccess processAccess, bool bInheritHandle, int processId);
 

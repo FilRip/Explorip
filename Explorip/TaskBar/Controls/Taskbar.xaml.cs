@@ -66,6 +66,9 @@ public partial class Taskbar : AppBarWindow
         if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton)
             SetShowWidget(false);
 
+        MyDataContext.TabTipVisible = ConfigManager.GetTaskbarConfig(ScreenName).ShowTabTip;
+        MyDataContext.KeyboardLayoutVisible = ConfigManager.GetTaskbarConfig(ScreenName).ShowKeyboardLayout;
+
         if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarBackground != null)
             Background = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarBackground;
         else
@@ -184,12 +187,6 @@ public partial class Taskbar : AppBarWindow
     private void TaskbarAllScreenMenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         ((MyTaskbarApp)Program.MyCurrentApp).ShowTaskbarOnAllOthersScreen();
-    }
-
-    private void MenuShowTabTip_Click(object sender, RoutedEventArgs e)
-    {
-        MyDataContext.ShowTabTip = MyDataContext.ShowTabTip == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
-        MenuShowTabTip.IsChecked = MyDataContext.ShowTabTip == Visibility.Visible;
     }
 
     #endregion
