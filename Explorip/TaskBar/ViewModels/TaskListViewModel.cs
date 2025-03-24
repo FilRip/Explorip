@@ -82,9 +82,9 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             if (_taskbarParent != value && value != null)
             {
                 _taskbarParent = value;
-                RemoveTaskServiceEvent();
                 if (_taskbarParent.MainScreen)
                 {
+                    RemoveTaskServiceEvent();
                     if (VirtualDesktopProvider.Default.Initialized)
                         VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
                     MyTaskbarApp.MyShellManager.TasksService.WindowDestroy += RefreshAllCollectionView;
