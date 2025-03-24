@@ -9,6 +9,9 @@ using Explorip.HookFileOperations.Models;
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
 
+using ExploripSharedCopy.Helpers;
+using ExploripSharedCopy.WinAPI;
+
 using ManagedShell.Interop;
 
 namespace ExploripCopy.GUI;
@@ -25,6 +28,12 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+        if (WindowsSettings.IsWindowsApplicationInDarkMode())
+        {
+            WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
+            Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
+        }
 
         Instance = this;
         DataContext = MainViewModels.Instance;
