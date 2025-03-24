@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.Diagnostics;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -7,7 +7,7 @@ using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.ViewModels;
 
-public partial class LanguageViewModel(InputLanguage il) : ObservableObject
+public partial class LanguageViewModel(System.Windows.Forms.InputLanguage il) : ObservableObject
 {
     private readonly IntPtr _handle = il.Handle;
 
@@ -18,8 +18,9 @@ public partial class LanguageViewModel(InputLanguage il) : ObservableObject
     [ObservableProperty()]
     private string _details = il.LayoutName;
 
-    public void ActiveThisKeyboard()
+    public void ActiveKeyboardLayout()
     {
+        Debug.WriteLine($"Active keyboard {ShortName}");
         NativeMethods.ActivateKeyboardLayout(_handle, 0);
     }
 }

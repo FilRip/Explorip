@@ -12,14 +12,9 @@ using ManagedShell.AppBar;
 
 namespace Explorip.TaskBar.ViewModels;
 
-public partial class TaskbarViewModel : ObservableObject
+public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject()
 {
     private AppBarEdge _currentEdge;
-
-    public TaskbarViewModel(Taskbar parentControl) : base()
-    {
-        _parentTaskbar = parentControl;
-    }
 
     public void ChangeEdge(AppBarEdge newEdge)
     {
@@ -57,7 +52,7 @@ public partial class TaskbarViewModel : ObservableObject
     }
 
     [ObservableProperty()]
-    private Taskbar _parentTaskbar;
+    private Taskbar _parentTaskbar = parentControl;
     [ObservableProperty()]
     private bool _resizeOn;
     [ObservableProperty()]

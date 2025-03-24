@@ -30,9 +30,12 @@ public partial class ToolbarViewModel : ObservableObject
     private readonly ContextMenu moreItems;
     private Toolbar _parentControl;
     private double _startX, _startY;
+    private Task _taskRefresh;
+    private readonly object _lockRefresh;
 
     public ToolbarViewModel()
     {
+        _lockRefresh = new object();
         moreItems = new ContextMenu()
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
@@ -90,11 +93,6 @@ public partial class ToolbarViewModel : ObservableObject
         _parentControl = parentControl;
         ParentTaskbar = parentControl.FindVisualParent<Taskbar>();
         SetupFolder(Path);
-        Task.Run(async () =>
-        {
-            await Task.Delay(5000);
-            SetItemsSource();
-        });
     }
 
     private void SetupFolder(string path)
@@ -109,41 +107,61 @@ public partial class ToolbarViewModel : ObservableObject
             TitleVisibility = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path) ? Visibility.Visible : Visibility.Collapsed;
             Point point = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Path);
             Margin = new Thickness(point.X, point.Y, Margin.Right, Margin.Bottom);
+            Folder.Files.CollectionChanged += Files_CollectionChanged;
+        }
+    }
+
+    private void Files_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (_taskRefresh == null || _taskRefresh.Status != TaskStatus.Running)
+        {
+            _taskRefresh = new Task(async () =>
+            {
+                await Task.Delay(500);
+                SetItemsSource();
+            });
+            _taskRefresh.Start();
         }
     }
 
     private void SetItemsSource()
     {
-        if (Folder != null)
+        Application.Current.Dispatcher.Invoke(() =>
         {
-            int lastPosition = -1;
-            Dictionary<string, int> orders = [];
-            string config = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Config", "exploripToolbar" + ConfigManager.ToolbarNumber(Path) + ".ini");
-            if (File.Exists(config))
+            lock (_lockRefresh)
             {
-                string[] lines = File.ReadAllLines(config);
-                string[] splitter;
-                foreach (string line in lines)
+                if (Folder != null)
                 {
-                    splitter = line.Split('|');
-                    if (splitter.Length == 2 && int.TryParse(splitter[0], out int position))
-                        orders.Add(splitter[1], position);
-                }
-                if (Folder?.Files?.Count > 0)
-                    foreach (ShellItem si in Folder.Files)
-                        if (orders.TryGetValue(System.IO.Path.GetFileName(si.Path), out int position))
+                    int lastPosition = -1;
+                    Dictionary<string, int> orders = [];
+                    string config = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Config", "exploripToolbar" + ConfigManager.ToolbarNumber(Path) + ".ini");
+                    if (File.Exists(config))
+                    {
+                        string[] lines = File.ReadAllLines(config);
+                        string[] splitter;
+                        foreach (string line in lines)
                         {
-                            si.Position = position;
-                            lastPosition = Math.Max(lastPosition, position);
+                            splitter = line.Split('|');
+                            if (splitter.Length == 2 && int.TryParse(splitter[0], out int position))
+                                orders.Add(splitter[1], position);
                         }
+                        if (Folder?.Files?.Count > 0)
+                            foreach (ShellItem si in Folder.Files)
+                                if (orders.TryGetValue(System.IO.Path.GetFileName(si.Path), out int position))
+                                {
+                                    si.Position = position;
+                                    lastPosition = Math.Max(lastPosition, position);
+                                }
+                    }
+                    foreach (ShellItem si in Folder.Files.Where(sf => sf.Position == 0))
+                        si.Position = ++lastPosition;
+                    ToolbarItems = CollectionViewSource.GetDefaultView(Folder.Files);
+                    ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.Position), ListSortDirection.Ascending));
+                    UpdateInvisibleIcons();
+                    RefreshMyCollectionView();
+                }
             }
-            foreach (ShellItem si in Folder.Files.Where(sf => sf.Position == 0))
-                si.Position = ++lastPosition;
-            ToolbarItems = CollectionViewSource.GetDefaultView(Folder.Files);
-            ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.Position), ListSortDirection.Ascending));
-            UpdateInvisibleIcons();
-            RefreshMyCollectionView();
-        }
+        });
     }
 
     public void RefreshMyCollectionView()
@@ -307,6 +325,8 @@ public partial class ToolbarViewModel : ObservableObject
     {
         try
         {
+            if (Folder.Files != null)
+                Folder.Files.CollectionChanged -= Files_CollectionChanged;
             Folder?.Dispose();
         }
         catch (Exception) { /* Ignore errors */ }

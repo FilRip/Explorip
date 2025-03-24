@@ -29,7 +29,9 @@ public partial class MyTaskbarApp : Application
 {
     public DictionaryManager DictionaryManager { get; }
 
+#if DEBUG
     private ManagedShellLogger _logger;
+#endif
     private readonly List<Taskbar> _taskbarList;
     private readonly StartMenuMonitor _startMenuMonitor;
     public static ShellManager MyShellManager { get; private set; }
@@ -158,7 +160,9 @@ public partial class MyTaskbarApp : Application
         DictionaryManager.Dispose();
         MyShellManager.Dispose();
         _startMenuMonitor.Dispose();
+#if DEBUG
         _logger?.Dispose();
+#endif
     }
 
     public Taskbar MainTaskbar

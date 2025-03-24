@@ -1,5 +1,8 @@
 ﻿using System.Windows.Controls;
 
+using Explorip.Helpers;
+using Explorip.TaskBar.ViewModels;
+
 namespace Explorip.TaskBar.Controls
 {
     /// <summary>
@@ -10,6 +13,16 @@ namespace Explorip.TaskBar.Controls
         public LanguageButton()
         {
             InitializeComponent();
+        }
+
+        public LanguageButtonViewModel MyDataContext
+        {
+            get { return (LanguageButtonViewModel)DataContext; }
+        }
+
+        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            MyDataContext.ParentTaskbar = this.FindVisualParent<Taskbar>();
         }
     }
 }
