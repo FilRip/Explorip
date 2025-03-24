@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -72,5 +74,15 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     {
         KeyboardLayoutVisible = !KeyboardLayoutVisible;
         ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowKeyboardLayout = KeyboardLayoutVisible;
+    }
+
+    [RelayCommand()]
+    private void CustomColor()
+    {
+        CustomColor win = Application.Current.Windows.OfType<CustomColor>().FirstOrDefault();
+        win ??= new CustomColor();
+        win.Show();
+        win.Activate();
+        win.MyDataContext.ParentTaskbar = ParentTaskbar;
     }
 }

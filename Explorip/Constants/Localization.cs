@@ -142,6 +142,9 @@ public static class Localization
     public static string ASK_INSTALL_NEW_VERSION { get; private set; }
     public static string ASK_DOWNLOAD_NEW_VERSION { get; private set; }
     public static string CHOICE_KEYBOARD_LAYOUT { get; private set; }
+    public static string CHANGE_BACKGROUND_COLOR { get; private set; }
+    public static string CHANGE_FONT_COLOR { get; private set; }
+    public static string CUSTOM_COLOR { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -282,6 +285,9 @@ public static class Localization
         ASK_DOWNLOAD_NEW_VERSION = Load("wscapi.dll", 6104, "Do you want to update %1");
         ASK_INSTALL_NEW_VERSION = Load("wscapi.dll", 6101, "Click to install the new version of %1");
         CHOICE_KEYBOARD_LAYOUT = Load("bootux.dll", 1634, "Choice the keyboard layout");
+        CHANGE_BACKGROUND_COLOR = Load("ieframe.dll", 20051, "Background color");
+        CHANGE_FONT_COLOR = Load("ieframe.dll", 20055, "Font color");
+        CUSTOM_COLOR = Load("uiribbon.dll", 147, "Custom colors");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

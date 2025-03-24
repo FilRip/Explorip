@@ -128,6 +128,8 @@
             <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Command="{Binding ShowHideTabTipCommand}"/>
             <MenuItem Header="{x:Static localization:Localization.CHOICE_KEYBOARD_LAYOUT}" Name="MenuShowKeyboardLayout" Command="{Binding ShowKeyboardLayoutCommand}"/>
             <Separator/>
+            <MenuItem Header="{x:Static localization:Localization.CUSTOM_COLOR}" Name="MenuCustomColor" Command="{Binding CustomColorCommand}"/>
+            <Separator/>
             <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>
     </appbar:AppBarWindow.ContextMenu>

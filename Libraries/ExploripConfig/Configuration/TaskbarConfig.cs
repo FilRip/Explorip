@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 using ExploripConfig.Helpers;
@@ -114,31 +115,21 @@ public class TaskbarConfig
         }
     }
 
-    public Brush TaskbarBackground
+    public SolidColorBrush TaskbarBackground
     {
         get
         {
             string bgColor = _registryTaskbar.GetValue("BackgroundColor")?.ToString();
             if (!string.IsNullOrWhiteSpace(bgColor))
             {
-                string[] splitter = bgColor.Split(',');
-                byte a, r, g, b;
-                if (splitter.Length == 3)
-                    splitter = splitter.Insert("255", 0);
-                if (splitter.Length == 4)
-                {
-                    try
-                    {
-                        a = byte.Parse(splitter[0]);
-                        r = byte.Parse(splitter[1]);
-                        g = byte.Parse(splitter[2]);
-                        b = byte.Parse(splitter[3]);
-                        return new SolidColorBrush(Color.FromArgb(a, r, g, b));
-                    }
-                    catch (Exception) { /* Ignore errors, most of time can't cast value as string to byte */ }
-                }
+                return new SolidColorBrush(_registryTaskbar.ReadColor("BackgroundColor", ExploripSharedCopy.Constants.Colors.BackgroundColor));
             }
             return null;
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryTaskbar.SetValue("BackgroundColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 
