@@ -19,10 +19,13 @@ public partial class LanguageButtonViewModel : ObservableObject
     public LanguageButtonViewModel() : base()
     {
         _languagesList = [];
-        IntPtr keyb = NativeMethods.GetKeyboardLayout(0);
-        int lcid = keyb.ToInt32() & 0xFFFF;
-        CultureInfo ci = CultureInfo.GetCultureInfo(lcid);
-        _currentLanguage = ci.ThreeLetterWindowsLanguageName;
+        RefreshAllLanguages();
+        new System.Threading.Timer(RefreshCurrentLayout).Change(1000, 1000);
+    }
+
+    public void RefreshAllLanguages()
+    {
+        RefreshCurrentLayout();
         RefreshListAvailableLanguages();
     }
 
@@ -40,6 +43,17 @@ public partial class LanguageButtonViewModel : ObservableObject
         LanguagesList.Clear();
         foreach (InputLanguage il in InputLanguage.InstalledInputLanguages)
             LanguagesList.Add(new LanguageViewModel(il));
+    }
+
+    public void RefreshCurrentLayout(object state = null)
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            IntPtr keyb = NativeMethods.GetKeyboardLayout(0);
+            int lcid = keyb.ToInt32() & 0xFFFF;
+            CultureInfo ci = CultureInfo.GetCultureInfo(lcid);
+            CurrentLanguage = ci.ThreeLetterISOLanguageName.ToUpper();
+        });
     }
 
     [RelayCommand()]
@@ -61,6 +75,7 @@ public partial class LanguageButtonViewModel : ObservableObject
     private void MouseUp()
     {
         SelectedItem?.ActiveKeyboardLayout();
+        RefreshCurrentLayout();
         _window?.Close();
     }
 }

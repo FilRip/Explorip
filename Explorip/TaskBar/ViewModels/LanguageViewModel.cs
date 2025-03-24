@@ -12,9 +12,9 @@ public partial class LanguageViewModel(System.Windows.Forms.InputLanguage il) : 
     private readonly IntPtr _handle = il.Handle;
 
     [ObservableProperty()]
-    private string _shortName = il.Culture.ThreeLetterWindowsLanguageName;
+    private string _shortName = il.Culture.ThreeLetterISOLanguageName.ToUpper();
     [ObservableProperty()]
-    private string _fullName = il.Culture.NativeName;
+    private string _fullName = il.Culture.DisplayName;
     [ObservableProperty()]
     private string _details = il.LayoutName;
 
