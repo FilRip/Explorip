@@ -11,7 +11,7 @@
         mc:Ignorable="d"
         WindowStyle="None"
         ResizeMode="NoResize"
-        Height="640" Width="760" Background="{x:Static constants:Colors.BackgroundColorBrush}"
+        Height="640" MinWidth="760" Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Topmost="True" ShowInTaskbar="False" IsVisibleChanged="Window_IsVisibleChanged">
     
     <Window.DataContext>
@@ -216,14 +216,14 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
-            <Button Background="Transparent" BorderThickness="0" Grid.Row="0" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE700;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StartButton" Click="StartButton_Click" Focusable="True"/>
-            <Button Background="Transparent" BorderThickness="0" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE748;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="UserButton" Click="UserButton_Click" Focusable="True"/>
-            <Button Background="Transparent" BorderThickness="0" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE713;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="ParamButton" Click="ParamButton_Click" Focusable="True"/>
-            <Button Background="Transparent" BorderThickness="0" Grid.Row="4" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE7E8;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StopButton" Click="StopButton_Click" Focusable="True"/>
+            <Button Background="Transparent" BorderThickness="0" Grid.Row="0" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE700;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StartButton" Command="{Binding StartButtonCommand}" Focusable="True"/>
+            <Button Background="Transparent" BorderThickness="0" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE748;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="UserButton" Command="{Binding UserButtonCommand}" Focusable="True"/>
+            <Button Background="Transparent" BorderThickness="0" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE713;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="ParamButton" Command="{Binding ParamButtonCommand}" Focusable="True"/>
+            <Button Background="Transparent" BorderThickness="0" Grid.Row="4" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE7E8;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StopButton" Command="{Binding StopButtonCommand}" Focusable="True"/>
         </Grid>
 
         <!-- Second column, list of items in Start Menu -->
-        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}">
+        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}" Visibility="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisible}}">
             <ItemsControl.Template>
                 <ControlTemplate TargetType="ItemsControl">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Style="{DynamicResource MyScrollViewerStyle}" MouseEnter="ScrollViewer_MouseEnter" MouseLeave="ScrollViewer_MouseLeave">
@@ -240,7 +240,12 @@
         
         <!-- Third column, some free shortcut panel -->
         <Grid Grid.Column="2">
-            <ListView ItemsSource="{Binding PinnedShortcut}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" HorizontalAlignment="Center" Focusable="True" AllowDrop="True" Name="FirstPanel" Drop="FirstPanel_Drop">
+            <ListView ItemsSource="{Binding PinnedShortcut}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" HorizontalAlignment="Center" Focusable="True" AllowDrop="True" Name="FirstPanel">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Drop">
+                        <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>
@@ -284,7 +289,12 @@
 
         <!-- Fourth column, some more free shortcut panel -->
         <Grid Grid.Column="3" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}">
-            <ListView ItemsSource="{Binding PinnedShortcut2}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Center" Focusable="True" AllowDrop="True" Drop="SecondPanel_Drop"  Name="SecondPanel">
+            <ListView ItemsSource="{Binding PinnedShortcut2}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Center" Focusable="True" AllowDrop="True" Name="SecondPanel">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Drop">
+                        <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>

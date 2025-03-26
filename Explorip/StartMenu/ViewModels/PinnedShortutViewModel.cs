@@ -30,14 +30,10 @@ public partial class PinnedShortutViewModel(ShellFile sf, StartMenuViewModel win
     [RelayCommand()]
     private void MouseUp(MouseButtonEventArgs e)
     {
-        if (e.ChangedButton == MouseButton.Left)
+        if (e.ChangedButton == MouseButton.Left &&
+            ManagedShell.Common.Helpers.ShellHelper.StartProcess(_shellFile.Path, useShellExecute: true))
         {
-            if (ManagedShell.Common.Helpers.ShellHelper.StartProcess(_shellFile.Path, useShellExecute: true))
-                _window.HideWindow();
-        }
-        else if (e.ChangedButton == MouseButton.Right)
-        {
-            // TODO : Context menu when right click
+            _window.HideWindow();
         }
     }
 

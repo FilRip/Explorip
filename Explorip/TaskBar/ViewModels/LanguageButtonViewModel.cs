@@ -47,7 +47,7 @@ public partial class LanguageButtonViewModel : ObservableObject
 
     public void RefreshCurrentLayout(object state = null)
     {
-        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        System.Windows.Application.Current?.Dispatcher?.Invoke(() =>
         {
             IntPtr keyb = NativeMethods.GetKeyboardLayout(0);
             int lcid = keyb.ToInt32() & 0xFFFF;

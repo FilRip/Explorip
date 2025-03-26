@@ -145,6 +145,8 @@ public static class Localization
     public static string CHANGE_BACKGROUND_COLOR { get; private set; }
     public static string CHANGE_FONT_COLOR { get; private set; }
     public static string CUSTOM_COLOR { get; private set; }
+    public static string SHOW_SECOND_START_MENU_PANEL { get; private set; }
+    public static string SHOW_STARTMENUITEM_STARTWINDOW { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -288,6 +290,8 @@ public static class Localization
         CHANGE_BACKGROUND_COLOR = Load("ieframe.dll", 20051, "Background color");
         CHANGE_FONT_COLOR = Load("ieframe.dll", 20055, "Font color");
         CUSTOM_COLOR = Load("uiribbon.dll", 147, "Custom colors");
+        SHOW_SECOND_START_MENU_PANEL = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_MoreTilesEnabled/Description}", "Show more tiles in start menu");
+        SHOW_STARTMENUITEM_STARTWINDOW = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_ShowAppList/Description}", "Show applications in start menu");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

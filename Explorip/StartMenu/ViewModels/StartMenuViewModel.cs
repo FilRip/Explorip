@@ -3,20 +3,32 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Markup;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Helpers;
+using Explorip.StartMenu.Controls;
 
 using ExploripConfig.Configuration;
 
+using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
+
+using Securify.ShellLink;
 
 namespace Explorip.StartMenu.ViewModels;
 
 public partial class StartMenuViewModel : ObservableObject
 {
     private readonly double _iconSizeWidth, _iconSizeHeight, _iconSizeWidth2, _iconSizeHeight2;
+    private readonly ContextMenu _cmUser, _cmStop, _cmStartMenu;
+    private double _startMenuWidth;
+    private CustomColor _winColor;
+    private Action<double> _changeWidth;
 
     [ObservableProperty()]
     private ObservableCollection<StartMenuItemViewModel> _startMenuItems;
@@ -26,17 +38,69 @@ public partial class StartMenuViewModel : ObservableObject
     private ObservableCollection<PinnedShortutViewModel> _pinnedShortcut2;
     [ObservableProperty()]
     private bool _showPanel2;
+    [ObservableProperty()]
+    private bool _showApplicationsPrograms;
 
     public Action ShowWindow { get; set; }
     public Action HideWindow { get; set; }
+    public void SetChangeWidth(Action<double> changeWidth)
+    {
+        _changeWidth = changeWidth;
+        changeWidth(_startMenuWidth);
+    }
 
     public StartMenuViewModel()
     {
+        #region Build all context menu
+
+        string xaml = "<ItemsPanelTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' xmlns:colors='clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy'><StackPanel Margin=\"-20,0,0,0\" Background=\"{x:Static colors:Colors.BackgroundColorBrush}\"/></ItemsPanelTemplate>";
+        ItemsPanelTemplate itp = XamlReader.Parse(xaml) as ItemsPanelTemplate;
+
+        _cmStartMenu = new()
+        {
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            ItemsPanel = itp,
+        };
+        _cmStartMenu.AddEntry(Constants.Localization.SHOW_SECOND_START_MENU_PANEL, ChangeShowPanel2);
+        _cmStartMenu.AddEntry(Constants.Localization.SHOW_STARTMENUITEM_STARTWINDOW, ChangeShowStartPrograms);
+        _cmStartMenu.AddEntry(Constants.Localization.REFRESH, RefreshAll);
+        _cmStartMenu.AddEntry(Constants.Localization.CUSTOM_COLOR, ShowCustomColor);
+
+        _cmUser = new()
+        {
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            ItemsPanel = itp,
+        };
+        _cmUser.AddEntry(Constants.Localization.LOCK, ShellHelper.Lock);
+        _cmUser.AddEntry(Constants.Localization.DISCONNECT, ShellHelper.Logoff);
+
+        _cmStop = new()
+        {
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            ItemsPanel = itp,
+        };
+        _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
+        _cmStop.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);
+        _cmStop.AddEntry(Constants.Localization.RESTART, Restart);
+
+        #endregion
+
         _iconSizeHeight = ConfigManager.StartMenuIconSizeHeight;
         _iconSizeWidth = ConfigManager.StartMenuIconSizeWidth;
         _iconSizeHeight2 = ConfigManager.StartMenuIconSizeHeight2;
         _iconSizeWidth2 = ConfigManager.StartMenuIconSizeWidth2;
         _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
+
+        _startMenuWidth = 1175;
+        if (!ConfigManager.StartMenuShowPinnedApp2)
+            _startMenuWidth -= 415;
+        _showApplicationsPrograms = ConfigManager.ShowApplicationsPrograms;
+        if (!_showApplicationsPrograms)
+            _startMenuWidth -= 270;
+
         RefreshAll();
     }
 
@@ -56,7 +120,7 @@ public partial class StartMenuViewModel : ObservableObject
         StartMenuItems.AddRange(commonSM);
         List<StartMenuItemViewModel> MySM = GetRootSM(new ShellFolder(mySMFolder, IntPtr.Zero));
         StartMenuItems.AddRange(MySM);
-        StartMenuItems = [.. (StartMenuItems.OrderBy(i => i.Name))];
+        StartMenuItems = [.. StartMenuItems.OrderBy(i => i.Name)];
     }
 
     private List<StartMenuItemViewModel> GetRootSM(ShellFolder folder)
@@ -99,6 +163,13 @@ public partial class StartMenuViewModel : ObservableObject
             PinnedShortcut.Add(new PinnedShortutViewModel(file, this, true));
     }
 
+    public void HideAllContextMenu()
+    {
+        _cmUser.IsOpen = false;
+        _cmStartMenu.IsOpen = false;
+        _cmStop.IsOpen = false;
+    }
+
     public double IconSizeWidth
     {
         get { return _iconSizeWidth; }
@@ -117,5 +188,103 @@ public partial class StartMenuViewModel : ObservableObject
     public double IconSizeHeight2
     {
         get { return _iconSizeHeight2; }
+    }
+
+    [RelayCommand()]
+    private void StartButton()
+    {
+        _cmStartMenu.IsOpen = true;
+    }
+
+    private void ChangeShowPanel2()
+    {
+        ConfigManager.StartMenuShowPinnedApp2 = !ConfigManager.StartMenuShowPinnedApp2;
+        _startMenuWidth += ConfigManager.StartMenuShowPinnedApp2 ? 415 : -415;
+        _changeWidth(_startMenuWidth);
+    }
+
+    private void ChangeShowStartPrograms()
+    {
+        ShowApplicationsPrograms = !ShowApplicationsPrograms;
+        ConfigManager.ShowApplicationsPrograms = ShowApplicationsPrograms;
+        _startMenuWidth += ShowApplicationsPrograms ? 270 : -270;
+        _changeWidth(_startMenuWidth);
+    }
+
+    public static void Shutdown()
+    {
+        ShellHelper.StartProcess("shutdown /s /t 0", hidden: true);
+    }
+
+    public static void Restart()
+    {
+        ShellHelper.StartProcess("shutdown /r /t 0", hidden: true);
+    }
+
+    public static void Hybernate()
+    {
+        ShellHelper.StartProcess("shutdown /h", hidden: true);
+    }
+
+    private void ShowCustomColor()
+    {
+        _winColor ??= new CustomColor();
+        _winColor.Show();
+        _winColor.Activate();
+    }
+
+    [RelayCommand()]
+    private void ParamButton()
+    {
+        ShellHelper.ShowConfigPanel();
+    }
+
+    [RelayCommand()]
+    private void StopButton()
+    {
+        _cmStop.IsOpen = true;
+    }
+
+    [RelayCommand()]
+    private void UserButton()
+    {
+        _cmUser.IsOpen = true;
+    }
+
+    [RelayCommand()]
+    private void Drop(DragEventArgs e)
+    {
+        if (e.Source is ListView lv)
+        {
+            if (lv.Name == "FirstPanel")
+                DropToPanel(e, ConfigManager.StartMenuPinnedShortcutPath, RefreshPinnedShortcut);
+            else
+                DropToPanel(e, ConfigManager.StartMenuPinnedShortcutPath2, RefreshPinnedShortcut2);
+        }
+    }
+
+    private static void DropToPanel(DragEventArgs e, string path, Action refresh)
+    {
+        path = Environment.ExpandEnvironmentVariables(path);
+        if (e.Data is DataObject data && data.GetDataPresent(DataFormats.FileDrop))
+        {
+            foreach (string file in data.GetFileDropList())
+            {
+                string dest = Path.Combine(path, Path.GetFileName(file));
+                if (Path.GetExtension(file) == ".lnk")
+                {
+                    if (!File.Exists(dest))
+                        File.Copy(file, dest);
+                }
+                else
+                {
+                    Shortcut sc = Shortcut.CreateShortcut(file);
+                    dest = Path.Combine(path, Path.GetFileNameWithoutExtension(file) + ".lnk");
+                    if (!File.Exists(dest))
+                        sc.WriteToFile(dest);
+                }
+            }
+            refresh();
+        }
     }
 }

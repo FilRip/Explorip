@@ -73,6 +73,8 @@ public static class ConfigManager
                 _registryStartMenu.SetValue("IconSizeHeight2", "50");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("ShowPinnedApp2", "").ToString()))
                 _registryStartMenu.SetValue("ShowPinnedApp2", "True");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("ShowApplicationsPrograms", "").ToString()))
+                _registryStartMenu.SetValue("ShowApplicationsPrograms", "True");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
                 _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
 
@@ -389,6 +391,16 @@ public static class ConfigManager
         }
     }
 
+    public static bool ShowApplicationsPrograms
+    {
+        get { return _registryStartMenu.ReadBoolean("ShowApplicationsPrograms"); }
+        set
+        {
+            if (ShowApplicationsPrograms != value && AllowWrite)
+                _registryStartMenu.SetValue("ShowApplicationsPrograms", value.ToString());
+        }
+    }
+
     public static string StartMenuPinnedShortcutPath
     {
         get { return _registryStartMenu.GetValue("PinnedAppPath", "").ToString(); }
@@ -449,31 +461,21 @@ public static class ConfigManager
         }
     }
 
-    public static Brush StartMenuBackground
+    public static SolidColorBrush StartMenuBackground
     {
         get
         {
             string bgColor = _registryStartMenu.GetValue("BackgroundColor")?.ToString();
             if (!string.IsNullOrWhiteSpace(bgColor))
             {
-                string[] splitter = bgColor.Split(',');
-                byte a, r, g, b;
-                if (splitter.Length == 3)
-                    splitter = splitter.Insert("255", 0);
-                if (splitter.Length == 4)
-                {
-                    try
-                    {
-                        a = byte.Parse(splitter[0]);
-                        r = byte.Parse(splitter[1]);
-                        g = byte.Parse(splitter[2]);
-                        b = byte.Parse(splitter[3]);
-                        return new SolidColorBrush(Color.FromArgb(a, r, g, b));
-                    }
-                    catch (Exception) { /* Ignore errors, most of time can't cast value as string to byte */ }
-                }
+                return new SolidColorBrush(_registryStartMenu.ReadColor("BackgroundColor", ExploripSharedCopy.Constants.Colors.BackgroundColor));
             }
             return null;
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryStartMenu.SetValue("BackgroundColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 }

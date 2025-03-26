@@ -3,15 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 
-using Explorip.Helpers;
 using Explorip.StartMenu.ViewModels;
 using Explorip.TaskBar;
 
 using ExploripConfig.Configuration;
 
-using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
 using Securify.ShellLink;
@@ -25,62 +22,26 @@ namespace Explorip.StartMenu.Window
     /// </summary>
     public partial class StartMenuWindow : System.Windows.Window
     {
-        private readonly ContextMenu _cmUser, _cmStart;
         private IntPtr _keyboardHookPtr, _windowsStartMenu;
 
         public StartMenuWindow()
         {
             InitializeComponent();
 
-            string xaml = "<ItemsPanelTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' xmlns:colors='clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy'><StackPanel Margin=\"-20,0,0,0\" Background=\"{x:Static colors:Colors.BackgroundColorBrush}\"/></ItemsPanelTemplate>";
-            ItemsPanelTemplate itp = XamlReader.Parse(xaml) as ItemsPanelTemplate;
-
-            _cmUser = new()
-            {
-                Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-                Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-                ItemsPanel = itp,
-            };
-            _cmUser.AddEntry(Constants.Localization.LOCK, ShellHelper.Lock);
-            _cmUser.AddEntry(Constants.Localization.DISCONNECT, ShellHelper.Logoff);
-
-            _cmStart = new()
-            {
-                Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-                Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-                ItemsPanel = itp,
-            };
-            _cmStart.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
-            _cmStart.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);
-            _cmStart.AddEntry(Constants.Localization.RESTART, Restart);
-
             MyDataContext.HideWindow = Hide;
             MyDataContext.ShowWindow = Show;
+            MyDataContext.SetChangeWidth(ChangeWidth);
 
             HideWindowsStartMenu();
             SetMyStartMenu(this);
             HookWinKey();
             Application.Current.Deactivated += Current_Deactivated;
-            if (ConfigManager.StartMenuShowPinnedApp2)
-                Width = 1175;
             if (ConfigManager.StartMenuBackground != null)
                 Background = ConfigManager.StartMenuBackground;
             if (MyStartMenuApp.MyShellManager == null)
                 MyTaskbarApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
             else
                 MyStartMenuApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
-        }
-
-        private void TasksService_WindowActivated(IntPtr windowHandle)
-        {
-            if (IsVisible && windowHandle != IntPtr.Zero)
-            {
-                if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
-                    return;
-                NativeMethods.GetWindowThreadProcessId(windowHandle, out uint pid);
-                if (pid != Process.GetCurrentProcess().Id)
-                    Hide();
-            }
         }
 
         public static StartMenuWindow MyStartMenu { get; private set; }
@@ -95,25 +56,14 @@ namespace Explorip.StartMenu.Window
             get { return (StartMenuViewModel)DataContext; }
         }
 
-        private static void Hybernate()
+        private void ChangeWidth(double newWidth)
         {
-            ShellHelper.StartProcess("shutdown /h", hidden: true);
+            MinWidth = newWidth;
+            Width = newWidth;
+            MaxWidth = newWidth;
         }
 
-        private static void Shutdown()
-        {
-            ShellHelper.StartProcess("shutdown /s /t 0", hidden: true);
-        }
-
-        private static void Restart()
-        {
-            ShellHelper.StartProcess("shutdown /r /t 0", hidden: true);
-        }
-
-        private void StartMenuWindow_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+        #region Events
 
         private void ScrollViewer_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
@@ -125,19 +75,20 @@ namespace Explorip.StartMenu.Window
             ((ScrollViewer)sender).VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
         }
 
-        private void ParamButton_Click(object sender, RoutedEventArgs e)
-        {
-            ShellHelper.ShowConfigPanel();
-        }
+        #endregion
 
-        private void StopButton_Click(object sender, RoutedEventArgs e)
-        {
-            _cmStart.IsOpen = true;
-        }
+        #region Hook Win key press
 
-        private void UserButton_Click(object sender, RoutedEventArgs e)
+        private void TasksService_WindowActivated(IntPtr windowHandle)
         {
-            _cmUser.IsOpen = true;
+            if (IsVisible && windowHandle != IntPtr.Zero)
+            {
+                if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
+                    return;
+                NativeMethods.GetWindowThreadProcessId(windowHandle, out uint pid);
+                if (pid != Process.GetCurrentProcess().Id)
+                    Hide();
+            }
         }
 
         private void HookWinKey()
@@ -155,8 +106,7 @@ namespace Explorip.StartMenu.Window
 #endif
             if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
                 return;
-            _cmStart.IsOpen = false;
-            _cmUser.IsOpen = false;
+            MyDataContext.HideAllContextMenu();
             Hide();
         }
 
@@ -193,45 +143,14 @@ namespace Explorip.StartMenu.Window
             }
         }
 
-        private void StartButton_Click(object sender, RoutedEventArgs e)
+        private void HideWindowsStartMenu()
         {
-            MyDataContext.RefreshAll();
+            _windowsStartMenu = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
+            if (_windowsStartMenu != IntPtr.Zero)
+                NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.Hide);
         }
 
-        private void SecondPanel_Drop(object sender, DragEventArgs e)
-        {
-            DropToPanel(e, ConfigManager.StartMenuPinnedShortcutPath2, MyDataContext.RefreshPinnedShortcut2);
-        }
-
-        private void FirstPanel_Drop(object sender, DragEventArgs e)
-        {
-            DropToPanel(e, ConfigManager.StartMenuPinnedShortcutPath, MyDataContext.RefreshPinnedShortcut);
-        }
-
-        private static void DropToPanel(DragEventArgs e, string path, Action refresh)
-        {
-            path = Environment.ExpandEnvironmentVariables(path);
-            if (e.Data is DataObject data && data.GetDataPresent(DataFormats.FileDrop))
-            {
-                foreach (string file in data.GetFileDropList())
-                {
-                    string dest = Path.Combine(path, Path.GetFileName(file));
-                    if (Path.GetExtension(file) == ".lnk")
-                    {
-                        if (!File.Exists(dest))
-                            File.Copy(file, dest);
-                    }
-                    else
-                    {
-                        Shortcut sc = Shortcut.CreateShortcut(file);
-                        dest = Path.Combine(path, Path.GetFileNameWithoutExtension(file) + ".lnk");
-                        if (!File.Exists(dest))
-                            sc.WriteToFile(dest);
-                    }
-                }
-                refresh();
-            }
-        }
+        #endregion
 
         protected override void OnClosed(EventArgs e)
         {
@@ -240,13 +159,6 @@ namespace Explorip.StartMenu.Window
             if (_windowsStartMenu != IntPtr.Zero)
                 NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.ShowNormal);
             Application.Current.Deactivated -= Current_Deactivated;
-        }
-
-        private void HideWindowsStartMenu()
-        {
-            _windowsStartMenu = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
-            if (_windowsStartMenu != IntPtr.Zero)
-                NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.Hide);
         }
     }
 }
