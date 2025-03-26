@@ -16,10 +16,10 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class TaskList : UserControl
 {
-    private bool isLoaded;
-    private double DefaultButtonWidth;
-    private double TaskButtonLeftMargin;
-    private double TaskButtonRightMargin;
+    private bool _isLoaded;
+    private double _defaultButtonWidth;
+    private double _taskButtonLeftMargin;
+    private double _taskButtonRightMargin;
 
     public readonly static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
 
@@ -41,7 +41,7 @@ public partial class TaskList : UserControl
 
     private void SetStyles()
     {
-        DefaultButtonWidth = Application.Current.FindResource("TaskButtonWidth") as double? ?? 0;
+        _defaultButtonWidth = Application.Current.FindResource("TaskButtonWidth") as double? ?? 0;
         Thickness buttonMargin;
 
         if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Left || ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Right)
@@ -49,8 +49,8 @@ public partial class TaskList : UserControl
         else
             buttonMargin = Application.Current.FindResource("TaskButtonMargin") as Thickness? ?? new Thickness();
 
-        TaskButtonLeftMargin = buttonMargin.Left;
-        TaskButtonRightMargin = buttonMargin.Right;
+        _taskButtonLeftMargin = buttonMargin.Left;
+        _taskButtonRightMargin = buttonMargin.Right;
     }
 
     private void TaskList_OnLoaded(object sender, RoutedEventArgs e)
@@ -58,9 +58,9 @@ public partial class TaskList : UserControl
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
 
-        if (!isLoaded && MyTaskbarApp.MyShellManager.Tasks != null)
+        if (!_isLoaded && MyTaskbarApp.MyShellManager.Tasks != null)
         {
-            isLoaded = true;
+            _isLoaded = true;
             Taskbar tb = this.FindControlParent<Taskbar>();
             MyDataContext.TaskbarParent = tb;
             MyDataContext.ChangeEdge(tb.AppBarEdge);
@@ -85,12 +85,12 @@ public partial class TaskList : UserControl
             return;
         }
 
-        double margin = TaskButtonLeftMargin + TaskButtonRightMargin;
+        double margin = _taskButtonLeftMargin + _taskButtonRightMargin;
         double maxWidth = TasksList.ActualWidth / TasksList.Items.Count;
-        double defaultWidth = DefaultButtonWidth + margin;
+        double defaultWidth = _defaultButtonWidth + margin;
 
         if (maxWidth > defaultWidth)
-            ButtonWidth = DefaultButtonWidth;
+            ButtonWidth = _defaultButtonWidth;
         else
             ButtonWidth = Math.Floor(maxWidth);
     }
