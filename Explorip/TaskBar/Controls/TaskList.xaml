@@ -24,13 +24,9 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <ItemContainerTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="5"/>
-                        </Grid.ColumnDefinitions>
-                        <local:TaskButton Grid.Column="0" Width="{Binding Path=ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}}"/>
-                    </Grid>
+                    <local:TaskButton Margin="{Binding Path=ButtonMargin, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}}"
+                                      Height="{Binding Path=ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}}"
+                                      Width="{Binding Path=ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}}"/>
                 </ItemContainerTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

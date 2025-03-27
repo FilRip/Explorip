@@ -27,7 +27,7 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class TaskButton : UserControl
 {
-    private ApplicationWindow Window;
+    private ApplicationWindow _window;
     private readonly TaskButtonStyleConverter StyleConverter = new();
     private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
     private TaskThumbButton _thumb;
@@ -60,19 +60,26 @@ public partial class TaskButton : UserControl
 
     private void ScrollIntoView()
     {
-        if (Window == null)
+        if (_window == null)
             return;
 
-        if (Window.State == ApplicationWindow.WindowState.Active)
+        if (_window.State == ApplicationWindow.WindowState.Active)
             BringIntoView();
     }
 
     private void TaskButton_OnLoaded(object sender, RoutedEventArgs e)
     {
-        Window = DataContext as ApplicationWindow;
+        if (_isLoaded)
+            return;
 
-        if (Window != null)
-            Window.PropertyChanged += Window_PropertyChanged;
+        _window = DataContext as ApplicationWindow;
+
+        if (_window != null)
+            _window.PropertyChanged += Window_PropertyChanged;
+
+        double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).ScreenName).TaskButtonSize;
+        MyTaskIcon.Height = size;
+        MyTaskIcon.Width = size;
 
         _isLoaded = true;
     }
@@ -88,8 +95,8 @@ public partial class TaskButton : UserControl
         if (!_isLoaded)
             return;
 
-        if (Window != null)
-            Window.PropertyChanged -= Window_PropertyChanged;
+        if (_window != null)
+            _window.PropertyChanged -= Window_PropertyChanged;
 
         _isLoaded = false;
         _mouseOver = false;
@@ -103,22 +110,22 @@ public partial class TaskButton : UserControl
             _timerBeforeShowThumbnail?.Change(ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
         }
         catch (Exception) { /* Ignore errors */ }
-        if (Window.ListWindows.Count == 1)
+        if (_window.ListWindows.Count == 1)
         {
             if (PressedWindowState == ApplicationWindow.WindowState.Active)
-                Window.Minimize();
-            else if (Window.State != ApplicationWindow.WindowState.Unknown)
-                Window.BringToFront();
+                _window.Minimize();
+            else if (_window.State != ApplicationWindow.WindowState.Unknown)
+                _window.BringToFront();
         }
-        else if (Window.ListWindows.Count == 0)
-            ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
+        else if (_window.ListWindows.Count == 0)
+            ShellHelper.StartProcess(_window.WinFileName, _window.Arguments);
     }
 
     private void AppButton_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
         if (e.ChangedButton == MouseButton.Left)
         {
-            PressedWindowState = Window.State;
+            PressedWindowState = _window.State;
             DragMouseDown();
         }
     }
@@ -127,9 +134,9 @@ public partial class TaskButton : UserControl
     {
         if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl) == KeyStates.Down || Keyboard.GetKeyStates(Key.RightCtrl) == KeyStates.Down)))
         {
-            if (Window == null)
+            if (_window == null)
                 return;
-            ShellHelper.StartProcess(Window.WinFileName, Window.Arguments);
+            ShellHelper.StartProcess(_window.WinFileName, _window.Arguments);
         }
         DragMouseUp();
     }
@@ -138,7 +145,7 @@ public partial class TaskButton : UserControl
 
     public ApplicationWindow ApplicationWindow
     {
-        get { return Window; }
+        get { return _window; }
     }
 
     public Taskbar TaskbarParent
@@ -195,7 +202,7 @@ public partial class TaskButton : UserControl
     private void AppButton_MouseEnter(object sender, MouseEventArgs e)
     {
         _mouseOver = true;
-        if (Window.ListWindows.Count == 0)
+        if (_window.ListWindows.Count == 0)
             return;
 
         if (ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).TaskbarDisableThumb)
@@ -219,7 +226,7 @@ public partial class TaskButton : UserControl
     private void AppButton_MouseLeave(object sender, MouseEventArgs e)
     {
         _mouseOver = false;
-        if (Window.ListWindows.Count == 0)
+        if (_window.ListWindows.Count == 0)
         {
             CloseThumbnail();
             return;

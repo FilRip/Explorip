@@ -30,7 +30,6 @@ namespace Explorip.StartMenu.Window
 
             MyDataContext.HideWindow = Hide;
             MyDataContext.ShowWindow = Show;
-            MyDataContext.SetChangeWidth(ChangeWidth);
 
             HideWindowsStartMenu();
             SetMyStartMenu(this);
@@ -54,13 +53,6 @@ namespace Explorip.StartMenu.Window
         public StartMenuViewModel MyDataContext
         {
             get { return (StartMenuViewModel)DataContext; }
-        }
-
-        private void ChangeWidth(double newWidth)
-        {
-            MinWidth = newWidth;
-            Width = newWidth;
-            MaxWidth = newWidth;
         }
 
         #region Events

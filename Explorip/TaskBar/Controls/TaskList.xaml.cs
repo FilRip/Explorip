@@ -18,8 +18,7 @@ public partial class TaskList : UserControl
 {
     private bool _isLoaded;
     private double _defaultButtonWidth;
-    private double _taskButtonLeftMargin;
-    private double _taskButtonRightMargin;
+    private Thickness _taskButtonMargin;
 
     public readonly static DependencyProperty ButtonWidthProperty = DependencyProperty.Register(nameof(ButtonWidth), typeof(double), typeof(TaskList), new PropertyMetadata(new double()));
 
@@ -39,18 +38,19 @@ public partial class TaskList : UserControl
         set { SetValue(ButtonWidthProperty, value); }
     }
 
+    public Thickness ButtonMargin
+    {
+        get { return _taskButtonMargin; }
+    }
+
     private void SetStyles()
     {
-        _defaultButtonWidth = Application.Current.FindResource("TaskButtonWidth") as double? ?? 0;
-        Thickness buttonMargin;
+        _defaultButtonWidth = ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).TaskButtonSize + 12;
 
         if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Left || ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Right)
-            buttonMargin = Application.Current.FindResource("TaskButtonVerticalMargin") as Thickness? ?? new Thickness();
+            _taskButtonMargin = Application.Current.FindResource("TaskButtonVerticalMargin") as Thickness? ?? new Thickness();
         else
-            buttonMargin = Application.Current.FindResource("TaskButtonMargin") as Thickness? ?? new Thickness();
-
-        _taskButtonLeftMargin = buttonMargin.Left;
-        _taskButtonRightMargin = buttonMargin.Right;
+            _taskButtonMargin = Application.Current.FindResource("TaskButtonMargin") as Thickness? ?? new Thickness();
     }
 
     private void TaskList_OnLoaded(object sender, RoutedEventArgs e)
@@ -85,11 +85,9 @@ public partial class TaskList : UserControl
             return;
         }
 
-        double margin = _taskButtonLeftMargin + _taskButtonRightMargin;
         double maxWidth = TasksList.ActualWidth / TasksList.Items.Count;
-        double defaultWidth = _defaultButtonWidth + margin;
 
-        if (maxWidth > defaultWidth)
+        if (maxWidth > _defaultButtonWidth)
             ButtonWidth = _defaultButtonWidth;
         else
             ButtonWidth = Math.Floor(maxWidth);

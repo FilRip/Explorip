@@ -52,6 +52,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue("ShowSearch", "True");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowWidget", "").ToString()) && WindowsSettings.IsWindows11OrGreater())
                 _registryTaskbar.SetValue("ShowWidget", "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskButtonSize", "").ToString()))
+                _registryTaskbar.SetValue("TaskButtonSize", "32");
         }
     }
 
@@ -230,6 +232,16 @@ public class TaskbarConfig
         {
             if (TaskbarDisableThumb != value && AllowWrite)
                 _registryTaskbar.SetValue("DisableThumb", value.ToString());
+        }
+    }
+
+    public double TaskButtonSize
+    {
+        get { return _registryTaskbar.ReadDouble("TaskButtonSize"); }
+        set
+        {
+            if (TaskButtonSize != value && AllowWrite)
+                _registryTaskbar.SetValue("TaskButtonSize", value.ToString());
         }
     }
 

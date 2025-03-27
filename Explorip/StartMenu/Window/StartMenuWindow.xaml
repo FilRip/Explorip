@@ -201,10 +201,10 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="270"/>
-            <ColumnDefinition Width="430"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.05*"/>
+            <ColumnDefinition Width="0.23*"/>
+            <ColumnDefinition Width="0.36*"/>
+            <ColumnDefinition Width="0.36*"/>
         </Grid.ColumnDefinitions>
 
         <!-- First column, quick button -->

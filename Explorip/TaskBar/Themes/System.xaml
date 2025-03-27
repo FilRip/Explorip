@@ -4,12 +4,8 @@
                     xmlns:constants="clr-namespace:Explorip.Constants"
                     xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy">
 
-    <system:Double x:Key="TaskbarHeight">52</system:Double>
-    <system:Double x:Key="TaskbarWidth">98</system:Double>
-    <system:Double x:Key="TaskButtonWidth">45</system:Double>
-    <system:Double x:Key="TaskButtonMinWidth">45</system:Double>
     <Thickness x:Key="TaskButtonMargin" Right="3" />
-    <Thickness x:Key="TaskButtonVerticalMargin" />
+    <Thickness x:Key="TaskButtonVerticalMargin" Top="3" />
 
     <SolidColorBrush x:Key="ButtonHighlight" Color="Gray" />
     <SolidColorBrush x:Key="ButtonLight" Color="Blue" />
@@ -193,7 +189,7 @@
                         </Border>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                        <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                      Value="Vertical">
                             <DataTrigger.Setters>
                                 <Setter TargetName="ButtonBorder"
@@ -215,7 +211,7 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
                 <DataTrigger.Setters>
                     <Setter Property="Margin"
@@ -250,7 +246,7 @@
                         </Border>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                        <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                      Value="Vertical">
                             <DataTrigger.Setters>
                                 <Setter TargetName="ButtonBorder"
@@ -382,7 +378,7 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
                 <DataTrigger.Setters>
                     <Setter Property="Template">
@@ -460,7 +456,7 @@
             </Setter.Value>
         </Setter>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
                 <DataTrigger.Setters>
                     <Setter Property="Margin"
@@ -502,12 +498,6 @@
 
     <Style TargetType="Image"
            x:Key="TaskIcon">
-        <Setter Property="Width"
-                Value="32" />
-        <Setter Property="Height"
-                Value="32" />
-        <Setter Property="Margin"
-                Value="0,0,3,0" />
         <Setter Property="RenderOptions.EdgeMode"
                 Value="Aliased"/>
         <Setter Property="RenderOptions.BitmapScalingMode"
@@ -590,7 +580,7 @@
         <Setter Property="Height"
                 Value="16" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
                 <DataTrigger.Setters>
                     <Setter Property="Margin"
@@ -636,7 +626,7 @@
         <Setter Property="Background"
                 Value="Transparent"/>
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
                 <DataTrigger.Setters>
                     <Setter Property="Margin"
@@ -667,7 +657,7 @@
                         </Border>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                        <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                      Value="Vertical">
                             <DataTrigger.Setters>
                                 <Setter TargetName="ButtonBorder"
@@ -718,7 +708,7 @@
         <Setter Property="Background"
                 Value="Transparent" />
         <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
                 <DataTrigger.Setters>
                     <Setter Property="Margin"
@@ -771,7 +761,7 @@
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}"
                                            Value="True" />
-                                <Condition Binding="{Binding Path=Orientation, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                <Condition Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                                            Value="Vertical" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.Setters>
@@ -790,7 +780,7 @@
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}"
                                            Value="False" />
-                                <Condition Binding="{Binding Path=Orientation, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                <Condition Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                                            Value="Vertical" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.Setters>
@@ -805,7 +795,7 @@
                                 </Setter>
                             </MultiDataTrigger.Setters>
                         </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+                        <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                                      Value="Vertical">
                             <DataTrigger.Setters>
                                 <Setter TargetName="ButtonBorder"
@@ -841,7 +831,7 @@
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}"
                                            Value="True" />
-                                <Condition Binding="{Binding Path=Orientation, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                <Condition Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                                            Value="Horizontal" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.Setters>
@@ -867,7 +857,7 @@
             <Trigger Property="IsChecked" Value="False">
                 <Setter Property="ToolTip" Value="{x:Static constants:Localization.SHOW_HIDDEN_ICONS}" />
             </Trigger>
-            <DataTrigger Binding="{Binding Path=Orientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
+            <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                          Value="Vertical">
                 <DataTrigger.Setters>
                     <Setter Property="Margin"

@@ -26,9 +26,7 @@ public partial class StartMenuViewModel : ObservableObject
 {
     private readonly double _iconSizeWidth, _iconSizeHeight, _iconSizeWidth2, _iconSizeHeight2;
     private readonly ContextMenu _cmUser, _cmStop, _cmStartMenu;
-    private double _startMenuWidth;
     private CustomColor _winColor;
-    private Action<double> _changeWidth;
 
     [ObservableProperty()]
     private ObservableCollection<StartMenuItemViewModel> _startMenuItems;
@@ -43,11 +41,6 @@ public partial class StartMenuViewModel : ObservableObject
 
     public Action ShowWindow { get; set; }
     public Action HideWindow { get; set; }
-    public void SetChangeWidth(Action<double> changeWidth)
-    {
-        _changeWidth = changeWidth;
-        changeWidth(_startMenuWidth);
-    }
 
     public StartMenuViewModel()
     {
@@ -94,12 +87,8 @@ public partial class StartMenuViewModel : ObservableObject
         _iconSizeWidth2 = ConfigManager.StartMenuIconSizeWidth2;
         _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
 
-        _startMenuWidth = 1175;
-        if (!ConfigManager.StartMenuShowPinnedApp2)
-            _startMenuWidth -= 415;
+        _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
         _showApplicationsPrograms = ConfigManager.ShowApplicationsPrograms;
-        if (!_showApplicationsPrograms)
-            _startMenuWidth -= 270;
 
         RefreshAll();
     }
@@ -198,17 +187,14 @@ public partial class StartMenuViewModel : ObservableObject
 
     private void ChangeShowPanel2()
     {
-        ConfigManager.StartMenuShowPinnedApp2 = !ConfigManager.StartMenuShowPinnedApp2;
-        _startMenuWidth += ConfigManager.StartMenuShowPinnedApp2 ? 415 : -415;
-        _changeWidth(_startMenuWidth);
+        ShowPanel2 = !ShowPanel2;
+        ConfigManager.StartMenuShowPinnedApp2 = ShowPanel2;
     }
 
     private void ChangeShowStartPrograms()
     {
         ShowApplicationsPrograms = !ShowApplicationsPrograms;
         ConfigManager.ShowApplicationsPrograms = ShowApplicationsPrograms;
-        _startMenuWidth += ShowApplicationsPrograms ? 270 : -270;
-        _changeWidth(_startMenuWidth);
     }
 
     public static void Shutdown()
