@@ -129,6 +129,7 @@
             <MenuItem Header="{x:Static localization:Localization.CHOICE_KEYBOARD_LAYOUT}" Name="MenuShowKeyboardLayout" Command="{Binding ShowKeyboardLayoutCommand}"/>
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.CUSTOM_COLOR}" Name="MenuCustomColor" Command="{Binding CustomColorCommand}"/>
+            <MenuItem Header="{x:Static localization:Localization.SMALL_ICON_TASKBAR}" Name="MenuSmallIcon" Command="{Binding SmallIconTaskbarCommand}"/>
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
         </ContextMenu>

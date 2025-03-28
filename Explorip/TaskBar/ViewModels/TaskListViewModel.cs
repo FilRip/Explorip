@@ -246,6 +246,12 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         });
     }
 
+    public void ForceRefresh()
+    {
+        OnPropertyChanged(nameof(TaskListCollection));
+        TaskListCollection.Refresh();
+    }
+
     #region IDisposable
 
     public bool IsDisposed

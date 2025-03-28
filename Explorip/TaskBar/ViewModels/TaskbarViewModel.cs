@@ -85,4 +85,16 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         win.Activate();
         win.MyDataContext.ParentTaskbar = ParentTaskbar;
     }
+
+    [RelayCommand()]
+    private void SmallIconTaskbar()
+    {
+        if (ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize == 16)
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize = 32;
+        else
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize = 16;
+        ParentTaskbar.MyTaskList.SetStyles();
+        ParentTaskbar.MyTaskList.SetTaskButtonWidth();
+        ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
+    }
 }

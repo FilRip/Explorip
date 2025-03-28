@@ -43,7 +43,7 @@ public partial class TaskList : UserControl
         get { return _taskButtonMargin; }
     }
 
-    private void SetStyles()
+    public void SetStyles()
     {
         _defaultButtonWidth = ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).TaskButtonSize + 12;
 
@@ -77,7 +77,7 @@ public partial class TaskList : UserControl
         SetTaskButtonWidth();
     }
 
-    private void SetTaskButtonWidth()
+    public void SetTaskButtonWidth()
     {
         if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Left || ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).Edge == AppBarEdge.Right)
         {

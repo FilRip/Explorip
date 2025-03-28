@@ -147,6 +147,7 @@ public static class Localization
     public static string CUSTOM_COLOR { get; private set; }
     public static string SHOW_SECOND_START_MENU_PANEL { get; private set; }
     public static string SHOW_STARTMENUITEM_STARTWINDOW { get; private set; }
+    public static string SMALL_ICON_TASKBAR { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -292,6 +293,7 @@ public static class Localization
         CUSTOM_COLOR = Load("uiribbon.dll", 147, "Custom colors");
         SHOW_SECOND_START_MENU_PANEL = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_MoreTilesEnabled/Description}", "Show more tiles in start menu");
         SHOW_STARTMENUITEM_STARTWINDOW = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_ShowAppList/Description}", "Show applications in start menu");
+        SMALL_ICON_TASKBAR = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Taskbar_SmallButtons/Description}", "Use small icon for button of task bar");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
