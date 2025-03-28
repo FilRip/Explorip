@@ -8,10 +8,11 @@
         xmlns:constants="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:localization="clr-namespace:Explorip.Constants"
+        xmlns:converters="clr-namespace:Explorip.StartMenu.Converters"
         mc:Ignorable="d"
         WindowStyle="None"
-        ResizeMode="NoResize"
-        Height="640" MinWidth="760" Background="{x:Static constants:Colors.BackgroundColorBrush}"
+        ResizeMode="NoResize" SizeToContent="Width"
+        Height="640" MinWidth="475" Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Topmost="True" ShowInTaskbar="False" IsVisibleChanged="Window_IsVisibleChanged">
     
     <Window.DataContext>
@@ -130,6 +131,7 @@
         </Style>
         
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+        <converters:BooleanToGridLengthConverter x:Key="boolToVisibleColumn"/>
         
         <DataTemplate x:Key="MyDataTemplate" DataType="{x:Type viewmodels:StartMenuItemViewModel}">
             <Grid>
@@ -139,6 +141,10 @@
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Background="{Binding BackgroundItem}">
                     <StackPanel.ContextMenu>
                         <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
@@ -201,10 +207,10 @@
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.05*"/>
-            <ColumnDefinition Width="0.23*"/>
-            <ColumnDefinition Width="0.36*"/>
-            <ColumnDefinition Width="0.36*"/>
+            <ColumnDefinition Width="60"/>
+            <ColumnDefinition Width="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisibleColumn}, ConverterParameter='285'}"/>
+            <ColumnDefinition Width="415"/>
+            <ColumnDefinition Width="{Binding ShowPanel2, Converter={StaticResource boolToVisibleColumn}, ConverterParameter='415'}"/>
         </Grid.ColumnDefinitions>
 
         <!-- First column, quick button -->
@@ -223,10 +229,10 @@
         </Grid>
 
         <!-- Second column, list of items in Start Menu -->
-        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}" Visibility="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisible}}">
+        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}" Visibility="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Left">
             <ItemsControl.Template>
                 <ControlTemplate TargetType="ItemsControl">
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Style="{DynamicResource MyScrollViewerStyle}" MouseEnter="ScrollViewer_MouseEnter" MouseLeave="ScrollViewer_MouseLeave">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Style="{StaticResource MyScrollViewerStyle}" MouseEnter="ScrollViewer_MouseEnter" MouseLeave="ScrollViewer_MouseLeave">
                         <ItemsPresenter/>
                     </ScrollViewer>
                 </ControlTemplate>
@@ -240,7 +246,7 @@
         
         <!-- Third column, some free shortcut panel -->
         <Grid Grid.Column="2">
-            <ListView ItemsSource="{Binding PinnedShortcut}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" HorizontalAlignment="Center" Focusable="True" AllowDrop="True" Name="FirstPanel">
+            <ListView ItemsSource="{Binding PinnedShortcut}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" HorizontalAlignment="Left" Focusable="True" AllowDrop="True" Name="FirstPanel">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">
                         <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>
@@ -289,7 +295,7 @@
 
         <!-- Fourth column, some more free shortcut panel -->
         <Grid Grid.Column="3" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}">
-            <ListView ItemsSource="{Binding PinnedShortcut2}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Center" Focusable="True" AllowDrop="True" Name="SecondPanel">
+            <ListView ItemsSource="{Binding PinnedShortcut2}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Left" Focusable="True" AllowDrop="True" Name="SecondPanel">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Drop">
                         <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>

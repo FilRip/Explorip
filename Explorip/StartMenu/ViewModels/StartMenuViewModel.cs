@@ -85,7 +85,6 @@ public partial class StartMenuViewModel : ObservableObject
         _iconSizeWidth = ConfigManager.StartMenuIconSizeWidth;
         _iconSizeHeight2 = ConfigManager.StartMenuIconSizeHeight2;
         _iconSizeWidth2 = ConfigManager.StartMenuIconSizeWidth2;
-        _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
 
         _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
         _showApplicationsPrograms = ConfigManager.ShowApplicationsPrograms;
