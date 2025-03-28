@@ -38,6 +38,8 @@ public partial class StartMenuViewModel : ObservableObject
     private bool _showPanel2;
     [ObservableProperty()]
     private bool _showApplicationsPrograms;
+    [ObservableProperty()]
+    private double _height;
 
     public Action ShowWindow { get; set; }
     public Action HideWindow { get; set; }
@@ -88,6 +90,8 @@ public partial class StartMenuViewModel : ObservableObject
 
         _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
         _showApplicationsPrograms = ConfigManager.ShowApplicationsPrograms;
+
+        _height = 640;
 
         RefreshAll();
     }

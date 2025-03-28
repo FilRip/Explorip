@@ -12,7 +12,7 @@
         mc:Ignorable="d"
         WindowStyle="None"
         ResizeMode="NoResize" SizeToContent="Width"
-        Height="640" MinWidth="475" Background="{x:Static constants:Colors.BackgroundColorBrush}"
+        Height="{Binding Height}" MinWidth="475" Background="{x:Static constants:Colors.BackgroundColorBrush}"
         Topmost="True" ShowInTaskbar="False" IsVisibleChanged="Window_IsVisibleChanged">
     
     <Window.DataContext>
