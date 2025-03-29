@@ -91,7 +91,7 @@ public partial class StartMenuViewModel : ObservableObject
         _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
         _showApplicationsPrograms = ConfigManager.ShowApplicationsPrograms;
 
-        _height = 640;
+        _height = ConfigManager.StartMenuHeight;
 
         RefreshAll();
     }

@@ -399,7 +399,7 @@ public static class ShellHelper
         PropertyKey PKEY_AppUserModel_ID = new()
         {
             fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
-            pid = 5
+            pid = 5,
         };
 
         if (propStore != null)

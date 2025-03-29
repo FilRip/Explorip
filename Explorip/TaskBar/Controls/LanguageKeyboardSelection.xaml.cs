@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Interop;
 
 using Explorip.TaskBar.ViewModels;
+
 using ExploripSharedCopy.Helpers;
 
 using ExploripSharedCopy.WinAPI;

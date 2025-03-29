@@ -554,6 +554,19 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     private void UncloakEventCallback(IntPtr hWinEventHook, uint eventType, IntPtr hWnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
     {
         ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(hWnd));
+        if (win?.IsUWP == true)
+        {
+            string AppModelId = ShellHelper.GetAppUserModelIdForHandle(hWnd);
+            if (win.AppUserModelID.IndexOf(AppModelId, StringComparison.InvariantCultureIgnoreCase) == -1)
+            {
+                RemoveWindow(hWnd);
+                win = Windows.FirstOrDefault(wnd => wnd.AppUserModelID?.IndexOf(AppModelId, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                if (win == null)
+                    AddWindow(hWnd);
+                else
+                    win.ListWindows.Add(hWnd);
+            }
+        }
         if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && win != null)
         {
             win?.Uncloak();

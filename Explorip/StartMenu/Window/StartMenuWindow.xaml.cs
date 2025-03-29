@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,8 +9,6 @@ using Explorip.TaskBar;
 using ExploripConfig.Configuration;
 
 using ManagedShell.Interop;
-
-using Securify.ShellLink;
 
 using WpfScreenHelper;
 

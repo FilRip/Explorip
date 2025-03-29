@@ -77,6 +77,8 @@ public static class ConfigManager
                 _registryStartMenu.SetValue("ShowApplicationsPrograms", "True");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
                 _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("StartMenuHeight", "").ToString()))
+                _registryRootTaskbar.SetValue("StartMenuHeight", "640");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -476,6 +478,16 @@ public static class ConfigManager
         {
             if (AllowWrite)
                 _registryStartMenu.SetValue("BackgroundColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static double StartMenuHeight
+    {
+        get { return _registryStartMenu.ReadDouble("StartMenuHeight"); }
+        set
+        {
+            if (StartMenuHeight != value && AllowWrite)
+                _registryStartMenu.SetValue("StartMenuHeight", value.ToString());
         }
     }
 }
