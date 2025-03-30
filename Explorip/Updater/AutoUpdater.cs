@@ -25,25 +25,14 @@ internal static class AutoUpdater
         try
         {
             client = new ExtendWebClient();
-            if (beta)
+            client.Headers.Add("User-Agent", ApplicationName);
+            string json = client.DownloadString(new Uri($"https://api.github.com/repos/filrip/{ApplicationName}/releases"));
+            Releases[] deserialized = JsonSerializer.Deserialize<Releases[]>(json);
+            if (deserialized != null)
             {
-                client.Headers.Add("User-Agent", ApplicationName);
-                string json = client.DownloadString(new Uri($"https://api.github.com/repos/filrip/{ApplicationName}/releases"));
-                Releases[] deserialized = JsonSerializer.Deserialize<Releases[]>(json);
-                if (deserialized != null)
-                {
-                    Releases lastBeta = Array.Find(deserialized, r => r.PreRelease);
-                    if (lastBeta != null)
-                    {
-                        Version.TryParse(lastBeta.Tag.Replace("v", ""), out result);
-                    }
-                }
-            }
-            else
-            {
-                string readme = client.DownloadString(new Uri($"https://github.com/FilRip/{ApplicationName}/releases/latest"));
-                if (!string.IsNullOrWhiteSpace(readme))
-                    Version.TryParse(client.LastUri.Segments[client.LastUri.Segments.Length - 1].Replace("v", ""), out result);
+                Releases lastBeta = Array.Find(deserialized, r => r.PreRelease == beta);
+                if (lastBeta != null)
+                    Version.TryParse(lastBeta.Tag.Replace("v", ""), out result);
             }
         }
         catch (Exception) { /* Ignore errors */ }

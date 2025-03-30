@@ -1,16 +1,11 @@
 using System;
 using System.Diagnostics;
-#if !DEBUG
 using System.IO;
-#endif
 using System.Linq;
 using System.Threading;
 using System.Windows;
 
 using Explorip.Helpers;
-#if !DEBUG
-using Explorip.Updater;
-#endif
 
 using ExploripApi;
 
@@ -26,6 +21,7 @@ public static class Program
 {
     private static Application _WpfHost;
     internal static bool ModeShell { get; private set; }
+    private const string AppDomainName = "ExploripAppDomain";
 
     /// <summary>
     /// The main entry point for the application.
@@ -33,22 +29,42 @@ public static class Program
     [STAThread()]
     public static void Main(string[] args)
     {
-#if !DEBUG
-        if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), AutoUpdater.UpdateFolder)))
+        if (AppDomain.CurrentDomain.FriendlyName != AppDomainName)
         {
-            Process.Start("autoupdate.cmd", AutoUpdater.UpdateFolder);
+            AppDomainSetup appDomainSetup = AppDomain.CurrentDomain.SetupInformation;
+            appDomainSetup.ShadowCopyFiles = "true";
+            appDomainSetup.ShadowCopyDirectories = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+            appDomainSetup.ApplicationBase = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+            AppDomain myAppDomain = AppDomain.CreateDomain(AppDomainName, null, appDomainSetup);
+#if !DEBUG
+            myAppDomain.UnhandledException += MyAppDomain_UnhandledException;
+#endif
+            try
+            {
+                myAppDomain.ExecuteAssembly(Environment.GetCommandLineArgs()[0], args);
+            }
+            catch (Exception ex)
+            {
+                CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(ex, false));
+            }
             return;
         }
-        AutoUpdater.SearchNewVersion(true);
+
+#if !DEBUG
+        if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), Updater.AutoUpdater.UpdateFolder)))
+        {
+            Process.Start("autoupdate.cmd", Updater.AutoUpdater.UpdateFolder);
+            return;
+        }
+        Updater.AutoUpdater.SearchNewVersion(false);
 #endif
+
         ModeShell = true;
         Mutex mutexProcess;
 
         Process[] process = Process.GetProcessesByName("explorer");
         if (process != null && process.Length > 0)
-        {
-            ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", System.IO.Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe")));
-        }
+            ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe")));
 
         Constants.Localization.LoadTranslation();
         ExploripSharedCopy.Constants.Colors.LoadTheme();
@@ -99,9 +115,7 @@ public static class Program
                 _WpfHost.Run();
             }
             else
-            {
                 IpcServerManager.SendNewWindow(args);
-            }
         }
         mutexProcess.Dispose();
     }
