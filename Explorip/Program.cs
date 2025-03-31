@@ -37,7 +37,7 @@ public static class Program
             appDomainSetup.ApplicationBase = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
             AppDomain myAppDomain = AppDomain.CreateDomain(AppDomainName, null, appDomainSetup);
 #if !DEBUG
-            myAppDomain.UnhandledException += MyAppDomain_UnhandledException;
+            myAppDomain.UnhandledException += CurrentDomain_UnhandledException;
 #endif
             try
             {
