@@ -78,7 +78,7 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
                 _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("StartMenuHeight", "").ToString()))
-                _registryRootTaskbar.SetValue("StartMenuHeight", "640");
+                _registryStartMenu.SetValue("StartMenuHeight", "640");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
