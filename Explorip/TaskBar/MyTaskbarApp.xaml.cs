@@ -51,6 +51,7 @@ public partial class MyTaskbarApp : Application
 
     public void ExitGracefully()
     {
+        Models.HookRefreshLanguageLayout.UnHook();
         foreach (Taskbar taskbar in _taskbarList)
         {
             taskbar.AllowClose = true;
@@ -58,7 +59,7 @@ public partial class MyTaskbarApp : Application
         }
         MyShellManager.AppBarManager.SignalGracefulShutdown();
         ExitApp();
-        Current.Shutdown();
+        Current?.Shutdown();
     }
 
     public void ReopenTaskbar()

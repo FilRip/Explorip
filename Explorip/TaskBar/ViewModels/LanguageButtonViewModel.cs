@@ -12,15 +12,16 @@ using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.ViewModels;
 
-public partial class LanguageButtonViewModel : ObservableObject
+public partial class LanguageButtonViewModel : ObservableObject, IDisposable
 {
     private LanguageKeyboardSelection _window;
+    private IntPtr _keyboardHookPtr;
 
     public LanguageButtonViewModel() : base()
     {
         _languagesList = [];
         RefreshAllLanguages();
-        new System.Threading.Timer(RefreshCurrentLayout).Change(1000, 1000);
+        Models.HookRefreshLanguageLayout.Hook();
     }
 
     public void RefreshAllLanguages()
@@ -37,6 +38,7 @@ public partial class LanguageButtonViewModel : ObservableObject
     private ObservableCollection<LanguageViewModel> _languagesList;
     [ObservableProperty()]
     private LanguageViewModel _selectedItem;
+    private bool disposedValue;
 
     public void RefreshListAvailableLanguages()
     {
@@ -45,7 +47,7 @@ public partial class LanguageButtonViewModel : ObservableObject
             LanguagesList.Add(new LanguageViewModel(il));
     }
 
-    public void RefreshCurrentLayout(object state = null)
+    public void RefreshCurrentLayout()
     {
         System.Windows.Application.Current?.Dispatcher?.Invoke(() =>
         {
@@ -78,4 +80,38 @@ public partial class LanguageButtonViewModel : ObservableObject
         RefreshCurrentLayout();
         _window?.Close();
     }
+
+    #region IDisposable
+
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                if (_keyboardHookPtr != IntPtr.Zero)
+                {
+                    NativeMethods.UnhookWindowsHookEx(_keyboardHookPtr);
+                    _keyboardHookPtr = IntPtr.Zero;
+                }
+                _window?.Close();
+                LanguagesList.Clear();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }

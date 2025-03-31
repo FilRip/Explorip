@@ -411,6 +411,9 @@ public partial class NativeMethods
     internal static extern IntPtr SendMessage(IntPtr hWnd, int messageId, IntPtr wparam, IntPtr lparam);
 
     [DllImport(User32_DllName)]
+    internal static extern IntPtr SendMessage(IntPtr hWnd, WM messageId, IntPtr wparam, IntPtr lparam);
+
+    [DllImport(User32_DllName)]
     internal static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, uint wParam, uint lParam);
 
     [DllImport(User32_DllName)]
@@ -4174,4 +4177,7 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     internal static extern IntPtr ActivateKeyboardLayout(IntPtr hkl, uint flags);
+
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern bool SetWindowText(IntPtr hWnd, string lpString);
 }

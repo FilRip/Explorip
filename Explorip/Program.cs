@@ -95,7 +95,16 @@ public static class Program
             {
                 RegisterSystemEvents();
                 _WpfHost = new TaskBar.MyTaskbarApp();
-                _WpfHost.Run();
+                try
+                {
+                    _WpfHost.Run();
+                }
+                catch (Exception) { /* Ignore errors (already catched by event AppDomain.UnhandledException) */ }
+                try
+                {
+                    (_WpfHost as TaskBar.MyTaskbarApp)?.ExitGracefully();
+                }
+                catch (Exception) { /* Ignore errors when trying to gracefully closed taskbar */ }
             }
         }
         else

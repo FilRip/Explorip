@@ -53,6 +53,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue("ShowWidget", "True");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskButtonSize", "").ToString()))
                 _registryTaskbar.SetValue("TaskButtonSize", "32");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("SearchWidth", "").ToString()))
+                _registryTaskbar.SetValue("SearchWidth", "100");
         }
     }
 
@@ -241,6 +243,26 @@ public class TaskbarConfig
         {
             if (TaskButtonSize != value && AllowWrite)
                 _registryTaskbar.SetValue("TaskButtonSize", value.ToString());
+        }
+    }
+
+    public double SearchWidth
+    {
+        get { return _registryTaskbar.ReadDouble("SearchWidth"); }
+        set
+        {
+            if (SearchWidth != value && AllowWrite)
+                _registryTaskbar.SetValue("SearchWidth", value.ToString());
+        }
+    }
+
+    public double SearchHeight
+    {
+        get { return _registryTaskbar.ReadDouble("SearchHeight"); }
+        set
+        {
+            if (SearchHeight != value && AllowWrite)
+                _registryTaskbar.SetValue("SearchHeight", value.ToString());
         }
     }
 

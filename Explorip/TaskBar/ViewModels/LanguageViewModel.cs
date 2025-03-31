@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -20,7 +19,6 @@ public partial class LanguageViewModel(System.Windows.Forms.InputLanguage il) : 
 
     public void ActiveKeyboardLayout()
     {
-        Debug.WriteLine($"Active keyboard {ShortName}");
         NativeMethods.ActivateKeyboardLayout(_handle, 0);
     }
 }
