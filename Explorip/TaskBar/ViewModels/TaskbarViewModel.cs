@@ -24,6 +24,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         OnPropertyChanged(nameof(PanelOrientation));
         OnPropertyChanged(nameof(LeadingDockOrientation));
         OnPropertyChanged(nameof(TrailingDockOrientation));
+        RefreshSearch();
     }
 
     public Orientation PanelOrientation
@@ -61,6 +62,10 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private bool _tabTipVisible;
     [ObservableProperty()]
     private bool _keyboardLayoutVisible;
+    [ObservableProperty()]
+    private bool _searchZoneVisible;
+    [ObservableProperty()]
+    private bool _searchButtonVisible;
 
     [RelayCommand()]
     private void ShowHideTabTip()
@@ -96,5 +101,27 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         ParentTaskbar.MyTaskList.SetStyles();
         ParentTaskbar.MyTaskList.SetTaskButtonWidth();
         ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
+    }
+
+    [RelayCommand()]
+    private void ShowSearchZone()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchZone = true;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchButton = false;
+        RefreshSearch();
+    }
+
+    private void RefreshSearch()
+    {
+        SearchZoneVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchZone;
+        SearchButtonVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchButton;
+    }
+
+    [RelayCommand()]
+    private void ShowSearchButton()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchZone = false;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchButton = true;
+        RefreshSearch();
     }
 }

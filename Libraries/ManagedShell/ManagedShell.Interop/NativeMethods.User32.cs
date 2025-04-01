@@ -1894,8 +1894,47 @@ public partial class NativeMethods
     [DllImport(User32_DllName)]
     internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-    public const int INPUT_KEYBOARD = 1;
-    public const uint KEYEVENTF_KEYUP = 0x0002;
+    public enum TypeInput
+    {
+        Mouse = 0,
+        Keyboard = 1,
+        Hardware = 2,
+    }
+
+    [Flags()]
+    public enum KeyEventF : uint
+    {
+        KeyDown = 0x0000,
+        ExtendedKey = 0x0001,
+        KeyUp = 0x0002,
+        ScanCode = 0x0008,
+        Unicode = 0x0004,
+    }
+
+    [Flags()]
+    public enum MouseEventF : uint
+    {
+        MOVE = 0x0001,
+        LEFTDOWN = 0x0002,
+        LEFTUP = 0x0004,
+        RIGHTDOWN = 0x0008,
+        RIGHTUP = 0x0010,
+        MIDDLEDOWN = 0x0020,
+        MIDDLEUP = 0x0040,
+        XDOWN = 0x0080,
+        XUP = 0x0100,
+        WHEEL = 0x0800,
+        HWHEEL = 0x1000,
+        MOVE_NOCOALESCE = 0x2000,
+        VIRTUALDESK = 0x4000,
+        ABSOLUTE = 0x8000,
+    }
+
+    public enum XButton : uint
+    {
+        XBUTTON1 = 0x0001,
+        XBUTTON2 = 0x0002,
+    }
 
 #pragma warning disable IDE0044, S1144
     [StructLayout(LayoutKind.Sequential)]
@@ -1904,7 +1943,7 @@ public partial class NativeMethods
         int dx;
         int dy;
         uint mouseData;
-        uint dwFlags;
+        MouseEventF dwFlags;
         uint time;
         IntPtr dwExtraInfo;
     }
@@ -1915,7 +1954,7 @@ public partial class NativeMethods
     {
         public ushort wVk;
         public ushort wScan;
-        public uint dwFlags;
+        public KeyEventF dwFlags;
         public uint time;
         public IntPtr dwExtraInfo;
     }
@@ -1946,7 +1985,7 @@ public partial class NativeMethods
     [StructLayout(LayoutKind.Sequential)]
     public struct Input
     {
-        public int type;
+        public TypeInput type;
         public MouseKeybdHardwareInputUnion mkhi;
     }
 

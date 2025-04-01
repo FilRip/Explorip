@@ -512,14 +512,14 @@ public static class ShellHelper
     {
         Input[] inputs = new Input[(wVk_3 == VK.NONE ? 4 : 6)];
 
-        inputs[0].type = INPUT_KEYBOARD;
+        inputs[0].type = TypeInput.Keyboard;
         inputs[0].mkhi.ki.time = 0;
         inputs[0].mkhi.ki.wScan = 0;
         inputs[0].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
         inputs[0].mkhi.ki.wVk = (ushort)wVk_1;
         inputs[0].mkhi.ki.dwFlags = 0;
 
-        inputs[1].type = INPUT_KEYBOARD;
+        inputs[1].type = TypeInput.Keyboard;
         inputs[1].mkhi.ki.wScan = 0;
         inputs[1].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
         inputs[1].mkhi.ki.wVk = (ushort)wVk_2;
@@ -528,33 +528,33 @@ public static class ShellHelper
         int position = 2;
         if (wVk_3 != VK.NONE)
         {
-            inputs[position].type = INPUT_KEYBOARD;
+            inputs[position].type = TypeInput.Keyboard;
             inputs[position].mkhi.ki.wScan = 0;
             inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
             inputs[position].mkhi.ki.wVk = (ushort)wVk_3;
             inputs[position].mkhi.ki.dwFlags = 0;
             position++;
 
-            inputs[position].type = INPUT_KEYBOARD;
+            inputs[position].type = TypeInput.Keyboard;
             inputs[position].mkhi.ki.wScan = 0;
             inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
             inputs[position].mkhi.ki.wVk = (ushort)wVk_3;
-            inputs[position].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
+            inputs[position].mkhi.ki.dwFlags = KeyEventF.KeyUp;
             position++;
         }
 
-        inputs[position].type = INPUT_KEYBOARD;
+        inputs[position].type = TypeInput.Keyboard;
         inputs[position].mkhi.ki.wScan = 0;
         inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
         inputs[position].mkhi.ki.wVk = (ushort)wVk_2;
-        inputs[position].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
+        inputs[position].mkhi.ki.dwFlags = KeyEventF.KeyUp;
         position++;
 
-        inputs[position].type = INPUT_KEYBOARD;
+        inputs[position].type = TypeInput.Keyboard;
         inputs[position].mkhi.ki.wScan = 0;
         inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
         inputs[position].mkhi.ki.wVk = (ushort)wVk_1;
-        inputs[position].mkhi.ki.dwFlags = KEYEVENTF_KEYUP;
+        inputs[position].mkhi.ki.dwFlags = KeyEventF.KeyUp;
 
         SendInput((uint)(wVk_3 == VK.NONE ? 4 : 6), inputs, Marshal.SizeOf(typeof(Input)));
     }

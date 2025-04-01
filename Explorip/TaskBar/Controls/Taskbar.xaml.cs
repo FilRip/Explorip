@@ -61,8 +61,6 @@ public partial class Taskbar : AppBarWindow
 
         if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton)
             SetShowTaskMan(false);
-        if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowSearchButton)
-            SetShowSearch(false);
         if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton)
             SetShowWidget(false);
 
@@ -331,18 +329,6 @@ public partial class Taskbar : AppBarWindow
     }
 
     #endregion
-
-    private void SetShowSearch(bool state)
-    {
-        SearchButton.Visibility = (state ? Visibility.Visible : Visibility.Collapsed);
-        MenuShowSearch.IsChecked = state;
-    }
-
-    private void MenuShowSearch_Click(object sender, RoutedEventArgs e)
-    {
-        ConfigManager.GetTaskbarConfig(ScreenName).ShowSearchButton = !ConfigManager.GetTaskbarConfig(ScreenName).ShowSearchButton;
-        SetShowSearch(ConfigManager.GetTaskbarConfig(ScreenName).ShowSearchButton);
-    }
 
     private void SetShowTaskMan(bool state)
     {

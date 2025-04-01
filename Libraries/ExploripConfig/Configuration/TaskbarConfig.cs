@@ -176,6 +176,16 @@ public class TaskbarConfig
         }
     }
 
+    public bool ShowSearchZone
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowSearchBar"); }
+        set
+        {
+            if (ShowSearchZone != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowSearchBar", value.ToString());
+        }
+    }
+
     public bool ShowWidgetButton
     {
         get { return _registryTaskbar.ReadBoolean("ShowWidget"); }

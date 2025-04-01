@@ -51,11 +51,12 @@
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:StartButton>
-                <controls:SearchButton x:Name="SearchButton" Grid.Column="1" Grid.RowSpan="2">
+                <controls:SearchButton x:Name="SearchButton" Grid.Column="1" Grid.RowSpan="2" Visibility="{Binding DataContext.SearchButtonVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:SearchButton>
+                <controls:SearchZone HorizontalAlignment="Right" Grid.Column="1" Grid.RowSpan="2" Visibility="{Binding DataContext.SearchZoneVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                 <controls:TaskManButton x:Name="TaskManButton" Grid.Column="2" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
@@ -72,7 +73,6 @@
                     </Grid.ColumnDefinitions>
                 </Grid>
                 <controls:TaskList VerticalAlignment="Top" Grid.Column="4" Grid.Row="1" x:Name="MyTaskList"/>
-                <controls:SearchBar HorizontalAlignment="Right" Grid.Column="4" Grid.Row="1"/>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
@@ -123,7 +123,8 @@
             <MenuItem Header="{x:Static localization:Localization.UNLOCK_TASKBAR}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAddToolbar" Click="AddToolbar_Click"/>
             <Separator/>
-            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH}" Name="MenuShowSearch" Click="MenuShowSearch_Click"/>
+            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH}" Name="MenuShowSearch" Command="{Binding ShowSearchButtonCommand}" IsChecked="{Binding SearchButtonVisible}"/>
+            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH_ZONE}" Name="MenuShowSearchZone" Command="{Binding ShowSearchZoneCommand}" IsChecked="{Binding SearchZoneVisible}"/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Click="MenuShowTaskmgr_Click"/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_WIDGET}" Name="MenuShowWidget" Click="MenuShowWidget_Click"/>
             <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Command="{Binding ShowHideTabTipCommand}"/>
