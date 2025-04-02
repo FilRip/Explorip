@@ -258,7 +258,6 @@ public static class Localization
         REGEDIT_TYPE_NAME = Load("regedit.exe", 31, "Type");
         REGEDIT_DATA_NAME = Load("regedit.exe", 18, "Data");
         TASKBAR_SHOW_TASKMGR = Load("explorerframe.dll", 50259, "Show") + " " + Load("twinui.pcshell.dll", 34304, "actives applications").ToLower();
-        TASKBAR_SHOW_SEARCH = LoadMenuItem("explorer.exe", 205, 433, "Show search button", 0).Replace("&", "_");
         TASKBAR_SHOW_WIDGET = Load("explorerframe.dll", 50259, "Show") + " " + Load("mshtml.dll", 53857, "widget").ToLower();
         SHOW_HIDDEN_ICONS = Load("explorer.exe", 543, "Show hidden icons");
         HIDE = Load("explorer.exe", 542, "Hide");
@@ -283,9 +282,17 @@ public static class Localization
         UNPIN_FROM_STARTMENU = Load("starttiledata.dll", 1008, "Unpin from Start Menu");
         OPEN_NEW_WINDOW = Load("starttiledata.dll", 1001, "Open a new window");
         if (EnvironmentHelper.IsWindows11OrBetter)
+        {
             CLOSE_ALL_WINDOW = LoadMenuItem("taskbar.dll", 12000, 65491, "Close all windows").Replace("&", "_");
+            TASKBAR_SHOW_SEARCH_ZONE = LoadMenuItem("taskbar.dll", 205, 434, "Show search zone", 0).Replace("&", "_");
+            TASKBAR_SHOW_SEARCH = LoadMenuItem("taskbar.dll", 205, 433, "Show search button", 0).Replace("&", "_");
+        }
         else
+        {
             CLOSE_ALL_WINDOW = LoadMenuItem("explorer.exe", 12000, 65491, "Close all windows").Replace("&", "_");
+            TASKBAR_SHOW_SEARCH_ZONE = LoadMenuItem("explorer.exe", 205, 434, "Show search zone", 0).Replace("&", "_");
+            TASKBAR_SHOW_SEARCH = LoadMenuItem("explorer.exe", 205, 433, "Show search button", 0).Replace("&", "_");
+        }
         RENAME_MENUITEM_WPF = RENAME_MENUITEM.Replace("&", "_");
         ASK_DOWNLOAD_NEW_VERSION = Load("wscapi.dll", 6104, "Do you want to update %1");
         ASK_INSTALL_NEW_VERSION = Load("wscapi.dll", 6101, "Click to install the new version of %1");
@@ -297,7 +304,6 @@ public static class Localization
         SHOW_STARTMENUITEM_STARTWINDOW = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_ShowAppList/Description}", "Show applications in start menu");
         SMALL_ICON_TASKBAR = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Taskbar_SmallButtons/Description}", "Use small icon for button of task bar");
         SEARCH = Load("shell32.dll", 32872, "Search");
-        TASKBAR_SHOW_SEARCH_ZONE = LoadMenuItem("explorer.exe", 205, 434, "Show search zone", 0).Replace("&", "_");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
