@@ -172,11 +172,6 @@ public partial class Taskbar : AppBarWindow
 
     #region Context menu
 
-    private void TaskManagerMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        ShellHelper.StartTaskManager();
-    }
-
     private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
     {
         ((MyTaskbarApp)Application.Current).ExitGracefully();

@@ -11,6 +11,7 @@ using Explorip.TaskBar.Helpers;
 using ExploripConfig.Configuration;
 
 using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
 
 namespace Explorip.TaskBar.ViewModels;
 
@@ -123,5 +124,11 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchZone = false;
         ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchButton = true;
         RefreshSearch();
+    }
+
+    [RelayCommand()]
+    private void ShowTaskMgr()
+    {
+        ShellHelper.StartTaskManager();
     }
 }

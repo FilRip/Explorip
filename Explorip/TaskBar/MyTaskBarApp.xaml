@@ -8,7 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/System.xaml" />
-                <ResourceDictionary Source="Styles/StyleContextMenu"/>
+                <ResourceDictionary Source="Styles/StyleContextMenu.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
