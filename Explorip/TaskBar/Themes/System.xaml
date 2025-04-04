@@ -35,7 +35,7 @@
                  UriSource="/Taskbar/Resources/widget11.png"/>
 
     <system:Double x:Key="GlobalFontSize">11</system:Double>
-
+    <FontFamily x:Key="GlobalFontFamily">Segoe UI</FontFamily>
     <system:Boolean x:Key="AllowsTransparency">False</system:Boolean>
 
     <Style x:Key="GlobalFonts">

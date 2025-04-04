@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="Styles/StyleComboBox.xaml"/>
                 <ResourceDictionary Source="Styles/StyleButton.xaml"/>
                 <ResourceDictionary Source="Styles/StyleTreeViewItem.xaml"/>
+                <ResourceDictionary Source="Styles/StyleContextMenu.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

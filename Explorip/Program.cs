@@ -47,6 +47,11 @@ public static class Program
             {
                 CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(ex, false));
             }
+            try
+            {
+                (_WpfHost as TaskBar.MyTaskbarApp)?.ExitGracefully();
+            }
+            catch (Exception) { /* Ignore errors when trying to gracefully closed taskbar */ }
             return;
         }
 

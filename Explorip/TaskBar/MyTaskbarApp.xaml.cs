@@ -27,26 +27,18 @@ namespace Explorip.TaskBar;
 /// </summary>
 public partial class MyTaskbarApp : Application
 {
-    public DictionaryManager DictionaryManager { get; }
+    public DictionaryManager DictionaryManager { get; set; }
 
 #if DEBUG
     private ManagedShellLogger _logger;
 #endif
-    private readonly List<Taskbar> _taskbarList;
-    private readonly StartMenuMonitor _startMenuMonitor;
+    private List<Taskbar> _taskbarList;
+    private StartMenuMonitor _startMenuMonitor;
     public static ShellManager MyShellManager { get; private set; }
 
     public MyTaskbarApp()
     {
-        _taskbarList = [];
-        MyShellManager = SetupManagedShell();
-
-        _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
-        DictionaryManager = new DictionaryManager();
-
-        // Startup
-        DictionaryManager.SetThemeFromSettings();
-        OpenTaskbar();
+        InitializeComponent();
     }
 
     public void ExitGracefully()
@@ -57,6 +49,7 @@ public partial class MyTaskbarApp : Application
             taskbar.AllowClose = true;
             taskbar.Close();
         }
+        _taskbarList.Clear();
         MyShellManager.AppBarManager.SignalGracefulShutdown();
         ExitApp();
         Current?.Shutdown();
@@ -179,5 +172,18 @@ public partial class MyTaskbarApp : Application
     public List<Taskbar> ListAllTaskbar()
     {
         return _taskbarList;
+    }
+
+    private void Application_Startup(object sender, StartupEventArgs e)
+    {
+        _taskbarList = [];
+        MyShellManager = SetupManagedShell();
+
+        _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
+        DictionaryManager = new DictionaryManager();
+
+        // Startup
+        DictionaryManager.SetThemeFromSettings();
+        OpenTaskbar();
     }
 }

@@ -77,7 +77,7 @@ public partial class StartMenuViewModel : ObservableObject
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             ItemsPanel = itp,
         };
-        _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
+        _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate); // TODO : Do not show Hybernate option if not enabled on this computer
         _cmStop.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);
         _cmStop.AddEntry(Constants.Localization.RESTART, Restart);
 

@@ -26,6 +26,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         OnPropertyChanged(nameof(LeadingDockOrientation));
         OnPropertyChanged(nameof(TrailingDockOrientation));
         RefreshSearch();
+        SetShowTaskMan();
+        SetShowWidget();
     }
 
     public Orientation PanelOrientation
@@ -67,6 +69,10 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private bool _searchZoneVisible;
     [ObservableProperty()]
     private bool _searchButtonVisible;
+    [ObservableProperty()]
+    private bool _taskManVisible;
+    [ObservableProperty()]
+    private bool _widgetsVisible;
 
     [RelayCommand()]
     private void ShowHideTabTip()
@@ -130,5 +136,41 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private void ShowTaskMgr()
     {
         ShellHelper.StartTaskManager();
+    }
+
+    private void SetShowTaskMan()
+    {
+        TaskManVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowTaskManButton;
+    }
+
+    [RelayCommand()]
+    private void ShowTaskMan()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowTaskManButton = !TaskManVisible;
+        SetShowTaskMan();
+    }
+
+    private void SetShowWidget()
+    {
+        WidgetsVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowWidgetButton;
+    }
+
+    [RelayCommand()]
+    private void ShowWidgets()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowWidgetButton = !WidgetsVisible;
+        SetShowWidget();
+    }
+
+    [RelayCommand()]
+    private void Exit()
+    {
+        ((MyTaskbarApp)Application.Current).ExitGracefully();
+    }
+
+    [RelayCommand()]
+    private void TaskbarAllScreen()
+    {
+        ((MyTaskbarApp)Program.MyCurrentApp).ShowTaskbarOnAllOthersScreen();
     }
 }

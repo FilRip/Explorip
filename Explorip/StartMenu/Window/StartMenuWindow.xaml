@@ -132,7 +132,11 @@
         
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>
         <converters:BooleanToGridLengthConverter x:Key="boolToVisibleColumn"/>
-        
+
+        <ItemsPanelTemplate x:Key="MyMenuItem">
+            <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
+        </ItemsPanelTemplate>
+
         <DataTemplate x:Key="MyDataTemplate" DataType="{x:Type viewmodels:StartMenuItemViewModel}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -147,12 +151,7 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Background="{Binding BackgroundItem}">
                     <StackPanel.ContextMenu>
-                        <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
-                            <ContextMenu.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
-                                </ItemsPanelTemplate>
-                            </ContextMenu.ItemsPanel>
+                        <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" ItemsPanel="{StaticResource MyMenuItem}">
                             <MenuItem Header="{x:Static localization:Localization.PIN_TO_STARTMENU}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
@@ -195,12 +194,7 @@
             </Grid>
         </DataTemplate>
 
-        <ContextMenu x:Key="CmPanel" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}">
-            <ContextMenu.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Margin="-20,0,0,0" Background="{x:Static constants:Colors.BackgroundColorBrush}"/>
-                </ItemsPanelTemplate>
-            </ContextMenu.ItemsPanel>
+        <ContextMenu x:Key="CmPanel" Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" ItemsPanel="{StaticResource MyMenuItem}">
             <MenuItem Header="{x:Static localization:Localization.RENAME_MENUITEM_WPF}" Name="RenameItem" Command="{Binding RenameCommand}"/>
             <MenuItem Header="{x:Static localization:Localization.UNPIN_FROM_STARTMENU}" Name="DeleteItem" Command="{Binding DeleteCommand}"/>
         </ContextMenu>

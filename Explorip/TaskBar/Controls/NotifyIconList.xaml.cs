@@ -98,14 +98,10 @@ public partial class NotifyIconList : UserControl
                 SetToggleVisibility();
 
                 if (NotifyIconToggleButton.IsChecked == true)
-                {
                     NotifyIconToggleButton.IsChecked = false;
-                }
             }
             else
-            {
                 NotifyIcons.ItemsSource = allNotifyIconsSource.View;
-            }
 
             isLoaded = true;
         }
@@ -116,23 +112,17 @@ public partial class NotifyIconList : UserControl
         // This is used to promote unpinned icons to show when the tray is collapsed.
 
         if (NotificationArea == null)
-        {
             return;
-        }
 
         ManagedShell.WindowsTray.NotifyIcon notifyIcon = e.Balloon.NotifyIcon;
 
+        // Do not promote pinned icons (they're already there!)
         if (NotificationArea.PinnedIcons.Contains(notifyIcon))
-        {
-            // Do not promote pinned icons (they're already there!)
             return;
-        }
 
+        // Do not duplicate promoted icons
         if (promotedIcons.Contains(notifyIcon))
-        {
-            // Do not duplicate promoted icons
             return;
-        }
 
         promotedIcons.Add(notifyIcon);
 
@@ -143,9 +133,7 @@ public partial class NotifyIconList : UserControl
         unpromoteTimer.Tick += (object mysender, EventArgs ea) =>
         {
             if (promotedIcons.Contains(notifyIcon))
-            {
                 promotedIcons.Remove(notifyIcon);
-            }
             unpromoteTimer.Stop();
         };
         unpromoteTimer.Start();
@@ -199,19 +187,14 @@ public partial class NotifyIconList : UserControl
     private void NotifyIconToggleButton_OnClick(object sender, RoutedEventArgs e)
     {
         if (NotifyIconToggleButton.IsChecked == true)
-        {
-
             NotifyIcons.ItemsSource = allNotifyIconsSource.View;
-        }
         else
-        {
             NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;
-        }
     }
 
     private void SetToggleVisibility()
     {
-        if (!ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).CollapseNotifyIcons)
+        if (this.FindVisualParent<Taskbar>() == null || !ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).CollapseNotifyIcons)
             return;
 
         if (NotificationArea.UnpinnedIcons.IsEmpty)
@@ -219,13 +202,9 @@ public partial class NotifyIconList : UserControl
             NotifyIconToggleButton.Visibility = Visibility.Collapsed;
 
             if (NotifyIconToggleButton.IsChecked == true)
-            {
                 NotifyIconToggleButton.IsChecked = false;
-            }
         }
         else
-        {
             NotifyIconToggleButton.Visibility = Visibility.Visible;
-        }
     }
 }

@@ -29,12 +29,7 @@
             <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
                    Style="{DynamicResource TaskIcon}"/>
             <Button.ContextMenu>
-                <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
-                    <ContextMenu.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                        </ItemsPanelTemplate>
-                    </ContextMenu.ItemsPanel>
+                <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
                     <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_WINDOW}" Name="StartNewInstanceMenuItem" Click="StartNewInstanceMenuItem_Click"/>
                     <MenuItem Header="{x:Static constants:Localization.UNPIN_FROM_TASKBAR}" Visibility="{Binding IsPinnedApp, Converter={StaticResource BoolToVisibility}}" Name="UnpinMenuItem" Click="UnpinMenuItem_Click"/>
                     <MenuItem Header="{x:Static constants:Localization.PIN_TO_TASKBAR}" Visibility="{Binding IsPinnedApp, Converter={StaticResource InverseBoolToVisibility}}" Name="PinMenuItem" Click="PinMenuItem_Click"/>

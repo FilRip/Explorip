@@ -59,11 +59,6 @@ public partial class Taskbar : AppBarWindow
         if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth > 0)
             DesiredWidth = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth;
 
-        if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton)
-            SetShowTaskMan(false);
-        if (!ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton)
-            SetShowWidget(false);
-
         MyDataContext.TabTipVisible = ConfigManager.GetTaskbarConfig(ScreenName).ShowTabTip;
         MyDataContext.KeyboardLayoutVisible = ConfigManager.GetTaskbarConfig(ScreenName).ShowKeyboardLayout;
 
@@ -169,20 +164,6 @@ public partial class Taskbar : AppBarWindow
                 Top = desiredTop;
         }
     }
-
-    #region Context menu
-
-    private void ExitMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        ((MyTaskbarApp)Application.Current).ExitGracefully();
-    }
-
-    private void TaskbarAllScreenMenuItem_OnClick(object sender, RoutedEventArgs e)
-    {
-        ((MyTaskbarApp)Program.MyCurrentApp).ShowTaskbarOnAllOthersScreen();
-    }
-
-    #endregion
 
     protected override void CustomClosing()
     {
@@ -324,28 +305,4 @@ public partial class Taskbar : AppBarWindow
     }
 
     #endregion
-
-    private void SetShowTaskMan(bool state)
-    {
-        TaskManButton.Visibility = (state ? Visibility.Visible : Visibility.Collapsed);
-        MenuShowTaskmgr.IsChecked = state;
-    }
-
-    private void MenuShowTaskmgr_Click(object sender, RoutedEventArgs e)
-    {
-        ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton = !ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton;
-        SetShowTaskMan(ConfigManager.GetTaskbarConfig(ScreenName).ShowTaskManButton);
-    }
-
-    private void SetShowWidget(bool state)
-    {
-        WidgetsButton.Visibility = (state ? Visibility.Visible : Visibility.Collapsed);
-        MenuShowWidget.IsChecked = state;
-    }
-
-    private void MenuShowWidget_Click(object sender, RoutedEventArgs e)
-    {
-        ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton = !ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton;
-        SetShowWidget(ConfigManager.GetTaskbarConfig(ScreenName).ShowWidgetButton);
-    }
 }

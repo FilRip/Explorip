@@ -57,12 +57,12 @@
                     </DockPanel.Dock>
                 </controls:SearchButton>
                 <controls:SearchZone HorizontalAlignment="Right" Grid.Column="1" Grid.RowSpan="2" Visibility="{Binding DataContext.SearchZoneVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
-                <controls:TaskManButton x:Name="TaskManButton" Grid.Column="2" Grid.RowSpan="2">
+                <controls:TaskManButton x:Name="TaskManButton" Grid.Column="2" Grid.RowSpan="2" Visibility="{Binding DataContext.TaskManVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:TaskManButton>
-                <controls:WidgetsButton x:Name="WidgetsButton" Grid.Column="3" Grid.RowSpan="2">
+                <controls:WidgetsButton x:Name="WidgetsButton" Grid.Column="3" Grid.RowSpan="2" Visibility="{Binding DataContext.WidgetsVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
@@ -101,39 +101,29 @@
         </DockPanel>
     </ContentControl>
     <appbar:AppBarWindow.ContextMenu>
-        <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
-            <ContextMenu.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                </ItemsPanelTemplate>
-            </ContextMenu.ItemsPanel>
+        <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
             <MenuItem Header="{x:Static localization:Localization.TASK_MANAGER}" Name="TaskManagerMenuItem" Command="{Binding ShowTaskMgrCommand}"/>
             <Separator/>
-            <MenuItem Header="{x:Static localization:Localization.TOOLBAR}">
-                <MenuItem.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                    </ItemsPanelTemplate>
-                </MenuItem.ItemsPanel>
+            <MenuItem Header="{x:Static localization:Localization.TOOLBAR}" Name="ToolbarSubMenu" Style="{DynamicResource MenuItemWithSubMenuStyle}">
                 <MenuItem Header="{x:Static localization:Localization.SHOW_TITLE}" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
                 <MenuItem Header="{x:Static localization:Localization.LARGE_ICON}" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
             </MenuItem>
             <Separator/>
-            <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Click="TaskbarAllScreenMenuItem_OnClick"/>
+            <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Command="{Binding TaskbarAllScreenCommand}"/>
             <MenuItem Header="{x:Static localization:Localization.UNLOCK_TASKBAR}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
             <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAddToolbar" Click="AddToolbar_Click"/>
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH}" Name="MenuShowSearch" Command="{Binding ShowSearchButtonCommand}" IsChecked="{Binding SearchButtonVisible}"/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH_ZONE}" Name="MenuShowSearchZone" Command="{Binding ShowSearchZoneCommand}" IsChecked="{Binding SearchZoneVisible}"/>
-            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Click="MenuShowTaskmgr_Click"/>
-            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_WIDGET}" Name="MenuShowWidget" Click="MenuShowWidget_Click"/>
-            <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Command="{Binding ShowHideTabTipCommand}"/>
-            <MenuItem Header="{x:Static localization:Localization.CHOICE_KEYBOARD_LAYOUT}" Name="MenuShowKeyboardLayout" Command="{Binding ShowKeyboardLayoutCommand}"/>
+            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Command="{Binding ShowTaskManCommand}" IsCheckable="{Binding TaskManVisible}"/>
+            <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_WIDGET}" Name="MenuShowWidget" Command="{Binding ShowWidgetsCommand}" IsChecked="{Binding WidgetsVisible}"/>
+            <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Command="{Binding ShowHideTabTipCommand}" IsChecked="{Binding TabTipVisible}"/>
+            <MenuItem Header="{x:Static localization:Localization.CHOICE_KEYBOARD_LAYOUT}" Name="MenuShowKeyboardLayout" Command="{Binding ShowKeyboardLayoutCommand}" IsChecked="{Binding KeyboardLayoutVisible}"/>
             <Separator/>
             <MenuItem Header="{x:Static localization:Localization.CUSTOM_COLOR}" Name="MenuCustomColor" Command="{Binding CustomColorCommand}"/>
             <MenuItem Header="{x:Static localization:Localization.SMALL_ICON_TASKBAR}" Name="MenuSmallIcon" Command="{Binding SmallIconTaskbarCommand}"/>
             <Separator/>
-            <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Click="ExitMenuItem_OnClick"/>
+            <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Command="{Binding ExitCommand}"/>
         </ContextMenu>
     </appbar:AppBarWindow.ContextMenu>
 </appbar:AppBarWindow>

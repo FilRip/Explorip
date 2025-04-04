@@ -20,12 +20,7 @@
     </UserControl.Resources>
     
     <UserControl.ContextMenu>
-        <ContextMenu Name="TabControlContextualMenu" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
-            <ContextMenu.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Margin="-20,0,0,0" Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                </ItemsPanelTemplate>
-            </ContextMenu.ItemsPanel>
+        <ContextMenu Name="TabControlContextualMenu" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
             <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_TAB}" Name="NewTab" Command="{Binding NewTabCommand}"/>
             <MenuItem Header="{x:Static constants:Localization.CLOSE_TAB}" Name="CloseTab" Command="{Binding CloseTabCommand}"/>
             <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Command="{Binding NewTabOtherCommand}"/>
