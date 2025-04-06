@@ -150,6 +150,8 @@ public static class Localization
     public static string SMALL_ICON_TASKBAR { get; private set; }
     public static string SEARCH { get; private set; }
     public static string TASKBAR_SHOW_SEARCH_ZONE { get; private set; }
+    public static string UPDATE_AND_SHUTDOWN { get; private set; }
+    public static string UPDATE_AND_RESTART { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -284,8 +286,8 @@ public static class Localization
         if (EnvironmentHelper.IsWindows11OrBetter)
         {
             CLOSE_ALL_WINDOW = LoadMenuItem("taskbar.dll", 12000, 65491, "Close all windows").Replace("&", "_");
-            TASKBAR_SHOW_SEARCH_ZONE = LoadMenuItem("taskbar.dll", 205, 434, "Show search zone", 0).Replace("&", "_");
-            TASKBAR_SHOW_SEARCH = LoadMenuItem("taskbar.dll", 205, 433, "Show search button", 0).Replace("&", "_");
+            TASKBAR_SHOW_SEARCH_ZONE = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SystemSettings/Resources/SystemSettings_DesktopTaskbar_Search_Box}", "Show search zone");
+            TASKBAR_SHOW_SEARCH = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SystemSettings/Resources/SystemSettings_DesktopTaskbar_Search_Icon}", "Show search button");
         }
         else
         {
@@ -304,6 +306,8 @@ public static class Localization
         SHOW_STARTMENUITEM_STARTWINDOW = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_ShowAppList/Description}", "Show applications in start menu");
         SMALL_ICON_TASKBAR = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Taskbar_SmallButtons/Description}", "Use small icon for button of task bar");
         SEARCH = Load("shell32.dll", 32872, "Search");
+        UPDATE_AND_SHUTDOWN = Load("shutdownux.dll", 3026, "Update and shutdown");
+        UPDATE_AND_RESTART = Load("shutdownux.dll", 3030, "Update and restart");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

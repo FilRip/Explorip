@@ -18,6 +18,8 @@ using ExploripConfig.Configuration;
 using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 
+using Microsoft.Win32;
+
 using Securify.ShellLink;
 
 namespace Explorip.StartMenu.ViewModels;
@@ -77,7 +79,8 @@ public partial class StartMenuViewModel : ObservableObject
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             ItemsPanel = itp,
         };
-        _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate); // TODO : Do not show Hybernate option if not enabled on this computer
+        if (IsHybernateEnabled)
+            _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
         _cmStop.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);
         _cmStop.AddEntry(Constants.Localization.RESTART, Restart);
 
@@ -94,6 +97,42 @@ public partial class StartMenuViewModel : ObservableObject
         _height = ConfigManager.StartMenuHeight;
 
         RefreshAll();
+    }
+
+    private static bool IsHybernateEnabled
+    {
+        get
+        {
+            RegistryKey Key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Power");
+            if (Key != null)
+                return Key.GetValue("HibernateEnabled", 0) != null && (int)Key.GetValue("HibernateEnabled") == 1;
+            return false;
+        }
+    }
+
+    private static bool IsRestartPending()
+    {
+        return IsPendingReboot() || IsPendingFileRenameOperations();
+    }
+
+    private static bool IsPendingReboot()
+    {
+        using RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing");
+        if (key != null && key.GetValue("RebootPending") != null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private static bool IsPendingFileRenameOperations()
+    {
+        using RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager");
+        if (key != null && key.GetValue("PendingFileRenameOperations") != null)
+        {
+            return true;
+        }
+        return false;
     }
 
     public void RefreshAll()
@@ -231,6 +270,7 @@ public partial class StartMenuViewModel : ObservableObject
     [RelayCommand()]
     private void StopButton()
     {
+        // TODO : Refresh label of MenuItem depend on if a windows update need a restart
         _cmStop.IsOpen = true;
     }
 
