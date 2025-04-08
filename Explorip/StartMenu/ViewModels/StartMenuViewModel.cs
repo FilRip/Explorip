@@ -105,7 +105,7 @@ public partial class StartMenuViewModel : ObservableObject
         {
             RegistryKey Key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Power");
             if (Key != null)
-                return Key.GetValue("HibernateEnabled", 0) != null && (int)Key.GetValue("HibernateEnabled") == 1;
+                return Key.GetValue("HibernateEnabled", 0) != null && (int)Key.GetValue("HibernateEnabled", 0) == 1;
             return false;
         }
     }
