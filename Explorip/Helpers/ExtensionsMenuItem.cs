@@ -6,7 +6,7 @@ namespace Explorip.Helpers;
 
 public static class ExtensionsMenuItem
 {
-    public static void AddEntry(this ContextMenu cm, string title, Action click)
+    public static MenuItem AddEntry(this ContextMenu cm, string title, Action click)
     {
         MenuItem mi = new()
         {
@@ -21,5 +21,6 @@ public static class ExtensionsMenuItem
             click();
         };
         cm.Items.Add(mi);
+        return mi;
     }
 }

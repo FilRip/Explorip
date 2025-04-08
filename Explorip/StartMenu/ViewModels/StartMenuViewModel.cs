@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Markup;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -79,8 +80,13 @@ public partial class StartMenuViewModel : ObservableObject
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             ItemsPanel = itp,
         };
-        if (IsHybernateEnabled)
-            _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
+        MenuItem mi = _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
+        Binding bd = new(nameof(IsHybernateEnabled))
+        {
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+            Converter = new BooleanToVisibilityConverter(),
+        };
+        mi.SetBinding(UIElement.VisibilityProperty, bd);
         _cmStop.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);
         _cmStop.AddEntry(Constants.Localization.RESTART, Restart);
 
@@ -99,7 +105,8 @@ public partial class StartMenuViewModel : ObservableObject
         RefreshAll();
     }
 
-    private static bool IsHybernateEnabled
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
+    public bool IsHybernateEnabled
     {
         get
         {
@@ -109,6 +116,7 @@ public partial class StartMenuViewModel : ObservableObject
             return false;
         }
     }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
     private static bool IsRestartPending()
     {
@@ -271,6 +279,7 @@ public partial class StartMenuViewModel : ObservableObject
     private void StopButton()
     {
         // TODO : Refresh label of MenuItem depend on if a windows update need a restart
+        OnPropertyChanged(nameof(IsHybernateEnabled));
         _cmStop.IsOpen = true;
     }
 
