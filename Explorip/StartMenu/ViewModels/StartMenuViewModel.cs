@@ -80,13 +80,7 @@ public partial class StartMenuViewModel : ObservableObject
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             ItemsPanel = itp,
         };
-        MenuItem mi = _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
-        Binding bd = new(nameof(IsHybernateEnabled))
-        {
-            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
-            Converter = new BooleanToVisibilityConverter(),
-        };
-        mi.SetBinding(UIElement.VisibilityProperty, bd);
+        _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
         _cmStop.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);
         _cmStop.AddEntry(Constants.Localization.RESTART, Restart);
 
@@ -105,22 +99,30 @@ public partial class StartMenuViewModel : ObservableObject
         RefreshAll();
     }
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
-    public bool IsHybernateEnabled
+    public static bool IsHybernateEnabled
     {
         get
         {
+            bool result = false;
             RegistryKey Key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Power");
             if (Key != null)
-                return Key.GetValue("HibernateEnabled", 0) != null && (int)Key.GetValue("HibernateEnabled", 0) == 1;
-            return false;
+            {
+                if (Key.GetValue("HibernateEnabled") != null)
+                    result = (int)Key.GetValue("HibernateEnabled") == 1;
+                else if (Key.GetValue("HibernateEnabledDefault") != null)
+                    return (int)Key.GetValue("HibernateEnabledDefault") == 1;
+            }
+            Key.Close();
+            return result;
         }
     }
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
-    private static bool IsRestartPending()
+    private static bool IsRestartPending
     {
-        return IsPendingReboot() || IsPendingFileRenameOperations();
+        get
+        {
+            return IsPendingReboot() || IsWUPendingReboot() || IsPendingFileRenameOperations();
+        }
     }
 
     private static bool IsPendingReboot()
@@ -130,6 +132,14 @@ public partial class StartMenuViewModel : ObservableObject
         {
             return true;
         }
+        return false;
+    }
+
+    private static bool IsWUPendingReboot()
+    {
+        using RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired");
+        if (key != null)
+            return true;
         return false;
     }
 
@@ -278,8 +288,9 @@ public partial class StartMenuViewModel : ObservableObject
     [RelayCommand()]
     private void StopButton()
     {
-        // TODO : Refresh label of MenuItem depend on if a windows update need a restart
-        OnPropertyChanged(nameof(IsHybernateEnabled));
+        ((MenuItem)_cmStop.Items[0]).Visibility = IsHybernateEnabled ? Visibility.Visible : Visibility.Collapsed;
+        ((MenuItem)_cmStop.Items[1]).Header = IsRestartPending ? Constants.Localization.UPDATE_AND_SHUTDOWN : Constants.Localization.SHUTDOWN;
+        ((MenuItem)_cmStop.Items[2]).Header = IsRestartPending ? Constants.Localization.UPDATE_AND_RESTART : Constants.Localization.RESTART;
         _cmStop.IsOpen = true;
     }
 
