@@ -14,7 +14,6 @@ using Explorip.TaskBar.Controls;
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
-using ManagedShell.Interop;
 
 using static ManagedShell.Interop.NativeMethods;
 

@@ -4,9 +4,6 @@
                     xmlns:constants="clr-namespace:Explorip.Constants"
                     xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy">
 
-    <Thickness x:Key="TaskButtonMargin" Right="3" />
-    <Thickness x:Key="TaskButtonVerticalMargin" Top="3" />
-
     <SolidColorBrush x:Key="ButtonHighlight" Color="Gray" />
     <SolidColorBrush x:Key="ButtonLight" Color="Blue" />
     <SolidColorBrush x:Key="ButtonFace" Color="White" />
@@ -168,8 +165,6 @@
                 Value="True" />
         <Setter Property="Background"
                 Value="Transparent" />
-        <Setter Property="Margin"
-                Value="{DynamicResource TaskButtonMargin}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -210,15 +205,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                         Value="Vertical">
-                <DataTrigger.Setters>
-                    <Setter Property="Margin"
-                            Value="{DynamicResource TaskButtonVerticalMargin}" />
-                </DataTrigger.Setters>
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
 
     <Style TargetType="Button"

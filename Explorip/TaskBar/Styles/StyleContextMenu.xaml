@@ -153,7 +153,7 @@
                            Opacity="0.7"
                            Grid.Column="4" />
                 <Path Data="M0,0L4,3.5 0,7z"
-                      Fill="#FF212121"
+                      Fill="{x:Static colors:Colors.ForegroundColorBrush}"
                       Name="RightArrow"
                       Margin="10,0,0,0"
                       HorizontalAlignment="Left"
@@ -196,6 +196,7 @@
             <Trigger Property="MenuItem.IsHighlighted" Value="True">
                 <Setter Property="Panel.Background" TargetName="templateRoot" Value="#00FFFFFF"/>
                 <Setter Property="Border.BorderBrush" TargetName="templateRoot" Value="#FF26A0DA"/>
+                <Setter Property="Popup.IsOpen" TargetName="PART_Popup" Value="True"/>
             </Trigger>
             <Trigger Property="UIElement.IsEnabled" Value="False">
                 <Setter Property="TextElement.Foreground" TargetName="templateRoot" Value="#FF707070"/>
@@ -219,6 +220,7 @@
 
     <Style TargetType="{x:Type MenuItem}" x:Key="MenuItemWithSubMenuStyle">
         <Setter Property="Template" Value="{StaticResource MyMenuItemControlTemplateWithSubMenu}"/>
+        <Setter Property="ItemsPanel" Value="{StaticResource MyMenuItemPanel}"/>
     </Style>
 
     <Style TargetType="{x:Type Separator}">

@@ -14,6 +14,8 @@ using Explorip.Helpers;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Helpers;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.AppBar;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
@@ -33,6 +35,10 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     [ObservableProperty()]
     private ICollectionView _taskListCollection;
+    [ObservableProperty()]
+    private double _buttonWith;
+    [ObservableProperty()]
+    private double _buttonRightMargin, _buttonBottomMargin;
 
     public TaskListViewModel() : base()
     {
@@ -72,6 +78,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         _currentEdge = newEdge;
         OnPropertyChanged(nameof(PanelOrientation));
+        ChangeButtonSize();
     }
 
     public Taskbar TaskbarParent
@@ -90,9 +97,21 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     MyTaskbarApp.MyShellManager.TasksService.WindowDestroy += RefreshAllCollectionView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowCreate += RefreshAllCollectionView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += TasksService_WindowUncloaked;
+                    ChangeButtonSize();
                 }
             }
         }
+    }
+
+    public void ChangeButtonSize()
+    {
+        ButtonWith = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize;
+        ButtonRightMargin = 0;
+        ButtonBottomMargin = 0;
+        if (_currentEdge == AppBarEdge.Left || _currentEdge == AppBarEdge.Right)
+            ButtonBottomMargin = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton;
+        else
+            ButtonRightMargin = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton;
     }
 
     private static void TasksService_WindowUncloaked(IntPtr windowHandle)

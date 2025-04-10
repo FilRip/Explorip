@@ -105,8 +105,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
             ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize = 32;
         else
             ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize = 16;
-        ParentTaskbar.MyTaskList.SetStyles();
-        ParentTaskbar.MyTaskList.SetTaskButtonWidth();
+        ParentTaskbar.MyTaskList.MyDataContext.ChangeButtonSize();
         ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
     }
 
