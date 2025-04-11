@@ -76,7 +76,7 @@ public partial class ToolbarViewModel : ObservableObject
     [ObservableProperty()]
     private Visibility _moreItemsVisibility = Visibility.Collapsed;
     [ObservableProperty()]
-    private Visibility _titleVisibility;
+    private bool _showTitle;
     [ObservableProperty()]
     private string _title;
     [ObservableProperty()]
@@ -104,7 +104,7 @@ public partial class ToolbarViewModel : ObservableObject
             Title = Folder.DisplayName;
             if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
                 ShowLargeIcon();
-            TitleVisibility = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path) ? Visibility.Visible : Visibility.Collapsed;
+            ShowTitle = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path);
             Point point = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Path);
             Margin = new Thickness(point.X, point.Y, Margin.Right, Margin.Bottom);
             Folder.Files.CollectionChanged += Files_CollectionChanged;
@@ -178,7 +178,7 @@ public partial class ToolbarViewModel : ObservableObject
             if (Folder == null)
                 return;
             double maxWidth = _parentControl.ToolbarItems.ActualWidth - (CurrentShowLargeIcon ? 32 : 16);
-            if (TitleVisibility == Visibility.Visible)
+            if (ShowTitle)
                 maxWidth -= TitleWidth;
             double currentWidth = 0;
             moreItems.Items.Clear();
@@ -336,11 +336,8 @@ public partial class ToolbarViewModel : ObservableObject
     [RelayCommand()]
     public void ShowHideTitle()
     {
-        if (TitleVisibility == Visibility.Visible)
-            TitleVisibility = Visibility.Collapsed;
-        else
-            TitleVisibility = Visibility.Visible;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path, TitleVisibility == Visibility.Visible);
+        ShowTitle = !ShowTitle;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path, ShowTitle);
     }
 
     [RelayCommand()]
