@@ -14,7 +14,7 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
-	<Version>1.0.0.2</Version>
+	<Version>1.0.0.3</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>

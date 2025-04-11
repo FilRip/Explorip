@@ -106,7 +106,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     public void ChangeButtonSize()
     {
         ButtonWidth = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20, GridUnitType.Pixel);
-        ButtonHeight = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize, GridUnitType.Pixel);
+        ButtonHeight = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 13, GridUnitType.Pixel);
         ButtonRightMargin = new GridLength(0, GridUnitType.Pixel);
         ButtonBottomMargin = new GridLength(0, GridUnitType.Pixel);
         if (_currentEdge == AppBarEdge.Left || _currentEdge == AppBarEdge.Right)

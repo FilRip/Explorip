@@ -120,7 +120,7 @@ public partial class StartMenuViewModel : ObservableObject
     {
         get
         {
-            return IsPendingReboot() || IsWUPendingReboot() || IsPendingFileRenameOperations();
+            return IsPendingReboot() || IsWUPendingReboot()/* || IsPendingFileRenameOperations()*/;
         }
     }
 

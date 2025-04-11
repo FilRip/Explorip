@@ -7,12 +7,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:windowstask="clr-namespace:ManagedShell.WindowsTasks;assembly=ManagedShell.WindowsTasks"
              xmlns:explorerConverters="clr-namespace:Explorip.Explorer.Converters"
+             xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
              Loaded="TaskButton_OnLoaded"
              Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave" PreviewMouseUp="AppButton_OnPreviewMouseUp">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <converters:MultipleInstanceAlignmentConverter x:Key="multipleInstanceAlignmentConverter"/>
         <explorerConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility"/>
     </UserControl.Resources>
     <Grid>
@@ -30,12 +32,10 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIconBack" Margin="34,0,0,0"
+                <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIconBack" Margin="32,0,0,0"
                        Style="{DynamicResource TaskIcon}" HorizontalAlignment="Right" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}"/>
-                <!--<Border BorderThickness="1" Background="Transparent">-->
                     <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
-                           Style="{DynamicResource TaskIcon}" HorizontalAlignment="Center"/>
-                <!--</Border>-->
+                           Style="{DynamicResource TaskIcon}" HorizontalAlignment="{Binding MultipleInstanceLaunched, Converter={StaticResource multipleInstanceAlignmentConverter}}"/>
             </Grid>
             <Button.ContextMenu>
                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
