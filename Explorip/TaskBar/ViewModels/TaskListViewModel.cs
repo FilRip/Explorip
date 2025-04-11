@@ -36,9 +36,9 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     [ObservableProperty()]
     private ICollectionView _taskListCollection;
     [ObservableProperty()]
-    private double _buttonWith;
+    private GridLength _buttonWidth, _buttonHeight;
     [ObservableProperty()]
-    private double _buttonRightMargin, _buttonBottomMargin;
+    private GridLength _buttonRightMargin, _buttonBottomMargin;
 
     public TaskListViewModel() : base()
     {
@@ -105,13 +105,14 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void ChangeButtonSize()
     {
-        ButtonWith = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize;
-        ButtonRightMargin = 0;
-        ButtonBottomMargin = 0;
+        ButtonWidth = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20, GridUnitType.Pixel);
+        ButtonHeight = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize, GridUnitType.Pixel);
+        ButtonRightMargin = new GridLength(0, GridUnitType.Pixel);
+        ButtonBottomMargin = new GridLength(0, GridUnitType.Pixel);
         if (_currentEdge == AppBarEdge.Left || _currentEdge == AppBarEdge.Right)
-            ButtonBottomMargin = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton;
+            ButtonBottomMargin = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton, GridUnitType.Pixel);
         else
-            ButtonRightMargin = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton;
+            ButtonRightMargin = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton, GridUnitType.Pixel);
     }
 
     private static void TasksService_WindowUncloaked(IntPtr windowHandle)

@@ -26,8 +26,17 @@
                 Click="AppButton_OnClick"
                 PreviewMouseDown="AppButton_OnPreviewMouseDown"
                 DragEnter="AppButton_OnDragEnter">
-            <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
-                   Style="{DynamicResource TaskIcon}"/>
+            <Grid Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIconBack" Margin="34,0,0,0"
+                       Style="{DynamicResource TaskIcon}" HorizontalAlignment="Right" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}"/>
+                <!--<Border BorderThickness="1" Background="Transparent">-->
+                    <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
+                           Style="{DynamicResource TaskIcon}" HorizontalAlignment="Center"/>
+                <!--</Border>-->
+            </Grid>
             <Button.ContextMenu>
                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
                     <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_WINDOW}" Name="StartNewInstanceMenuItem" Click="StartNewInstanceMenuItem_Click"/>

@@ -56,7 +56,7 @@ public class TaskbarConfig
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("SearchWidth", "").ToString()))
                 _registryTaskbar.SetValue("SearchWidth", "100");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("SpaceBetweenTaskButton", "").ToString()))
-                _registryTaskbar.SetValue("SpaceBetweenTaskButton", "3");
+                _registryTaskbar.SetValue("SpaceBetweenTaskButton", "5");
         }
     }
 
