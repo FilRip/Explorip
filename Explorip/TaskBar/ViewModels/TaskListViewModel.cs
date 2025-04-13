@@ -220,7 +220,10 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     IsPinnedApp = true,
                     PinnedShortcut = file,
                     WinFileName = pinnedApp.Target,
+                    Arguments = pinnedApp.StringData?.CommandLineArguments,
                 };
+                if (string.Compare(appWin.WinFileName, Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe"), StringComparison.OrdinalIgnoreCase) == 0 && !string.IsNullOrWhiteSpace(appWin.Arguments) && appWin.Arguments.StartsWith("shell:AppsFolder\\"))
+                    appWin.SetIsUWP();
                 appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
                 if (orders.TryGetValue(Path.GetFileName(file), out int position))
                     appWin.Position = position;

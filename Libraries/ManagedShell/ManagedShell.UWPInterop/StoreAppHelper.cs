@@ -32,9 +32,7 @@ public static class StoreAppHelper
                 string packagePath = GetPackagePath(package);
 
                 if (string.IsNullOrEmpty(packagePath))
-                {
                     continue;
-                }
 
                 XmlDocument manifest = GetManifest(packagePath);
                 XmlNamespaceManager xmlnsManager = GetNamespaceManager(manifest);
@@ -42,9 +40,7 @@ public static class StoreAppHelper
                     xmlnsManager);
 
                 if (appNodeList == null)
-                {
                     continue;
-                }
 
                 foreach (XmlNode appNode in appNodeList)
                 {
@@ -58,9 +54,7 @@ public static class StoreAppHelper
                         StoreApp storeApp = GetAppFromNode(package, packagePath, appNode, xmlnsManager);
 
                         if (storeApp == null)
-                        {
                             continue;
-                        }
 
                         bool canAdd = true;
                         foreach (StoreApp added in apps)
@@ -92,9 +86,7 @@ public static class StoreAppHelper
         XmlNode appIdNode = appNode.SelectSingleNode("@Id", xmlnsManager);
 
         if (appIdNode == null)
-        {
             return null;
-        }
 
         Dictionary<IconSize, string> icons = GetIcons(packagePath, appNode, xmlnsManager);
 
@@ -106,7 +98,7 @@ public static class StoreAppHelper
             LargeIconPath = icons[IconSize.Large],
             ExtraLargeIconPath = icons[IconSize.ExtraLarge],
             JumboIconPath = icons[IconSize.Jumbo],
-            IconColor = GetPlateColor(icons[IconSize.Small], appNode, xmlnsManager)
+            IconColor = GetPlateColor(icons[IconSize.Small], appNode, xmlnsManager),
         };
 
         return storeApp;
@@ -290,42 +282,32 @@ public static class StoreAppHelper
             string fullName = baseName + iconName;
 
             foreach (string fileName in files)
-            {
                 if (string.Equals(Path.GetFileName(fileName), fullName, StringComparison.OrdinalIgnoreCase) && File.Exists(fileName))
-                {
                     return fileName;
-                }
-            }
         }
 
         return string.Empty;
     }
 
-#pragma warning disable IDE0301 // Simplifier l'initialisation des collections
     private static IEnumerable<Windows.ApplicationModel.Package> GetPackages(Windows.Management.Deployment.PackageManager pman, string packageFamilyName)
     {
         userSID ??= System.Security.Principal.WindowsIdentity.GetCurrent().User?.ToString();
 
         if (userSID == null)
-        {
-            return Enumerable.Empty<Windows.ApplicationModel.Package>();
-        }
+            return [];
 
         try
         {
             if (string.IsNullOrEmpty(packageFamilyName))
-            {
                 return pman.FindPackagesForUser(userSID);
-            }
 
             return pman.FindPackagesForUser(userSID, packageFamilyName);
         }
         catch
         {
-            return Enumerable.Empty<Windows.ApplicationModel.Package>();
+            return [];
         }
     }
-#pragma warning restore IDE0301 // Simplifier l'initialisation des collections
 
     private static string GetPackagePath(Windows.ApplicationModel.Package package)
     {
@@ -353,18 +335,14 @@ public static class StoreAppHelper
             appId = pkgAppId[1];
         }
         else
-        {
             return null;
-        }
 
         foreach (Windows.ApplicationModel.Package package in GetPackages(new Windows.Management.Deployment.PackageManager(), packageFamilyName))
         {
             string packagePath = GetPackagePath(package);
 
             if (string.IsNullOrEmpty(packagePath))
-            {
                 continue;
-            }
 
             XmlDocument manifest = GetManifest(packagePath);
             XmlNamespaceManager xmlnsManager = GetNamespaceManager(manifest);
@@ -372,9 +350,7 @@ public static class StoreAppHelper
                 manifest.SelectNodes("/ns:Package/ns:Applications/ns:Application", xmlnsManager);
 
             if (appNodeList == null)
-            {
                 return null;
-            }
 
             foreach (XmlNode appNode in appNodeList)
             {
@@ -398,7 +374,7 @@ public static class StoreAppHelper
     {
         string sWin8ManifestString = $"@{{{pathToPRI}? {resourceKey}}}";
         StringBuilder outBuff = new(256);
-        _ = SHLoadIndirectString(sWin8ManifestString, outBuff, outBuff.Capacity, IntPtr.Zero);
+        SHLoadIndirectString(sWin8ManifestString, outBuff, outBuff.Capacity, IntPtr.Zero);
         return outBuff.ToString();
     }
 }

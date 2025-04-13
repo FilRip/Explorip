@@ -8,9 +8,9 @@
         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d" Topmost="True" ShowInTaskbar="False"
-        Deactivated="Window_Deactivated" Activated="Window_Activated" WindowStyle="None" ResizeMode="NoResize"
-        Title="LanguageKeyboardSelection" Background="{x:Static colors:Colors.BackgroundColorBrush}" Width="200" Height="100">
-    <ListView ItemsSource="{Binding LanguagesList}" SelectionMode="Single" SelectionChanged="ListView_SelectionChanged" Background="Transparent">
+        Deactivated="Window_Deactivated" Activated="Window_Activated" WindowStyle="None" ResizeMode="NoResize" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        Title="LanguageKeyboardSelection" Background="{x:Static colors:Colors.BackgroundColorBrush}" Width="300" Height="100">
+    <ListView ItemsSource="{Binding LanguagesList}" SelectionMode="Single" SelectionChanged="ListView_SelectionChanged" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="MouseUp">
                 <i:InvokeCommandAction Command="{Binding MouseUpCommand}"/>
@@ -25,17 +25,19 @@
             <DataTemplate DataType="viewmodels:LanguageViewModel">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Column="0" Grid.RowSpan="2" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding ShortName}" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="2" Grid.Row="0" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding FullName}"/>
-                    <TextBlock Grid.Column="2" Grid.Row="1" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding Details}"/>
+                    <TextBlock Grid.Column="1" Grid.RowSpan="2" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding ShortName}" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" Grid.Row="0" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding FullName}"/>
+                    <TextBlock Grid.Column="3" Grid.Row="1" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Text="{Binding Details}"/>
                 </Grid>
             </DataTemplate>
         </ListView.ItemTemplate>

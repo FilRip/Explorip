@@ -111,6 +111,14 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
+    public void SetIsUWP()
+    {
+        _title = System.IO.Path.GetFileName(WinFileName);
+        _winFileName = "applicationframehost.exe";
+        _appUserModelId = Arguments.Substring(Arguments.IndexOf("\\") + 1);
+        Task.Factory.StartNew(LoadUWPIcon);
+    }
+
     public string WinFileName
     {
         get
@@ -451,6 +459,25 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         SetShowInTaskbar();
     }
 
+    private void LoadUWPIcon()
+    {
+        // UWP apps
+        try
+        {
+            UWPInterop.StoreApp storeApp = UWPInterop.StoreAppHelper.AppList.GetAppByAumid(AppUserModelID);
+
+            if (storeApp != null)
+                Icon = storeApp.GetIconImageSource(_tasksService.TaskIconSize);
+            else
+                Icon = IconImageConverter.GetDefaultIcon();
+        }
+        catch (Exception)
+        {
+            if (_icon == null)
+                Icon = IconImageConverter.GetDefaultIcon();
+        }
+    }
+
     private void SetIcon()
     {
         if (!_iconLoading && ShowInTaskbar && _windows.Count > 0)
@@ -461,21 +488,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             {
                 if (IsUWP && !string.IsNullOrEmpty(AppUserModelID))
                 {
-                    // UWP apps
-                    try
-                    {
-                        UWPInterop.StoreApp storeApp = UWPInterop.StoreAppHelper.AppList.GetAppByAumid(AppUserModelID);
-
-                        if (storeApp != null)
-                            Icon = storeApp.GetIconImageSource(_tasksService.TaskIconSize);
-                        else
-                            Icon = IconImageConverter.GetDefaultIcon();
-                    }
-                    catch (Exception)
-                    {
-                        if (_icon == null)
-                            Icon = IconImageConverter.GetDefaultIcon();
-                    }
+                    LoadUWPIcon();
                 }
                 else
                 {
@@ -758,7 +771,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         Inactive,
         Hidden,
         Flashing,
-        Unknown = 999
+        Unknown = 999,
     }
 
     public bool IsPinnedApp { get; set; }
@@ -777,5 +790,13 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             }
             return _propStore;
         }
+    }
+
+    public bool StartNewInstance()
+    {
+        if (IsUWP)
+            return ShellHelper.StartProcess("explorer.exe", $"shell:AppsFolder\\{AppUserModelID}");
+        else
+            return ShellHelper.StartProcess(WinFileName, Arguments);
     }
 }

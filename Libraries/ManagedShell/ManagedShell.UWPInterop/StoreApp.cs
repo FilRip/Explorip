@@ -25,7 +25,7 @@ public sealed class StoreApp(string appUserModelId) : IEquatable<StoreApp>
     {
         ShellItem item = new("shell:appsfolder\\" + AppUserModelId)
         {
-            AllowAsync = false
+            AllowAsync = false,
         };
         ImageSource img = size switch
         {
@@ -37,9 +37,7 @@ public sealed class StoreApp(string appUserModelId) : IEquatable<StoreApp>
         item.Dispose();
 
         if (img != null)
-        {
             return img;
-        }
 
         return IconImageConverter.GetDefaultIcon();
     }
@@ -54,10 +52,9 @@ public sealed class StoreApp(string appUserModelId) : IEquatable<StoreApp>
             IconSize.Jumbo => JumboIconPath,
             _ => LargeIconPath,
         };
+
         if (string.IsNullOrEmpty(iconPath))
-        {
             return GetShellItemImageSource(size);
-        }
 
         try
         {

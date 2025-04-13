@@ -347,9 +347,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             ShellLogger.Debug("TasksService: Activated: " + msg.LParam);
 
                             foreach (ApplicationWindow aWin in Windows.Where(w => w.State == ApplicationWindow.WindowState.Active))
-                            {
                                 aWin.State = ApplicationWindow.WindowState.Inactive;
-                            }
 
                             if (msg.LParam != IntPtr.Zero)
                             {
@@ -360,9 +358,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                     win.SetShowInTaskbar();
                                 }
                                 else
-                                {
                                     win = AddWindow(msg.LParam, ApplicationWindow.WindowState.Active);
-                                }
 
                                 if (win != null)
                                     foreach (ApplicationWindow wind in Windows)
@@ -557,6 +553,13 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         if (win?.IsUWP == true)
         {
             string AppModelId = ShellHelper.GetAppUserModelIdForHandle(hWnd);
+            ApplicationWindow winAlreadyExist = Windows.FirstOrDefault(w => w.AppUserModelID == win.AppUserModelID && w != win);
+            if (winAlreadyExist != null && winAlreadyExist.ListWindows?.Count == 0)
+            {
+                win.IsPinnedApp = winAlreadyExist.IsPinnedApp;
+                win.Position = winAlreadyExist.Position;
+                winAlreadyExist.Dispose();
+            }
             if (win.AppUserModelID.IndexOf(AppModelId, StringComparison.InvariantCultureIgnoreCase) == -1)
             {
                 RemoveWindow(hWnd);

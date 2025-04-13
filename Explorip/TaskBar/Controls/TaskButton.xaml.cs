@@ -14,7 +14,6 @@ using Explorip.TaskBar.Converters;
 
 using ExploripConfig.Configuration;
 
-using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
@@ -53,7 +52,7 @@ public partial class TaskButton : UserControl
         {
             RelativeSource = RelativeSource.Self,
         });
-        multiBinding.Bindings.Add(new Binding(nameof(ApplicationWindow.State)));
+        multiBinding.Bindings.Add(new Binding(nameof(_appWindow.State)));
 
         AppButton.SetBinding(StyleProperty, multiBinding);
     }
@@ -88,7 +87,7 @@ public partial class TaskButton : UserControl
 
     private void Window_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(ApplicationWindow.State))
+        if (e.PropertyName == nameof(_appWindow.State))
             ScrollIntoView();
     }
 
@@ -120,7 +119,7 @@ public partial class TaskButton : UserControl
                 _appWindow.BringToFront();
         }
         else if (_appWindow.ListWindows.Count == 0)
-            ShellHelper.StartProcess(_appWindow.WinFileName, _appWindow.Arguments);
+            _appWindow.StartNewInstance();
     }
 
     private void AppButton_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -138,7 +137,7 @@ public partial class TaskButton : UserControl
         {
             if (_appWindow == null)
                 return;
-            ShellHelper.StartProcess(_appWindow.WinFileName, _appWindow.Arguments);
+            _appWindow.StartNewInstance();
         }
         DragMouseUp();
     }
@@ -177,9 +176,9 @@ public partial class TaskButton : UserControl
         if (e.Data is DataObject data)
         {
             ApplicationWindow appWin = (ApplicationWindow)data.GetData(typeof(ApplicationWindow));
-            if (appWin != ApplicationWindow)
+            if (appWin != _appWindow)
             {
-                (ApplicationWindow.Position, appWin.Position) = (appWin.Position, ApplicationWindow.Position);
+                (_appWindow.Position, appWin.Position) = (appWin.Position, _appWindow.Position);
                 this.FindVisualParent<TaskList>().MyDataContext.RefreshMyCollectionView();
             }
         }
@@ -191,8 +190,8 @@ public partial class TaskButton : UserControl
         if (_startDrag)
         {
             DataObject data = new();
-            data.SetData(ApplicationWindow);
-            DragDrop.DoDragDrop(this, ApplicationWindow, DragDropEffects.Move);
+            data.SetData(_appWindow);
+            DragDrop.DoDragDrop(this, _appWindow, DragDropEffects.Move);
             _startDrag = true;
         }
     }
@@ -262,37 +261,47 @@ public partial class TaskButton : UserControl
 
     private void UnpinMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        ApplicationWindow.IsPinnedApp = false;
-        ApplicationWindow.OnPropertyChanged(nameof(ApplicationWindow.IsPinnedApp));
-        if (string.IsNullOrWhiteSpace(ApplicationWindow.PinnedShortcut))
-            return;
-        if (File.Exists(ApplicationWindow.PinnedShortcut))
-            File.Delete(ApplicationWindow.PinnedShortcut);
-        if (!ApplicationWindow.Launched)
-            ApplicationWindow.Dispose();
+        _appWindow.IsPinnedApp = false;
+        _appWindow.OnPropertyChanged(nameof(_appWindow.IsPinnedApp));
+        if (!string.IsNullOrWhiteSpace(_appWindow.PinnedShortcut) && File.Exists(_appWindow.PinnedShortcut))
+            File.Delete(_appWindow.PinnedShortcut);
+        TaskList taskList = this.FindVisualParent<TaskList>();
+        if (!_appWindow.Launched)
+            _appWindow.Dispose();
+        taskList.MyDataContext.RefreshMyCollectionView();
     }
 
     private void PinMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        Shortcut sc = Shortcut.CreateShortcut(ApplicationWindow.WinFileName, ApplicationWindow.Arguments);
+        Shortcut sc;
+        string filename = Path.GetFileNameWithoutExtension(_appWindow.WinFileName);
+        if (_appWindow.IsUWP)
+        {
+            sc = Shortcut.CreateShortcut(Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe"), $"shell:AppsFolder\\{_appWindow.AppUserModelID}");
+            filename = _appWindow.Title;
+            foreach (char c in Path.GetInvalidFileNameChars())
+                filename = filename.Replace(c, ' ');
+        }
+        else
+            sc = Shortcut.CreateShortcut(_appWindow.WinFileName, _appWindow.Arguments);
         string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
-        path = Path.Combine(path, Path.GetFileNameWithoutExtension(ApplicationWindow.WinFileName) + ".lnk");
+        path = Path.Combine(path, filename + ".lnk");
         if (!File.Exists(path))
             sc.WriteToFile(path);
-        ApplicationWindow.IsPinnedApp = true;
-        ApplicationWindow.PinnedShortcut = path;
-        ApplicationWindow.OnPropertyChanged(nameof(ApplicationWindow.IsPinnedApp));
+        _appWindow.IsPinnedApp = true;
+        _appWindow.PinnedShortcut = path;
+        _appWindow.OnPropertyChanged(nameof(_appWindow.IsPinnedApp));
     }
 
     private void StartNewInstanceMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        ShellHelper.StartProcess(ApplicationWindow.WinFileName, ApplicationWindow.Arguments);
+        _appWindow.StartNewInstance();
     }
 
     private void CloseMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        if (ApplicationWindow.ListWindows?.Count > 0)
-            foreach (IntPtr handle in ApplicationWindow.ListWindows)
+        if (_appWindow.ListWindows?.Count > 0)
+            foreach (IntPtr handle in _appWindow.ListWindows)
                 NativeMethods.SendMessage(handle, NativeMethods.WM.CLOSE, 0, 0);
     }
 

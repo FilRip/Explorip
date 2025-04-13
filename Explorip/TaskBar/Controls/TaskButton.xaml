@@ -32,7 +32,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIconBack" Margin="32,0,0,0"
+                <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIconBack" Margin="34,0,0,0"
                        Style="{DynamicResource TaskIcon}" HorizontalAlignment="Right" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}"/>
                     <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
                            Style="{DynamicResource TaskIcon}" HorizontalAlignment="{Binding MultipleInstanceLaunched, Converter={StaticResource multipleInstanceAlignmentConverter}}"/>
