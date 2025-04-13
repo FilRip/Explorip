@@ -81,8 +81,7 @@ internal static class AutoUpdater
             Version version = LatestVersion(beta);
             if (version != null)
             {
-                Version latestVersion = new(version.ToString());
-                if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(latestVersion) < 0 &&
+                if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(version) < 0 &&
                     MessageBox.Show(Constants.Localization.ASK_DOWNLOAD_NEW_VERSION.Replace("%1", ApplicationName), ApplicationName, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     InstallNewVersion(version.ToString(), beta);

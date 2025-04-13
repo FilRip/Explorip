@@ -55,6 +55,15 @@ public static class Program
             return;
         }
 
+        ModeShell = true;
+        Mutex mutexProcess;
+
+        Process[] process = Process.GetProcessesByName("explorer");
+        if (process != null && process.Length > 0)
+            ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe")));
+
+        Constants.Localization.LoadTranslation();
+
 #if !DEBUG
         if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), Updater.AutoUpdater.UpdateFolder)))
         {
@@ -64,14 +73,6 @@ public static class Program
         Updater.AutoUpdater.SearchNewVersion(false);
 #endif
 
-        ModeShell = true;
-        Mutex mutexProcess;
-
-        Process[] process = Process.GetProcessesByName("explorer");
-        if (process != null && process.Length > 0)
-            ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe")));
-
-        Constants.Localization.LoadTranslation();
         ExploripSharedCopy.Constants.Colors.LoadTheme();
         Constants.Icons.Init();
         ConfigManager.Init();
