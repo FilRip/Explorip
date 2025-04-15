@@ -20,20 +20,20 @@
     </UserControl.Resources>
     
     <UserControl.ContextMenu>
-        <ContextMenu Name="TabControlContextualMenu" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
+        <ContextMenu Name="TabControlContextualMenu" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
             <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_TAB}" Name="NewTab" Command="{Binding NewTabCommand}"/>
             <MenuItem Header="{x:Static constants:Localization.CLOSE_TAB}" Name="CloseTab" Command="{Binding CloseTabCommand}"/>
             <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Command="{Binding NewTabOtherCommand}"/>
             <MenuItem Header="{x:Static constants:Localization.CLOSE_OTHER_TAB}" Name="CloseAllTab" Command="{Binding CloseAllTabCommand}"/>
-            <Separator/>
+            <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static constants:Localization.COMMANDLINE}" Name="NewConsoleTab" Command="{Binding NewConsoleTabCommand}"/>
             <MenuItem Header="{x:Static constants:Localization.POWER_SHELL}" Name="NewPowerShellTab" Command="{Binding NewPowerShellTabCommand}"/>
-            <Separator/>
+            <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static constants:Localization.COMMANDLINE_ADMIN}" Name="NewAdminConsoleTab" Command="{Binding NewAdminConsoleTabCommand}"/>
             <MenuItem Header="{x:Static constants:Localization.POWER_SHELL_ADMIN}" Name="NewAdminPowerShellTab" Command="{Binding NewAdminPowerShellTabCommand}"/>
-            <Separator/>
+            <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static constants:Localization.REGISTRY_EDITOR}" Name="NewRegistryEditorTab" Command="{Binding NewRegistryEditorTabCommand}"/>
-            <Separator/>
+            <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="Embedded Window" Name="NewEmbeddedWindowTab" Command="{Binding NewEmbeddedWindowTabCommand}"/>
         </ContextMenu>
     </UserControl.ContextMenu>

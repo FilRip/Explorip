@@ -48,10 +48,10 @@
         </Grid.ColumnDefinitions>
         <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0" Visibility="{Binding ShowTitle, Converter={StaticResource boolToVisible}}" Content="{Binding Title}">
             <Label.ContextMenu>
-                <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
+                <ContextMenu ItemsPanel="{DynamicResource MyMenuItemPanel}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Background="{x:Static colors:Colors.BackgroundColorBrush}">
                     <MenuItem Header="{x:Static constants:Localization.SHOW_TITLE}" Name="ShowHideTitle" Command="{Binding ShowHideTitleCommand}" IsChecked="{Binding ShowTitle}"/>
                     <MenuItem Header="{x:Static constants:Localization.LARGE_ICON}" Name="ShowLargeIcon" Command="{Binding ShowLargeIconCommand}" IsChecked="{Binding CurrentShowLargeIcon}"/>
-                    <Separator/>
+                    <Separator Style="{DynamicResource MySeparatorStyle}"/>
                     <MenuItem Header="{x:Static constants:Localization.CLOSE}" Name="CloseToolbar" Command="{Binding CloseToolbarCommand}"/>
                 </ContextMenu>
             </Label.ContextMenu>

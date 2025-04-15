@@ -79,13 +79,10 @@ internal static class AutoUpdater
         try
         {
             Version version = LatestVersion(beta);
-            if (version != null)
+            if (version != null && Assembly.GetEntryAssembly().GetName().Version.CompareTo(version) < 0 &&
+                MessageBox.Show(Constants.Localization.ASK_DOWNLOAD_NEW_VERSION.Replace("%1", ApplicationName), ApplicationName, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                if (Assembly.GetEntryAssembly().GetName().Version.CompareTo(version) < 0 &&
-                    MessageBox.Show(Constants.Localization.ASK_DOWNLOAD_NEW_VERSION.Replace("%1", ApplicationName), ApplicationName, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    InstallNewVersion(version.ToString(), beta);
-                }
+                InstallNewVersion(version.ToString(), beta);
             }
         }
         catch (Exception) { /* Ignore errors */ }

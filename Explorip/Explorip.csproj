@@ -64,6 +64,7 @@
     <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj" />
     <ProjectReference Include="..\Libraries\WindowsAPICodePack\Shell\Shell.csproj" />
     <ProjectReference Include="..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj" />
+    <ProjectReference Include="..\Plugins\ExploripPlugins\ExploripPlugins.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TaskBar\Resources\notification10.png" />

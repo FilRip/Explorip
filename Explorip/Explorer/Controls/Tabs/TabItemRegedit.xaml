@@ -24,10 +24,10 @@
             <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
             <converters:InverseBooleanConverter x:Key="inverseBool"/>
 
-            <ContextMenu x:Key="NewContextMenu" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
-                <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
+            <ContextMenu x:Key="NewContextMenu" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
+                <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW}" Style="{DynamicResource MenuItemWithSubMenuStyle}">
                     <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_KEY}" Command="{Binding AddNewKeyCommand}"/>
-                    <Separator/>
+                    <Separator Style="{DynamicResource MySeparatorStyle}"/>
                     <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_STRING}" Command="{Binding AddNewValueStringCommand}"/>
                     <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_BINARY}" Command="{Binding AddNewValueBinaryCommand}"/>
                     <MenuItem Header="{x:Static Constants:Localization.REGEDIT_NEW_DWORD_32}" Command="{Binding AddNewValueDword32Command}"/>
@@ -262,7 +262,7 @@
                                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
                                     <MenuItem Header="{x:Static Constants:Localization.REGEDIT_MODIFY_VALUE}" Command="{Binding ModifyCommand}"/>
                                     <MenuItem Header="{x:Static Constants:Localization.REGEDIT_MODIFY_VALUE_BINARY}" Command="{Binding ModifyBinaryCommand}"/>
-                                    <Separator/>
+                                    <Separator Style="{DynamicResource MySeparatorStyle}"/>
                                     <MenuItem Header="{x:Static Constants:Localization.REGEDIT_DELETE_VALUE}" Command="{Binding DeleteCommand}"/>
                                     <MenuItem Header="{x:Static Constants:Localization.REGEDIT_RENAME_VALUE}" Command="{Binding RenameCommand}"/>
                                 </ContextMenu>

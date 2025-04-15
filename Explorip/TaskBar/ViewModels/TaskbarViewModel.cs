@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.Plugins;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Helpers;
 
@@ -172,4 +174,17 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     {
         ((MyTaskbarApp)Program.MyCurrentApp).ShowTaskbarOnAllOthersScreen();
     }
+
+#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
+    public IEnumerable<string> ListPlugins
+    {
+        get
+        {
+            if (PluginsManager.ListName().Any())
+                return PluginsManager.ListName();
+            else
+                return ["No plugins loaded"];
+        }
+    }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 }

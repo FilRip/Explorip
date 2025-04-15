@@ -142,6 +142,7 @@ public partial class StartMenuViewModel : ObservableObject
         return false;
     }
 
+#pragma warning disable S1144 // Unused private types or members should be removed
     private static bool IsPendingFileRenameOperations()
     {
         using RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager");
@@ -151,6 +152,7 @@ public partial class StartMenuViewModel : ObservableObject
         }
         return false;
     }
+#pragma warning restore S1144 // Unused private types or members should be removed
 
     public void RefreshAll()
     {

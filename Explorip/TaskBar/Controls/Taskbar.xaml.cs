@@ -304,5 +304,15 @@ public partial class Taskbar : AppBarWindow
         }
     }
 
+    private void ToolbarListPlugins_Click(object sender, RoutedEventArgs e)
+    {
+        if (e.OriginalSource is MenuItem mi)
+        {
+            string pluginName = mi.Header.ToString();
+            if (pluginName == "Plugins" || pluginName == "No plugins loaded")
+                return;
+        }
+    }
+
     #endregion
 }

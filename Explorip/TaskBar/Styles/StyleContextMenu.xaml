@@ -223,8 +223,8 @@
         <Setter Property="ItemsPanel" Value="{StaticResource MyMenuItemPanel}"/>
     </Style>
 
-    <Style TargetType="{x:Type Separator}">
-        <Setter Property="Margin" Value="-25,0,0,0"/>
+    <Style TargetType="{x:Type Separator}" BasedOn="{StaticResource {x:Type Separator}}" x:Key="MySeparatorStyle">
+        <Setter Property="Margin" Value="3,0,0,0"/>
     </Style>
     
 </ResourceDictionary>

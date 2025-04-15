@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+using ExploripPlugins;
+
+namespace Explorip.Plugins;
+
+public static class PluginsManager
+{
+    private static readonly List<IExploripToolbar> _listPlugins = [];
+
+    public static void LoadPlugins()
+    {
+        foreach (string files in Directory.GetFiles(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Plugins"), "*.dll"))
+        {
+            try
+            {
+#pragma warning disable S3885 // "Assembly.Load" should be used
+                Assembly assembly = Assembly.LoadFrom(files);
+#pragma warning restore S3885 // "Assembly.Load" should be used
+                foreach (Type type in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IExploripToolbar).IsAssignableFrom(t)))
+                {
+                    try
+                    {
+                        IExploripToolbar plugin = (IExploripToolbar)Activator.CreateInstance(type);
+                        _listPlugins.Add(plugin);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error loading plugin type {type.Name} from {files}: {ex.Message}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading plugin {files}: {ex.Message}");
+            }
+        }
+    }
+
+    public static IEnumerable<string> ListName()
+    {
+        return _listPlugins.Select(plugin => plugin.Name);
+    }
+
+    public static List<IExploripToolbar> ListPlugins()
+    {
+        return _listPlugins;
+    }
+
+    public static IExploripToolbar GetPlugin(string name)
+    {
+        return _listPlugins.FirstOrDefault(plugin => plugin.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+}
