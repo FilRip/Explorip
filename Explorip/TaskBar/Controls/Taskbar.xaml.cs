@@ -6,11 +6,14 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Explorip.Helpers;
+using Explorip.Plugins;
 using Explorip.StartMenu.Window;
 using Explorip.TaskBar.Utilities;
 using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
+
+using ExploripPlugins;
 
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
@@ -311,6 +314,15 @@ public partial class Taskbar : AppBarWindow
             string pluginName = mi.Header.ToString();
             if (pluginName == "Plugins" || pluginName == "No plugins loaded")
                 return;
+            IExploripToolbar plugin = PluginsManager.GetPlugin(pluginName);
+            double height = Math.Max(16, plugin.MinHeight);
+            ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, GridUnitType.Pixel) });
+            Grid.SetRow(plugin.ExploripToolbar, ToolsBars.RowDefinitions.Count - 1);
+            Grid.SetColumn(plugin.ExploripToolbar, 0);
+            ToolsBars.Children.Add(plugin.ExploripToolbar);
+            Height += height;
+            DesiredHeight = Height;
+            _appBarManager.SetWorkArea(Screen);
         }
     }
 
