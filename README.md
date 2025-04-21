@@ -40,6 +40,12 @@ Replace StartMenu of Windows by the one integrate in Explorip. Model take from W
 
 
 
+Plugins
+-------
+You can make plugins. Plugins will be available like toolbar, to add custom control to taskbar. There is an example in this repository of a "MP3 Player" plugins with playlist
+
+
+
 Tested under
 ------------
 - Windows 10 22H2 build 19041
