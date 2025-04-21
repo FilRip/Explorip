@@ -67,6 +67,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{02EA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploripPlugins", "Plugins\ExploripPlugins\ExploripPlugins.csproj", "{0AAB2216-EF05-49D7-9798-A754AEAC1DD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3Player", "Plugins\Mp3Player\Mp3Player.csproj", "{55FDAC13-2AB1-42C8-85BD-4A068F4107A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +175,10 @@ Global
 		{0AAB2216-EF05-49D7-9798-A754AEAC1DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AAB2216-EF05-49D7-9798-A754AEAC1DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AAB2216-EF05-49D7-9798-A754AEAC1DD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55FDAC13-2AB1-42C8-85BD-4A068F4107A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55FDAC13-2AB1-42C8-85BD-4A068F4107A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55FDAC13-2AB1-42C8-85BD-4A068F4107A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55FDAC13-2AB1-42C8-85BD-4A068F4107A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -207,6 +213,7 @@ Global
 		{865A98D3-510F-4B8A-9AF5-38C68A40C70F} = {02E20678-9AD3-4370-904E-02D800F25B35}
 		{F9027224-B608-402A-83D1-A48E3DD4F883} = {02E20678-9AD3-4370-904E-02D800F25B35}
 		{0AAB2216-EF05-49D7-9798-A754AEAC1DD7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{55FDAC13-2AB1-42C8-85BD-4A068F4107A0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}

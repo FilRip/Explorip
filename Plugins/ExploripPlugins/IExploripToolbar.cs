@@ -4,15 +4,19 @@ namespace ExploripPlugins;
 
 public interface IExploripToolbar
 {
-    string Author { get; set; }
+    string Author { get; }
 
-    string Name { get; set; }
+    string Name { get; }
 
-    string Description { get; set; }
+    string Description { get; }
 
-    Version Version { get; set; }
+    Version Version { get; }
 
-    UserControl ExploripToolbar { get; set; }
+    UserControl ExploripToolbar { get; }
 
     void SpecifyTaskbarSize(string screenName, int width, int height);
+
+    double MinHeight { get; }
+
+    double MinWidth { get; }
 }

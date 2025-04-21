@@ -215,13 +215,17 @@ public partial class ToolbarViewModel : ObservableObject
                 if (!string.IsNullOrWhiteSpace(newPath) && Directory.Exists(newPath))
                 {
                     ShellFolder sf = new(newPath, IntPtr.Zero);
+                    mi.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
                     ExpandFolder(mi, sf);
                 }
             }
             catch (Exception) { /* Ignore errors */ }
         }
         else if (item.IsFolder)
+        {
+            mi.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
             ExpandFolder(mi, (ShellFolder)item.ShellFolder);
+        }
     }
 
     private MenuItem CreateMenuItem(ShellFile item)
@@ -239,6 +243,7 @@ public partial class ToolbarViewModel : ObservableObject
             BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             Margin = new Thickness(0, 0, 0, 0),
             Tag = item,
+            IsCheckable = false,
         };
         mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
         mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
