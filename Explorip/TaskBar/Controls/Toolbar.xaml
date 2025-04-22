@@ -43,10 +43,12 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0" Visibility="{Binding ShowTitle, Converter={StaticResource boolToVisible}}" Content="{Binding Title}">
+        <Label Content="&#xE759;" FontFamily="Segoe MDL2 Assets" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0" Visibility="{Binding DataContext.ResizeOn, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+        <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="1" Visibility="{Binding ShowTitle, Converter={StaticResource boolToVisible}}" Content="{Binding Title}">
             <Label.ContextMenu>
                 <ContextMenu ItemsPanel="{DynamicResource MyMenuItemPanel}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Background="{x:Static colors:Colors.BackgroundColorBrush}">
                     <MenuItem Header="{x:Static constants:Localization.SHOW_TITLE}" Name="ShowHideTitle" Command="{Binding ShowHideTitleCommand}" IsChecked="{Binding ShowTitle}"/>
@@ -56,7 +58,7 @@
                 </ContextMenu>
             </Label.ContextMenu>
         </Label>
-        <ItemsControl x:Name="ToolbarItems" Grid.Column="1"
+        <ItemsControl x:Name="ToolbarItems" Grid.Column="2"
                   Focusable="False" ItemsSource="{Binding ToolbarItems}"
                   Style="{DynamicResource ToolbarItems}" ItemTemplateSelector="{StaticResource MyDataTemplateSelector}">
             <ItemsControl.ItemsPanel>
@@ -65,6 +67,6 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-        <Button Content=">>" Name="MoreItems" Command="{Binding ShowMoreItemsCommand}" Visibility="{Binding MoreItemsVisibility}" Grid.Column="2" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+        <Button Content=">>" Name="MoreItems" Command="{Binding ShowMoreItemsCommand}" Visibility="{Binding MoreItemsVisibility}" Grid.Column="3" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
     </Grid>
 </UserControl>

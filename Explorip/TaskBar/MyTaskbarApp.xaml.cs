@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 
+using Explorip.Plugins;
+using Explorip.StartMenu.Window;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
 
@@ -52,6 +54,8 @@ public partial class MyTaskbarApp : Application
         _taskbarList.Clear();
         MyShellManager.AppBarManager.SignalGracefulShutdown();
         ExitApp();
+        if (ConfigManager.TaskbarReplaceStartMenu)
+            StartMenuWindow.MyStartMenu?.Close();
         Current?.Shutdown();
     }
 
@@ -181,6 +185,8 @@ public partial class MyTaskbarApp : Application
 
         _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
         DictionaryManager = new DictionaryManager();
+
+        PluginsManager.LoadPlugins();
 
         // Startup
         DictionaryManager.SetThemeFromSettings();

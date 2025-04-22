@@ -1,0 +1,31 @@
+﻿<Window x:Class="Mp3Player.MyMp3PlayerPlayListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Mp3Player"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:MyMp3PlayerPluginViewModel}"
+        Background="{Binding Background}" Foreground="{Binding Foreground}"
+        Title="PlayList" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" Deactivated="Window_Deactivated" Width="200" Height="100">
+    
+    <ListView ItemsSource="{Binding ListFiles}" Name="MyListView">
+        <ListView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <UniformGrid Columns="1"/>
+            </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding Name}">
+                    <TextBlock.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Remove" Command="{Binding DataContext.RemoveFile, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+                        </ContextMenu>
+                    </TextBlock.ContextMenu>
+                </TextBlock>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+    
+</Window>

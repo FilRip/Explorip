@@ -15,7 +15,15 @@ public static class PluginsManager
 
     public static void LoadPlugins()
     {
-        foreach (string files in Directory.GetFiles(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Plugins"), "*.dll"))
+        string root = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Plugins");
+        LoadPlugins(root);
+        foreach (string dir in Directory.GetDirectories(root))
+            LoadPlugins(dir);
+    }
+
+    public static void LoadPlugins(string folder)
+    {
+        foreach (string files in Directory.GetFiles(folder, "*.dll"))
         {
             try
             {

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 using ExploripPlugins;
+
+using ManagedShell.AppBar;
 
 namespace Mp3Player;
 
@@ -15,7 +18,7 @@ public class MyMp3PlayerPlugins : IExploripToolbar
 
     public string Description { get => "This is a simple MP3 player for plugins demo"; }
 
-    public Version Version { get => new(1,0,0,0); }
+    public Version Version { get => new(1, 0, 0, 0); }
 
     public UserControl ExploripToolbar
     {
@@ -26,12 +29,19 @@ public class MyMp3PlayerPlugins : IExploripToolbar
         }
     }
 
-    public double MinHeight { get => 16; }
+    public double MinHeight { get => 24; }
 
     public double MinWidth { get => 0; }
 
-    public void SpecifyTaskbarSize(string screenName, int width, int height)
+    public Guid GuidKey { get => new("{921DE993-35F2-4B88-9832-F7F837929CDC}"); }
+
+    public void SetGlobalColors(SolidColorBrush background, SolidColorBrush foreground, SolidColorBrush accent)
     {
-        // Nothing to do here, or not yet to be precise
+        ((MyMp3PlayerControl)ExploripToolbar).MyDataContext.SetColor(background, foreground);
+    }
+
+    public void UpdateTaskbar(string screenName, double width, double height, Brush backgroundColor, AppBarEdge edge)
+    {
+        ((MyMp3PlayerControl)ExploripToolbar).MyDataContext.ChangeTaskbarBackgroundColor(backgroundColor);
     }
 }

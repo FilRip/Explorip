@@ -31,7 +31,7 @@ public partial class CustomColorViewModel : ObservableObject
     {
         SolidColorBrush brush = new(CurrentColor);
         ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskbarBackground = brush;
-        ParentTaskbar.Background = brush;
+        ParentTaskbar.SetBackground(brush);
     }
 
     public Taskbar ParentTaskbar

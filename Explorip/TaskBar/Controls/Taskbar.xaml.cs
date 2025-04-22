@@ -206,6 +206,12 @@ public partial class Taskbar : AppBarWindow
         }
     }
 
+    public void SetBackground(SolidColorBrush newBackground)
+    {
+        Background = newBackground;
+        UpdatePlugins();
+    }
+
     #region Move/stretch
 
     public void ChangeDesiredSize(double height, double width)
@@ -217,6 +223,7 @@ public partial class Taskbar : AppBarWindow
         _appBarManager.SetWorkArea(Screen);
         ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
         ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth = DesiredWidth;
+        UpdatePlugins();
     }
 
     private void UnlockTaskbar_Click(object sender, RoutedEventArgs e)
@@ -315,15 +322,27 @@ public partial class Taskbar : AppBarWindow
             if (pluginName == "Plugins" || pluginName == "No plugins loaded")
                 return;
             IExploripToolbar plugin = PluginsManager.GetPlugin(pluginName);
-            double height = Math.Max(16, plugin.MinHeight);
+            double height = Math.Max(24, plugin.MinHeight);
+            ToolbarPlugin tp = new();
+            Grid.SetColumn(plugin.ExploripToolbar, 1);
+            tp.MainGrid.Children.Add(plugin.ExploripToolbar);
+            tp.PluginLinked = plugin;
             ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, GridUnitType.Pixel) });
-            Grid.SetRow(plugin.ExploripToolbar, ToolsBars.RowDefinitions.Count - 1);
-            Grid.SetColumn(plugin.ExploripToolbar, 0);
-            ToolsBars.Children.Add(plugin.ExploripToolbar);
+            Grid.SetRow(tp, ToolsBars.RowDefinitions.Count - 1);
+            Grid.SetColumn(tp, 0);
+            ToolsBars.Children.Add(tp);
             Height += height;
             DesiredHeight = Height;
             _appBarManager.SetWorkArea(Screen);
+            plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
+            plugin.UpdateTaskbar(ScreenName, ActualWidth, ActualHeight, Background, AppBarEdge);
         }
+    }
+
+    private void UpdatePlugins()
+    {
+        foreach (ToolbarPlugin plugin in ToolsBars.Children.OfType<ToolbarPlugin>())
+            plugin.PluginLinked.UpdateTaskbar(ScreenName, ActualWidth, ActualHeight, Background, AppBarEdge);
     }
 
     #endregion

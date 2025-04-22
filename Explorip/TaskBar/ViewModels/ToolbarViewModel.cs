@@ -403,9 +403,12 @@ public partial class ToolbarViewModel : ObservableObject
     [RelayCommand()]
     private void MouseUp()
     {
-        _parentControl.ReleaseMouseCapture();
-        Mouse.OverrideCursor = null;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Path, new Point(Margin.Left, Margin.Top));
+        if (_parentControl.IsMouseCaptured)
+        {
+            _parentControl.ReleaseMouseCapture();
+            Mouse.OverrideCursor = null;
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Path, new Point(Margin.Left, Margin.Top));
+        }
     }
 
     [RelayCommand()]

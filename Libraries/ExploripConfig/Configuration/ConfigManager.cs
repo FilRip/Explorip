@@ -210,6 +210,8 @@ public static class ConfigManager
         }
     }
 
+    #region Toolbars
+
     public static string[] ToolbarsPath
     {
         get
@@ -259,6 +261,8 @@ public static class ConfigManager
         return max;
     }
 
+    #endregion
+
     public static RegistryKey MyRegistryKey
     {
         get { return _registryKeyExplorer; }
@@ -273,6 +277,8 @@ public static class ConfigManager
     {
         get { return _registryRootTaskbar; }
     }
+
+    #region File Explorer tabs
 
     public static string[] LeftTabs
     {
@@ -313,6 +319,10 @@ public static class ConfigManager
         foreach (string path in listTabs)
             hkey.SetValue($"Tab({i++})", path);
     }
+
+    #endregion
+
+    #region Systray
 
     public static string[] AllPinnedSystray()
     {
@@ -363,6 +373,8 @@ public static class ConfigManager
         key.SetValue(order.ToString(), path);
     }
 
+    #endregion
+
     public static bool TaskbarReplaceStartMenu
     {
         get { return _registryRootTaskbar.ReadBoolean("ReplaceStartMenu"); }
@@ -382,6 +394,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", value.ToString());
         }
     }
+
+    #region StartMenu
 
     public static bool StartMenuShowPinnedApp2
     {
@@ -490,4 +504,6 @@ public static class ConfigManager
                 _registryStartMenu.SetValue("StartMenuHeight", value.ToString());
         }
     }
+
+    #endregion
 }

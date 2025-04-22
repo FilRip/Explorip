@@ -5,16 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Mp3Player"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d">
+             mc:Ignorable="d" Background="Transparent" Foreground="{Binding Foreground}">
+    
     <UserControl.DataContext>
         <local:MyMp3PlayerPluginViewModel/>
     </UserControl.DataContext>
+    
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="boolToVisible"/>
             <local:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisible"/>
         </ResourceDictionary>
     </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -24,10 +27,21 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="&#xE892;" FontFamily="Segoe MDL2 Assets">
-
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseUp">
+                    <i:InvokeCommandAction Command="{Binding PlayPreviousCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </TextBlock>
         <TextBlock Grid.Row="0" Grid.Column="1" Text="&#xED25;" FontFamily="Segoe MDL2 Assets">
-
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseRightButtonUp">
+                    <i:InvokeCommandAction Command="{Binding ShowPlayListCommand}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseLeftButtonUp">
+                    <i:InvokeCommandAction Command="{Binding AddFileCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </TextBlock>
         <TextBlock Grid.Row="0" Grid.Column="2" Text="&#xE768;" FontFamily="Segoe MDL2 Assets" Visibility="{Binding IsPlaying, Converter={StaticResource inverseBoolToVisible}}">
             <i:Interaction.Triggers>
@@ -44,7 +58,12 @@
             </i:Interaction.Triggers>
         </TextBlock>
         <TextBlock Grid.Row="0" Grid.Column="4" Text="&#xE893;" FontFamily="Segoe MDL2 Assets">
-
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseUp">
+                    <i:InvokeCommandAction Command="{Binding PlayNextCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </TextBlock>
     </Grid>
+    
 </UserControl>

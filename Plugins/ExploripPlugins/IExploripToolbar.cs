@@ -1,4 +1,7 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Media;
+
+using ManagedShell.AppBar;
 
 namespace ExploripPlugins;
 
@@ -14,9 +17,13 @@ public interface IExploripToolbar
 
     UserControl ExploripToolbar { get; }
 
-    void SpecifyTaskbarSize(string screenName, int width, int height);
+    Guid GuidKey { get; }
+
+    void UpdateTaskbar(string screenName, double width, double height, Brush backgroundColor, AppBarEdge edge);
 
     double MinHeight { get; }
 
     double MinWidth { get; }
+
+    void SetGlobalColors(SolidColorBrush background, SolidColorBrush foreground, SolidColorBrush accent);
 }
