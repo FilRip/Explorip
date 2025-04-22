@@ -224,7 +224,7 @@ public partial class ToolbarViewModel : ObservableObject
         else if (item.IsFolder)
         {
             mi.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
-            ExpandFolder(mi, (ShellFolder)item.ShellFolder);
+            ExpandFolder(mi, new ShellFolder(item.Path, IntPtr.Zero));
         }
     }
 
@@ -260,7 +260,20 @@ public partial class ToolbarViewModel : ObservableObject
             MenuItem subMenu = CreateMenuItem(sf);
             mi.Items.Add(subMenu);
             if (sf.IsFolder)
+            {
+                subMenu.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
                 ExpandFolder(subMenu, new ShellFolder(sf.Path, IntPtr.Zero), nbRecursive++);
+            }
+            else if (System.IO.Path.GetExtension(sf.FileName) == ".lnk")
+            {
+                Shortcut sc = Shortcut.ReadFromFile(sf.Path);
+                string newPath = sc.Target;
+                if (!string.IsNullOrWhiteSpace(newPath) && Directory.Exists(newPath))
+                {
+                    mi.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
+                    ExpandFolder(subMenu, new ShellFolder(newPath, IntPtr.Zero), nbRecursive++);
+                }
+            }
         }
     }
 
