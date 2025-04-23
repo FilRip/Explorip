@@ -284,7 +284,7 @@ public partial class Taskbar : AppBarWindow
                 if (MainScreen)
                 {
                     ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
-                    ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.MyDataContext.Path)];
+                    ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
                 }
                 newTb.MyDataContext.ShowHideTitle();
                 newTb.MyDataContext.CurrentShowLargeIcon = true;
@@ -336,6 +336,7 @@ public partial class Taskbar : AppBarWindow
             _appBarManager.SetWorkArea(Screen);
             plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
             plugin.UpdateTaskbar(ScreenName, ActualWidth, ActualHeight, Background, AppBarEdge);
+            ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
         }
     }
 

@@ -8,12 +8,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Helpers;
 using Explorip.TaskBar.Controls;
 
 using ExploripConfig.Configuration;
@@ -25,11 +23,9 @@ using Securify.ShellLink;
 
 namespace Explorip.TaskBar.ViewModels;
 
-public partial class ToolbarViewModel : ObservableObject
+public partial class ToolbarViewModel : BaseToolbarViewModel
 {
     private readonly ContextMenu moreItems;
-    private Toolbar _parentControl;
-    private double _startX, _startY;
     private Task _taskRefresh;
     private readonly object _lockRefresh;
 
@@ -43,6 +39,8 @@ public partial class ToolbarViewModel : ObservableObject
             Margin = new Thickness(0, 0, 0, 0),
         };
     }
+
+    public override string Id => Path;
 
     private enum MenuItemId : uint
     {
@@ -65,8 +63,6 @@ public partial class ToolbarViewModel : ObservableObject
 
     #region Properties
 
-    public Taskbar ParentTaskbar { get; set; }
-
     [ObservableProperty()]
     private string _path;
     [ObservableProperty()]
@@ -82,16 +78,13 @@ public partial class ToolbarViewModel : ObservableObject
     [ObservableProperty()]
     private ICollectionView _toolbarItems;
     [ObservableProperty()]
-    private Thickness _margin;
-    [ObservableProperty()]
     private double _titleWidth;
 
     #endregion
 
-    public void Init(Toolbar parentControl)
+    public override void Init(BaseToolbar parentControl)
     {
-        _parentControl = parentControl;
-        ParentTaskbar = parentControl.FindVisualParent<Taskbar>();
+        base.Init(parentControl);
         SetupFolder(Path);
     }
 
@@ -169,6 +162,11 @@ public partial class ToolbarViewModel : ObservableObject
         ToolbarItems?.Refresh();
     }
 
+    public Toolbar MyToolbar
+    {
+        get { return (Toolbar)_parentControl; }
+    }
+
     #region Expand toolbar
 
     private void UpdateInvisibleIcons()
@@ -177,7 +175,7 @@ public partial class ToolbarViewModel : ObservableObject
         {
             if (Folder == null)
                 return;
-            double maxWidth = _parentControl.ToolbarItems.ActualWidth - (CurrentShowLargeIcon ? 32 : 16);
+            double maxWidth = MyToolbar.ToolbarItems.ActualWidth - (CurrentShowLargeIcon ? 32 : 16);
             if (ShowTitle)
                 maxWidth -= TitleWidth;
             double currentWidth = 0;
@@ -362,9 +360,9 @@ public partial class ToolbarViewModel : ObservableObject
     public void ShowLargeIcon()
     {
         CurrentShowLargeIcon = !CurrentShowLargeIcon;
-        DataTemplateSelector dts = _parentControl.ToolbarItems.ItemTemplateSelector;
-        _parentControl.ToolbarItems.ItemTemplateSelector = null;
-        _parentControl.ToolbarItems.ItemTemplateSelector = dts;
+        DataTemplateSelector dts = MyToolbar.ToolbarItems.ItemTemplateSelector;
+        MyToolbar.ToolbarItems.ItemTemplateSelector = null;
+        MyToolbar.ToolbarItems.ItemTemplateSelector = dts;
         Taskbar parentTaskbar = ParentTaskbar;
         if (parentTaskbar != null)
         {
@@ -383,92 +381,6 @@ public partial class ToolbarViewModel : ObservableObject
     {
         ParentTaskbar?.ToolsBars.Children.Remove(_parentControl);
     }
-
-    #region Drag'n drop toolbar in taskbar
-
-    [RelayCommand()]
-    private void MouseDown()
-    {
-        if (!ParentTaskbar.MyDataContext.ResizeOn)
-            return;
-
-        Grid myGrid = _parentControl.FindVisualParent<Grid>();
-        _startX = Mouse.GetPosition(myGrid).X - Margin.Left;
-        _startY = Mouse.GetPosition(myGrid).Y - Margin.Top;
-
-        Mouse.OverrideCursor = Cursors.ScrollAll;
-        _parentControl.CaptureMouse();
-    }
-
-    [RelayCommand()]
-    private void MouseUp()
-    {
-        if (_parentControl.IsMouseCaptured)
-        {
-            _parentControl.ReleaseMouseCapture();
-            Mouse.OverrideCursor = null;
-            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Path, new Point(Margin.Left, Margin.Top));
-        }
-    }
-
-    [RelayCommand()]
-    private void MouseMove(MouseEventArgs e)
-    {
-        if (!_parentControl.IsMouseCaptured)
-            return;
-
-        Grid myGrid = _parentControl.FindVisualParent<Grid>();
-        Margin = new Thickness(Math.Max(0, Mouse.GetPosition(myGrid).X - _startX), Margin.Top, Margin.Right, Margin.Bottom);
-        HitTestResult result = VisualTreeHelper.HitTest(myGrid, e.GetPosition(myGrid));
-        if (result?.VisualHit != null)
-        {
-            if (Margin.Left == 0)
-            {
-                Toolbar parent = result.VisualHit.FindVisualParent<Toolbar>();
-                if (parent != null)
-                {
-                    int previousRow = Grid.GetRow(_parentControl);
-                    int newRow = Grid.GetRow(parent);
-                    if (previousRow != newRow)
-                    {
-                        Grid.SetRow(parent, previousRow);
-                        Grid.SetRow(_parentControl, newRow);
-                    }
-                }
-            }
-            else
-            {
-                Margin = new Thickness(Margin.Left, Mouse.GetPosition(myGrid).Y - _startY, Margin.Right, Margin.Bottom);
-                Toolbar parent = result.VisualHit.FindVisualParent<Toolbar>();
-                if (parent != null)
-                {
-                    int previousRow = Grid.GetRow(_parentControl);
-                    int newRow = Grid.GetRow(parent);
-                    if (previousRow != newRow)
-                    {
-                        int previousColumn = Grid.GetColumn(_parentControl);
-                        int newColumn = Grid.GetColumn(parent);
-                        if (previousColumn == newColumn)
-                        {
-                            Grid.SetRow(_parentControl, newRow);
-                            myGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                            Grid.SetColumn(_parentControl, myGrid.ColumnDefinitions.Count - 1);
-                            Margin = new Thickness(0, Margin.Top, Margin.Right, Margin.Bottom);
-                            _startX = 0;
-                        }
-                        else
-                        {
-                            Grid.SetColumn(_parentControl, newColumn);
-                            Grid.SetColumn(parent, previousColumn);
-                        }
-                    }
-                }
-            }
-        }
-        UpdateInvisibleIcons();
-    }
-
-    #endregion
 
     [RelayCommand()]
     private void IsVisibleChanged(DependencyPropertyChangedEventArgs e)

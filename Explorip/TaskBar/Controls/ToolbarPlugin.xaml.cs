@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
 using Explorip.TaskBar.ViewModels;
 
@@ -10,10 +9,8 @@ namespace Explorip.TaskBar.Controls
     /// <summary>
     /// Logique d'interaction pour ToolbarPlugin.xaml
     /// </summary>
-    public partial class ToolbarPlugin : UserControl
+    public partial class ToolbarPlugin : BaseToolbar
     {
-        private bool _isLoaded;
-
         public ToolbarPlugin()
         {
             InitializeComponent();
