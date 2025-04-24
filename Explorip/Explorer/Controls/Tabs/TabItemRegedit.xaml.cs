@@ -128,4 +128,11 @@ public partial class TabItemRegedit : TabItemExplorip
 
         return null;
     }
+
+    private void ValueLV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        ValueLV.Focus();
+        Keyboard.Focus(ValueLV);
+        ValueLV.SelectedItem ??= ValueLV.Items[0];
+    }
 }

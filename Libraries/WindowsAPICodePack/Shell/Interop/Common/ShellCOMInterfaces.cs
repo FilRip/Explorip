@@ -870,8 +870,59 @@ internal class QueryParserManagerCoClass
 [ComImport(),
 Guid("24264891-E80B-4fd3-B7CE-4FF2FAE8931F"),
 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-internal interface IEntity
+public interface IEntity
 {
-    // TODO
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string Name();
+
+    int Base(out IEntity pBaseEntity);
+
+    [return: MarshalAs(UnmanagedType.IUnknown)]
+    object Relationships(in Guid riid);
+
+    IRelationship GetRelationship([In, MarshalAs(UnmanagedType.LPWStr)] string pszRelationName);
+
+    [return: MarshalAs(UnmanagedType.IUnknown)]
+    object MetaData(in Guid riid);
+
+    [return: MarshalAs(UnmanagedType.IUnknown)]
+    object NamedEntities(in Guid riid);
+
+    INamedEntity GetNamedEntity([In, MarshalAs(UnmanagedType.LPWStr)] string pszValue);
+
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string DefaultPhrase();
 }
+
+[ComImport(), Guid("B72F8FD8-0FAB-4dd9-BDBF-245A6CE1485B"), ClassInterface(ClassInterfaceType.None)]
+public class QueryParser { }
+
+[ComImport(), InterfaceType(ComInterfaceType.InterfaceIsIUnknown), Guid("ABDBD0B1-7D54-49fb-AB5C-BFF4130004CD"), CoClass(typeof(QueryParser))]
+public interface INamedEntity
+{
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string GetValue();
+
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string DefaultPhrase();
+}
+
+[ComImport(), Guid("2769280B-5108-498c-9C7F-A51239B63147"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface IRelationship
+{
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string Name();
+
+    [return: MarshalAs(UnmanagedType.Bool)]
+    bool IsReal();
+
+    IEntity Destination();
+
+    [return: MarshalAs(UnmanagedType.IUnknown)]
+    object MetaData(in Guid riid);
+
+    [return: MarshalAs(UnmanagedType.LPWStr)]
+    string DefaultPhrase();
+}
+
 #endregion

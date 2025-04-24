@@ -24,7 +24,6 @@ public partial class App : Application
 
     private void Application_Startup(object sender, StartupEventArgs e)
     {
-        // TODO : Launch on another AppDomain Shadow File
         _mutexProcess = new Mutex(true, "ExploripCopy", out bool processNotLaunched);
         if (processNotLaunched)
         {

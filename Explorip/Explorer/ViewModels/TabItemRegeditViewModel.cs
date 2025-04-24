@@ -253,8 +253,13 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
             CurrentValueChange.EditValueName = false;
         }
         else if (e.Key == Key.F5 && CurrentSelectedKey != null)
-        {
             CurrentSelectedKey.RefreshValues();
+        else if (CurrentValueChange != null && !CurrentValueChange.EditValueName && !ShowModifyValue)
+        {
+            if (e.Key == Key.F2)
+                CurrentValueChange.RenameMode();
+            else if (e.Key == Key.Enter || e.Key == Key.Return)
+                CurrentValueChange.Modify();
         }
     }
 
@@ -273,7 +278,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
                 i++;
             }
             string definitiveName = name.Replace("%%u", i.ToString());
-            CurrentSelectedKey.CreateSubKey(definitiveName);
+            CurrentSelectedKey.GetWriteKey().CreateSubKey(definitiveName);
             CurrentSelectedKey.RefreshSubKey();
             foreach (OneRegistryKey key in CurrentSelectedKey.Children)
                 if (key.DisplayText == definitiveName)
@@ -299,7 +304,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
             e.Handled = true;
     }
 
-    private void CreateNewValue(RegistryValueKind type)
+    private void CreateNewValue(RegistryValueKind type, object defaultValue)
     {
         if (ListViewItems == null || CurrentSelectedKey?.CurrentKey == null || CurrentSelectedKey?.Parent == null)
             return;
@@ -311,7 +316,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
         }
         try
         {
-            CurrentSelectedKey.CurrentKey.SetValue(name, null, type);
+            CurrentSelectedKey.GetWriteKey().SetValue(name.Replace("%%u", i.ToString()), defaultValue, type);
         }
         catch (Exception ex)
         {
@@ -331,37 +336,37 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
     [RelayCommand()]
     public void AddNewValueString()
     {
-        CreateNewValue(RegistryValueKind.String);
+        CreateNewValue(RegistryValueKind.String, "");
     }
 
     [RelayCommand()]
     public void AddNewValueBinary()
     {
-        CreateNewValue(RegistryValueKind.Binary);
+        CreateNewValue(RegistryValueKind.Binary, Array.Empty<byte>());
     }
 
     [RelayCommand()]
     public void AddNewValueDword32()
     {
-        CreateNewValue(RegistryValueKind.DWord);
+        CreateNewValue(RegistryValueKind.DWord, 0);
     }
 
     [RelayCommand()]
     public void AddNewValueDword64()
     {
-        CreateNewValue(RegistryValueKind.QWord);
+        CreateNewValue(RegistryValueKind.QWord, 0);
     }
 
     [RelayCommand()]
-    public void AddNewMultipleString()
+    public void AddNewValueMultipleString()
     {
-        CreateNewValue(RegistryValueKind.MultiString);
+        CreateNewValue(RegistryValueKind.MultiString, "");
     }
 
     [RelayCommand()]
-    public void AddNewExtendedString()
+    public void AddNewValueExtendedString()
     {
-        CreateNewValue(RegistryValueKind.ExpandString);
+        CreateNewValue(RegistryValueKind.ExpandString, "");
     }
 
     #endregion
@@ -442,7 +447,13 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
         {
             if (disposing)
             {
-                // TODO: supprimer l'état managé (objets managés)
+                _historic.Clear();
+                if (CurrentValueChange != null)
+                    CurrentValueChange.EditValueName = false;
+                _currentValueChange = null;
+                foreach (OneRegistryKey registryKey in RegKeyItems)
+                    registryKey.Dispose();
+                RegKeyItems.Clear();
             }
             disposedValue = true;
         }

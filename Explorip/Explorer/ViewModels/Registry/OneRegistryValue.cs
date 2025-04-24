@@ -103,7 +103,7 @@ public partial class OneRegistryValue(string name, RegistryValueKind type, objec
         if (_parent?.CurrentKey != null &&
             MessageBox.Show(Constants.Localization.REGEDIT_CONFIRM_DELETE_VALUE, Constants.Localization.REGISTRY_EDITOR, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
         {
-            _parent.CurrentKey.DeleteValue(Name);
+            _parent.GetWriteKey().DeleteValue(Name);
             _parent.RefreshValues();
         }
     }
@@ -141,9 +141,10 @@ public partial class OneRegistryValue(string name, RegistryValueKind type, objec
             {
                 if (NewName != null && NewName != _name)
                 {
-                    _parent.CurrentKey.SetValue(NewName, Value, Type);
-                    _parent.CurrentKey.DeleteValue(_name);
+                    _parent.GetWriteKey().SetValue(NewName, Value, Type);
+                    _parent.GetWriteKey().DeleteValue(_name);
                     Name = NewName;
+                    OnPropertyChanged(nameof(Name));
                 }
             }
             catch (Exception ex)

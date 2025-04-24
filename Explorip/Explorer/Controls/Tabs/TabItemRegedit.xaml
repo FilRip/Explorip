@@ -249,7 +249,7 @@
             <!-- ListView -->
             <ListView Grid.Column="1" Background="{x:Static colors:Colors.BackgroundColorBrush}" ItemsSource="{Binding ListViewItems}" Focusable="True" Name="ValueLV"
                       Visibility="{Binding ErrorVisible, Converter={StaticResource inverseBoolToVisibility}}" ContextMenu="{StaticResource NewContextMenu}"
-                      Foreground="{x:Static colors:Colors.ForegroundColorBrush}">
+                      Foreground="{x:Static colors:Colors.ForegroundColorBrush}" PreviewMouseLeftButtonDown="ValueLV_PreviewMouseLeftButtonDown">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewKeyUp">
                         <i:InvokeCommandAction Command="{Binding KeyUpLVCommand}" PassEventArgsToCommand="True"/>

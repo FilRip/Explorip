@@ -15,6 +15,9 @@
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
 	<Version>1.0.0.3</Version>
+	<StartupObject>Explorip.Program</StartupObject>
+	<ApplicationManifest>app.manifest</ApplicationManifest>
+	<ApplicationIcon>Ressources\icone.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -22,13 +25,6 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>Explorip.Program</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>Ressources\icone.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Ressources\icone.ico" />
