@@ -197,11 +197,16 @@ public partial class Taskbar : AppBarWindow
         string[] listToolbars = ConfigManager.ToolbarsPath;
         if (listToolbars?.Length > 0)
         {
-            double newHeight = 52;
             foreach (string path in listToolbars.Where(p => ConfigManager.GetTaskbarConfig(ScreenName).ToolbarVisible(p)))
             {
-                AddToolbar(path, false);
-                newHeight += (ConfigManager.GetTaskbarConfig(ScreenName).ToolbarSmallSizeIcon(path) ? 16 : 32);
+                if (Directory.Exists(path))
+                    AddToolbar(path, false);
+                else if (path.StartsWith("{") && Guid.TryParse(path, out Guid guidPlugin))
+                {
+                    IExploripToolbar plugin = PluginsManager.GetPlugin(guidPlugin);
+                    if (plugin != null)
+                        AddToolbar(plugin, false);
+                }
             }
         }
     }
@@ -270,6 +275,27 @@ public partial class Taskbar : AppBarWindow
         return newToolbar;
     }
 
+    private void AddToolbar(IExploripToolbar plugin, bool resize = true)
+    {
+        double height = Math.Max(24, plugin.MinHeight);
+        ToolbarPlugin tp = new();
+        Grid.SetColumn(plugin.ExploripToolbar, 1);
+        tp.MainGrid.Children.Add(plugin.ExploripToolbar);
+        tp.PluginLinked = plugin;
+        ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, GridUnitType.Pixel) });
+        Grid.SetRow(tp, ToolsBars.RowDefinitions.Count - 1);
+        Grid.SetColumn(tp, 0);
+        ToolsBars.Children.Add(tp);
+        if (resize)
+        {
+            Height += height;
+            DesiredHeight = Height;
+        }
+        _appBarManager.SetWorkArea(Screen);
+        plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
+        plugin.UpdateTaskbar(ScreenName, ActualWidth, ActualHeight, Background, AppBarEdge);
+    }
+
     private void AddToolbar_Click(object sender, RoutedEventArgs e)
     {
         CommonOpenFileDialog dialog = new()
@@ -322,20 +348,7 @@ public partial class Taskbar : AppBarWindow
             if (pluginName == "Plugins" || pluginName == "No plugins loaded")
                 return;
             IExploripToolbar plugin = PluginsManager.GetPlugin(pluginName);
-            double height = Math.Max(24, plugin.MinHeight);
-            ToolbarPlugin tp = new();
-            Grid.SetColumn(plugin.ExploripToolbar, 1);
-            tp.MainGrid.Children.Add(plugin.ExploripToolbar);
-            tp.PluginLinked = plugin;
-            ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, GridUnitType.Pixel) });
-            Grid.SetRow(tp, ToolsBars.RowDefinitions.Count - 1);
-            Grid.SetColumn(tp, 0);
-            ToolsBars.Children.Add(tp);
-            Height += height;
-            DesiredHeight = Height;
-            _appBarManager.SetWorkArea(Screen);
-            plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
-            plugin.UpdateTaskbar(ScreenName, ActualWidth, ActualHeight, Background, AppBarEdge);
+            AddToolbar(plugin);
             ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
         }
     }

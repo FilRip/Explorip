@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 
 using ExploripPlugins;
 
@@ -63,5 +64,10 @@ public static class PluginsManager
     public static IExploripToolbar GetPlugin(string name)
     {
         return _listPlugins.FirstOrDefault(plugin => plugin.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public static IExploripToolbar GetPlugin(Guid guid)
+    {
+        return _listPlugins.FirstOrDefault(plugin => plugin.GuidKey.Equals(guid));
     }
 }
