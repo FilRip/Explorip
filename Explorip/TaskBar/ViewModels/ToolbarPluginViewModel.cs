@@ -12,5 +12,6 @@ public partial class ToolbarPluginViewModel : BaseToolbarViewModel
     {
         base.Init(parentControl);
         _guid = ((ToolbarPlugin)parentControl).PluginLinked.GuidKey.ToString();
+        DefaultSavedPosition();
     }
 }

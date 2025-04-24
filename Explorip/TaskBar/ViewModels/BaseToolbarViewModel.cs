@@ -118,4 +118,10 @@ public abstract partial class BaseToolbarViewModel : ObservableObject
         _parentControl = parentControl;
         ParentTaskbar = parentControl.FindVisualParent<Taskbar>();
     }
+
+    protected void DefaultSavedPosition()
+    {
+        Point point = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Id);
+        Margin = new Thickness(point.X, point.Y, Margin.Right, Margin.Bottom);
+    }
 }

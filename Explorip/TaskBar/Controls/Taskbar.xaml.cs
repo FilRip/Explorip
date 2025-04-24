@@ -199,7 +199,7 @@ public partial class Taskbar : AppBarWindow
         {
             foreach (string path in listToolbars.Where(p => ConfigManager.GetTaskbarConfig(ScreenName).ToolbarVisible(p)))
             {
-                if (Directory.Exists(path))
+                if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
                     AddToolbar(path, false);
                 else if (path.StartsWith("{") && Guid.TryParse(path, out Guid guidPlugin))
                 {

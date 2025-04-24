@@ -98,8 +98,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
                 ShowLargeIcon();
             ShowTitle = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path);
-            Point point = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Path);
-            Margin = new Thickness(point.X, point.Y, Margin.Right, Margin.Bottom);
+            DefaultSavedPosition();
             Folder.Files.CollectionChanged += Files_CollectionChanged;
         }
     }
