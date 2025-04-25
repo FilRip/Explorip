@@ -17,6 +17,8 @@ public static class PluginsManager
     public static void LoadPlugins()
     {
         string root = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Plugins");
+        if (!Directory.Exists(root))
+            return;
         LoadPlugins(root);
         foreach (string dir in Directory.GetDirectories(root))
             LoadPlugins(dir);

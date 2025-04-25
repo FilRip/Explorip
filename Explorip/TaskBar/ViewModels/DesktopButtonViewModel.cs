@@ -70,8 +70,8 @@ public partial class DesktopButtonViewModel : ObservableObject
                     dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.OPACITY | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.RECTSOURCE,
                     fVisible = true,
                     opacity = 255,
-                    rcSource = new NativeMethods.Rect((int)screen.WpfWorkingArea.X, (int)screen.WpfWorkingArea.Y, (int)screen.WpfWorkingArea.Right, (int)screen.WpfWorkingArea.Bottom),
-                    rcDestination = new NativeMethods.Rect(0, 0, (int)_windowPreview.Width, (int)_windowPreview.Height),
+                    rcSource = new NativeMethods.Rect((int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Right, (int)screen.WorkingArea.Bottom),
+                    rcDestination = new NativeMethods.Rect(0, 0, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height),
                 };
                 NativeMethods.DwmUpdateThumbnailProperties(_thumbPtr, ref preview);
             }
