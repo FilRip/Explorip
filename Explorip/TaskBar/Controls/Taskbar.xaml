@@ -41,6 +41,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -97,6 +98,11 @@
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:NotificationButton>
+                <controls:DesktopButton x:Name="DesktopButton" Grid.Column="9" Grid.RowSpan="2" Visibility="{Binding DataContext.DesktopPreviewVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                    <DockPanel.Dock>
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}"/>
+                    </DockPanel.Dock>
+                </controls:DesktopButton>
             </Grid>
         </DockPanel>
     </ContentControl>
@@ -120,6 +126,7 @@
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH_ZONE}" Name="MenuShowSearchZone" Command="{Binding ShowSearchZoneCommand}" IsChecked="{Binding SearchZoneVisible}"/>
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Command="{Binding ShowTaskManCommand}" IsChecked="{Binding TaskManVisible}"/>
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_WIDGET}" Name="MenuShowWidget" Command="{Binding ShowWidgetsCommand}" IsChecked="{Binding WidgetsVisible}"/>
+                <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_DESKTOP}" Name="MenuShowDesktopButton" Command="{Binding ShowDesktopPreviewCommand}" IsChecked="{Binding DesktopPreviewVisible}"/>
                 <MenuItem Header="{x:Static localization:Localization.SMALL_ICON_TASKBAR}" Name="MenuSmallIcon" Command="{Binding SmallIconTaskbarCommand}"/>
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
                 <MenuItem Header="{x:Static localization:Localization.CUSTOM_COLOR}" Name="MenuCustomColor" Command="{Binding CustomColorCommand}"/>

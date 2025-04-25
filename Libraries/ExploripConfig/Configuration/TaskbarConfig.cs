@@ -57,6 +57,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue("SearchWidth", "100");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("SpaceBetweenTaskButton", "").ToString()))
                 _registryTaskbar.SetValue("SpaceBetweenTaskButton", "5");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("DesktopButtonWidth", "").ToString()))
+                _registryTaskbar.SetValue("DesktopButtonWidth", "5");
         }
     }
 
@@ -285,6 +287,26 @@ public class TaskbarConfig
         {
             if (TaskButtonSize != value && AllowWrite)
                 _registryTaskbar.SetValue("SpaceBetweenTaskButton", value.ToString());
+        }
+    }
+
+    public bool ShowDesktopPreview
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowDesktopPreview"); }
+        set
+        {
+            if (ShowDesktopPreview != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowDesktopPreview", value.ToString());
+        }
+    }
+
+    public double DesktopButtonWidth
+    {
+        get { return _registryTaskbar.ReadDouble("DesktopButtonWidth"); }
+        set
+        {
+            if (DesktopButtonWidth != value && AllowWrite)
+                _registryTaskbar.SetValue("DesktopButtonWidth", value.ToString());
         }
     }
 

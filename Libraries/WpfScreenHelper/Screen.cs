@@ -48,18 +48,14 @@ public class Screen
                     NativeMethods.GetDpiForMonitor(ptr, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
                 }
                 else
-                {
                     NativeMethods.GetDpiForMonitor(monitor, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
-                }
             }
             catch
             {
                 // Windows 7 fallback
                 int hr = NativeMethods.D2D1CreateFactory(NativeMethods.D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_SINGLE_THREADED, typeof(NativeMethods.ID2D1Factory).GUID, IntPtr.Zero, out NativeMethods.ID2D1Factory factory);
                 if (hr < 0)
-                {
                     dpiX = 96;
-                }
                 else
                 {
                     factory.GetDesktopDpi(out float x, out _);
@@ -113,9 +109,7 @@ public class Screen
                 NativeMethods.MonitorEnumProc proc = new(closure.Callback);
                 NativeMethods.EnumDisplayMonitors(NativeMethods.NullHandleRef, null, proc, IntPtr.Zero);
                 if (closure.Screens.Count > 0)
-                {
                     return closure.Screens.Cast<Screen>();
-                }
             }
 
             return [new Screen((IntPtr)PRIMARY_MONITOR)];
@@ -271,9 +265,7 @@ public class Screen
     public override bool Equals(object obj)
     {
         if (obj is Screen monitor && monitorHandle == monitor.monitorHandle)
-        {
             return true;
-        }
 
         return false;
     }

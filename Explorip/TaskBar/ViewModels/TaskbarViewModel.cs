@@ -30,6 +30,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         RefreshSearch();
         SetShowTaskMan();
         SetShowWidget();
+        SetShowDesktopPreview();
     }
 
     public Orientation PanelOrientation
@@ -75,6 +76,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private bool _taskManVisible;
     [ObservableProperty()]
     private bool _widgetsVisible;
+    [ObservableProperty()]
+    private bool _desktopPreviewVisible;
 
     [RelayCommand()]
     private void ShowHideTabTip()
@@ -161,6 +164,18 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     {
         ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowWidgetButton = !WidgetsVisible;
         SetShowWidget();
+    }
+
+    private void SetShowDesktopPreview()
+    {
+        DesktopPreviewVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowDesktopPreview;
+    }
+
+    [RelayCommand()]
+    private void ShowDesktopPreview()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowDesktopPreview = !DesktopPreviewVisible;
+        SetShowDesktopPreview();
     }
 
     [RelayCommand()]

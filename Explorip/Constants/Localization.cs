@@ -153,6 +153,7 @@ public static class Localization
     public static string UPDATE_AND_SHUTDOWN { get; private set; }
     public static string UPDATE_AND_RESTART { get; private set; }
     public static string TASKBAR { get; private set; }
+    public static string TASKBAR_SHOW_DESKTOP { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -290,6 +291,7 @@ public static class Localization
             TASKBAR_SHOW_SEARCH_ZONE = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SystemSettings/Resources/SystemSettings_DesktopTaskbar_Search_Box}", "Show search zone");
             TASKBAR_SHOW_SEARCH = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SystemSettings/Resources/SystemSettings_DesktopTaskbar_Search_Icon}", "Show search button");
             SMALL_ICON_TASKBAR = Load("shell32.dll", 31063, "Small icons");
+            TASKBAR_SHOW_DESKTOP = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SystemSettings/Resources/SystemSettings_DesktopTaskbar_Sd}", "Show desktop preview button");
         }
         else
         {
@@ -297,6 +299,7 @@ public static class Localization
             TASKBAR_SHOW_SEARCH_ZONE = LoadMenuItem("explorer.exe", 205, 434, "Show search zone", 0).Replace("&", "_");
             TASKBAR_SHOW_SEARCH = LoadMenuItem("explorer.exe", 205, 433, "Show search button", 0).Replace("&", "_");
             SMALL_ICON_TASKBAR = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Taskbar_SmallButtons/Description}", "Use small icon for button of task bar");
+            TASKBAR_SHOW_DESKTOP = Load("uiautomationcore.dll", 1, "Button") + " " + Load("explorer.exe", 22000, "Desktop").ToLower();
         }
         RENAME_MENUITEM_WPF = RENAME_MENUITEM.Replace("&", "_");
         ASK_DOWNLOAD_NEW_VERSION = Load("wscapi.dll", 6104, "Do you want to update %1");
