@@ -93,7 +93,8 @@ public partial class MyMp3PlayerPluginViewModel : ObservableObject
                 FileInfo fileInfo = new(fileName);
                 ListFiles.Add(fileInfo);
             }
-            PlayCurrent();
+            if (!IsPlaying)
+                Play();
         }
     }
 
