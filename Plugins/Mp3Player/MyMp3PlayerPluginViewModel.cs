@@ -121,6 +121,7 @@ public partial class MyMp3PlayerPluginViewModel : ObservableObject
 
     private void PlayCurrent()
     {
+        _mediaPlayer.Stop();
         _mediaPlayer.Open(new Uri(ListFiles[_indexCurrentlyPlaying].FullName, UriKind.Absolute));
         _mediaPlayer.Play();
     }

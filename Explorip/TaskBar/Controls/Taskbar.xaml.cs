@@ -201,7 +201,7 @@ public partial class Taskbar : AppBarWindow
             {
                 if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
                     AddToolbar(path, false);
-                else if (path.StartsWith("{") && Guid.TryParse(path, out Guid guidPlugin))
+                else if (Guid.TryParse(path, out Guid guidPlugin))
                 {
                     IExploripToolbar plugin = PluginsManager.GetPlugin(guidPlugin);
                     if (plugin != null)
@@ -270,6 +270,7 @@ public partial class Taskbar : AppBarWindow
         {
             Height += 22;
             DesiredHeight = Height;
+            ConfigManager.GetTaskbarConfig(ScreenName).ToolbarVisible(path, true);
         }
         _appBarManager.SetWorkArea(Screen);
         return newToolbar;
@@ -290,6 +291,7 @@ public partial class Taskbar : AppBarWindow
         {
             Height += height;
             DesiredHeight = Height;
+            ConfigManager.GetTaskbarConfig(ScreenName).ToolbarVisible(tp.MyDataContext.Id, true);
         }
         _appBarManager.SetWorkArea(Screen);
         plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
@@ -308,10 +310,8 @@ public partial class Taskbar : AppBarWindow
             if (newTb != null)
             {
                 if (MainScreen)
-                {
-                    ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
                     ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
-                }
+                ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
                 newTb.MyDataContext.ShowHideTitle();
                 newTb.MyDataContext.CurrentShowLargeIcon = true;
                 newTb.MyDataContext.ShowLargeIcon();
@@ -349,7 +349,9 @@ public partial class Taskbar : AppBarWindow
                 return;
             IExploripToolbar plugin = PluginsManager.GetPlugin(pluginName);
             AddToolbar(plugin);
-            ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
+            if (MainScreen)
+                ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
+            ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
         }
     }
 
