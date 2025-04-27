@@ -124,9 +124,7 @@ namespace Explorip.StartMenu.Window
         {
             if (IsVisible)
             {
-                System.Drawing.Point p = new();
-                NativeMethods.GetCursorPos(ref p);
-                Screen screen = Screen.FromPoint(new Point(p.X, p.Y));
+                Screen screen = MouseHelper.MouseScreen;
                 Left = screen.WorkingArea.X;
                 Height = MyDataContext.Height;
                 Top = (int)(screen.WorkingArea.Bottom / screen.ScaleFactor) - Height;

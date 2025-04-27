@@ -311,12 +311,13 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 lock (_windowsLock)
                 {
                     string winFileName = ShellHelper.GetPathForHandle(msg.LParam);
-                    ApplicationWindow win;
+                    ApplicationWindow win = null;
                     switch ((HSHELL)msg.WParam.ToInt32())
                     {
                         case HSHELL.WINDOWCREATED:
                             ShellLogger.Debug("TasksService: Created: " + msg.LParam);
-                            win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
+                            if (GroupApplicationsWindows)
+                                win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
                             if (win == null)
                                 AddWindow(msg.LParam);
                             else
@@ -563,7 +564,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             if (win.AppUserModelID.IndexOf(AppModelId, StringComparison.InvariantCultureIgnoreCase) == -1)
             {
                 RemoveWindow(hWnd);
-                win = Windows.FirstOrDefault(wnd => wnd.AppUserModelID?.IndexOf(AppModelId, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                if (GroupApplicationsWindows)
+                    win = Windows.FirstOrDefault(wnd => wnd.AppUserModelID?.IndexOf(AppModelId, StringComparison.InvariantCultureIgnoreCase) >= 0);
                 if (win == null)
                     AddWindow(hWnd);
                 else
@@ -621,4 +623,6 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     private readonly DependencyProperty windowsProperty = DependencyProperty.Register(nameof(Windows),
         typeof(ObservableCollection<ApplicationWindow>), typeof(TasksService),
         new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
+
+    public bool GroupApplicationsWindows { get; set; } = true;
 }

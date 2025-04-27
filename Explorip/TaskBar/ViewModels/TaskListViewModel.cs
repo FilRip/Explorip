@@ -253,6 +253,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                                 appWin.State = ApplicationWindow.WindowState.Unknown;
                             else
                                 appWin.State = win.State;
+                            if (!MyTaskbarApp.MyShellManager.TasksService.GroupApplicationsWindows)
+                                break;
                         }
                     }
                 }
