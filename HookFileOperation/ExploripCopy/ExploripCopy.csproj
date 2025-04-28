@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <ProjectGuid>{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net481</TargetFramework>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <LangVersion>latest</LangVersion>
+	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	<OutputType>WinExe</OutputType>
+	<TargetFramework>net481</TargetFramework>
+	<LangVersion>latest</LangVersion>
     <AssemblyTitle>ExploripCopy</AssemblyTitle>
     <Company>CoolBytes</Company>
     <Product>ExploripCopy</Product>
-    <Copyright>Copyright © CoolBytes 2023</Copyright>
+    <Copyright>Copyright © CoolBytes 2021-2025</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
-	<Version>1.0.0.0</Version>
+	<Version>1.0.0.1</Version>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
 	<StartupObject>ExploripCopy.Program</StartupObject>
   </PropertyGroup>
@@ -24,14 +24,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Runtime.Remoting" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />

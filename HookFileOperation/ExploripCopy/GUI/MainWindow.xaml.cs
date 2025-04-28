@@ -50,6 +50,7 @@ public partial class MainWindow : Window
         MainViewModels.Instance.Dispose();
         _forceClose = true;
         Close();
+        Environment.Exit(0);
     }
 
     private MainViewModels MyDataContext

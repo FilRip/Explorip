@@ -10,7 +10,7 @@
     <Company>CoolBytes</Company>
     <Product>Explorip</Product>
     <Description>Shell for Windows 10 and 11</Description>
-    <Copyright>Copyright © 2021-2024</Copyright>
+    <Copyright>Copyright © CoolBytes 2021-2025</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>

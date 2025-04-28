@@ -11,10 +11,15 @@ namespace ExploripCopy;
 /// <summary>
 /// Logique d'interaction pour App.xaml
 /// </summary>
-public partial class App : Application
+public partial class ExploripCopyApp : Application
 {
     private TaskbarIcon notifyIcon;
     private Mutex _mutexProcess;
+
+    public ExploripCopyApp()
+    {
+        InitializeComponent();
+    }
 
     private void Application_Exit(object sender, ExitEventArgs e)
     {
@@ -34,6 +39,9 @@ public partial class App : Application
 
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
             NotifyIconViewModel.Instance.SetControl(notifyIcon);
+
+            GUI.MainWindow mainWindow = new();
+            mainWindow.Show();
         }
         else
         {

@@ -8,6 +8,7 @@ public static class Program
 {
     private const string AppDomainName = "ExploripCopyAppDomain";
 
+    [STAThread()]
     public static void Main(string[] args)
     {
         if (AppDomain.CurrentDomain.FriendlyName != AppDomainName)
@@ -30,7 +31,7 @@ public static class Program
             }
             return;
         }
-        new App().Run();
+        new ExploripCopyApp().Run();
     }
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
