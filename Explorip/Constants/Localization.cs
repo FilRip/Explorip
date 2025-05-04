@@ -154,6 +154,7 @@ public static class Localization
     public static string UPDATE_AND_RESTART { get; private set; }
     public static string TASKBAR { get; private set; }
     public static string TASKBAR_SHOW_DESKTOP { get; private set; }
+    public static string TASKBAR_GROUP_APPLICATION_WINDOW { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -314,6 +315,7 @@ public static class Localization
         UPDATE_AND_SHUTDOWN = Load("shutdownux.dll", 3026, "Update and shutdown");
         UPDATE_AND_RESTART = Load("shutdownux.dll", 3030, "Update and restart");
         TASKBAR = Load("explorer.exe", 518, "Taskbar");
+        TASKBAR_GROUP_APPLICATION_WINDOW = Load("shell32.dll", 24289, "Regroup same application windows in taskbar");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

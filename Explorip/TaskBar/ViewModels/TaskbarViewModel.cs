@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,9 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         SetShowTaskMan();
         SetShowWidget();
         SetShowDesktopPreview();
+        SetSmallIcon();
+        SetGroupApplicationWindows();
+        SetShowTitleWindow();
     }
 
     public Orientation PanelOrientation
@@ -62,22 +66,9 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
 
     [ObservableProperty()]
     private Taskbar _parentTaskbar = parentControl;
+
     [ObservableProperty()]
-    private bool _resizeOn;
-    [ObservableProperty()]
-    private bool _tabTipVisible;
-    [ObservableProperty()]
-    private bool _keyboardLayoutVisible;
-    [ObservableProperty()]
-    private bool _searchZoneVisible;
-    [ObservableProperty()]
-    private bool _searchButtonVisible;
-    [ObservableProperty()]
-    private bool _taskManVisible;
-    [ObservableProperty()]
-    private bool _widgetsVisible;
-    [ObservableProperty()]
-    private bool _desktopPreviewVisible;
+    private bool _resizeOn, _tabTipVisible, _keyboardLayoutVisible, _searchZoneVisible, _searchButtonVisible, _taskManVisible, _widgetsVisible, _desktopPreviewVisible, _showApplicationWindowTitle, _isGroupedApplicationWindow, _isShowSmallIcon;
 
     [RelayCommand()]
     private void ShowHideTabTip()
@@ -107,9 +98,15 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private void SmallIconTaskbar()
     {
         if (ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize == 16)
+        {
             ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize = 32;
+            IsShowSmallIcon = false;
+        }
         else
+        {
             ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize = 16;
+            IsShowSmallIcon = true;
+        }
         ParentTaskbar.MyTaskList.MyDataContext.ChangeButtonSize();
         ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
     }
@@ -178,6 +175,11 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         SetShowDesktopPreview();
     }
 
+    private void SetSmallIcon()
+    {
+        IsShowSmallIcon = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize == 16;
+    }
+
     [RelayCommand()]
     private void Exit()
     {
@@ -188,6 +190,39 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private void TaskbarAllScreen()
     {
         ((MyTaskbarApp)Program.MyCurrentApp).ShowTaskbarOnAllOthersScreen();
+    }
+
+    [RelayCommand()]
+    private void ShowTitleWindow()
+    {
+        ConfigManager.ShowTitleApplicationWindow = !ShowApplicationWindowTitle;
+        SetShowTitleWindow();
+        RefreshTaskList();
+    }
+
+    private void SetShowTitleWindow()
+    {
+        ShowApplicationWindowTitle = ConfigManager.ShowTitleApplicationWindow;
+    }
+
+    [RelayCommand()]
+    private void GroupApplicationWindows()
+    {
+        ConfigManager.GroupedApplicationWindow = !IsGroupedApplicationWindow;
+        SetGroupApplicationWindows();
+        RefreshTaskList();
+    }
+
+    private void SetGroupApplicationWindows()
+    {
+        IsGroupedApplicationWindow = ConfigManager.GroupedApplicationWindow;
+    }
+
+    private void RefreshTaskList()
+    {
+        TaskListViewModel.RefreshAllCollectionView(null, EventArgs.Empty);
+        ParentTaskbar.MyTaskList.MyDataContext.ChangeButtonSize();
+        ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
     }
 
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static

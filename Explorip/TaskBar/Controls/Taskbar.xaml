@@ -127,7 +127,9 @@
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Command="{Binding ShowTaskManCommand}" IsChecked="{Binding TaskManVisible}"/>
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_WIDGET}" Name="MenuShowWidget" Command="{Binding ShowWidgetsCommand}" IsChecked="{Binding WidgetsVisible}"/>
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_DESKTOP}" Name="MenuShowDesktopButton" Command="{Binding ShowDesktopPreviewCommand}" IsChecked="{Binding DesktopPreviewVisible}"/>
-                <MenuItem Header="{x:Static localization:Localization.SMALL_ICON_TASKBAR}" Name="MenuSmallIcon" Command="{Binding SmallIconTaskbarCommand}"/>
+                <MenuItem Header="{x:Static localization:Localization.SMALL_ICON_TASKBAR}" Name="MenuSmallIcon" Command="{Binding SmallIconTaskbarCommand}" IsChecked="{Binding IsShowSmallIcon}"/>
+                <MenuItem Header="{x:Static localization:Localization.SHOW_TITLE}" Name="MenuShowTitleWindow" Command="{Binding ShowTitleWindowCommand}" IsChecked="{Binding ShowApplicationWindowTitle}"/>
+                <MenuItem Header="{x:Static localization:Localization.TASKBAR_GROUP_APPLICATION_WINDOW}" Name="MenuGroupApplicationWindow" Command="{Binding GroupApplicationWindowsCommand}" IsChecked="{Binding IsGroupedApplicationWindow}"/>
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
                 <MenuItem Header="{x:Static localization:Localization.CUSTOM_COLOR}" Name="MenuCustomColor" Command="{Binding CustomColorCommand}"/>
             </MenuItem>
