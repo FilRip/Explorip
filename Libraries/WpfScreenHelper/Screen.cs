@@ -16,7 +16,7 @@ public class Screen
     /// <summary>
     /// Indicates if we have more than one monitor.
     /// </summary>
-    private static readonly bool MultiMonitorSupport = NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_CMONITORS) != 0;
+    private static bool MultiMonitorSupport = IsMultiMonitorSupport();
 
     // This identifier is just for us, so that we don't try to call the multimon
     // functions if we just need the primary monitor... this is safer for
@@ -25,6 +25,16 @@ public class Screen
 
     private const int MONITORINFOF_PRIMARY = 0x00000001;
 
+    public static void ResetMultiMonitorSupport()
+    {
+        MultiMonitorSupport = IsMultiMonitorSupport();
+    }
+
+    private static bool IsMultiMonitorSupport()
+    {
+        return NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_CMONITORS) != 0;
+    }
+    
     /// <summary>
     /// The monitor handle.
     /// </summary>

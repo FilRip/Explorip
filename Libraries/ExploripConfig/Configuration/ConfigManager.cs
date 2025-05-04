@@ -79,6 +79,10 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("StartMenuHeight", "").ToString()))
                 _registryStartMenu.SetValue("StartMenuHeight", "640");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("GroupedApplicationWindow", "").ToString()))
+                _registryRootTaskbar.SetValue("GroupedApplicationWindow", "True");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MaxWidthTitleApplicationWindow", "").ToString()))
+                _registryRootTaskbar.SetValue("MaxWidthTitleApplicationWindow", "100");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -392,6 +396,36 @@ public static class ConfigManager
         {
             if (TaskbarDelayBeforeShowThumbnail != value && AllowWrite)
                 _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", value.ToString());
+        }
+    }
+
+    public static bool GroupedApplicationWindow
+    {
+        get { return _registryRootTaskbar.ReadBoolean("GroupedApplicationWindow"); }
+        set
+        {
+            if (GroupedApplicationWindow != value && AllowWrite)
+                _registryRootTaskbar.SetValue("GroupedApplicationWindow", value.ToString());
+        }
+    }
+
+    public static bool ShowTitleApplicationWindow
+    {
+        get { return _registryRootTaskbar.ReadBoolean("ShowTitleApplicationWindow"); }
+        set
+        {
+            if (ShowTitleApplicationWindow != value && AllowWrite)
+                _registryRootTaskbar.SetValue("ShowTitleApplicationWindow", value.ToString());
+        }
+    }
+
+    public static double MaxWidthTitleApplicationWindow
+    {
+        get { return _registryRootTaskbar.ReadDouble("MaxWidthTitleApplicationWindow"); }
+        set
+        {
+            if (MaxWidthTitleApplicationWindow != value && AllowWrite)
+                _registryRootTaskbar.SetValue("MaxWidthTitleApplicationWindow", value.ToString());
         }
     }
 

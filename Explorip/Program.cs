@@ -162,5 +162,6 @@ public static class Program
     private static void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
     {
         // TODO : Warn taskbar and/or dekstop
+        WpfScreenHelper.Screen.ResetMultiMonitorSupport();
     }
 }

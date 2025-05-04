@@ -82,6 +82,14 @@ public partial class TaskButton : UserControl
         MyTaskIconBack.Height = size;
         MyTaskIconBack.Width = size;
 
+        if (ConfigManager.ShowTitleApplicationWindow)
+        {
+            IconColumn.Width = new GridLength(size + 20, GridUnitType.Pixel);
+            TitleColumn.MaxWidth = ConfigManager.MaxWidthTitleApplicationWindow;
+        }
+        else
+            TitleColumn.Width = new GridLength(0, GridUnitType.Pixel);
+
         _isLoaded = true;
     }
 

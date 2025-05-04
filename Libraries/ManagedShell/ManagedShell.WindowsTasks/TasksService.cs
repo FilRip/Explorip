@@ -298,7 +298,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         win.UpdateProperties();
 
         foreach (ApplicationWindow wind in Windows)
-            if (wind.WinFileName == win.WinFileName && wind.ListWindows.Count > 0 && wind.ListWindows[0] != win.ListWindows[0])
+            if (wind.WinFileName == win.WinFileName && wind.ListWindows.Count > 0 && win.ListWindows.Count > 0 && wind.ListWindows[0] != win.ListWindows[0])
                 wind.UpdateProperties();
     }
 
@@ -318,6 +318,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             ShellLogger.Debug("TasksService: Created: " + msg.LParam);
                             if (GroupApplicationsWindows)
                                 win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
+                            else
+                                win = Windows.FirstOrDefault(wnd => wnd.WinFileName == winFileName && wnd.IsPinnedApp && wnd.ListWindows.Count == 0);
                             if (win == null)
                                 AddWindow(msg.LParam);
                             else

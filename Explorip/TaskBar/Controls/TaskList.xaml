@@ -25,7 +25,7 @@
                 <ItemContainerTemplate>
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding Path=MyDataContext.ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ColumnDefinition Width="{Binding Path=MyDataContext.ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}" MaxWidth="{Binding Path=MyDataContext.TitleLength, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
                             <ColumnDefinition Width="{Binding Path=MyDataContext.ButtonRightMargin, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
