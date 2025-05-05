@@ -247,10 +247,9 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         return mi;
     }
 
-    private const int MaxRecursive = 5;
     private void ExpandFolder(MenuItem mi, ShellFolder folder, int nbRecursive = 1)
     {
-        if (nbRecursive > MaxRecursive || folder == null)
+        if (nbRecursive > ConfigManager.MaxRecursiveSubFolderInToolbar || folder == null)
             return;
         foreach (ShellFile sf in folder.Files)
         {

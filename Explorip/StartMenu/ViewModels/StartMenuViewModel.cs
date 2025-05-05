@@ -164,8 +164,12 @@ public partial class StartMenuViewModel : ObservableObject
     public void RefreshPrograms()
     {
         StartMenuItems = [];
-        string commonSMFolder = Path.Combine(Environment.SpecialFolder.CommonStartMenu.FullPath(), "Programs");
-        string mySMFolder = Path.Combine(Environment.SpecialFolder.StartMenu.FullPath(), "Programs");
+        string commonSMFolder = Environment.ExpandEnvironmentVariables(ConfigManager.CommonProgramsPath);
+        if (string.IsNullOrWhiteSpace(commonSMFolder))
+            commonSMFolder = Path.Combine(Environment.SpecialFolder.CommonStartMenu.FullPath(), "Programs");
+        string mySMFolder = Environment.ExpandEnvironmentVariables(ConfigManager.CurrentUserProgramsPath);
+        if (string.IsNullOrWhiteSpace(mySMFolder))
+            mySMFolder = Path.Combine(Environment.SpecialFolder.StartMenu.FullPath(), "Programs");
         List<StartMenuItemViewModel> commonSM = GetRootSM(new ShellFolder(commonSMFolder, IntPtr.Zero));
         StartMenuItems.AddRange(commonSM);
         List<StartMenuItemViewModel> MySM = GetRootSM(new ShellFolder(mySMFolder, IntPtr.Zero));

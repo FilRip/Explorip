@@ -36,6 +36,7 @@ public static class ConfigManager
         if (allowWrite && _registryKeyExplorer != null)
         {
             // If empty config in registry, set default settings
+            // Explorer
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Theme", "").ToString()))
                 _registryKeyExplorer.SetValue("Theme", "System");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Language", "").ToString()))
@@ -59,6 +60,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue("ExplorerSizeX", (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("ExplorerSizeY", "").ToString()))
                 _registryKeyExplorer.SetValue("ExplorerSizeY", (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
+
+            // Start Menu
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("PinnedAppPath", "").ToString()))
                 _registryStartMenu.SetValue("PinnedAppPath", @"%APPDATA%\CoolBytes\Explorip\StartMenu\PinnedApp");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("IconSizeWidth", "").ToString()))
@@ -75,14 +78,18 @@ public static class ConfigManager
                 _registryStartMenu.SetValue("ShowPinnedApp2", "True");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("ShowApplicationsPrograms", "").ToString()))
                 _registryStartMenu.SetValue("ShowApplicationsPrograms", "True");
-            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
-                _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("StartMenuHeight", "").ToString()))
                 _registryStartMenu.SetValue("StartMenuHeight", "640");
+
+            // Taskbar
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
+                _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("GroupedApplicationWindow", "").ToString()))
                 _registryRootTaskbar.SetValue("GroupedApplicationWindow", "True");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MaxWidthTitleApplicationWindow", "").ToString()))
                 _registryRootTaskbar.SetValue("MaxWidthTitleApplicationWindow", "100");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MaxRecursiveSubFolderInToolbar", "").ToString()))
+                _registryRootTaskbar.SetValue("MaxRecursiveSubFolderInToolbar", "5");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -429,6 +436,16 @@ public static class ConfigManager
         }
     }
 
+    public static int MaxRecursiveSubFolderInToolbar
+    {
+        get { return _registryRootTaskbar.ReadInteger("MaxRecursiveSubFolderInToolbar"); }
+        set
+        {
+            if (MaxRecursiveSubFolderInToolbar != value && AllowWrite)
+                _registryRootTaskbar.SetValue("MaxRecursiveSubFolderInToolbar", value.ToString());
+        }
+    }
+
     #region StartMenu
 
     public static bool StartMenuShowPinnedApp2
@@ -536,6 +553,26 @@ public static class ConfigManager
         {
             if (StartMenuHeight != value && AllowWrite)
                 _registryStartMenu.SetValue("StartMenuHeight", value.ToString());
+        }
+    }
+
+    public static string CommonProgramsPath
+    {
+        get { return _registryStartMenu.GetValue("CommonProgramsPath", "")?.ToString(); }
+        set
+        {
+            if (CommonProgramsPath != value && AllowWrite)
+                _registryStartMenu.SetValue("CommonProgramsPath", value);
+        }
+    }
+
+    public static string CurrentUserProgramsPath
+    {
+        get { return _registryStartMenu.GetValue("CurrentUserProgramsPath", "")?.ToString(); }
+        set
+        {
+            if (CommonProgramsPath != value && AllowWrite)
+                _registryStartMenu.SetValue("CurrentUserProgramsPath", value);
         }
     }
 
