@@ -14,7 +14,7 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
-	<Version>1.1.1.0</Version>
+	<Version>1.1.2.1</Version>
 	<StartupObject>Explorip.Program</StartupObject>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
 	<ApplicationIcon>Ressources\icone.ico</ApplicationIcon>

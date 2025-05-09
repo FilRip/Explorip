@@ -4,7 +4,7 @@ using ManagedShell.AppBar;
 
 namespace Explorip.TaskBar.Helpers;
 
-public static class ExtensionsAppBardge
+public static class ExtensionsAppBarEdge
 {
     public static Orientation GetOrientation(this AppBarEdge appBar)
     {

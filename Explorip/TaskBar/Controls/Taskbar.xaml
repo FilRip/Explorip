@@ -114,8 +114,7 @@
                 <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAddToolbar" Click="AddToolbar_Click"/>
                 <MenuItem Header="Plugins" Name="ToolbarListPlugins" ItemsSource="{Binding ListPlugins}" Style="{DynamicResource MenuItemWithSubMenuStyle}" Click="ToolbarListPlugins_Click"/>
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
-                <MenuItem Header="{x:Static localization:Localization.SHOW_TITLE}" Name="ShowHideTitleToolbar" Click="ShowHideTitleToolbar_Click"/>
-                <MenuItem Header="{x:Static localization:Localization.LARGE_ICON}" Name="ShowSmallLargeIcon" Click="ShowSmallLargeIcon_Click"/>
+                <MenuItem Header="{x:Static localization:Localization.TOOLBAR}" Name="MenuToolbars" Style="{DynamicResource MenuItemWithSubMenuStyle}" MouseEnter="MenuToolbars_MouseEnter"/>
             </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Command="{Binding TaskbarAllScreenCommand}"/>

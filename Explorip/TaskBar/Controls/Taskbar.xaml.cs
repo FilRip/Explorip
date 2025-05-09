@@ -256,7 +256,12 @@ public partial class Taskbar : AppBarWindow
 
     #region Manage toolbar
 
-    private Toolbar AddToolbar(string path, bool resize = true)
+    public Grid ListToolbars
+    {
+        get { return ToolsBars; }
+    }
+
+    public Toolbar AddToolbar(string path, bool resize = true)
     {
         if (!Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
             return null;
@@ -276,7 +281,7 @@ public partial class Taskbar : AppBarWindow
         return newToolbar;
     }
 
-    private void AddToolbar(IExploripToolbar plugin, bool resize = true)
+    public void AddToolbar(IExploripToolbar plugin, bool resize = true)
     {
         double height = Math.Max(24, plugin.MinHeight);
         ToolbarPlugin tp = new();
@@ -362,4 +367,9 @@ public partial class Taskbar : AppBarWindow
     }
 
     #endregion
+
+    private void MenuToolbars_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        MyDataContext.BuildToolbarsMenu();
+    }
 }

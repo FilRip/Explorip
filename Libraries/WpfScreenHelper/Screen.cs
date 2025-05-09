@@ -34,7 +34,7 @@ public class Screen
     {
         return NativeMethods.GetSystemMetrics(NativeMethods.SystemMetric.SM_CMONITORS) != 0;
     }
-    
+
     /// <summary>
     /// The monitor handle.
     /// </summary>

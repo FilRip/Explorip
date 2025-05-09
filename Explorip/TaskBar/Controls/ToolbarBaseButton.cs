@@ -66,12 +66,19 @@ public class ToolbarBaseButton : UserControl
                 }
                 else if (Path.GetExtension(sf.FileName).ToLower() == ".lnk")
                 {
-                    Shortcut sc = Shortcut.ReadFromFile(sf.Path);
-                    string newPath = sc.Target;
-                    if (!string.IsNullOrWhiteSpace(newPath) && Directory.Exists(newPath))
+                    try
                     {
-                        _isFolder = true;
-                        _folderPath = newPath;
+                        Shortcut sc = Shortcut.ReadFromFile(sf.Path);
+                        string newPath = sc.Target;
+                        if (!string.IsNullOrWhiteSpace(newPath) && Directory.Exists(newPath))
+                        {
+                            _isFolder = true;
+                            _folderPath = newPath;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        _isFolder = false;
                     }
                 }
             }

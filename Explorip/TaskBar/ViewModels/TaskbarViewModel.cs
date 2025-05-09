@@ -13,8 +13,11 @@ using Explorip.TaskBar.Helpers;
 
 using ExploripConfig.Configuration;
 
+using ExploripPlugins;
+
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.ShellFolders;
 
 namespace Explorip.TaskBar.ViewModels;
 
@@ -237,4 +240,105 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         }
     }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+
+    public void BuildToolbarsMenu()
+    {
+        ParentTaskbar.MenuToolbars.Items.Clear();
+        foreach (string path in ConfigManager.ToolbarsPath)
+        {
+            string title = null;
+            if (Guid.TryParse(path, out Guid guid))
+            {
+                IExploripToolbar plugin = PluginsManager.GetPlugin(guid);
+                if (plugin != null)
+                    title = plugin.Name;
+            }
+            else
+            {
+                ShellFolder sf = new(path, IntPtr.Zero);
+                title = sf.DisplayName;
+                sf.Dispose();
+            }
+            if (title != null)
+            {
+                MenuItem item = new()
+                {
+                    Header = title,
+                    Tag = path,
+                    Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle"),
+                };
+                item.Items.Add(new MenuItem()
+                {
+                    Header = Constants.Localization.VISIBLE,
+                    Tag = path,
+                    IsChecked = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarVisible(title),
+                });
+                ((MenuItem)item.Items[0]).Click += ChangeToolbarVisible;
+                item.Items.Add(new MenuItem()
+                {
+                    Header = Constants.Localization.SHOW_TITLE,
+                    Tag = path,
+                    IsChecked = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(title),
+                });
+                ((MenuItem)item.Items[1]).Click += ChangeShowTitile;
+                item.Items.Add(new MenuItem()
+                {
+                    Header = Constants.Localization.LARGE_ICON,
+                    Tag = path,
+                    IsChecked = !ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(title),
+                });
+                ((MenuItem)item.Items[2]).Click += ChangeShowLargeIcon;
+                ParentTaskbar.MenuToolbars.Items.Add(item);
+            }
+        }
+    }
+
+    private void ChangeToolbarVisible(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string path)
+        {
+            bool visible = !mi.IsChecked;
+            mi.IsChecked = visible;
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarVisible(path, visible);
+            if (visible)
+            {
+                if (Guid.TryParse(path, out Guid guid))
+                {
+                    IExploripToolbar plugin = PluginsManager.GetPlugin(guid);
+                    if (plugin != null)
+                        ParentTaskbar.AddToolbar(plugin);
+                }
+                else
+                    ParentTaskbar.AddToolbar(path);
+            }
+            else
+            {
+                Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
+                if (tb != null)
+                    ParentTaskbar.ListToolbars.Children.Remove(tb);
+            }
+        }
+    }
+
+    private void ChangeShowTitile(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string path)
+        {
+            mi.IsChecked = !mi.IsChecked;
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(path, mi.IsChecked);
+            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
+            tb.MyDataContext.ShowHideTitle();
+        }
+    }
+
+    private void ChangeShowLargeIcon(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string path)
+        {
+            mi.IsChecked = !mi.IsChecked;
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(path, !mi.IsChecked);
+            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
+            tb.MyDataContext.ShowLargeIcon();
+        }
+    }
 }
