@@ -55,6 +55,8 @@
         <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="1" Visibility="{Binding ShowTitle, Converter={StaticResource boolToVisible}}" Content="{Binding Title}">
             <Label.ContextMenu>
                 <ContextMenu ItemsPanel="{DynamicResource MyMenuItemPanel}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Background="{x:Static colors:Colors.BackgroundColorBrush}">
+                    <MenuItem Header="{x:Static constants:Localization.OPEN_FOLDER}" Name="OpenFolder" Command="{Binding OpenFolderCommand}"/>
+                    <Separator Style="{DynamicResource MySeparatorStyle}"/>
                     <MenuItem Header="{x:Static constants:Localization.SHOW_TITLE}" Name="ShowHideTitle" Command="{Binding ShowHideTitleCommand}" IsChecked="{Binding ShowTitle}"/>
                     <MenuItem Header="{x:Static constants:Localization.LARGE_ICON}" Name="ShowLargeIcon" Command="{Binding ShowLargeIconCommand}" IsChecked="{Binding CurrentShowLargeIcon}"/>
                     <Separator Style="{DynamicResource MySeparatorStyle}"/>

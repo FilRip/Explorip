@@ -16,6 +16,7 @@ using Explorip.TaskBar.Controls;
 
 using ExploripConfig.Configuration;
 
+using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 
@@ -395,5 +396,12 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             else
                 UnloadFolder();
         }
+    }
+
+    [RelayCommand()]
+    private void OpenFolder()
+    {
+        if (!string.IsNullOrWhiteSpace(Folder?.Path))
+            ShellHelper.StartProcess(Folder.Path, useShellExecute: true, verb: "open");
     }
 }
