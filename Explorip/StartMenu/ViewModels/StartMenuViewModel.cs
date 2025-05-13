@@ -50,14 +50,11 @@ public partial class StartMenuViewModel : ObservableObject
     {
         #region Build all context menu
 
-        string xaml = "<ItemsPanelTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' xmlns:colors='clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy'><StackPanel Margin=\"-20,0,0,0\" Background=\"{x:Static colors:Colors.BackgroundColorBrush}\"/></ItemsPanelTemplate>";
-        ItemsPanelTemplate itp = XamlReader.Parse(xaml) as ItemsPanelTemplate;
-
         _cmStartMenu = new()
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            ItemsPanel = itp,
+            Margin = new Thickness(0, 0, 0, 0),
         };
         _cmStartMenu.AddEntry(Constants.Localization.SHOW_SECOND_START_MENU_PANEL, ChangeShowPanel2);
         _cmStartMenu.AddEntry(Constants.Localization.SHOW_STARTMENUITEM_STARTWINDOW, ChangeShowStartPrograms);
@@ -68,7 +65,7 @@ public partial class StartMenuViewModel : ObservableObject
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            ItemsPanel = itp,
+            Margin = new Thickness(0, 0, 0, 0),
         };
         _cmUser.AddEntry(Constants.Localization.LOCK, ShellHelper.Lock);
         _cmUser.AddEntry(Constants.Localization.DISCONNECT, ShellHelper.Logoff);
@@ -77,7 +74,7 @@ public partial class StartMenuViewModel : ObservableObject
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            ItemsPanel = itp,
+            Margin = new Thickness(0, 0, 0, 0),
         };
         _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
         _cmStop.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);

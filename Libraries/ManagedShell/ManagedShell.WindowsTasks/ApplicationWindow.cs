@@ -318,6 +318,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
+    public int PercentProgressValue
+    {
+        get { return (int)(_progressValue / 65535d * 100) ; }
+    }
+
     public WindowState State
     {
         get

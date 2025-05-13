@@ -89,7 +89,7 @@ public partial class TaskButton : UserControl
         }
         else
             TitleColumn.Width = new GridLength(0, GridUnitType.Pixel);
-
+        ProgressRectangle.SetBinding(WidthProperty, new Binding("PercentProgressValue") { Converter = new ProgressConverter(), ConverterParameter = TitleColumn.ActualWidth });
         _isLoaded = true;
     }
 

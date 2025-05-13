@@ -15,6 +15,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
         <converters:MultipleInstanceAlignmentConverter x:Key="multipleInstanceAlignmentConverter"/>
+        <converters:ProgressConverter x:Key="ProgressConverter" />
         <explorerConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility"/>
     </UserControl.Resources>
     <Grid>
@@ -22,6 +23,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="2"/>
         </Grid.RowDefinitions>
+        <Rectangle Grid.RowSpan="2" Panel.ZIndex="-1" HorizontalAlignment="Left" Fill="Green" Width="{Binding PercentProgressValue, Converter={StaticResource ProgressConverter},ConverterParameter=0}" Height="auto" Name="ProgressRectangle"/>
         <Button Name="AppButton" BorderThickness="0" AllowDrop="True"
                 Grid.Row="0"
                 ToolTip="{Binding Title}"
@@ -33,6 +35,7 @@
                     <ColumnDefinition Width="*" x:Name="IconColumn"/>
                     <ColumnDefinition Width="auto" x:Name="TitleColumn"/>
                 </Grid.ColumnDefinitions>
+                <Rectangle Fill="Green" Height="auto" Width="{Binding PercentProgressValue}" HorizontalAlignment="Left"/>
                 <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIconBack" Margin="34,0,0,0"
                        Style="{DynamicResource TaskIcon}" HorizontalAlignment="Right" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}"/>
                 <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
