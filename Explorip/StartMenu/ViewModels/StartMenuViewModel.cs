@@ -54,7 +54,7 @@ public partial class StartMenuViewModel : ObservableObject
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(0, 0, 0, 0),
+            Margin = new Thickness(-25, 0, 0, 0),
         };
         _cmStartMenu.AddEntry(Constants.Localization.SHOW_SECOND_START_MENU_PANEL, ChangeShowPanel2);
         _cmStartMenu.AddEntry(Constants.Localization.SHOW_STARTMENUITEM_STARTWINDOW, ChangeShowStartPrograms);

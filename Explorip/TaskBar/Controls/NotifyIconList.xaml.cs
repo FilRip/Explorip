@@ -130,7 +130,7 @@ public partial class NotifyIconList : UserControl
         {
             Interval = TimeSpan.FromMilliseconds(e.Balloon.Timeout + 500) // Keep it around for a few ms for the animation to complete
         };
-        unpromoteTimer.Tick += (object mysender, EventArgs ea) =>
+        unpromoteTimer.Tick += (mysender, ea) =>
         {
             if (promotedIcons.Contains(notifyIcon))
                 promotedIcons.Remove(notifyIcon);

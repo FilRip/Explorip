@@ -16,7 +16,7 @@ public static class ExtensionsMenuItem
             Margin = new Thickness(0),
             BorderThickness = new Thickness(0),
         };
-        mi.Click += (object sender, RoutedEventArgs e) =>
+        mi.Click += (sender, e) =>
         {
             click();
         };

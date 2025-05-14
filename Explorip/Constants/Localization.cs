@@ -294,6 +294,7 @@ public static class Localization
             TASKBAR_SHOW_SEARCH = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SystemSettings/Resources/SystemSettings_DesktopTaskbar_Search_Icon}", "Show search button");
             SMALL_ICON_TASKBAR = Load("shell32.dll", 31063, "Small icons");
             TASKBAR_SHOW_DESKTOP = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SystemSettings/Resources/SystemSettings_DesktopTaskbar_Sd}", "Show desktop preview button");
+            SHOW_SECOND_START_MENU_PANEL = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SystemSettings/Resources/SystemSettings_Start_MorePinnedLayout/Content}", "Show more tiles in start menu");
         }
         else
         {
@@ -302,6 +303,7 @@ public static class Localization
             TASKBAR_SHOW_SEARCH = LoadMenuItem("explorer.exe", 205, 433, "Show search button", 0).Replace("&", "_");
             SMALL_ICON_TASKBAR = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Taskbar_SmallButtons/Description}", "Use small icon for button of task bar");
             TASKBAR_SHOW_DESKTOP = Load("uiautomationcore.dll", 1, "Button") + " " + Load("explorer.exe", 22000, "Desktop").ToLower();
+            SHOW_SECOND_START_MENU_PANEL = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_MoreTilesEnabled/Description}", "Show more tiles in start menu");
         }
         RENAME_MENUITEM_WPF = RENAME_MENUITEM.Replace("&", "_");
         ASK_DOWNLOAD_NEW_VERSION = Load("wscapi.dll", 6104, "Do you want to update %1");
@@ -310,7 +312,6 @@ public static class Localization
         CHANGE_BACKGROUND_COLOR = Load("ieframe.dll", 20051, "Background color");
         CHANGE_FONT_COLOR = Load("ieframe.dll", 20055, "Font color");
         CUSTOM_COLOR = Load("uiribbon.dll", 147, "Custom colors");
-        SHOW_SECOND_START_MENU_PANEL = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_MoreTilesEnabled/Description}", "Show more tiles in start menu");
         SHOW_STARTMENUITEM_STARTWINDOW = LoadMsResourceString("@{windows?ms-resource://Windows.UI.SettingsAppThreshold/SearchResources/SystemSettings_Start_ShowAppList/Description}", "Show applications in start menu");
         SEARCH = Load("shell32.dll", 32872, "Search");
         UPDATE_AND_SHUTDOWN = Load("shutdownux.dll", 3026, "Update and shutdown");
