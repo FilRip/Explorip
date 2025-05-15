@@ -84,11 +84,11 @@ public partial class StartButton : System.Windows.Controls.UserControl
                 pendingOpenTimer.Start();
                 try
                 {
-                    IntPtr pointeurMenuDemarrer = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
-                    if (pointeurMenuDemarrer != IntPtr.Zero)
+                    IntPtr ptrStartMenuWindow = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
+                    if (ptrStartMenuWindow != IntPtr.Zero)
                     {
                         Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
-                        NativeMethods.SetWindowPos(pointeurMenuDemarrer, IntPtr.Zero, (int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height, NativeMethods.SWP.SWP_NOACTIVATE);
+                        NativeMethods.SetWindowPos(ptrStartMenuWindow, IntPtr.Zero, (int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height, NativeMethods.SWP.SWP_NOACTIVATE);
                     }
                     ShellHelper.ShowStartMenu();
                 }
