@@ -89,7 +89,7 @@ public partial class TaskButton : UserControl
         }
         else
             TitleColumn.Width = new GridLength(0, GridUnitType.Pixel);
-        ProgressRectangle.SetBinding(WidthProperty, new Binding("PercentProgressValue") { Converter = new ProgressConverter(), ConverterParameter = TitleColumn.ActualWidth });
+
         _isLoaded = true;
     }
 
@@ -314,4 +314,12 @@ public partial class TaskButton : UserControl
     }
 
     #endregion
+
+    private void TextBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        double newWidth = IconColumn.ActualWidth;
+        if (ConfigManager.ShowTitleApplicationWindow)
+            newWidth += TitleColumn.ActualWidth;
+        ProgressRectangle.SetBinding(WidthProperty, new Binding("PercentProgressValue") { Converter = new ProgressConverter(), ConverterParameter = newWidth });
+    }
 }

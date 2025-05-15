@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(0, 0, 0, 0),
+            Margin = new Thickness(0),
         };
     }
 
@@ -239,10 +240,17 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
                 Source = item.SmallIcon,
             },
             BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(0, 0, 0, 0),
+            Margin = new Thickness(0),
             Tag = item,
             IsCheckable = false,
         };
+        if (mi.Icon == null)
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+            while (mi.Icon == null && sw.ElapsedMilliseconds < 3000)
+                mi.Icon = item.SmallIcon;
+            sw.Stop();
+        }
         mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
         mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
         return mi;

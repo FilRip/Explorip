@@ -219,6 +219,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private void SetGroupApplicationWindows()
     {
         IsGroupedApplicationWindow = ConfigManager.GroupedApplicationWindow;
+        MyTaskbarApp.MyShellManager.TasksService.GroupApplicationsWindows = IsGroupedApplicationWindow;
     }
 
     private void RefreshTaskList()
@@ -246,16 +247,17 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         ParentTaskbar.MenuToolbars.Items.Clear();
         foreach (string path in ConfigManager.ToolbarsPath)
         {
+            IExploripToolbar plugin = null;
             string title = null;
             if (Guid.TryParse(path, out Guid guid))
             {
-                IExploripToolbar plugin = PluginsManager.GetPlugin(guid);
+                plugin = PluginsManager.GetPlugin(guid);
                 if (plugin != null)
                     title = plugin.Name;
             }
             else
             {
-                ShellFolder sf = new(path, IntPtr.Zero);
+                ShellFolder sf = new(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero);
                 title = sf.DisplayName;
                 sf.Dispose();
             }
@@ -265,6 +267,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                 {
                     Header = title,
                     Tag = path,
+                    Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+                    Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
                     Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle"),
                 };
                 item.Items.Add(new MenuItem()
@@ -288,8 +292,26 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                     IsChecked = !ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(title),
                 });
                 ((MenuItem)item.Items[2]).Click += ChangeShowLargeIcon;
+                if (plugin == null)
+                {
+                    item.Items.Add(new MenuItem()
+                    {
+                        Header = Constants.Localization.OPEN_FOLDER,
+                        Tag = path,
+                    });
+                    ((MenuItem)item.Items[3]).Click += OpenToolbarFolder;
+                }
+
                 ParentTaskbar.MenuToolbars.Items.Add(item);
             }
+        }
+    }
+
+    private static void OpenToolbarFolder(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string path)
+        {
+            ShellHelper.StartProcess(Environment.ExpandEnvironmentVariables(path), useShellExecute: true, verb: "open");
         }
     }
 

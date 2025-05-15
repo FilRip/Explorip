@@ -54,31 +54,31 @@ public partial class StartMenuViewModel : ObservableObject
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(-25, 0, 0, 0),
+            Margin = new Thickness(-30, 0, 0, 0),
         };
-        _cmStartMenu.AddEntry(Constants.Localization.SHOW_SECOND_START_MENU_PANEL, ChangeShowPanel2);
-        _cmStartMenu.AddEntry(Constants.Localization.SHOW_STARTMENUITEM_STARTWINDOW, ChangeShowStartPrograms);
-        _cmStartMenu.AddEntry(Constants.Localization.REFRESH, RefreshAll);
-        _cmStartMenu.AddEntry(Constants.Localization.CUSTOM_COLOR, ShowCustomColor);
+        CreateMenuItem(_cmStartMenu, Constants.Localization.SHOW_SECOND_START_MENU_PANEL, ChangeShowPanel2);
+        CreateMenuItem(_cmStartMenu, Constants.Localization.SHOW_STARTMENUITEM_STARTWINDOW, ChangeShowStartPrograms);
+        CreateMenuItem(_cmStartMenu, Constants.Localization.REFRESH, RefreshAll);
+        CreateMenuItem(_cmStartMenu, Constants.Localization.CUSTOM_COLOR, ShowCustomColor);
 
         _cmUser = new()
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(0, 0, 0, 0),
+            Margin = new Thickness(-30, 0, 0, 0),
         };
-        _cmUser.AddEntry(Constants.Localization.LOCK, ShellHelper.Lock);
-        _cmUser.AddEntry(Constants.Localization.DISCONNECT, ShellHelper.Logoff);
+        CreateMenuItem(_cmUser, Constants.Localization.LOCK, ShellHelper.Lock);
+        CreateMenuItem(_cmUser, Constants.Localization.DISCONNECT, ShellHelper.Logoff);
 
         _cmStop = new()
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(0, 0, 0, 0),
+            Margin = new Thickness(-30, 0, 0, 0),
         };
-        _cmStop.AddEntry(Constants.Localization.PUT_HYBERNATE, Hybernate);
-        _cmStop.AddEntry(Constants.Localization.SHUTDOWN, Shutdown);
-        _cmStop.AddEntry(Constants.Localization.RESTART, Restart);
+        CreateMenuItem(_cmStop, Constants.Localization.PUT_HYBERNATE, Hybernate);
+        CreateMenuItem(_cmStop, Constants.Localization.SHUTDOWN, Shutdown);
+        CreateMenuItem(_cmStop, Constants.Localization.RESTART, Restart);
 
         #endregion
 
@@ -93,6 +93,24 @@ public partial class StartMenuViewModel : ObservableObject
         _height = ConfigManager.StartMenuHeight;
 
         RefreshAll();
+    }
+
+    private static void CreateMenuItem(ContextMenu cm, string label, Action onClick)
+    {
+        MenuItem mi = new()
+        {
+            Header = label,
+            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+            BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            Margin = new Thickness(0, 0, 0, 0),
+            IsCheckable = false,
+        };
+        mi.Click += (sender, e) =>
+        {
+            onClick();
+        };
+        cm.Items.Add(mi);
     }
 
     public static bool IsHybernateEnabled

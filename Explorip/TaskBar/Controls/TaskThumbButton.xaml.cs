@@ -52,6 +52,8 @@ public partial class TaskThumbButton : Window
         Owner = parent.TaskbarParent;
         Point positionParent = _parent.PointToScreen(Mouse.GetPosition(this));
         Left = (int)((positionParent.X - (Width / 2)) / VisualTreeHelper.GetDpi(this).DpiScaleX);
+        if (parent.ApplicationWindow.ListWindows.Count == 1)
+            Left += Width / 2;
         Top = parent.TaskbarParent.Top - Height;
         _timerBeforePreviewWindow = new Timer(ShowPreviewWindow, null, Timeout.Infinite, Timeout.Infinite);
         _lastPeek = IntPtr.Zero;

@@ -40,7 +40,7 @@
                        Style="{DynamicResource TaskIcon}" HorizontalAlignment="Right" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}"/>
                 <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
                        Style="{DynamicResource TaskIcon}" HorizontalAlignment="{Binding MultipleInstanceLaunched, Converter={StaticResource multipleInstanceAlignmentConverter}}"/>
-                <TextBlock Grid.Column="1" Text="{Binding Title}" Margin="0" VerticalAlignment="Center" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                <TextBlock Grid.Column="1" Text="{Binding Title}" Margin="0" VerticalAlignment="Center" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" SizeChanged="TextBlock_SizeChanged"/>
             </Grid>
             <Button.ContextMenu>
                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
