@@ -257,6 +257,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                         {
                             MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
                             appWin.ListWindows.AddRange(win.ListWindows);
+                            appWin.SetTitle();
                             if (appWin.ListWindows.Count > 1)
                                 appWin.State = ApplicationWindow.WindowState.Unknown;
                             else

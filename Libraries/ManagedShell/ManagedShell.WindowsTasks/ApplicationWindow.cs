@@ -193,7 +193,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
-    private void SetTitle()
+    public void SetTitle()
     {
         string title = "";
         try
@@ -204,6 +204,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             title = stringBuilder.ToString();
         }
         catch { /* Ignore errors */ }
+
+        if (IsPinnedApp && string.IsNullOrWhiteSpace(title))
+            title = System.IO.Path.GetFileNameWithoutExtension(PinnedShortcut);
 
         if (_title != title)
             Title = title;

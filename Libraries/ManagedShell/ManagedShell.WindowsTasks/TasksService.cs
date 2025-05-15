@@ -287,6 +287,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             else
             {
                 win.ListWindows.Remove(hWnd);
+                win.SetTitle();
                 win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
                 win.OnPropertyChanged(nameof(ApplicationWindow.MultipleInstanceLaunched));
             }
@@ -571,7 +572,10 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 if (win == null)
                     AddWindow(hWnd);
                 else
+                {
                     win.ListWindows.Add(hWnd);
+                    win.SetTitle();
+                }
             }
         }
         if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && win != null)
