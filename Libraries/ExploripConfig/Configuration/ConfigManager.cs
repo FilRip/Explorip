@@ -36,6 +36,7 @@ public static class ConfigManager
         if (allowWrite && _registryKeyExplorer != null)
         {
             // If empty config in registry, set default settings
+
             // Explorer
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Theme", "").ToString()))
                 _registryKeyExplorer.SetValue("Theme", "System");
@@ -90,6 +91,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("MaxWidthTitleApplicationWindow", "100");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MaxRecursiveSubFolderInToolbar", "").ToString()))
                 _registryRootTaskbar.SetValue("MaxRecursiveSubFolderInToolbar", "5");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ProgressBarHeight", "").ToString()))
+                _registryRootTaskbar.SetValue("ProgressBarHeight", "2");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -443,6 +446,16 @@ public static class ConfigManager
         {
             if (MaxRecursiveSubFolderInToolbar != value && AllowWrite)
                 _registryRootTaskbar.SetValue("MaxRecursiveSubFolderInToolbar", value.ToString());
+        }
+    }
+
+    public static double TaskbarProgressBarHeight
+    {
+        get { return _registryRootTaskbar.ReadDouble("ProgressBarHeight"); }
+        set
+        {
+            if (TaskbarProgressBarHeight != value && AllowWrite)
+                _registryRootTaskbar.SetValue("ProgressBarHeight", value.ToString());
         }
     }
 

@@ -89,6 +89,7 @@ public partial class TaskButton : UserControl
         }
         else
             TitleColumn.Width = new GridLength(0, GridUnitType.Pixel);
+        ProgressBarWindow.Height = ConfigManager.TaskbarProgressBarHeight;
 
         _isLoaded = true;
     }
