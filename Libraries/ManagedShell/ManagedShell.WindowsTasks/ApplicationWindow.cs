@@ -291,6 +291,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
+    public bool IsInProgress
+    {
+        get { return ProgressState != NativeMethods.TBPFLAG.TBPF_NOPROGRESS; }
+    }
+
     public NativeMethods.TBPFLAG ProgressState
     {
         get
@@ -305,6 +310,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 ProgressValue = 0;
 
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsInProgress));
         }
     }
 
@@ -318,6 +324,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             _progressValue = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(PercentProgressValue));
         }
     }
 
