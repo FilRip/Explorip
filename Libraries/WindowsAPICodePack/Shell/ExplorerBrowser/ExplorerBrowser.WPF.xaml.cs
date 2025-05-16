@@ -31,23 +31,29 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         // the ExplorerBrowser WinForms control
         ExplorerBrowserControl = new Shell.ExplorerBrowser.ExplorerBrowser();
 
-        // host the control           
-        WindowsFormsHost host = new()
-        {
-            Focusable = true,
-        };
-        try
-        {
-            host.Child = ExplorerBrowserControl;
-            this.AddChild(host);
-        }
-        catch
-        {
-            host.Dispose();
-            throw;
-        }
+        Init();
 
         Loaded += new RoutedEventHandler(ExplorerBrowser_Loaded);
+    }
+
+    private void Init()
+    {
+        WindowsFormsHost host = null;
+        try
+        {
+            // host the control           
+            host = new WindowsFormsHost()
+            {
+                Focusable = true,
+                Child = ExplorerBrowserControl,
+            };
+            this.AddChild(host);
+        }
+        catch (Exception)
+        {
+            host?.Dispose();
+            throw;
+        }
     }
 
     /// <summary>

@@ -156,6 +156,7 @@ public static class Localization
     public static string TASKBAR_SHOW_DESKTOP { get; private set; }
     public static string TASKBAR_GROUP_APPLICATION_WINDOW { get; private set; }
     public static string VISIBLE { get; private set; }
+    public static string NOTIFICATION_CENTER { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -320,6 +321,7 @@ public static class Localization
         TASKBAR = Load("explorer.exe", 518, "Taskbar");
         TASKBAR_GROUP_APPLICATION_WINDOW = Load("shell32.dll", 24289, "Regroup same application windows in taskbar");
         VISIBLE = Load("propsys.dll", 42120, "Visible");
+        NOTIFICATION_CENTER = Load("explorer.exe", 852, "Notifications center");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

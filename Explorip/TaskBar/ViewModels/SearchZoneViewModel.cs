@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using System.Windows.Input;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,6 +16,8 @@ using Explorip.TaskBar.Controls;
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
+
+using WpfScreenHelper;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -48,7 +52,7 @@ public partial class SearchZoneViewModel : ObservableObject
     {
         ShellHelper.ShellKeyCombo(VK.LWIN, VK.KEY_S);
         Stopwatch stopwatch = Stopwatch.StartNew();
-        IntPtr ptrForegroundWindow;
+        IntPtr ptrForegroundWindow = IntPtr.Zero;
         while (stopwatch.ElapsedMilliseconds < 2000)
         {
             Thread.Sleep(10);
@@ -61,6 +65,13 @@ public partial class SearchZoneViewModel : ObservableObject
         stopwatch.Stop();
         if (stopwatch.ElapsedMilliseconds >= 2000)
             return;
+        Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
+        Taskbar currentTaskbar = ((MyTaskbarApp)Application.Current).ListAllTaskbar().FirstOrDefault(t => t.ScreenName == screen.DeviceName.TrimStart('.', '\\'));
+        if (currentTaskbar != null)
+        {
+            GetWindowRect(ptrForegroundWindow, out ManagedShell.Interop.NativeMethods.Rect rect);
+            SetWindowPos(ptrForegroundWindow, IntPtr.Zero, (int)currentTaskbar.Left, (int)currentTaskbar.Top - rect.Height, rect.Width, rect.Height, SWP.SWP_SHOWWINDOW);
+        }
         Thread.Sleep(200);
         List<Input> listKeys = [];
         Input i;

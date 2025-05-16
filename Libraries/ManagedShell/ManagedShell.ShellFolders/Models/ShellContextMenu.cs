@@ -30,6 +30,11 @@ internal class ShellContextMenu : NativeWindow
 
     internal ShellContextMenu()
     {
+        Init();
+    }
+
+    private void Init()
+    {
         CreateHandle(new CreateParams());
     }
 

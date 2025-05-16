@@ -23,7 +23,7 @@ public class ShellWindow : NativeWindowEx, IDisposable
         cp.X = SystemInformation.VirtualScreen.Left;
         cp.Y = SystemInformation.VirtualScreen.Top;
 
-        CreateHandle(cp);
+        Init(cp);
         MessageReceived += WndProc;
         NativeMethods.SetWindowLong(Handle, NativeMethods.GWL.GWL_EXSTYLE,
             NativeMethods.GetWindowLong(Handle, NativeMethods.GWL.GWL_EXSTYLE) &
@@ -34,6 +34,11 @@ public class ShellWindow : NativeWindowEx, IDisposable
             // we did it
             IsShellWindow = true;
         }
+    }
+
+    private void Init(CreateParams cp)
+    {
+        CreateHandle(cp);
     }
 
     public void SetSize()
