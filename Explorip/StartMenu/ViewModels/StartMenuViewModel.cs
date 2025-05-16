@@ -54,10 +54,10 @@ public partial class StartMenuViewModel : ObservableObject
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(-30, 0, 0, 0),
+            Margin = new Thickness(0),
         };
-        CreateMenuItem(_cmStartMenu, Constants.Localization.SHOW_SECOND_START_MENU_PANEL, ChangeShowPanel2);
-        CreateMenuItem(_cmStartMenu, Constants.Localization.SHOW_STARTMENUITEM_STARTWINDOW, ChangeShowStartPrograms);
+        CreateMenuItem(_cmStartMenu, Constants.Localization.SHOW_SECOND_START_MENU_PANEL, ChangeShowPanel2, true);
+        CreateMenuItem(_cmStartMenu, Constants.Localization.SHOW_STARTMENUITEM_STARTWINDOW, ChangeShowStartPrograms, true);
         CreateMenuItem(_cmStartMenu, Constants.Localization.REFRESH, RefreshAll);
         CreateMenuItem(_cmStartMenu, Constants.Localization.CUSTOM_COLOR, ShowCustomColor);
 
@@ -65,7 +65,7 @@ public partial class StartMenuViewModel : ObservableObject
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(-30, 0, 0, 0),
+            Margin = new Thickness(0),
         };
         CreateMenuItem(_cmUser, Constants.Localization.LOCK, ShellHelper.Lock);
         CreateMenuItem(_cmUser, Constants.Localization.DISCONNECT, ShellHelper.Logoff);
@@ -74,7 +74,7 @@ public partial class StartMenuViewModel : ObservableObject
         {
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(-30, 0, 0, 0),
+            Margin = new Thickness(0),
         };
         CreateMenuItem(_cmStop, Constants.Localization.PUT_HYBERNATE, Hybernate);
         CreateMenuItem(_cmStop, Constants.Localization.SHUTDOWN, Shutdown);
@@ -95,7 +95,7 @@ public partial class StartMenuViewModel : ObservableObject
         RefreshAll();
     }
 
-    private static void CreateMenuItem(ContextMenu cm, string label, Action onClick)
+    private static void CreateMenuItem(ContextMenu cm, string label, Action onClick, bool checkable = false)
     {
         MenuItem mi = new()
         {
@@ -103,8 +103,8 @@ public partial class StartMenuViewModel : ObservableObject
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(0, 0, 0, 0),
-            IsCheckable = false,
+            Margin = new Thickness(0),
+            IsCheckable = checkable,
         };
         mi.Click += (sender, e) =>
         {
@@ -262,6 +262,8 @@ public partial class StartMenuViewModel : ObservableObject
     [RelayCommand()]
     private void StartButton()
     {
+        ((MenuItem)_cmStartMenu.Items[0]).IsChecked = ShowPanel2;
+        ((MenuItem)_cmStartMenu.Items[1]).IsChecked = ShowApplicationsPrograms;
         _cmStartMenu.IsOpen = true;
     }
 
