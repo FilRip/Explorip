@@ -48,6 +48,6 @@ You can make plugins. Plugins will be available like toolbar, to add custom cont
 
 Tested under
 ------------
-- Windows 10 22H2 build 19041
+- Windows 10 22H2 build 19041 (no more tested since version > 1.1.2.1, but must work)
 - Windows 11 23H2 build 22631
 - Windows 11 24H2 build 26100
