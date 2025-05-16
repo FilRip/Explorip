@@ -226,9 +226,13 @@ public partial class TaskButton : UserControl
             return;
         Application.Current.Dispatcher.Invoke(() =>
         {
-            _thumb?.Close();
-            _thumb = new TaskThumbButton(this);
-            _thumb.Show();
+            try
+            {
+                _thumb?.Close();
+                _thumb = new TaskThumbButton(this);
+                _thumb.Show();
+            }
+            catch (Exception) { /* Ignore errors */ }
         });
     }
 

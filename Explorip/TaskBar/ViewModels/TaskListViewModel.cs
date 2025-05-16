@@ -38,7 +38,9 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     [ObservableProperty()]
     private GridLength _buttonWidth, _buttonHeight;
     [ObservableProperty()]
-    private GridLength _buttonRightMargin, _buttonBottomMargin, _titleLength;
+    private GridLength _buttonRightMargin, _buttonBottomMargin;
+    [ObservableProperty()]
+    private double _titleLength;
 
     public TaskListViewModel() : base()
     {
@@ -107,13 +109,12 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         ButtonWidth = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20, GridUnitType.Pixel);
         ButtonHeight = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 13, GridUnitType.Pixel);
+        TitleLength = ButtonWidth.Value;
         if (ConfigManager.ShowTitleApplicationWindow)
         {
             ButtonWidth = GridLength.Auto;
-            TitleLength = new GridLength(ConfigManager.MaxWidthTitleApplicationWindow, GridUnitType.Pixel);
+            TitleLength += ConfigManager.MaxWidthTitleApplicationWindow;
         }
-        else
-            TitleLength = ButtonWidth;
 
         ButtonRightMargin = new GridLength(0, GridUnitType.Pixel);
         ButtonBottomMargin = new GridLength(0, GridUnitType.Pixel);
