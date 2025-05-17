@@ -16,6 +16,7 @@ using Explorip.TaskBar.Controls;
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 using WpfScreenHelper;
 
@@ -70,7 +71,7 @@ public partial class SearchZoneViewModel : ObservableObject
         if (currentTaskbar != null)
         {
             GetWindowRect(ptrForegroundWindow, out ManagedShell.Interop.NativeMethods.Rect rect);
-            SetWindowPos(ptrForegroundWindow, IntPtr.Zero, (int)currentTaskbar.Left, (int)currentTaskbar.Top - rect.Height, rect.Width, rect.Height, SWP.SWP_SHOWWINDOW);
+            SetWindowPos(ptrForegroundWindow, IntPtr.Zero, (int)currentTaskbar.Left, (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
         }
         Thread.Sleep(200);
         List<Input> listKeys = [];
