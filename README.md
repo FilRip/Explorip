@@ -7,11 +7,11 @@ Look at Settings in Wiki : <a href="https://github.com/FilRip/Explorip/wiki/Sett
 ------------
 Example with a classic Windows 11
 
-<img src="Win11Taskbar.png">
+<img src="DemoImg\Win11Taskbar.png">
 
 And an example with Explorip (and a custom toolbar called QuickLaunch in Win10)
 
-<img src="Win11Explorip.png">
+<img src="DemoImg\Win11Explorip.png">
 
 
 
@@ -25,7 +25,7 @@ You can open command prompt or powershell too in any tabs. Same for a registry e
 
 Sample of Explorip explorer with two tabs :
 
-<img src="ExplorerDemo.png">
+<img src="DemoImg\ExplorerDemo.png">
 
 
 
