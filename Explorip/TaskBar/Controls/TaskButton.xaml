@@ -29,6 +29,7 @@
                 Grid.Row="0"
                 ToolTip="{Binding Title}"
                 Click="AppButton_OnClick"
+                Drop="AppButton_Drop"
                 PreviewMouseDown="AppButton_OnPreviewMouseDown"
                 DragEnter="AppButton_OnDragEnter">
             <Grid Margin="0">

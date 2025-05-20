@@ -125,7 +125,7 @@ namespace Explorip.StartMenu.Window
             if (IsVisible)
             {
                 Screen screen = MouseHelper.MouseScreen;
-                Left = screen.WorkingArea.X;
+                Left = screen.WpfWorkingArea.X;
                 Height = MyDataContext.Height;
                 Top = (int)(screen.WorkingArea.Bottom / screen.ScaleFactor) - Height;
             }

@@ -233,7 +233,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 };
                 if (string.Compare(appWin.WinFileName, Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe"), StringComparison.OrdinalIgnoreCase) == 0 && !string.IsNullOrWhiteSpace(appWin.Arguments) && appWin.Arguments.StartsWith("shell:AppsFolder\\"))
                     appWin.SetIsUWP();
-                appWin.SetTitle(Path.GetFileNameWithoutExtension(file));
+                appWin.SetTitle();
                 if (orders.TryGetValue(Path.GetFileName(file), out int position))
                     appWin.Position = position;
                 if (string.IsNullOrWhiteSpace(appWin.WinFileName))

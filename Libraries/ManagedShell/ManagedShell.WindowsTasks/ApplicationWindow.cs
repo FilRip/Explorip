@@ -198,10 +198,13 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         string title = "";
         try
         {
-            StringBuilder stringBuilder = new(MAX_STRING_SIZE);
-            NativeMethods.GetWindowText(_windows[0], stringBuilder, MAX_STRING_SIZE);
+            if (_windows?.Count > 0)
+            {
+                StringBuilder stringBuilder = new(MAX_STRING_SIZE);
+                NativeMethods.GetWindowText(_windows[0], stringBuilder, MAX_STRING_SIZE);
 
-            title = stringBuilder.ToString();
+                title = stringBuilder.ToString();
+            }
         }
         catch { /* Ignore errors */ }
 
@@ -210,11 +213,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
         if (_title != title)
             Title = title;
-    }
-
-    public void SetTitle(string newTitle)
-    {
-        Title = newTitle;
     }
 
     public string ClassName
@@ -648,7 +646,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             NativeMethods.ShowWindow(handle, NativeMethods.WindowShowStyle.Show);
             NativeMethods.SetForegroundWindow(handle);
 
-            if (State == WindowState.Flashing) State = WindowState.Active; // some stubborn windows (Outlook) start flashing while already active, this lets us stop
+            // some stubborn windows (Outlook) start flashing while already active, this lets us stop
+            if (State == WindowState.Flashing)
+                State = WindowState.Active;
         }
     }
 
@@ -807,11 +807,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
-    public bool StartNewInstance()
+    public bool StartNewInstance(string arguments = null)
     {
         if (IsUWP)
             return ShellHelper.StartProcess("explorer.exe", $"shell:AppsFolder\\{AppUserModelID}");
         else
-            return ShellHelper.StartProcess(WinFileName, Arguments);
+            return ShellHelper.StartProcess(WinFileName, (string.IsNullOrWhiteSpace(arguments) ? Arguments : arguments));
     }
 }

@@ -70,8 +70,8 @@ public partial class SearchZoneViewModel : ObservableObject
         Taskbar currentTaskbar = ((MyTaskbarApp)Application.Current).ListAllTaskbar().FirstOrDefault(t => t.ScreenName == screen.DeviceName.TrimStart('.', '\\'));
         if (currentTaskbar != null)
         {
-            GetWindowRect(ptrForegroundWindow, out ManagedShell.Interop.NativeMethods.Rect rect);
-            SetWindowPos(ptrForegroundWindow, IntPtr.Zero, (int)currentTaskbar.Left, (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
+            GetWindowRect(ptrForegroundWindow, out NativeMethods.Rect rect);
+            SetWindowPos(ptrForegroundWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
         }
         Thread.Sleep(200);
         List<Input> listKeys = [];

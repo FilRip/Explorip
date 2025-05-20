@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -165,7 +166,7 @@ public partial class TaskButton : UserControl
 
     #endregion
 
-    #region Drag
+    #region Drag'n Drop
 
     private void DragMouseDown()
     {
@@ -184,11 +185,24 @@ public partial class TaskButton : UserControl
     {
         if (e.Data is DataObject data)
         {
-            ApplicationWindow appWin = (ApplicationWindow)data.GetData(typeof(ApplicationWindow));
-            if (appWin != _appWindow)
+            if (data.GetDataPresent(typeof(ApplicationWindow)))
             {
-                (_appWindow.Position, appWin.Position) = (appWin.Position, _appWindow.Position);
-                this.FindVisualParent<TaskList>().MyDataContext.RefreshMyCollectionView();
+                ApplicationWindow appWin = (ApplicationWindow)data.GetData(typeof(ApplicationWindow));
+                if (appWin != _appWindow)
+                {
+                    (_appWindow.Position, appWin.Position) = (appWin.Position, _appWindow.Position);
+                    this.FindVisualParent<TaskList>().MyDataContext.RefreshMyCollectionView();
+                }
+            }
+            else if (data.GetFileDropList()?.Count > 0)
+            {
+                if (_appWindow.ListWindows.Count == 1)
+                    _appWindow.BringToFront();
+                else if (_appWindow.ListWindows.Count > 1)
+                {
+                    _mouseOver = true;
+                    ShowThumbnail(null);
+                }
             }
         }
     }
@@ -202,6 +216,21 @@ public partial class TaskButton : UserControl
             data.SetData(_appWindow);
             DragDrop.DoDragDrop(this, _appWindow, DragDropEffects.Move);
             _startDrag = true;
+        }
+    }
+
+    private void AppButton_Drop(object sender, DragEventArgs e)
+    {
+        if (e.Data is DataObject data && data.GetFileDropList()?.Count > 0)
+        {
+            StringBuilder arguments = new();
+            foreach (string file in data.GetFileDropList())
+            {
+                if (arguments.Length > 0)
+                    arguments.Append(' ');
+                arguments.Append("\"" + file + "\"");
+            }
+            _appWindow.StartNewInstance(arguments.ToString());
         }
     }
 

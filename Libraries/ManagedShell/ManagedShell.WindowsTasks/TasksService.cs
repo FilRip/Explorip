@@ -359,6 +359,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                 if (win != null)
                                 {
                                     win.State = ApplicationWindow.WindowState.Active;
+                                    win.SetTitle();
                                     win.SetShowInTaskbar();
                                 }
                                 else
@@ -580,7 +581,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         }
         if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && win != null)
         {
-            win?.Uncloak();
+            win.Uncloak();
             WindowUncloaked?.Invoke(hWnd);
         }
     }
