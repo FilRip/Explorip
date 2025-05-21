@@ -52,26 +52,13 @@ public partial class SearchZoneViewModel : ObservableObject
     private void ShowSearch()
     {
         ShellHelper.ShellKeyCombo(VK.LWIN, VK.KEY_S);
-        Stopwatch stopwatch = Stopwatch.StartNew();
-        IntPtr ptrForegroundWindow = IntPtr.Zero;
-        while (stopwatch.ElapsedMilliseconds < 2000)
-        {
-            Thread.Sleep(10);
-            ptrForegroundWindow = GetForegroundWindow();
-            StringBuilder sb = new(256);
-            GetClassName(ptrForegroundWindow, sb, 256);
-            if (sb.ToString() == "Windows.UI.Core.CoreWindow")
-                break;
-        }
-        stopwatch.Stop();
-        if (stopwatch.ElapsedMilliseconds >= 2000)
-            return;
+        IntPtr ptrSearchWindow = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.SEARCH);
         Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
         Taskbar currentTaskbar = ((MyTaskbarApp)Application.Current).ListAllTaskbar().FirstOrDefault(t => t.ScreenName == screen.DeviceName.TrimStart('.', '\\'));
         if (currentTaskbar != null)
         {
-            GetWindowRect(ptrForegroundWindow, out NativeMethods.Rect rect);
-            SetWindowPos(ptrForegroundWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
+            GetWindowRect(ptrSearchWindow, out NativeMethods.Rect rect);
+            SetWindowPos(ptrSearchWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
         }
         Thread.Sleep(200);
         List<Input> listKeys = [];

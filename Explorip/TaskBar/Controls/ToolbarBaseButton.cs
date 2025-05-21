@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,7 @@ using Explorip.Helpers;
 
 using ExploripConfig.Configuration;
 
+using ManagedShell.Common.Helpers;
 using ManagedShell.ShellFolders;
 using ManagedShell.ShellFolders.Enums;
 
@@ -34,6 +36,7 @@ public class ToolbarBaseButton : UserControl
         PreviewMouseDown += DragMouseDown;
         PreviewMouseUp += DragMouseUp;
         DragEnter += OnDragEnter;
+        Drop += OnDrop;
         MouseEnter += ToolbarBaseButton_MouseEnter;
         MouseLeave += ToolbarBaseButton_MouseLeave;
     }
@@ -254,13 +257,45 @@ public class ToolbarBaseButton : UserControl
 
     protected void OnDragEnter(object sender, DragEventArgs e)
     {
-        if (e.Data is DataObject data)
+        if (e.Data is DataObject data && data.GetDataPresent(typeof(ShellFile)))
         {
             ShellFile shellFile = (ShellFile)data.GetData(typeof(ShellFile));
             if (shellFile != DataContext)
             {
                 (MyDataContext.Position, shellFile.Position) = (shellFile.Position, MyDataContext.Position);
                 this.FindVisualParent<Toolbar>().MyDataContext.RefreshMyCollectionView();
+            }
+        }
+    }
+
+    protected void OnDrop(object sender, DragEventArgs e)
+    {
+        if (e.Data is DataObject data && data.GetFileDropList()?.Count > 0)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                string toolbarPath = Path.GetDirectoryName(MyDataContext.Path);
+                foreach (string file in data.GetFileDropList())
+                {
+                    if (Path.GetExtension(file) == ".lnk")
+                        File.Copy(file, Path.Combine(toolbarPath, Path.GetFileName(file)));
+                    else
+                    {
+                        Shortcut sc = Shortcut.CreateShortcut(file);
+                        sc.WriteToFile(Path.Combine(toolbarPath, Path.GetFileNameWithoutExtension(file) + ".lnk"));
+                    }
+                }
+            }
+            else
+            {
+                StringBuilder sb = new();
+                foreach (string file in data.GetFileDropList())
+                {
+                    if (sb.Length > 0)
+                        sb.Append(' ');
+                    sb.Append("\"" + file + "\"");
+                }
+                ShellHelper.StartProcess(MyDataContext.Path, sb.ToString());
             }
         }
     }

@@ -315,7 +315,7 @@ public static class Localization
         CHANGE_BACKGROUND_COLOR = Load("ieframe.dll", 20051, "Background color");
         CHANGE_FONT_COLOR = Load("ieframe.dll", 20055, "Font color");
         CUSTOM_COLOR = Load("uiribbon.dll", 147, "Custom colors");
-        SEARCH = Load("shell32.dll", 32872, "Search");
+        SEARCH = Load("explorerframe.dll", 12897, "Search");
         UPDATE_AND_SHUTDOWN = Load("shutdownux.dll", 3026, "Update and shutdown");
         UPDATE_AND_RESTART = Load("shutdownux.dll", 3030, "Update and restart");
         TASKBAR = Load("explorer.exe", 518, "Taskbar");

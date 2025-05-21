@@ -3993,6 +3993,14 @@ public partial class NativeMethods
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern bool SetWindowPos(IntPtr hWnd, int X, int Y, int cx, int cy, SWP uFlags);
 
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern bool AdjustWindowRectExForDpi(ref Rect rect, WindowStyles dwStyle, bool menu, ExtendedWindowStyles dwExStyle, uint dpi);
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern bool AdjustWindowRectExForDpi(ref Rect rect, uint dwStyle, bool menu, uint dwExStyle, uint dpi);
+
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern bool MoveWindow(IntPtr hWnd, int x, int y, int cx, int cy, bool repaint);
+
     [DllImport(User32_DllName)]
     internal static extern IntPtr SetFocus(IntPtr hWnd);
 

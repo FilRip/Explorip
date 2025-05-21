@@ -23,26 +23,13 @@ public partial class SearchButtonViewModel : ObservableObject
     private void ShowSearch()
     {
         ShellHelper.ShellKeyCombo(NativeMethods.VK.LWIN, NativeMethods.VK.KEY_S);
-        Stopwatch stopwatch = Stopwatch.StartNew();
-        IntPtr ptrForegroundWindow = IntPtr.Zero;
-        while (stopwatch.ElapsedMilliseconds < 2000)
-        {
-            Thread.Sleep(10);
-            ptrForegroundWindow = NativeMethods.GetForegroundWindow();
-            StringBuilder sb = new(256);
-            NativeMethods.GetClassName(ptrForegroundWindow, sb, 256);
-            if (sb.ToString() == "Windows.UI.Core.CoreWindow")
-                break;
-        }
-        stopwatch.Stop();
-        if (stopwatch.ElapsedMilliseconds >= 2000)
-            return;
+        IntPtr ptrSearchWindow = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.SEARCH);
         Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
         Taskbar currentTaskbar = ((MyTaskbarApp)Application.Current).ListAllTaskbar().FirstOrDefault(t => t.ScreenName == screen.DeviceName.TrimStart('.', '\\'));
         if (currentTaskbar != null)
         {
-            NativeMethods.GetWindowRect(ptrForegroundWindow, out NativeMethods.Rect rect);
-            NativeMethods.SetWindowPos(ptrForegroundWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
+            NativeMethods.GetWindowRect(ptrSearchWindow, out NativeMethods.Rect rect);
+            NativeMethods.SetWindowPos(ptrSearchWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
         }
     }
 }
