@@ -184,12 +184,12 @@ public abstract class ShellContextMenu : NativeWindow
     {
         if (iContextMenu != null &&
             m.Msg == (int)NativeMethods.WM.MENUSELECT &&
-            ((int)Interop.HiWord(m.WParam) & (int)MFT.SEPARATOR) == 0 &&
-            ((int)Interop.HiWord(m.WParam) & (int)MFT.POPUP) == 0)
+            ((int)NativeMethods.HiWord(m.WParam) & (int)MFT.SEPARATOR) == 0 &&
+            ((int)NativeMethods.HiWord(m.WParam) & (int)MFT.POPUP) == 0)
         {
             _ = GetCommandString(
                 iContextMenu,
-                (uint)Interop.LoWord(m.WParam) - Interop.CMD_FIRST,
+                (uint)NativeMethods.LoWord(m.WParam) - Interop.CMD_FIRST,
                 false);
         }
 

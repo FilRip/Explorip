@@ -44,9 +44,32 @@ public partial class NativeMethods
     }
 
     // lo = x; hi = y
-    public static IntPtr MakeLParam(int loWord, int hiWord)
+    public static IntPtr MakeParam(int loWord, int hiWord)
     {
         int i = ((short)hiWord << 16) | ((short)loWord & 0xffff);
         return new IntPtr(i);
+    }
+
+    /// <summary>
+    /// Retrieves the High Word of a WParam of a WindowMessage
+    /// </summary>
+    /// <param name="ptr">The pointer to the WParam</param>
+    /// <returns>The unsigned integer for the High Word</returns>
+    public static ulong HiWord(IntPtr ptr)
+    {
+        if (((ulong)ptr & 0x80000000) == 0x80000000)
+            return ((ulong)ptr >> 16);
+        else
+            return ((ulong)ptr >> 16) & 0xffff;
+    }
+
+    /// <summary>
+    /// Retrieves the Low Word of a WParam of a WindowMessage
+    /// </summary>
+    /// <param name="ptr">The pointer to the WParam</param>
+    /// <returns>The unsigned integer for the Low Word</returns>
+    public static ulong LoWord(IntPtr ptr)
+    {
+        return (ulong)ptr & 0xffff;
     }
 }

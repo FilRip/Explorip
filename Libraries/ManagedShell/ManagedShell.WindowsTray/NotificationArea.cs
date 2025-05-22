@@ -235,16 +235,16 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         if (icon != null)
         {
             if (dwMessage == 1)
-                return MakeLParam(icon.Placement.Left, icon.Placement.Top);
+                return MakeParam(icon.Placement.Left, icon.Placement.Top);
             else if (dwMessage == 2)
-                return MakeLParam(icon.Placement.Right, icon.Placement.Bottom);
+                return MakeParam(icon.Placement.Right, icon.Placement.Bottom);
         }
         else if (guidItem == new Guid(VOLUME_GUID))
         {
             if (dwMessage == 1)
-                return MakeLParam(defaultPlacement.Left, defaultPlacement.Top);
+                return MakeParam(defaultPlacement.Left, defaultPlacement.Top);
             else if (dwMessage == 2)
-                return MakeLParam(defaultPlacement.Right, defaultPlacement.Bottom);
+                return MakeParam(defaultPlacement.Right, defaultPlacement.Bottom);
         }
 
         return IntPtr.Zero;

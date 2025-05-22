@@ -18,32 +18,9 @@ internal static class Interop
     public static readonly int cbInvokeCommand = Marshal.SizeOf(typeof(CmInvokeCommandInfoEx));
     public static readonly ComTaskScheduler ShellItemScheduler = new();
 
-    /// <summary>
-    /// Retrieves the High Word of a WParam of a WindowMessage
-    /// </summary>
-    /// <param name="ptr">The pointer to the WParam</param>
-    /// <returns>The unsigned integer for the High Word</returns>
-    public static ulong HiWord(IntPtr ptr)
-    {
-        if (((ulong)ptr & 0x80000000) == 0x80000000)
-            return ((ulong)ptr >> 16);
-        else
-            return ((ulong)ptr >> 16) & 0xffff;
-    }
-
     public static Guid CLSID_NewMenu
     {
         get { return CLSIDNewMenu; }
-    }
-
-    /// <summary>
-    /// Retrieves the Low Word of a WParam of a WindowMessage
-    /// </summary>
-    /// <param name="ptr">The pointer to the WParam</param>
-    /// <returns>The unsigned integer for the Low Word</returns>
-    public static ulong LoWord(IntPtr ptr)
-    {
-        return (ulong)ptr & 0xffff;
     }
 
     // Retrieves the IShellFolder interface for the desktop folder,

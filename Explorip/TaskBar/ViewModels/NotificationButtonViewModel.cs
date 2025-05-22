@@ -22,11 +22,11 @@ public partial class NotificationButtonViewModel : ObservableObject
         IntPtr ptrNotifCenterWindow = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.NOTIFICATION_CENTER);
         NativeMethods.DwmGetWindowAttribute(ptrNotifCenterWindow, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, Marshal.SizeOf(typeof(bool)));
         ShellHelper.ShowNotificationCenter();
-        Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
-        int width = (int)(400 * screen.ScaleFactor);
-        int top = (int)(screen.WorkingArea.Top * screen.ScaleFactor);
         if (cloaked != 0)
         {
+            Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
+            int width = (int)(400 * screen.ScaleFactor);
+            int top = (int)(screen.WorkingArea.Top * screen.ScaleFactor);
             NativeMethods.Rect rect = new()
             {
                 Top = top,
@@ -36,10 +36,10 @@ public partial class NotificationButtonViewModel : ObservableObject
             };
             IntPtr ptrRect = Marshal.AllocHGlobal(Marshal.SizeOf<NativeMethods.Rect>());
             Marshal.StructureToPtr(rect, ptrRect, false);
-            NativeMethods.SendMessage(ptrNotifCenterWindow, NativeMethods.WM.DPICHANGED, NativeMethods.MakeLParam((int)(screen.ScaleFactor * 96), (int)(screen.ScaleFactor * 96)), ptrRect);
             NativeMethods.MoveWindow(ptrNotifCenterWindow, rect.Left, rect.Top, rect.Width, rect.Height, true);
+            IntPtr wParam = NativeMethods.MakeParam((int)(screen.ScaleFactor * 96), (int)(screen.ScaleFactor * 96));
+            NativeMethods.SendMessage(ptrNotifCenterWindow, NativeMethods.WM.DPICHANGED, wParam, ptrRect);
             Marshal.FreeHGlobal(ptrRect);
-            //NativeMethods.SetWindowPos(ptrNotifCenterWindow, IntPtr.Zero, (int)(screen.WorkingArea.Right) - width, top, width, (int)(screen.WorkingArea.Height), NativeMethods.SWP.SWP_SHOWWINDOW);
         }
         NumberOfNotifications = 0;
     }

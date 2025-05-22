@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -77,9 +78,10 @@ public partial class NotifyIconList : UserControl
             if (pinnedPath?.Length > 0 && promotedIcons.Count == 0)
                 foreach (string path in pinnedPath)
                 {
-                    ManagedShell.WindowsTray.NotifyIcon ni = NotificationArea.UnpinnedIcons.OfType<ManagedShell.WindowsTray.NotifyIcon>().SingleOrDefault(i => i.Path == path);
-                    if (ni != null)
-                        promotedIcons.Add(ni);
+                    IEnumerable<ManagedShell.WindowsTray.NotifyIcon> listNotifIcon = NotificationArea.UnpinnedIcons.OfType<ManagedShell.WindowsTray.NotifyIcon>().Where(i => i.Path == path);
+                    if (listNotifIcon.Any())
+                        foreach (ManagedShell.WindowsTray.NotifyIcon notifIcon in listNotifIcon)
+                            promotedIcons.Add(notifIcon);
                 }
 
             CompositeCollection pinnedNotifyIcons =
