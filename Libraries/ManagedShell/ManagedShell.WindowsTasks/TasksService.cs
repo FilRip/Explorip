@@ -359,7 +359,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                 if (win != null)
                                 {
                                     win.State = ApplicationWindow.WindowState.Active;
-                                    win.SetTitle();
+                                    win.SetTitle(msg.LParam);
                                     win.SetShowInTaskbar();
                                 }
                                 else

@@ -168,7 +168,7 @@ public partial class MyTaskbarApp : Application
         get
         {
             if (_taskbarList != null)
-                return _taskbarList.First(item => item.MainScreen);
+                return _taskbarList.Single(item => item.MainScreen);
             return null;
         }
     }

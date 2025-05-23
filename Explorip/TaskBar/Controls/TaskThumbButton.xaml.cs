@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -12,6 +13,8 @@ using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+
+using WpfScreenHelper;
 
 namespace Explorip.TaskBar.Controls;
 
@@ -36,6 +39,8 @@ public partial class TaskThumbButton : Window
             return;
 
         _thumbPtr = [];
+        if (parent?.TaskbarParent == null)
+            Close();
         Background = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarBackground;
         ThumbWidth = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbWidth;
         ThumbHeight = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbHeight;
@@ -45,16 +50,15 @@ public partial class TaskThumbButton : Window
 
         TitleFirst.Width = ThumbWidth - CloseButtonSize;
         if (parent.ApplicationWindow.ListWindows.Count > 0)
-        {
             Width *= parent.ApplicationWindow.ListWindows.Count;
-        }
         _parent = parent;
         Owner = parent.TaskbarParent;
+        Screen screen = Screen.AllScreens.FirstOrDefault(s => s.DeviceName.EndsWith(parent.TaskbarParent.ScreenName));
         Point positionParent = _parent.PointToScreen(Mouse.GetPosition(this));
-        Left = (int)((positionParent.X - (Width / 2)) / VisualTreeHelper.GetDpi(this).DpiScaleX);
+        Left = (positionParent.X / screen.ScaleFactor - (Width / screen.ScaleFactor / 2));
         if (parent.ApplicationWindow.ListWindows.Count == 1)
-            Left += Width / 2;
-        Top = parent.TaskbarParent.Top - Height;
+            Left += Width / screen.ScaleFactor / 2;
+        Top = (parent.TaskbarParent.Top * VisualTreeHelper.GetDpi(this).DpiScaleY) - Height;
         _timerBeforePreviewWindow = new Timer(ShowPreviewWindow, null, Timeout.Infinite, Timeout.Infinite);
         _lastPeek = IntPtr.Zero;
         _handle = new WindowInteropHelper(this).EnsureHandle();

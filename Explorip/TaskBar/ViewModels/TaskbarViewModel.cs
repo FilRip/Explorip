@@ -213,7 +213,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     {
         ConfigManager.GroupedApplicationWindow = !IsGroupedApplicationWindow;
         SetGroupApplicationWindows();
-        RefreshTaskList();
+        RefreshTaskList(true);
     }
 
     private void SetGroupApplicationWindows()
@@ -222,11 +222,18 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         MyTaskbarApp.MyShellManager.TasksService.GroupApplicationsWindows = IsGroupedApplicationWindow;
     }
 
-    private void RefreshTaskList()
+    private void RefreshTaskList(bool rebuild = false)
     {
-        TaskListViewModel.RefreshAllCollectionView(null, EventArgs.Empty);
-        ParentTaskbar.MyTaskList.MyDataContext.ChangeButtonSize();
-        ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
+        if (rebuild)
+        {
+            TaskListViewModel.RebuildListWindows();
+        }
+        else
+        {
+            TaskListViewModel.RefreshAllCollectionView(null, EventArgs.Empty);
+            ParentTaskbar.MyTaskList.MyDataContext.ChangeButtonSize();
+            ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
+        }
     }
 
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static

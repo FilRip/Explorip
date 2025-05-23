@@ -193,7 +193,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
-    public void SetTitle()
+    public void SetTitle(IntPtr? ptrWindow = null)
     {
         string title = "";
         try
@@ -201,7 +201,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             if (_windows?.Count > 0)
             {
                 StringBuilder stringBuilder = new(MAX_STRING_SIZE);
-                NativeMethods.GetWindowText(_windows[0], stringBuilder, MAX_STRING_SIZE);
+                NativeMethods.GetWindowText((ptrWindow ?? _windows[0]), stringBuilder, MAX_STRING_SIZE);
 
                 title = stringBuilder.ToString();
             }

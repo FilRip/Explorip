@@ -309,7 +309,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     {
         if (action == ((uint)MenuItemId.OpenParentFolder).ToString())
         {
-            ManagedShell.Common.Helpers.ShellHelper.StartProcess(Folder.Path);
+            ShellHelper.StartProcess(Folder.Path);
             return true;
         }
 

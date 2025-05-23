@@ -48,6 +48,11 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         RebuildCollectionView();
     }
 
+    public static void RebuildListWindows()
+    {
+        ((MyTaskbarApp)Application.Current).MainTaskbar.MyTaskList.MyDataContext.FirstRefresh();
+    }
+
     public static void RefreshAllCollectionView(object sender, EventArgs e)
     {
         bool rebuild = false;
@@ -190,6 +195,36 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     }
                 }
 
+                if (MyTaskbarApp.MyShellManager.TasksService.GroupApplicationsWindows)
+                {
+                    bool changed = true;
+                    while (changed)
+                    {
+                        changed = false;
+                        foreach (ApplicationWindow appWin in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw.ListWindows.Count > 0))
+                        {
+                            List<ApplicationWindow> listSame = [.. MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw != appWin && string.Compare(aw.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0)];
+                            if (listSame.Any())
+                            {
+                                foreach (ApplicationWindow win in listSame)
+                                {
+                                    MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
+                                    appWin.ListWindows.AddRange(win.ListWindows);
+                                    appWin.SetTitle();
+                                    if (appWin.ListWindows.Count > 1)
+                                        appWin.State = ApplicationWindow.WindowState.Unknown;
+                                    else
+                                        appWin.State = win.State;
+                                }
+                                changed = true;
+                                break;
+                            }
+                        }
+                        if (!changed)
+                            break;
+                    }
+                }
+
                 RefreshAllCollectionView(true, EventArgs.Empty);
             }
         });
@@ -276,7 +311,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         Task.Run(async () =>
         {
-            await Task.Delay(1000);
+            await Task.Delay(100);
             VirtualDesktop_CurrentChanged(null, null);
         });
     }
