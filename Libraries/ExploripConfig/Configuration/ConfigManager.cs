@@ -93,6 +93,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("MaxRecursiveSubFolderInToolbar", "5");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ProgressBarHeight", "").ToString()))
                 _registryRootTaskbar.SetValue("ProgressBarHeight", "2");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ReduceTitleWidthWhenTaskbarFull", "").ToString()))
+                _registryRootTaskbar.SetValue("ReduceTitleWidthWhenTaskbarFull", "True");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -436,6 +438,16 @@ public static class ConfigManager
         {
             if (MaxWidthTitleApplicationWindow != value && AllowWrite)
                 _registryRootTaskbar.SetValue("MaxWidthTitleApplicationWindow", value.ToString());
+        }
+    }
+
+    public static bool ReduceTitleWidthWhenTaskbarFull
+    {
+        get { return _registryRootTaskbar.ReadBoolean("ReduceTitleWidthWhenTaskbarFull"); }
+        set
+        {
+            if (ReduceTitleWidthWhenTaskbarFull != value && AllowWrite)
+                _registryRootTaskbar.SetValue("ReduceTitleWidthWhenTaskbarFull", value.ToString());
         }
     }
 

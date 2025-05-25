@@ -65,6 +65,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 if (rebuild)
                     tl.RebuildCollectionView();
                 tl.RefreshMyCollectionView();
+                if (ConfigManager.ReduceTitleWidthWhenTaskbarFull)
+                    tl.UpdateMaxWidth();
             }
         });
     }
@@ -132,6 +134,21 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     private static void TasksService_WindowUncloaked(IntPtr windowHandle)
     {
         RefreshAllCollectionView(null, EventArgs.Empty);
+    }
+
+    public void UpdateMaxWidth()
+    {
+        if (!ConfigManager.ShowTitleApplicationWindow)
+            return;
+        double currentWidth = TaskbarParent.MyTaskList.TasksList.Items.Count * (ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow + ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton);
+        double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20;
+        if (currentWidth > TaskbarParent.MyTaskList.ActualWidth)
+        {
+            double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - ButtonRightMargin.Value * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
+            TitleLength = Math.Max(minWidth, newMaxWidth);
+        }
+        else
+            TitleLength = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow;
     }
 
     private static void RemoveTaskServiceEvent()
