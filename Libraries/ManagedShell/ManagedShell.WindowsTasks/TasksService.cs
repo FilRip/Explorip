@@ -130,8 +130,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             if (win.CanAddToTaskbar && win.ShowInTaskbar && !Windows.Contains(win))
             {
                 Windows.Add(win);
-
-                SendTaskbarButtonCreatedMessage(win.ListWindows[0]);
+                if (EnvironmentHelper.IsAppRunningAsShell)
+                    SendTaskbarButtonCreatedMessage(win.ListWindows[0]);
             }
 
             return true;
@@ -318,7 +318,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             if (GroupApplicationsWindows)
                                 win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
                             else
-                                win = Windows.FirstOrDefault(wnd => wnd.WinFileName == winFileName && wnd.IsPinnedApp && wnd.ListWindows.Count == 0);
+                                win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || (wnd.IsPinnedApp && wnd.WinFileName == winFileName && wnd.ListWindows.Count == 0));
                             if (win == null)
                                 AddWindow(msg.LParam);
                             else

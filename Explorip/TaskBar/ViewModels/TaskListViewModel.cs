@@ -189,7 +189,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                         if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyTaskbarApp.MyShellManager.TasksService.Windows.Contains(win))
                         {
                             MyTaskbarApp.MyShellManager.TasksService.Windows.Add(win);
-                            TasksService.SendTaskbarButtonCreatedMessage(hwnd);
+                            if (ManagedShell.Common.Helpers.EnvironmentHelper.IsAppRunningAsShell)
+                                TasksService.SendTaskbarButtonCreatedMessage(hwnd);
                         }
                     }
                     return true;
