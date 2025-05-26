@@ -278,11 +278,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 win.State = ApplicationWindow.WindowState.Active;
             if (disposeWindow && !win.IsPinnedApp)
             {
-                bool raiseEvent = win.ShowInTaskbar;
                 Windows.Remove(win);
                 win.Dispose();
-                if (raiseEvent)
-                    WindowDestroy?.Invoke(this, EventArgs.Empty);
             }
             else
             {
@@ -291,6 +288,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
                 win.OnPropertyChanged(nameof(ApplicationWindow.MultipleInstanceLaunched));
             }
+            WindowDestroy?.Invoke(this, EventArgs.Empty);
         }
     }
 
