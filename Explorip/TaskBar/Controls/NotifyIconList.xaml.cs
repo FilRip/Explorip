@@ -78,7 +78,7 @@ public partial class NotifyIconList : UserControl
             if (pinnedPath?.Length > 0 && promotedIcons.Count == 0)
                 foreach (string path in pinnedPath)
                 {
-                    IEnumerable<ManagedShell.WindowsTray.NotifyIcon> listNotifIcon = NotificationArea.UnpinnedIcons.OfType<ManagedShell.WindowsTray.NotifyIcon>().Where(i => i.Path == path);
+                    IEnumerable<ManagedShell.WindowsTray.NotifyIcon> listNotifIcon = NotificationArea.UnpinnedIcons.OfType<ManagedShell.WindowsTray.NotifyIcon>().Where(i => string.Compare(i.Path, path, true) == 0 || (path.IndexOf(System.IO.Path.DirectorySeparatorChar) < 0 && string.Compare(System.IO.Path.GetFileName(i.Path), path, true) == 0));
                     if (listNotifIcon.Any())
                         foreach (ManagedShell.WindowsTray.NotifyIcon notifIcon in listNotifIcon)
                             promotedIcons.Add(notifIcon);
@@ -166,7 +166,7 @@ public partial class NotifyIconList : UserControl
         {
             string[] pinnedPath = ConfigManager.AllPinnedSystray();
             foreach (ManagedShell.WindowsTray.NotifyIcon item in e.NewItems)
-                if (pinnedPath.Contains(item.Path))
+                if (pinnedPath.Any(pin => string.Compare(pin, item.Path, true) == 0) || (pinnedPath.Any(pin => pin.IndexOf(System.IO.Path.DirectorySeparatorChar) < 0 && string.Compare(System.IO.Path.GetFileName(item.Path), pin, true) == 0)))
                 {
                     refreshList = true;
                     promotedIcons.Add(item);

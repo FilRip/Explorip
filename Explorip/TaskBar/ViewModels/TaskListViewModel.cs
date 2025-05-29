@@ -24,10 +24,14 @@ using Securify.ShellLink;
 
 using WindowsDesktop;
 
+using WpfScreenHelper;
+
 namespace Explorip.TaskBar.ViewModels;
 
 public partial class TaskListViewModel : ObservableObject, IDisposable
 {
+    private const int ScrollBarWidth = 20;
+
     private AppBarEdge _currentEdge;
     private Taskbar _taskbarParent;
     private readonly object _lockChangeDesktop;
@@ -144,7 +148,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20;
         if (currentWidth > TaskbarParent.MyTaskList.ActualWidth)
         {
-            double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - 22 - ButtonRightMargin.Value * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
+            double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - ScrollBarWidth / Screen.AllScreens.Single(s => s.DeviceName.EndsWith(TaskbarParent.ScreenName)).ScaleFactor - ButtonRightMargin.Value * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
             TitleLength = Math.Max(minWidth, newMaxWidth);
         }
         else

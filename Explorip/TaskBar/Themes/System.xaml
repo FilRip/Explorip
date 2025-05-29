@@ -215,32 +215,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border Background="Transparent"
-                            Padding="0,2"
-                            Name="ButtonBorder">
-                        <Border BorderThickness="0,0,1,0"
-                                BorderBrush="{TemplateBinding Foreground}"
-                                Background="DarkBlue"
-                                x:Name="ButtonRightBottomBorder">
-                            <Border BorderThickness="0,0,0,0"
-                                    BorderBrush="{TemplateBinding Background}"
-                                    Background="#606060"
-                                    Padding="2"
-                                    x:Name="ButtonLeftTopBorder">
-                                <ContentPresenter />
-                            </Border>
-                        </Border>
+                    <Border BorderThickness="0"
+                            BorderBrush="Transparent"
+                            Background="{x:Static colors:Colors.SelectedBackgroundShellObject}"
+                            CornerRadius="10"
+                            x:Name="ButtonLeftTopBorder">
+                        <ContentPresenter />
                     </Border>
-                    <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                                     Value="Vertical">
-                            <DataTrigger.Setters>
-                                <Setter TargetName="ButtonBorder"
-                                        Property="Padding"
-                                        Value="2,1" />
-                            </DataTrigger.Setters>
-                        </DataTrigger>
-                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

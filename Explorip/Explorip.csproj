@@ -29,6 +29,9 @@
 	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Explorip.args.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Ressources\icone.ico" />
   </ItemGroup>
   <ItemGroup>

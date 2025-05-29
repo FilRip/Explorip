@@ -95,6 +95,12 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("ProgressBarHeight", "2");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ReduceTitleWidthWhenTaskbarFull", "").ToString()))
                 _registryRootTaskbar.SetValue("ReduceTitleWidthWhenTaskbarFull", "True");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MarginTitleApplicationWindow", "").ToString()))
+                _registryRootTaskbar.SetValue("MarginTitleApplicationWindow", "5");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("TaskButtonSelectedColor", "").ToString()))
+                _registryRootTaskbar.SetValue("TaskButtonSelectedColor", $"128,{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.R},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.G},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.B}");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("TaskButtonProgressBarColor", "").ToString()))
+                _registryRootTaskbar.SetValue("TaskButtonProgressBarColor", $"255,{Colors.Green.R},{Colors.Green.G},{Colors.Green.B}");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -279,6 +285,8 @@ public static class ConfigManager
 
     #endregion
 
+    #region Properties Root Registry Key
+
     public static RegistryKey MyRegistryKey
     {
         get { return _registryKeyExplorer; }
@@ -293,6 +301,8 @@ public static class ConfigManager
     {
         get { return _registryRootTaskbar; }
     }
+
+    #endregion
 
     #region File Explorer tabs
 
@@ -391,6 +401,8 @@ public static class ConfigManager
 
     #endregion
 
+    #region Taskbar
+
     public static bool TaskbarReplaceStartMenu
     {
         get { return _registryRootTaskbar.ReadBoolean("ReplaceStartMenu"); }
@@ -441,6 +453,52 @@ public static class ConfigManager
         }
     }
 
+    public static double MarginTitleApplicationWindow
+    {
+        get { return _registryRootTaskbar.ReadDouble("MarginTitleApplicationWindow"); }
+        set
+        {
+            if (MarginTitleApplicationWindow != value && AllowWrite)
+                _registryRootTaskbar.SetValue("MarginTitleApplicationWindow", value.ToString());
+        }
+    }
+
+    public static SolidColorBrush TaskButtonSelectedColor
+    {
+        get
+        {
+            string bgColor = _registryStartMenu.GetValue("TaskButtonSelectedColor")?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                return new SolidColorBrush(_registryStartMenu.ReadColor("TaskButtonSelectedColor", ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color));
+            }
+            return null;
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryStartMenu.SetValue("TaskButtonSelectedColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static SolidColorBrush TaskButtonProgressBarColor
+    {
+        get
+        {
+            string bgColor = _registryStartMenu.GetValue("TaskButtonProgressBarColor")?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                return new SolidColorBrush(_registryStartMenu.ReadColor("TaskButtonProgressBarColor", Colors.Green));
+            }
+            return null;
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryStartMenu.SetValue("TaskButtonProgressBarColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
     public static bool ReduceTitleWidthWhenTaskbarFull
     {
         get { return _registryRootTaskbar.ReadBoolean("ReduceTitleWidthWhenTaskbarFull"); }
@@ -470,6 +528,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("ProgressBarHeight", value.ToString());
         }
     }
+
+    #endregion
 
     #region StartMenu
 

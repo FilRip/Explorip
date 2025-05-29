@@ -87,10 +87,15 @@ public partial class TaskButton : UserControl
         {
             IconColumn.Width = new GridLength(size + 20, GridUnitType.Pixel);
             TitleColumn.MaxWidth = ConfigManager.MaxWidthTitleApplicationWindow;
+            TxtTitle.Margin = new Thickness(0, 0, ConfigManager.MarginTitleApplicationWindow, 0);
         }
         else
+        {
             TitleColumn.Width = new GridLength(0, GridUnitType.Pixel);
+            TxtTitle.Margin = new Thickness(0);
+        }
         ProgressBarWindow.Height = ConfigManager.TaskbarProgressBarHeight;
+        ProgressBarWindow.Foreground = ConfigManager.TaskButtonProgressBarColor;
 
         _isLoaded = true;
     }
