@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:constants="clr-namespace:Explorip.Constants"
-                    xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy">
+                    xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+                    xmlns:config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig">
 
     <SolidColorBrush x:Key="ButtonHighlight" Color="Gray" />
     <SolidColorBrush x:Key="ButtonLight" Color="Blue" />
@@ -218,7 +219,7 @@
                     <Border BorderThickness="0"
                             BorderBrush="Transparent"
                             Background="{x:Static colors:Colors.SelectedBackgroundShellObject}"
-                            CornerRadius="10"
+                            CornerRadius="{x:Static config:ConfigManager.TaskButtonCornerRadius}"
                             x:Name="ButtonLeftTopBorder">
                         <ContentPresenter />
                     </Border>

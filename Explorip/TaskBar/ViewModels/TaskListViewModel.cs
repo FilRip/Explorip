@@ -30,7 +30,7 @@ namespace Explorip.TaskBar.ViewModels;
 
 public partial class TaskListViewModel : ObservableObject, IDisposable
 {
-    private const int ScrollBarWidth = 20;
+    private const int ScrollBarWidth = 22;
 
     private AppBarEdge _currentEdge;
     private Taskbar _taskbarParent;
@@ -151,7 +151,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20;
         if (currentWidth > TaskbarParent.MyTaskList.ActualWidth)
         {
-            double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - ScrollBarWidth / Screen.AllScreens.Single(s => s.DeviceName.EndsWith(TaskbarParent.ScreenName)).ScaleFactor - ButtonRightMargin.Value * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
+            double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - ScrollBarWidth - ButtonRightMargin.Value * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
             TitleLength = Math.Max(minWidth, newMaxWidth);
         }
         else

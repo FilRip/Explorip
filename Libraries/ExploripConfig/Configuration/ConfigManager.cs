@@ -101,6 +101,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("TaskButtonSelectedColor", $"128,{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.R},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.G},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.B}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("TaskButtonProgressBarColor", "").ToString()))
                 _registryRootTaskbar.SetValue("TaskButtonProgressBarColor", $"255,{Colors.Green.R},{Colors.Green.G},{Colors.Green.B}");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("TaskButtonCornerRadius", "").ToString()))
+                _registryRootTaskbar.SetValue("TaskButtonCornerRadius", "1");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -496,6 +498,16 @@ public static class ConfigManager
         {
             if (AllowWrite)
                 _registryStartMenu.SetValue("TaskButtonProgressBarColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static CornerRadius TaskButtonCornerRadius
+    {
+        get { return new CornerRadius(_registryRootTaskbar.ReadDouble("TaskButtonCornerRadius")); }
+        set
+        {
+            if (TaskButtonCornerRadius != value && AllowWrite)
+                _registryRootTaskbar.SetValue("TaskButtonCornerRadius", value.TopRight.ToString());
         }
     }
 

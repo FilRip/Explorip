@@ -40,7 +40,10 @@ public partial class TaskThumbButton : Window
 
         _thumbPtr = [];
         if (parent?.TaskbarParent == null)
+        {
             Close();
+            return;
+        }
         Background = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarBackground;
         ThumbWidth = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbWidth;
         ThumbHeight = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbHeight;
