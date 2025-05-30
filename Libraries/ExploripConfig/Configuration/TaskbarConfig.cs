@@ -59,6 +59,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue("SpaceBetweenTaskButton", "5");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("DesktopButtonWidth", "").ToString()))
                 _registryTaskbar.SetValue("DesktopButtonWidth", "5");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistHorizontalAligment", "").ToString()))
+                _registryTaskbar.SetValue("TasklistHorizontalAligment", "Left");
         }
     }
 
@@ -307,6 +309,16 @@ public class TaskbarConfig
         {
             if (DesktopButtonWidth != value && AllowWrite)
                 _registryTaskbar.SetValue("DesktopButtonWidth", value.ToString());
+        }
+    }
+
+    public HorizontalAlignment TaskListAligment
+    {
+        get { return _registryTaskbar.ReadEnum<HorizontalAlignment>("TasklistHorizontalAligment"); }
+        set
+        {
+            if (TaskListAligment != value && AllowWrite)
+                _registryTaskbar.SetValue("TasklistHorizontalAligment", value.ToString("G"));
         }
     }
 
