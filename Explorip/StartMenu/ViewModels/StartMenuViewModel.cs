@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -66,7 +67,7 @@ public partial class StartMenuViewModel : ObservableObject
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             Margin = new Thickness(0),
         };
-        CreateMenuItem(_cmUser, Constants.Localization.LOCK, ShellHelper.Lock);
+        CreateMenuItem(_cmUser, Constants.Localization.LOCK, ShellHelper.Lock, icon: Constants.Icons.Lock);
         CreateMenuItem(_cmUser, Constants.Localization.DISCONNECT, ShellHelper.Logoff);
 
         _cmStop = new()
@@ -76,8 +77,8 @@ public partial class StartMenuViewModel : ObservableObject
             Margin = new Thickness(0),
         };
         CreateMenuItem(_cmStop, Constants.Localization.PUT_HYBERNATE, Hybernate);
-        CreateMenuItem(_cmStop, Constants.Localization.SHUTDOWN, Shutdown);
-        CreateMenuItem(_cmStop, Constants.Localization.RESTART, Restart);
+        CreateMenuItem(_cmStop, Constants.Localization.SHUTDOWN, Shutdown, icon: Constants.Icons.Shutdown);
+        CreateMenuItem(_cmStop, Constants.Localization.RESTART, Restart, icon: Constants.Icons.Refresh);
 
         #endregion
 
@@ -94,7 +95,7 @@ public partial class StartMenuViewModel : ObservableObject
         RefreshAll();
     }
 
-    private static void CreateMenuItem(ContextMenu cm, string label, Action onClick, bool checkable = false)
+    private static void CreateMenuItem(ContextMenu cm, string label, Action onClick, bool checkable = false, ImageSource icon = null)
     {
         MenuItem mi = new()
         {
@@ -109,6 +110,8 @@ public partial class StartMenuViewModel : ObservableObject
         {
             onClick();
         };
+        if (icon != null)
+            mi.Icon = new Image() { Source = icon };
         cm.Items.Add(mi);
     }
 
@@ -311,7 +314,9 @@ public partial class StartMenuViewModel : ObservableObject
     {
         ((MenuItem)_cmStop.Items[0]).Visibility = IsHybernateEnabled ? Visibility.Visible : Visibility.Collapsed;
         ((MenuItem)_cmStop.Items[1]).Header = IsRestartPending ? Constants.Localization.UPDATE_AND_SHUTDOWN : Constants.Localization.SHUTDOWN;
+        ((Image)((MenuItem)_cmStop.Items[1]).Icon).Source = IsRestartPending ? Constants.Icons.UpdateAndShutdown : Constants.Icons.Shutdown;
         ((MenuItem)_cmStop.Items[2]).Header = IsRestartPending ? Constants.Localization.UPDATE_AND_RESTART : Constants.Localization.RESTART;
+        ((Image)((MenuItem)_cmStop.Items[2]).Icon).Source = IsRestartPending ? Constants.Icons.UpdateAndRestart : Constants.Icons.Refresh;
         _cmStop.IsOpen = true;
     }
 

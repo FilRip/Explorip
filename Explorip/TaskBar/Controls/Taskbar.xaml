@@ -108,7 +108,11 @@
     </ContentControl>
     <appbar:AppBarWindow.ContextMenu>
         <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
-            <MenuItem Header="{x:Static localization:Localization.TASK_MANAGER}" Name="TaskManagerMenuItem" Command="{Binding ShowTaskMgrCommand}"/>
+            <MenuItem Header="{x:Static localization:Localization.TASK_MANAGER}" Name="TaskManagerMenuItem" Command="{Binding ShowTaskMgrCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static localization:Icons.Taskmgr}"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static localization:Localization.TOOLBAR}" Name="ToolbarSubMenu" Style="{DynamicResource MenuItemWithSubMenuStyle}">
                 <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAddToolbar" Click="AddToolbar_Click"/>
@@ -132,8 +136,16 @@
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
                 <MenuItem Header="{x:Static localization:Localization.CUSTOM_COLOR}" Name="MenuCustomColor" Command="{Binding CustomColorCommand}"/>
             </MenuItem>
-            <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Command="{Binding ShowHideTabTipCommand}" IsChecked="{Binding TabTipVisible}"/>
-            <MenuItem Header="{x:Static localization:Localization.CHOICE_KEYBOARD_LAYOUT}" Name="MenuShowKeyboardLayout" Command="{Binding ShowKeyboardLayoutCommand}" IsChecked="{Binding KeyboardLayoutVisible}"/>
+            <MenuItem Header="{x:Static localization:Localization.SHOW_VISUAL_KEYBOARD}" Name="MenuShowTabTip" Command="{Binding ShowHideTabTipCommand}" IsChecked="{Binding TabTipVisible}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static localization:Icons.Keyboard}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{x:Static localization:Localization.CHOICE_KEYBOARD_LAYOUT}" Name="MenuShowKeyboardLayout" Command="{Binding ShowKeyboardLayoutCommand}" IsChecked="{Binding KeyboardLayoutVisible}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static localization:Icons.KeyboardSettings}"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Command="{Binding ExitCommand}"/>
         </ContextMenu>

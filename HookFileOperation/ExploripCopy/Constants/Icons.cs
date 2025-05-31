@@ -8,10 +8,10 @@ namespace ExploripCopy.Constants;
 public static class Icons
 {
     public static BitmapSource MainIconSource { get; private set; }
-    public static ImageSource CancelImage { get; set; }
-    public static ImageSource OkImage { get; set; }
-    public static ImageSource Folder { get; set; }
-    public static ImageSource Shortcut { get; set; }
+    public static ImageSource CancelImage { get; private set; }
+    public static ImageSource OkImage { get; private set; }
+    public static ImageSource Folder { get; private set; }
+    public static ImageSource Shortcut { get; private set; }
 
     public static void LoadIcons()
     {

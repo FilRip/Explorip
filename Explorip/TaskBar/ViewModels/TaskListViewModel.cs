@@ -24,8 +24,6 @@ using Securify.ShellLink;
 
 using WindowsDesktop;
 
-using WpfScreenHelper;
-
 namespace Explorip.TaskBar.ViewModels;
 
 public partial class TaskListViewModel : ObservableObject, IDisposable
