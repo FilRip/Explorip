@@ -163,6 +163,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         ToolbarItems?.Refresh();
     }
 
+    protected override void UpdateAfterMove()
+    {
+        UpdateInvisibleIcons();
+    }
+
     public Toolbar MyToolbar
     {
         get { return (Toolbar)_parentControl; }
@@ -170,7 +175,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
 
     #region Expand toolbar
 
-    private void UpdateInvisibleIcons()
+    public void UpdateInvisibleIcons()
     {
         Application.Current?.Dispatcher.BeginInvoke(() =>
         {

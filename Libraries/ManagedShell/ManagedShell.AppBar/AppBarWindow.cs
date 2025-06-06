@@ -323,6 +323,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
             Topmost = false;
             WindowHelper.ShowWindowBottomMost(Handle);
+            EnterFullScreen?.Invoke(this, EventArgs.Empty);
         }
         else
         {
@@ -332,8 +333,12 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             Topmost = true;
             WindowHelper.ShowWindowTopMost(Handle);
             IsRaising = false;
+            ExitFullScreen?.Invoke(this, EventArgs.Empty);
         }
     }
+
+    public event EventHandler ExitFullScreen;
+    public event EventHandler EnterFullScreen;
 
     protected void SetBlur(bool enable)
     {

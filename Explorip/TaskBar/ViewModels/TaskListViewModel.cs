@@ -187,6 +187,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         {
             lock (_lockChangeDesktop)
             {
+                for (int i = MyTaskbarApp.MyShellManager.TasksService.Windows.Count - 1; i>= 0; i--)
+                    MyTaskbarApp.MyShellManager.TasksService.Windows[i].Dispose();
                 MyTaskbarApp.MyShellManager.TasksService.Windows?.Clear();
                 MyTaskbarApp.MyShellManager.TasksService.Windows = [];
 
@@ -231,13 +233,13 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                         changed = false;
                         foreach (ApplicationWindow appWin in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw.ListWindows.Count > 0))
                         {
-                            List<ApplicationWindow> listSame = [.. MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw != appWin && string.Compare(aw.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0)];
+                            List<ApplicationWindow> listSame = [.. MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw != appWin && string.Compare(aw.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0 && aw.ListWindows.Count > 0)];
                             if (listSame.Any())
                             {
                                 foreach (ApplicationWindow win in listSame)
                                 {
-                                    MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
                                     appWin.ListWindows.AddRange(win.ListWindows);
+                                    win.ListWindows.Clear();
                                     appWin.SetTitle();
                                     if (appWin.ListWindows.Count > 1)
                                         appWin.State = ApplicationWindow.WindowState.Unknown;
@@ -251,11 +253,22 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                         if (!changed)
                             break;
                     }
+                    DisposeEmptyApplicationWindow();
                 }
 
                 RefreshAllCollectionView(true, EventArgs.Empty);
             }
         });
+    }
+
+    private static void DisposeEmptyApplicationWindow()
+    {
+        IEnumerable<ApplicationWindow> windowsToDispose = MyTaskbarApp.MyShellManager.TasksService.Windows.Where(win => !win.IsPinnedApp && win.ListWindows.Count == 0);
+        foreach (ApplicationWindow win in windowsToDispose)
+        {
+            win.Dispose();
+            MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
+        }
     }
 
     private void InsertPinnedApp()
@@ -315,12 +328,12 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
                 if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => string.Compare(win.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0))
                 {
-                    foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => string.Compare(aw.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0).ToList())
+                    foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => string.Compare(aw.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0))
                     {
                         if (win != appWin)
                         {
-                            MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
                             appWin.ListWindows.AddRange(win.ListWindows);
+                            win.ListWindows.Clear();
                             appWin.SetTitle();
                             if (appWin.ListWindows.Count > 1)
                                 appWin.State = ApplicationWindow.WindowState.Unknown;
@@ -333,6 +346,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 }
             }
         }
+        DisposeEmptyApplicationWindow();
     }
 
     public void FirstRefresh()

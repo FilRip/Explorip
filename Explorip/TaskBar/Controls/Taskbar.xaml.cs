@@ -181,6 +181,7 @@ public partial class Taskbar : AppBarWindow
         MyDataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
         {
+            ExitFullScreen += Taskbar_ExitFullScreen;
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
             try
             {
@@ -209,6 +210,12 @@ public partial class Taskbar : AppBarWindow
                 }
             }
         }
+    }
+
+    private void Taskbar_ExitFullScreen(object sender, EventArgs e)
+    {
+        foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
+            tb.MyTaskList.MyDataContext.FirstRefresh();
     }
 
     public void SetBackground(SolidColorBrush newBackground)
@@ -244,6 +251,12 @@ public partial class Taskbar : AppBarWindow
             MyDataContext.ResizeOn = false;
             DesiredHeight = Height;
             _appBarManager.SetWorkArea(Screen);
+            UpdatePlugins();
+            foreach (ToolbarViewModel tb in ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.MyDataContext))
+            {
+                tb.RefreshMyCollectionView();
+                tb.UpdateInvisibleIcons();
+            }
         }
     }
 
