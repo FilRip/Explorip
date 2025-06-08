@@ -253,19 +253,15 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                         if (!changed)
                             break;
                     }
-                    DisposeEmptyApplicationWindow();
                 }
+
+                IEnumerable<ApplicationWindow> windowsToDispose = [.. MyTaskbarApp.MyShellManager.TasksService.Windows.Where(win => !win.IsPinnedApp && win.ListWindows.Count == 0)];
+                foreach (ApplicationWindow win in windowsToDispose)
+                    win.Dispose();
 
                 RefreshAllCollectionView(true, EventArgs.Empty);
             }
         });
-    }
-
-    private static void DisposeEmptyApplicationWindow()
-    {
-        IEnumerable<ApplicationWindow> windowsToDispose = MyTaskbarApp.MyShellManager.TasksService.Windows.Where(win => !win.IsPinnedApp && win.ListWindows.Count == 0);
-        foreach (ApplicationWindow win in windowsToDispose)
-            win.Dispose();
     }
 
     private void InsertPinnedApp()
@@ -343,7 +339,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 }
             }
         }
-        DisposeEmptyApplicationWindow();
     }
 
     public void FirstRefresh()
