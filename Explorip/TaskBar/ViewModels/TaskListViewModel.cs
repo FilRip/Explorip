@@ -187,7 +187,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         {
             lock (_lockChangeDesktop)
             {
-                for (int i = MyTaskbarApp.MyShellManager.TasksService.Windows.Count - 1; i>= 0; i--)
+                for (int i = MyTaskbarApp.MyShellManager.TasksService.Windows.Count - 1; i >= 0; i--)
                     MyTaskbarApp.MyShellManager.TasksService.Windows[i].Dispose();
                 MyTaskbarApp.MyShellManager.TasksService.Windows?.Clear();
                 MyTaskbarApp.MyShellManager.TasksService.Windows = [];
@@ -265,10 +265,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         IEnumerable<ApplicationWindow> windowsToDispose = MyTaskbarApp.MyShellManager.TasksService.Windows.Where(win => !win.IsPinnedApp && win.ListWindows.Count == 0);
         foreach (ApplicationWindow win in windowsToDispose)
-        {
             win.Dispose();
-            MyTaskbarApp.MyShellManager.TasksService.Windows.Remove(win);
-        }
     }
 
     private void InsertPinnedApp()

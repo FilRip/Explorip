@@ -122,6 +122,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 _lastError = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(ColorGlobalReport));
+            if (value != null)
+                MainWindow.Instance.ShowWindow();
         }
     }
 

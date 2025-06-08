@@ -10,6 +10,7 @@ public class Tasks : IDisposable
     private readonly TasksService _tasksService;
 
     public ICollectionView GroupedWindows { get; set; }
+    public bool SetInitialWindows { get; set; } = true;
 
     public Tasks(TasksService tasksService)
     {
@@ -40,7 +41,7 @@ public class Tasks : IDisposable
 
     public void Initialize()
     {
-        _tasksService.Initialize();
+        _tasksService.Initialize(SetInitialWindows);
     }
 
     private void GroupedWindows_Changed(object sender, NotifyCollectionChangedEventArgs e)

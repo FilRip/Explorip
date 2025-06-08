@@ -52,7 +52,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     public event DelegateWindowActivated WindowActivated;
     public event DelegateWindowActivated WindowUncloaked;
 
-    internal void Initialize()
+    internal void Initialize(bool initialWindows)
     {
         if (IsInitialized)
         {
@@ -102,7 +102,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             SetMinimizedMetrics();
 
             // enumerate windows already opened and set active window
-            GetInitialWindows();
+            if (initialWindows)
+                GetInitialWindows();
 
             IsInitialized = true;
         }

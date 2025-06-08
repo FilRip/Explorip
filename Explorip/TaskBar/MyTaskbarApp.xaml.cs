@@ -182,6 +182,7 @@ public partial class MyTaskbarApp : Application
     {
         _taskbarList = [];
         MyShellManager = SetupManagedShell();
+        MyShellManager.Tasks.SetInitialWindows = false;
         MyShellManager.TasksService.GroupApplicationsWindows = ConfigManager.GroupedApplicationWindow;
 
         _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));

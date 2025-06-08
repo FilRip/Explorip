@@ -43,6 +43,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private readonly List<IntPtr> _windows;
     private readonly object _lockUpdate;
     private int _position;
+    private readonly Guid _id;
 
     public ApplicationWindow(TasksService tasksService, IntPtr handle)
     {
@@ -58,6 +59,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         State = WindowState.Inactive;
         if (tasksService.Windows.Count > 0)
             _position = tasksService.Windows.Max(aw => aw.Position) + 1;
+        _id = Guid.NewGuid();
     }
 
     #region IDisposable
@@ -754,10 +756,15 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
     #region IEquatable<Window> Members
 
+    public Guid Id
+    {
+        get { return _id; }
+    }
+
     public bool Equals(ApplicationWindow other)
     {
         if (_windows.Count == 0 || other.ListWindows.Count == 0)
-            return false;
+            return other.Id == Id;
         return _windows[0].Equals(other.ListWindows[0]);
     }
 
