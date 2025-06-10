@@ -297,7 +297,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 {
                     IsPinnedApp = true,
                     PinnedShortcut = file,
-                    WinFileName = pinnedApp.Target,
+                    WinFileName = string.IsNullOrWhiteSpace(pinnedApp.Target) ? Environment.ExpandEnvironmentVariables(@"%windir%\explorer.exe") : pinnedApp.Target,
                     Arguments = pinnedApp.StringData?.CommandLineArguments,
                 };
                 if (string.Compare(appWin.WinFileName, Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe"), StringComparison.OrdinalIgnoreCase) == 0 && !string.IsNullOrWhiteSpace(appWin.Arguments) && appWin.Arguments.StartsWith("shell:AppsFolder\\"))

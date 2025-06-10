@@ -171,7 +171,7 @@ public class Shortcut : ShellLinkHeader
     {
         get
         {
-            if (LinkTargetIDList?.Path != null)
+            if (!string.IsNullOrWhiteSpace(LinkTargetIDList?.Path))
                 return Path.GetFullPath(LinkTargetIDList.Path);
             else if (ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode != null)
                 return Path.GetFullPath(ExtraData.EnvironmentVariableDataBlock.TargetUnicode);
