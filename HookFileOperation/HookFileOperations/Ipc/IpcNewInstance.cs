@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -47,6 +48,7 @@ public class IpcNewInstance : MarshalByRefObject
                         }
                         if (Path.GetExtension(listOperations[0].NewName).ToLower() == ".lnk")
                         {
+                            // TODO : Replace by rundll32.exe AppWiz.cpl,NewLinkHere %1
                             IpcServerManager.CreateShortcut(listOperations[0].Destination, listOperations[0].NewName);
                             return;
                         }
@@ -59,7 +61,7 @@ public class IpcNewInstance : MarshalByRefObject
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error during HookCopy : {ex.Message}{Environment.NewLine}{ex.StackTrace}");
+                    Debug.WriteLine($"Error during HookCopy : {ex.Message}{Environment.NewLine}{ex.StackTrace}");
                 }
                 finally
                 {

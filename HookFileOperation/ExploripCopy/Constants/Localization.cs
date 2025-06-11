@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -116,7 +117,7 @@ public static class Localization
         }
         else
         {
-            Console.WriteLine($"Error, unable to find StringResource={Ident} in {libraryName}");
+            Debug.WriteLine($"Error, unable to find StringResource={Ident} in {libraryName}");
             return DefaultText;
         }
     }

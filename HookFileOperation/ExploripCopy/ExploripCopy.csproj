@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\ExploripConfig\ExploripConfig.csproj" />
+    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
     <ProjectReference Include="..\..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj" />
     <ProjectReference Include="..\ExploripSharedCopy\ExploripSharedCopy.csproj" />
     <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj" />

@@ -85,7 +85,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Binding="{Binding Source}" Width="0.5*" IsReadOnly="True">
+                        <DataGridTextColumn Binding="{Binding DisplaySource}" Width="0.5*" IsReadOnly="True">
                             <DataGridTextColumn.HeaderStyle>
                                 <Style TargetType="DataGridColumnHeader">
                                     <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>

@@ -1,13 +1,19 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 using Explorip.HookFileOperations.FilesOperations;
 
 namespace Explorip.HookFileOperations.Models;
 
 [Serializable()]
-public class OneFileOperation
+public class OneFileOperation : INotifyPropertyChanged
 {
+    private string _display;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
     public OneFileOperation() { }
 
     public OneFileOperation(EFileOperation operation) : this()
@@ -18,6 +24,17 @@ public class OneFileOperation
     public EFileOperation FileOperation { get; set; }
 
     public string Source { get; set; }
+
+    public string DisplaySource
+    {
+        get { return string.IsNullOrWhiteSpace(_display) ? Source : _display; }
+    }
+
+    public void SetDisplaySource(string display)
+    {
+        _display = display;
+        OnPropertyChanged(nameof(DisplaySource));
+    }
 
     public string Destination { get; set; }
 
@@ -88,5 +105,10 @@ public class OneFileOperation
                 throw new Exception("Unknown IFileOperation command");
 #pragma warning restore S112 // General exceptions should never be thrown
         }
+    }
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Explorip.HookFileOperations.Interfaces;
 using Explorip.HookFileOperations.Models;
@@ -15,6 +16,14 @@ internal class InteractionMainProcess : IInteractionMainProcess
     {
         if (listOperations?.Count > 0)
         {
+            // TODO : If RecycledBin file, get real name
+            /*foreach (OneFileOperation operation in listOperations.Where(op => op.FileOperation == EFileOperation.Delete))
+            {
+                if (string.IsNullOrWhiteSpace(operation.DisplaySource))
+                {
+                    operation.SetDisplaySource(operation.Source);
+                }
+            }*/
             MainViewModels.Instance.AddOperations(listOperations);
             listOperations[listOperations.Count - 1].ResetChoice = true;
             MainViewModels.Instance.ForceUpdateWaitingList();
