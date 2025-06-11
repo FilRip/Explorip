@@ -196,10 +196,12 @@ internal static class TaskbarWindowManager
         }
         else
         {
+#pragma warning disable S1871 // Two branches in a conditional structure should not have exactly the same implementation
             if (!_buttonsAdded)
             {
                 AddButtons(taskbarWindow);
             }
+#pragma warning restore S1871 // Two branches in a conditional structure should not have exactly the same implementation
 
             if (m.Msg == TaskbarNativeMethods.WmCommand &&
                 CoreNativeMethods.GetHiWord(m.WParam.ToInt64(), 16) == ThumbButton.Clicked)

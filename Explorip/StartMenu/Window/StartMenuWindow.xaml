@@ -138,7 +138,7 @@
         </ItemsPanelTemplate>
 
         <DataTemplate x:Key="MyDataTemplate" DataType="{x:Type viewmodels:StartMenuItemViewModel}">
-            <Grid>
+            <Grid HorizontalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="5"/>
                     <RowDefinition Height="*"/>
@@ -149,16 +149,10 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="15"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" Background="{Binding BackgroundItem}">
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Background="{Binding BackgroundItem}" HorizontalAlignment="Stretch">
                     <StackPanel.ContextMenu>
                         <ContextMenu Background="{x:Static constants:Colors.BackgroundColorBrush}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" ItemsPanel="{StaticResource MyMenuItem}">
-                            <MenuItem Header="{x:Static localization:Localization.PIN_TO_STARTMENU}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding PinToStartMenuCommand}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </MenuItem>
+                            <MenuItem Header="{x:Static localization:Localization.PIN_TO_STARTMENU}" Command="{Binding PinToStartMenuCommand}"/>
                         </ContextMenu>
                     </StackPanel.ContextMenu>
                     <i:Interaction.Triggers>
@@ -172,16 +166,16 @@
                             <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
-                    <Grid>
+                    <Grid HorizontalAlignment="Stretch">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="32"/>
-                            <ColumnDefinition Width="{Binding SizeNameColumn}"/>
-                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding Icon}" Grid.Column="0"/>
-                        <TextBlock Text="{Binding Name}" Margin="5 0 0 0" Grid.Column="1" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96E;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowDown, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96D;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowUp, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextAlignment="Left"/>
+                        <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96E;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowDown, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96D;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowUp, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center"/>
                     </Grid>
                 </StackPanel>
                 <Grid Grid.Row="3">
@@ -223,7 +217,7 @@
         </Grid>
 
         <!-- Second column, list of items in Start Menu -->
-        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}" Visibility="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Left">
+        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}" Visibility="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Left" HorizontalContentAlignment="Stretch">
             <ItemsControl.Template>
                 <ControlTemplate TargetType="ItemsControl">
                     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Style="{StaticResource MyScrollViewerStyle}" MouseEnter="ScrollViewer_MouseEnter" MouseLeave="ScrollViewer_MouseLeave">
@@ -233,7 +227,7 @@
             </ItemsControl.Template>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical"/>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>

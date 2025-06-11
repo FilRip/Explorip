@@ -203,10 +203,18 @@ public partial class StartMenuViewModel : ObservableObject
             if (alreadyExist != null)
             {
                 if (sf.IsFolder)
-                    alreadyExist.LoadChildren(new ShellFolder(sf.Path, IntPtr.Zero));
+                {
+                    ShellFolder newShellFolder = new(sf.Path, IntPtr.Zero);
+                    if (newShellFolder.Files.Count > 0)
+                        alreadyExist.LoadChildren(newShellFolder);
+                }
             }
             else
-                StartMenuItems.Add(new StartMenuItemViewModel(sf, 0, this));
+            {
+                StartMenuItemViewModel smivm = new(sf, 0, this);
+                if (!sf.IsFolder || smivm.Children.Count > 0)
+                    StartMenuItems.Add(smivm);
+            }
         }
 
         return ret;

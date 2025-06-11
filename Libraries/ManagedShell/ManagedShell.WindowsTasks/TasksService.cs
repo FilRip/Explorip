@@ -285,6 +285,19 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             else
             {
                 win.ListWindows.Remove(hWnd);
+                if (win.IsPinnedApp && !GroupApplicationsWindows)
+                {
+                    ApplicationWindow nextPinned = Windows.FirstOrDefault(aw => aw != win && aw.WinFileName == win.WinFileName && aw.Arguments == win.Arguments && !aw.IsPinnedApp);
+                    if (nextPinned != null)
+                    {
+                        nextPinned.IsPinnedApp = true;
+                        nextPinned.PinnedShortcut = win.PinnedShortcut;
+                        nextPinned.Position = win.Position;
+                        Windows.Remove(win);
+                        win.Dispose();
+                        return;
+                    }
+                }
                 win.SetTitle();
                 win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
                 win.OnPropertyChanged(nameof(ApplicationWindow.MultipleInstanceLaunched));

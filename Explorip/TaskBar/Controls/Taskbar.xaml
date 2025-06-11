@@ -79,7 +79,7 @@
                         <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                     <StackPanel Orientation="{Binding PanelOrientation}">
-                        <controls:NotifyIconList VerticalAlignment="Center"/>
+                        <controls:NotifyIconList VerticalAlignment="Center" x:Name="MySystray"/>
                         <controls:Clock VerticalAlignment="Center"/>
                     </StackPanel>
                 </GroupBox>

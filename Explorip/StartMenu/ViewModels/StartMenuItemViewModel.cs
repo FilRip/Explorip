@@ -55,7 +55,11 @@ public partial class StartMenuItemViewModel : ObservableObject
     {
         foreach (ShellFile item in sf.Files)
             if (!Children.Any(i => i.Name == sf.DisplayName))
-                Children.Add(new StartMenuItemViewModel(item, _deep + 1, _window));
+            {
+                StartMenuItemViewModel smivm = new(item, _deep + 1, _window);
+                if (!item.IsFolder || smivm.Children.Count > 0)
+                    Children.Add(smivm);
+            }
     }
 
     public bool ShowDown

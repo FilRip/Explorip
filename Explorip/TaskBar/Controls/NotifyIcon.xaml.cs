@@ -4,8 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-using Explorip.Helpers;
-
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
@@ -112,8 +110,11 @@ public partial class NotifyIcon : UserControl
     {
         if ((e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down) || Keyboard.GetKeyStates(Key.RightCtrl).HasFlag(KeyStates.Down)))) && TrayIcon != null)
         {
-            NotifyIconList parent = this.FindVisualParent<NotifyIconList>();
-            parent.ChangePinItem(TrayIcon);
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
+                    tb.MySystray.ChangePinItem(TrayIcon);
+            });
             e.Handled = true;
         }
     }

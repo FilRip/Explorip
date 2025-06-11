@@ -21,6 +21,10 @@ public static class IconManager
             if ((largeIcon && large != IntPtr.Zero) ||
                 (!largeIcon && small != IntPtr.Zero))
             {
+                if (largeIcon && small != IntPtr.Zero)
+                    NativeMethods.DestroyIcon(small);
+                else if (!largeIcon && large != IntPtr.Zero)
+                    NativeMethods.DestroyIcon(large);
                 icon = Icon.FromHandle(largeIcon ? large : small);
             }
             return icon;
