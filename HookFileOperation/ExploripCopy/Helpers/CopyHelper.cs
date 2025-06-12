@@ -181,7 +181,7 @@ internal static class CopyHelper
             if (!Directory.Exists(Path.GetFullPath(destinationDir)))
                 Directory.CreateDirectory(Path.GetFullPath(destinationDir));
             DriveInfo di = new DirectoryInfo(destinationDir).GetDrive();
-            if (di.AvailableFreeSpace < fullSize)
+            if (di != null && di.AvailableFreeSpace < fullSize)
                 throw new ExploripCopyException(Constants.Localization.NOT_ENOUGH_FREE_SPACE);
             FileStream destination = new(destFile.FullName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
             destination.SetLength(fullSize);

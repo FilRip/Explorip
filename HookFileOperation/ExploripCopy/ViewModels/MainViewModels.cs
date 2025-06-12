@@ -329,21 +329,6 @@ public partial class MainViewModels : ObservableObject, IDisposable
                     switch (operation.FileOperation)
                     {
                         case Explorip.HookFileOperations.Models.EFileOperation.Delete:
-                            // TODO : If RecycledBin file, get real name
-                            /*Guid guidShellItem = typeof(ManagedShell.ShellFolders.Interfaces.IShellItem).GUID;
-                            NativeMethods.SHCreateItemFromParsingName(operation.Source, IntPtr.Zero, ref guidShellItem, out IntPtr siPtr);
-                            if (siPtr != IntPtr.Zero)
-                            {
-                                ManagedShell.ShellFolders.Interfaces.IShellItem si = (ManagedShell.ShellFolders.Interfaces.IShellItem)Marshal.GetTypedObjectForIUnknown(siPtr, typeof(ManagedShell.ShellFolders.Interfaces.IShellItem));
-                                if (si.GetDisplayName(ManagedShell.ShellFolders.Enums.SIGDN.NORMALDISPLAY, out IntPtr ptrDisplayName) == NativeMethods.S_OK && ptrDisplayName != IntPtr.Zero)
-                                {
-                                    string filename = Marshal.PtrToStringAuto(ptrDisplayName);
-                                    if (string.Compare(filename, Path.GetFileName(operation.Source), StringComparison.OrdinalIgnoreCase) != 0)
-                                        operation.SetDisplaySource(filename);
-                                    Marshal.FreeCoTaskMem(ptrDisplayName);
-                                }
-                                Marshal.ReleaseComObject(si);
-                            }*/
                             if (operation.ForceDeleteNoRecycled || !ExploripSharedCopy.WinAPI.Shell32.RecycledEnabledOnDrive(operation.Source.Substring(0, 2)))
                             {
                                 if (CopyHelper.ChoiceOnCollision == EChoiceFileOperation.ConfirmDelete)
