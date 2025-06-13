@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -27,19 +28,13 @@ namespace Explorip.TaskBar.ViewModels;
 
 public partial class ToolbarViewModel : BaseToolbarViewModel
 {
-    private readonly ContextMenu moreItems;
     private Task _taskRefresh;
     private readonly object _lockRefresh;
+    private Popup _moreItems;
 
     public ToolbarViewModel()
     {
         _lockRefresh = new object();
-        moreItems = new ContextMenu()
-        {
-            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(0),
-        };
     }
 
     public override string Id => Path;
@@ -185,7 +180,25 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             if (ShowTitle)
                 maxWidth -= TitleWidth;
             double currentWidth = 0;
-            moreItems.Items.Clear();
+            if (_moreItems != null)
+            {
+                ((ItemsControl)_moreItems.Child).Items.Clear();
+                if (_moreItems.IsOpen)
+                    _moreItems.IsOpen = false;
+                MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= ClosePopup;
+            }
+            _moreItems = new Popup()
+            {
+                Margin = new Thickness(0),
+                Child = new ItemsControl()
+                {
+                    Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+                    Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+                },
+                StaysOpen = false,
+            };
+            MyTaskbarApp.MyShellManager.TasksService.WindowActivated += ClosePopup;
+            _moreItems.PlacementTarget = MyToolbar;
             ShellFile lastVisible = null;
             foreach (ShellFile item in Folder.Files.OrderBy(sf => sf.Position))
             {
@@ -195,10 +208,15 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
                 else
                     lastVisible = item;
             }
-            if (moreItems.Items.Count > 0 && lastVisible != null)
+            if (((ItemsControl)_moreItems.Child).Items.Count > 0 && lastVisible != null)
                 AddMenuItem(lastVisible, true);
-            MoreItemsVisibility = (moreItems.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed);
+            MoreItemsVisibility = (((ItemsControl)_moreItems.Child).Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed);
         });
+    }
+
+    private void ClosePopup(IntPtr activatedWindow)
+    {
+        _moreItems.IsOpen = false;
     }
 
     private void AddMenuItem(ShellFile item, bool atStart = false)
@@ -207,9 +225,9 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             return;
         MenuItem mi = CreateMenuItem(item);
         if (atStart)
-            moreItems.Items.Insert(0, mi);
+            ((ItemsControl)_moreItems.Child).Items.Insert(0, mi);
         else
-            moreItems.Items.Add(mi);
+            ((ItemsControl)_moreItems.Child).Items.Add(mi);
         if (System.IO.Path.GetExtension(item.FileName) == ".lnk")
         {
             try
@@ -344,7 +362,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     [RelayCommand()]
     private void ShowMoreItems()
     {
-        moreItems.IsOpen = true;
+        _moreItems.IsOpen = true;
     }
 
     #endregion
@@ -356,6 +374,12 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             if (Folder.Files != null)
                 Folder.Files.CollectionChanged -= Files_CollectionChanged;
             Folder?.Dispose();
+            if (_moreItems != null)
+            {
+                MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= ClosePopup;
+                ((ItemsControl)_moreItems.Child).Items.Clear();
+                _moreItems.IsOpen = false;
+            }
         }
         catch (Exception) { /* Ignore errors */ }
         Folder = null;

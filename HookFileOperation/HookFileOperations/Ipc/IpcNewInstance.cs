@@ -48,7 +48,6 @@ public class IpcNewInstance : MarshalByRefObject
                         }
                         if (Path.GetExtension(listOperations[0].NewName).ToLower() == ".lnk")
                         {
-                            // TODO : Replace by rundll32.exe AppWiz.cpl,NewLinkHere %1
                             IpcServerManager.CreateShortcut(listOperations[0].Destination, listOperations[0].NewName);
                             return;
                         }

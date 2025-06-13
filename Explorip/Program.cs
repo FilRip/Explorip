@@ -74,6 +74,7 @@ public static class Program
 #endif
 
         ExploripSharedCopy.Constants.Colors.LoadTheme();
+        ExploripSharedCopy.Constants.Localization.LoadTranslation();
         Constants.Icons.Init();
         ConfigManager.Init();
 

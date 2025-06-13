@@ -33,6 +33,7 @@ public partial class ExploripCopyApp : Application
         if (processNotLaunched)
         {
             ExploripSharedCopy.Constants.Colors.LoadTheme();
+            ExploripSharedCopy.Constants.Localization.LoadTranslation();
             Constants.Localization.LoadTranslation();
             Constants.Icons.LoadIcons();
             ExploripConfig.Configuration.ConfigManager.Init();

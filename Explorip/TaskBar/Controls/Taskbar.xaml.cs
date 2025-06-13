@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 using Explorip.Helpers;
@@ -33,6 +34,8 @@ public partial class Taskbar : AppBarWindow
 {
     private readonly bool _mainScreen;
     private readonly string _screenName;
+
+    public Popup MyPopup { get; private set; }
 
     public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
         : base(MyTaskbarApp.MyShellManager.AppBarManager, MyTaskbarApp.MyShellManager.ExplorerHelper, MyTaskbarApp.MyShellManager.FullScreenHelper, screen, edge, 0)
@@ -74,6 +77,24 @@ public partial class Taskbar : AppBarWindow
         {
             _ = new StartMenuWindow();
         }
+
+        MyPopup = new Popup()
+        {
+            Margin = new Thickness(0),
+            Child = new ItemsControl()
+            {
+                Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+                Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            },
+            StaysOpen = false,
+        };
+
+        MyTaskbarApp.MyShellManager.TasksService.WindowActivated += ClosePopup;
+    }
+
+    private void ClosePopup(IntPtr activatedWindow)
+    {
+        MyPopup.IsOpen = false;
     }
 
     public TaskbarViewModel MyDataContext
@@ -172,7 +193,9 @@ public partial class Taskbar : AppBarWindow
     {
         if (AllowClose && !IsReopening)
         {
-            _explorerHelper.HideExplorerTaskbar = false;
+            MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= ClosePopup;
+            if (_mainScreen)
+                _explorerHelper.HideExplorerTaskbar = false;
         }
     }
 

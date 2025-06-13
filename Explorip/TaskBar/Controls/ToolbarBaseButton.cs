@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 using Explorip.Constants;
@@ -26,7 +27,6 @@ public class ToolbarBaseButton : UserControl
     private Timer _timer;
     protected bool? _isFolder = null;
     protected string _folderPath;
-    private ContextMenu moreItems;
     private ShellFolder _shellFolder;
 
     public bool DisableFolderPreview { get; set; }
@@ -87,17 +87,18 @@ public class ToolbarBaseButton : UserControl
             }
             if (_isFolder.Value)
             {
-                moreItems = new ContextMenu()
+                Popup myPopup = this.FindVisualParent<Taskbar>().MyPopup;
+                if (myPopup != null)
                 {
-                    Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-                    Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-                    Margin = new Thickness(0, 0, 0, 0),
-                };
-                moreItems.Items.Clear();
+                    ((ItemsControl)myPopup.Child).Items.Clear();
+                    if (myPopup.IsOpen)
+                        myPopup.IsOpen = false;
+                }
+                myPopup.PlacementTarget = this;
                 _shellFolder ??= new ShellFolder(_folderPath, IntPtr.Zero, false);
                 foreach (ShellFile file in _shellFolder.Files)
                     AddMenuItem(file);
-                moreItems.IsOpen = true;
+                myPopup.IsOpen = true;
             }
             else
                 DisableFolderPreview = true;
@@ -107,7 +108,7 @@ public class ToolbarBaseButton : UserControl
     private void AddMenuItem(ShellFile item)
     {
         MenuItem mi = CreateMenuItem(item);
-        moreItems.Items.Add(mi);
+        ((ItemsControl)this.FindVisualParent<Taskbar>().MyPopup.Child).Items.Add(mi);
         if (Path.GetExtension(item.FileName) == ".lnk")
         {
             try

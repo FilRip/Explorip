@@ -38,6 +38,7 @@ namespace ExploripComponents.Controls
         public MainWindow()
         {
             ExploripSharedCopy.Constants.Colors.LoadTheme();
+            ExploripSharedCopy.Constants.Localization.LoadTranslation();
             Explorip.Constants.Localization.LoadTranslation();
             InitializeComponent();
 

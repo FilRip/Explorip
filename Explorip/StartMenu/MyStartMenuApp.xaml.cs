@@ -1,7 +1,5 @@
 ﻿using System.Windows;
 
-using Explorip.TaskBar.Utilities;
-
 using ManagedShell;
 
 namespace Explorip.StartMenu;

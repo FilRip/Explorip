@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 
 using ExploripSharedCopy.Controls;
-
-using Securify.ShellLink;
 
 namespace ExploripSharedCopy.Helpers;
 
@@ -28,19 +27,16 @@ public static class CreateOperations
         });
     }
 
-#pragma warning disable IDE0060 // Supprimer le paramètre inutilisé
-    public static void CreateShortcut(string path, string name, Action<CreateShortcutWindow> actionOnWindow)
+    public static void CreateShortcut(string path, string newName)
     {
-        Application.Current.Dispatcher.BeginInvoke(() =>
+        int iteration = 1;
+        string name = (string.IsNullOrWhiteSpace(newName) ? Constants.Localization.NEW_SHORTCUT_NAME + ".lnk" : newName);
+        while (File.Exists(Path.Combine(path, name)))
         {
-            CreateShortcutWindow win = new();
-            actionOnWindow?.Invoke(win);
-            if (win.ShowDialog() == true)
-            {
-                Shortcut sc = Shortcut.CreateShortcut(win.Target);
-                sc.WriteToFile(Path.Combine(path, win.ShortcutName + ".lnk"));
-            }
-        });
+            iteration++;
+            name = Constants.Localization.NEW_SHORTCUT_NAME + $" ({iteration}).lnk";
+        }
+        File.CreateText(Path.Combine(path, name)).Close();
+        Process.Start("rundll32.exe", $"appwiz.cpl,NewLinkHere {Path.Combine(path, name)}");
     }
-#pragma warning restore IDE0060 // Supprimer le paramètre inutilisé
 }

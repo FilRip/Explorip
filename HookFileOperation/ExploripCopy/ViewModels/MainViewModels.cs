@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Media;
@@ -365,20 +364,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                             }
                             if (Path.GetExtension(operation.NewName).ToLower() == ".lnk")
                             {
-                                static void SetConstants(CreateShortcutWindow win)
-                                {
-                                    win.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-                                    win.Title = Localization.CREATE_SHORTCUT;
-                                    win.Icon = Icons.Shortcut;
-                                    win.Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
-                                    win.Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
-                                    win.SetQuestions(Localization.CREATE_SHORTCUT_Q1, Localization.CREATE_SHORTCUT_Q2);
-                                    win.SetOk(Localization.CONTINUE.Replace("_", ""), Icons.OkImage);
-                                    win.SetCancel(Localization.CANCEL.Replace("_", ""), Icons.CancelImage);
-                                    win.SetBrowse(Localization.BROWSE.Replace("_", ""));
-                                }
-
-                                ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(operation.Destination, operation.NewName, SetConstants);
+                                ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(operation.Destination, Path.GetFileNameWithoutExtension(operation.NewName));
                                 break;
                             }
                             fo.NewItem(operation.Destination, operation.NewName, operation.Attributes);

@@ -41,19 +41,7 @@ public sealed class IpcServer : IServerIpc
 
     public void CreateShortcut(string path, string name)
     {
-        static void SetConstants(CreateShortcutWindow win)
-        {
-            win.Title = Constants.Localization.CREATE_SHORTCUT;
-            win.Icon = Constants.Icons.Shortcut;
-            win.Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
-            win.Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
-            win.SetQuestions(Constants.Localization.CREATE_SHORTCUT_Q1, Constants.Localization.CREATE_SHORTCUT_Q2);
-            win.SetOk(Constants.Localization.CONTINUE, Constants.Icons.OkImage);
-            win.SetCancel(Constants.Localization.CANCEL, Constants.Icons.CancelImage);
-            win.SetBrowse(Constants.Localization.BROWSE);
-        }
-
-        ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(path, name, SetConstants);
+        ExploripSharedCopy.Helpers.CreateOperations.CreateShortcut(path, name);
     }
 
     public void Ping()
