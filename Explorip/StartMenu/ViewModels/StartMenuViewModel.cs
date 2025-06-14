@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Helpers;
 using Explorip.StartMenu.Controls;
+using Explorip.TaskBar;
 
 using ExploripConfig.Configuration;
 
@@ -292,11 +293,13 @@ public partial class StartMenuViewModel : ObservableObject
     public static void Shutdown()
     {
         ShellHelper.StartProcess("shutdown", "/s /t 0", hidden: true);
+        ((MyTaskbarApp)Application.Current).ExitGracefully();
     }
 
     public static void Restart()
     {
         ShellHelper.StartProcess("shutdown", "/r /t 0", hidden: true);
+        ((MyTaskbarApp)Application.Current).ExitGracefully();
     }
 
     public static void Hybernate()
