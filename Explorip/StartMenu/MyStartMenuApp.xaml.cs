@@ -1,5 +1,9 @@
 ﻿using System.Windows;
 
+#if DEBUG
+using Explorip.TaskBar.Utilities;
+#endif
+
 using ManagedShell;
 
 namespace Explorip.StartMenu;

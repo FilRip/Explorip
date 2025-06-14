@@ -291,17 +291,17 @@ public partial class StartMenuViewModel : ObservableObject
 
     public static void Shutdown()
     {
-        ShellHelper.StartProcess("shutdown /s /t 0", hidden: true);
+        ShellHelper.StartProcess("shutdown", "/s /t 0", hidden: true);
     }
 
     public static void Restart()
     {
-        ShellHelper.StartProcess("shutdown /r /t 0", hidden: true);
+        ShellHelper.StartProcess("shutdown", "/r /t 0", hidden: true);
     }
 
     public static void Hybernate()
     {
-        ShellHelper.StartProcess("shutdown /h", hidden: true);
+        ShellHelper.StartProcess("shutdown", "/h", hidden: true);
     }
 
     private void ShowCustomColor()
