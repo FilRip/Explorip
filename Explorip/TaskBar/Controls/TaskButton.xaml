@@ -22,10 +22,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition Height="2"/>
         </Grid.RowDefinitions>
-        <Rectangle Grid.RowSpan="2" Panel.ZIndex="-1" HorizontalAlignment="Left" Fill="Green" Width="{Binding PercentProgressValue, Converter={StaticResource ProgressConverter},ConverterParameter=0}" Height="auto" Name="ProgressRectangle"/>
         <Button Name="AppButton" BorderThickness="0" AllowDrop="True"
                 Grid.Row="0"
                 ToolTip="{Binding Title}"
@@ -75,7 +73,7 @@
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
-        <ProgressBar Grid.Row="1" Margin="0" Height="2" Visibility="{Binding IsInProgress, Converter={StaticResource BoolToVisibility}}" Maximum="100" Value="{Binding PercentProgressValue, Mode=OneWay}" Foreground="Green" Background="Transparent" BorderThickness="0" Name="ProgressBarWindow"/>
-        <StackPanel Grid.Row="2" Margin="0" Background="{x:Static colors:Colors.AccentColorBrush}" Visibility="{Binding Launched, Converter={StaticResource BoolToVisibility}}"/>
+        <ProgressBar Grid.Row="0" VerticalContentAlignment="Bottom" Panel.ZIndex="-1" VerticalAlignment="Bottom" Margin="0" Visibility="{Binding IsInProgress, Converter={StaticResource BoolToVisibility}}" Maximum="100" Value="{Binding PercentProgressValue, Mode=OneWay}" Foreground="Green" Background="Transparent" BorderThickness="0" Name="ProgressBarWindow"/>
+        <StackPanel Grid.Row="1" Margin="0" Background="{x:Static colors:Colors.AccentColorBrush}" Visibility="{Binding Launched, Converter={StaticResource BoolToVisibility}}"/>
     </Grid>
 </UserControl>

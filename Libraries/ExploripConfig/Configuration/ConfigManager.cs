@@ -92,7 +92,7 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MaxRecursiveSubFolderInToolbar", "").ToString()))
                 _registryRootTaskbar.SetValue("MaxRecursiveSubFolderInToolbar", "5");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ProgressBarHeight", "").ToString()))
-                _registryRootTaskbar.SetValue("ProgressBarHeight", "2");
+                _registryRootTaskbar.SetValue("ProgressBarHeight", "5");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ReduceTitleWidthWhenTaskbarFull", "").ToString()))
                 _registryRootTaskbar.SetValue("ReduceTitleWidthWhenTaskbarFull", "True");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MarginTitleApplicationWindow", "").ToString()))
