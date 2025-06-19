@@ -487,17 +487,17 @@ public static class ConfigManager
     {
         get
         {
-            string bgColor = _registryStartMenu.GetValue("TaskButtonProgressBarColor")?.ToString();
+            string bgColor = _registryRootTaskbar.GetValue("TaskButtonProgressBarColor")?.ToString();
             if (!string.IsNullOrWhiteSpace(bgColor))
             {
-                return new SolidColorBrush(_registryStartMenu.ReadColor("TaskButtonProgressBarColor", Colors.Green));
+                return new SolidColorBrush(_registryRootTaskbar.ReadColor("TaskButtonProgressBarColor", Colors.Green));
             }
             return null;
         }
         set
         {
             if (AllowWrite)
-                _registryStartMenu.SetValue("TaskButtonProgressBarColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+                _registryRootTaskbar.SetValue("TaskButtonProgressBarColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 
