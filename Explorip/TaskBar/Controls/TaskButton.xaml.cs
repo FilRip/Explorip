@@ -6,12 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 using Explorip.Constants;
 using Explorip.Helpers;
-using Explorip.TaskBar.Converters;
 
 using ExploripConfig.Configuration;
 
@@ -28,7 +26,6 @@ namespace Explorip.TaskBar.Controls;
 public partial class TaskButton : UserControl
 {
     private ApplicationWindow _appWindow;
-    private readonly TaskButtonStyleConverter StyleConverter = new();
     private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
     private TaskThumbButton _thumb;
     private bool _isLoaded;
@@ -39,23 +36,6 @@ public partial class TaskButton : UserControl
     public TaskButton()
     {
         InitializeComponent();
-        SetStyle();
-    }
-
-    private void SetStyle()
-    {
-        MultiBinding multiBinding = new()
-        {
-            Converter = StyleConverter,
-        };
-
-        multiBinding.Bindings.Add(new Binding()
-        {
-            RelativeSource = RelativeSource.Self,
-        });
-        multiBinding.Bindings.Add(new Binding(nameof(_appWindow.State)));
-
-        AppButton.SetBinding(StyleProperty, multiBinding);
     }
 
     private void ScrollIntoView()
@@ -251,9 +231,10 @@ public partial class TaskButton : UserControl
         if (_appWindow.ListWindows.Count == 0)
             return;
 
-        if (ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).TaskbarDisableThumb)
+        if (ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskbarDisableThumb)
             return;
 
+        _timerBeforeShowThumbnail?.Dispose();
         _timerBeforeShowThumbnail = new Timer(ShowThumbnail, null, ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
     }
 

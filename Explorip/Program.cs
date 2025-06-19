@@ -131,7 +131,12 @@ public static class Program
                 _WpfHost.Run();
             }
             else
-                IpcServerManager.SendNewWindow(args);
+            {
+                if (args?.Length > 0 && Directory.Exists(args[0]))
+                    IpcServerManager.SendNewWindow(args);
+                else
+                    IpcServerManager.SendNewWindow([Environment.SpecialFolder.System.FullPath().Substring(0, 3)]);
+            }
         }
         mutexProcess.Dispose();
     }

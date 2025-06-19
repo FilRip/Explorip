@@ -17,6 +17,7 @@
         <converters:MultipleInstanceAlignmentConverter x:Key="multipleInstanceAlignmentConverter"/>
         <converters:ProgressConverter x:Key="ProgressConverter" />
         <explorerConverters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility"/>
+        <converters:TaskButtonStyleConverter x:Key="taskButtonStyleConvert"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -31,7 +32,8 @@
                 Click="AppButton_OnClick"
                 Drop="AppButton_Drop"
                 PreviewMouseDown="AppButton_OnPreviewMouseDown"
-                DragEnter="AppButton_OnDragEnter">
+                DragEnter="AppButton_OnDragEnter"
+                Style="{Binding State, Converter={StaticResource taskButtonStyleConvert}}">
             <Grid Margin="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" x:Name="IconColumn"/>

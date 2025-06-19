@@ -147,14 +147,13 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
     }
 
-
     public int Position
     {
         get { return _position; }
         set
         {
             _position = value;
-            OnPropertyChanged(nameof(Position));
+            OnPropertyChanged();
         }
     }
 

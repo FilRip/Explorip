@@ -67,7 +67,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             {
                 if (rebuild)
                     tl.RebuildCollectionView();
-                tl.RefreshMyCollectionView();
                 if (ConfigManager.ReduceTitleWidthWhenTaskbarFull)
                     tl.UpdateMaxWidth();
             }

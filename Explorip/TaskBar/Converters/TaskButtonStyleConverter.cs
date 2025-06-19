@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
@@ -6,43 +7,26 @@ using ManagedShell.WindowsTasks;
 
 namespace Explorip.TaskBar.Converters;
 
-[ValueConversion(typeof(bool), typeof(Style))]
-public class TaskButtonStyleConverter : IMultiValueConverter
+public class TaskButtonStyleConverter : IValueConverter
 {
-    public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (values[0] is not FrameworkElement fxElement)
-        {
-            return null;
-        }
-
-        // Default style is Inactive...
-        object fxStyle = fxElement.FindResource("TaskButton");
-
-        if (values[1] == null)
-        {
-            // Default - couldn't get window state.
-            return fxStyle;
-        }
-
-        if (values[1] is ApplicationWindow.WindowState state)
+        if (value is ApplicationWindow.WindowState state)
         {
             switch (state)
             {
                 case ApplicationWindow.WindowState.Active:
-                    fxStyle = fxElement.FindResource("TaskButtonActive");
-                    break;
-
+                    return Application.Current.FindResource("TaskButtonActive");
                 case ApplicationWindow.WindowState.Flashing:
-                    fxStyle = fxElement.FindResource("TaskButtonFlashing");
-                    break;
+                    return Application.Current.FindResource("TaskButtonFlashing");
             }
         }
 
-        return fxStyle;
+        // Default style is Inactive...
+        return Application.Current.FindResource("TaskButton");
     }
 
-    public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
         throw new NotImplementedException();
     }
