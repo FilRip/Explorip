@@ -103,6 +103,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("TaskButtonProgressBarColor", $"255,{Colors.Green.R},{Colors.Green.G},{Colors.Green.B}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("TaskButtonCornerRadius", "").ToString()))
                 _registryRootTaskbar.SetValue("TaskButtonCornerRadius", "1");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DateFormat", "").ToString()))
+                _registryRootTaskbar.SetValue("DateFormat", "<%dayofweek%>\\r<%t%>\\r<%d%>");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -404,6 +406,16 @@ public static class ConfigManager
     #endregion
 
     #region Taskbar
+
+    public static string DateFormat
+    {
+        get { return _registryRootTaskbar.GetValue("DateFormat", "").ToString(); }
+        set
+        {
+            if (DateFormat != value && AllowWrite)
+                _registryRootTaskbar.SetValue("DateFormat", value.ToString());
+        }
+    }
 
     public static bool TaskbarReplaceStartMenu
     {

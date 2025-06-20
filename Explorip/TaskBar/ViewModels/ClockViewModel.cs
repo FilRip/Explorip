@@ -8,6 +8,8 @@ using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.Common.Helpers;
 
 using Microsoft.WindowsAPICodePack.Shell.Constants;
@@ -24,6 +26,12 @@ public partial class ClockViewModel : ObservableObject
     private readonly DispatcherTimer clock = new(DispatcherPriority.Background);
     private readonly DispatcherTimer singleClick = new(DispatcherPriority.Input);
     private Dispatcher _dispatcher;
+    private readonly string[] _dateFormat;
+
+    public ClockViewModel()
+    {
+        _dateFormat = System.Text.RegularExpressions.Regex.Split(ConfigManager.DateFormat.Trim().Replace("\\r\\n", Environment.NewLine).Replace("\\r", Environment.NewLine), "(<%.*?%>)");
+    }
 
     public void ShowClock()
     {
@@ -104,10 +112,24 @@ public partial class ClockViewModel : ObservableObject
         DateTime now = DateTime.Now;
 
         StringBuilder sb = new();
-        sb.AppendLine(DateTimeFormatInfo.CurrentInfo.GetDayName(now.DayOfWeek));
-        sb.AppendLine(now.ToString("t", CultureInfo.CurrentCulture));
-        sb.AppendLine(now.ToString("d", CultureInfo.CurrentCulture));
+        foreach (string str in _dateFormat)
+        {
+            if (!string.IsNullOrWhiteSpace(str) || str == Environment.NewLine)
+            {
+                try
+                {
+                    if (str.ToLower() == "<%dayofweek%>")
+                        sb.Append(DateTimeFormatInfo.CurrentInfo.GetDayName(now.DayOfWeek));
+                    else if (str.StartsWith("<%"))
+                        sb.Append(now.ToString(str.Replace("<%", "").Replace("%>", ""), CultureInfo.CurrentCulture));
+                    else
+                        sb.Append(str);
+                }
+                catch (Exception) { /* Ignore errors */ }
+            }
+        }
         ClockText = sb.ToString();
+
         ClockTip = now.ToString("f", CultureInfo.CurrentCulture);
     }
 

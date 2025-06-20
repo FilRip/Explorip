@@ -61,6 +61,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue("DesktopButtonWidth", "5");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistHorizontalAligment", "").ToString()))
                 _registryTaskbar.SetValue("TasklistHorizontalAligment", "Left");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarMinHeight", "").ToString()))
+                _registryTaskbar.SetValue("TaskbarMinHeight", "52");
         }
     }
 
@@ -111,6 +113,16 @@ public class TaskbarConfig
         {
             if (TaskbarHeight != value && AllowWrite)
                 _registryTaskbar.SetValue("TaskbarHeight", value.ToString());
+        }
+    }
+
+    public double TaskbarMinHeight
+    {
+        get { return _registryTaskbar.ReadDouble("TaskbarMinHeight"); }
+        set
+        {
+            if (TaskbarMinHeight != value && AllowWrite)
+                _registryTaskbar.SetValue("TaskbarMinHeight", value.ToString());
         }
     }
 

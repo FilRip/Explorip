@@ -58,7 +58,7 @@ public partial class Taskbar : AppBarWindow
         if (DpiHelper.DpiScale % 1 != 0)
             UseLayoutRounding = false;
 
-        MinHeight = Math.Max(52, DesiredHeight);
+        MinHeight = Math.Max(ConfigManager.GetTaskbarConfig(ScreenName).TaskbarMinHeight, DesiredHeight);
 
         if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight > 0)
             DesiredHeight = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight;
