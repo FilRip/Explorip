@@ -69,7 +69,8 @@ public partial class StartMenuViewModel : ObservableObject
             Margin = new Thickness(0),
         };
         CreateMenuItem(_cmUser, Constants.Localization.LOCK, ShellHelper.Lock, icon: Constants.Icons.Lock);
-        CreateMenuItem(_cmUser, Constants.Localization.DISCONNECT, ShellHelper.Logoff);
+        CreateMenuItem(_cmUser, Constants.Localization.DISCONNECT, ShellHelper.Logoff, icon: Constants.Icons.SignOut);
+        CreateMenuItem(_cmUser, Constants.Localization.CHANGE_USER, ShellHelper.Lock, icon: Constants.Icons.SwitchUser);
 
         _cmStop = new()
         {
@@ -77,7 +78,7 @@ public partial class StartMenuViewModel : ObservableObject
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             Margin = new Thickness(0),
         };
-        CreateMenuItem(_cmStop, Constants.Localization.PUT_HYBERNATE, Hybernate);
+        CreateMenuItem(_cmStop, Constants.Localization.PUT_HYBERNATE, Hybernate, icon: Constants.Icons.Sleep);
         CreateMenuItem(_cmStop, Constants.Localization.SHUTDOWN, Shutdown, icon: Constants.Icons.Shutdown);
         CreateMenuItem(_cmStop, Constants.Localization.RESTART, Restart, icon: Constants.Icons.Refresh);
 
