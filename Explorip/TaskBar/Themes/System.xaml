@@ -170,37 +170,18 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Background="Transparent"
+                            CornerRadius="{x:Static config:ConfigManager.TaskButtonCornerRadius}"
+                            BorderThickness="0"
                             Padding="0,2"
                             Name="ButtonBorder">
-                        <Border BorderThickness="0,0,0,0"
-                                BorderBrush="{TemplateBinding Background}"
-                                x:Name="ButtonRightBottomBorder">
-                            <Border BorderThickness="0,0,0,0"
-                                    BorderBrush="{TemplateBinding Background}"
-                                    Background="{TemplateBinding Background}"
-                                    Padding="2"
-                                    x:Name="ButtonLeftTopBorder">
-                                <ContentPresenter />
-                            </Border>
-                        </Border>
+                        <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-                                     Value="Vertical">
-                            <DataTrigger.Setters>
-                                <Setter TargetName="ButtonBorder"
-                                        Property="Padding"
-                                        Value="2,1" />
-                            </DataTrigger.Setters>
-                        </DataTrigger>
                         <Trigger Property="IsMouseOver"
                                  Value="True">
-                            <Setter TargetName="ButtonLeftTopBorder"
+                            <Setter TargetName="ButtonBorder"
                                     Property="Background"
                                     Value="#303030" />
-                            <Setter TargetName="ButtonRightBottomBorder"
-                                    Property="BorderBrush"
-                                    Value="DarkBlue" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
