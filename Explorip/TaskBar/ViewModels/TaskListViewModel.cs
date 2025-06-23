@@ -34,7 +34,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     private Taskbar _taskbarParent;
     private readonly object _lockChangeDesktop;
     private bool disposedValue;
-    private HorizontalAlignment _tasklistAligment;
 
     [ObservableProperty()]
     private ICollectionView _taskListCollection;
@@ -100,8 +99,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             if (_taskbarParent != value && value != null)
             {
                 _taskbarParent = value;
-                _tasklistAligment = ConfigManager.GetTaskbarConfig(value.ScreenName).TaskListAligment;
-                OnPropertyChanged(nameof(TasklistHorizontalAligment));
                 if (_taskbarParent.MainScreen)
                 {
                     RemoveTaskServiceEvent();
@@ -173,11 +170,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     public Orientation PanelOrientation
     {
         get { return _currentEdge.GetOrientation(); }
-    }
-
-    public HorizontalAlignment TasklistHorizontalAligment
-    {
-        get { return _tasklistAligment; }
     }
 
     private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)

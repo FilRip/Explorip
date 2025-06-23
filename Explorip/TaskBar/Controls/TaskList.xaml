@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
-             Loaded="TaskList_OnLoaded" HorizontalContentAlignment="{Binding TasklistHorizontalAligment, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+             Loaded="TaskList_OnLoaded"
              Background="Transparent">
     <UserControl.DataContext>
         <viewmodels:TaskListViewModel/>

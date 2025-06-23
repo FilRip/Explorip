@@ -67,11 +67,63 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         }
     }
 
+    public VerticalAlignment VerticalTaskListAlignment
+    {
+        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListVerticalAlignment; }
+    }
+
+    public HorizontalAlignment HorizontalTaskListAlignment
+    {
+        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListHorizontalAlignment; }
+    }
+
     [ObservableProperty()]
     private Taskbar _parentTaskbar = parentControl;
 
     [ObservableProperty()]
     private bool _resizeOn, _tabTipVisible, _keyboardLayoutVisible, _searchZoneVisible, _searchButtonVisible, _taskManVisible, _widgetsVisible, _desktopPreviewVisible, _showApplicationWindowTitle, _isGroupedApplicationWindow, _isShowSmallIcon;
+
+    [RelayCommand()]
+    private void AlignTaskListToLeft()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListHorizontalAlignment = HorizontalAlignment.Left;
+        OnPropertyChanged(nameof(HorizontalTaskListAlignment));
+    }
+
+    [RelayCommand()]
+    private void AlignTaskListToRight()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListHorizontalAlignment = HorizontalAlignment.Right;
+        OnPropertyChanged(nameof(HorizontalTaskListAlignment));
+    }
+
+    [RelayCommand()]
+    private void AlignTaskListToCenter()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListHorizontalAlignment = HorizontalAlignment.Center;
+        OnPropertyChanged(nameof(HorizontalTaskListAlignment));
+    }
+
+    [RelayCommand()]
+    private void AlignTaskListToCenterV()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListVerticalAlignment = VerticalAlignment.Center;
+        OnPropertyChanged(nameof(VerticalTaskListAlignment));
+    }
+
+    [RelayCommand()]
+    private void AlignTaskListToTop()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListVerticalAlignment = VerticalAlignment.Top;
+        OnPropertyChanged(nameof(VerticalTaskListAlignment));
+    }
+
+    [RelayCommand()]
+    private void AlignTaskListToBottom()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListVerticalAlignment = VerticalAlignment.Bottom;
+        OnPropertyChanged(nameof(VerticalTaskListAlignment));
+    }
 
     [RelayCommand()]
     private void ShowHideTabTip()

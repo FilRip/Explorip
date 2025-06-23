@@ -59,10 +59,12 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue("SpaceBetweenTaskButton", "5");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("DesktopButtonWidth", "").ToString()))
                 _registryTaskbar.SetValue("DesktopButtonWidth", "5");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistHorizontalAligment", "").ToString()))
-                _registryTaskbar.SetValue("TasklistHorizontalAligment", "Left");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistHorizontalAlignment", "").ToString()))
+                _registryTaskbar.SetValue("TasklistHorizontalAlignment", HorizontalAlignment.Left.ToString("G"));
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarMinHeight", "").ToString()))
                 _registryTaskbar.SetValue("TaskbarMinHeight", "52");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistVerticalAlignment", "").ToString()))
+                _registryTaskbar.SetValue("TasklistVerticalAlignment", VerticalAlignment.Bottom.ToString("G"));
         }
     }
 
@@ -324,13 +326,23 @@ public class TaskbarConfig
         }
     }
 
-    public HorizontalAlignment TaskListAligment
+    public HorizontalAlignment TaskListHorizontalAlignment
     {
-        get { return _registryTaskbar.ReadEnum<HorizontalAlignment>("TasklistHorizontalAligment"); }
+        get { return _registryTaskbar.ReadEnum<HorizontalAlignment>("TasklistHorizontalAlignment"); }
         set
         {
-            if (TaskListAligment != value && AllowWrite)
-                _registryTaskbar.SetValue("TasklistHorizontalAligment", value.ToString("G"));
+            if (TaskListHorizontalAlignment != value && AllowWrite)
+                _registryTaskbar.SetValue("TasklistHorizontalAlignment", value.ToString("G"));
+        }
+    }
+
+    public VerticalAlignment TaskListVerticalAlignment
+    {
+        get { return _registryTaskbar.ReadEnum<VerticalAlignment>("TasklistVerticalAlignment"); }
+        set
+        {
+            if (TaskListVerticalAlignment != value && AllowWrite)
+                _registryTaskbar.SetValue("TasklistVerticalAlignment", value.ToString("G"));
         }
     }
 

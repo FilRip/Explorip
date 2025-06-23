@@ -22,6 +22,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+            <converters:EnumToBool x:Key="EnumToBool"/>
         </ResourceDictionary>
     </Window.Resources>
     <WindowChrome.WindowChrome>
@@ -73,7 +74,9 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                 </Grid>
-                <controls:TaskList VerticalAlignment="Bottom" Grid.Column="4" Grid.Row="1" x:Name="MyTaskList"/>
+                <controls:TaskList HorizontalContentAlignment="{Binding DataContext.HorizontalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
+                                   VerticalContentAlignment="{Binding DataContext.VerticalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
+                                   Grid.Column="4" Grid.Row="1" x:Name="MyTaskList"/>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
@@ -133,6 +136,15 @@
                 <MenuItem Header="{x:Static localization:Localization.SMALL_ICON_TASKBAR}" Name="MenuSmallIcon" Command="{Binding SmallIconTaskbarCommand}" IsChecked="{Binding IsShowSmallIcon}"/>
                 <MenuItem Header="{x:Static localization:Localization.SHOW_TITLE}" Name="MenuShowTitleWindow" Command="{Binding ShowTitleWindowCommand}" IsChecked="{Binding ShowApplicationWindowTitle}"/>
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_GROUP_APPLICATION_WINDOW}" Name="MenuGroupApplicationWindow" Command="{Binding GroupApplicationWindowsCommand}" IsChecked="{Binding IsGroupedApplicationWindow}"/>
+                <MenuItem Header="{x:Static localization:Localization.STYLE_LIST_OF_TASKS}" Name="MenuStyleListTasks" Style="{DynamicResource MenuItemWithSubMenuStyle}">
+                    <MenuItem Header="{x:Static localization:Localization.ALIGN_TO_LEFT}" Name="LeftAlignListOfTasks" IsChecked="{Binding HorizontalTaskListAlignment, Mode=OneWay, Converter={StaticResource EnumToBool}, ConverterParameter=Left}" Command="{Binding AlignTaskListToLeftCommand}"/>
+                    <MenuItem Header="{x:Static localization:Localization.ALIGN_CENTER}" Name="CenterAlignListOfTasks" IsChecked="{Binding HorizontalTaskListAlignment, Mode=OneWay, Converter={StaticResource EnumToBool}, ConverterParameter=Center}" Command="{Binding AlignTaskListToCenterCommand}"/>
+                    <MenuItem Header="{x:Static localization:Localization.ALIGN_TO_RIGHT}" Name="RightAlignListOfTasks" IsChecked="{Binding HorizontalTaskListAlignment, Mode=OneWay, Converter={StaticResource EnumToBool}, ConverterParameter=Right}" Command="{Binding AlignTaskListToRightCommand}"/>
+                    <Separator Style="{DynamicResource MySeparatorStyle}"/>
+                    <MenuItem Header="{x:Static localization:Localization.UP}" Name="UpAlignListOfTasks" IsChecked="{Binding VerticalTaskListAlignment, Mode=OneWay, Converter={StaticResource EnumToBool}, ConverterParameter=Top}" Command="{Binding AlignTaskListToTopCommand}"/>
+                    <MenuItem Header="{x:Static localization:Localization.ALIGN_CENTER}" Name="CenterVAlignListOfTasks" IsChecked="{Binding VerticalTaskListAlignment, Mode=OneWay, Converter={StaticResource EnumToBool}, ConverterParameter=Center}" Command="{Binding AlignTaskListToCenterVCommand}"/>
+                    <MenuItem Header="{x:Static localization:Localization.DOWN}" Name="DownAlignListOfTasks" IsChecked="{Binding VerticalTaskListAlignment, Mode=OneWay, Converter={StaticResource EnumToBool}, ConverterParameter=Bottom}" Command="{Binding AlignTaskListToBottomCommand}"/>
+                </MenuItem>
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
                 <MenuItem Header="{x:Static localization:Localization.CUSTOM_COLOR}" Name="MenuCustomColor" Command="{Binding CustomColorCommand}"/>
             </MenuItem>

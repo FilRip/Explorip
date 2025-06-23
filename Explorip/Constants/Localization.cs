@@ -157,6 +157,12 @@ public static class Localization
     public static string TASKBAR_GROUP_APPLICATION_WINDOW { get; private set; }
     public static string VISIBLE { get; private set; }
     public static string NOTIFICATION_CENTER { get; private set; }
+    public static string ALIGN_TO_LEFT { get; private set; }
+    public static string ALIGN_TO_RIGHT { get; private set; }
+    public static string ALIGN_CENTER { get; private set; }
+    public static string STYLE_LIST_OF_TASKS { get; private set; }
+    public static string UP { get; private set; }
+    public static string DOWN { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -322,6 +328,12 @@ public static class Localization
         TASKBAR_GROUP_APPLICATION_WINDOW = Load("shell32.dll", 24289, "Regroup same application windows in taskbar");
         VISIBLE = Load("propsys.dll", 42120, "Visible");
         NOTIFICATION_CENTER = Load("explorer.exe", 852, "Notifications center");
+        ALIGN_TO_LEFT = Load("inetres.dll", 5232, "Align to left");
+        ALIGN_TO_RIGHT = Load("inetres.dll", 5234, "Aligne to right");
+        ALIGN_CENTER = Load("inetres.dll", 5233, "Center");
+        STYLE_LIST_OF_TASKS = Load("mmcbase.dll", 14138, "Style of list of tasks");
+        DOWN = Load("windows.ui.xaml.dll", 5377, "Down");
+        UP = Load("windows.ui.xaml.dll", 5513, "Up");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
