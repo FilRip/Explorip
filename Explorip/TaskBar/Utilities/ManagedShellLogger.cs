@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 using ManagedShell.Common.Logging;
 using ManagedShell.Common.Logging.Observers;
@@ -50,12 +51,9 @@ class ManagedShellLogger : IDisposable
 
             // delete any files that are older than the retention period
             DateTime now = DateTime.Now;
-            foreach (FileInfo file in files)
+            foreach (FileInfo file in files.Where(file => now.Subtract(file.LastWriteTime) > _logRetention))
             {
-                if (now.Subtract(file.LastWriteTime) > _logRetention)
-                {
-                    file.Delete();
-                }
+                file.Delete();
             }
         }
         catch (Exception ex)

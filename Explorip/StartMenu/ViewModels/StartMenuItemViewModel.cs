@@ -53,13 +53,12 @@ public partial class StartMenuItemViewModel : ObservableObject
 
     public void LoadChildren(ShellFolder sf)
     {
-        foreach (ShellFile item in sf.Files)
-            if (!Children.Any(i => i.Name == sf.DisplayName))
-            {
-                StartMenuItemViewModel smivm = new(item, _deep + 1, _window);
-                if (!item.IsFolder || smivm.Children.Count > 0)
-                    Children.Add(smivm);
-            }
+        foreach (ShellFile item in sf.Files.Where(item => !Children.Any(i => i.Name == sf.DisplayName)))
+        {
+            StartMenuItemViewModel smivm = new(item, _deep + 1, _window);
+            if (!item.IsFolder || smivm.Children.Count > 0)
+                Children.Add(smivm);
+        }
     }
 
     public bool ShowDown

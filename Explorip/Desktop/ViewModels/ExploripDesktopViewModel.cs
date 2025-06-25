@@ -75,23 +75,22 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     {
         ShellFolder desktop = (ShellFolder)ShellObject.FromParsingName(desktopPath);
         OneDesktopItemViewModel item;
-        foreach (ShellObject filename in desktop)
-            if (filename.Name.Trim().ToLower() != "desktop.ini")
+        foreach (ShellObject filename in desktop.Where(filename => filename.Name.Trim().ToLower() != "desktop.ini"))
+        {
+            item = new()
             {
-                item = new()
-                {
-                    Name = filename.Name,
-                    FullPath = filename.ParsingName,
-                    CurrentShellObject = filename,
-                    CurrentDesktop = this,
-                };
-                item.GetIcon();
-                OneDesktopItem ctrl = new()
-                {
-                    MyDataContext = item,
-                };
-                _parentDesktop.AddItem(ctrl);
-            }
+                Name = filename.Name,
+                FullPath = filename.ParsingName,
+                CurrentShellObject = filename,
+                CurrentDesktop = this,
+            };
+            item.GetIcon();
+            OneDesktopItem ctrl = new()
+            {
+                MyDataContext = item,
+            };
+            _parentDesktop.AddItem(ctrl);
+        }
     }
 
     private void Watcher_Deleted(object sender, FileSystemEventArgs e)

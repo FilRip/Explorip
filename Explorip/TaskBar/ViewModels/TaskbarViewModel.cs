@@ -359,10 +359,25 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                         Tag = path,
                     });
                     ((MenuItem)item.Items[3]).Click += OpenToolbarFolder;
+                    item.Items.Add(new MenuItem()
+                    {
+                        Header = Constants.Localization.REFRESH,
+                        Tag = path,
+                    });
+                    ((MenuItem)item.Items[4]).Click += RefreshToolbarFolder;
                 }
 
                 ParentTaskbar.MenuToolbars.Items.Add(item);
             }
+        }
+    }
+
+    private void RefreshToolbarFolder(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is string path)
+        {
+            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
+            tb.MyDataContext.RefreshFolder();
         }
     }
 

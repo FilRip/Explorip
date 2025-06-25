@@ -100,6 +100,12 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         }
     }
 
+    [RelayCommand()]
+    public void RefreshFolder()
+    {
+        Files_CollectionChanged(null, null);
+    }
+
     private void Files_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
         if (_taskRefresh == null || _taskRefresh.Status != TaskStatus.Running)

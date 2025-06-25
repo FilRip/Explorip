@@ -152,9 +152,8 @@ public class ListViewEx : ListView
         SetVisibleItem(e);
         if (DrawSelection && e.VerticalChange != 0)
         {
-            foreach (OneFileSystem fs in SelectedItems.OfType<OneFileSystem>())
-                if (!_scrolledSelectedElements.Contains(fs))
-                    _scrolledSelectedElements.Add(fs);
+            foreach (OneFileSystem fs in SelectedItems.OfType<OneFileSystem>().Where(fs => !_scrolledSelectedElements.Contains(fs)))
+                _scrolledSelectedElements.Add(fs);
             InvalidateVisual();
             SelectItems();
         }

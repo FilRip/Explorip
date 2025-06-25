@@ -101,15 +101,12 @@ public class ShellFolderContextMenu : ShellContextMenu
             if (selected <= Interop.CMD_LAST)
             {
                 // custom commands are greater than CMD_LAST, so this must be a sub menu item
-                foreach (IContextMenu subMenu in ShellNewMenus.Select(item => item.iContextMenu))
+                foreach (IContextMenu subMenu in ShellNewMenus.Where(m => m != null).Select(item => item.iContextMenu))
                 {
-                    if (subMenu != null)
-                    {
-                        InvokeCommand(
-                            subMenu,
-                            selected - Interop.CMD_FIRST,
-                            new Point(x, y));
-                    }
+                    InvokeCommand(
+                        subMenu,
+                        selected - Interop.CMD_FIRST,
+                        new Point(x, y));
                 }
             }
 

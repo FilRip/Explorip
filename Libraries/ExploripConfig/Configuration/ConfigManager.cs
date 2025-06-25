@@ -367,19 +367,17 @@ public static class ConfigManager
 
     public static void RemovePinnedSystray(string path)
     {
-        RegistryKey key = _registryRootTaskbar.CreateSubKey("Systray");
-        foreach (string name in key.GetValueNames())
-            if (key.GetValue(name).ToString() == path)
-                key.DeleteValue(name);
+        RegistryKey key = _registryRootTaskbar.CreateSubKey("Systray", true);
+        foreach (string name in key.GetValueNames().Where(name => key.GetValue(name).ToString() == path))
+            key.DeleteValue(name);
     }
 
     public static void AddPinnedSystray(string path, int order = -1)
     {
         RegistryKey key = _registryRootTaskbar.CreateSubKey("Systray", true);
 
-        foreach (string name in key.GetValueNames())
-            if (key.GetValue(name).ToString() == path)
-                key.DeleteValue(name);
+        foreach (string name in key.GetValueNames().Where(name => key.GetValue(name).ToString() == path))
+            key.DeleteValue(name);
 
         if (order >= 0 && key.GetValueNames().Contains(order.ToString()))
         {

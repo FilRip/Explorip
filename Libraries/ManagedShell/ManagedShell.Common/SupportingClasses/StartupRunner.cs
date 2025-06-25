@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 using ManagedShell.Common.Enums;
@@ -247,28 +248,25 @@ public class StartupRunner
                     List<string> disallowedItems = GetDisallowedItems(location, root == Registry.LocalMachine ? StartupEntryScope.Machine : StartupEntryScope.User);
 
                     // add items from registry key
-                    foreach (string valueName in registryKey.GetValueNames())
+                    foreach (string valueName in registryKey.GetValueNames().Where(valueName => !disallowedItems.Contains(valueName)))
                     {
                         // only add items that are not disabled
-                        if (!disallowedItems.Contains(valueName))
+                        startupApps.Add(new StartupEntry
                         {
-                            startupApps.Add(new StartupEntry
-                            {
-                                Location = location,
-                                Path = ((string)registryKey.GetValue(valueName)).Replace("\"", "")
-                            });
+                            Location = location,
+                            Path = ((string)registryKey.GetValue(valueName)).Replace("\"", "")
+                        });
 
-                            // if this is a runonce key, remove the value after we grab it
-                            if (isRunOnce)
+                        // if this is a runonce key, remove the value after we grab it
+                        if (isRunOnce)
+                        {
+                            try
                             {
-                                try
-                                {
-                                    registryKey.DeleteValue(valueName);
-                                }
-                                catch
-                                {
-                                    ShellLogger.Warning($"StartupRunner: Unable to delete RunOnce startup item {valueName}");
-                                }
+                                registryKey.DeleteValue(valueName);
+                            }
+                            catch
+                            {
+                                ShellLogger.Warning($"StartupRunner: Unable to delete RunOnce startup item {valueName}");
                             }
                         }
                     }

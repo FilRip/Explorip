@@ -281,9 +281,9 @@ public static class StoreAppHelper
         {
             string fullName = baseName + iconName;
 
-            foreach (string fileName in files)
-                if (string.Equals(Path.GetFileName(fileName), fullName, StringComparison.OrdinalIgnoreCase) && File.Exists(fileName))
-                    return fileName;
+            string filename = files.FirstOrDefault(fileName => string.Equals(Path.GetFileName(fileName), fullName, StringComparison.OrdinalIgnoreCase) && File.Exists(fileName));
+            if (!string.IsNullOrWhiteSpace(filename))
+                return filename;
         }
 
         return string.Empty;

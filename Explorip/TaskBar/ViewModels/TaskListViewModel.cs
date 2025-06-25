@@ -312,20 +312,17 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Insert(numPinnedApp++, appWin);
                 if (MyTaskbarApp.MyShellManager.TasksService.Windows.Any(win => string.Compare(win.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0))
                 {
-                    foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => string.Compare(aw.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0))
+                    foreach (ApplicationWindow win in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(aw => aw != appWin && string.Compare(aw.WinFileName, appWin.WinFileName, StringComparison.OrdinalIgnoreCase) == 0))
                     {
-                        if (win != appWin)
-                        {
-                            appWin.ListWindows.AddRange(win.ListWindows);
-                            win.ListWindows.Clear();
-                            appWin.SetTitle();
-                            if (appWin.ListWindows.Count > 1)
-                                appWin.State = ApplicationWindow.WindowState.Unknown;
-                            else
-                                appWin.State = win.State;
-                            if (!MyTaskbarApp.MyShellManager.TasksService.GroupApplicationsWindows)
-                                break;
-                        }
+                        appWin.ListWindows.AddRange(win.ListWindows);
+                        win.ListWindows.Clear();
+                        appWin.SetTitle();
+                        if (appWin.ListWindows.Count > 1)
+                            appWin.State = ApplicationWindow.WindowState.Unknown;
+                        else
+                            appWin.State = win.State;
+                        if (!MyTaskbarApp.MyShellManager.TasksService.GroupApplicationsWindows)
+                            break;
                     }
                 }
             }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;
 using System.Text;
 using System.Windows.Input;
 
@@ -73,6 +75,10 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName)]
     internal static extern Int32 CloseHandle(Int32 Handle);
+
+    [DllImport(Kernel32_DllName, SetLastError = true, ExactSpelling = true)]
+    internal static extern bool CloseHandle(IntPtr handle);
+
 
     [DllImport(Kernel32_DllName, SetLastError = true, CallingConvention = CallingConvention.Winapi)]
     [return: MarshalAs(UnmanagedType.Bool)]
@@ -385,4 +391,59 @@ public partial class NativeMethods
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
         public string cAlternateFileName;
     }
+
+    [Flags()]
+    public enum Snapshot : uint
+    {
+        HeapList = 0x00000001,
+        Process = 0x00000002,
+        Thread = 0x00000004,
+        Module = 0x00000008,
+        Module32 = 0x00000010,
+        All = (HeapList | Process | Thread | Module),
+        Inherit = 0x80000000,
+        NoHeaps = 0x40000000
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ProcessEntry32
+    {
+        public uint dwSize;
+        public uint cntUsage;
+        public uint th32ProcessID;
+        public IntPtr th32DefaultHeapID;
+        public uint th32ModuleID;
+        public uint cntThreads;
+        public uint th32ParentProcessID;
+        public int pcPriClassBase;
+        public uint dwFlags;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)] public string szExeFile;
+    };
+
+    internal sealed class SafeSnapshotHandle : SafeHandleMinusOneIsInvalid
+    {
+        internal SafeSnapshotHandle() : base(true)
+        {
+        }
+
+        [SecurityPermission(SecurityAction.LinkDemand, UnmanagedCode = true)]
+        internal SafeSnapshotHandle(IntPtr handle) : base(true)
+        {
+            base.SetHandle(handle);
+        }
+
+        protected override bool ReleaseHandle()
+        {
+            return CloseHandle(base.handle);
+        }
+    }
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern SafeSnapshotHandle CreateToolhelp32Snapshot(Snapshot flags, uint id);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern bool Process32First(SafeSnapshotHandle hSnapshot, ref ProcessEntry32 lppe);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern bool Process32Next(SafeSnapshotHandle hSnapshot, ref ProcessEntry32 lppe);
 }

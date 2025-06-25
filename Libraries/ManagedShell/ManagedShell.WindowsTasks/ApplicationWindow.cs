@@ -820,4 +820,29 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         else
             return ShellHelper.StartProcess(WinFileName, (string.IsNullOrWhiteSpace(arguments) ? Arguments : arguments));
     }
+
+    public int ParentProcessId()
+    {
+        NativeMethods.ProcessEntry32 pe32 = new()
+        {
+            dwSize = (uint)Marshal.SizeOf(typeof(NativeMethods.ProcessEntry32)),
+        };
+        using var hSnapshot = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.Snapshot.Process, _procId.Value);
+        if (hSnapshot.IsInvalid)
+            throw new Win32Exception();
+
+        if (!NativeMethods.Process32First(hSnapshot, ref pe32))
+        {
+            int errno = Marshal.GetLastWin32Error();
+            if (errno == (int)NativeMethods.HResult.ERROR_NO_MORE_FILES)
+                return -1;
+            throw new Win32Exception(errno);
+        }
+        do
+        {
+            if (pe32.th32ProcessID == _procId.Value)
+                return (int)pe32.th32ParentProcessID;
+        } while (NativeMethods.Process32Next(hSnapshot, ref pe32));
+        return -1;
+    }
 }
