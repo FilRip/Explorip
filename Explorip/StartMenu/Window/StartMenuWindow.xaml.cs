@@ -33,7 +33,8 @@ namespace Explorip.StartMenu.Window
             HookWinKey();
             Application.Current.Deactivated += Current_Deactivated;
             if (ConfigManager.StartMenuBackground != null)
-                Background = ConfigManager.StartMenuBackground;
+                MyBorder.Background = ConfigManager.StartMenuBackground;
+            MyBorder.CornerRadius = ConfigManager.StartMenuCornerRadius;
             if (MyStartMenuApp.MyShellManager == null)
                 MyTaskbarApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
             else

@@ -81,6 +81,8 @@ public static class ConfigManager
                 _registryStartMenu.SetValue("ShowApplicationsPrograms", "True");
             if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("StartMenuHeight", "").ToString()))
                 _registryStartMenu.SetValue("StartMenuHeight", "640");
+            if (string.IsNullOrWhiteSpace(_registryStartMenu.GetValue("CornerRadius", "").ToString()))
+                _registryStartMenu.SetValue("CornerRadius", "10");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeShowThumbnail", "").ToString()))
@@ -650,6 +652,16 @@ public static class ConfigManager
         {
             if (AllowWrite)
                 _registryStartMenu.SetValue("BackgroundColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static CornerRadius StartMenuCornerRadius
+    {
+        get { return new CornerRadius(_registryStartMenu.ReadDouble("CornerRadius")); }
+        set
+        {
+            if (StartMenuCornerRadius != value && AllowWrite)
+                _registryStartMenu.SetValue("CornerRadius", value.TopRight.ToString());
         }
     }
 

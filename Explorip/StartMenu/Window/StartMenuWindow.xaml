@@ -10,15 +10,15 @@
         xmlns:localization="clr-namespace:Explorip.Constants"
         xmlns:converters="clr-namespace:Explorip.StartMenu.Converters"
         mc:Ignorable="d"
-        WindowStyle="None"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ResizeMode="NoResize" SizeToContent="Width"
-        Height="{Binding Height}" MinWidth="475" Background="{x:Static constants:Colors.BackgroundColorBrush}"
+        Height="{Binding Height}" MinWidth="475"
         Topmost="True" ShowInTaskbar="False" IsVisibleChanged="Window_IsVisibleChanged">
-    
+
     <Window.DataContext>
         <viewmodels:StartMenuViewModel/>
     </Window.DataContext>
-    
+
     <Window.Resources>
         <Style x:Key="MyScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
             <Setter Property="Focusable" Value="False" />
@@ -129,7 +129,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>
         <converters:BooleanToGridLengthConverter x:Key="boolToVisibleColumn"/>
 
@@ -165,7 +165,7 @@
                         <i:EventTrigger EventName="MouseLeave">
                             <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
                         </i:EventTrigger>
-                    </i:Interaction.Triggers>                        
+                    </i:Interaction.Triggers>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="32"/>
                         <ColumnDefinition Width="*"/>
@@ -191,141 +191,143 @@
             <MenuItem Header="{x:Static localization:Localization.UNPIN_FROM_STARTMENU}" Name="DeleteItem" Command="{Binding DeleteCommand}"/>
         </ContextMenu>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="60"/>
-            <ColumnDefinition Width="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisibleColumn}, ConverterParameter='285'}"/>
-            <ColumnDefinition Width="415"/>
-            <ColumnDefinition Width="{Binding ShowPanel2, Converter={StaticResource boolToVisibleColumn}, ConverterParameter='415'}"/>
-        </Grid.ColumnDefinitions>
+    <Border x:Name="MyBorder" Background="{x:Static constants:Colors.BackgroundColorBrush}" BorderThickness="0">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60"/>
+                <ColumnDefinition Width="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisibleColumn}, ConverterParameter='285'}"/>
+                <ColumnDefinition Width="415"/>
+                <ColumnDefinition Width="{Binding ShowPanel2, Converter={StaticResource boolToVisibleColumn}, ConverterParameter='415'}"/>
+            </Grid.ColumnDefinitions>
 
-        <!-- First column, quick button -->
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
-            </Grid.RowDefinitions>
-            <Button Background="Transparent" BorderThickness="0" Grid.Row="0" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE700;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StartButton" Command="{Binding StartButtonCommand}" Focusable="True"/>
-            <Button Background="Transparent" BorderThickness="0" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE748;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="UserButton" Command="{Binding UserButtonCommand}" Focusable="True"/>
-            <Button Background="Transparent" BorderThickness="0" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE713;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="ParamButton" Command="{Binding ParamButtonCommand}" Focusable="True"/>
-            <Button Background="Transparent" BorderThickness="0" Grid.Row="4" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE7E8;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StopButton" Command="{Binding StopButtonCommand}" Focusable="True"/>
-        </Grid>
+            <!-- First column, quick button -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Button Background="Transparent" BorderThickness="0" Grid.Row="0" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE700;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StartButton" Command="{Binding StartButtonCommand}" Focusable="True"/>
+                <Button Background="Transparent" BorderThickness="0" Grid.Row="2" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE748;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="UserButton" Command="{Binding UserButtonCommand}" Focusable="True"/>
+                <Button Background="Transparent" BorderThickness="0" Grid.Row="3" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE713;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="ParamButton" Command="{Binding ParamButtonCommand}" Focusable="True"/>
+                <Button Background="Transparent" BorderThickness="0" Grid.Row="4" FontFamily="Segoe MDL2 Assets" FontSize="14" Content="&#xE7E8;" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Name="StopButton" Command="{Binding StopButtonCommand}" Focusable="True"/>
+            </Grid>
 
-        <!-- Second column, list of items in Start Menu -->
-        <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}" Visibility="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisible}}" HorizontalContentAlignment="Stretch">
-            <ItemsControl.Template>
-                <ControlTemplate TargetType="ItemsControl">
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Style="{StaticResource MyScrollViewerStyle}" MouseEnter="ScrollViewer_MouseEnter" MouseLeave="ScrollViewer_MouseLeave">
-                        <ItemsPresenter/>
-                    </ScrollViewer>
-                </ControlTemplate>
-            </ItemsControl.Template>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-        
-        <!-- Third column, some free shortcut panel -->
-        <Grid Grid.Column="2">
-            <ListView ItemsSource="{Binding PinnedShortcut}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" HorizontalAlignment="Left" Focusable="True" AllowDrop="True" Name="FirstPanel">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Drop">
-                        <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListView.ItemsPanel>
+            <!-- Second column, list of items in Start Menu -->
+            <ItemsControl ItemsSource="{Binding StartMenuItems}" Grid.Column="1" ItemTemplate="{StaticResource MyDataTemplate}" Visibility="{Binding ShowApplicationsPrograms, Converter={StaticResource boolToVisible}}" HorizontalContentAlignment="Stretch">
+                <ItemsControl.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Style="{StaticResource MyScrollViewerStyle}" MouseEnter="ScrollViewer_MouseEnter" MouseLeave="ScrollViewer_MouseLeave">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel/>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch"/>
                     </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:PinnedShortutViewModel}">
-                        <Grid Width="{Binding IconSizeWidth}" Height="{Binding IconSizeHeight}" Focusable="True" ContextMenu="{StaticResource CmPanel}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}" PassEventArgsToCommand="True"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseEnter">
-                                    <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseLeave">
-                                    <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Border BorderThickness="2" BorderBrush="{Binding BackgroundItem}" Grid.Column="0" Grid.Row="0" Background="{x:Static constants:Colors.SelectedBackgroundShellObject}" Width="100" Height="100"/>
-                            <Image Source="{Binding Icon}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="{Binding IconWidth}" Height="{Binding IconHeight}"/>
-                            <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" Background="Transparent"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <Setter Property="Padding" Value="0"/>
-                        <Setter Property="Margin" Value="0"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
-        </Grid>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
 
-        <!-- Fourth column, some more free shortcut panel -->
-        <Grid Grid.Column="3" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}">
-            <ListView ItemsSource="{Binding PinnedShortcut2}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Left" Focusable="True" AllowDrop="True" Name="SecondPanel">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Drop">
-                        <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate DataType="{x:Type viewmodels:PinnedShortutViewModel}">
-                        <Grid Width="{Binding IconSizeWidth}" Height="{Binding IconSizeHeight}" Focusable="True" ContextMenu="{StaticResource CmPanel}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="MouseUp">
-                                    <i:InvokeCommandAction Command="{Binding MouseUpCommand}" PassEventArgsToCommand="True"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseEnter">
-                                    <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseLeave">
-                                    <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Border BorderThickness="2" BorderBrush="{Binding BackgroundItem}" Grid.Column="0" Grid.Row="0" Background="{x:Static constants:Colors.SelectedBackgroundShellObject}" Width="100" Height="100"/>
-                            <Image Source="{Binding Icon}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="{Binding IconWidth}" Height="{Binding IconHeight}"/>
-                            <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" Background="Transparent"/>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <Setter Property="Padding" Value="0"/>
-                        <Setter Property="Margin" Value="0"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
+            <!-- Third column, some free shortcut panel -->
+            <Grid Grid.Column="2">
+                <ListView ItemsSource="{Binding PinnedShortcut}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" HorizontalAlignment="Left" Focusable="True" AllowDrop="True" Name="FirstPanel">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:PinnedShortutViewModel}">
+                            <Grid Width="{Binding IconSizeWidth}" Height="{Binding IconSizeHeight}" Focusable="True" ContextMenu="{StaticResource CmPanel}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseUpCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseEnter">
+                                        <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeave">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border BorderThickness="2" BorderBrush="{Binding BackgroundItem}" Grid.Column="0" Grid.Row="0" Background="{x:Static constants:Colors.SelectedBackgroundShellObject}" Width="100" Height="100"/>
+                                <Image Source="{Binding Icon}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="{Binding IconWidth}" Height="{Binding IconHeight}"/>
+                                <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" Background="Transparent"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+
+            <!-- Fourth column, some more free shortcut panel -->
+            <Grid Grid.Column="3" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}">
+                <ListView ItemsSource="{Binding PinnedShortcut2}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0" Visibility="{Binding ShowPanel2, Converter={StaticResource boolToVisible}}" HorizontalAlignment="Left" Focusable="True" AllowDrop="True" Name="SecondPanel">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction Command="{Binding DropCommand}" PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewmodels:PinnedShortutViewModel}">
+                            <Grid Width="{Binding IconSizeWidth}" Height="{Binding IconSizeHeight}" Focusable="True" ContextMenu="{StaticResource CmPanel}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseUp">
+                                        <i:InvokeCommandAction Command="{Binding MouseUpCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseEnter">
+                                        <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseLeave">
+                                        <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border BorderThickness="2" BorderBrush="{Binding BackgroundItem}" Grid.Column="0" Grid.Row="0" Background="{x:Static constants:Colors.SelectedBackgroundShellObject}" Width="100" Height="100"/>
+                                <Image Source="{Binding Icon}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="{Binding IconWidth}" Height="{Binding IconHeight}"/>
+                                <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" Background="Transparent"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
         </Grid>
-    </Grid>
+    </Border>
 </Window>
