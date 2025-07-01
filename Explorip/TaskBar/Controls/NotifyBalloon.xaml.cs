@@ -65,15 +65,8 @@ public partial class NotifyBalloon : UserControl
 
     private void PlaySound(NotificationBalloon balloonInfo)
     {
-        if (BalloonPopup.IsOpen)
-        {
+        if (BalloonPopup.IsOpen || balloonInfo.Flags.HasFlag(ManagedShell.Interop.NativeMethods.NIIF.NOSOUND))
             return;
-        }
-
-        if ((balloonInfo.Flags & ManagedShell.Interop.NativeMethods.NIIF.NOSOUND) != 0)
-        {
-            return;
-        }
 
         SoundHelper.PlayNotificationSound();
     }

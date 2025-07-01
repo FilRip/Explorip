@@ -152,7 +152,6 @@ public partial class NotifyIconList : UserControl
         isLoaded = false;
     }
 
-#pragma warning disable S3267 // Loops should be simplified with "LINQ" expressions
     private void UnpinnedIcons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         bool refreshList = false;
@@ -184,7 +183,6 @@ public partial class NotifyIconList : UserControl
         }
         SetToggleVisibility();
     }
-#pragma warning restore S3267 // Loops should be simplified with "LINQ" expressions
 
     private void NotifyIconToggleButton_OnClick(object sender, RoutedEventArgs e)
     {

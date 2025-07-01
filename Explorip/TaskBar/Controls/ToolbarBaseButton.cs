@@ -90,7 +90,7 @@ public class ToolbarBaseButton : UserControl
                 Popup myPopup = this.FindVisualParent<Taskbar>().MyPopup;
                 if (myPopup != null)
                 {
-                    ((ItemsControl)myPopup.Child).Items.Clear();
+                    ((ItemsControl)((Border)myPopup.Child).Child).Items.Clear();
                     if (myPopup.IsOpen)
                         myPopup.IsOpen = false;
                 }
@@ -108,7 +108,7 @@ public class ToolbarBaseButton : UserControl
     private void AddMenuItem(ShellFile item)
     {
         MenuItem mi = CreateMenuItem(item);
-        ((ItemsControl)this.FindVisualParent<Taskbar>().MyPopup.Child).Items.Add(mi);
+        ((ItemsControl)((Border)this.FindVisualParent<Taskbar>().MyPopup.Child).Child).Items.Add(mi);
         if (Path.GetExtension(item.FileName) == ".lnk")
         {
             try

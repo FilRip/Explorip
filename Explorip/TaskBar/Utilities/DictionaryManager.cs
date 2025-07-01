@@ -19,17 +19,11 @@ public class DictionaryManager : IDisposable
     private const string THEME_EXT = DICT_EXT;
     private bool disposedValue;
 
-    public DictionaryManager()
-    {
-    }
-
     public void SetThemeFromSettings()
     {
         SetTheme(THEME_DEFAULT);
         if (ConfigManager.Theme != THEME_DEFAULT)
-        {
             SetTheme(ConfigManager.Theme);
-        }
     }
 
     private void SetTheme(string theme)
@@ -50,9 +44,7 @@ public class DictionaryManager : IDisposable
     private static void ClearPreviousThemes()
     {
         if (GetActualThemeDictionary() != null)
-        {
-            _ = GetMergedDictionaries().Remove(GetActualThemeDictionary());
-        }
+            GetMergedDictionaries().Remove(GetActualThemeDictionary());
     }
 
     private void SetDictionary(string dictionary, string dictFolder, string dictDefault, string dictExtension, int dictType)
@@ -62,9 +54,7 @@ public class DictionaryManager : IDisposable
         if (dictionary == dictDefault)
         {
             if (dictType == 0)
-            {
                 ClearPreviousThemes();
-            }
             dictFilePath = Path.ChangeExtension(Path.Combine(dictFolder, dictDefault), dictExtension);
         }
         else
@@ -76,15 +66,13 @@ public class DictionaryManager : IDisposable
                 dictFilePath = Path.ChangeExtension(Path.Combine(Path.GetDirectoryName(ExePath.GetExecutablePath()), dictFolder, dictionary), dictExtension);
 
                 if (!File.Exists(dictFilePath))
-                {
                     return;
-                }
             }
         }
 
         GetMergedDictionaries().Add(new ResourceDictionary()
         {
-            Source = new Uri(dictFilePath, UriKind.RelativeOrAbsolute)
+            Source = new Uri(dictFilePath, UriKind.RelativeOrAbsolute),
         });
     }
 

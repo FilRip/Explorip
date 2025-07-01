@@ -80,15 +80,19 @@ public partial class Taskbar : AppBarWindow
 
         MyPopup = new Popup()
         {
-            Margin = new Thickness(0),
-            Child = new ItemsControl()
+            AllowsTransparency = true,
+            Child = new Border()
             {
-                Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+                CornerRadius = new CornerRadius(10),
+                BorderThickness = new Thickness(0),
                 Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             },
             StaysOpen = false,
         };
-
+        ((Border)MyPopup.Child).Child = new ItemsControl()
+        {
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+        };
         MyTaskbarApp.MyShellManager.TasksService.WindowActivated += ClosePopup;
     }
 

@@ -29,7 +29,7 @@ public class StartMenuMonitor : IDisposable
         {
             _poller = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(100)
+                Interval = TimeSpan.FromMilliseconds(100),
             };
 
             _poller.Tick += Poller_Tick;
@@ -62,15 +62,13 @@ public class StartMenuMonitor : IDisposable
     private void SetVisibility(bool isVisible)
     {
         if (isVisible == _isVisible)
-        {
             return;
-        }
 
         _isVisible = isVisible;
 
         LauncherVisibilityEventArgs args = new()
         {
-            Visible = _isVisible
+            Visible = _isVisible,
         };
 
         StartMenuVisibilityChanged?.Invoke(this, args);

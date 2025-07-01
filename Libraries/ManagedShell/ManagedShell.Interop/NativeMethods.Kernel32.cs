@@ -446,4 +446,7 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern bool Process32Next(SafeSnapshotHandle hSnapshot, ref ProcessEntry32 lppe);
+
+    [DllImport(Kernel32_DllName)]
+    internal static extern uint GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
 }

@@ -25,7 +25,7 @@ public partial class NotificationButton : UserControl
 
     private void NotificationArea_NotificationBalloonShown(object sender, ManagedShell.WindowsTray.NotificationBalloonEventArgs e)
     {
-        MyDataContext.IncreaseNumberOfNotifications();
+        //MyDataContext.IncreaseNumberOfNotifications();
         new ToastContentBuilder()
             .AddHeader(e.Balloon.Title, e.Balloon.Title, "")
             .AddText(e.Balloon.Info)
