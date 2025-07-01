@@ -104,9 +104,13 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("TaskButtonProgressBarColor", "").ToString()))
                 _registryRootTaskbar.SetValue("TaskButtonProgressBarColor", $"255,{Colors.Green.R},{Colors.Green.G},{Colors.Green.B}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("TaskButtonCornerRadius", "").ToString()))
-                _registryRootTaskbar.SetValue("TaskButtonCornerRadius", "1");
+                _registryRootTaskbar.SetValue("TaskButtonCornerRadius", "6");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DateFormat", "").ToString()))
                 _registryRootTaskbar.SetValue("DateFormat", "<%dayofweek%>\\r<%t%>\\r<%d%>");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("PopUpCornerRadius", "").ToString()))
+                _registryRootTaskbar.SetValue("PopUpCornerRadius", "6");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ThumbnailCornerRadius", "").ToString()))
+                _registryRootTaskbar.SetValue("ThumbnailCornerRadius", "0");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -518,8 +522,8 @@ public static class ConfigManager
         get { return new CornerRadius(_registryRootTaskbar.ReadDouble("TaskButtonCornerRadius")); }
         set
         {
-            if (TaskButtonCornerRadius != value && AllowWrite)
-                _registryRootTaskbar.SetValue("TaskButtonCornerRadius", value.TopRight.ToString());
+            if (TaskButtonCornerRadius.TopLeft != value.TopLeft && AllowWrite)
+                _registryRootTaskbar.SetValue("TaskButtonCornerRadius", value.TopLeft.ToString());
         }
     }
 
@@ -550,6 +554,26 @@ public static class ConfigManager
         {
             if (TaskbarProgressBarHeight != value && AllowWrite)
                 _registryRootTaskbar.SetValue("ProgressBarHeight", value.ToString());
+        }
+    }
+
+    public static CornerRadius PopUpCornerRadius
+    {
+        get { return new CornerRadius(_registryRootTaskbar.ReadDouble("PopUpCornerRadius")); }
+        set
+        {
+            if (PopUpCornerRadius.TopLeft != value.TopLeft && AllowWrite)
+                _registryRootTaskbar.SetValue("PopUpCornerRadius", value.TopLeft.ToString());
+        }
+    }
+
+    public static CornerRadius ThumbnailCornerRadius
+    {
+        get { return new CornerRadius(_registryRootTaskbar.ReadDouble("ThumbnailCornerRadius")); }
+        set
+        {
+            if (PopUpCornerRadius.TopLeft != value.TopLeft && AllowWrite)
+                _registryRootTaskbar.SetValue("ThumbnailCornerRadius", value.TopLeft.ToString());
         }
     }
 

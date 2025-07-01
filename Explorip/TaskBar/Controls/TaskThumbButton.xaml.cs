@@ -44,7 +44,8 @@ public partial class TaskThumbButton : Window
             Close();
             return;
         }
-        Background = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarBackground;
+        MyBorder.Background = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarBackground;
+        MyBorder.CornerRadius = ConfigManager.ThumbnailCornerRadius;
         ThumbWidth = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbWidth;
         ThumbHeight = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbHeight;
         Width = ThumbWidth;
