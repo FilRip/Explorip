@@ -111,6 +111,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("PopUpCornerRadius", "6");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ThumbnailCornerRadius", "").ToString()))
                 _registryRootTaskbar.SetValue("ThumbnailCornerRadius", "0");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("SpaceBetweenThumbnail", "").ToString()))
+                _registryRootTaskbar.SetValue("SpaceBetweenThumbnail", "10");
 
             foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
             {
@@ -574,6 +576,16 @@ public static class ConfigManager
         {
             if (PopUpCornerRadius.TopLeft != value.TopLeft && AllowWrite)
                 _registryRootTaskbar.SetValue("ThumbnailCornerRadius", value.TopLeft.ToString());
+        }
+    }
+
+    public static double SpaceBetweenThumbnail
+    {
+        get { return _registryRootTaskbar.ReadDouble("SpaceBetweenThumbnail"); }
+        set
+        {
+            if (SpaceBetweenThumbnail != value && AllowWrite)
+                _registryRootTaskbar.SetValue("SpaceBetweenThumbnail", value.ToString());
         }
     }
 

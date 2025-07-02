@@ -3,9 +3,7 @@
 namespace ManagedShell.ShellFolders.Enums;
 
 [Flags()]
-#pragma warning disable S2344 // Enumeration type names should not have "Flags" or "Enum" suffixes
-public enum FolderFlags : uint
-#pragma warning restore S2344 // Enumeration type names should not have "Flags" or "Enum" suffixes
+public enum EFolder : uint
 {
     FWF_NONE = 0,
     FWF_AUTOARRANGE = 0x1,

@@ -18,6 +18,7 @@ using ExploripPlugins;
 
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
 
@@ -83,7 +84,7 @@ public partial class Taskbar : AppBarWindow
             AllowsTransparency = true,
             Child = new Border()
             {
-                CornerRadius = new CornerRadius(10),
+                CornerRadius = ConfigManager.PopUpCornerRadius,
                 BorderThickness = new Thickness(0),
                 Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             },
@@ -91,6 +92,7 @@ public partial class Taskbar : AppBarWindow
         };
         ((Border)MyPopup.Child).Child = new ItemsControl()
         {
+            Margin = new Thickness(ConfigManager.PopUpCornerRadius.TopLeft),
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
         };
         MyTaskbarApp.MyShellManager.TasksService.WindowActivated += ClosePopup;
@@ -137,6 +139,10 @@ public partial class Taskbar : AppBarWindow
 
             // If the color scheme changes, re-apply the current theme to get updated colors.
             ((MyTaskbarApp)Application.Current).DictionaryManager.SetThemeFromSettings();
+        }
+        else if (msg == (int)NativeMethods.WM.POWERBROADCAST)
+        {
+            ShellLogger.Debug("Received POWERBROADCAST, wParam=" + wParam);
         }
 
         return IntPtr.Zero;

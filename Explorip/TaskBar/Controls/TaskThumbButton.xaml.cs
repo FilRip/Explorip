@@ -29,7 +29,6 @@ public partial class TaskThumbButton : Window
     private IntPtr _lastPeek;
     private bool _showContextMenu;
     private readonly Timer _timerBeforePreviewWindow;
-    private const int CloseButtonSize = 15;
 
     public TaskThumbButton(TaskButton parent)
     {
@@ -48,13 +47,15 @@ public partial class TaskThumbButton : Window
         MyBorder.CornerRadius = ConfigManager.ThumbnailCornerRadius;
         ThumbWidth = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbWidth;
         ThumbHeight = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbHeight;
-        Width = ThumbWidth;
         Height = ThumbHeight;
-        MainGrid.ColumnDefinitions[0].Width = new GridLength(ThumbWidth, GridUnitType.Pixel);
 
-        TitleFirst.Width = ThumbWidth - CloseButtonSize;
         if (parent.ApplicationWindow.ListWindows.Count > 0)
+        {
+            Width = ThumbWidth + (ConfigManager.SpaceBetweenThumbnail * 2 * parent.ApplicationWindow.ListWindows.Count);
             Width *= parent.ApplicationWindow.ListWindows.Count;
+        }
+        MainGrid.RowDefinitions[1].Height = new GridLength(ThumbHeight, GridUnitType.Pixel);
+        MainGrid.Margin = new Thickness(ConfigManager.SpaceBetweenThumbnail);
         _parent = parent;
         Owner = parent.TaskbarParent;
         Screen screen = Screen.AllScreens.FirstOrDefault(s => s.DeviceName.EndsWith(parent.TaskbarParent.ScreenName));
@@ -99,53 +100,53 @@ public partial class TaskThumbButton : Window
             WindowHelper.ExcludeWindowFromPeek(_handle);
             if (_parent.ApplicationWindow.ListWindows.Count > 0)
             {
+                double currentLeft = 0;
                 for (int i = 0; i < _parent.ApplicationWindow.ListWindows.Count; i++)
                 {
+                    currentLeft += ConfigManager.SpaceBetweenThumbnail;
                     int result = NativeMethods.DwmRegisterThumbnail(_handle, _parent.ApplicationWindow.ListWindows[i], out IntPtr thumbPtr);
                     if (result == (int)NativeMethods.HResult.SUCCESS)
                     {
+                        MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ThumbWidth, GridUnitType.Pixel) });
+
+                        StringBuilder sb = new(255);
+                        NativeMethods.GetWindowText(_parent.ApplicationWindow.ListWindows[i], sb, 255);
+
+                        TextBlock txtTitle = new()
+                        {
+                            Text = sb.ToString(),
+                            HorizontalAlignment = HorizontalAlignment.Left,
+                            Background = Brushes.Transparent,
+                            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+                            MaxWidth = ThumbWidth - 16,
+                            Margin = new Thickness(ConfigManager.SpaceBetweenThumbnail, 0, 0, 0),
+                        };
+                        Button closeButton = new()
+                        {
+                            Style = (Style)FindResource("CloseButtonStyle"),
+                            Tag = i,
+                            HorizontalAlignment = HorizontalAlignment.Right,
+                            BorderThickness = new Thickness(0, 0, 0, 0),
+                            Background = Brushes.Transparent,
+                            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+                        };
+                        closeButton.Click += CloseButton_Click;
+
+                        MainGrid.Children.Add(txtTitle);
+                        MainGrid.Children.Add(closeButton);
+
+                        Grid.SetColumn(txtTitle, i);
+                        Grid.SetColumn(closeButton, i);
+
                         NativeMethods.DwmThumbnailProperties thumbProp = new()
                         {
                             dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.OPACITY,
                             fVisible = true,
                             opacity = 255,
-                            rcDestination = new NativeMethods.Rect() { Left = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX * i), Top = (int)(TitleFirst.ActualHeight * VisualTreeHelper.GetDpi(this).DpiScaleY), Right = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX * i), Bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
+                            rcDestination = new NativeMethods.Rect() { Left = (int)currentLeft, Top = (int)(MainGrid.RowDefinitions[0].Height.Value * VisualTreeHelper.GetDpi(this).DpiScaleY), Right = (int)(ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)currentLeft, Bottom = (int)(Height * VisualTreeHelper.GetDpi(this).DpiScaleY) },
                         };
-                        StringBuilder sb = new(255);
-                        NativeMethods.GetWindowText(_parent.ApplicationWindow.ListWindows[i], sb, 255);
-                        if (i > 0)
-                        {
-                            MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(ThumbWidth, GridUnitType.Pixel) });
+                        currentLeft += ThumbWidth + ConfigManager.SpaceBetweenThumbnail;
 
-                            TextBlock txtTitle = new()
-                            {
-                                Text = sb.ToString(),
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                Background = Brushes.Transparent,
-                                Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-                            };
-                            Button closeButton = new()
-                            {
-                                Content = " X ",
-                                Tag = i,
-                                HorizontalAlignment = HorizontalAlignment.Right,
-                                BorderThickness = new Thickness(0, 0, 0, 0),
-                                Background = Brushes.Transparent,
-                                Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-                            };
-                            closeButton.Click += CloseButton_Click;
-
-                            MainGrid.Children.Add(txtTitle);
-                            MainGrid.Children.Add(closeButton);
-
-                            Grid.SetColumn(txtTitle, i);
-                            Grid.SetColumn(closeButton, i);
-                        }
-                        else
-                        {
-                            TitleFirst.Text = sb.ToString();
-                            CloseButton.Tag = 0;
-                        }
                         NativeMethods.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
                         _thumbPtr.Add(thumbPtr);
                     }

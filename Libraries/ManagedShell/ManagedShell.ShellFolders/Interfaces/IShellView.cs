@@ -11,7 +11,7 @@ namespace ManagedShell.ShellFolders.Interfaces;
 public struct FolderSettings
 {
     public FolderViewMode ViewMode;
-    public FolderFlags Flags;
+    public EFolder Flags;
 }
 
 [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]

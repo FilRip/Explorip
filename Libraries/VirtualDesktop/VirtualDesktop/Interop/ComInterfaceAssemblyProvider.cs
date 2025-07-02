@@ -29,12 +29,9 @@ namespace WindowsDesktop.Interop
 
         public Assembly GetAssembly()
         {
-            if (!Debugger.IsAttached)
-            {
-                Assembly assembly = GetExistingAssembly();
-                if (assembly != null)
-                    return assembly;
-            }
+            Assembly assembly = GetExistingAssembly();
+            if (assembly != null)
+                return assembly;
 
             return CreateAssembly();
         }

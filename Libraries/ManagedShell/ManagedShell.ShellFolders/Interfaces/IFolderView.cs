@@ -354,7 +354,7 @@ public interface IFolderView2 : IFolderView
     /// </remarks>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-setcurrentfolderflags
     // int SetCurrentFolderFlags( DWORD dwMask, DWORD dwFlags );
-    void SetCurrentFolderFlags(FolderFlags dwMask, FolderFlags dwFlags);
+    void SetCurrentFolderFlags(EFolder dwMask, EFolder dwFlags);
 
     /// <summary>Gets the currently applied folder flags.</summary>
     /// <returns>
@@ -363,7 +363,7 @@ public interface IFolderView2 : IFolderView
     /// </returns>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-getcurrentfolderflags
     // int GetCurrentFolderFlags( DWORD *pdwFlags );
-    FolderFlags GetCurrentFolderFlags();
+    EFolder GetCurrentFolderFlags();
 
     /// <summary>Gets the count of sort columns currently applied to the view.</summary>
     /// <returns>
