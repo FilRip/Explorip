@@ -163,14 +163,13 @@ public class ToolbarBaseButton : UserControl
         MenuItem mi = new()
         {
             Header = item.DisplayName,
-            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Icon = new Image()
             {
                 Source = item.SmallIcon,
             },
-            BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-            Margin = new Thickness(0, 0, 0, 0),
+            BorderThickness = new Thickness(1),
+            Margin = new Thickness(0),
             Tag = item,
             IsCheckable = false,
         };
@@ -211,7 +210,7 @@ public class ToolbarBaseButton : UserControl
     {
         if (action == ((uint)MenuItemId.OpenParentFolder).ToString())
         {
-            ManagedShell.Common.Helpers.ShellHelper.StartProcess(items[0].Path);
+            ShellHelper.StartProcess(items[0].Path);
             return true;
         }
 

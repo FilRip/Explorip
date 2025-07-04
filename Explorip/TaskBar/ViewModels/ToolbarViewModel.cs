@@ -10,10 +10,12 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.Helpers;
 using Explorip.TaskBar.Controls;
 
 using ExploripConfig.Configuration;
@@ -30,11 +32,29 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
 {
     private Task _taskRefresh;
     private readonly object _lockRefresh;
-    private Popup _moreItems;
+    private readonly Popup _moreItems;
 
     public ToolbarViewModel()
     {
         _lockRefresh = new object();
+
+        _moreItems = new Popup()
+        {
+            AllowsTransparency = true,
+            Child = new Border()
+            {
+                CornerRadius = ConfigManager.PopUpCornerRadius,
+                BorderThickness = new Thickness(0),
+                Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            },
+            StaysOpen = false,
+        };
+        ((Border)_moreItems.Child).Child = new ItemsControl()
+        {
+            Margin = new Thickness(ConfigManager.PopUpCornerRadius.TopLeft),
+            Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+            Background = Brushes.Transparent,
+        };
     }
 
     public override string Id => Path;
@@ -82,6 +102,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     public override void Init(BaseToolbar parentControl)
     {
         base.Init(parentControl);
+        ((Border)_moreItems.Child).Background = ConfigManager.GetTaskbarConfig(parentControl.FindVisualParent<Taskbar>().ScreenName).TaskbarBackground;
         SetupFolder(Path);
     }
 
@@ -188,22 +209,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             double currentWidth = 0;
             if (_moreItems != null)
             {
-                ((ItemsControl)_moreItems.Child).Items.Clear();
+                ((ItemsControl)((Border)_moreItems.Child).Child).Items.Clear();
                 if (_moreItems.IsOpen)
                     _moreItems.IsOpen = false;
-                MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= ClosePopup;
             }
-            _moreItems = new Popup()
-            {
-                Margin = new Thickness(0),
-                Child = new ItemsControl()
-                {
-                    Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-                    Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
-                },
-                StaysOpen = false,
-            };
-            MyTaskbarApp.MyShellManager.TasksService.WindowActivated += ClosePopup;
+            ((ItemsControl)((Border)_moreItems.Child).Child).Items.Clear();
             _moreItems.PlacementTarget = MyToolbar;
             ShellFile lastVisible = null;
             foreach (ShellFile item in Folder.Files.OrderBy(sf => sf.Position))
@@ -214,15 +224,10 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
                 else
                     lastVisible = item;
             }
-            if (((ItemsControl)_moreItems.Child).Items.Count > 0 && lastVisible != null)
+            if (((ItemsControl)((Border)_moreItems.Child).Child).Items.Count > 0 && lastVisible != null)
                 AddMenuItem(lastVisible, true);
-            MoreItemsVisibility = (((ItemsControl)_moreItems.Child).Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed);
+            MoreItemsVisibility = (((ItemsControl)((Border)_moreItems.Child).Child).Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed);
         });
-    }
-
-    private void ClosePopup(IntPtr activatedWindow)
-    {
-        _moreItems.IsOpen = false;
     }
 
     private void AddMenuItem(ShellFile item, bool atStart = false)
@@ -231,9 +236,9 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             return;
         MenuItem mi = CreateMenuItem(item);
         if (atStart)
-            ((ItemsControl)_moreItems.Child).Items.Insert(0, mi);
+            ((ItemsControl)((Border)_moreItems.Child).Child).Items.Insert(0, mi);
         else
-            ((ItemsControl)_moreItems.Child).Items.Add(mi);
+            ((ItemsControl)((Border)_moreItems.Child).Child).Items.Add(mi);
         if (System.IO.Path.GetExtension(item.FileName) == ".lnk")
         {
             try
@@ -262,13 +267,12 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         MenuItem mi = new()
         {
             Header = item.DisplayName,
-            Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Icon = new Image()
             {
                 Source = item.SmallIcon,
             },
-            BorderBrush = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
+            BorderThickness = new Thickness(1),
             Margin = new Thickness(0),
             Tag = item,
             IsCheckable = false,
@@ -382,8 +386,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             Folder?.Dispose();
             if (_moreItems != null)
             {
-                MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= ClosePopup;
-                ((ItemsControl)_moreItems.Child).Items.Clear();
+                ((ItemsControl)((Border)_moreItems.Child).Child).Items.Clear();
                 _moreItems.IsOpen = false;
             }
         }

@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="Themes/System.xaml" />
                 <ResourceDictionary Source="Styles/StyleContextMenu.xaml"/>
                 <ResourceDictionary Source="Styles/StyleWindow.xaml"/>
+                <ResourceDictionary Source="Styles/StyleButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
