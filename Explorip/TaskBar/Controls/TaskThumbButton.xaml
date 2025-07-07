@@ -25,9 +25,6 @@
         <viewmodels:TaskThumbButtonViewModel/>
     </Window.DataContext>
     <i:Interaction.Triggers>
-        <i:EventTrigger EventName="MouseEnter">
-            <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
-        </i:EventTrigger>
         <i:EventTrigger EventName="MouseLeave">
             <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
         </i:EventTrigger>

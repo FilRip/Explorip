@@ -21,10 +21,12 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
 {
     private readonly Timer _timerBeforePeek;
     private bool disposedValue;
+    private readonly int _delayBeforePreview;
 
     public TaskThumbButtonViewModel()
     {
         _timerBeforePeek = new Timer(ShowPreviewWindow, null, Timeout.Infinite, Timeout.Infinite);
+        _delayBeforePreview = ConfigManager.TaskbarDelayBeforeShowThumbnail;
     }
 
     [ObservableProperty()]
@@ -44,7 +46,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
         {
             if (CurrentWindow < 0)
             {
-                _timerBeforePeek.Change(ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
+                _timerBeforePeek.Change(_delayBeforePreview, Timeout.Infinite);
                 return;
             }
             IntPtr newPeek;
@@ -63,18 +65,6 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
     {
         if (LastPeeked != IntPtr.Zero)
             WindowHelper.PeekWindow(false, LastPeeked, ParentTask.TaskbarParent.Handle);
-    }
-
-    [RelayCommand()]
-    private void MouseEnter()
-    {
-        MouseIn = true;
-        if (ShowContextMenu)
-            return;
-        if (LastPeeked == IntPtr.Zero)
-            _timerBeforePeek.Change(ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
-        else
-            ShowPreviewWindow(null);
     }
 
     [RelayCommand()]
@@ -147,6 +137,16 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
             ShowContextMenu = false;
         }
         CloseThumbnail();
+    }
+
+    public void MouseEnter(int numWindow)
+    {
+        MouseIn = true;
+        CurrentWindow = numWindow;
+        if (LastPeeked != IntPtr.Zero)
+            ShowPreviewWindow(null);
+        else
+            _timerBeforePeek.Change(_delayBeforePreview, Timeout.Infinite);
     }
 
     #region IDisposable Support
