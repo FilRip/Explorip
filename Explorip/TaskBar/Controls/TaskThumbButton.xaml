@@ -16,7 +16,6 @@
         ResizeMode="NoResize"
         Topmost="True"
         Closing="Window_Closing"
-        ContentRendered="Window_ContentRendered"
         Unloaded="Window_Unloaded"
         AllowsTransparency="True"
         Background="Transparent"
@@ -27,6 +26,9 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="MouseLeave">
             <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="ContentRendered">
+            <i:InvokeCommandAction Command="{Binding ContentRenderedCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Border Background="{x:Static colors:Colors.BackgroundColorBrush}" BorderThickness="0" CornerRadius="0" x:Name="MyBorder">

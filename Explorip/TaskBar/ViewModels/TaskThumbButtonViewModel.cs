@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,7 +14,6 @@ using Explorip.TaskBar.Controls;
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.ViewModels;
@@ -22,49 +23,64 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
     private readonly Timer _timerBeforePeek;
     private bool disposedValue;
     private readonly int _delayBeforePreview;
+    private IntPtr _lastPeeked = IntPtr.Zero;
+    private int _currentWindow = -1;
+    private readonly List<IntPtr> _thumbPtr;
 
     public TaskThumbButtonViewModel()
     {
         _timerBeforePeek = new Timer(ShowPreviewWindow, null, Timeout.Infinite, Timeout.Infinite);
         _delayBeforePreview = ConfigManager.TaskbarDelayBeforeShowThumbnail;
+        _thumbPtr = [];
+        ListThumbnailButtons = [];
     }
 
     [ObservableProperty()]
     private double _thumbHeight, _thumbWidth;
 
-    public Action CloseThumbnail { get; set; }
     public IntPtr WindowHandle { get; set; }
     public bool MouseIn { get; private set; }
     public bool ShowContextMenu { get; private set; }
     public TaskButton ParentTask { get; set; }
-    public IntPtr LastPeeked { get; set; } = IntPtr.Zero;
-    public int CurrentWindow { get; set; } = -1;
+    public double SpaceBetweenThumbnail { get; set; }
+    public List<Button> ListThumbnailButtons { get; private set; }
+    public TaskThumbButton ParentControl { get; set; }
 
     public void ShowPreviewWindow(object userData)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
-            if (CurrentWindow < 0)
+            if (_currentWindow < 0)
             {
                 _timerBeforePeek.Change(_delayBeforePreview, Timeout.Infinite);
                 return;
             }
             IntPtr newPeek;
-            newPeek = ParentTask.ApplicationWindow.ListWindows[CurrentWindow];
-            if (newPeek != LastPeeked)
+            newPeek = ParentTask.ApplicationWindow.ListWindows[_currentWindow];
+            if (newPeek != _lastPeeked)
             {
                 UnPeek();
-                LastPeeked = newPeek;
+                _lastPeeked = newPeek;
                 if (newPeek != IntPtr.Zero)
-                    WindowHelper.PeekWindow(true, LastPeeked, ParentTask.TaskbarParent.Handle);
+                    WindowHelper.PeekWindow(true, _lastPeeked, ParentTask.TaskbarParent.Handle);
             }
         });
     }
 
     public void UnPeek()
     {
-        if (LastPeeked != IntPtr.Zero)
-            WindowHelper.PeekWindow(false, LastPeeked, ParentTask.TaskbarParent.Handle);
+        if (_lastPeeked != IntPtr.Zero)
+            WindowHelper.PeekWindow(false, _lastPeeked, ParentTask.TaskbarParent.Handle);
+    }
+
+    public void CloseWindow(int numWindow)
+    {
+        IntPtr windowHandle = ParentTask.ApplicationWindow.ListWindows[numWindow];
+        if (windowHandle == IntPtr.Zero)
+            return;
+        UnPeek();
+        NativeMethods.SendMessage(windowHandle, NativeMethods.WM.CLOSE, 0, 0);
+        ParentControl.Close();
     }
 
     [RelayCommand()]
@@ -74,29 +90,30 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
             return;
         MouseIn = false;
         UnPeek();
-        CloseThumbnail();
+        ParentControl.Close();
     }
 
-    public void ClickWindow()
+    [RelayCommand()]
+    private void ClickWindow()
     {
         _timerBeforePeek.Change(Timeout.Infinite, Timeout.Infinite);
-        if (CurrentWindow < 0)
+        if (_currentWindow < 0)
         {
             IInputElement control = Mouse.DirectlyOver;
             if (control is Button btn &&
                 btn.Tag is int numWindow)
             {
-                CurrentWindow = numWindow;
+                _currentWindow = numWindow;
             }
             else
                 return;
         }
         IntPtr window;
-        window = ParentTask.ApplicationWindow.ListWindows[CurrentWindow];
+        window = ParentTask.ApplicationWindow.ListWindows[_currentWindow];
         UnPeek();
         if (window != IntPtr.Zero)
             ParentTask.ApplicationWindow.BringToFront(window);
-        CloseThumbnail();
+        ParentControl.Close();
     }
 
     public void MouseRightButtonDown()
@@ -105,20 +122,20 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (CurrentWindow < 0)
+                if (_currentWindow < 0)
                 {
                     IInputElement control = Mouse.DirectlyOver;
                     if (control is Button btn &&
                         btn.Tag is int numWindow)
                     {
-                        CurrentWindow = numWindow;
+                        _currentWindow = numWindow;
                     }
                     else
                         return;
                 }
                 _timerBeforePeek.Change(Timeout.Infinite, Timeout.Infinite);
                 IntPtr window;
-                window = ParentTask.ApplicationWindow.ListWindows[CurrentWindow];
+                window = ParentTask.ApplicationWindow.ListWindows[_currentWindow];
                 ShowContextMenu = true;
                 UnPeek();
                 System.Drawing.Point posMouse = new();
@@ -127,7 +144,6 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 // Display the menu
                 uint command = NativeMethods.TrackPopupMenuEx(wMenu,
                     NativeMethods.TPM.RIGHTBUTTON | NativeMethods.TPM.RETURNCMD | NativeMethods.TPM.NONOTIFY, posMouse.X, posMouse.Y, WindowHandle, IntPtr.Zero);
-                ShellLogger.Debug("GetLastError=" + NativeMethods.GetLastError());
                 if (command != 0)
                     NativeMethods.PostMessage(window, NativeMethods.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
             });
@@ -136,17 +152,59 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
         {
             ShowContextMenu = false;
         }
-        CloseThumbnail();
+        ParentControl.Close();
     }
 
     public void MouseEnter(int numWindow)
     {
         MouseIn = true;
-        CurrentWindow = numWindow;
-        if (LastPeeked != IntPtr.Zero)
+        _currentWindow = numWindow;
+        if (_lastPeeked != IntPtr.Zero)
             ShowPreviewWindow(null);
         else
             _timerBeforePeek.Change(_delayBeforePreview, Timeout.Infinite);
+    }
+
+    [RelayCommand()]
+    private void ContentRendered()
+    {
+        try
+        {
+            WindowHelper.ExcludeWindowFromPeek(WindowHandle);
+            if (ParentTask.ApplicationWindow.ListWindows.Count > 0)
+            {
+                double currentLeft = 0;
+                for (int i = 0; i < ParentTask.ApplicationWindow.ListWindows.Count; i++)
+                {
+                    currentLeft += SpaceBetweenThumbnail;
+                    int result = NativeMethods.DwmRegisterThumbnail(WindowHandle, ParentTask.ApplicationWindow.ListWindows[i], out IntPtr thumbPtr);
+                    if (result == (int)NativeMethods.HResult.SUCCESS)
+                    {
+                        Point buttonPosition = ListThumbnailButtons[i].TransformToAncestor(ParentControl).Transform(new Point(0, 0));
+
+                        NativeMethods.DwmThumbnailProperties thumbProp = new()
+                        {
+                            dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.OPACITY,
+                            fVisible = true,
+                            opacity = 255,
+                            rcDestination = new NativeMethods.Rect()
+                            {
+                                Left = (int)(currentLeft * VisualTreeHelper.GetDpi(ParentControl).DpiScaleX),
+                                Top = (int)(buttonPosition.Y * VisualTreeHelper.GetDpi(ParentControl).DpiScaleY),
+                                Right = (int)(ThumbWidth * VisualTreeHelper.GetDpi(ParentControl).DpiScaleX) + (int)(currentLeft * VisualTreeHelper.GetDpi(ParentControl).DpiScaleX),
+                                Bottom = (int)(ThumbHeight * VisualTreeHelper.GetDpi(ParentControl).DpiScaleY) + (int)(buttonPosition.Y * VisualTreeHelper.GetDpi(ParentControl).DpiScaleY),
+                            }
+                        };
+
+                        currentLeft += ThumbWidth + SpaceBetweenThumbnail;
+
+                        NativeMethods.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
+                        _thumbPtr.Add(thumbPtr);
+                    }
+                }
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
     }
 
     #region IDisposable Support
@@ -164,6 +222,8 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
             {
                 UnPeek();
                 _timerBeforePeek.Dispose();
+                foreach (IntPtr thumb in _thumbPtr)
+                    NativeMethods.DwmUnregisterThumbnail(thumb);
             }
 
             disposedValue = true;

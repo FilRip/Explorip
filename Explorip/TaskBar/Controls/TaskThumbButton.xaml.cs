@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -12,7 +11,6 @@ using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
 
-using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
 using WpfScreenHelper;
@@ -24,10 +22,6 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class TaskThumbButton : Window
 {
-    private readonly List<IntPtr> _thumbPtr;
-    private readonly List<Button> _listThumbnailButtons;
-    private readonly double _spaceBetweenThumbnail;
-
     public TaskThumbButton(TaskButton parent)
     {
         InitializeComponent();
@@ -35,7 +29,6 @@ public partial class TaskThumbButton : Window
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
 
-        _thumbPtr = [];
         if (parent?.TaskbarParent == null)
         {
             Close();
@@ -43,32 +36,31 @@ public partial class TaskThumbButton : Window
         }
 
         // Set default value
+        MyDataContext.ParentControl = this;
         MyDataContext.ParentTask = parent;
-        MyDataContext.CloseThumbnail = Close;
 
-        _listThumbnailButtons = [];
-        _spaceBetweenThumbnail = ConfigManager.SpaceBetweenThumbnail;
+        MyDataContext.SpaceBetweenThumbnail = ConfigManager.SpaceBetweenThumbnail;
         MyBorder.Background = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarBackground;
         MyBorder.CornerRadius = ConfigManager.ThumbnailCornerRadius;
         MyDataContext.ThumbWidth = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbWidth;
         MyDataContext.ThumbHeight = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbHeight;
         MainGrid.RowDefinitions[1].Height = new GridLength(MyDataContext.ThumbHeight, GridUnitType.Pixel);
-        MainGrid.RowDefinitions[2].Height = new GridLength(_spaceBetweenThumbnail, GridUnitType.Pixel);
-        MainGrid.Margin = new Thickness(_spaceBetweenThumbnail);
+        MainGrid.RowDefinitions[2].Height = new GridLength(MyDataContext.SpaceBetweenThumbnail, GridUnitType.Pixel);
+        MainGrid.Margin = new Thickness(MyDataContext.SpaceBetweenThumbnail);
         Owner = parent.TaskbarParent;
         MyDataContext.WindowHandle = new WindowInteropHelper(this).EnsureHandle();
 
         // Build controls
         if (parent.ApplicationWindow.ListWindows.Count > 0)
         {
-            Width = (MyDataContext.ThumbWidth + _spaceBetweenThumbnail * 2) * parent.ApplicationWindow.ListWindows.Count;
+            Width = (MyDataContext.ThumbWidth + MyDataContext.SpaceBetweenThumbnail * 2) * parent.ApplicationWindow.ListWindows.Count;
             int numColumn = -1;
             for (int i = 0; i < parent.ApplicationWindow.ListWindows.Count; i++)
             {
                 numColumn++;
                 if (i > 0 && i < parent.ApplicationWindow.ListWindows.Count)
                 {
-                    MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(_spaceBetweenThumbnail * 2, GridUnitType.Pixel) });
+                    MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(MyDataContext.SpaceBetweenThumbnail * 2, GridUnitType.Pixel) });
                     numColumn++;
                 }
                 MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(MyDataContext.ThumbWidth, GridUnitType.Pixel) });
@@ -106,7 +98,7 @@ public partial class TaskThumbButton : Window
                     Style = (Style)FindResource("ButtonWithoutMouseOver"),
                 };
                 thumbnailButton.MouseEnter += ThumbnailButton_MouseEnter;
-                thumbnailButton.Click += ThumbnailButton_MouseLeftButtonUp;
+                thumbnailButton.SetBinding(Button.CommandProperty, new Binding(nameof(MyDataContext.ClickWindowCommand)));
                 thumbnailButton.MouseRightButtonDown += ThumbnailButton_MouseRightButtonDown;
 
                 MainGrid.Children.Add(txtTitle);
@@ -118,12 +110,12 @@ public partial class TaskThumbButton : Window
                 Grid.SetColumn(thumbnailButton, numColumn);
                 Grid.SetRow(thumbnailButton, 1);
 
-                _listThumbnailButtons.Add(thumbnailButton);
+                MyDataContext.ListThumbnailButtons.Add(thumbnailButton);
             }
         }
 
         // Calculate size and position
-        Height = MainGrid.RowDefinitions.Sum(row => row.Height.Value) + _spaceBetweenThumbnail;
+        Height = MainGrid.RowDefinitions.Sum(row => row.Height.Value) + MyDataContext.SpaceBetweenThumbnail;
         Screen screen = Screen.AllScreens.FirstOrDefault(s => s.DeviceName.EndsWith(parent.TaskbarParent.ScreenName));
         Point positionParent = MyDataContext.ParentTask.PointToScreen(Mouse.GetPosition(this));
         Left = (int)((positionParent.X - (Width / 2)) / screen.ScaleFactor);
@@ -135,11 +127,6 @@ public partial class TaskThumbButton : Window
     private void ThumbnailButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         MyDataContext.MouseRightButtonDown();
-    }
-
-    private void ThumbnailButton_MouseLeftButtonUp(object sender, RoutedEventArgs e)
-    {
-        MyDataContext.ClickWindow();
     }
 
     private void ThumbnailButton_MouseEnter(object sender, MouseEventArgs e)
@@ -161,52 +148,9 @@ public partial class TaskThumbButton : Window
         e.Cancel = MyDataContext.ShowContextMenu;
     }
 
-    private void Window_ContentRendered(object sender, EventArgs e)
-    {
-        try
-        {
-            WindowHelper.ExcludeWindowFromPeek(MyDataContext.WindowHandle);
-            if (MyDataContext.ParentTask.ApplicationWindow.ListWindows.Count > 0)
-            {
-                double currentLeft = 0;
-                for (int i = 0; i < MyDataContext.ParentTask.ApplicationWindow.ListWindows.Count; i++)
-                {
-                    currentLeft += _spaceBetweenThumbnail;
-                    int result = NativeMethods.DwmRegisterThumbnail(MyDataContext.WindowHandle, MyDataContext.ParentTask.ApplicationWindow.ListWindows[i], out IntPtr thumbPtr);
-                    if (result == (int)NativeMethods.HResult.SUCCESS)
-                    {
-                        Point buttonPosition = _listThumbnailButtons[i].TransformToAncestor(this).Transform(new Point(0, 0));
-
-                        NativeMethods.DwmThumbnailProperties thumbProp = new()
-                        {
-                            dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.OPACITY,
-                            fVisible = true,
-                            opacity = 255,
-                            rcDestination = new NativeMethods.Rect()
-                            {
-                                Left = (int)(currentLeft * VisualTreeHelper.GetDpi(this).DpiScaleX),
-                                Top = (int)(buttonPosition.Y * VisualTreeHelper.GetDpi(this).DpiScaleY),
-                                Right = (int)(MyDataContext.ThumbWidth * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)(currentLeft * VisualTreeHelper.GetDpi(this).DpiScaleX),
-                                Bottom = (int)(MyDataContext.ThumbHeight * VisualTreeHelper.GetDpi(this).DpiScaleY) + (int)(buttonPosition.Y * VisualTreeHelper.GetDpi(this).DpiScaleY),
-                            }
-                        };
-
-                        currentLeft += MyDataContext.ThumbWidth + _spaceBetweenThumbnail;
-
-                        NativeMethods.DwmUpdateThumbnailProperties(thumbPtr, ref thumbProp);
-                        _thumbPtr.Add(thumbPtr);
-                    }
-                }
-            }
-        }
-        catch (Exception) { /* Ignore errors */ }
-    }
-
     private void Window_Unloaded(object sender, RoutedEventArgs e)
     {
         MyDataContext.Dispose();
-        foreach (IntPtr thumb in _thumbPtr)
-            NativeMethods.DwmUnregisterThumbnail(thumb);
     }
 
     private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
@@ -214,12 +158,7 @@ public partial class TaskThumbButton : Window
         if (sender is Button btn &&
             btn.Tag is int numWindow)
         {
-            IntPtr windowHandle = MyDataContext.ParentTask.ApplicationWindow.ListWindows[numWindow];
-            if (windowHandle == IntPtr.Zero)
-                return;
-            MyDataContext.UnPeek();
-            NativeMethods.SendMessage(windowHandle, NativeMethods.WM.CLOSE, 0, 0);
-            Close();
+            MyDataContext.CloseWindow(numWindow);
         }
     }
 }

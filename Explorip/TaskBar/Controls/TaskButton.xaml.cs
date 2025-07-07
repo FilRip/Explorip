@@ -118,7 +118,11 @@ public partial class TaskButton : UserControl
         else if (_appWindow.ListWindows.Count == 0)
             _appWindow.StartNewInstance();
         else
-            _timerBeforeShowThumbnail.Change(0, Timeout.Infinite);
+            try
+            {
+                _timerBeforeShowThumbnail.Change(0, Timeout.Infinite);
+            }
+            catch (Exception) { /* Ignore errors */ }
     }
 
     private void AppButton_OnPreviewMouseDown(object sender, MouseButtonEventArgs e)
