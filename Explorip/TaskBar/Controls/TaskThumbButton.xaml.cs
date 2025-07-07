@@ -84,7 +84,7 @@ public partial class TaskThumbButton : Window
                     Background = Brushes.Transparent,
                     Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
                 };
-                closeButton.Click += CloseButton_Click;
+                closeButton.Click += CloseWindowButton_Click;
                 Button thumbnailButton = new()
                 {
                     HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -97,7 +97,7 @@ public partial class TaskThumbButton : Window
                     Style = (Style)FindResource("ButtonWithoutMouseOver"),
                 };
                 thumbnailButton.MouseEnter += ThumbnailButton_MouseEnter;
-                thumbnailButton.MouseLeftButtonUp += ThumbnailButton_MouseLeftButtonUp;
+                thumbnailButton.Click += ThumbnailButton_MouseLeftButtonUp;
                 thumbnailButton.MouseRightButtonDown += ThumbnailButton_MouseRightButtonDown;
 
                 MainGrid.Children.Add(txtTitle);
@@ -113,7 +113,7 @@ public partial class TaskThumbButton : Window
             }
         }
 
-        // Calculate size
+        // Calculate size and position
         Height = MainGrid.RowDefinitions.Sum(row => row.Height.Value) + ConfigManager.SpaceBetweenThumbnail;
         Screen screen = Screen.AllScreens.FirstOrDefault(s => s.DeviceName.EndsWith(parent.TaskbarParent.ScreenName));
         Point positionParent = MyDataContext.ParentTask.PointToScreen(Mouse.GetPosition(this));
@@ -128,9 +128,9 @@ public partial class TaskThumbButton : Window
         MyDataContext.MouseRightButtonDown();
     }
 
-    private void ThumbnailButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    private void ThumbnailButton_MouseLeftButtonUp(object sender, RoutedEventArgs e)
     {
-        MyDataContext.MouseLeftButtonUp();
+        MyDataContext.ClickWindow();
     }
 
     private void ThumbnailButton_MouseEnter(object sender, MouseEventArgs e)
@@ -139,6 +139,8 @@ public partial class TaskThumbButton : Window
             btn.Tag is int numWindow)
         {
             MyDataContext.CurrentWindow = numWindow;
+            if (MyDataContext.LastPeeked != IntPtr.Zero)
+                MyDataContext.ShowPreviewWindow(null);
         }
     }
 
@@ -149,13 +151,7 @@ public partial class TaskThumbButton : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (MyDataContext.ShowContextMenu)
-        {
-            e.Cancel = true;
-            return;
-        }
-        foreach (IntPtr thumb in _thumbPtr)
-            NativeMethods.DwmUnregisterThumbnail(thumb);
+        e.Cancel = MyDataContext.ShowContextMenu;
     }
 
     private void Window_ContentRendered(object sender, EventArgs e)
@@ -201,10 +197,12 @@ public partial class TaskThumbButton : Window
 
     private void Window_Unloaded(object sender, RoutedEventArgs e)
     {
-        MyDataContext.Close();
+        MyDataContext.Dispose();
+        foreach (IntPtr thumb in _thumbPtr)
+            NativeMethods.DwmUnregisterThumbnail(thumb);
     }
 
-    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    private void CloseWindowButton_Click(object sender, RoutedEventArgs e)
     {
         if (sender is Button btn &&
             btn.Tag is int numWindow)

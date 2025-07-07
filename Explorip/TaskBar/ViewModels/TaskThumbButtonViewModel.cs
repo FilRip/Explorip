@@ -12,13 +12,15 @@ using Explorip.TaskBar.Controls;
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.ViewModels;
 
-public partial class TaskThumbButtonViewModel : ObservableObject
+public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
 {
     private readonly Timer _timerBeforePeek;
+    private bool disposedValue;
 
     public TaskThumbButtonViewModel()
     {
@@ -36,7 +38,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject
     public IntPtr LastPeeked { get; set; } = IntPtr.Zero;
     public int CurrentWindow { get; set; } = -1;
 
-    private void ShowPreviewWindow(object userData)
+    public void ShowPreviewWindow(object userData)
     {
         Application.Current.Dispatcher.Invoke(() =>
         {
@@ -85,7 +87,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject
         CloseThumbnail();
     }
 
-    public void MouseLeftButtonUp()
+    public void ClickWindow()
     {
         _timerBeforePeek.Change(Timeout.Infinite, Timeout.Infinite);
         if (CurrentWindow < 0)
@@ -101,6 +103,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject
         }
         IntPtr window;
         window = ParentTask.ApplicationWindow.ListWindows[CurrentWindow];
+        UnPeek();
         if (window != IntPtr.Zero)
             ParentTask.ApplicationWindow.BringToFront(window);
         CloseThumbnail();
@@ -110,30 +113,34 @@ public partial class TaskThumbButtonViewModel : ObservableObject
     {
         try
         {
-            _timerBeforePeek.Change(Timeout.Infinite, Timeout.Infinite);
-            if (CurrentWindow < 0)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                IInputElement control = Mouse.DirectlyOver;
-                if (control is Button btn &&
-                    btn.Tag is int numWindow)
+                if (CurrentWindow < 0)
                 {
-                    CurrentWindow = numWindow;
+                    IInputElement control = Mouse.DirectlyOver;
+                    if (control is Button btn &&
+                        btn.Tag is int numWindow)
+                    {
+                        CurrentWindow = numWindow;
+                    }
+                    else
+                        return;
                 }
-                else
-                    return;
-            }
-            IntPtr window;
-            window = ParentTask.ApplicationWindow.ListWindows[CurrentWindow];
-            ShowContextMenu = true;
-            UnPeek();
-            IntPtr wMenu = NativeMethods.GetSystemMenu(window, false);
-            // Display the menu
-            System.Drawing.Point posMouse = new();
-            NativeMethods.GetCursorPos(ref posMouse);
-            uint command = NativeMethods.TrackPopupMenuEx(wMenu,
-                NativeMethods.TPM.RIGHTBUTTON | NativeMethods.TPM.RETURNCMD, posMouse.X, posMouse.Y, WindowHandle, IntPtr.Zero);
-            if (command != 0)
-                NativeMethods.PostMessage(window, NativeMethods.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+                _timerBeforePeek.Change(Timeout.Infinite, Timeout.Infinite);
+                IntPtr window;
+                window = ParentTask.ApplicationWindow.ListWindows[CurrentWindow];
+                ShowContextMenu = true;
+                UnPeek();
+                System.Drawing.Point posMouse = new();
+                NativeMethods.GetCursorPos(ref posMouse);
+                IntPtr wMenu = NativeMethods.GetSystemMenu(window, false);
+                // Display the menu
+                uint command = NativeMethods.TrackPopupMenuEx(wMenu,
+                    NativeMethods.TPM.RIGHTBUTTON | NativeMethods.TPM.RETURNCMD | NativeMethods.TPM.NONOTIFY, posMouse.X, posMouse.Y, WindowHandle, IntPtr.Zero);
+                ShellLogger.Debug("GetLastError=" + NativeMethods.GetLastError());
+                if (command != 0)
+                    NativeMethods.PostMessage(window, NativeMethods.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+            });
         }
         finally
         {
@@ -142,8 +149,32 @@ public partial class TaskThumbButtonViewModel : ObservableObject
         CloseThumbnail();
     }
 
-    public void Close()
+    #region IDisposable Support
+
+    public bool IsDisposed
     {
-        _timerBeforePeek.Dispose();
+        get => disposedValue;
     }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                UnPeek();
+                _timerBeforePeek.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }

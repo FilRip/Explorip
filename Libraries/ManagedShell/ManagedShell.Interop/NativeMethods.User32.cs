@@ -113,7 +113,7 @@ public partial class NativeMethods
     [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
     internal static extern int GetMenuDefaultItem(IntPtr hMenu, bool fByPos, uint gmdiFlags);
 
-    [DllImport(User32_DllName, ExactSpelling = true, CharSet = CharSet.Auto)]
+    [DllImport(User32_DllName, ExactSpelling = true, CharSet = CharSet.Auto, SetLastError = true)]
     internal static extern uint TrackPopupMenuEx(IntPtr hmenu, TPM flags, int x, int y, IntPtr hwnd, IntPtr lptpm);
 
     [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
