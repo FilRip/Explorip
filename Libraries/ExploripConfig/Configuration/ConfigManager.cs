@@ -110,7 +110,7 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("PopUpCornerRadius", "").ToString()))
                 _registryRootTaskbar.SetValue("PopUpCornerRadius", "6");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ThumbnailCornerRadius", "").ToString()))
-                _registryRootTaskbar.SetValue("ThumbnailCornerRadius", "0");
+                _registryRootTaskbar.SetValue("ThumbnailCornerRadius", "10");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("SpaceBetweenThumbnail", "").ToString()))
                 _registryRootTaskbar.SetValue("SpaceBetweenThumbnail", "10");
 
