@@ -30,6 +30,14 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 {
     private const int ScrollBarWidth = 22;
 
+    [Flags()]
+    private enum ERefreshList
+    {
+        None,
+        Rebuild,
+        Refresh,
+    }
+
     private AppBarEdge _currentEdge;
     private Taskbar _taskbarParent;
     private readonly object _lockChangeDesktop;
@@ -57,19 +65,16 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public static void RefreshAllCollectionView(object sender, EventArgs e)
     {
-        bool rebuild = false;
-        bool refresh = false;
-        if (sender is bool b)
-            rebuild = b;
-        else if (sender is int i && i == 1)
-            refresh = true;
+        ERefreshList function = ERefreshList.None;
+        if (sender is ERefreshList rl)
+            function = rl;
         Application.Current.Dispatcher.Invoke(() =>
         {
             foreach (TaskListViewModel tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList.MyDataContext))
             {
-                if (refresh)
+                if (function.HasFlag(ERefreshList.Refresh))
                     tl.RefreshMyCollectionView();
-                if (rebuild)
+                if (function.HasFlag(ERefreshList.Rebuild))
                     tl.RebuildCollectionView();
                 if (ConfigManager.ReduceTitleWidthWhenTaskbarFull)
                     tl.UpdateMaxWidth();
@@ -120,7 +125,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     private static void UncloakedUwp(IntPtr hwnd)
     {
-        RefreshAllCollectionView(1, EventArgs.Empty);
+        RefreshAllCollectionView(ERefreshList.Refresh, EventArgs.Empty);
     }
 
     public void ChangeButtonSize()
@@ -140,11 +145,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             ButtonBottomMargin = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton, GridUnitType.Pixel);
         else
             ButtonRightMargin = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton, GridUnitType.Pixel);
-    }
-
-    private static void TasksService_WindowUncloaked(IntPtr windowHandle)
-    {
-        RefreshAllCollectionView(null, EventArgs.Empty);
     }
 
     public void UpdateMaxWidth()
@@ -260,7 +260,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 foreach (ApplicationWindow win in windowsToDispose)
                     win.Dispose();
 
-                RefreshAllCollectionView(true, EventArgs.Empty);
+                RefreshAllCollectionView(ERefreshList.Rebuild, EventArgs.Empty);
             }
         });
     }
