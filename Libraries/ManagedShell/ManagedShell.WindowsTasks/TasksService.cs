@@ -450,7 +450,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         {
             // Handle ITaskbarList functions, most not implemented yet
 
-            ApplicationWindow win = null;
+            ApplicationWindow win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
 
             switch (msg.Msg)
             {
@@ -468,21 +468,15 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 case (int)WM.TB_SETBUTTONINFOW:
                     // SetProgressValue
                     ShellLogger.Debug("TasksService: ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
-
-                    win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
                     if (win != null)
                         win.ProgressValue = (int)msg.LParam;
-
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETBUTTONINFOA:
                     // SetProgressState
                     ShellLogger.Debug("TasksService: ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
-
-                    win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
                     if (win != null)
                         win.ProgressState = (TBPFLAG)msg.LParam;
-
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_INSERTBUTTONW:
@@ -513,6 +507,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 case (int)WM.TB_SAVERESTOREW:
                     // TODO : ThumbBarAddButtons
                     ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarAddButtons HWND:" + msg.WParam);
+                    win?.AddThumbBarButton(msg.LParam);
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_ADDSTRINGW:
@@ -528,10 +523,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 case (int)WM.TB_GETINSERTMARK:
                     // SetOverlayIcon - Icon
                     ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
-
-                    win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
                     win?.SetOverlayIcon(msg.LParam);
-
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETINSERTMARK:
@@ -547,15 +539,28 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 case (int)WM.TB_GETEXTENDEDSTYLE:
                     // SetOverlayIcon - Description
                     ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Description HWND:" + msg.WParam);
-
-                    win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.WParam));
                     win?.SetOverlayIconDescription(msg.LParam);
-
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETPADDING:
                     // TODO : SetTabProperties
                     ShellLogger.Debug("TasksService: ITaskbarList: SetTabProperties HWND:" + msg.WParam);
+                    msg.Result = IntPtr.Zero;
+                    return;
+            }
+            uint msgUint = unchecked((uint)msg.Msg);
+            switch (msgUint)
+            {
+                case (uint)WMuint.TBN_SAVE:
+                    ShellLogger.Debug("TasksService: ITaskbarList: TBN_SAVE HWND:" + msg.WParam);
+                    msg.Result = IntPtr.Zero;
+                    return;
+                case (uint)WMuint.TBN_RESTORE:
+                    ShellLogger.Debug("TasksService: ITaskbarList: TBN_RESTORE HWND:" + msg.WParam);
+                    msg.Result = IntPtr.Zero;
+                    return;
+                case (uint)WMuint.TBN_GETBUTTONINFOW:
+                    ShellLogger.Debug("TasksService: ITaskbarList: TBN_GETBUTTONINFO HWND:" + msg.WParam);
                     msg.Result = IntPtr.Zero;
                     return;
             }

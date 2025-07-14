@@ -3056,6 +3056,27 @@ public partial class NativeMethods
         TB_SETPADDING = 0x0457,
     }
 
+    public enum WMuint : uint
+    {
+        TBN_FIRST = uint.MaxValue - 699,
+        TBN_HOTITEMCHANGE = TBN_FIRST - 13,
+        TBN_DRAGOUT = TBN_FIRST - 14,
+        TBN_DELETINGBUTTON = TBN_FIRST - 15,
+        TBN_GETDISPINFOA = TBN_FIRST - 16,
+        TBN_GETDISPINFOW = TBN_FIRST - 17,
+        TBN_GETINFOTIPA = TBN_FIRST - 18,
+        TBN_GETINFOTIPW = TBN_FIRST - 19,
+        TBN_GETBUTTONINFOW = TBN_FIRST - 20,
+        TBN_RESTORE = TBN_FIRST - 21,
+        TBN_SAVE = TBN_FIRST - 22,
+        TBN_INITCUSTOMIZE = TBN_FIRST - 23,
+        TBN_WRAPHOTITEM = TBN_FIRST - 24,
+        TBN_DUPACCELERATOR = TBN_FIRST - 25,
+        TBN_WRAPACCELERATOR = TBN_FIRST - 26,
+        TBN_DRAGOVER = TBN_FIRST - 27,
+        TBN_MAPACCELERATOR = TBN_FIRST - 28,
+    }
+
     public enum HSHELL : uint
     {
         /// <summary>

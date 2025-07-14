@@ -13,6 +13,7 @@ using System.Windows.Media;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.Common.Structs;
 using ManagedShell.Interop;
 
 namespace ManagedShell.WindowsTasks;
@@ -844,5 +845,19 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 return (int)pe32.th32ParentProcessID;
         } while (NativeMethods.Process32Next(hSnapshot, ref pe32));
         return -1;
+    }
+
+    public void AddThumbBarButton(IntPtr lParam)
+    {
+        if (_windows.Count == 0 || lParam == IntPtr.Zero)
+            return;
+        try
+        {
+            //TbSaveParams button = Marshal.PtrToStructure<TbSaveParams>(lParam);
+        }
+        catch (Exception ex)
+        {
+            ShellLogger.Error($"ApplicationWindow: Unable to add thumb bar button for {Title}: {ex.Message}");
+        }
     }
 }

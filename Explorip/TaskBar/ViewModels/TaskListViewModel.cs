@@ -58,12 +58,17 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     public static void RefreshAllCollectionView(object sender, EventArgs e)
     {
         bool rebuild = false;
+        bool refresh = false;
         if (sender is bool b)
             rebuild = b;
+        else if (sender is int i && i == 1)
+            refresh = true;
         Application.Current.Dispatcher.Invoke(() =>
         {
             foreach (TaskListViewModel tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList.MyDataContext))
             {
+                if (refresh)
+                    tl.RefreshMyCollectionView();
                 if (rebuild)
                     tl.RebuildCollectionView();
                 if (ConfigManager.ReduceTitleWidthWhenTaskbarFull)
@@ -106,11 +111,16 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                         VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
                     MyTaskbarApp.MyShellManager.TasksService.WindowDestroy += RefreshAllCollectionView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowCreate += RefreshAllCollectionView;
-                    MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += TasksService_WindowUncloaked;
+                    MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += UncloakedUwp;
                     ChangeButtonSize();
                 }
             }
         }
+    }
+
+    private static void UncloakedUwp(IntPtr hwnd)
+    {
+        RefreshAllCollectionView(1, EventArgs.Empty);
     }
 
     public void ChangeButtonSize()
@@ -156,7 +166,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         MyTaskbarApp.MyShellManager.TasksService.WindowDestroy -= RefreshAllCollectionView;
         MyTaskbarApp.MyShellManager.TasksService.WindowCreate -= RefreshAllCollectionView;
-        MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= TasksService_WindowUncloaked;
+        MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= UncloakedUwp;
     }
 
     private static bool FilterAppWindow(object item)
