@@ -16,15 +16,22 @@ public class ExplorerHelper
     private static TaskbarState? startupTaskbarState;
     private readonly NotificationArea _notificationArea;
 
-
     private readonly DispatcherTimer taskbarMonitor = new(DispatcherPriority.Background);
 
     private bool _hideExplorerTaskbar;
 
+    public ExplorerHelper() : this(null) { }
+
+    public ExplorerHelper(NotificationArea notificationArea)
+    {
+        _notificationArea = notificationArea;
+
+        SetupTaskbarMonitor();
+    }
+
     public bool HideExplorerTaskbar
     {
         get => _hideExplorerTaskbar;
-
         set
         {
             if (value != _hideExplorerTaskbar)
@@ -32,26 +39,11 @@ public class ExplorerHelper
                 _hideExplorerTaskbar = value;
 
                 if (_hideExplorerTaskbar)
-                {
                     HideTaskbar();
-                }
                 else
-                {
                     ShowTaskbar();
-                }
             }
         }
-    }
-
-    public ExplorerHelper() : this(null)
-    {
-    }
-
-    public ExplorerHelper(NotificationArea notificationArea)
-    {
-        _notificationArea = notificationArea;
-
-        SetupTaskbarMonitor();
     }
 
     public void SuspendTrayService()
@@ -79,9 +71,7 @@ public class ExplorerHelper
             {
                 SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | SWP.SWP_NOMOVE | SWP.SWP_NOSIZE | SWP.SWP_NOACTIVATE);
                 if (startButtonHwnd != IntPtr.Zero)
-                {
                     SetWindowPos(startButtonHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | SWP.SWP_NOMOVE | SWP.SWP_NOSIZE | SWP.SWP_NOACTIVATE);
-                }
             }
 
             // adjust secondary TaskBars for multi-monitor
@@ -91,18 +81,10 @@ public class ExplorerHelper
 
     public static void SetSecondaryTaskbarVisibility(SWP swp)
     {
-        IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
-
         // if we have 3+ monitors there may be multiple secondary TaskBars
-        while (secTaskbarHwnd != IntPtr.Zero)
-        {
-            if (swp == SWP.SWP_HIDEWINDOW == IsWindowVisible(secTaskbarHwnd))
-            {
-                SetWindowPos(secTaskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | SWP.SWP_NOMOVE | SWP.SWP_NOSIZE | SWP.SWP_NOACTIVATE);
-            }
-
-            secTaskbarHwnd = FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
-        }
+        IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
+        if (secTaskbarHwnd != IntPtr.Zero && swp == SWP.SWP_HIDEWINDOW == IsWindowVisible(secTaskbarHwnd))
+            SetWindowPos(secTaskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0, swp | SWP.SWP_NOMOVE | SWP.SWP_NOSIZE | SWP.SWP_NOACTIVATE);
     }
 
     public void SetTaskbarState(TaskbarState state)
@@ -113,7 +95,7 @@ public class ExplorerHelper
             {
                 cbSize = Marshal.SizeOf(typeof(AppBarData)),
                 hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle),
-                lParam = (IntPtr)state
+                lParam = (IntPtr)state,
             };
 
             SHAppBarMessage((int)ABMsg.ABM_SETSTATE, ref abd);
@@ -125,7 +107,7 @@ public class ExplorerHelper
         AppBarData abd = new()
         {
             cbSize = Marshal.SizeOf(typeof(AppBarData)),
-            hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle)
+            hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle),
         };
 
         uint uState = SHAppBarMessage((int)ABMsg.ABM_GETSTATE, ref abd);
@@ -143,9 +125,7 @@ public class ExplorerHelper
         if (!EnvironmentHelper.IsAppRunningAsShell)
         {
             if (startupTaskbarState == null)
-            {
                 SetStartupTaskbarState(GetTaskbarState());
-            }
 
             if (HideExplorerTaskbar)
             {
@@ -188,23 +168,15 @@ public class ExplorerHelper
             return;
         }
 
+        // if we have 3+ monitors there may be multiple secondary TaskBars
         IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
 
-        // if we have 3+ monitors there may be multiple secondary TaskBars
-        while (secTaskbarHwnd != IntPtr.Zero)
+        if (secTaskbarHwnd != IntPtr.Zero && IsWindowVisible(secTaskbarHwnd))
         {
-            if (IsWindowVisible(secTaskbarHwnd))
-            {
-                ShellLogger.Debug("ExplorerHelper: Hiding unwanted Windows taskbar");
-                DoHideTaskbar();
-                return;
-            }
-
-            secTaskbarHwnd = FindWindowEx(IntPtr.Zero, secTaskbarHwnd, "Shell_SecondaryTrayWnd", null);
+            ShellLogger.Debug("ExplorerHelper: Hiding unwanted Windows taskbar");
+            DoHideTaskbar();
         }
     }
-
-
 
     public enum TaskbarState
     {

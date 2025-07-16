@@ -114,6 +114,7 @@ namespace Explorip.StartMenu.Window
                     MyStartMenu.Show();
                     MyStartMenu.Activate();
                 }
+                return 0;
             }
             return NativeMethods.CallNextHookEx(IntPtr.Zero, code, wParam, ref lParam);
         }
