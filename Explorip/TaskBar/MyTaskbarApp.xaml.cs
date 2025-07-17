@@ -20,6 +20,8 @@ using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
+using Microsoft.Win32;
+
 using WpfScreenHelper;
 
 namespace Explorip.TaskBar;
@@ -45,6 +47,7 @@ public partial class MyTaskbarApp : Application
 
     public void ExitGracefully()
     {
+        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         Models.HookRefreshLanguageLayout.UnHook();
         foreach (Taskbar taskbar in _taskbarList)
         {
@@ -57,6 +60,21 @@ public partial class MyTaskbarApp : Application
         if (ConfigManager.TaskbarReplaceStartMenu)
             StartMenuWindow.MyStartMenu?.Close();
         Current?.Shutdown();
+    }
+
+    private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+    {
+        if (e.Reason == SessionSwitchReason.ConsoleConnect ||
+            e.Reason == SessionSwitchReason.RemoteConnect ||
+            e.Reason == SessionSwitchReason.SessionLogon ||
+            e.Reason == SessionSwitchReason.SessionUnlock)
+        {
+            MyShellManager.ExplorerHelper.Disable = false;
+        }
+        else
+        {
+            MyShellManager.ExplorerHelper.Disable = true;
+        }
     }
 
     public void ReopenTaskbar()

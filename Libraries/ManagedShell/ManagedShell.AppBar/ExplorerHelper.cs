@@ -157,8 +157,13 @@ public class ExplorerHelper
         taskbarMonitor.Tick += TaskbarMonitor_Tick;
     }
 
+    public bool Disable { get; set; }
+
     private void TaskbarMonitor_Tick(object sender, EventArgs e)
     {
+        if (Disable)
+            return;
+
         IntPtr taskbarHwnd = WindowHelper.FindWindowsTray(_notificationArea.Handle);
 
         if (IsWindowVisible(taskbarHwnd))
