@@ -18,6 +18,7 @@ using ExploripSharedCopy.WinAPI;
 using ManagedShell;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
 using Microsoft.Win32;
@@ -47,7 +48,6 @@ public partial class MyTaskbarApp : Application
 
     public void ExitGracefully()
     {
-        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         Models.HookRefreshLanguageLayout.UnHook();
         foreach (Taskbar taskbar in _taskbarList)
         {
@@ -62,6 +62,12 @@ public partial class MyTaskbarApp : Application
         Current?.Shutdown();
     }
 
+    private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
+    {
+        foreach (Taskbar taskbar in _taskbarList)
+            taskbar.SetPositionAndSize();
+    }
+
     private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
     {
         if (e.Reason == SessionSwitchReason.ConsoleConnect ||
@@ -69,10 +75,12 @@ public partial class MyTaskbarApp : Application
             e.Reason == SessionSwitchReason.SessionLogon ||
             e.Reason == SessionSwitchReason.SessionUnlock)
         {
+            ShellLogger.Debug("Enable ExplorerHelper");
             MyShellManager.ExplorerHelper.Disable = false;
         }
         else
         {
+            ShellLogger.Debug("Disable ExplorerHelper");
             MyShellManager.ExplorerHelper.Disable = true;
         }
     }
@@ -211,5 +219,8 @@ public partial class MyTaskbarApp : Application
         // Startup
         DictionaryManager.SetThemeFromSettings();
         OpenTaskbar();
+
+        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
     }
 }

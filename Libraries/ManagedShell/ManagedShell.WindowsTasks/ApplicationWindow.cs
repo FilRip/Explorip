@@ -13,7 +13,6 @@ using System.Windows.Media;
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
-using ManagedShell.Common.Structs;
 using ManagedShell.Interop;
 
 namespace ManagedShell.WindowsTasks;

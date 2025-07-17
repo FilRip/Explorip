@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -18,7 +19,6 @@ using ExploripPlugins;
 
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
 
@@ -55,16 +55,7 @@ public partial class Taskbar : AppBarWindow
 
         _explorerHelper.HideExplorerTaskbar = true;
 
-        // Layout rounding causes incorrect sizing on non-integer scales
-        if (DpiHelper.DpiScale % 1 != 0)
-            UseLayoutRounding = false;
-
-        MinHeight = Math.Max(ConfigManager.GetTaskbarConfig(ScreenName).TaskbarMinHeight, DesiredHeight);
-
-        if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight > 0)
-            DesiredHeight = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight;
-        if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth > 0)
-            DesiredWidth = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth;
+        SetSize();
 
         MyDataContext.TabTipVisible = ConfigManager.GetTaskbarConfig(ScreenName).ShowTabTip;
         MyDataContext.KeyboardLayoutVisible = ConfigManager.GetTaskbarConfig(ScreenName).ShowKeyboardLayout;
@@ -141,12 +132,34 @@ public partial class Taskbar : AppBarWindow
             // If the color scheme changes, re-apply the current theme to get updated colors.
             ((MyTaskbarApp)Application.Current).DictionaryManager.SetThemeFromSettings();
         }
-        else if (msg == (int)NativeMethods.WM.POWERBROADCAST)
-        {
-            ShellLogger.Debug("Received POWERBROADCAST, wParam=" + wParam);
-        }
 
         return IntPtr.Zero;
+    }
+
+    public void SetPositionAndSize()
+    {
+        DpiScale = Screen.DpiScale;
+
+        SetPosition();
+        DelaySetPosition();
+
+        Thread.Sleep(200);
+
+        SetSize();
+    }
+
+    public void SetSize()
+    {
+        // Layout rounding causes incorrect sizing on non-integer scales
+        if (DpiHelper.DpiScale % 1 != 0)
+            UseLayoutRounding = false;
+
+        MinHeight = Math.Max(ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarMinHeight ?? 0, DesiredHeight);
+
+        if (ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarHeight > 0)
+            DesiredHeight = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight;
+        if (ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarWidth > 0)
+            DesiredWidth = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth;
     }
 
     public override void SetPosition()

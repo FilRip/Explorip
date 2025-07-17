@@ -255,7 +255,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
     #endregion
 
     #region Helpers
-    private void DelaySetPosition()
+    protected void DelaySetPosition()
     {
         // delay changing things when we are shell. it seems that explorer AppBars do this too.
         // if we don't, the system moves things to bad places
