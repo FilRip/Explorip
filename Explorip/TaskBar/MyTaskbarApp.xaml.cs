@@ -75,13 +75,15 @@ public partial class MyTaskbarApp : Application
             e.Reason == SessionSwitchReason.SessionLogon ||
             e.Reason == SessionSwitchReason.SessionUnlock)
         {
-            ShellLogger.Debug("Enable ExplorerHelper");
+            ShellLogger.Debug("Enable background work");
             MyShellManager.ExplorerHelper.Disable = false;
+            MyShellManager.NotificationArea.Resume();
         }
         else
         {
-            ShellLogger.Debug("Disable ExplorerHelper");
+            ShellLogger.Debug("Disable background work");
             MyShellManager.ExplorerHelper.Disable = true;
+            MyShellManager.NotificationArea.Suspend();
         }
     }
 
