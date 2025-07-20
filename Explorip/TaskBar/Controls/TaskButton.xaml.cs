@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -286,8 +287,11 @@ public partial class TaskButton : UserControl
         {
             try
             {
-                _timerBeforeShowThumbnail?.Change(Timeout.Infinite, Timeout.Infinite);
-                _timerBeforeShowThumbnail?.Dispose();
+                if (!_timerBeforeShowThumbnail.IsDisposed())
+                {
+                    _timerBeforeShowThumbnail?.Change(Timeout.Infinite, Timeout.Infinite);
+                    _timerBeforeShowThumbnail?.Dispose();
+                }
             }
             catch (Exception) { /* Ignore errors */ }
             _thumb?.Close();

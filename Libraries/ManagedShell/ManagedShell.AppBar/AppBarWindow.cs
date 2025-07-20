@@ -11,8 +11,6 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
-using Application = System.Windows.Application;
-
 namespace ManagedShell.AppBar;
 
 public class AppBarWindow : Window, INotifyPropertyChanged
@@ -79,13 +77,9 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         AppBarEdge = edge;
 
         if (Orientation == Orientation.Vertical)
-        {
             DesiredWidth = size;
-        }
         else
-        {
             DesiredHeight = size;
-        }
     }
 
     #region Events

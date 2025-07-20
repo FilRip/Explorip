@@ -64,6 +64,7 @@ public partial class MyTaskbarApp : Application
 
     private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
     {
+        ShellLogger.Debug("Display settings changed, updating taskbar positions and sizes.");
         foreach (Taskbar taskbar in _taskbarList)
             taskbar.SetPositionAndSize();
     }
