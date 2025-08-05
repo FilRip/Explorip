@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Windows;
 
+using WpfScreenHelper.Enum;
+
 namespace WpfScreenHelper;
 
 internal static class NativeMethods
@@ -181,6 +183,12 @@ internal static class NativeMethods
 #endif
     }
 
+    [Flags()]
+    public enum EMonitorInfo
+    {
+        Primary = 0x00000001,
+    }
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 4)]
     public class MonitorInfoEx
     {
@@ -188,10 +196,10 @@ internal static class NativeMethods
 
         internal Rect rcMonitor = new();
         internal Rect rcWork = new();
-        internal int dwFlags = 0;
+        internal EMonitorInfo dwFlags = 0;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-        internal char[] szDevice = new char[32];
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+        internal string szDevice;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -242,24 +250,6 @@ internal static class NativeMethods
         void GetDesktopDpi(out float dpiX, out float dpiY);
 
         // the rest is not implemented as we don't need it
-    }
-
-    [Flags()]
-    internal enum EDisplayDevice
-    {
-        Active = 0x00000001,
-        Attached = 0x00000002,
-        PrimaryDevice = 0x00000004,
-        MirroringDriver = 0x00000008,
-        VgaCompatible = 0x00000010,
-        Removable = 0x00000020,
-        AccDriver = 0x00000040,
-        ModesPruned = 0x08000000,
-        RpdUdd = 0x01000000,
-        Remote = 0x04000000,
-        Disconnect = 0x02000000,
-        TSCompatible = 0x00200000,
-        UnsafeModesOn = 0x00080000,
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]

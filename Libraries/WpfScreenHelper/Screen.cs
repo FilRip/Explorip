@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 
+using WpfScreenHelper.Enum;
+
 namespace WpfScreenHelper;
 
 /// <summary>
@@ -23,8 +25,6 @@ public class Screen
     // functions if we just need the primary monitor... this is safer for
     // non-multimon OSes.
     private const int PRIMARY_MONITOR = unchecked((int)0xBAADF00D);
-
-    private const int MONITORINFOF_PRIMARY = 0x00000001;
 
     public static void ResetMultiMonitorSupport()
     {
@@ -78,6 +78,8 @@ public class Screen
             ScaleFactor = dpiX / 96.0;
         }
 
+        NativeMethods.DisplayDevice dd = new();
+        bool deviceOk;
         if (!MultiMonitorSupport || monitor == (IntPtr)PRIMARY_MONITOR)
         {
             Size size = new(
@@ -86,7 +88,8 @@ public class Screen
 
             Bounds = new Rect(0, 0, size.Width, size.Height);
             Primary = true;
-            DeviceName = "DISPLAY";
+            DeviceName = "\\\\.\\DISPLAY1";
+            deviceOk = NativeMethods.EnumDisplayDevices(null, 0, ref dd, NativeMethods.EDD.GET_DEVICE_INTERFACE_NAME);
         }
         else
         {
@@ -99,15 +102,20 @@ public class Screen
                 info.rcMonitor.top,
                 info.rcMonitor.right - info.rcMonitor.left,
                 info.rcMonitor.bottom - info.rcMonitor.top);
-            Primary = (info.dwFlags & MONITORINFOF_PRIMARY) != 0;
-            DeviceName = new string(info.szDevice).TrimEnd((char)0);
+            Primary = info.dwFlags.HasFlag(NativeMethods.EMonitorInfo.Primary);
+            DeviceName = info.szDevice;
+            deviceOk = NativeMethods.EnumDisplayDevices(DeviceName, 0, ref dd, NativeMethods.EDD.GET_DEVICE_INTERFACE_NAME);
         }
 
-        // Extended properties
-        NativeMethods.DisplayDevice dd = new();
-        if (NativeMethods.EnumDisplayDevices(DeviceName, 0, ref dd, NativeMethods.EDD.GET_DEVICE_INTERFACE_NAME))
+        if (deviceOk)
         {
             Id = dd.Id;
+            RegistryKeyEntry = dd.Key;
+            Description = dd.String;
+            InternalName = dd.Name;
+            DisplayDevice = dd.StateFlags;
+            string[] keySplitter = dd.Key.Split('\\');
+            DisplayNumber = int.Parse(keySplitter[keySplitter.Length - 1]);
         }
 
         monitorHandle = monitor;
@@ -131,8 +139,8 @@ public class Screen
                     if (closure.Screens.Count > 0)
                         _listScreens = closure.Screens.Cast<Screen>();
                 }
-
-                _listScreens = [new Screen((IntPtr)PRIMARY_MONITOR)];
+                else
+                    _listScreens = [new Screen((IntPtr)PRIMARY_MONITOR)];
             }
             return _listScreens;
         }
@@ -197,6 +205,31 @@ public class Screen
     /// Id of the monitor
     /// </summary>
     public string Id { get; }
+
+    /// <summary>
+    /// Entry, in the Windows registry, for this display
+    /// </summary>
+    public string RegistryKeyEntry { get; }
+
+    /// <summary>
+    /// Description of this monitor give us by drivers
+    /// </summary>
+    public string Description { get; }
+
+    /// <summary>
+    /// Internal name, for IO
+    /// </summary>
+    public string InternalName { get; }
+
+    /// <summary>
+    /// Some flags for this display
+    /// </summary>
+    public EDisplayDevice DisplayDevice { get; }
+
+    /// <summary>
+    /// Unique identification of monitor
+    /// </summary>
+    public int DisplayNumber { get; }
 
     /// <summary>
     /// Gets the working area of the display. The working area is the desktop area of the display, excluding task bars,
