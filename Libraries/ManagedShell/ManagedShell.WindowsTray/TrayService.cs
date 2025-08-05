@@ -141,6 +141,10 @@ public class TrayService : IDisposable
         }
     }
 
+    public bool Disable { get; set; }
+
+    #region IDisposable
+
     public void Dispose()
     {
         Dispose(true);
@@ -166,6 +170,8 @@ public class TrayService : IDisposable
             _isDisposed = true;
         }
     }
+
+    #endregion
 
     private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
     {
@@ -325,7 +331,7 @@ public class TrayService : IDisposable
             lpszClassName = name,
             hInstance = hInstance,
             style = 0x8,
-            lpfnWndProc = wndProcDelegate
+            lpfnWndProc = wndProcDelegate,
         };
 
         return RegisterClass(ref newClass);
@@ -387,11 +393,13 @@ public class TrayService : IDisposable
 
     private void TrayMonitor_Tick(object sender, EventArgs e)
     {
-        if (HwndTray == IntPtr.Zero) return;
+        if (HwndTray == IntPtr.Zero || Disable)
+            return;
 
         IntPtr taskbarHwnd = FindWindow(WindowHelper.TrayWndClass, "");
 
-        if (taskbarHwnd == HwndTray) return;
+        if (taskbarHwnd == HwndTray)
+            return;
 
         ShellLogger.Debug("TrayService: Raising Shell_TrayWnd");
         MakeTrayTopmost();

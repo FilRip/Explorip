@@ -77,13 +77,13 @@ public partial class MyTaskbarApp : Application
         {
             ShellLogger.Debug("Enable background work");
             MyShellManager.ExplorerHelper.Disable = false;
-            MyShellManager.NotificationArea.Resume();
+            MyShellManager.NotificationArea.Disable = false;
         }
         else
         {
             ShellLogger.Debug("Disable background work");
             MyShellManager.ExplorerHelper.Disable = true;
-            MyShellManager.NotificationArea.Suspend();
+            MyShellManager.NotificationArea.Disable = true;
         }
     }
 

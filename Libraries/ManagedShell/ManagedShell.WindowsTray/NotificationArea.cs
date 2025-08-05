@@ -27,14 +27,14 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         HEALTH_GUID,
         POWER_GUID,
         NETWORK_GUID,
-        VOLUME_GUID
+        VOLUME_GUID,
     ];
 
     internal static readonly List<string> Win11ActionCenterIcons =
     [
         NETWORK_GUID,
         POWER_GUID,
-        VOLUME_GUID
+        VOLUME_GUID,
     ];
 
     readonly NativeMethods.Rect defaultPlacement = new()
@@ -42,7 +42,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         Top = 0,
         Left = GetSystemMetrics(0) - 200,
         Bottom = 23,
-        Right = 23
+        Right = 23,
     };
 
     public string[] PinnedNotifyIcons { get; internal set; } = savedPinnedIcons;
@@ -66,7 +66,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
             Top = 0,
             Left = 0,
             Bottom = 23,
-            Right = GetSystemMetrics(0)
+            Right = GetSystemMetrics(0),
         }
     };
 
@@ -169,6 +169,16 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
     public void Resume()
     {
         _trayService?.Resume();
+    }
+
+    public bool Disable
+    {
+        get { return _trayService?.Disable ?? false; }
+        set
+        {
+            if (_trayService != null)
+                _trayService.Disable = value;
+        }
     }
 
     #region Collections

@@ -17,6 +17,7 @@ public class Screen
     /// Indicates if we have more than one monitor.
     /// </summary>
     private static bool MultiMonitorSupport = IsMultiMonitorSupport();
+    private static IEnumerable<Screen> _listScreens;
 
     // This identifier is just for us, so that we don't try to call the multimon
     // functions if we just need the primary monitor... this is safer for
@@ -102,6 +103,13 @@ public class Screen
             DeviceName = new string(info.szDevice).TrimEnd((char)0);
         }
 
+        // Extended properties
+        NativeMethods.DisplayDevice dd = new();
+        if (NativeMethods.EnumDisplayDevices(DeviceName, 0, ref dd, NativeMethods.EDD.GET_DEVICE_INTERFACE_NAME))
+        {
+            Id = dd.Id;
+        }
+
         monitorHandle = monitor;
     }
 
@@ -113,17 +121,27 @@ public class Screen
     {
         get
         {
-            if (MultiMonitorSupport)
+            if (_listScreens == null)
             {
-                MonitorEnumCallback closure = new();
-                NativeMethods.MonitorEnumProc proc = new(closure.Callback);
-                NativeMethods.EnumDisplayMonitors(NativeMethods.NullHandleRef, null, proc, IntPtr.Zero);
-                if (closure.Screens.Count > 0)
-                    return closure.Screens.Cast<Screen>();
-            }
+                if (MultiMonitorSupport)
+                {
+                    MonitorEnumCallback closure = new();
+                    NativeMethods.MonitorEnumProc proc = new(closure.Callback);
+                    NativeMethods.EnumDisplayMonitors(NativeMethods.NullHandleRef, null, proc, IntPtr.Zero);
+                    if (closure.Screens.Count > 0)
+                        _listScreens = closure.Screens.Cast<Screen>();
+                }
 
-            return [new Screen((IntPtr)PRIMARY_MONITOR)];
+                _listScreens = [new Screen((IntPtr)PRIMARY_MONITOR)];
+            }
+            return _listScreens;
         }
+    }
+
+    public static void ForceRefreshListScreens()
+    {
+        _listScreens = null;
+        _ = AllScreens;
     }
 
     /// <summary>
@@ -174,6 +192,11 @@ public class Screen
     /// </summary>
     /// <returns>The scale factor of the display.</returns>
     public double ScaleFactor { get; } = 1.0;
+
+    /// <summary>
+    /// Id of the monitor
+    /// </summary>
+    public string Id { get; }
 
     /// <summary>
     /// Gets the working area of the display. The working area is the desktop area of the display, excluding task bars,
