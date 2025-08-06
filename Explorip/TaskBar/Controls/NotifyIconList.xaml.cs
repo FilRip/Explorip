@@ -94,7 +94,7 @@ public partial class NotifyIconList : UserControl
             NotificationArea.UnpinnedIcons.CollectionChanged += UnpinnedIcons_CollectionChanged;
             NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
 
-            if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).CollapseNotifyIcons)
+            if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().NumScreen).CollapseNotifyIcons)
             {
                 NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;
                 SetToggleVisibility();
@@ -194,7 +194,7 @@ public partial class NotifyIconList : UserControl
 
     private void SetToggleVisibility()
     {
-        if (this.FindVisualParent<Taskbar>() == null || !ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).CollapseNotifyIcons)
+        if (this.FindVisualParent<Taskbar>() == null || !ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().NumScreen).CollapseNotifyIcons)
             return;
 
         if (NotificationArea.UnpinnedIcons.IsEmpty)

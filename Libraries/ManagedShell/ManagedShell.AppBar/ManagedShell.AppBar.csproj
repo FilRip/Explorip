@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\WpfScreenHelper\WpfScreenHelper.csproj" />
     <ProjectReference Include="..\ManagedShell.Common\ManagedShell.Common.csproj" />
     <ProjectReference Include="..\ManagedShell.Interop\ManagedShell.Interop.csproj" />
     <ProjectReference Include="..\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj" />

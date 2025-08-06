@@ -424,12 +424,10 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             else
                                 AddWindow(msg.LParam, ApplicationWindow.WindowState.Inactive, true);
                             break;
-#pragma warning disable S125 // Sections of code should not be commented out
                         // TaskMan needs to return true if we provide our own task manager to prevent explorers.
                         // case HSHELL.TASKMAN:
                         //     SingletonLogger.Instance.Info("TaskMan Message received.");
                         //     break;
-#pragma warning restore S125 // Sections of code should not be commented out
                         default:
                             break;
                     }

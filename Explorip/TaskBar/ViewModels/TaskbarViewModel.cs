@@ -69,12 +69,12 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
 
     public VerticalAlignment VerticalTaskListAlignment
     {
-        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListVerticalAlignment; }
+        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment; }
     }
 
     public HorizontalAlignment HorizontalTaskListAlignment
     {
-        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListHorizontalAlignment; }
+        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment; }
     }
 
     [ObservableProperty()]
@@ -86,42 +86,42 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     [RelayCommand()]
     private void AlignTaskListToLeft()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListHorizontalAlignment = HorizontalAlignment.Left;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment = HorizontalAlignment.Left;
         OnPropertyChanged(nameof(HorizontalTaskListAlignment));
     }
 
     [RelayCommand()]
     private void AlignTaskListToRight()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListHorizontalAlignment = HorizontalAlignment.Right;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment = HorizontalAlignment.Right;
         OnPropertyChanged(nameof(HorizontalTaskListAlignment));
     }
 
     [RelayCommand()]
     private void AlignTaskListToCenter()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListHorizontalAlignment = HorizontalAlignment.Center;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment = HorizontalAlignment.Center;
         OnPropertyChanged(nameof(HorizontalTaskListAlignment));
     }
 
     [RelayCommand()]
     private void AlignTaskListToCenterV()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListVerticalAlignment = VerticalAlignment.Center;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment = VerticalAlignment.Center;
         OnPropertyChanged(nameof(VerticalTaskListAlignment));
     }
 
     [RelayCommand()]
     private void AlignTaskListToTop()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListVerticalAlignment = VerticalAlignment.Top;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment = VerticalAlignment.Top;
         OnPropertyChanged(nameof(VerticalTaskListAlignment));
     }
 
     [RelayCommand()]
     private void AlignTaskListToBottom()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskListVerticalAlignment = VerticalAlignment.Bottom;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment = VerticalAlignment.Bottom;
         OnPropertyChanged(nameof(VerticalTaskListAlignment));
     }
 
@@ -129,14 +129,14 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private void ShowHideTabTip()
     {
         TabTipVisible = !TabTipVisible;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowTabTip = TabTipVisible;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowTabTip = TabTipVisible;
     }
 
     [RelayCommand()]
     private void ShowKeyboardLayout()
     {
         KeyboardLayoutVisible = !KeyboardLayoutVisible;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowKeyboardLayout = KeyboardLayoutVisible;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowKeyboardLayout = KeyboardLayoutVisible;
     }
 
     [RelayCommand()]
@@ -152,14 +152,14 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     [RelayCommand()]
     private void SmallIconTaskbar()
     {
-        if (ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize == 16)
+        if (ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskButtonSize == 16)
         {
-            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize = 32;
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskButtonSize = 32;
             IsShowSmallIcon = false;
         }
         else
         {
-            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize = 16;
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskButtonSize = 16;
             IsShowSmallIcon = true;
         }
         ParentTaskbar.MyTaskList.MyDataContext.ChangeButtonSize();
@@ -169,22 +169,22 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     [RelayCommand()]
     private void ShowSearchZone()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchZone = true;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchButton = false;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone = true;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton = false;
         RefreshSearch();
     }
 
     private void RefreshSearch()
     {
-        SearchZoneVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchZone;
-        SearchButtonVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchButton;
+        SearchZoneVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone;
+        SearchButtonVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton;
     }
 
     [RelayCommand()]
     private void ShowSearchButton()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchZone = false;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowSearchButton = true;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone = false;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton = true;
         RefreshSearch();
     }
 
@@ -196,43 +196,43 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
 
     private void SetShowTaskMan()
     {
-        TaskManVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowTaskManButton;
+        TaskManVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowTaskManButton;
     }
 
     [RelayCommand()]
     private void ShowTaskMan()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowTaskManButton = !TaskManVisible;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowTaskManButton = !TaskManVisible;
         SetShowTaskMan();
     }
 
     private void SetShowWidget()
     {
-        WidgetsVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowWidgetButton;
+        WidgetsVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowWidgetButton;
     }
 
     [RelayCommand()]
     private void ShowWidgets()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowWidgetButton = !WidgetsVisible;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowWidgetButton = !WidgetsVisible;
         SetShowWidget();
     }
 
     private void SetShowDesktopPreview()
     {
-        DesktopPreviewVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowDesktopPreview;
+        DesktopPreviewVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowDesktopPreview;
     }
 
     [RelayCommand()]
     private void ShowDesktopPreview()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ShowDesktopPreview = !DesktopPreviewVisible;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowDesktopPreview = !DesktopPreviewVisible;
         SetShowDesktopPreview();
     }
 
     private void SetSmallIcon()
     {
-        IsShowSmallIcon = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskButtonSize == 16;
+        IsShowSmallIcon = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskButtonSize == 16;
     }
 
     [RelayCommand()]
@@ -334,21 +334,21 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                 {
                     Header = Constants.Localization.VISIBLE,
                     Tag = path,
-                    IsChecked = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarVisible(title),
+                    IsChecked = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarVisible(title),
                 });
                 ((MenuItem)item.Items[0]).Click += ChangeToolbarVisible;
                 item.Items.Add(new MenuItem()
                 {
                     Header = Constants.Localization.SHOW_TITLE,
                     Tag = path,
-                    IsChecked = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(title),
+                    IsChecked = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarShowTitle(title),
                 });
                 ((MenuItem)item.Items[1]).Click += ChangeShowTitile;
                 item.Items.Add(new MenuItem()
                 {
                     Header = Constants.Localization.LARGE_ICON,
                     Tag = path,
-                    IsChecked = !ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(title),
+                    IsChecked = !ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(title),
                 });
                 ((MenuItem)item.Items[2]).Click += ChangeShowLargeIcon;
                 if (plugin == null)
@@ -395,7 +395,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         {
             bool visible = !mi.IsChecked;
             mi.IsChecked = visible;
-            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarVisible(path, visible);
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarVisible(path, visible);
             if (visible)
             {
                 if (Guid.TryParse(path, out Guid guid))
@@ -421,7 +421,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         if (sender is MenuItem mi && mi.Tag is string path)
         {
             mi.IsChecked = !mi.IsChecked;
-            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(path, mi.IsChecked);
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarShowTitle(path, mi.IsChecked);
             Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
             tb.MyDataContext.ShowHideTitle();
         }
@@ -432,7 +432,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         if (sender is MenuItem mi && mi.Tag is string path)
         {
             mi.IsChecked = !mi.IsChecked;
-            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(path, !mi.IsChecked);
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(path, !mi.IsChecked);
             Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
             tb.MyDataContext.ShowLargeIcon();
         }

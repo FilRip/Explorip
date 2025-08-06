@@ -166,4 +166,9 @@ public sealed class CommonOpenFileDialog : CommonFileDialog
 
         return flags;
     }
+
+    internal override void SyncFileTypeComboToDefaultExtension(IFileDialog dialog)
+    {
+        // Nothing to do in OpenFileDialog, method reserved to SaveFileDialog
+    }
 }

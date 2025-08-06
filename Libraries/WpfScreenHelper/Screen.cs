@@ -232,6 +232,14 @@ public class Screen
     public int DisplayNumber { get; }
 
     /// <summary>
+    /// Return the pointer to the monitor
+    /// </summary>
+    public IntPtr MonitorHandle
+    {
+        get { return monitorHandle; }
+    }
+
+    /// <summary>
     /// Gets the working area of the display. The working area is the desktop area of the display, excluding task bars,
     /// docked windows, and docked tool bars in pixels.
     /// </summary>

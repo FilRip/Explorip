@@ -47,7 +47,7 @@ public abstract partial class BaseToolbarViewModel : ObservableObject
         {
             _parentControl.ReleaseMouseCapture();
             Mouse.OverrideCursor = null;
-            ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Id, new Point(Margin.Left, Margin.Top));
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarPosition(Id, new Point(Margin.Left, Margin.Top));
         }
     }
 
@@ -121,7 +121,7 @@ public abstract partial class BaseToolbarViewModel : ObservableObject
 
     protected void DefaultSavedPosition()
     {
-        Point point = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarPosition(Id);
+        Point point = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarPosition(Id);
         Margin = new Thickness(point.X, point.Y, Margin.Right, Margin.Bottom);
     }
 }

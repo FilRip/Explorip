@@ -348,17 +348,10 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
     /// 
     /// <param name="dialog">The native/IFileDialog instance.</param>
     /// 
-    private void SyncFileTypeComboToDefaultExtension(IFileDialog dialog)
+    internal virtual void SyncFileTypeComboToDefaultExtension(IFileDialog dialog)
     {
-        // make sure it's a Save dialog and that there is a default 
-        // extension to sync to.
-#pragma warning disable S3060 // "is" should not be used with "this"
-        if (this is not CommonSaveFileDialog || DefaultExtension == null ||
-            filters.Count <= 0)
-        {
+        if (DefaultExtension == null || filters.Count <= 0)
             return;
-        }
-#pragma warning restore S3060 // "is" should not be used with "this"
 
         CommonFileDialogFilter filter;
 
@@ -1217,6 +1210,13 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
 
     #region IDisposable Members
 
+    private bool disposedValue;
+
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
     /// <summary>
     /// Releases the unmanaged resources used by the CommonFileDialog class and optionally 
     /// releases the managed resources.
@@ -1228,6 +1228,8 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         if (disposing)
         {
             CleanUpNativeFileDialog();
+            disposedValue = true;
+            nativeEventSink = null;
         }
     }
 

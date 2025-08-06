@@ -18,7 +18,7 @@ namespace Explorip.TaskBar.Controls
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            MyDesktopButton.Width = ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().ScreenName).DesktopButtonWidth;
+            MyDesktopButton.Width = ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().NumScreen).DesktopButtonWidth;
         }
     }
 }

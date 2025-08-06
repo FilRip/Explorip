@@ -34,9 +34,9 @@ public partial class SearchZoneViewModel : ObservableObject
     public void SetTaskbar(Taskbar taskbar)
     {
         _parentTaskbar = taskbar;
-        Width = ConfigManager.GetTaskbarConfig(_parentTaskbar.ScreenName).SearchWidth;
-        double height = ConfigManager.GetTaskbarConfig(_parentTaskbar.ScreenName).SearchHeight;
-        Height = height > 0 ? height : ConfigManager.GetTaskbarConfig(_parentTaskbar.ScreenName).TaskButtonSize;
+        Width = ConfigManager.GetTaskbarConfig(_parentTaskbar.NumScreen).SearchWidth;
+        double height = ConfigManager.GetTaskbarConfig(_parentTaskbar.NumScreen).SearchHeight;
+        Height = height > 0 ? height : ConfigManager.GetTaskbarConfig(_parentTaskbar.NumScreen).TaskButtonSize;
         SearchText = Constants.Localization.SEARCH;
     }
 
@@ -52,7 +52,7 @@ public partial class SearchZoneViewModel : ObservableObject
         ShellHelper.ShellKeyCombo(VK.LWIN, VK.KEY_S);
         IntPtr ptrSearchWindow = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.SEARCH);
         Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
-        Taskbar currentTaskbar = ((MyTaskbarApp)Application.Current).ListAllTaskbar().FirstOrDefault(t => t.ScreenName == screen.DeviceName.TrimStart('.', '\\'));
+        Taskbar currentTaskbar = ((MyTaskbarApp)Application.Current).ListAllTaskbar().FirstOrDefault(t => t.NumScreen == screen.DisplayNumber);
         if (currentTaskbar != null)
         {
             GetWindowRect(ptrSearchWindow, out NativeMethods.Rect rect);

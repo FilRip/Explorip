@@ -40,10 +40,10 @@ public partial class TaskThumbButton : Window
         MyDataContext.ParentTask = parent;
 
         MyDataContext.SpaceBetweenThumbnail = ConfigManager.SpaceBetweenThumbnail;
-        MyBorder.Background = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarBackground;
+        MyBorder.Background = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.NumScreen).TaskbarBackground;
         MyBorder.CornerRadius = ConfigManager.ThumbnailCornerRadius;
-        MyDataContext.ThumbWidth = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbWidth;
-        MyDataContext.ThumbHeight = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.ScreenName).TaskbarThumbHeight;
+        MyDataContext.ThumbWidth = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.NumScreen).TaskbarThumbWidth;
+        MyDataContext.ThumbHeight = ConfigManager.GetTaskbarConfig(parent.TaskbarParent.NumScreen).TaskbarThumbHeight;
         MainGrid.RowDefinitions[1].Height = new GridLength(MyDataContext.ThumbHeight, GridUnitType.Pixel);
         MainGrid.RowDefinitions[2].Height = new GridLength(MyDataContext.SpaceBetweenThumbnail, GridUnitType.Pixel);
         MainGrid.Margin = new Thickness(MyDataContext.SpaceBetweenThumbnail);
@@ -116,7 +116,7 @@ public partial class TaskThumbButton : Window
 
         // Calculate size and position
         Height = MainGrid.RowDefinitions.Sum(row => row.Height.Value) + MyDataContext.SpaceBetweenThumbnail;
-        Screen screen = Screen.AllScreens.FirstOrDefault(s => s.DeviceName.EndsWith(parent.TaskbarParent.ScreenName));
+        Screen screen = Screen.AllScreens.FirstOrDefault(s => s.DisplayNumber == parent.TaskbarParent.NumScreen);
         Point positionParent = MyDataContext.ParentTask.PointToScreen(Mouse.GetPosition(this));
         Left = (int)((positionParent.X - (Width / 2)) / screen.ScaleFactor);
         if (parent.ApplicationWindow.ListWindows.Count == 1)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
+using System.Linq;
+
+using WpfScreenHelper;
 
 namespace ManagedShell.AppBar;
 
@@ -56,18 +58,25 @@ public class AppBarScreen
 
     public int BitsPerPixel { get; set; }
 
+    private static Rectangle ToRectangle(System.Windows.Rect rect)
+    {
+        return new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+    }
+
     public static AppBarScreen FromScreen(Screen screen, int numScreen)
     {
+        if (screen == null)
+            return null;
         AppBarScreen appBarScreen = new()
         {
-            Bounds = screen.Bounds,
+            Bounds = ToRectangle(screen.Bounds),
             DeviceName = screen.DeviceName,
             Primary = screen.Primary,
-            WorkingArea = screen.WorkingArea,
-            BitsPerPixel = screen.BitsPerPixel,
+            WorkingArea = ToRectangle(screen.WorkingArea),
+            //BitsPerPixel = screen.BitsPerPixel,
             NumScreen = numScreen,
 #pragma warning disable S3011
-            Handle = (IntPtr)typeof(Screen).GetField("hmonitor", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(screen)
+            Handle = screen.MonitorHandle,
         };
 #pragma warning restore S3011
         appBarScreen.ChangeDpi();
@@ -76,23 +85,23 @@ public class AppBarScreen
 
     public static AppBarScreen FromScreen(int numScreen)
     {
-        return FromScreen(Screen.AllScreens[numScreen], numScreen);
+        return FromScreen(Screen.AllScreens.FirstOrDefault(s => s.DisplayNumber == numScreen), numScreen);
     }
 
     public static AppBarScreen FromPrimaryScreen()
     {
-        return FromScreen(Screen.PrimaryScreen, 1);
+        Screen screen = Screen.PrimaryScreen;
+        return FromScreen(screen, screen.DisplayNumber);
     }
 
     public static List<AppBarScreen> FromAllOthersScreen()
     {
         List<AppBarScreen> screens = [];
-        int i = 0;
 
         foreach (Screen screen in Screen.AllScreens)
         {
             if (!screen.Primary)
-                screens.Add(FromScreen(screen, i++));
+                screens.Add(FromScreen(screen, screen.DisplayNumber));
         }
 
         return screens;
@@ -101,11 +110,10 @@ public class AppBarScreen
     public static List<AppBarScreen> FromAllScreens()
     {
         List<AppBarScreen> screens = [];
-        int i = 0;
 
         foreach (Screen screen in Screen.AllScreens)
         {
-            screens.Add(FromScreen(screen, i++));
+            screens.Add(FromScreen(screen, screen.DisplayNumber));
         }
 
         return screens;

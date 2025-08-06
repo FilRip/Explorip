@@ -102,7 +102,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     public override void Init(BaseToolbar parentControl)
     {
         base.Init(parentControl);
-        ((Border)_moreItems.Child).Background = ConfigManager.GetTaskbarConfig(parentControl.FindVisualParent<Taskbar>().ScreenName).TaskbarBackground;
+        ((Border)_moreItems.Child).Background = ConfigManager.GetTaskbarConfig(parentControl.FindVisualParent<Taskbar>().NumScreen).TaskbarBackground;
         SetupFolder(Path);
     }
 
@@ -113,9 +113,9 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         {
             Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
             Title = Folder.DisplayName;
-            if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
+            if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
                 ShowLargeIcon();
-            ShowTitle = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path);
+            ShowTitle = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarShowTitle(Path);
             DefaultSavedPosition();
             Folder.Files.CollectionChanged += Files_CollectionChanged;
         }
@@ -398,7 +398,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     public void ShowHideTitle()
     {
         ShowTitle = !ShowTitle;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarShowTitle(Path, ShowTitle);
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarShowTitle(Path, ShowTitle);
     }
 
     [RelayCommand()]
@@ -418,7 +418,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
                 newHeight -= 16;
             parentTaskbar.ChangeDesiredSize(newHeight, parentTaskbar.Width);
         }
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).ToolbarSmallSizeIcon(Path, !CurrentShowLargeIcon);
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(Path, !CurrentShowLargeIcon);
     }
 
     [RelayCommand()]

@@ -26,13 +26,13 @@ public partial class Clock : UserControl
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
-        if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).ShowClock)
+        if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().NumScreen).ShowClock)
             MyDataContext.ShowClock();
     }
 
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)
     {
-        if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().ScreenName).ShowClock)
+        if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().NumScreen).ShowClock)
             MyDataContext.HideClock();
     }
 }

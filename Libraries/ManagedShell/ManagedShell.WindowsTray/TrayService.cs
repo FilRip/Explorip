@@ -175,103 +175,105 @@ public class TrayService : IDisposable
 
     private IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
     {
-        switch ((WM)msg)
+        if (!Disable)
         {
-            case WM.COPYDATA:
-                if (lParam == IntPtr.Zero)
-                {
-                    ShellLogger.Debug("TrayService: CopyData is null");
+            switch ((WM)msg)
+            {
+                case WM.COPYDATA:
+                    if (lParam == IntPtr.Zero)
+                    {
+                        ShellLogger.Debug("TrayService: CopyData is null");
+                        break;
+                    }
+
+                    CopyDataStruct copyData =
+                        (CopyDataStruct)Marshal.PtrToStructure(lParam, typeof(CopyDataStruct));
+
+                    switch ((int)copyData.dwData)
+                    {
+                        case 0:
+                            // AppBar message
+                            if (Marshal.SizeOf(typeof(AppBarMsgDataV3)) == copyData.cbData)
+                            {
+                                AppBarMsgDataV3 amd = (AppBarMsgDataV3)Marshal.PtrToStructure(copyData.lpData,
+                                    typeof(AppBarMsgDataV3));
+
+                                if (Marshal.SizeOf(typeof(AppBarDataV2)) != amd.abd.cbSize)
+                                {
+                                    ShellLogger.Debug("TrayService: Size incorrect for APPBARMSGDATAV3");
+                                    break;
+                                }
+
+                                IntPtr abmResult = AppBarMessageAction(amd);
+
+                                if (abmResult != IntPtr.Zero)
+                                {
+                                    return abmResult;
+                                }
+
+                                ShellLogger.Debug($"TrayService: Forwarding AppBar message {(ABMsg)amd.dwMessage} from PID {amd.dwSourceProcessId}");
+                            }
+                            else
+                            {
+                                ShellLogger.Debug("TrayService: AppBar message received, but with unknown size");
+                            }
+                            break;
+                        case 1:
+                            ShellTrayData trayData =
+                                (ShellTrayData)Marshal.PtrToStructure(copyData.lpData,
+                                    typeof(ShellTrayData));
+                            if (trayDelegate != null)
+                            {
+                                if (trayDelegate(trayData.dwMessage, new SafeNotifyIconData(trayData.nid)))
+                                {
+                                    return (IntPtr)1;
+                                }
+
+                                ShellLogger.Debug("TrayService: Ignored notify icon message");
+                            }
+                            else
+                            {
+                                ShellLogger.Info("TrayService: TrayDelegate is null");
+                            }
+                            break;
+                        case 3:
+                            WinNotifyIconIdentifier iconData =
+                                (WinNotifyIconIdentifier)Marshal.PtrToStructure(copyData.lpData,
+                                    typeof(WinNotifyIconIdentifier));
+
+                            if (iconDataDelegate != null)
+                            {
+                                return iconDataDelegate(iconData.dwMessage, iconData.hWnd, iconData.uID,
+                                    iconData.guidItem);
+                            }
+
+                            ShellLogger.Info("TrayService: IconDataDelegate is null");
+                            break;
+                    }
+
                     break;
-                }
+                case WM.WINDOWPOSCHANGED:
+                    WindowPos wndPos = WindowPos.FromMessage(lParam);
 
-                CopyDataStruct copyData =
-                    (CopyDataStruct)Marshal.PtrToStructure(lParam, typeof(CopyDataStruct));
+                    if ((wndPos.flags & SWP.SWP_SHOWWINDOW) != 0)
+                    {
+                        SetWindowLong(HwndTray, GWL.GWL_STYLE,
+                            GetWindowLong(HwndTray, GWL.GWL_STYLE) &
+                            ~(int)WindowStyles.WS_VISIBLE);
 
-                switch ((int)copyData.dwData)
-                {
-                    case 0:
-                        // AppBar message
-                        if (Marshal.SizeOf(typeof(AppBarMsgDataV3)) == copyData.cbData)
-                        {
-                            AppBarMsgDataV3 amd = (AppBarMsgDataV3)Marshal.PtrToStructure(copyData.lpData,
-                                typeof(AppBarMsgDataV3));
+                        ShellLogger.Debug($"TrayService: {WindowHelper.TrayWndClass} became visible; hiding");
+                    }
+                    break;
+            }
 
-                            if (Marshal.SizeOf(typeof(AppBarDataV2)) != amd.abd.cbSize)
-                            {
-                                ShellLogger.Debug("TrayService: Size incorrect for APPBARMSGDATAV3");
-                                break;
-                            }
-
-                            IntPtr abmResult = AppBarMessageAction(amd);
-
-                            if (abmResult != IntPtr.Zero)
-                            {
-                                return abmResult;
-                            }
-
-                            ShellLogger.Debug($"TrayService: Forwarding AppBar message {(ABMsg)amd.dwMessage} from PID {amd.dwSourceProcessId}");
-                        }
-                        else
-                        {
-                            ShellLogger.Debug("TrayService: AppBar message received, but with unknown size");
-                        }
-                        break;
-                    case 1:
-                        ShellTrayData trayData =
-                            (ShellTrayData)Marshal.PtrToStructure(copyData.lpData,
-                                typeof(ShellTrayData));
-                        if (trayDelegate != null)
-                        {
-                            if (trayDelegate(trayData.dwMessage, new SafeNotifyIconData(trayData.nid)))
-                            {
-                                return (IntPtr)1;
-                            }
-
-                            ShellLogger.Debug("TrayService: Ignored notify icon message");
-                        }
-                        else
-                        {
-                            ShellLogger.Info("TrayService: TrayDelegate is null");
-                        }
-                        break;
-                    case 3:
-                        WinNotifyIconIdentifier iconData =
-                            (WinNotifyIconIdentifier)Marshal.PtrToStructure(copyData.lpData,
-                                typeof(WinNotifyIconIdentifier));
-
-                        if (iconDataDelegate != null)
-                        {
-                            return iconDataDelegate(iconData.dwMessage, iconData.hWnd, iconData.uID,
-                                iconData.guidItem);
-                        }
-
-                        ShellLogger.Info("TrayService: IconDataDelegate is null");
-                        break;
-                }
-
-                break;
-            case WM.WINDOWPOSCHANGED:
-                WindowPos wndPos = WindowPos.FromMessage(lParam);
-
-                if ((wndPos.flags & SWP.SWP_SHOWWINDOW) != 0)
-                {
-                    SetWindowLong(HwndTray, GWL.GWL_STYLE,
-                        GetWindowLong(HwndTray, GWL.GWL_STYLE) &
-                        ~(int)WindowStyles.WS_VISIBLE);
-
-                    ShellLogger.Debug($"TrayService: {WindowHelper.TrayWndClass} became visible; hiding");
-                }
-                break;
+            if (msg == (int)WM.COPYDATA ||
+                msg == (int)WM.ACTIVATEAPP ||
+                msg == (int)WM.COMMAND ||
+                msg >= (int)WM.USER)
+            {
+                return ForwardMsg(hWnd, msg, wParam, lParam);
+            }
         }
-
-        if (msg == (int)WM.COPYDATA ||
-            msg == (int)WM.ACTIVATEAPP ||
-            msg == (int)WM.COMMAND ||
-            msg >= (int)WM.USER)
-        {
-            return ForwardMsg(hWnd, msg, wParam, lParam);
-        }
-
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
 

@@ -19,7 +19,7 @@ public interface IExploripToolbar
 
     Guid GuidKey { get; }
 
-    void UpdateTaskbar(string screenName, double width, double height, Brush backgroundColor, AppBarEdge edge);
+    void UpdateTaskbar(int numScreen, double width, double height, Brush backgroundColor, AppBarEdge edge);
 
     double MinHeight { get; }
 

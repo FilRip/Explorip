@@ -34,34 +34,34 @@ namespace Explorip.TaskBar.Controls;
 public partial class Taskbar : AppBarWindow
 {
     private readonly bool _mainScreen;
-    private readonly string _screenName;
+    private readonly int _numScreen;
 
     public Popup MyPopup { get; private set; }
 
-    public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen, AppBarEdge edge)
-        : base(MyTaskbarApp.MyShellManager.AppBarManager, MyTaskbarApp.MyShellManager.ExplorerHelper, MyTaskbarApp.MyShellManager.FullScreenHelper, screen, edge, 0)
+    public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen)
+        : base(MyTaskbarApp.MyShellManager.AppBarManager, MyTaskbarApp.MyShellManager.ExplorerHelper, MyTaskbarApp.MyShellManager.FullScreenHelper, screen, ConfigManager.GetTaskbarConfig(screen.NumScreen).Edge, 0)
     {
         InitializeComponent();
 
         _mainScreen = screen.Primary;
-        _screenName = screen.DeviceName.TrimStart('.', '\\');
+        _numScreen = screen.NumScreen;
 
         DataContext = new TaskbarViewModel(this);
 
         StartButton.StartMenuMonitor = startMenuMonitor;
 
-        AllowsTransparency = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarAllowsTransparency;
+        AllowsTransparency = ConfigManager.GetTaskbarConfig(_numScreen).TaskbarAllowsTransparency;
         SetFontSmoothing();
 
         _explorerHelper.HideExplorerTaskbar = true;
 
         SetSize();
 
-        MyDataContext.TabTipVisible = ConfigManager.GetTaskbarConfig(ScreenName).ShowTabTip;
-        MyDataContext.KeyboardLayoutVisible = ConfigManager.GetTaskbarConfig(ScreenName).ShowKeyboardLayout;
+        MyDataContext.TabTipVisible = ConfigManager.GetTaskbarConfig(NumScreen).ShowTabTip;
+        MyDataContext.KeyboardLayoutVisible = ConfigManager.GetTaskbarConfig(NumScreen).ShowKeyboardLayout;
 
-        if (ConfigManager.GetTaskbarConfig(ScreenName).TaskbarBackground != null)
-            Background = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarBackground;
+        if (ConfigManager.GetTaskbarConfig(NumScreen).TaskbarBackground != null)
+            Background = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarBackground;
         else
             Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
 
@@ -105,9 +105,9 @@ public partial class Taskbar : AppBarWindow
         get { return _mainScreen; }
     }
 
-    public string ScreenName
+    public int NumScreen
     {
-        get { return _screenName; }
+        get { return _numScreen; }
     }
 
     public bool IsReopening { get; set; }
@@ -139,30 +139,30 @@ public partial class Taskbar : AppBarWindow
     public void SetPositionAndSize()
     {
         double previousDpi = DpiHelper.DpiScale;
-        AppBarScreen newScreen = AppBarScreen.FromAllScreens().FirstOrDefault(s => s.DeviceName.TrimStart('.', '\\') == ScreenName);
+        AppBarScreen newScreen = AppBarScreen.FromAllScreens().FirstOrDefault(s => s.NumScreen == _numScreen);
         if (newScreen != null)
             Screen = newScreen;
         DpiScale = Screen.DpiScale;
 
         if (DpiScale != previousDpi)
         {
-            if (ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarHeight > 0)
+            if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarHeight > 0)
             {
-                double newHeight = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight;
+                double newHeight = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight;
                 newHeight = newHeight / previousDpi * DpiScale;
-                ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = newHeight;
+                ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = newHeight;
             }
-            if (ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarMinHeight > 0)
+            if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarMinHeight > 0)
             {
-                double newMinHeight = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarMinHeight;
+                double newMinHeight = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarMinHeight;
                 newMinHeight = newMinHeight / previousDpi * DpiScale;
-                ConfigManager.GetTaskbarConfig(ScreenName).TaskbarMinHeight = newMinHeight;
+                ConfigManager.GetTaskbarConfig(NumScreen).TaskbarMinHeight = newMinHeight;
             }
-            if (ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarWidth > 0)
+            if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarWidth > 0)
             {
-                double newWidth = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth;
+                double newWidth = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarWidth;
                 newWidth = newWidth / previousDpi * DpiScale;
-                ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth = newWidth;
+                ConfigManager.GetTaskbarConfig(NumScreen).TaskbarWidth = newWidth;
             }
         }
 
@@ -180,12 +180,12 @@ public partial class Taskbar : AppBarWindow
         if (DpiHelper.DpiScale % 1 != 0)
             UseLayoutRounding = false;
 
-        MinHeight = Math.Max(ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarMinHeight ?? 0, DesiredHeight);
+        MinHeight = Math.Max(ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarMinHeight ?? 0, DesiredHeight);
 
-        if (ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarHeight > 0)
-            DesiredHeight = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight;
-        if (ConfigManager.GetTaskbarConfig(ScreenName)?.TaskbarWidth > 0)
-            DesiredWidth = ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth;
+        if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarHeight > 0)
+            DesiredHeight = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight;
+        if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarWidth > 0)
+            DesiredWidth = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarWidth;
     }
 
     public override void SetPosition()
@@ -207,7 +207,7 @@ public partial class Taskbar : AppBarWindow
 
     private void SetFontSmoothing()
     {
-        VisualTextRenderingMode = ConfigManager.GetTaskbarConfig(ScreenName).AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
+        VisualTextRenderingMode = ConfigManager.GetTaskbarConfig(NumScreen).AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
     }
 
     private void Taskbar_OnLocationChanged(object sender, EventArgs e)
@@ -267,7 +267,7 @@ public partial class Taskbar : AppBarWindow
         string[] listToolbars = ConfigManager.ToolbarsPath;
         if (listToolbars?.Length > 0)
         {
-            foreach (string path in listToolbars.Where(p => ConfigManager.GetTaskbarConfig(ScreenName).ToolbarVisible(p)))
+            foreach (string path in listToolbars.Where(p => ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(p)))
             {
                 if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
                     AddToolbar(path, false);
@@ -302,8 +302,8 @@ public partial class Taskbar : AppBarWindow
         DesiredHeight = height;
         DesiredWidth = width;
         _appBarManager.SetWorkArea(Screen);
-        ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
-        ConfigManager.GetTaskbarConfig(ScreenName).TaskbarWidth = DesiredWidth;
+        ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = DesiredHeight;
+        ConfigManager.GetTaskbarConfig(NumScreen).TaskbarWidth = DesiredWidth;
         UpdatePlugins();
     }
 
@@ -357,7 +357,7 @@ public partial class Taskbar : AppBarWindow
         {
             Height += 22;
             DesiredHeight = Height;
-            ConfigManager.GetTaskbarConfig(ScreenName).ToolbarVisible(path, true);
+            ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(path, true);
         }
         _appBarManager.SetWorkArea(Screen);
         return newToolbar;
@@ -378,11 +378,11 @@ public partial class Taskbar : AppBarWindow
         {
             Height += height;
             DesiredHeight = Height;
-            ConfigManager.GetTaskbarConfig(ScreenName).ToolbarVisible(tp.MyDataContext.Id, true);
+            ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(tp.MyDataContext.Id, true);
         }
         _appBarManager.SetWorkArea(Screen);
         plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
-        plugin.UpdateTaskbar(ScreenName, ActualWidth, ActualHeight, Background, AppBarEdge);
+        plugin.UpdateTaskbar(_numScreen, ActualWidth, ActualHeight, Background, AppBarEdge);
     }
 
     private void AddToolbar_Click(object sender, RoutedEventArgs e)
@@ -398,7 +398,7 @@ public partial class Taskbar : AppBarWindow
             {
                 if (MainScreen)
                     ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
-                ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
+                ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = DesiredHeight;
                 newTb.MyDataContext.ShowHideTitle();
                 newTb.MyDataContext.CurrentShowLargeIcon = true;
                 newTb.MyDataContext.ShowLargeIcon();
@@ -438,14 +438,14 @@ public partial class Taskbar : AppBarWindow
             AddToolbar(plugin);
             if (MainScreen)
                 ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
-            ConfigManager.GetTaskbarConfig(ScreenName).TaskbarHeight = DesiredHeight;
+            ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = DesiredHeight;
         }
     }
 
     private void UpdatePlugins()
     {
         foreach (ToolbarPlugin plugin in ToolsBars.Children.OfType<ToolbarPlugin>())
-            plugin.PluginLinked.UpdateTaskbar(ScreenName, ActualWidth, ActualHeight, Background, AppBarEdge);
+            plugin.PluginLinked.UpdateTaskbar(_numScreen, ActualWidth, ActualHeight, Background, AppBarEdge);
     }
 
     #endregion

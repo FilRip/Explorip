@@ -22,7 +22,7 @@ public partial class SearchButtonViewModel : ObservableObject
         ShellHelper.ShellKeyCombo(NativeMethods.VK.LWIN, NativeMethods.VK.KEY_S);
         IntPtr ptrSearchWindow = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.SEARCH);
         Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
-        Taskbar currentTaskbar = ((MyTaskbarApp)Application.Current).ListAllTaskbar().FirstOrDefault(t => t.ScreenName == screen.DeviceName.TrimStart('.', '\\'));
+        Taskbar currentTaskbar = ((MyTaskbarApp)Application.Current).ListAllTaskbar().FirstOrDefault(t => t.NumScreen == screen.DisplayNumber);
         if (currentTaskbar != null)
         {
             NativeMethods.GetWindowRect(ptrSearchWindow, out NativeMethods.Rect rect);

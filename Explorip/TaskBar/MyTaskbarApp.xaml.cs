@@ -65,6 +65,7 @@ public partial class MyTaskbarApp : Application
     private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
     {
         ShellLogger.Debug("Display settings changed, updating taskbar positions and sizes.");
+        Screen.ForceRefreshListScreens();
         foreach (Taskbar taskbar in _taskbarList)
             taskbar.SetPositionAndSize();
     }
@@ -102,7 +103,7 @@ public partial class MyTaskbarApp : Application
     private void OpenTaskbar()
     {
         Taskbar taskBar;
-        taskBar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen(), ConfigManager.GetTaskbarConfig(Screen.PrimaryScreen.DeviceName.TrimStart('.', '\\')).Edge);
+        taskBar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen());
         taskBar.Show();
         _taskbarList.Add(taskBar);
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
@@ -120,7 +121,7 @@ public partial class MyTaskbarApp : Application
         List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
         foreach (AppBarScreen appBarScreen in appBarScreens)
         {
-            taskBar = new Taskbar(_startMenuMonitor, appBarScreen, ConfigManager.GetTaskbarConfig(appBarScreen.DeviceName.TrimStart('.', '\\')).Edge);
+            taskBar = new Taskbar(_startMenuMonitor, appBarScreen);
             taskBar.Show();
             _taskbarList.Add(taskBar);
         }
@@ -133,7 +134,7 @@ public partial class MyTaskbarApp : Application
             foreach (Taskbar taskbar in _taskbarList)
                 if (!taskbar.MainScreen)
                 {
-                    ConfigManager.GetTaskbarConfig(taskbar.ScreenName).ShowTaskbar = false;
+                    ConfigManager.GetTaskbarConfig(taskbar.NumScreen).ShowTaskbar = false;
                     taskbar.Close();
                 }
         }
@@ -143,7 +144,7 @@ public partial class MyTaskbarApp : Application
             {
                 foreach (Screen screen in Screen.AllScreens)
                     if (!screen.Primary)
-                        ConfigManager.GetTaskbarConfig(screen.DeviceName.TrimStart('.', '\\')).ShowTaskbar = true;
+                        ConfigManager.GetTaskbarConfig(screen.DisplayNumber).ShowTaskbar = true;
                 MakeTaskbarOnAllScreen();
             }
         }

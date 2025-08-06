@@ -30,7 +30,7 @@ public partial class CustomColorViewModel : ObservableObject
     private void Save()
     {
         SolidColorBrush brush = new(CurrentColor);
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskbarBackground = brush;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskbarBackground = brush;
         ParentTaskbar.SetBackground(brush);
     }
 
@@ -53,7 +53,7 @@ public partial class CustomColorViewModel : ObservableObject
 
     public void Init()
     {
-        SolidColorBrush brush = ConfigManager.GetTaskbarConfig(ParentTaskbar.ScreenName).TaskbarBackground;
+        SolidColorBrush brush = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskbarBackground;
         if (brush != null)
         {
             CurrentBackground = brush;

@@ -52,16 +52,14 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
     public event EventHandler<NotificationBalloonEventArgs> NotificationBalloonShown;
 
     private SystrayDelegate trayDelegate;
-#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
     private IconDataDelegate iconDataDelegate;
     private TrayHostSizeDelegate trayHostSizeDelegate;
-#pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
     private readonly object _lockObject = new();
     private ShellServiceObject shellServiceObject;
     private TrayHostSizeData trayHostSizeData = new()
     {
         edge = ABEdge.ABE_TOP,
-        rc = new NativeMethods.Rect
+        rc = new NativeMethods.Rect()
         {
             Top = 0,
             Left = 0,
@@ -262,12 +260,12 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
 
     private bool SysTrayCallback(uint message, SafeNotifyIconData nicData)
     {
-        if (nicData.hWnd == IntPtr.Zero)
+        if (nicData.hWnd == IntPtr.Zero || Disable)
             return false;
 
         NotifyIcon trayIcon = new(this, nicData.hWnd)
         {
-            UID = nicData.uID
+            UID = nicData.uID,
         };
 
         lock (_lockObject)
@@ -441,6 +439,8 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         _trayService?.SetTrayHostSizeData(trayHostSizeData);
     }
 
+    #region IDisposable
+
     public void Dispose()
     {
         Dispose(true);
@@ -456,8 +456,18 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
             {
                 shellServiceObject?.Dispose();
                 _trayService.Dispose();
+                _trayService.SetIconDataCallback(null);
+                _trayService.SetTrayHostSizeCallback(null);
+                iconDataDelegate = null;
+                trayHostSizeDelegate = null;
             }
             _isDisposed = true;
         }
     }
+    public bool IsDisposed
+    {
+        get { return _isDisposed; }
+    }
+
+    #endregion
 }

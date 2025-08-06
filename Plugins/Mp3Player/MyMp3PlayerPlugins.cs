@@ -40,7 +40,7 @@ public class MyMp3PlayerPlugins : IExploripToolbar
         ((MyMp3PlayerControl)ExploripToolbar).MyDataContext.SetColor(background, foreground);
     }
 
-    public void UpdateTaskbar(string screenName, double width, double height, Brush backgroundColor, AppBarEdge edge)
+    public void UpdateTaskbar(int numScreen, double width, double height, Brush backgroundColor, AppBarEdge edge)
     {
         ((MyMp3PlayerControl)ExploripToolbar).MyDataContext.ChangeTaskbarBackgroundColor(backgroundColor);
     }

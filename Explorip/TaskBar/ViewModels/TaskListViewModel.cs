@@ -130,8 +130,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void ChangeButtonSize()
     {
-        ButtonWidth = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20, GridUnitType.Pixel);
-        ButtonHeight = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 13, GridUnitType.Pixel);
+        ButtonWidth = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20, GridUnitType.Pixel);
+        ButtonHeight = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 13, GridUnitType.Pixel);
         TitleLength = ButtonWidth.Value;
         if (ConfigManager.ShowTitleApplicationWindow)
         {
@@ -142,24 +142,24 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         ButtonRightMargin = new GridLength(0, GridUnitType.Pixel);
         ButtonBottomMargin = new GridLength(0, GridUnitType.Pixel);
         if (_currentEdge == AppBarEdge.Left || _currentEdge == AppBarEdge.Right)
-            ButtonBottomMargin = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton, GridUnitType.Pixel);
+            ButtonBottomMargin = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).SpaceBetweenTaskButton, GridUnitType.Pixel);
         else
-            ButtonRightMargin = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton, GridUnitType.Pixel);
+            ButtonRightMargin = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).SpaceBetweenTaskButton, GridUnitType.Pixel);
     }
 
     public void UpdateMaxWidth()
     {
         if (!ConfigManager.ShowTitleApplicationWindow)
             return;
-        double currentWidth = TaskbarParent.MyTaskList.TasksList.Items.Count * (ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow + ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).SpaceBetweenTaskButton);
-        double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20;
+        double currentWidth = TaskbarParent.MyTaskList.TasksList.Items.Count * (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).SpaceBetweenTaskButton);
+        double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20;
         if (currentWidth > TaskbarParent.MyTaskList.ActualWidth)
         {
             double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - ScrollBarWidth - ButtonRightMargin.Value * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
             TitleLength = Math.Max(minWidth, newMaxWidth);
         }
         else
-            TitleLength = ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow;
+            TitleLength = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow;
     }
 
     private static void RemoveTaskServiceEvent()

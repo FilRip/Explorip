@@ -16,15 +16,15 @@ public class TaskbarConfig
 {
     private RegistryKey _registryTaskbar;
 
-    public string TaskbarName { get; private set; }
+    public int NumScreen { get; private set; }
     public bool AllowWrite { get; private set; }
 
-    public void Init(string screenName, RegistryKey rootRK, bool allowWrite)
+    public void Init(int numScreen, RegistryKey rootRK, bool allowWrite)
     {
-        TaskbarName = screenName;
+        NumScreen = numScreen;
         AllowWrite = allowWrite;
 
-        _registryTaskbar = rootRK.CreateSubKey(screenName, true);
+        _registryTaskbar = rootRK.CreateSubKey($"DISPLAY{numScreen}", true);
 
         if (allowWrite && _registryTaskbar != null)
         {

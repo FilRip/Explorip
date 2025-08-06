@@ -58,7 +58,7 @@ public partial class TaskButton : UserControl
         if (_appWindow != null)
             _appWindow.PropertyChanged += Window_PropertyChanged;
 
-        double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).ScreenName).TaskButtonSize;
+        double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).TaskButtonSize;
         MyTaskIcon.Height = size;
         MyTaskIcon.Width = size;
         MyTaskIconBack.Height = size;
@@ -238,7 +238,7 @@ public partial class TaskButton : UserControl
         if (_appWindow.ListWindows.Count == 0)
             return;
 
-        if (ConfigManager.GetTaskbarConfig(TaskbarParent.ScreenName).TaskbarDisableThumb)
+        if (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskbarDisableThumb)
             return;
 
         _timerBeforeShowThumbnail?.Dispose();

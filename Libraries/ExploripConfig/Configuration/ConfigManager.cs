@@ -114,22 +114,22 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("SpaceBetweenThumbnail", "").ToString()))
                 _registryRootTaskbar.SetValue("SpaceBetweenThumbnail", "10");
 
-            foreach (string screenName in Screen.AllScreens.Select(s => s.DeviceName.TrimStart('.', '\\')))
+            foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
                 TaskbarConfig tbc = new();
-                tbc.Init(screenName, _registryRootTaskbar, true);
+                tbc.Init(numScreen, _registryRootTaskbar, true);
                 _listScreens.Add(tbc);
             }
         }
     }
 
-    public static TaskbarConfig GetTaskbarConfig(string screenName)
+    public static TaskbarConfig GetTaskbarConfig(int numScreen)
     {
-        TaskbarConfig tbc = _listScreens.SingleOrDefault(tbc => tbc.TaskbarName == screenName);
+        TaskbarConfig tbc = _listScreens.SingleOrDefault(tbc => tbc.NumScreen == numScreen);
         if (tbc != null)
             return tbc;
         tbc = new();
-        tbc.Init(screenName, _registryRootTaskbar, AllowWrite);
+        tbc.Init(numScreen, _registryRootTaskbar, AllowWrite);
         _listScreens.Add(tbc);
         return tbc;
     }
