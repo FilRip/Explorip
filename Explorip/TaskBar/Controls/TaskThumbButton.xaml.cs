@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -122,6 +123,9 @@ public partial class TaskThumbButton : Window
         if (parent.ApplicationWindow.ListWindows.Count == 1)
             Left += Width / screen.ScaleFactor / 2;
         Top = parent.TaskbarParent.Top - Height;
+
+        // Cancel System menu
+        HwndSource.FromHwnd(MyDataContext.WindowHandle).AddHook(WndProc);
     }
 
     private void ThumbnailButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -160,5 +164,12 @@ public partial class TaskThumbButton : Window
         {
             MyDataContext.CloseWindow(numWindow);
         }
+    }
+
+    private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg == (int)NativeMethods.WM.SYSCOMMAND)
+            handled = true;
+        return IntPtr.Zero;
     }
 }

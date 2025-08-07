@@ -123,14 +123,21 @@ public partial class Taskbar : AppBarWindow
     {
         base.WndProc(hwnd, msg, wParam, lParam, ref handled);
 
-        if ((msg == (int)NativeMethods.WM.SYSCOLORCHANGE ||
-            msg == (int)NativeMethods.WM.SETTINGCHANGE) &&
-            ConfigManager.Theme == DictionaryManager.THEME_DEFAULT)
+        if (!handled)
         {
-            handled = true;
+            if ((msg == (int)NativeMethods.WM.SYSCOLORCHANGE ||
+                msg == (int)NativeMethods.WM.SETTINGCHANGE) &&
+                ConfigManager.Theme == DictionaryManager.THEME_DEFAULT)
+            {
+                handled = true;
 
-            // If the color scheme changes, re-apply the current theme to get updated colors.
-            ((MyTaskbarApp)Application.Current).DictionaryManager.SetThemeFromSettings();
+                // If the color scheme changes, re-apply the current theme to get updated colors.
+                ((MyTaskbarApp)Application.Current).DictionaryManager.SetThemeFromSettings();
+            }
+            else if (msg == (int)NativeMethods.WM.SYSCOMMAND)
+            {
+                handled = true;
+            }
         }
 
         return IntPtr.Zero;
@@ -138,7 +145,7 @@ public partial class Taskbar : AppBarWindow
 
     public void SetPositionAndSize()
     {
-        double previousDpi = DpiHelper.DpiScale;
+        double previousDpi = Screen.DpiScale;
         AppBarScreen newScreen = AppBarScreen.FromAllScreens().FirstOrDefault(s => s.NumScreen == _numScreen);
         if (newScreen != null)
             Screen = newScreen;

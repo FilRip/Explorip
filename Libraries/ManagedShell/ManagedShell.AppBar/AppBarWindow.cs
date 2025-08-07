@@ -171,25 +171,15 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             {
                 case NativeMethods.AppBarNotifications.PosChanged:
                     if (Orientation == Orientation.Vertical)
-                    {
                         _appBarManager.ABSetPos(this, DesiredWidth * DpiScale, ActualHeight * DpiScale, AppBarEdge);
-                    }
                     else
-                    {
                         _appBarManager.ABSetPos(this, ActualWidth * DpiScale, DesiredHeight * DpiScale, AppBarEdge);
-                    }
                     break;
-
                 case NativeMethods.AppBarNotifications.WindowArrange:
                     if ((int)lParam != 0) // before
-                    {
                         Visibility = Visibility.Collapsed;
-                    }
                     else // after
-                    {
                         Visibility = Visibility.Visible;
-                    }
-
                     break;
             }
             handled = true;
@@ -219,9 +209,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         else if ((msg == (int)NativeMethods.WM.DPICHANGED) && !_positionAlreadyUnderChanged)
         {
             if (Screen.Primary)
-            {
                 DpiHelper.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
-            }
 
             DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
             Screen.ChangeDpi();

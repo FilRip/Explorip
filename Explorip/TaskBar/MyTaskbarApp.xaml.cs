@@ -64,10 +64,38 @@ public partial class MyTaskbarApp : Application
 
     private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
     {
-        ShellLogger.Debug("Display settings changed, updating taskbar positions and sizes.");
-        Screen.ForceRefreshListScreens();
-        foreach (Taskbar taskbar in _taskbarList)
-            taskbar.SetPositionAndSize();
+        Current.Dispatcher.Invoke(() =>
+        {
+            try
+            {
+                ShellLogger.Debug("Display settings changed, updating taskbar positions and sizes.");
+                Screen.ForceRefreshListScreens();
+                // Remove taskbar from screen that does not exists anymore
+                for (int i = _taskbarList.Count - 1; i >= 0; i--)
+                {
+                    if (!Screen.AllScreens.Any(s => s.DisplayNumber == _taskbarList[i].NumScreen))
+                    {
+                        _taskbarList[i].AllowClose = true;
+                        _taskbarList[i].Close();
+                        _taskbarList.RemoveAt(i);
+                    }
+                }
+                // Refresh taskbar still present
+                foreach (Taskbar taskbar in _taskbarList)
+                    taskbar.SetPositionAndSize();
+                // Add taskbar on new monitor that is plugged
+                foreach (Screen screen in Screen.AllScreens.Where(s => !_taskbarList.Any(tb => tb.NumScreen == s.DisplayNumber)))
+                {
+                    Taskbar taskBar = new(_startMenuMonitor, AppBarScreen.FromScreen(screen.DisplayNumber));
+                    taskBar.Show();
+                    _taskbarList.Add(taskBar);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShellLogger.Error(ex.Message, ex);
+            }
+        });
     }
 
     private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
@@ -131,11 +159,13 @@ public partial class MyTaskbarApp : Application
     {
         if (_taskbarList.Count > 1)
         {
-            foreach (Taskbar taskbar in _taskbarList)
-                if (!taskbar.MainScreen)
+            for (int i = _taskbarList.Count - 1; i >= 0; i--)
+                if (!_taskbarList[i].MainScreen)
                 {
-                    ConfigManager.GetTaskbarConfig(taskbar.NumScreen).ShowTaskbar = false;
-                    taskbar.Close();
+                    ConfigManager.GetTaskbarConfig(_taskbarList[i].NumScreen).ShowTaskbar = false;
+                    _taskbarList[i].AllowClose = true;
+                    _taskbarList[i].Close();
+                    _taskbarList.RemoveAt(i);
                 }
         }
         else

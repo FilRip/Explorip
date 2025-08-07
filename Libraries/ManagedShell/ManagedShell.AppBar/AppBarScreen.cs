@@ -75,10 +75,8 @@ public class AppBarScreen
             WorkingArea = ToRectangle(screen.WorkingArea),
             //BitsPerPixel = screen.BitsPerPixel,
             NumScreen = numScreen,
-#pragma warning disable S3011
             Handle = screen.MonitorHandle,
         };
-#pragma warning restore S3011
         appBarScreen.ChangeDpi();
         return appBarScreen;
     }
