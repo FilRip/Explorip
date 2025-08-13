@@ -70,6 +70,7 @@ public partial class MyTaskbarApp : Application
             {
                 ShellLogger.Debug("Display settings changed, updating taskbar positions and sizes.");
                 Screen.ForceRefreshListScreens();
+
                 // Remove taskbar from screen that does not exists anymore
                 for (int i = _taskbarList.Count - 1; i >= 0; i--)
                 {
@@ -80,9 +81,11 @@ public partial class MyTaskbarApp : Application
                         _taskbarList.RemoveAt(i);
                     }
                 }
+
                 // Refresh taskbar still present
                 foreach (Taskbar taskbar in _taskbarList)
                     taskbar.SetPositionAndSize();
+
                 // Add taskbar on new monitor that is plugged
                 foreach (Screen screen in Screen.AllScreens.Where(s => !_taskbarList.Any(tb => tb.NumScreen == s.DisplayNumber)))
                 {

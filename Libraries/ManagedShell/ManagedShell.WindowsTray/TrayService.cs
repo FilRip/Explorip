@@ -413,9 +413,13 @@ public class TrayService : IDisposable
 
         if (taskbarHwnd != IntPtr.Zero)
         {
-            SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
-                SWP.SWP_NOMOVE | SWP.SWP_NOSIZE |
-                SWP.SWP_NOACTIVATE);
+            try
+            {
+                SetWindowPos(taskbarHwnd, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
+                    SWP.SWP_NOMOVE | SWP.SWP_NOSIZE |
+                    SWP.SWP_NOACTIVATE);
+            }
+            catch (Exception) { /* Ignore errors */ }
         }
     }
 
@@ -423,9 +427,13 @@ public class TrayService : IDisposable
     {
         if (HwndTray != IntPtr.Zero)
         {
-            SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0,
-                SWP.SWP_NOMOVE | SWP.SWP_NOACTIVATE |
-                SWP.SWP_NOSIZE);
+            try
+            {
+                SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0,
+                    SWP.SWP_NOMOVE | SWP.SWP_NOACTIVATE |
+                    SWP.SWP_NOSIZE);
+            }
+            catch (Exception) { /* Ignore errors */ }
         }
     }
     #endregion

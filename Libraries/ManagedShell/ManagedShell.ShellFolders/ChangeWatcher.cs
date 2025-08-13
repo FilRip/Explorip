@@ -90,16 +90,12 @@ class ChangeWatcher : IDisposable
             if (disposing)
             {
                 if (_watchers == null)
-                {
                     return;
-                }
 
                 foreach (FileSystemWatcher watcher in _watchers)
                 {
                     if (watcher == null)
-                    {
                         return;
-                    }
 
                     watcher.Changed -= _changedEventHandler;
                     watcher.Created -= _createdEventHandler;

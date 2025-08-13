@@ -4266,4 +4266,7 @@ public partial class NativeMethods
         PBT_APMRESUMEAUTOMATIC = 0x0012,
         PBT_POWERSETTINGCHANGE = 0x8013,
     }
+
+    [DllImport(User32_DllName, SetLastError = true)]
+    internal static extern IntPtr GetProp(IntPtr hWnd, string lpString);
 }

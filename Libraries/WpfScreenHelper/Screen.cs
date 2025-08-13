@@ -148,6 +148,7 @@ public class Screen
 
     public static void ForceRefreshListScreens()
     {
+        ResetMultiMonitorSupport();
         _listScreens = null;
         _ = AllScreens;
     }

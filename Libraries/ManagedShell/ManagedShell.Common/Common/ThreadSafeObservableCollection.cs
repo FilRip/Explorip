@@ -6,8 +6,8 @@ namespace ManagedShell.Common.Common;
 
 public class ThreadSafeObservableCollection<T> : ObservableCollection<T>
 {
-    readonly Dispatcher _dispatcher;
-    readonly ReaderWriterLock _lock;
+    private readonly Dispatcher _dispatcher;
+    private readonly ReaderWriterLock _lock;
 
     public ThreadSafeObservableCollection()
     {

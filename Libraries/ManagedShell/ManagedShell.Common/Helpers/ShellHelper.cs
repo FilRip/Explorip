@@ -375,7 +375,7 @@ public static class ShellHelper
             // get filename
             int len = outFileName.Capacity;
             QueryFullProcessImageName(hProc, 0, outFileName, ref len);
-
+            CloseHandle(hProc);
             outFileName.Replace("Excluded,", "");
             outFileName.Replace(",SFC protected", "");
         }
@@ -452,7 +452,7 @@ public static class ShellHelper
             StringBuilder outAumid = new((int)len);
 
             GetApplicationUserModelId(hProcess, ref len, outAumid);
-
+            CloseHandle(hProcess);
             if (outAumid.Length > 0)
             {
                 return outAumid.ToString();

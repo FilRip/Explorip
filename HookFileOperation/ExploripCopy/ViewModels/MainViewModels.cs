@@ -220,7 +220,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 break;
         }
         sb = sb.Replace("%s2", _currentOperation.NewName);
-        sb = sb.Replace("%s", Path.GetFileName(_currentOperation.Source));
+        sb = sb.Replace("%s", Path.GetFileName(_currentOperation.DisplaySource));
         GlobalReport = sb.ToString();
         if (Settings.ShowBalloon)
         {

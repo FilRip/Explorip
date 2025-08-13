@@ -396,9 +396,10 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             bool isToolWindow = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
             bool isAppWindow = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
             bool isNoActivate = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE) != 0;
+            bool isDeleted = NativeMethods.GetProp(_windows[0], "ITaskList_Deleted") != IntPtr.Zero;
             IntPtr ownerWin = NativeMethods.GetWindow(_windows[0], NativeMethods.GetWindow_Cmd.GW_OWNER);
 
-            return isWindow && isVisible && (ownerWin == IntPtr.Zero || isAppWindow) && (!isNoActivate || isAppWindow) && !isToolWindow;
+            return isWindow && isVisible && (ownerWin == IntPtr.Zero || isAppWindow) && (!isNoActivate || isAppWindow) && !isToolWindow && !isDeleted;
         }
     }
 

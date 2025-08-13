@@ -173,6 +173,8 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                         UnhookWinEvent(uncloakEventHook);
                     _HookWin.DestroyHandle();
                     SetTaskbarListHwnd(IntPtr.Zero);
+                    IsInitialized = false;
+                    Windows.Clear();
                 }
 
                 TaskCategoryProvider?.Dispose();
