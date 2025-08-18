@@ -448,4 +448,8 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName)]
     internal static extern uint GetModuleFileName(IntPtr hModule, StringBuilder lpFilename, int nSize);
+
+    [DllImport(Kernel32_DllName, SetLastError = false, ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool GetDevicePowerState([In] IntPtr hDevice, [Out, MarshalAs(UnmanagedType.Bool)] out bool pfOn);
 }

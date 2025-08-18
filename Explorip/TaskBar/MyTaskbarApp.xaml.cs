@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 
@@ -39,6 +41,9 @@ public partial class MyTaskbarApp : Application
 #endif
     private List<Taskbar> _taskbarList;
     private StartMenuMonitor _startMenuMonitor;
+    private Thread _threadAutoLock;
+    private static bool DisableAutoLock;
+
     public static ShellManager MyShellManager { get; private set; }
 
     public MyTaskbarApp()
@@ -111,12 +116,14 @@ public partial class MyTaskbarApp : Application
             ShellLogger.Debug("Enable background work");
             MyShellManager.ExplorerHelper.Disable = false;
             MyShellManager.NotificationArea.Disable = false;
+            DisableAutoLock = false;
         }
         else
         {
             ShellLogger.Debug("Disable background work");
             MyShellManager.ExplorerHelper.Disable = true;
             MyShellManager.NotificationArea.Disable = true;
+            DisableAutoLock = true;
         }
     }
 
@@ -185,6 +192,7 @@ public partial class MyTaskbarApp : Application
 
     private void App_OnExit(object sender, ExitEventArgs e)
     {
+        _threadAutoLock?.Abort();
         ExitGracefully();
     }
 
@@ -259,5 +267,40 @@ public partial class MyTaskbarApp : Application
 
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+
+        if (ConfigManager.AutoLockOnMonitorPowerOff)
+        {
+            _threadAutoLock = new Thread(new ThreadStart(CheckMonitorPower));
+            _threadAutoLock.Start();
+        }
+    }
+
+    private static void CheckMonitorPower()
+    {
+        try
+        {
+            while (true)
+            {
+                if (!DisableAutoLock)
+                {
+                    Microsoft.Win32.SafeHandles.SafeFileHandle handle = NativeMethods.CreateFile("\\\\.\\LCD", 0, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
+                    if (!handle.IsInvalid)
+                    {
+#pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
+                        NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out bool on);
+                        if (!on)
+                        {
+                            ShellLogger.Debug("Auto lock");
+                            ShellHelper.Lock();
+                        }
+                        NativeMethods.CloseHandle(handle.DangerousGetHandle());
+#pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
+                    }
+                    handle.Dispose();
+                    Thread.Sleep(1000);
+                }
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
     }
 }

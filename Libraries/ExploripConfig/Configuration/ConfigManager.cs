@@ -113,6 +113,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("ThumbnailCornerRadius", "10");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("SpaceBetweenThumbnail", "").ToString()))
                 _registryRootTaskbar.SetValue("SpaceBetweenThumbnail", "10");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("LockOnMonitorPowerOff", "").ToString()))
+                _registryRootTaskbar.SetValue("LockOnMonitorPowerOff", "False");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
@@ -132,6 +134,16 @@ public static class ConfigManager
         tbc.Init(numScreen, _registryRootTaskbar, AllowWrite);
         _listScreens.Add(tbc);
         return tbc;
+    }
+
+    public static bool AutoLockOnMonitorPowerOff
+    {
+        get { return _registryRootTaskbar.ReadBoolean("LockOnMonitorPowerOff"); }
+        set
+        {
+            if (AutoLockOnMonitorPowerOff != value && AllowWrite)
+                _registryRootTaskbar.SetValue("LockOnMonitorPowerOff", value.ToString());
+        }
     }
 
     public static string Theme
