@@ -66,16 +66,12 @@ public class ExplorerTrayService
         IntPtr toolbarHwnd = FindExplorerTrayToolbarHwnd();
 
         if (toolbarHwnd == IntPtr.Zero)
-        {
             return;
-        }
 
         int count = GetNumTrayIcons(toolbarHwnd);
 
         if (count < 1)
-        {
             return;
-        }
 
         GetWindowThreadProcessId(toolbarHwnd, out uint processId);
         IntPtr hProcess = OpenProcess(ProcessAccess.All, false, (int)processId);
@@ -109,7 +105,7 @@ public class ExplorerTrayService
 
         VirtualFreeEx(hProcess, hBuffer, 0, AllocationType.Release);
 
-        CloseHandle((int)hProcess);
+        CloseHandle(hProcess);
     }
 
     private static IntPtr FindExplorerTrayToolbarHwnd()

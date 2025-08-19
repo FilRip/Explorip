@@ -269,13 +269,16 @@ public partial class TaskButton : UserControl
             return;
         }
 
-        Task.Run(async () =>
+        Task.Run(() =>
         {
-            await Task.Delay(500);
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.Invoke(async() =>
             {
-                if (_thumb != null && !_thumb.MyDataContext.MouseIn)
-                    CloseThumbnail();
+                await Task.Delay(TaskbarParent.TimeBeforeAutoCloseThumb);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (_thumb != null && !_thumb.MyDataContext.MouseIn)
+                        CloseThumbnail();
+                });
             });
         });
     }

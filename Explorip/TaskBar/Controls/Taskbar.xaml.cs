@@ -37,6 +37,7 @@ public partial class Taskbar : AppBarWindow
     private readonly int _numScreen;
 
     public Popup MyPopup { get; private set; }
+    public int TimeBeforeAutoCloseThumb { get; private set; }
 
     public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen)
         : base(MyTaskbarApp.MyShellManager.AppBarManager, MyTaskbarApp.MyShellManager.ExplorerHelper, MyTaskbarApp.MyShellManager.FullScreenHelper, screen, ConfigManager.GetTaskbarConfig(screen.NumScreen).Edge, 0)
@@ -88,6 +89,7 @@ public partial class Taskbar : AppBarWindow
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
         };
         MyTaskbarApp.MyShellManager.TasksService.WindowActivated += ClosePopup;
+        TimeBeforeAutoCloseThumb = ConfigManager.TaskbarDelayBeforeCloseThumbnail;
     }
 
     private void ClosePopup(IntPtr activatedWindow)

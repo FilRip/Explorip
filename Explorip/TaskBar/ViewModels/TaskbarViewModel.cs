@@ -31,6 +31,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         OnPropertyChanged(nameof(PanelOrientation));
         OnPropertyChanged(nameof(LeadingDockOrientation));
         OnPropertyChanged(nameof(TrailingDockOrientation));
+        SetTaskListAlignment(ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment,
+                             ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment);
         RefreshSearch();
         SetShowTaskMan();
         SetShowWidget();
@@ -83,46 +85,57 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     [ObservableProperty()]
     private bool _resizeOn, _tabTipVisible, _keyboardLayoutVisible, _searchZoneVisible, _searchButtonVisible, _taskManVisible, _widgetsVisible, _desktopPreviewVisible, _showApplicationWindowTitle, _isGroupedApplicationWindow, _isShowSmallIcon;
 
+    [ObservableProperty()]
+    private bool _isTaskListToLeft, _isTaskListToRight, _isTaskListToCenter, _isTaskListToTop, _isTaskListToBottom, _isTaskListToVCenter;
+
+    private void SetTaskListAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical)
+    {
+        IsTaskListToLeft = horizontal == HorizontalAlignment.Left;
+        IsTaskListToRight = horizontal == HorizontalAlignment.Right;
+        IsTaskListToCenter = horizontal == HorizontalAlignment.Center;
+        IsTaskListToTop = vertical == VerticalAlignment.Top;
+        IsTaskListToBottom = vertical == VerticalAlignment.Bottom;
+        IsTaskListToVCenter = vertical == VerticalAlignment.Center;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment = vertical;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment = horizontal;
+        OnPropertyChanged(nameof(HorizontalTaskListAlignment));
+        OnPropertyChanged(nameof(VerticalTaskListAlignment));
+    }
+
     [RelayCommand()]
     private void AlignTaskListToLeft()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment = HorizontalAlignment.Left;
-        OnPropertyChanged(nameof(HorizontalTaskListAlignment));
+        SetTaskListAlignment(HorizontalAlignment.Left, ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment);
     }
 
     [RelayCommand()]
     private void AlignTaskListToRight()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment = HorizontalAlignment.Right;
-        OnPropertyChanged(nameof(HorizontalTaskListAlignment));
+        SetTaskListAlignment(HorizontalAlignment.Right, ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment);
     }
 
     [RelayCommand()]
     private void AlignTaskListToCenter()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment = HorizontalAlignment.Center;
-        OnPropertyChanged(nameof(HorizontalTaskListAlignment));
+        SetTaskListAlignment(HorizontalAlignment.Center, ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment);
     }
 
     [RelayCommand()]
     private void AlignTaskListToCenterV()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment = VerticalAlignment.Center;
-        OnPropertyChanged(nameof(VerticalTaskListAlignment));
+        SetTaskListAlignment(ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment, VerticalAlignment.Center);
     }
 
     [RelayCommand()]
     private void AlignTaskListToTop()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment = VerticalAlignment.Top;
-        OnPropertyChanged(nameof(VerticalTaskListAlignment));
+        SetTaskListAlignment(ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment, VerticalAlignment.Top);
     }
 
     [RelayCommand()]
     private void AlignTaskListToBottom()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListVerticalAlignment = VerticalAlignment.Bottom;
-        OnPropertyChanged(nameof(VerticalTaskListAlignment));
+        SetTaskListAlignment(ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment, VerticalAlignment.Bottom);
     }
 
     [RelayCommand()]

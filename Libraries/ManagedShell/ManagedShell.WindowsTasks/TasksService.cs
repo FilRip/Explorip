@@ -507,7 +507,6 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 case (int)WM.TB_SAVERESTOREW:
                     // TODO : ThumbBarAddButtons
                     ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarAddButtons HWND:" + msg.WParam);
-                    win?.AddThumbBarButton(msg.LParam);
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_ADDSTRINGW:

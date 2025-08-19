@@ -329,13 +329,20 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
 
     public bool InvokeContextMenu(ShellFile file, bool isInteractive, ShellFolder parentFolder = null)
     {
-        if (file == null)
+        try
         {
-            return false;
-        }
+            if (file == null)
+            {
+                return false;
+            }
 
-        _ = new ShellItemContextMenu([file], (parentFolder ?? Folder), IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
-        return true;
+            _ = new ShellItemContextMenu([file], (parentFolder ?? Folder), IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
+            return true;
+        }
+        finally
+        {
+            parentFolder?.Dispose();
+        }
     }
 
     private bool HandleFileAction(string action, ShellItem[] items, bool allFolders)

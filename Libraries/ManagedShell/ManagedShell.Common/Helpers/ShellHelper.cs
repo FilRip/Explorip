@@ -108,13 +108,13 @@ public static class ShellHelper
         }
     }
 
-    public static bool StartProcess(string filename, string args)
+    public static bool StartProcess(string filename, string args, bool useShellExecute)
     {
         try
         {
             ProcessStartInfo psi = new()
             {
-                UseShellExecute = true,
+                UseShellExecute = useShellExecute,
                 FileName = filename,
                 Arguments = args,
             };
@@ -129,12 +129,12 @@ public static class ShellHelper
         }
     }
 
-    public static bool StartProcess(string filename, string args, string verb)
+    public static bool StartProcess(string filename, string args, string verb, bool useShellExecute)
     {
         try
         {
             Process proc = new();
-            proc.StartInfo.UseShellExecute = true;
+            proc.StartInfo.UseShellExecute = useShellExecute;
             proc.StartInfo.FileName = filename;
             proc.StartInfo.Arguments = args;
             proc.StartInfo.Verb = verb;

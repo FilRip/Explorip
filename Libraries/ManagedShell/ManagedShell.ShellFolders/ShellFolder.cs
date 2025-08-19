@@ -416,7 +416,7 @@ public class ShellFolder : ShellItem
 
                 if (_shellFolder != null)
                 {
-                    Marshal.ReleaseComObject(_shellFolder);
+                    Marshal.FinalReleaseComObject(_shellFolder);
                     _shellFolder = null;
                 }
 

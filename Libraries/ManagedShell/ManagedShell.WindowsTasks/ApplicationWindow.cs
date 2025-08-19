@@ -817,9 +817,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     public bool StartNewInstance(string arguments = null)
     {
         if (IsUWP)
-            return ShellHelper.StartProcess("explorer.exe", $"shell:AppsFolder\\{AppUserModelID}");
+            return ShellHelper.StartProcess("explorer.exe", $"shell:AppsFolder\\{AppUserModelID}", false);
         else
-            return ShellHelper.StartProcess(WinFileName, (string.IsNullOrWhiteSpace(arguments) ? Arguments : arguments));
+            return ShellHelper.StartProcess(WinFileName, (string.IsNullOrWhiteSpace(arguments) ? Arguments : arguments), false);
     }
 
     public int ParentProcessId()
@@ -845,19 +845,5 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 return (int)pe32.th32ParentProcessID;
         } while (NativeMethods.Process32Next(hSnapshot, ref pe32));
         return -1;
-    }
-
-    public void AddThumbBarButton(IntPtr lParam)
-    {
-        if (_windows.Count == 0 || lParam == IntPtr.Zero)
-            return;
-        try
-        {
-            //TbSaveParams button = Marshal.PtrToStructure<TbSaveParams>(lParam);
-        }
-        catch (Exception ex)
-        {
-            ShellLogger.Error($"ApplicationWindow: Unable to add thumb bar button for {Title}: {ex.Message}");
-        }
     }
 }

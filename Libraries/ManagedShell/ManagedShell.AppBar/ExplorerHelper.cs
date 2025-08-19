@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 
 using ManagedShell.Common.Helpers;
@@ -89,17 +88,14 @@ public class ExplorerHelper
 
     public void SetTaskbarState(TaskbarState state)
     {
-        Task.Run(() =>
+        AppBarData abd = new()
         {
-            AppBarData abd = new()
-            {
-                cbSize = Marshal.SizeOf(typeof(AppBarData)),
-                hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle),
-                lParam = (IntPtr)state,
-            };
+            cbSize = Marshal.SizeOf(typeof(AppBarData)),
+            hWnd = WindowHelper.FindWindowsTray(_notificationArea.Handle),
+            lParam = (IntPtr)state,
+        };
 
-            SHAppBarMessage((int)ABMsg.ABM_SETSTATE, ref abd);
-        });
+        SHAppBarMessage((int)ABMsg.ABM_SETSTATE, ref abd);
     }
 
     public TaskbarState GetTaskbarState()
