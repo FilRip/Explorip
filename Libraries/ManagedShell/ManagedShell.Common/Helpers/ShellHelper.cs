@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
 
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
@@ -154,6 +155,41 @@ public static class ShellHelper
         {
             return false;
         }
+    }
+
+    public static bool LaunchDetachedProcess(string filename, string args, bool createNewConsole = false)
+    {
+        StartupInfo si = new();
+        si.cb = (uint)Marshal.SizeOf(si);
+
+        string commandLine = $"\"{filename}\" {args}";
+
+        ECreateProcess flag = ECreateProcess.DETACHED_PROCESS;
+        if (createNewConsole)
+            flag |= ECreateProcess.CREATE_NEW_CONSOLE;
+
+        bool success = CreateProcess(
+            null,
+            commandLine,
+            IntPtr.Zero,
+            IntPtr.Zero,
+            false,
+            flag,
+            IntPtr.Zero,
+            null,
+            ref si,
+            out ProcessInformation pi);
+
+        if (!success)
+        {
+            int errorCode = Marshal.GetLastWin32Error();
+            ShellLogger.Error($"CreateProcess failed with error code {errorCode}");
+            return false;
+        }
+
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+        return true;
     }
 
     public static bool Exists(string filename)
