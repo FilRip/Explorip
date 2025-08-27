@@ -50,9 +50,7 @@ public class TrayService : IDisposable
     internal IntPtr Initialize()
     {
         if (HwndTray != IntPtr.Zero)
-        {
             return HwndTray;
-        }
 
         DestroyWindows();
 
@@ -102,14 +100,10 @@ public class TrayService : IDisposable
     internal void SetTrayHostSizeData(TrayHostSizeData data)
     {
         if (HwndTray != IntPtr.Zero)
-        {
             SetWindowPos(HwndTray, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, SWP.SWP_NOACTIVATE | SWP.SWP_NOZORDER);
-        }
 
         if (HwndNotify != IntPtr.Zero)
-        {
             SetWindowPos(HwndNotify, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, SWP.SWP_NOACTIVATE | SWP.SWP_NOZORDER);
-        }
     }
 
     private static void SendTaskbarCreated()
@@ -207,16 +201,12 @@ public class TrayService : IDisposable
                                 IntPtr abmResult = AppBarMessageAction(amd);
 
                                 if (abmResult != IntPtr.Zero)
-                                {
                                     return abmResult;
-                                }
 
                                 ShellLogger.Debug($"TrayService: Forwarding AppBar message {(ABMsg)amd.dwMessage} from PID {amd.dwSourceProcessId}");
                             }
                             else
-                            {
                                 ShellLogger.Debug("TrayService: AppBar message received, but with unknown size");
-                            }
                             break;
                         case 1:
                             ShellTrayData trayData =
@@ -225,16 +215,12 @@ public class TrayService : IDisposable
                             if (trayDelegate != null)
                             {
                                 if (trayDelegate(trayData.dwMessage, new SafeNotifyIconData(trayData.nid)))
-                                {
                                     return (IntPtr)1;
-                                }
 
                                 ShellLogger.Debug("TrayService: Ignored notify icon message");
                             }
                             else
-                            {
                                 ShellLogger.Info("TrayService: TrayDelegate is null");
-                            }
                             break;
                         case 3:
                             WinNotifyIconIdentifier iconData =
@@ -242,10 +228,8 @@ public class TrayService : IDisposable
                                     typeof(WinNotifyIconIdentifier));
 
                             if (iconDataDelegate != null)
-                            {
                                 return iconDataDelegate(iconData.dwMessage, iconData.hWnd, iconData.uID,
                                     iconData.guidItem);
-                            }
 
                             ShellLogger.Info("TrayService: IconDataDelegate is null");
                             break;
@@ -304,22 +288,16 @@ public class TrayService : IDisposable
             abd.uEdge = (uint)msd.edge;
         }
         else
-        {
             ShellLogger.Info("TrayService: TrayHostSizeDelegate is null");
-        }
     }
 
     private IntPtr ForwardMsg(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
     {
         if (HwndFwd == IntPtr.Zero || !IsWindow(HwndFwd))
-        {
             HwndFwd = WindowHelper.FindWindowsTray(HwndTray);
-        }
 
         if (HwndFwd != IntPtr.Zero)
-        {
             return SendMessage(HwndFwd, msg, wParam, lParam);
-        }
 
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
@@ -355,22 +333,16 @@ public class TrayService : IDisposable
             (int)(23 * DpiHelper.DpiScale), IntPtr.Zero, IntPtr.Zero, hInstance, IntPtr.Zero);
 
         if (HwndTray == IntPtr.Zero)
-        {
             ShellLogger.Info($"TrayService: Error creating {WindowHelper.TrayWndClass} window ({Marshal.GetLastWin32Error()})");
-        }
         else
-        {
             ShellLogger.Debug($"TrayService: Created {WindowHelper.TrayWndClass}");
-        }
     }
 
     private void RegisterNotifyWnd()
     {
         ushort trayNotifyClassReg = RegisterWndClass(NotifyWndClass);
         if (trayNotifyClassReg == 0)
-        {
             ShellLogger.Info($"TrayService: Error registering {NotifyWndClass} class ({Marshal.GetLastWin32Error()})");
-        }
 
         HwndNotify = CreateWindowEx(0, trayNotifyClassReg, null,
             WindowStyles.WS_CHILD | WindowStyles.WS_CLIPCHILDREN |
@@ -378,13 +350,9 @@ public class TrayService : IDisposable
             (int)(23 * DpiHelper.DpiScale), HwndTray, IntPtr.Zero, hInstance, IntPtr.Zero);
 
         if (HwndNotify == IntPtr.Zero)
-        {
             ShellLogger.Info($"TrayService: Error creating {NotifyWndClass} window ({Marshal.GetLastWin32Error()})");
-        }
         else
-        {
             ShellLogger.Debug($"TrayService: Created {NotifyWndClass}");
-        }
     }
 
     private void SetupTrayMonitor()

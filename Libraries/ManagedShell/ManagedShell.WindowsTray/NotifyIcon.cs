@@ -99,7 +99,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         {
             return _isPinned;
         }
-        private set
+        set
         {
             _isPinned = value;
             OnPropertyChanged();
@@ -300,7 +300,8 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
     public void IconMouseEnter(uint mouse)
     {
-        if (RemoveIfInvalid()) return;
+        if (RemoveIfInvalid())
+            return;
 
         SendMessage((uint)WM.MOUSEHOVER, mouse);
 
@@ -309,7 +310,8 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
     public void IconMouseLeave(uint mouse)
     {
-        if (RemoveIfInvalid()) return;
+        if (RemoveIfInvalid())
+            return;
 
         SendMessage((uint)WM.MOUSELEAVE, mouse);
 
@@ -318,7 +320,8 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
     public void IconMouseMove(uint mouse)
     {
-        if (RemoveIfInvalid()) return;
+        if (RemoveIfInvalid())
+            return;
 
         SendMessage((uint)WM.MOUSEMOVE, mouse);
     }
@@ -454,7 +457,8 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     /// <returns>Indication of equality.</returns>
     public bool Equals(NotifyIcon other)
     {
-        if (other == null) return false;
+        if (other == null)
+            return false;
 
         return (HWnd.Equals(other.HWnd) && UID.Equals(other.UID)) || (other.GUID != Guid.Empty && GUID.Equals(other.GUID));
     }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTray;
 
@@ -32,9 +34,9 @@ public partial class NotifyIcon : UserControl
             TrayIcon = DataContext as ManagedShell.WindowsTray.NotifyIcon;
 
             if (TrayIcon == null)
-            {
                 return;
-            }
+
+            ShellLogger.Debug($"Create Systray Icon for {TrayIcon.Title}");
 
             TrayIcon.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
 

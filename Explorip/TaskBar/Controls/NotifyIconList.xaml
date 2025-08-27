@@ -11,10 +11,10 @@
     </UserControl.DataContext>
     <StackPanel Orientation="{Binding StackPanelOrientation}">
         <ToggleButton Name="NotifyIconToggleButton"
-                      Visibility="Collapsed"
+                      IsChecked="{Binding ShowAllIcons}"
                       Click="NotifyIconToggleButton_OnClick"
                       Style="{DynamicResource TrayToggleButton}"/>
-        <ItemsControl x:Name="NotifyIcons"
+        <ItemsControl x:Name="NotifyIcons" ItemsSource="{Binding ListSystrayIcons}"
                       Focusable="False"
                       HorizontalAlignment="Center" VerticalAlignment="Center">
             <ItemsControl.ItemsPanel>

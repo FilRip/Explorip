@@ -191,21 +191,21 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         PinnedIcons = new ListCollectionView(TrayIcons);
         PinnedIcons.CollectionChanged += PinnedIcons_Changed;
         PinnedIcons.Filter = PinnedIcons_Filter;
-        PinnedIcons.SortDescriptions.Add(new SortDescription("PinOrder", ListSortDirection.Ascending));
+        PinnedIcons.SortDescriptions.Add(new SortDescription(nameof(NotifyIcon.PinOrder), ListSortDirection.Ascending));
         ICollectionViewLiveShaping pinnedIconsView = PinnedIcons as ICollectionViewLiveShaping;
         pinnedIconsView.IsLiveFiltering = true;
-        pinnedIconsView.LiveFilteringProperties.Add("IsHidden");
-        pinnedIconsView.LiveFilteringProperties.Add("IsPinned");
+        pinnedIconsView.LiveFilteringProperties.Add(nameof(NotifyIcon.IsHidden));
+        pinnedIconsView.LiveFilteringProperties.Add(nameof(NotifyIcon.IsPinned));
         pinnedIconsView.IsLiveSorting = true;
-        pinnedIconsView.LiveSortingProperties.Add("PinOrder");
+        pinnedIconsView.LiveSortingProperties.Add(nameof(NotifyIcon.PinOrder));
 
         UnpinnedIcons = new ListCollectionView(TrayIcons);
         UnpinnedIcons.CollectionChanged += PinnedIcons_Changed;
         UnpinnedIcons.Filter = UnpinnedIcons_Filter;
         ICollectionViewLiveShaping unpinnedIconsView = UnpinnedIcons as ICollectionViewLiveShaping;
         unpinnedIconsView.IsLiveFiltering = true;
-        unpinnedIconsView.LiveFilteringProperties.Add("IsHidden");
-        unpinnedIconsView.LiveFilteringProperties.Add("IsPinned");
+        unpinnedIconsView.LiveFilteringProperties.Add(nameof(NotifyIcon.IsHidden));
+        unpinnedIconsView.LiveFilteringProperties.Add(nameof(NotifyIcon.IsPinned));
     }
 
     private void PinnedIcons_Changed(object sender, NotifyCollectionChangedEventArgs e)
@@ -265,10 +265,21 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         if (nicData.hWnd == IntPtr.Zero || Disable)
             return false;
 
-        NotifyIcon trayIcon = new(this, nicData.hWnd)
+        NotifyIcon trayIcon;
+        bool exists = false;
+
+        if (TrayIcons.Any(ti => ti.Equals(nicData)))
         {
-            UID = nicData.uID,
-        };
+            exists = true;
+            trayIcon = TrayIcons.First(ti => ti.Equals(nicData));
+        }
+        else
+        {
+            trayIcon = new(this, nicData.hWnd)
+            {
+                UID = nicData.uID,
+            };
+        }
 
         lock (_lockObject)
         {
@@ -276,8 +287,6 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
             {
                 try
                 {
-                    bool exists = false;
-
                     // hide icons while we are shell which require UWP support & we have a separate implementation for
                     if (nicData.guidItem == new Guid(VOLUME_GUID) && ((EnvironmentHelper.IsAppRunningAsShell && EnvironmentHelper.IsWindows10OrBetter) || GroupPolicyHelper.HideScaVolume))
                         return false;
@@ -288,12 +297,6 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
                         (nicData.guidItem == new Guid(NETWORK_GUID) && GroupPolicyHelper.HideScaNetwork) ||
                         (nicData.guidItem == new Guid(POWER_GUID) && GroupPolicyHelper.HideScaPower))
                         return false;
-
-                    if (TrayIcons.Any(ti => ti.Equals(nicData)))
-                    {
-                        exists = true;
-                        trayIcon = TrayIcons.First(ti => ti.Equals(nicData));
-                    }
 
                     if ((NIF.STATE & nicData.uFlags) != 0)
                         trayIcon.IsHidden = nicData.dwState == NIS.NIS_HIDDEN;
@@ -395,9 +398,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
             else if ((NIM)message == NIM.NIM_SETVERSION)
             {
                 if (nicData.uVersion > 4)
-                {
                     return false;
-                }
 
                 if (TrayIcons.Any(item => item.Equals(nicData)))
                 {
@@ -414,9 +415,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
     private void HandleBalloonData(SafeNotifyIconData nicData, NotifyIcon notifyIcon)
     {
         if (string.IsNullOrEmpty(nicData.szInfoTitle) && (string.IsNullOrWhiteSpace(notifyIcon.Title) || string.IsNullOrWhiteSpace(notifyIcon.Path)))
-        {
             return;
-        }
 
         NotificationBalloon balloonInfo = new(nicData, notifyIcon);
         NotificationBalloonEventArgs args = new()
@@ -429,9 +428,7 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         NotificationBalloonShown?.Invoke(this, args);
 
         if (!args.Handled)
-        {
             notifyIcon.TriggerNotificationBalloon(balloonInfo);
-        }
     }
 
     // The notification area control calls this when an icon is clicked to set the placement of its host (such as for ABM_GETTASKBARPOS usage)

@@ -10,6 +10,7 @@ using ExploripConfig.Configuration;
 
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.WindowsTray;
 
 namespace Explorip.TaskBar.Controls;
@@ -30,6 +31,8 @@ public partial class NotifyBalloon : UserControl
 
     public void Show(NotificationBalloon balloonInfo, UIElement placementTarget)
     {
+        ShellLogger.Debug($"Show NotificationBalloon of {balloonInfo.Title}");
+
         _balloonInfo = balloonInfo;
         DataContext = _balloonInfo;
 

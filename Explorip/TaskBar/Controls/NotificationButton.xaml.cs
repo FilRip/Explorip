@@ -4,6 +4,8 @@ using System.Windows.Controls;
 using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
 
+using ManagedShell.Common.Logging;
+
 using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace Explorip.TaskBar.Controls;
@@ -26,6 +28,8 @@ public partial class NotificationButton : UserControl
     private void NotificationArea_NotificationBalloonShown(object sender, ManagedShell.WindowsTray.NotificationBalloonEventArgs e)
     {
         //MyDataContext.IncreaseNumberOfNotifications();
+        ShellLogger.Debug($"NotificationArea Show NotificationBalloon of {e.Balloon.Title}");
+
         new ToastContentBuilder()
             .AddHeader(e.Balloon.Title, e.Balloon.Title, "")
             .AddText(e.Balloon.Info)
