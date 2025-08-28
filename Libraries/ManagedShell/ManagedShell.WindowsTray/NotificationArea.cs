@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Data;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -15,7 +12,7 @@ using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray;
 
-public class NotificationArea(string[] savedPinnedIcons, TrayService trayService, ExplorerTrayService explorerTrayService) : DependencyObject, IDisposable
+public class NotificationArea(TrayService trayService, ExplorerTrayService explorerTrayService) : DependencyObject, IDisposable
 {
     const string HEALTH_GUID = "7820ae76-23e3-4229-82c1-e41cb67d5b9c";
     const string MEETNOW_GUID = "7820ae83-23e3-4229-82c1-e41cb67d5b9c";
@@ -45,9 +42,9 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         Right = 23,
     };
 
-    public string[] PinnedNotifyIcons { get; internal set; } = savedPinnedIcons;
     public IntPtr Handle { get; private set; }
     public bool IsFailed { get; private set; }
+    public bool PinDefaultIcons { get; private set; } = true;
 
     public event EventHandler<NotificationBalloonEventArgs> NotificationBalloonShown;
 
@@ -67,12 +64,8 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
             Left = 0,
             Bottom = 23,
             Right = GetSystemMetrics(0),
-        }
+        },
     };
-
-    public NotificationArea(TrayService trayService, ExplorerTrayService explorerTrayService) : this(DEFAULT_PINNED, trayService, explorerTrayService)
-    {
-    }
 
     public ObservableCollection<NotifyIcon> TrayIcons
     {
@@ -88,33 +81,6 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
 
     private static readonly DependencyProperty iconListProperty = DependencyProperty.Register("TrayIcons", typeof(ObservableCollection<NotifyIcon>), typeof(NotificationArea), new PropertyMetadata(new ObservableCollection<NotifyIcon>()));
 
-    public ICollectionView PinnedIcons
-    {
-        get
-        {
-            return GetValue(pinnedIconsProperty) as ICollectionView;
-        }
-        set
-        {
-            SetValue(pinnedIconsProperty, value);
-        }
-    }
-
-    private static readonly DependencyProperty pinnedIconsProperty = DependencyProperty.Register("PinnedIcons", typeof(ICollectionView), typeof(NotificationArea));
-
-    public ICollectionView UnpinnedIcons
-    {
-        get
-        {
-            return GetValue(unpinnedIconsProperty) as ICollectionView;
-        }
-        set
-        {
-            SetValue(unpinnedIconsProperty, value);
-        }
-    }
-
-    private static readonly DependencyProperty unpinnedIconsProperty = DependencyProperty.Register("UnpinnedIcons", typeof(ICollectionView), typeof(NotificationArea));
     private readonly TrayService _trayService = trayService;
     private readonly ExplorerTrayService _explorerTrayService = explorerTrayService;
 
@@ -122,7 +88,6 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
     {
         try
         {
-            PrepareCollections();
             trayDelegate = SysTrayCallback;
             iconDataDelegate = IconDataCallback;
             trayHostSizeDelegate = TrayHostSizeCallback;
@@ -146,21 +111,6 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         }
     }
 
-    public void SetPinnedIcons(string[] pinnedIcons)
-    {
-        PinnedNotifyIcons = pinnedIcons;
-
-        UpdatePinnedIcons();
-    }
-
-    internal void UpdatePinnedIcons()
-    {
-        foreach (NotifyIcon notifyIcon in TrayIcons)
-        {
-            notifyIcon.SetPinValues();
-        }
-    }
-
     public void Suspend()
     {
         _trayService?.Suspend();
@@ -181,66 +131,19 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
         }
     }
 
-    #region Collections
-    private void PrepareCollections()
-    {
-        // prepare grouped collections like the taskbar
-        // then display these in system tray
-
-        // prepare collections
-        PinnedIcons = new ListCollectionView(TrayIcons);
-        PinnedIcons.CollectionChanged += PinnedIcons_Changed;
-        PinnedIcons.Filter = PinnedIcons_Filter;
-        PinnedIcons.SortDescriptions.Add(new SortDescription(nameof(NotifyIcon.PinOrder), ListSortDirection.Ascending));
-        ICollectionViewLiveShaping pinnedIconsView = PinnedIcons as ICollectionViewLiveShaping;
-        pinnedIconsView.IsLiveFiltering = true;
-        pinnedIconsView.LiveFilteringProperties.Add(nameof(NotifyIcon.IsHidden));
-        pinnedIconsView.LiveFilteringProperties.Add(nameof(NotifyIcon.IsPinned));
-        pinnedIconsView.IsLiveSorting = true;
-        pinnedIconsView.LiveSortingProperties.Add(nameof(NotifyIcon.PinOrder));
-
-        UnpinnedIcons = new ListCollectionView(TrayIcons);
-        UnpinnedIcons.CollectionChanged += PinnedIcons_Changed;
-        UnpinnedIcons.Filter = UnpinnedIcons_Filter;
-        ICollectionViewLiveShaping unpinnedIconsView = UnpinnedIcons as ICollectionViewLiveShaping;
-        unpinnedIconsView.IsLiveFiltering = true;
-        unpinnedIconsView.LiveFilteringProperties.Add(nameof(NotifyIcon.IsHidden));
-        unpinnedIconsView.LiveFilteringProperties.Add(nameof(NotifyIcon.IsPinned));
-    }
-
-    private void PinnedIcons_Changed(object sender, NotifyCollectionChangedEventArgs e)
-    {
-        // yup, do nothing. helps prevent a NRE
-    }
-
-    private static bool PinnedIcons_Filter(object item)
-    {
-        return (item as NotifyIcon).IsPinned && !(item as NotifyIcon).IsHidden;
-    }
-
-    private static bool UnpinnedIcons_Filter(object item)
-    {
-        return !(item as NotifyIcon).IsPinned && !(item as NotifyIcon).IsHidden;
-    }
-    #endregion
-
     #region Callbacks
     private TrayHostSizeData TrayHostSizeCallback()
     {
         return trayHostSizeData;
     }
 
+#nullable enable
     private IntPtr IconDataCallback(int dwMessage, uint hWnd, uint uID, Guid guidItem)
     {
-        NotifyIcon icon = null;
-        foreach (NotifyIcon ti in TrayIcons)
-        {
-            if ((guidItem != Guid.Empty && guidItem == ti.GUID) || (ti.HWnd == (IntPtr)hWnd && ti.UID == uID))
-            {
-                icon = ti;
-                break;
-            }
-        }
+        if (Disable)
+            return IntPtr.Zero;
+
+        NotifyIcon? icon = TrayIcons.SingleOrDefault(ti => (guidItem != Guid.Empty && guidItem == ti.GUID) || (ti.HWnd == (IntPtr)hWnd && ti.UID == uID));
 
         if (icon != null)
         {
@@ -259,30 +162,31 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
 
         return IntPtr.Zero;
     }
+#nullable restore
 
     private bool SysTrayCallback(uint message, SafeNotifyIconData nicData)
     {
-        if (nicData.hWnd == IntPtr.Zero || Disable)
-            return false;
-
-        NotifyIcon trayIcon;
-        bool exists = false;
-
-        if (TrayIcons.Any(ti => ti.Equals(nicData)))
-        {
-            exists = true;
-            trayIcon = TrayIcons.First(ti => ti.Equals(nicData));
-        }
-        else
-        {
-            trayIcon = new(this, nicData.hWnd)
-            {
-                UID = nicData.uID,
-            };
-        }
-
         lock (_lockObject)
         {
+            if (nicData.hWnd == IntPtr.Zero || Disable)
+                return false;
+
+            NotifyIcon trayIcon;
+            bool exists = false;
+
+            if (TrayIcons.Any(ti => ti.Equals(nicData)))
+            {
+                exists = true;
+                trayIcon = TrayIcons.First(ti => ti.Equals(nicData));
+            }
+            else
+            {
+                trayIcon = new(this, nicData.hWnd)
+                {
+                    UID = nicData.uID,
+                };
+            }
+
             if ((NIM)message == NIM.NIM_ADD || (NIM)message == NIM.NIM_MODIFY)
             {
                 try
@@ -296,7 +200,9 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
                         (nicData.guidItem == new Guid(MEETNOW_GUID) && GroupPolicyHelper.HideScaMeetNow) ||
                         (nicData.guidItem == new Guid(NETWORK_GUID) && GroupPolicyHelper.HideScaNetwork) ||
                         (nicData.guidItem == new Guid(POWER_GUID) && GroupPolicyHelper.HideScaPower))
+                    {
                         return false;
+                    }
 
                     if ((NIF.STATE & nicData.uFlags) != 0)
                         trayIcon.IsHidden = nicData.dwState == NIS.NIS_HIDDEN;
@@ -345,7 +251,14 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
 
                         // set properties used for pinning
                         trayIcon.Path = ShellHelper.GetPathForHandle(trayIcon.HWnd);
-                        trayIcon.SetPinValues();
+                        if (PinDefaultIcons && (nicData.guidItem == new Guid(HEALTH_GUID) ||
+                            nicData.guidItem == new Guid(MEETNOW_GUID) ||
+                            nicData.guidItem == new Guid(NETWORK_GUID) ||
+                            nicData.guidItem == new Guid(POWER_GUID) ||
+                            nicData.guidItem == new Guid(VOLUME_GUID)))
+                        {
+                            trayIcon.IsPinned = true;
+                        }
 
                         trayIcon.Icon ??= IconImageConverter.GetDefaultIcon();
 
@@ -414,6 +327,9 @@ public class NotificationArea(string[] savedPinnedIcons, TrayService trayService
 
     private void HandleBalloonData(SafeNotifyIconData nicData, NotifyIcon notifyIcon)
     {
+        if (Disable)
+            return;
+
         if (string.IsNullOrEmpty(nicData.szInfoTitle) && (string.IsNullOrWhiteSpace(notifyIcon.Title) || string.IsNullOrWhiteSpace(notifyIcon.Path)))
             return;
 

@@ -82,11 +82,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the path to the application that created the icon.
     /// </summary>
-    public string Path
-    {
-        get;
-        set;
-    }
+    public string Path { get; set; }
 
     private bool _isPinned;
 
@@ -135,7 +131,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         {
             return _pinOrder;
         }
-        private set
+        set
         {
             _pinOrder = value;
             OnPropertyChanged();
@@ -145,69 +141,30 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     /// <summary>
     /// Gets or sets the owners handle.
     /// </summary>
-    public IntPtr HWnd
-    {
-        get;
-        set;
-    }
+    public IntPtr HWnd { get; set; }
 
     /// <summary>
     /// Gets or sets the callback message id.
     /// </summary>
-    public uint CallbackMessage
-    {
-        get;
-        set;
-    }
+    public uint CallbackMessage { get; set; }
 
     /// <summary>
     /// Gets or sets the UID of the Icon.
     /// </summary>
-    public uint UID
-    {
-        get;
-        set;
-    }
+    public uint UID { get; set; }
 
     /// <summary>
     /// Gets or sets the GUID of the Icon.
     /// </summary>
-    public Guid GUID
-    {
-        get;
-        set;
-    }
+    public Guid GUID { get; set; }
 
-    public uint Version
-    {
-        get;
-        set;
-    }
+    public uint Version { get; set; }
 
-    public Rect Placement
-    {
-        get;
-        set;
-    }
-
-    private string Identifier
-    {
-        get
-        {
-            if (GUID != Guid.Empty)
-                return GUID.ToString();
-            else
-                return Path + ":" + UID.ToString();
-        }
-    }
+    public Rect Placement { get; set; }
 
     #region Balloon Notifications
 
-    public ObservableCollection<NotificationBalloon> MissedNotifications
-    {
-        get;
-        set;
-    }
+    public ObservableCollection<NotificationBalloon> MissedNotifications { get; set; }
 
     public event EventHandler<NotificationBalloonEventArgs> NotificationBalloonShown;
 
@@ -215,7 +172,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     {
         NotificationBalloonEventArgs args = new()
         {
-            Balloon = balloonInfo
+            Balloon = balloonInfo,
         };
 
         NotificationBalloonShown?.Invoke(this, args);
@@ -226,71 +183,6 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         }
     }
 
-    #endregion
-
-    #region Pinning
-
-    public void Pin()
-    {
-        Pin(_notificationArea.PinnedNotifyIcons.Length);
-    }
-
-    public void Pin(int position)
-    {
-        bool updated = false;
-
-        if (IsPinned && position != PinOrder)
-        {
-            // already pinned, just moving
-            List<string> icons = [.. _notificationArea.PinnedNotifyIcons];
-            icons.Remove(Identifier);
-            icons.Insert(position, Identifier);
-            _notificationArea.PinnedNotifyIcons = [.. icons];
-            updated = true;
-        }
-        else if (!IsPinned)
-        {
-            // newly pinned. welcome to the party!
-            List<string> icons = [.. _notificationArea.PinnedNotifyIcons];
-            icons.Insert(position, Identifier);
-            _notificationArea.PinnedNotifyIcons = [.. icons];
-            updated = true;
-        }
-
-        if (updated)
-        {
-            _notificationArea.UpdatePinnedIcons();
-        }
-    }
-
-    public void Unpin()
-    {
-        if (IsPinned)
-        {
-            List<string> icons = [.. _notificationArea.PinnedNotifyIcons];
-            icons.Remove(Identifier);
-            _notificationArea.PinnedNotifyIcons = [.. icons];
-
-            IsPinned = false;
-            PinOrder = 0;
-
-            _notificationArea.UpdatePinnedIcons();
-        }
-    }
-
-    public void SetPinValues()
-    {
-        for (int i = 0; i < _notificationArea.PinnedNotifyIcons.Length; i++)
-        {
-            string item = _notificationArea.PinnedNotifyIcons[i].ToLower();
-            if (item == GUID.ToString().ToLower() || (GUID == Guid.Empty && item == (Path.ToLower() + ":" + UID.ToString())))
-            {
-                IsPinned = true;
-                PinOrder = i;
-                break;
-            }
-        }
-    }
     #endregion
 
     #region Mouse events
@@ -305,7 +197,8 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
         SendMessage((uint)WM.MOUSEHOVER, mouse);
 
-        if (Version > 3) SendMessage((uint)NIN.POPUPOPEN, mouse);
+        if (Version > 3)
+            SendMessage((uint)NIN.POPUPOPEN, mouse);
     }
 
     public void IconMouseLeave(uint mouse)
@@ -315,7 +208,8 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
         SendMessage((uint)WM.MOUSELEAVE, mouse);
 
-        if (Version > 3) SendMessage((uint)NIN.POPUPCLOSE, mouse);
+        if (Version > 3)
+            SendMessage((uint)NIN.POPUPCLOSE, mouse);
     }
 
     public void IconMouseMove(uint mouse)
@@ -335,31 +229,21 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         if (button == MouseButton.Left)
         {
             if (HandleClickOverride(false))
-            {
                 return;
-            }
 
             if (_lastLClick.ElapsedMilliseconds <= doubleClickTime)
-            {
                 SendMessage((uint)WM.LBUTTONDBLCLK, mouse);
-            }
             else
-            {
                 SendMessage((uint)WM.LBUTTONDOWN, mouse);
-            }
 
             _lastLClick.Restart();
         }
         else if (button == MouseButton.Right)
         {
             if (_lastRClick.ElapsedMilliseconds <= doubleClickTime)
-            {
                 SendMessage((uint)WM.RBUTTONDBLCLK, mouse);
-            }
             else
-            {
                 SendMessage((uint)WM.RBUTTONDOWN, mouse);
-            }
 
             _lastRClick.Restart();
         }
@@ -373,14 +257,13 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         if (button == MouseButton.Left)
         {
             if (HandleClickOverride(true))
-            {
                 return;
-            }
 
             SendMessage((uint)WM.LBUTTONUP, mouse);
 
             // This is documented as version 4, but Explorer does this for version 3 as well
-            if (Version >= 3) SendMessage((uint)NIN.SELECT, mouse);
+            if (Version >= 3)
+                SendMessage((uint)NIN.SELECT, mouse);
 
             _lastLClick.Restart();
         }
@@ -389,7 +272,8 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
             SendMessage((uint)WM.RBUTTONUP, mouse);
 
             // This is documented as version 4, but Explorer does this for version 3 as well
-            if (Version >= 3) SendMessage((uint)WM.CONTEXTMENU, mouse);
+            if (Version >= 3)
+                SendMessage((uint)WM.CONTEXTMENU, mouse);
 
             _lastRClick.Restart();
         }
@@ -404,9 +288,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     private uint GetMessageHiWord()
     {
         if (Version > 3)
-        {
             return UID;
-        }
 
         return 0;
     }
@@ -414,9 +296,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     private uint GetMessageWParam(uint mouse)
     {
         if (Version > 3)
-        {
             return mouse;
-        }
 
         return UID;
     }
@@ -425,6 +305,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     {
         if (!IsWindow(HWnd))
         {
+            ShellLogger.Debug($"Invalid hWnd, Remove systray icon of {Title}");
             _notificationArea.TrayIcons.Remove(this);
             return true;
         }
@@ -437,9 +318,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         if (NotificationArea.Win11ActionCenterIcons.Contains(GUID.ToString()) && EnvironmentHelper.IsWindows11OrBetter)
         {
             if (performAction)
-            {
                 ShellHelper.ShowActionCenter();
-            }
 
             return true;
         }

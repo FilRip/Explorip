@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Threading;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -71,7 +68,7 @@ public partial class NotifyIconList : UserControl
                                 notifIcon.IsPinned = true;
                     }
 
-                //NotificationArea.TrayIcons.CollectionChanged += UnpinnedIcons_CollectionChanged;
+                MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged += SystrayIcons_CollectionChanged;
                 MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
             }
 
@@ -94,102 +91,58 @@ public partial class NotifyIconList : UserControl
 
         ShellLogger.Debug($"NotificationBalloonShown of {e.Balloon.Title}");
 
-        // TODO : Temp show systray icon if is not visible
+        ManagedShell.WindowsTray.NotifyIcon notifyIcon = e.Balloon.NotifyIcon;
 
-        /*ManagedShell.WindowsTray.NotifyIcon notifyIcon = e.Balloon.NotifyIcon;
-
-        // Do not promote pinned icons (they're already there!)
-        if (NotificationArea.PinnedIcons.Contains(notifyIcon))
-            return;
-
-        // Do not duplicate promoted icons
-        if (promotedIcons.Contains(notifyIcon))
-            return;
-
-        promotedIcons.Add(notifyIcon);
-
-        DispatcherTimer unpromoteTimer = new()
+        if (notifyIcon != null && !notifyIcon.IsPinned)
         {
-            Interval = TimeSpan.FromMilliseconds(e.Balloon.Timeout + 500) // Keep it around for a few ms for the animation to complete
-        };
-        unpromoteTimer.Tick += (mysender, ea) =>
-        {
-            if (promotedIcons.Contains(notifyIcon))
-                promotedIcons.Remove(notifyIcon);
-            unpromoteTimer.Stop();
-        };
-        unpromoteTimer.Start();*/
+            notifyIcon.IsPinned = true;
+            MyDataContext.RefreshCollectionView();
+            DispatcherTimer unpromoteTimer = new()
+            {
+                Interval = TimeSpan.FromMilliseconds(e.Balloon.Timeout + 500) // Keep it around for a few ms for the animation to complete
+            };
+            unpromoteTimer.Tick += (mysender, ea) =>
+            {
+                notifyIcon.IsPinned = false;
+                unpromoteTimer.Stop();
+            };
+            unpromoteTimer.Start();
+        }
     }
 
     private void NotifyIconList_OnUnloaded(object sender, RoutedEventArgs e)
     {
         if (MyTaskbarApp.MyShellManager.NotificationArea != null)
         {
-            //NotificationArea.UnpinnedIcons.CollectionChanged -= UnpinnedIcons_CollectionChanged;
+            MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged -= SystrayIcons_CollectionChanged;
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
         }
 
         isLoaded = false;
     }
 
-    /*private void UnpinnedIcons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void SystrayIcons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         ShellLogger.Debug("UnpinnedIcons CollectionChanged");
 
         bool refreshList = false;
-        if (e.Action == NotifyCollectionChangedAction.Remove)
-        {
-            foreach (ManagedShell.WindowsTray.NotifyIcon item in e.OldItems)
-                if (promotedIcons.Remove(item))
-                    refreshList = true;
-        }
-        else if (e.Action == NotifyCollectionChangedAction.Add)
+        if (e.Action == NotifyCollectionChangedAction.Add)
         {
             string[] pinnedPath = ConfigManager.AllPinnedSystray();
             foreach (ManagedShell.WindowsTray.NotifyIcon item in e.NewItems)
+            {
                 if (pinnedPath.Any(pin => string.Compare(pin, item.Path, true) == 0) || (pinnedPath.Any(pin => pin.IndexOf(System.IO.Path.DirectorySeparatorChar) < 0 && string.Compare(System.IO.Path.GetFileName(item.Path), pin, true) == 0)))
                 {
                     refreshList = true;
-                    promotedIcons.Add(item);
+                    item.IsPinned = true;
                 }
+            }
         }
+
         if (refreshList)
         {
             ShellLogger.Debug("Refresh Systray list");
-
-            CompositeCollection pinnedNotifyIcons =
-            [
-                new CollectionContainer { Collection = promotedIcons },
-                new CollectionContainer { Collection = NotificationArea.PinnedIcons },
-            ];
-            pinnedNotifyIconsSource = new CollectionViewSource() { Source = pinnedNotifyIcons };
-            NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;
+            MyDataContext.RefreshCollectionView();
         }
-        SetToggleVisibility();
-    }*/
-
-    private void NotifyIconToggleButton_OnClick(object sender, RoutedEventArgs e)
-    {
-        MyDataContext.RefreshCollectionView();
-        /*if (NotifyIconToggleButton.IsChecked == true)
-            NotifyIcons.ItemsSource = allNotifyIconsSource.View;
-        else
-            NotifyIcons.ItemsSource = pinnedNotifyIconsSource.View;*/
     }
-
-    /*private void SetToggleVisibility()
-    {
-        if (this.FindVisualParent<Taskbar>() == null || !ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().NumScreen).CollapseNotifyIcons)
-            return;
-
-        if (MyTaskbarApp.MyShellManager.NotificationArea.UnpinnedIcons.IsEmpty)
-        {
-            NotifyIconToggleButton.Visibility = Visibility.Collapsed;
-
-            if (NotifyIconToggleButton.IsChecked == true)
-                NotifyIconToggleButton.IsChecked = false;
-        }
-        else
-            NotifyIconToggleButton.Visibility = Visibility.Visible;
-    }*/
 }

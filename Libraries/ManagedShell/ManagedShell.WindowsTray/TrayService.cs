@@ -99,6 +99,8 @@ public class TrayService : IDisposable
 
     internal void SetTrayHostSizeData(TrayHostSizeData data)
     {
+        ShellLogger.Debug("SetTrayHostSizeData");
+
         if (HwndTray != IntPtr.Zero)
             SetWindowPos(HwndTray, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, SWP.SWP_NOACTIVATE | SWP.SWP_NOZORDER);
 

@@ -38,7 +38,7 @@ public class ShellManager : IDisposable
         {
             TrayService = new TrayService();
             ExplorerTrayService = new ExplorerTrayService();
-            NotificationArea = new NotificationArea(config.PinnedNotifyIcons, TrayService, ExplorerTrayService);
+            NotificationArea = new NotificationArea(TrayService, ExplorerTrayService);
         }
 
         if (config.EnableTasksService)

@@ -12,7 +12,6 @@
     <StackPanel Orientation="{Binding StackPanelOrientation}">
         <ToggleButton Name="NotifyIconToggleButton"
                       IsChecked="{Binding ShowAllIcons}"
-                      Click="NotifyIconToggleButton_OnClick"
                       Style="{DynamicResource TrayToggleButton}"/>
         <ItemsControl x:Name="NotifyIcons" ItemsSource="{Binding ListSystrayIcons}"
                       Focusable="False"

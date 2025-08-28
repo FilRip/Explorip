@@ -64,6 +64,9 @@ public partial class NotifyIcon : UserControl
 
     private void TrayIcon_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)
     {
+        e.Handled = true;
+        if (MyTaskbarApp.MyShellManager.TrayService.Disable)
+            return;
         BalloonControl.Show(e.Balloon, NotifyIconBorder);
         e.Handled = true;
     }
@@ -71,18 +74,24 @@ public partial class NotifyIcon : UserControl
     private void NotifyIcon_OnMouseDown(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
+        if (MyTaskbarApp.MyShellManager.TrayService.Disable)
+            return;
         TrayIcon?.IconMouseDown(e.ChangedButton, MouseHelper.GetCursorPositionParam(), SystemInformations.DoubleClickTime);
     }
 
     private void NotifyIcon_OnMouseUp(object sender, MouseButtonEventArgs e)
     {
         e.Handled = true;
+        if (MyTaskbarApp.MyShellManager.TrayService.Disable)
+            return;
         TrayIcon?.IconMouseUp(e.ChangedButton, MouseHelper.GetCursorPositionParam(), SystemInformations.DoubleClickTime);
     }
 
     private void NotifyIcon_OnMouseEnter(object sender, MouseEventArgs e)
     {
         e.Handled = true;
+        if (MyTaskbarApp.MyShellManager.TrayService.Disable)
+            return;
 
         if (TrayIcon != null)
         {
@@ -99,17 +108,26 @@ public partial class NotifyIcon : UserControl
     private void NotifyIcon_OnMouseLeave(object sender, MouseEventArgs e)
     {
         e.Handled = true;
+        if (MyTaskbarApp.MyShellManager.TrayService.Disable)
+            return;
         TrayIcon?.IconMouseLeave(MouseHelper.GetCursorPositionParam());
     }
 
     private void NotifyIcon_OnMouseMove(object sender, MouseEventArgs e)
     {
         e.Handled = true;
+        if (MyTaskbarApp.MyShellManager.TrayService.Disable)
+            return;
         TrayIcon?.IconMouseMove(MouseHelper.GetCursorPositionParam());
     }
 
     private void NotifyIconBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
+        if (MyTaskbarApp.MyShellManager.TrayService.Disable)
+        {
+            e.Handled = true;
+            return;
+        }
         if ((e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down) || Keyboard.GetKeyStates(Key.RightCtrl).HasFlag(KeyStates.Down)))) && TrayIcon != null)
         {
             Application.Current.Dispatcher.BeginInvoke(() =>
@@ -123,6 +141,11 @@ public partial class NotifyIcon : UserControl
 
     private void NotifyIconBorder_PreviewMouseUp(object sender, MouseButtonEventArgs e)
     {
+        if (MyTaskbarApp.MyShellManager.TrayService.Disable)
+        {
+            e.Handled = true;
+            return;
+        }
         if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down) || Keyboard.GetKeyStates(Key.RightCtrl).HasFlag(KeyStates.Down))))
             e.Handled = true;
     }
