@@ -8,6 +8,7 @@ using System.Windows.Threading;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+using ManagedShell.WindowsTasks;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -15,66 +16,27 @@ namespace ManagedShell.AppBar;
 
 public sealed class FullScreenHelper : IDisposable
 {
-    private readonly DispatcherTimer fullscreenCheck;
+    private readonly TasksService _tasksService;
+    private bool disposableValue;
 
     public ObservableCollection<FullScreenApp> FullScreenApps { get; set; } = [];
 
-    public FullScreenHelper()
-    {
-        fullscreenCheck = new DispatcherTimer(DispatcherPriority.Background, System.Windows.Application.Current.Dispatcher)
-        {
-            Interval = new TimeSpan(0, 0, 0, 0, 100)
-        };
+    public bool Disable { get; set; }
 
-        fullscreenCheck.Tick += FullscreenCheck_Tick;
-        fullscreenCheck.Start();
+    public FullScreenHelper(TasksService tasksService)
+    {
+        _tasksService = tasksService;
+
+        // On Windows 8 and newer, TasksService will tell us when windows enter and exit full screen
+        _tasksService.FullScreenChanged += TasksService_FullScreenChanged;
+        _tasksService.MonitorChanged += TasksService_Event;
+        _tasksService.DesktopActivated += TasksService_Event;
+        _tasksService.WindowActivated += TasksService_Event;
     }
 
-    private void FullscreenCheck_Tick(object sender, EventArgs e)
+    private void TasksService_Event(object sender, EventArgs e)
     {
-        IntPtr hWnd = GetForegroundWindow();
-
-        List<FullScreenApp> removeApps = [];
-        bool skipAdd = false;
-
-        // first check if this window is already in our list. if so, remove it if necessary
-        foreach (FullScreenApp app in FullScreenApps)
-        {
-            FullScreenApp appCurrentState = GetFullScreenApp(app.HWnd);
-
-            if (app.HWnd == hWnd && appCurrentState != null && app.Screen.DeviceName == appCurrentState.Screen.DeviceName)
-            {
-                // this window, still same screen, do nothing
-                skipAdd = true;
-                continue;
-            }
-
-            if (appCurrentState == null || app.Screen.DeviceName != appCurrentState.Screen.DeviceName)
-            {
-                removeApps.Add(app);
-            }
-        }
-
-        // remove any changed windows we found
-        if (removeApps.Count > 0)
-        {
-            ShellLogger.Debug("Removing full screen app(s)");
-            foreach (FullScreenApp existingApp in removeApps)
-            {
-                FullScreenApps.Remove(existingApp);
-            }
-        }
-
-        // check if this is a new full screen app
-        if (!skipAdd)
-        {
-            FullScreenApp appNew = GetFullScreenApp(hWnd);
-            if (appNew != null)
-            {
-                ShellLogger.Debug("Adding full screen app");
-                FullScreenApps.Add(appNew);
-            }
-        }
+        updateFullScreenWindows();
     }
 
     private FullScreenApp GetFullScreenApp(IntPtr hWnd)
@@ -154,8 +116,27 @@ public sealed class FullScreenHelper : IDisposable
         ResetScreenCache();
     }
 
+    public bool IsDisposed
+    {
+        get { return disposableValue; }
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposableValue)
+        {
+            if (disposing)
+            {
+                fullscreenCheck.Stop();
+            }
+            disposableValue = true;
+        }
+    }
+
+    ///<inheritdoc/>
     public void Dispose()
     {
-        fullscreenCheck.Stop();
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

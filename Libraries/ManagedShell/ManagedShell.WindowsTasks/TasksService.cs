@@ -51,6 +51,9 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     public delegate void DelegateWindowActivated(IntPtr windowHandle);
     public event DelegateWindowActivated WindowActivated;
     public event DelegateWindowActivated WindowUncloaked;
+    public event EventHandler<EventArgs> DesktopActivated;
+    public event EventHandler<FullScreenEventArgs> FullScreenChanged;
+    public event EventHandler<WindowEventArgs> MonitorChanged;
 
     internal void Initialize(bool initialWindows)
     {
@@ -383,8 +386,10 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                     foreach (ApplicationWindow wind in Windows)
                                         if (wind.WinFileName == win.WinFileName && wind.ListWindows.Count > 0 && win.ListWindows.Count > 0 && wind.ListWindows[0] != win.ListWindows[0])
                                             wind.SetShowInTaskbar();
+                                WindowActivated?.Invoke(msg.LParam);
                             }
-                            WindowActivated?.Invoke(msg.LParam);
+                            else
+                                DesktopActivated?.Invoke(this, new EventArgs());
                             break;
                         case HSHELL.FLASH:
                             ShellLogger.Debug("TasksService: Flashing window: " + msg.LParam);
@@ -406,13 +411,6 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             ShellLogger.Debug("TasksService: EndTask called: " + msg.LParam);
                             RemoveWindow(msg.LParam);
                             break;
-                        case HSHELL.GETMINRECT:
-                            ShellLogger.Debug("TasksService: GetMinRect called: " + msg.LParam);
-                            ShellHookInfo winHandle = (ShellHookInfo)Marshal.PtrToStructure(msg.LParam, typeof(ShellHookInfo));
-                            winHandle.rc = new NativeMethods.Rect { Bottom = 100, Left = 0, Right = 100, Top = 0 };
-                            Marshal.StructureToPtr(winHandle, msg.LParam, true);
-                            msg.Result = winHandle.hwnd;
-                            return; // return here so the result isnt reset to DefWindowProc
                         case HSHELL.REDRAW:
                             ShellLogger.Debug("TasksService: Redraw called: " + msg.LParam);
                             win = Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(msg.LParam) || wnd.WinFileName == winFileName);
@@ -420,16 +418,55 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             {
                                 if (win.State == ApplicationWindow.WindowState.Flashing)
                                     win.State = ApplicationWindow.WindowState.Inactive;
-
                                 RedrawWindow(win);
                             }
                             else
                                 AddWindow(msg.LParam, ApplicationWindow.WindowState.Inactive, true);
                             break;
-                        // TaskMan needs to return true if we provide our own task manager to prevent explorers.
-                        // case HSHELL.TASKMAN:
-                        //     SingletonLogger.Instance.Info("TaskMan Message received.");
-                        //     break;
+                        case HSHELL.MONITORCHANGED:
+                            if (Windows.Any(i => i.ListWindows.Contains(msg.LParam)))
+                            {
+                                win = Windows.First(wnd => wnd.ListWindows.Contains(msg.LParam));
+                                WindowEventArgs winArgs = new()
+                                {
+                                    Window = win,
+                                    Handle = msg.LParam,
+                                };
+                                MonitorChanged?.Invoke(this, winArgs);
+                            }
+                            break;
+                        case HSHELL.FULLSCREENENTER:
+                            FullScreenEventArgs args = new()
+                            {
+                                Handle = msg.LParam,
+                                IsEntering = true,
+                            };
+                            FullScreenChanged?.Invoke(this, args);
+                            ShellLogger.Debug($"TasksService: Full screen entered by window {msg.LParam}");
+                            break;
+                        case HSHELL.FULLSCREENEXIT:
+                            FullScreenEventArgs fsArgs = new()
+                            {
+                                Handle = msg.LParam,
+                                IsEntering = false,
+                            };
+                            FullScreenChanged?.Invoke(this, fsArgs);
+                            ShellLogger.Debug($"TasksService: Full screen exited by window {msg.LParam}");
+                            break;
+                        case HSHELL.GETMINRECT:
+                            ShellHookInfo minRectInfo = Marshal.PtrToStructure<ShellHookInfo>(msg.LParam);
+                            if (Windows.Any(i => i.ListWindows.Contains(minRectInfo.hwnd)))
+                            {
+                                win = Windows.First(wnd => wnd.ListWindows.Contains(minRectInfo.hwnd));
+                                minRectInfo.rc = win.GetButtonRectFromShell();
+                                if (minRectInfo.rc.Width <= 0 && minRectInfo.rc.Height <= 0)
+                                    break;
+                                Marshal.StructureToPtr(minRectInfo, msg.LParam, false);
+                                msg.Result = (IntPtr)1;
+                                ShellLogger.Debug($"TasksService: MinRect {minRectInfo.rc.Width}x{minRectInfo.rc.Height} provided for {minRectInfo.hwnd} ({win.Title})");
+                                return; // return here so the result isnt reset to DefWindowProc
+                            }
+                            break;
                         default:
                             break;
                     }

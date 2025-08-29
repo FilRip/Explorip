@@ -368,7 +368,7 @@ public partial class NativeMethods
     public struct ShellHookInfo
     {
         public IntPtr hwnd;
-        public Rect rc;
+        public ShortRect rc;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -3133,7 +3133,19 @@ public partial class NativeMethods
         /// </summary>
         ENDTASK = 10,
         FLASH = (REDRAW | HSHELL_HIGHBIT),
-        RUDEAPPACTIVATED = (WINDOWACTIVATED | HSHELL_HIGHBIT)
+        RUDEAPPACTIVATED = (WINDOWACTIVATED | HSHELL_HIGHBIT),
+        /// <summary>
+        /// A window has moved to another monitor. Windows 8 and newer only.
+        /// </summary>
+        MONITORCHANGED = 16,
+        /// <summary>
+        /// A window has become full-screen. Windows 8 and newer only.
+        /// </summary>
+        FULLSCREENENTER = 53,
+        /// <summary>
+        /// A window has left full-screen. Windows 8 and newer only.
+        /// </summary>
+        FULLSCREENEXIT = 54
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
@@ -4269,4 +4281,14 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern IntPtr GetProp(IntPtr hWnd, string lpString);
+
+    public enum EMonitorFromWindow
+    {
+        DefaultToNull = 0x00000000,
+        DEefaultToPrimary = 0x00000001,
+        DefaultToNearest = 0x00000002,
+    }
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr MonitorFromWindow(IntPtr hWnd, EMonitorFromWindow dwFlags);
 }

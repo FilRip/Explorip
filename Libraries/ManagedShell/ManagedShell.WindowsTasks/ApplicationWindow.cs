@@ -45,6 +45,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private int _position;
     private readonly Guid _id;
 
+    public delegate void GetButtonRectEventHandler(ref NativeMethods.ShortRect rect);
+    public event GetButtonRectEventHandler GetButtonRect;
+
     public ApplicationWindow(TasksService tasksService, IntPtr handle)
     {
         _hIcon = IntPtr.Zero;
@@ -574,6 +577,20 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 _iconLoading = false;
             }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
         }
+    }
+
+    internal IntPtr GetMonitor(IntPtr? hWnd = null)
+    {
+        if (!hWnd.HasValue)
+            return NativeMethods.MonitorFromWindow(_windows[0], NativeMethods.EMonitorFromWindow.DefaultToNearest);
+        return NativeMethods.MonitorFromWindow(hWnd.Value, NativeMethods.EMonitorFromWindow.DefaultToNearest);
+    }
+
+    internal NativeMethods.ShortRect GetButtonRectFromShell()
+    {
+        NativeMethods.ShortRect rect = new();
+        GetButtonRect?.Invoke(ref rect);
+        return rect;
     }
 
     public void SetOverlayIcon(IntPtr hIcon)
