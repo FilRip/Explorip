@@ -64,6 +64,7 @@ public partial class MyTaskbarApp : Application
         ExitApp();
         if (ConfigManager.TaskbarReplaceStartMenu)
             StartMenuWindow.MyStartMenu?.Close();
+        Explorip.Helpers.HookTaskbarList.UninstallHook();
         Current?.Shutdown();
     }
 
@@ -273,6 +274,9 @@ public partial class MyTaskbarApp : Application
             _threadAutoLock = new Thread(new ThreadStart(CheckMonitorPower));
             _threadAutoLock.Start();
         }
+
+        if (ConfigManager.HookTaskbarList)
+            Explorip.Helpers.HookTaskbarList.InstallHook();
     }
 
     private static void CheckMonitorPower()

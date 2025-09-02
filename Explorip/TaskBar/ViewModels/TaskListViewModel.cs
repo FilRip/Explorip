@@ -123,7 +123,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         }
     }
 
-    private static void UncloakedUwp(IntPtr hwnd)
+    private static void UncloakedUwp(object sender, WindowEventArgs e)
     {
         RefreshAllCollectionView(ERefreshList.Refresh, EventArgs.Empty);
     }

@@ -10,7 +10,7 @@ using HookTaskbarList.TaskbarList.Interfaces;
 
 namespace HookTaskbarList;
 
-public class MainHookClass
+public class MainHookClass : IEntryPoint
 {
     private readonly TaskbarListServer? _server = null;
     private LocalHook? addButtons = null;
@@ -56,10 +56,7 @@ public class MainHookClass
                     _server.Ping();
                 }
             }
-            catch (Exception)
-            {
-                /* Ignore errors */
-            }
+            catch (Exception) { /* Ignore errors */ }
             Uninstall();
         }
     }

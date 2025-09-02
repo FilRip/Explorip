@@ -11,7 +11,6 @@ using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Common.SupportingClasses;
-using ManagedShell.Interop;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -48,19 +47,19 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         TASKBARBUTTONCREATEDMESSAGE = RegisterWindowMessage("TaskbarButtonCreated");
     }
 
-    public delegate void DelegateWindowActivated(IntPtr windowHandle);
-    public event DelegateWindowActivated WindowActivated;
-    public event DelegateWindowActivated WindowUncloaked;
-    public event EventHandler<EventArgs> DesktopActivated;
+    public event EventHandler<WindowEventArgs> WindowActivated;
+    public event EventHandler<WindowEventArgs> WindowUncloaked;
+    public event EventHandler<WindowEventArgs> DesktopActivated;
     public event EventHandler<FullScreenEventArgs> FullScreenChanged;
     public event EventHandler<WindowEventArgs> MonitorChanged;
+    public event EventHandler<WindowEventArgs> TaskbarListChanged;
+    public event EventHandler<WindowEventArgs> WindowDestroy;
+    public event EventHandler<WindowEventArgs> WindowCreate;
 
     internal void Initialize(bool initialWindows)
     {
         if (IsInitialized)
-        {
             return;
-        }
 
         try
         {
@@ -227,9 +226,9 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             bool raiseEvent = window.ShowInTaskbar;
             ShellLogger.Debug($"TasksService: Removing window {window.Title} from collection due to no response");
             Windows.Remove(window);
-            window.Dispose();
             if (raiseEvent)
-                WindowDestroy?.Invoke(this, EventArgs.Empty);
+                WindowDestroy?.Invoke(this, new WindowEventArgs() { Window = window });
+            window.Dispose();
         }
     }
 
@@ -259,19 +258,16 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             SendTaskbarButtonCreatedMessage(win.ListWindows[0]);
 
         if (win.ShowInTaskbar)
-            WindowCreate?.Invoke(this, EventArgs.Empty);
+            WindowCreate?.Invoke(this, new WindowEventArgs() { Handle = hWnd, Window = win });
 
         return win;
     }
 
-    public event EventHandler<EventArgs> WindowDestroy;
-    public event EventHandler<EventArgs> WindowCreate;
-
-    internal void RemoveWindow(ApplicationWindow window)
+    internal void RemoveWindow(ApplicationWindow window, IntPtr hwnd)
     {
         Windows.Remove(window);
         if (window.ShowInTaskbar)
-            WindowDestroy?.Invoke(this, EventArgs.Empty);
+            WindowDestroy?.Invoke(this, new WindowEventArgs() { Handle = hwnd, Window = window });
     }
 
     public void RemoveWindow(IntPtr hWnd)
@@ -307,7 +303,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 win.OnPropertyChanged(nameof(ApplicationWindow.Launched));
                 win.OnPropertyChanged(nameof(ApplicationWindow.MultipleInstanceLaunched));
             }
-            WindowDestroy?.Invoke(this, EventArgs.Empty);
+            WindowDestroy?.Invoke(this, new WindowEventArgs() { Handle = hWnd, Window = win });
         }
     }
 
@@ -386,10 +382,10 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                                     foreach (ApplicationWindow wind in Windows)
                                         if (wind.WinFileName == win.WinFileName && wind.ListWindows.Count > 0 && win.ListWindows.Count > 0 && wind.ListWindows[0] != win.ListWindows[0])
                                             wind.SetShowInTaskbar();
-                                WindowActivated?.Invoke(msg.LParam);
+                                WindowActivated?.Invoke(this, new WindowEventArgs() { Handle = msg.LParam, Window = win });
                             }
                             else
-                                DesktopActivated?.Invoke(this, new EventArgs());
+                                DesktopActivated?.Invoke(this, new WindowEventArgs() { Handle = IntPtr.Zero, Window = null });
                             break;
                         case HSHELL.FLASH:
                             ShellLogger.Debug("TasksService: Flashing window: " + msg.LParam);
@@ -495,11 +491,13 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     // ActivateTab
                     // Also sends WM_SHELLHOOK message
                     ShellLogger.Debug("TasksService: ITaskbarList: ActivateTab HWND:" + msg.LParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETMAXTEXTROWS:
                     // MarkFullscreenWindow
                     ShellLogger.Debug("TasksService: ITaskbarList: MarkFullscreenWindow HWND:" + msg.LParam + " Entering? " + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETBUTTONINFOW:
@@ -519,21 +517,25 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 case (int)WM.TB_INSERTBUTTONW:
                     // RegisterTab
                     ShellLogger.Debug("TasksService: ITaskbarList: RegisterTab MDI HWND:" + msg.LParam + " Tab HWND: " + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_ADDBUTTONSW:
                     // UnregisterTab
                     ShellLogger.Debug("TasksService: ITaskbarList: UnregisterTab Tab HWND: " + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETHOTITEM:
                     // SetTabOrder
                     ShellLogger.Debug("TasksService: ITaskbarList: SetTabOrder HWND:" + msg.WParam + " Before HWND: " + msg.LParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETHOTITEM:
                     // SetTabActive
                     ShellLogger.Debug("TasksService: ITaskbarList: SetTabActive HWND:" + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETBUTTONTEXTW:
@@ -542,34 +544,40 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SAVERESTOREW:
-                    // TODO : ThumbBarAddButtons
+                    // ThumbBarAddButtons
                     ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarAddButtons HWND:" + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_ADDSTRINGW:
-                    // TODO : ThumbBarUpdateButtons
+                    // ThumbBarUpdateButtons
                     ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarUpdateButtons HWND:" + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_MAPACCELERATORA:
-                    // TODO : ThumbBarSetImageList
+                    // ThumbBarSetImageList
                     ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarSetImageList HWND:" + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETINSERTMARK:
                     // SetOverlayIcon - Icon
                     ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     win?.SetOverlayIcon(msg.LParam);
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETINSERTMARK:
                     // SetThumbnailTooltip
                     ShellLogger.Debug("TasksService: ITaskbarList: SetThumbnailTooltip HWND:" + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_INSERTMARKHITTEST:
                     // SetThumbnailClip
                     ShellLogger.Debug("TasksService: ITaskbarList: SetThumbnailClip HWND:" + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETEXTENDEDSTYLE:
@@ -579,24 +587,9 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETPADDING:
-                    // TODO : SetTabProperties
+                    // SetTabProperties
                     ShellLogger.Debug("TasksService: ITaskbarList: SetTabProperties HWND:" + msg.WParam);
-                    msg.Result = IntPtr.Zero;
-                    return;
-            }
-            uint msgUint = unchecked((uint)msg.Msg);
-            switch (msgUint)
-            {
-                case (uint)WMuint.TBN_SAVE:
-                    ShellLogger.Debug("TasksService: ITaskbarList: TBN_SAVE HWND:" + msg.WParam);
-                    msg.Result = IntPtr.Zero;
-                    return;
-                case (uint)WMuint.TBN_RESTORE:
-                    ShellLogger.Debug("TasksService: ITaskbarList: TBN_RESTORE HWND:" + msg.WParam);
-                    msg.Result = IntPtr.Zero;
-                    return;
-                case (uint)WMuint.TBN_GETBUTTONINFOW:
-                    ShellLogger.Debug("TasksService: ITaskbarList: TBN_GETBUTTONINFO HWND:" + msg.WParam);
+                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
             }
@@ -635,7 +628,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
         if (hWnd != IntPtr.Zero && idObject == 0 && idChild == 0 && win != null)
         {
             win.Uncloak();
-            WindowUncloaked?.Invoke(hWnd);
+            WindowUncloaked?.Invoke(this, new WindowEventArgs() { Handle = hWnd, Window = win });
         }
     }
 

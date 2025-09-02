@@ -9,6 +9,7 @@ using Explorip.TaskBar;
 using ExploripConfig.Configuration;
 
 using ManagedShell.Interop;
+using ManagedShell.WindowsTasks;
 
 using WpfScreenHelper;
 
@@ -69,13 +70,13 @@ namespace Explorip.StartMenu.Window
 
         #region Hook Win key press
 
-        private void TasksService_WindowActivated(IntPtr windowHandle)
+        private void TasksService_WindowActivated(object sender, WindowEventArgs e)
         {
-            if (IsVisible && windowHandle != IntPtr.Zero)
+            if (IsVisible && e.Handle != IntPtr.Zero)
             {
                 if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
                     return;
-                NativeMethods.GetWindowThreadProcessId(windowHandle, out uint pid);
+                NativeMethods.GetWindowThreadProcessId(e.Handle, out uint pid);
                 if (pid != Process.GetCurrentProcess().Id)
                     Hide();
             }

@@ -47,7 +47,7 @@ public class ShellManager : IDisposable
             Tasks = new Tasks(TasksService);
         }
 
-        FullScreenHelper = new FullScreenHelper();
+        FullScreenHelper = new FullScreenHelper(TasksService);
         ExplorerHelper = new ExplorerHelper(NotificationArea);
         AppBarManager = new AppBarManager(ExplorerHelper);
 

@@ -4,9 +4,6 @@
     <TargetFramework>net481</TargetFramework>
     <UseWPF>true</UseWPF>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <Description>A library for creating Windows shell replacements using .NET.</Description>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>

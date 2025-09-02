@@ -30,24 +30,16 @@ public partial class NativeMethods
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct ShortRect
+    public struct ShortRect(short left, short top, short right, short bottom)
     {
-        public ShortRect(short left, short top, short right, short bottom)
-        {
-            Left = left;
-            Top = top;
-            Right = right;
-            Bottom = bottom;
-        }
+        public short Left = left;
+        public short Top = top;
+        public short Right = right;
+        public short Bottom = bottom;
 
-        public short Left;
-        public short Top;
-        public short Right;
-        public short Bottom;
+        public readonly int Width => Right - Left;
 
-        public int Width => Right - Left;
-
-        public int Height => Bottom - Top;
+        public readonly int Height => Bottom - Top;
     }
 
     [StructLayout(LayoutKind.Sequential)]

@@ -20,6 +20,7 @@ using ExploripPlugins;
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
+using ManagedShell.WindowsTasks;
 using ManagedShell.WindowsTray;
 
 using Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
@@ -92,7 +93,7 @@ public partial class Taskbar : AppBarWindow
         TimeBeforeAutoCloseThumb = ConfigManager.TaskbarDelayBeforeCloseThumbnail;
     }
 
-    private void ClosePopup(IntPtr activatedWindow)
+    private void ClosePopup(object sender, WindowEventArgs e)
     {
         MyPopup.IsOpen = false;
     }

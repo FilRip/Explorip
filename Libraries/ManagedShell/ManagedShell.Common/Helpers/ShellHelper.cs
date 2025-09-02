@@ -6,7 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 using ManagedShell.Common.Logging;
-using ManagedShell.Interop;
 
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;

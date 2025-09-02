@@ -10,6 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
+using HookTaskbarList.TaskbarList.Interfaces;
+
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -44,6 +46,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private readonly object _lockUpdate;
     private int _position;
     private readonly Guid _id;
+    private ThumbButton[] _thumbButtons;
 
     public delegate void GetButtonRectEventHandler(ref NativeMethods.ShortRect rect);
     public event GetButtonRectEventHandler GetButtonRect;
@@ -83,7 +86,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             if (disposing)
             {
-                _tasksService.RemoveWindow(this);
+                _tasksService.RemoveWindow(this, IntPtr.Zero);
                 _windows.Clear();
                 _icon = null;
                 if (_hIcon != IntPtr.Zero)
@@ -452,17 +455,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             StringBuilder cName = new(256);
             NativeMethods.GetClassName(_windows[0], cName, cName.Capacity);
             string className = cName.ToString();
-            if (className == "ApplicationFrameWindow" || className == "Windows.UI.Core.CoreWindow")
+            if ((className == "ApplicationFrameWindow" || className == "Windows.UI.Core.CoreWindow") && (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) == 0)
             {
-                if ((ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) == 0)
-                {
-                    ShellLogger.Debug($"ApplicationWindow: Hiding UWP non-window {Title}");
-                    return false;
-                }
-            }
-            else if (!EnvironmentHelper.IsWindows10OrBetter && (className == "ImmersiveBackgroundWindow" || className == "SearchPane" || className == "NativeHWNDHost" || className == "Shell_CharmWindow" || className == "ImmersiveLauncher") && string.Compare(System.IO.Path.GetFileName(WinFileName), "explorer.exe", StringComparison.OrdinalIgnoreCase) == 0)
-            {
-                ShellLogger.Debug($"ApplicationWindow: Hiding immersive shell window {Title}");
+                ShellLogger.Debug($"ApplicationWindow: Hiding UWP non-window {Title}");
                 return false;
             }
         }
@@ -862,5 +857,16 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 return (int)pe32.th32ParentProcessID;
         } while (NativeMethods.Process32Next(hSnapshot, ref pe32));
         return -1;
+    }
+
+    public void SetThumbButtons(ThumbButton[] buttons)
+    {
+        _thumbButtons = buttons;
+        OnPropertyChanged(nameof(ThumbButtons));
+    }
+
+    public ThumbButton[] ThumbButtons
+    {
+        get { return _thumbButtons; }
     }
 }

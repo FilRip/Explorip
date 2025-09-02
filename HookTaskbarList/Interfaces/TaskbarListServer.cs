@@ -6,6 +6,8 @@ namespace HookTaskbarList.Interfaces;
 
 public class TaskbarListServer : MarshalByRefObject
 {
+    public event EventHandler<AddButtonsEventArgs>? AddButtonsEvent;
+
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public void IsInstalled(int clientPID)
     {
@@ -30,6 +32,12 @@ public class TaskbarListServer : MarshalByRefObject
     /// <param name="pButtons">Array of details for each button</param>
     public void AddButtons(int processId, IntPtr hWndWindow, uint cButtons, ThumbButton[] pButtons)
     {
-
+        AddButtonsEvent?.Invoke(this, new AddButtonsEventArgs()
+        {
+            ProcessId = processId,
+            Handle = hWndWindow,
+            NbButtons = cButtons,
+            Buttons = pButtons
+        });
     }
 }

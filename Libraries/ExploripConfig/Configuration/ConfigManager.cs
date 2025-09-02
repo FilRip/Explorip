@@ -117,6 +117,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("LockOnMonitorPowerOff", "False");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeCloseThumbnail", "").ToString()))
                 _registryRootTaskbar.SetValue("DelayBeforeCloseThumbnail", "1000");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("HookTaskbarList", "").ToString()))
+                _registryRootTaskbar.SetValue("HookTaskbarList", "True");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
@@ -610,6 +612,16 @@ public static class ConfigManager
         {
             if (SpaceBetweenThumbnail != value && AllowWrite)
                 _registryRootTaskbar.SetValue("SpaceBetweenThumbnail", value.ToString());
+        }
+    }
+
+    public static bool HookTaskbarList
+    {
+        get { return _registryRootTaskbar.ReadBoolean("HookTaskbarList"); }
+        set
+        {
+            if (HookTaskbarList != value && AllowWrite)
+                _registryRootTaskbar.SetValue("HookTaskbarList", value.ToString());
         }
     }
 

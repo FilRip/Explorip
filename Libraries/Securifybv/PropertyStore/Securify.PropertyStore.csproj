@@ -8,12 +8,6 @@
     <Description>.NET Class Library for processing Serialized Property Stores</Description>
     <Copyright>Copyright © 2017 Securify B.V.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageProjectUrl>https://github.com/securifybv/PropertyStore</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/securifybv/PropertyStore.git</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-    <PackageId>Securify.PropertyStore</PackageId>
     <RootNamespace>Securify.PropertyStore</RootNamespace>
     <AssemblyName>Securify.PropertyStore</AssemblyName>
     <Version>1.1.0</Version>

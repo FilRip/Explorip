@@ -271,7 +271,7 @@ public partial class TaskButton : UserControl
 
         Task.Run(() =>
         {
-            Application.Current.Dispatcher.Invoke(async() =>
+            Application.Current.Dispatcher.Invoke(async () =>
             {
                 await Task.Delay(TaskbarParent.TimeBeforeAutoCloseThumb);
                 Application.Current.Dispatcher.Invoke(() =>

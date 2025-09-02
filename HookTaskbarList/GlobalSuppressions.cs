@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"")]
+[assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags")]
