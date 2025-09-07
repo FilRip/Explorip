@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
 
 using EasyHook;
 
@@ -16,20 +19,22 @@ using ManagedShell.WindowsTasks;
 
 namespace Explorip.Helpers;
 
-internal class HookTaskbarList : IDisposable
+internal class HookTaskbarListHelper : IDisposable
 {
-    private string _channelName;
-    private TaskbarListServer _server;
     private static readonly object _lockThreadSafe = new();
-    private List<uint> _alreadyInjectedProcess;
+    private readonly List<uint> _listProcessInjected = [];
+
+    private TaskbarListServer _server;
+    private string _channelName;
     private bool disposedValue;
-    private static HookTaskbarList _instance;
+    private static HookTaskbarListHelper _instance;
+    private int _numProcessManaged;
 
     public static void InstallHook()
     {
         if (_instance == null)
         {
-            _instance ??= new HookTaskbarList();
+            _instance ??= new HookTaskbarListHelper();
             _instance.Init();
         }
     }
@@ -45,12 +50,22 @@ internal class HookTaskbarList : IDisposable
 
     internal void Init()
     {
-        _alreadyInjectedProcess = [];
-        _server = new TaskbarListServer();
-        _channelName = null;
-        RemoteHooking.IpcCreateServer<TaskbarListServer>(ref _channelName, WellKnownObjectMode.Singleton);
-        _server.AddButtonsEvent += Server_AddButtonsEvent;
-        MyTaskbarApp.MyShellManager.TasksService.TaskbarListChanged += TasksService_TaskbarListChanged;
+        try
+        {
+            _server = new TaskbarListServer();
+            _channelName = null;
+            RemoteHooking.IpcCreateServer<TaskbarListServer>(ref _channelName, WellKnownObjectMode.Singleton);
+
+            _server.AddButtonsEvent += Server_AddButtonsEvent;
+            MyTaskbarApp.MyShellManager.TasksService.TaskbarListChanged += TasksService_TaskbarListChanged;
+
+            StartManagerProcess();
+            // TODO : Inject in ICustomDestinationList too, later
+        }
+        catch (Exception ex)
+        {
+            ShellLogger.Error("Unable to initialize HookTaskbarListHelper: " + ex.ToString());
+        }
     }
 
     private void TasksService_TaskbarListChanged(object sender, WindowEventArgs e)
@@ -61,11 +76,23 @@ internal class HookTaskbarList : IDisposable
             if (processId == 0)
                 ShellLogger.Debug("WindowEventArgs.ProcessId is 0");
             else
+            {
+                StartManagerProcess();
                 InjectToProcess(processId);
+            }
         }
         else
         {
             ShellLogger.Debug("WindowEventArgs.Hndle is null");
+        }
+    }
+
+    private void StartManagerProcess()
+    {
+        if (_numProcessManaged == 0 || Process.GetProcessById(_numProcessManaged) == null)
+        {
+            string path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+            _numProcessManaged = Process.Start(Path.Combine(path, "HookTaskbarListManager.exe"), Process.GetCurrentProcess().Id.ToString() + " " + _channelName).Id;
         }
     }
 
@@ -82,26 +109,14 @@ internal class HookTaskbarList : IDisposable
     {
         lock (_lockThreadSafe)
         {
-            if (_alreadyInjectedProcess.Contains(processId))
+            if (_listProcessInjected.Contains(processId))
                 return;
-
-            ShellLogger.Debug($"Injecting HookTaskbarList into process {processId}");
-            try
-            {
-                RemoteHooking.Inject((int)processId,
-                    InjectionOptions.Default,
-                    typeof(TaskbarListServer).Assembly.Location,
-                    typeof(TaskbarListServer).Assembly.Location,
-                    _channelName);
-
-                _alreadyInjectedProcess.Add(processId);
-            }
-            catch (Exception ex)
-            {
-                ShellLogger.Error($"Failed to inject HookTaskbarList into process {processId}: {ex.Message}");
-            }
+            _listProcessInjected.Add(processId);
+            _server.InjectInProcess(processId);
         }
     }
+
+    #region IDisposable Support
 
     public bool IsDisposed
     {
@@ -115,15 +130,31 @@ internal class HookTaskbarList : IDisposable
             if (disposing)
             {
                 _server.AddButtonsEvent -= Server_AddButtonsEvent;
+                MyTaskbarApp.MyShellManager.TasksService.TaskbarListChanged -= TasksService_TaskbarListChanged;
+                _listProcessInjected.Clear();
+                try
+                {
+                    if (_numProcessManaged != 0 && Process.GetProcessById(_numProcessManaged) != null)
+                    {
+                        Process.GetProcessById(_numProcessManaged).Kill();
+                    }
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine("Unable to kill HookTaskbarListManager process");
+                }
             }
 
             disposedValue = true;
         }
     }
 
+    /// <inheritdoc/>/>
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
     }
+
+    #endregion
 }

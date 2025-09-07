@@ -33,7 +33,6 @@ public class MainHookClass : IEntryPoint
         try
         {
             _currentProcessId = RemoteHooking.GetCurrentProcessId();
-            _server?.IsInstalled(_currentProcessId);
 
             COMClassInfo tblCom = new(typeof(TaskbarList.ClSidITaskbarList), typeof(ITaskbarList), nameof(ITaskbarList.ThumbBarAddButtons));
             tblCom.Query();

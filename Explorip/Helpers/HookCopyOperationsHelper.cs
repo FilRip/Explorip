@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Explorip.Helpers;
 
-internal static class HookCopyOperations
+internal static class HookCopyOperationsHelper
 {
     internal static void InstallHook()
     {

@@ -18,39 +18,40 @@ public static class Program
     {
         string channelName = null;
 
-        if (Environment.GetCommandLineArgs()[1] == "NI")
+        if (Environment.GetCommandLineArgs().Length > 1)
         {
-            IpcChannel canal = new("HookFileOperation_" + Process.GetCurrentProcess().Id.ToString());
-            ChannelServices.RegisterChannel(canal, false);
-            RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
-            while (true)
+            if (Environment.GetCommandLineArgs()[1] == "NI")
             {
-                Thread.Sleep(100);
-            }
-        }
-        else
-        {
-            int processId = int.Parse(Environment.GetCommandLineArgs()[1]);
-
-            RemoteHooking.IpcCreateServer<ServerInterface>(ref channelName, WellKnownObjectMode.Singleton);
-            RemoteHooking.Inject(processId,
-                InjectionOptions.Default,
-                typeof(MainHookClass).Assembly.Location,
-                typeof(MainHookClass).Assembly.Location,
-                channelName);
-
-            try
-            {
+                IpcChannel canal = new("HookFileOperation_" + Process.GetCurrentProcess().Id.ToString());
+                ChannelServices.RegisterChannel(canal, false);
+                RemotingConfiguration.RegisterWellKnownServiceType(typeof(IpcNewInstance), "HookManagerRemoteServer", WellKnownObjectMode.Singleton);
                 while (true)
                 {
-                    if (Process.GetProcessById(processId) == null)
-                        break;
                     Thread.Sleep(100);
                 }
             }
-            catch (Exception ex)
+            else if (int.TryParse(Environment.GetCommandLineArgs()[1], out int processId))
             {
-                Debug.WriteLine(ex.ToString());
+                RemoteHooking.IpcCreateServer<ServerInterface>(ref channelName, WellKnownObjectMode.Singleton);
+                RemoteHooking.Inject(processId,
+                    InjectionOptions.Default,
+                    typeof(MainHookClass).Assembly.Location,
+                    typeof(MainHookClass).Assembly.Location,
+                    channelName);
+
+                try
+                {
+                    while (true)
+                    {
+                        if (Process.GetProcessById(processId) == null)
+                            break;
+                        Thread.Sleep(100);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                }
             }
         }
     }

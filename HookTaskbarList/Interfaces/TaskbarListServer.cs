@@ -7,13 +7,7 @@ namespace HookTaskbarList.Interfaces;
 public class TaskbarListServer : MarshalByRefObject
 {
     public event EventHandler<AddButtonsEventArgs>? AddButtonsEvent;
-
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
-    public void IsInstalled(int clientPID)
-    {
-        Console.WriteLine("Explorip has injected HookFileOperations into process {0}.", clientPID);
-    }
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+    public event EventHandler<ProcessToInjectEventArgs>? ProcessToInjectEvent;
 
     /// <summary>
     /// Called to confirm that the IPC channel is still open / host application has not closed
@@ -38,6 +32,14 @@ public class TaskbarListServer : MarshalByRefObject
             Handle = hWndWindow,
             NbButtons = cButtons,
             Buttons = pButtons
+        });
+    }
+
+    public void InjectInProcess(uint processId)
+    {
+        ProcessToInjectEvent?.Invoke(this, new ProcessToInjectEventArgs()
+        {
+            NumProcess = processId,
         });
     }
 }

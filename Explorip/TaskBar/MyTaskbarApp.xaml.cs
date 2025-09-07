@@ -64,7 +64,7 @@ public partial class MyTaskbarApp : Application
         ExitApp();
         if (ConfigManager.TaskbarReplaceStartMenu)
             StartMenuWindow.MyStartMenu?.Close();
-        Explorip.Helpers.HookTaskbarList.UninstallHook();
+        Explorip.Helpers.HookTaskbarListHelper.UninstallHook();
         Current?.Shutdown();
     }
 
@@ -276,7 +276,7 @@ public partial class MyTaskbarApp : Application
         }
 
         if (ConfigManager.HookTaskbarList)
-            Explorip.Helpers.HookTaskbarList.InstallHook();
+            Explorip.Helpers.HookTaskbarListHelper.InstallHook();
     }
 
     private static void CheckMonitorPower()

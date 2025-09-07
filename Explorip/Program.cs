@@ -102,16 +102,7 @@ public static class Program
             {
                 RegisterSystemEvents();
                 _WpfHost = new TaskBar.MyTaskbarApp();
-                try
-                {
-                    _WpfHost.Run();
-                }
-                catch (Exception) { /* Ignore errors (already catched by event AppDomain.UnhandledException) */ }
-                try
-                {
-                    (_WpfHost as TaskBar.MyTaskbarApp)?.ExitGracefully();
-                }
-                catch (Exception) { /* Ignore errors when trying to gracefully closed taskbar */ }
+                _WpfHost.Run();
             }
         }
         else
@@ -126,7 +117,7 @@ public static class Program
                     AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                 }
                 if (ConfigManager.HookCopy)
-                    HookCopyOperations.InstallHook();
+                    HookCopyOperationsHelper.InstallHook();
                 _WpfHost = new Explorer.MyExplorerApp();
                 _WpfHost.Run();
             }
@@ -145,7 +136,17 @@ public static class Program
     {
         Exception ex = (Exception)e.ExceptionObject;
         if (MessageBox.Show($"Unhandled error happends : {Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}At : {ex.StackTrace}{Environment.NewLine}{Environment.NewLine}Please report it at filrip@gmail.com or in 'issue' on official website. Thank you.{Environment.NewLine}{Environment.NewLine}The application can be unstable. Do you want to continue ?", "Error", MessageBoxButton.YesNo) == MessageBoxResult.No)
+        {
+            if (_WpfHost is TaskBar.MyTaskbarApp app)
+            {
+                try
+                {
+                    app.ExitGracefully();
+                }
+                catch (Exception) { /* Ignore errors when trying to gracefully closed taskbar */ }
+            }
             Environment.Exit(1);
+        }
     }
 
     private static void CurrentDomain_ProcessExit(object sender, EventArgs e)

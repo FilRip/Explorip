@@ -105,7 +105,7 @@ namespace Explorip.StartMenu.Window
                 _lastPressedKey = lParam.vkCode;
             }
             else if (code >= 0 && wParam == (int)NativeMethods.WM.KEYUP &&
-                _lastPressedKey == lParam.vkCode && (lParam.vkCode == (int)NativeMethods.VK.LWIN || lParam.vkCode == (int)NativeMethods.VK.RWIN))
+                     _lastPressedKey == lParam.vkCode && (lParam.vkCode == (int)NativeMethods.VK.LWIN || lParam.vkCode == (int)NativeMethods.VK.RWIN))
             {
                 if (MyStartMenu.IsVisible)
                     MyStartMenu.Hide();
@@ -147,6 +147,10 @@ namespace Explorip.StartMenu.Window
             if (_windowsStartMenu != IntPtr.Zero)
                 NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.ShowNormal);
             Application.Current.Deactivated -= Current_Deactivated;
+            if (MyStartMenuApp.MyShellManager == null)
+                MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
+            else
+                MyStartMenuApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
         }
     }
 }

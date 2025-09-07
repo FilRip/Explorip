@@ -254,7 +254,7 @@ public sealed class FullScreenHelper : IDisposable
             }
         }
 
-        ApplicationWindow win = new(null, hWnd);
+        ApplicationWindow win = new(_tasksService, hWnd);
         if (!CanFullScreen(win))
             return null;
 
