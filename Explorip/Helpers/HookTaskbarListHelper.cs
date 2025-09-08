@@ -52,10 +52,9 @@ internal class HookTaskbarListHelper : IDisposable
     {
         try
         {
-            _server = new TaskbarListServer();
             _channelName = null;
             RemoteHooking.IpcCreateServer<TaskbarListServer>(ref _channelName, WellKnownObjectMode.Singleton);
-
+            _server = RemoteHooking.IpcConnectClient<TaskbarListServer>(_channelName);
             _server.AddButtonsEvent += Server_AddButtonsEvent;
             MyTaskbarApp.MyShellManager.TasksService.TaskbarListChanged += TasksService_TaskbarListChanged;
 

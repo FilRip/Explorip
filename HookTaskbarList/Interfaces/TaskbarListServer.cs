@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using HookTaskbarList.TaskbarList.Interfaces;
 
@@ -8,6 +9,7 @@ public class TaskbarListServer : MarshalByRefObject
 {
     public event EventHandler<AddButtonsEventArgs>? AddButtonsEvent;
     public event EventHandler<ProcessToInjectEventArgs>? ProcessToInjectEvent;
+    public List<uint> ProcessesInjected { get; set; } = [];
 
     /// <summary>
     /// Called to confirm that the IPC channel is still open / host application has not closed
@@ -37,6 +39,7 @@ public class TaskbarListServer : MarshalByRefObject
 
     public void InjectInProcess(uint processId)
     {
+        ProcessesInjected.Add(processId);
         ProcessToInjectEvent?.Invoke(this, new ProcessToInjectEventArgs()
         {
             NumProcess = processId,

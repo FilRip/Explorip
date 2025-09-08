@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
@@ -27,6 +28,7 @@ internal static class Program
                     if (Process.GetProcessById(processId) == null)
                         break;
                     comm.Ping();
+                    List<uint> test = comm.ProcessesInjected;
                     Thread.Sleep(100);
                 }
             }
