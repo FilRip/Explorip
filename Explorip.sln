@@ -69,11 +69,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploripPlugins", "Plugins\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp3Player", "Plugins\Mp3Player\Mp3Player.csproj", "{55FDAC13-2AB1-42C8-85BD-4A068F4107A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookTaskbarList", "HookTaskbarList\HookTaskbarList.csproj", "{8AB38089-86B4-4585-BFBF-194CA81A600A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookTaskbarList", "HookTaskbarList\HookTaskbarList\HookTaskbarList.csproj", "{8AB38089-86B4-4585-BFBF-194CA81A600A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HookTaskbarList", "HookTaskbarList", "{CB768FB5-D618-426B-8656-85D37E320C44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookTaskbarListManager", "HookTaskbarListManager\HookTaskbarListManager.csproj", "{ED818F3A-31B4-401D-B050-827E645D39FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookTaskbarListManager", "HookTaskbarList\HookTaskbarListManager\HookTaskbarListManager.csproj", "{ED818F3A-31B4-401D-B050-827E645D39FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
