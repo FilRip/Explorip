@@ -118,7 +118,7 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DelayBeforeCloseThumbnail", "").ToString()))
                 _registryRootTaskbar.SetValue("DelayBeforeCloseThumbnail", "1000");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("HookTaskbarList", "").ToString()))
-                _registryRootTaskbar.SetValue("HookTaskbarList", "True");
+                _registryRootTaskbar.SetValue("HookTaskbarList", "False");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
