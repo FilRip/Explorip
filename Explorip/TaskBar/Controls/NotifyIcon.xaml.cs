@@ -131,8 +131,7 @@ public partial class NotifyIcon : UserControl
         {
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
-                    tb.MySystray.ChangePinItem(TrayIcon);
+                ViewModels.NotifyIconListViewModel.ChangePinItem(TrayIcon);
             });
             e.Handled = true;
         }

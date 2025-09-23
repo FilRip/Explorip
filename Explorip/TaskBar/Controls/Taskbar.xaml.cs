@@ -251,7 +251,10 @@ public partial class Taskbar : AppBarWindow
         {
             MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= ClosePopup;
             if (_mainScreen)
+            {
                 _explorerHelper.HideExplorerTaskbar = false;
+                MySystray.MyDataContext.Unload();
+            }
         }
     }
 

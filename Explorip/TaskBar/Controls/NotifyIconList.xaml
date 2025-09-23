@@ -4,8 +4,7 @@
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
-             Loaded="NotifyIconList_OnLoaded"
-             Unloaded="NotifyIconList_OnUnloaded">
+             Loaded="NotifyIconList_OnLoaded">
     <UserControl.DataContext>
         <viewmodels:NotifyIconListViewModel/>
     </UserControl.DataContext>
