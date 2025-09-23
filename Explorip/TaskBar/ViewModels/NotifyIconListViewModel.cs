@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Explorip.TaskBar.Helpers;
 
 using ManagedShell.AppBar;
+using ManagedShell.Common.Logging;
 using ManagedShell.WindowsTray;
 
 namespace Explorip.TaskBar.ViewModels;
@@ -38,7 +39,7 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     public void RebuildCollectionView()
     {
-        ListSystrayIcons = CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons);
+        ListSystrayIcons = new ListCollectionView(MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons);
         ListSystrayIcons.SortDescriptions.Add(new SortDescription(nameof(NotifyIcon.PinOrder), ListSortDirection.Ascending));
         ListSystrayIcons.Filter = FilterSystrayIcon;
     }
@@ -50,6 +51,7 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     partial void OnShowAllIconsChanged(bool value)
     {
+        ShellLogger.Debug("Change show/hide unpinned icon in systray");
         RefreshCollectionView();
     }
 }
