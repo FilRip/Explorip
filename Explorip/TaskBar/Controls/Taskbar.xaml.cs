@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using Explorip.Helpers;
@@ -91,6 +92,28 @@ public partial class Taskbar : AppBarWindow
         };
         MyTaskbarApp.MyShellManager.TasksService.WindowActivated += ClosePopup;
         TimeBeforeAutoCloseThumb = ConfigManager.TaskbarDelayBeforeCloseThumbnail;
+
+        PreviewKeyUp += Taskbar_PreviewKeyUp;
+    }
+
+    private void Taskbar_PreviewKeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape && MyPopup.IsOpen)
+        {
+            try
+            {
+                ((ItemsControl)((Border)MyPopup.Child).Child).Items.Clear();
+            }
+            catch (Exception) { /* Ignore errors */ }
+            MyPopup.IsOpen = false;
+        }
+#if DEBUG
+        else if (e.Key == Key.F12)
+        {
+            CoolBytes.ScriptInterpreter.WPF.ExecuteScriptWindow executeScriptWindow = new();
+            executeScriptWindow.Show();
+        }
+#endif
     }
 
     private void ClosePopup(object sender, WindowEventArgs e)

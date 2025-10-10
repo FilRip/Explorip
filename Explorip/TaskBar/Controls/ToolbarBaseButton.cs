@@ -57,7 +57,7 @@ public class ToolbarBaseButton : UserControl
     {
         if (DisableFolderPreview)
             return;
-        Application.Current.Dispatcher.Invoke(() =>
+        Application.Current.Dispatcher.BeginInvoke(() =>
         {
             if (!_isFolder.HasValue && DataContext is ShellFile sf)
             {

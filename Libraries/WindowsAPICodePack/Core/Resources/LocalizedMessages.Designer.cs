@@ -259,7 +259,7 @@ namespace Microsoft.WindowsAPICodePack.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à .
+        ///   Recherche une chaîne localisée semblable à Content.
         /// </summary>
         internal static string DialogDefaultContent {
             get {
@@ -268,7 +268,7 @@ namespace Microsoft.WindowsAPICodePack.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à .
+        ///   Recherche une chaîne localisée semblable à Instructions.
         /// </summary>
         internal static string DialogDefaultMainInstruction {
             get {
@@ -583,7 +583,7 @@ namespace Microsoft.WindowsAPICodePack.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à .
+        ///   Recherche une chaîne localisée semblable à Content.
         /// </summary>
         internal static string TaskDialogDefaultContent {
             get {
@@ -592,7 +592,7 @@ namespace Microsoft.WindowsAPICodePack.Resources {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à .
+        ///   Recherche une chaîne localisée semblable à Instructions.
         /// </summary>
         internal static string TaskDialogDefaultMainInstruction {
             get {

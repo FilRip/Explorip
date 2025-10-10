@@ -1,0 +1,32 @@
+﻿<Window x:Class="CoolBytes.ScriptInterpreter.WPF.WpfObject"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:viewmodels="clr-namespace:CoolBytes.ScriptInterpreter.WPF.ViewModels"
+        xmlns:lex="http://wpflocalizeextension.codeplex.com"
+        mc:Ignorable="d" 
+        d:DesignHeight="150" d:DesignWidth="150">
+    <Window.DataContext>
+        <viewmodels:WpfObjectViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <TreeView Name="tvObjet" ItemsSource="{Binding TreeContent}" SelectedItemChanged="TvObjet_SelectedItemChanged">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding ExpandAll, Mode=TwoWay}"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="{lex:Loc MENUITEM_COPY_VALUE}" Command="{Binding MenuCopyValueClick}"/>
+                    <Separator/>
+                    <MenuItem Header="{lex:Loc MENUITEM_EXPAND_ALL}" Command="{Binding MenuOpenAllClick}"/>
+                    <MenuItem Header="{lex:Loc MENUITEM_COLLAPSE_ALL}" Command="{Binding MenuCloseAllClick}"/>
+                    <Separator/>
+                    <MenuItem Header="{lex:Loc MENUITEM_SAVE_STATE}" Command="{Binding MenuSaveStateClick}"/>
+                </ContextMenu>
+            </TreeView.ContextMenu>
+        </TreeView>
+    </Grid>
+</Window>

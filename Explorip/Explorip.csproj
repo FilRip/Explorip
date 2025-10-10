@@ -62,6 +62,7 @@
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.WindowsTasks\ManagedShell.WindowsTasks.csproj" />
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.WindowsTray\ManagedShell.WindowsTray.csproj" />
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell\ManagedShell.csproj" />
+    <ProjectReference Include="..\Libraries\Scripting\Coolbytes.ScriptInterpreter\CoolBytes.ScriptInterpreter.csproj" />
     <ProjectReference Include="..\Libraries\Securifybv\ShellLink\Securify.ShellLink.csproj" />
     <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop.WPF\VirtualDesktop.WPF.csproj" />
     <ProjectReference Include="..\Libraries\VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj" />

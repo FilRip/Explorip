@@ -184,10 +184,10 @@
     <value>Application</value>
   </data>
   <data name="DialogDefaultContent" xml:space="preserve">
-    <value />
+    <value>Content</value>
   </data>
   <data name="DialogDefaultMainInstruction" xml:space="preserve">
-    <value />
+    <value>Instructions</value>
   </data>
   <data name="ExpandedDetailsCannotBeChanged" xml:space="preserve">
     <value>Expanded information mode cannot be changed while dialog is showing.</value>
@@ -283,10 +283,10 @@
     <value>Application</value>
   </data>
   <data name="TaskDialogDefaultContent" xml:space="preserve">
-    <value />
+    <value>Content</value>
   </data>
   <data name="TaskDialogDefaultMainInstruction" xml:space="preserve">
-    <value />
+    <value>Instructions</value>
   </data>
   <data name="TaskDialogOnlyOneDefaultControl" xml:space="preserve">
     <value>Cannot have more than one default button of a given type.</value>
