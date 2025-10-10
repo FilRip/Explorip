@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 
 using Explorip.StartMenu.ViewModels;
 using Explorip.TaskBar;
@@ -40,6 +41,9 @@ namespace Explorip.StartMenu.Window
                 MyTaskbarApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
             else
                 MyStartMenuApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
+
+            // Cancel System menu
+            HwndSource.FromHwnd(new WindowInteropHelper(this).EnsureHandle()).AddHook(WndProc);
         }
 
         public static StartMenuWindow MyStartMenu { get; private set; }
@@ -151,6 +155,13 @@ namespace Explorip.StartMenu.Window
                 MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
             else
                 MyStartMenuApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
+        }
+
+        private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == (int)NativeMethods.WM.SYSCOMMAND)
+                handled = true;
+            return IntPtr.Zero;
         }
     }
 }
