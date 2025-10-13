@@ -29,7 +29,7 @@ public static class ExtensionsEnum
     public static T GetValueFromDescription<T>(string description) where T : Enum
     {
         foreach (var value in typeof(T).GetEnumValues())
-            if (GetEnumDescription(typeof(T), value.ToString()) == description)
+            if (GetEnumDescription(value, value.ToString()) == description)
                 return (T)value;
         return default;
     }

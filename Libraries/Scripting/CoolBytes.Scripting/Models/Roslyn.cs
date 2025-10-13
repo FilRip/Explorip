@@ -62,10 +62,10 @@ public abstract class Roslyn<TLanguage, TCompiler, TInterpreter> where TLanguage
         {
             compiler = new();
 
-            ParseOptions optionsParser = compiler.ReturnParserOptions();
+            ParseOptions parserOptions = compiler.ReturnParserOptions();
             SyntaxTree[] syntaxTrees = [];
-            foreach (string nomFichier in filenames)
-                syntaxTrees = syntaxTrees.Add((SyntaxTree)ReturnParserMethod(optionsParser.GetType()).Invoke(null, [File.ReadAllText(nomFichier), optionsParser, Type.Missing, Type.Missing, Type.Missing]));
+            foreach (string file in filenames)
+                syntaxTrees = syntaxTrees.Add(compiler.ReturnPrecompiledCode(File.ReadAllText(file), parserOptions));
 
             ret = CompileAssembly(string.IsNullOrWhiteSpace(compiledAssemblyName) ? ExtensionsString.RandomString() : compiledAssemblyName, syntaxTrees, assembliesFiles, assemblies, compiler);
         }
@@ -149,11 +149,11 @@ public abstract class Roslyn<TLanguage, TCompiler, TInterpreter> where TLanguage
         {
             compiler = new();
 
-            ParseOptions optionsParser = compiler.ReturnParserOptions();
+            ParseOptions parserOptions = compiler.ReturnParserOptions();
 
             SyntaxTree[] syntaxTrees = [];
-            foreach (string nomFichier in filenames)
-                syntaxTrees = syntaxTrees.Add((SyntaxTree)ReturnParserMethod(optionsParser.GetType()).Invoke(null, [File.ReadAllText(nomFichier), optionsParser, Type.Missing, Type.Missing, Type.Missing]));
+            foreach (string file in filenames)
+                syntaxTrees = syntaxTrees.Add(compiler.ReturnPrecompiledCode(File.ReadAllText(file), parserOptions));
 
             ret = CompileAssembly(string.IsNullOrWhiteSpace(nomAssemblyCompilee) ? ExtensionsString.RandomString() : nomAssemblyCompilee, syntaxTrees, assembliesFiles, assemblies, compiler);
 
@@ -268,8 +268,8 @@ public abstract class Roslyn<TLanguage, TCompiler, TInterpreter> where TLanguage
             myClass.AppendLine(script);
             myClass.Append(compiler.Footer);
 
-            ParseOptions parseOptions = compiler.ReturnParserOptions();
-            ret = CompileAssembly(string.IsNullOrWhiteSpace(compiledAssemblyName) ? ExtensionsString.RandomString() : compiledAssemblyName, [(SyntaxTree)ReturnParserMethod(parseOptions.GetType()).Invoke(null, [myClass.ToString(), parseOptions, Type.Missing, Type.Missing, Type.Missing])], assembliesFiles, assemblies, compiler);
+            ParseOptions parserOptions = compiler.ReturnParserOptions();
+            ret = CompileAssembly(string.IsNullOrWhiteSpace(compiledAssemblyName) ? ExtensionsString.RandomString() : compiledAssemblyName, [compiler.ReturnPrecompiledCode(myClass.ToString(), parserOptions)], assembliesFiles, assemblies, compiler);
 
             if (ret.Success)
             {
@@ -359,8 +359,13 @@ public abstract class Roslyn<TLanguage, TCompiler, TInterpreter> where TLanguage
         return ret;
     }
 
-    private static MethodInfo ReturnParserMethod(Type typeOptionsParseur)
+    public virtual MethodInfo ReturnParserMethod(ParseOptions parserOptions)
     {
-        return typeof(TInterpreter).GetMethod("ParseText", BindingFlags.Static | BindingFlags.Public, null, [typeof(string), typeOptionsParseur, typeof(string), typeof(Encoding), typeof(CancellationToken)], null);
+        return typeof(TInterpreter).GetMethod("ParseText", BindingFlags.Static | BindingFlags.Public, null, [typeof(string), parserOptions.GetType(), typeof(string), typeof(Encoding), typeof(CancellationToken)], null);
+    }
+
+    public virtual SyntaxTree ReturnPrecompiledCode(string code, ParseOptions parserOptions)
+    {
+        return (SyntaxTree)ReturnParserMethod(parserOptions).Invoke(null, [code, parserOptions, Type.Missing, Type.Missing, Type.Missing]);
     }
 }
