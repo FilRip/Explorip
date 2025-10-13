@@ -698,7 +698,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
 
             if (ret != null)
             {
-                if (ret.Errors != null)
+                if (ret.Errors != null || ret.ExceptionThrowed != null)
                 {
                     StringBuilder sb = new();
                     sb.AppendLine(Properties.Resources.ERRORS);

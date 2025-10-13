@@ -129,7 +129,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" Content="lex:Loc LBL_RESULT}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Label Grid.Row="0" Grid.Column="0" Content="{lex:Loc LBL_RESULT}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 <CheckBox Grid.Row="0" Grid.Column="1" Content="{lex:Loc CHK_READ_FIELDS}" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding WithFields, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding NotCheckedSerialisationDataContract, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Grid.Row="0" Grid.Column="2" Content="{lex:Loc CHK_READ_PUBLIC_PROPERTY}" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding WithProperties, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding NotCheckedSerialisationDataContract, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>

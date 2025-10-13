@@ -50,6 +50,6 @@ public class CSharp : Roslyn<CSharp, CSharpCompilation, CSharpSyntaxTree>, IRosl
 
     public ParseOptions ReturnParserOptions()
     {
-        return new CSharpParseOptions(LanguageVersion.CSharp6, DocumentationMode.None);
+        return new CSharpParseOptions(LanguageVersion.Latest, DocumentationMode.None);
     }
 }

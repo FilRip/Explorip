@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Reflection;
+using System.Text;
+using System.Threading;
 
 using CoolBytes.Scripting.Interfaces;
 
@@ -47,6 +51,16 @@ public class VisualBasic : Roslyn<VisualBasic, VisualBasicCompilation, VisualBas
 
     public ParseOptions ReturnParserOptions()
     {
-        return new VisualBasicParseOptions(LanguageVersion.VisualBasic14, DocumentationMode.None);
+        return new VisualBasicParseOptions(LanguageVersion.Latest, DocumentationMode.None);
+    }
+
+    public override MethodInfo ReturnParserMethod(ParseOptions parserOptions)
+    {
+        return typeof(VisualBasicSyntaxTree).GetMethod("ParseText", BindingFlags.Static | BindingFlags.Public, null, [typeof(string), parserOptions.GetType(), typeof(string), typeof(Encoding), typeof(ImmutableDictionary<string, ReportDiagnostic>), typeof(CancellationToken)], null);
+    }
+
+    public override SyntaxTree ReturnPrecompiledCode(string code, ParseOptions parserOptions)
+    {
+        return (SyntaxTree)ReturnParserMethod(parserOptions).Invoke(null, [code, parserOptions, Type.Missing, Type.Missing, Type.Missing, Type.Missing]);
     }
 }
