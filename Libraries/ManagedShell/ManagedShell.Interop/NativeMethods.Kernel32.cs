@@ -78,7 +78,6 @@ public partial class NativeMethods
     [DllImport(Kernel32_DllName, SetLastError = true, ExactSpelling = true)]
     internal static extern bool CloseHandle(IntPtr handle);
 
-
     [DllImport(Kernel32_DllName, SetLastError = true, CallingConvention = CallingConvention.Winapi)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool IsWow64Process(
@@ -451,7 +450,7 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName, SetLastError = false, ExactSpelling = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool GetDevicePowerState([In] IntPtr hDevice, [Out, MarshalAs(UnmanagedType.Bool)] out bool pfOn);
+    internal static extern bool GetDevicePowerState([In()] IntPtr hDevice, [Out(), MarshalAs(UnmanagedType.Bool)] out bool pfOn);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     public struct StartupInfo

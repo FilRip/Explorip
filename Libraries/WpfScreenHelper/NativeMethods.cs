@@ -77,11 +77,11 @@ internal static class NativeMethods
 
     [DllImport(ExternDll.Shcore, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
-    public static extern IntPtr GetDpiForMonitor([In] IntPtr hmonitor, [In] DpiType dpiType, [Out] out uint dpiX, [Out] out uint dpiY);
+    public static extern IntPtr GetDpiForMonitor([In()] IntPtr hmonitor, [In()] DpiType dpiType, [Out()] out uint dpiX, [Out()] out uint dpiY);
 
     [DllImport(ExternDll.User32, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
-    public static extern bool GetMonitorInfo(HandleRef hmonitor, [In][Out] MonitorInfoEx info);
+    public static extern bool GetMonitorInfo(HandleRef hmonitor, [In()][Out()] MonitorInfoEx info);
 
     [DllImport(ExternDll.User32, ExactSpelling = true)]
     [ResourceExposure(ResourceScope.None)]
@@ -105,7 +105,7 @@ internal static class NativeMethods
 
     [DllImport(ExternDll.User32, ExactSpelling = true, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
-    public static extern bool GetCursorPos([In][Out] Point pt);
+    public static extern bool GetCursorPos([In()][Out()] Point pt);
 
     [DllImport(ExternDll.User32, SetLastError = true)]
     public static extern bool IsProcessDPIAware();

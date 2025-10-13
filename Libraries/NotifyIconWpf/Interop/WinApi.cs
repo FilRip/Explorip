@@ -14,7 +14,7 @@ internal static class WinApi
     /// Creates, updates or deletes the taskbar icon.
     /// </summary>
     [DllImport("shell32.Dll", CharSet = CharSet.Unicode)]
-    public static extern bool Shell_NotifyIcon(NotifyCommand cmd, [In] ref NotifyIconData data);
+    public static extern bool Shell_NotifyIcon(NotifyCommand cmd, [In()] ref NotifyIconData data);
 
 
     /// <summary>
