@@ -143,6 +143,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
     {
         bool found = false;
 
+        ShellLogger.Debug("FullScreenApps CollectionChanged");
         foreach (ScreenInfo app in _fullScreenHelper.FullScreenApps.Select(item => item.Screen))
         {
             if (app.DeviceName == Screen.DeviceName || app.IsVirtualScreen)

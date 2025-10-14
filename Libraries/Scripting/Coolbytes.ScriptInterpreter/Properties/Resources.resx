@@ -226,4 +226,7 @@ System.Linq</value>
   <data name="WINDOW_TITLE" xml:space="preserve">
     <value>Script interpreter in Net Framework</value>
   </data>
+  <data name="ERROR_SAVE_SCRIPT" xml:space="preserve">
+    <value>Error during try to save script to disk</value>
+  </data>
 </root>

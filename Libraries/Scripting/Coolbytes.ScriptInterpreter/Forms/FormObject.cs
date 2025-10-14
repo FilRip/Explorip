@@ -17,9 +17,9 @@ public partial class FormObject : Form
         InitializeComponent();
     }
 
-    public FormObject(ProgressBar barreProgression) : this()
+    public FormObject(ProgressBar progressBar) : this()
     {
-        _progressBar = barreProgression;
+        _progressBar = progressBar;
     }
 
     private delegate void DelegateIncrementeCompteur();
@@ -57,18 +57,18 @@ public partial class FormObject : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
-    public void LoadXml(string objetXml)
+    public void LoadXml(string objectXml)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(objetXml))
+            if (string.IsNullOrWhiteSpace(objectXml))
                 return;
             _documentXml = new XmlDocument();
-            _documentXml.LoadXml(objetXml);
+            _documentXml.LoadXml(objectXml);
             TreatDocument();
         }
         catch (Exception ex)

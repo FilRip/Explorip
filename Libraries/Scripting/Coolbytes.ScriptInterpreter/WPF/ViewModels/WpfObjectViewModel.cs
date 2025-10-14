@@ -34,9 +34,9 @@ public class WpfObjectViewModel : ViewModelBase
         MenuCopyValueClick = new RelayCommand(item => MenuCopyValue());
     }
 
-    internal WpfObjectViewModel(ProgressBar barreProgression) : this()
+    internal WpfObjectViewModel(ProgressBar progressBar) : this()
     {
-        _progressBar = barreProgression;
+        _progressBar = progressBar;
     }
 
     public bool ExpandAll
@@ -79,18 +79,18 @@ public class WpfObjectViewModel : ViewModelBase
         ExpandAll = false;
     }
 
-    public void LoadFile(string nomFichier)
+    public void LoadFile(string filename)
     {
         try
         {
             _documentXml = new XmlDocument();
-            if (File.Exists(nomFichier))
+            if (File.Exists(filename))
             {
-                _documentXml.Load(nomFichier);
+                _documentXml.Load(filename);
                 TreatDocument();
             }
         }
-        catch { /* Ignore les erreurs du chargement d'un objet serialisé en Xml */ }
+        catch { /* Ignore errors */ }
     }
 
     public List<TreeViewItem> TreeContent { get; set; }
@@ -120,21 +120,21 @@ public class WpfObjectViewModel : ViewModelBase
         _progressBar?.Dispatcher.Invoke(new Action(() => _progressBar.Maximum = newMax));
     }
 
-    private void AddNode(TreeViewItem noeudCourant, XmlNode noeudXmlCourant)
+    private void AddNode(TreeViewItem currentTreeViewNode, XmlNode currentWmlNode)
     {
-        if (noeudXmlCourant.HasChildNodes)
-            foreach (XmlNode sousNoeudCourant in noeudXmlCourant.ChildNodes.OfType<XmlNode>().OrderBy(item => item.Name).ToList())
+        if (currentWmlNode.HasChildNodes)
+            foreach (XmlNode subNode in currentWmlNode.ChildNodes.OfType<XmlNode>().OrderBy(item => item.Name).ToList())
             {
                 IncrementCounter();
 #pragma warning disable S3358
                 TreeViewItem tvi = new()
                 {
-                    Header = sousNoeudCourant.HasChildNodes ? sousNoeudCourant.Name : string.IsNullOrWhiteSpace(sousNoeudCourant.Value) ? sousNoeudCourant.Name : sousNoeudCourant.Value,
+                    Header = subNode.HasChildNodes ? subNode.Name : string.IsNullOrWhiteSpace(subNode.Value) ? subNode.Name : subNode.Value,
                 };
 #pragma warning restore S3358
-                noeudCourant.Items.Add(tvi);
-                if (sousNoeudCourant.HasChildNodes)
-                    AddNode(tvi, sousNoeudCourant);
+                currentTreeViewNode.Items.Add(tvi);
+                if (subNode.HasChildNodes)
+                    AddNode(tvi, subNode);
             }
     }
 
@@ -146,7 +146,7 @@ public class WpfObjectViewModel : ViewModelBase
             _documentXml.LoadXml(contenuXml);
             TreatDocument();
         }
-        catch { /* Ignore les erreurs du chargement d'un objet serialisé en Xml */ }
+        catch { /* Ignore errors */ }
     }
 
     private void MenuSaveState()

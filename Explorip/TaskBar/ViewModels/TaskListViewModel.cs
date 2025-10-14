@@ -343,7 +343,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         Task.Run(async () =>
         {
-            await Task.Delay(100);
+            await Task.Delay(10);
             VirtualDesktop_CurrentChanged(null, null);
         });
     }

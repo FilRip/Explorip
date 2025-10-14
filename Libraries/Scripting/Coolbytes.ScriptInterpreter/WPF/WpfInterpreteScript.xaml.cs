@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
 
@@ -116,6 +117,13 @@ public partial class WpfInterpreteScript
     {
         ((WpfInterpreteScriptViewModel)DataContext).Script_KeyDown(sender, e);
         PopUpIntellisense.ScrollIntoView(PopUpIntellisense.SelectedItem);
+        if ((e.Key == Key.V && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) ||
+            (e.Key == Key.Insert && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)))
+        {
+            string plainText = Clipboard.GetText();
+            Clipboard.Clear();
+            Clipboard.SetText(plainText);
+        }
     }
 
     private void Hyperlink_RequestNavigateChamps(object sender, RequestNavigateEventArgs e)

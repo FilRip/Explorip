@@ -424,6 +424,13 @@ public partial class ScriptInterpreter : UserControl, IScriptReturn, IIntellisen
         try
         {
             KeyboardInputIntellisense(e, null);
+            if ((e.KeyCode == Keys.V && e.Modifiers.HasFlag(Keys.Control)) ||
+                (e.KeyCode == Keys.Insert && e.Modifiers.HasFlag(Keys.Shift)))
+            {
+                string plainText = Clipboard.GetText();
+                Clipboard.Clear();
+                Clipboard.SetText(plainText);
+            }
         }
         catch (Exception ex)
         {
@@ -531,7 +538,7 @@ public partial class ScriptInterpreter : UserControl, IScriptReturn, IIntellisen
                 mesure = txtScript.CreateGraphics().MeasureString(".", txtScript.Font);
                 lbListFieldsScript.Location = new Point(txtScript.Location.X + cursorPosition.X + (int)(mesure.Width * 2), txtScript.Location.Y + cursorPosition.Y + (int)(mesure.Height));
             }
-         }
+        }
         catch (Exception) { /* Ignore errors */ }
     }
 

@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 
-using CoolBytes.Scripting.Interfaces;
 using CoolBytes.Helpers;
+using CoolBytes.Scripting.Interfaces;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Emit;

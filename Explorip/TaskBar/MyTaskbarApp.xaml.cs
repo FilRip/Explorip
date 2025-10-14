@@ -117,6 +117,7 @@ public partial class MyTaskbarApp : Application
             ShellLogger.Debug("Enable background work");
             MyShellManager.ExplorerHelper.Disable = false;
             MyShellManager.NotificationArea.Disable = false;
+            MyShellManager.FullScreenHelper.Disable = false;
             DisableAutoLock = false;
         }
         else
@@ -124,6 +125,7 @@ public partial class MyTaskbarApp : Application
             ShellLogger.Debug("Disable background work");
             MyShellManager.ExplorerHelper.Disable = true;
             MyShellManager.NotificationArea.Disable = true;
+            MyShellManager.FullScreenHelper.Disable = true;
             DisableAutoLock = true;
         }
     }

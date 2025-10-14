@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Threading;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -15,7 +14,6 @@ namespace ManagedShell.AppBar;
 
 public sealed class FullScreenHelper : IDisposable
 {
-    private readonly DispatcherTimer _fullscreenCheck;
     private readonly TasksService _tasksService;
     private bool disposableValue;
 
@@ -28,38 +26,25 @@ public sealed class FullScreenHelper : IDisposable
     {
         _tasksService = tasksService;
 
-        if (_tasksService == null)
-        {
-            _fullscreenCheck = new DispatcherTimer(DispatcherPriority.Background, System.Windows.Application.Current.Dispatcher)
-            {
-                Interval = new TimeSpan(0, 0, 0, 0, 100)
-            };
-
-            _fullscreenCheck.Tick += FullscreenCheck_Tick;
-            _fullscreenCheck.Start();
-        }
-        else
-        {
-            // On Windows 8 and newer, TasksService will tell us when windows enter and exit full screen
-            _tasksService.FullScreenChanged += TasksService_FullScreenChanged;
-            _tasksService.MonitorChanged += TasksService_Event;
-            _tasksService.DesktopActivated += TasksService_Event;
-            _tasksService.WindowActivated += TasksService_Event;
-        }
-    }
-
-    private void FullscreenCheck_Tick(object sender, EventArgs e)
-    {
-        UpdateFullScreenWindows();
+        // On Windows 8 and newer, TasksService will tell us when windows enter and exit full screen
+        _tasksService.FullScreenChanged += TasksService_FullScreenChanged;
+        _tasksService.MonitorChanged += TasksService_Event;
+        _tasksService.DesktopActivated += TasksService_Event;
+        _tasksService.WindowActivated += TasksService_Event;
     }
 
     private void TasksService_Event(object sender, WindowEventArgs e)
     {
+        if (Disable)
+            return;
         UpdateFullScreenWindows();
     }
 
     private void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
     {
+        if (Disable)
+            return;
+
         if (InactiveFullScreenApps.Count > 0 && InactiveFullScreenApps.Any(app => app.HWnd == e.Handle))
         {
             // If this window is in the inactive list, remove it--the message that triggered this event takes precedence
@@ -348,14 +333,10 @@ public sealed class FullScreenHelper : IDisposable
         {
             if (disposing)
             {
-                _fullscreenCheck?.Stop();
-                if (_tasksService != null)
-                {
-                    _tasksService.FullScreenChanged -= TasksService_FullScreenChanged;
-                    _tasksService.MonitorChanged -= TasksService_Event;
-                    _tasksService.DesktopActivated -= TasksService_Event;
-                    _tasksService.WindowActivated -= TasksService_Event;
-                }
+                _tasksService.FullScreenChanged -= TasksService_FullScreenChanged;
+                _tasksService.MonitorChanged -= TasksService_Event;
+                _tasksService.DesktopActivated -= TasksService_Event;
+                _tasksService.WindowActivated -= TasksService_Event;
             }
             disposableValue = true;
         }

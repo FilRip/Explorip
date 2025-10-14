@@ -21,7 +21,6 @@ using System.Xml;
 using System.Xml.Linq;
 
 using CoolBytes.Helpers;
-using CoolBytes.ScriptInterpreter.Helpers;
 
 namespace CoolBytes.ScriptInterpreter.YAXLib;
 

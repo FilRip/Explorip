@@ -197,6 +197,15 @@ namespace CoolBytes.ScriptInterpreter.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Error during try to save script to disk.
+        /// </summary>
+        public static string ERROR_SAVE_SCRIPT {
+            get {
+                return ResourceManager.GetString("ERROR_SAVE_SCRIPT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Error during serialization of object : .
         /// </summary>
         public static string ERROR_SERIALIZATION {

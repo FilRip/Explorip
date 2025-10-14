@@ -698,7 +698,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
 
             if (ret != null)
             {
-                if (ret.Errors != null || ret.ExceptionThrowed != null)
+                if (!ret.Success || ret.ExceptionThrowed != null)
                 {
                     StringBuilder sb = new();
                     sb.AppendLine(Properties.Resources.ERRORS);
@@ -759,7 +759,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
                     File.Delete(dialog.FileName);
                 File.AppendAllText(dialog.FileName, TxtScript());
             }
-            catch (Exception ex) { TxtResult = Environment.NewLine + "Error during try to save script to file, Check rights of folder/free space/..." + Environment.NewLine + ex.Message; }
+            catch (Exception ex) { TxtResult = Environment.NewLine + Properties.Resources.ERROR_SAVE_SCRIPT + Environment.NewLine + ex.Message; }
         }
     }
 

@@ -20,6 +20,7 @@ using ExploripPlugins;
 
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 using ManagedShell.WindowsTray;
@@ -286,7 +287,7 @@ public partial class Taskbar : AppBarWindow
         MyDataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
         {
-            ExitFullScreen += Taskbar_ExitFullScreen;
+            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
             try
             {
@@ -317,10 +318,20 @@ public partial class Taskbar : AppBarWindow
         }
     }
 
-    private void Taskbar_ExitFullScreen(object sender, EventArgs e)
+    private DateTimeOffset _dtLastExitFullScreen = DateTimeOffset.MinValue;
+    private void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
     {
-        foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
-            tb.MyTaskList.MyDataContext.FirstRefresh();
+        if (!e.IsEntering)
+        {
+            NativeMethods.GetWindowThreadProcessId(e.Handle, out uint processId);
+            if (processId == 0 && DateTimeOffset.UtcNow.Subtract(_dtLastExitFullScreen).TotalSeconds > 1)
+            {
+                ShellLogger.Debug("Refresh all task list after exited fullscreen");
+                _dtLastExitFullScreen = DateTimeOffset.UtcNow;
+                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
+                    tb.MyTaskList.MyDataContext.FirstRefresh();
+            }
+        }
     }
 
     public void SetBackground(SolidColorBrush newBackground)
