@@ -83,6 +83,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.Scripting", "Libr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.Helpers", "Libraries\CoolBytes.Helpers\CoolBytes.Helpers.csproj", "{BC1015D4-2CDA-4CC1-AD06-35F949397F16}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitorian", "Libraries\Monitorian\Monitorian.csproj", "{30574F83-3A99-4BE1-86EB-2E68C5D2CC4F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -213,6 +215,10 @@ Global
 		{BC1015D4-2CDA-4CC1-AD06-35F949397F16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC1015D4-2CDA-4CC1-AD06-35F949397F16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC1015D4-2CDA-4CC1-AD06-35F949397F16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30574F83-3A99-4BE1-86EB-2E68C5D2CC4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30574F83-3A99-4BE1-86EB-2E68C5D2CC4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30574F83-3A99-4BE1-86EB-2E68C5D2CC4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30574F83-3A99-4BE1-86EB-2E68C5D2CC4F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -255,6 +261,7 @@ Global
 		{3B4306ED-2F48-4E45-BCF5-C5EBEEA8734E} = {02E20678-9AD3-4370-904E-02D800F25B35}
 		{6C161902-E387-41EF-9F7E-699733184F6F} = {3B4306ED-2F48-4E45-BCF5-C5EBEEA8734E}
 		{BC1015D4-2CDA-4CC1-AD06-35F949397F16} = {02E20678-9AD3-4370-904E-02D800F25B35}
+		{30574F83-3A99-4BE1-86EB-2E68C5D2CC4F} = {02E20678-9AD3-4370-904E-02D800F25B35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}

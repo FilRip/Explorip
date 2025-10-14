@@ -232,6 +232,7 @@ public partial class MyTaskbarApp : Application
         DictionaryManager.Dispose();
         MyShellManager.Dispose();
         _startMenuMonitor.Dispose();
+        Monitorian.MonitorsManager.Clean();
 #if DEBUG
         _logger?.Dispose();
 #endif
@@ -289,6 +290,7 @@ public partial class MyTaskbarApp : Application
             {
                 if (!DisableAutoLock)
                 {
+                    bool lockSession = false;
                     Microsoft.Win32.SafeHandles.SafeFileHandle handle = NativeMethods.CreateFile("\\\\.\\LCD", 0, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
                     if (!handle.IsInvalid)
                     {
@@ -296,14 +298,18 @@ public partial class MyTaskbarApp : Application
                         NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out bool on);
                         if (!on)
                         {
-                            ShellLogger.Debug("Auto lock");
-                            ShellHelper.Lock();
+                            lockSession = true;
                         }
                         NativeMethods.CloseHandle(handle.DangerousGetHandle());
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
                     }
+                    if ((lockSession || handle.IsInvalid) && Monitorian.MonitorsManager.AllMonitorsOff())
+                    {
+                        ShellLogger.Debug("Auto lock");
+                        ShellHelper.Lock();
+                    }
                     handle.Dispose();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(5000);
                 }
             }
         }
