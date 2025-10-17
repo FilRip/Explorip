@@ -30,17 +30,16 @@ public static class MonitorsManager
         MonitorsList = null;
     }
 
-    public static bool AllMonitorsOff(bool withCapabilities = false)
+    public static bool AllMonitorsOff(bool withCapabilities = false, bool forceRefreshMonitorList = false)
     {
-        if (MonitorsList == null)
+        if (MonitorsList == null || forceRefreshMonitorList)
         {
+            Clean();
             MonitorsList = [];
             HandleItem[] hMonitors = GetMonitorHandles();
             if (hMonitors.Length > 0)
-            {
                 foreach (HandleItem hMon in hMonitors)
                     MonitorsList.AddRange(EnumeratePhysicalMonitors(hMon.MonitorHandle, withCapabilities: withCapabilities));
-            }
         }
 
         if (MonitorsList.Count == 0)
