@@ -30,7 +30,7 @@ public static class MonitorsManager
         MonitorsList = null;
     }
 
-    public static bool AllMonitorsOff()
+    public static bool AllMonitorsOff(bool withCapabilities = false)
     {
         if (MonitorsList == null)
         {
@@ -39,7 +39,7 @@ public static class MonitorsManager
             if (hMonitors.Length > 0)
             {
                 foreach (HandleItem hMon in hMonitors)
-                    MonitorsList.AddRange(EnumeratePhysicalMonitors(hMon.MonitorHandle));
+                    MonitorsList.AddRange(EnumeratePhysicalMonitors(hMon.MonitorHandle, withCapabilities: withCapabilities));
             }
         }
 
@@ -51,9 +51,14 @@ public static class MonitorsManager
         {
             if (GetCapabilitiesStringLength(physicalMonitorHandler, out uint size))
             {
-                StringBuilder sb = new((int)size);
-                bool on = CapabilitiesRequestAndCapabilitiesReply(physicalMonitorHandler, sb, size);
-                if (on)
+                if (withCapabilities)
+                {
+                    StringBuilder sb = new((int)size);
+                    bool on = CapabilitiesRequestAndCapabilitiesReply(physicalMonitorHandler, sb, size);
+                    if (on)
+                        allOff = false;
+                }
+                else
                     allOff = false;
             }
         }

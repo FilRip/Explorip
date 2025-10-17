@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Windows;
 
 using ManagedShell.Common.Helpers;
@@ -67,19 +68,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
         },
     };
 
-    public ObservableCollection<NotifyIcon> TrayIcons
-    {
-        get
-        {
-            return GetValue(iconListProperty) as ObservableCollection<NotifyIcon>;
-        }
-        set
-        {
-            SetValue(iconListProperty, value);
-        }
-    }
-
-    private static readonly DependencyProperty iconListProperty = DependencyProperty.Register("TrayIcons", typeof(ObservableCollection<NotifyIcon>), typeof(NotificationArea), new PropertyMetadata(new ObservableCollection<NotifyIcon>()));
+    public ObservableCollection<NotifyIcon> TrayIcons { get; set; } = [];
 
     private readonly TrayService _trayService = trayService;
     private readonly ExplorerTrayService _explorerTrayService = explorerTrayService;
@@ -137,13 +126,12 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
         return trayHostSizeData;
     }
 
-#nullable enable
     private IntPtr IconDataCallback(int dwMessage, uint hWnd, uint uID, Guid guidItem)
     {
         if (Disable)
             return IntPtr.Zero;
 
-        NotifyIcon? icon = TrayIcons.SingleOrDefault(ti => (guidItem != Guid.Empty && guidItem == ti.GUID) || (ti.HWnd == (IntPtr)hWnd && ti.UID == uID));
+        NotifyIcon icon = TrayIcons.SingleOrDefault(ti => (guidItem != Guid.Empty && guidItem == ti.GUID) || (ti.HWnd == (IntPtr)hWnd && ti.UID == uID));
 
         if (icon != null)
         {
@@ -162,8 +150,10 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
 
         return IntPtr.Zero;
     }
-#nullable restore
 
+#if DEBUG
+    private DateTime _lastLogged = DateTime.UtcNow;
+#endif
     private bool SysTrayCallback(uint message, SafeNotifyIconData nicData)
     {
         lock (_lockObject)
@@ -171,20 +161,31 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
             if (nicData.hWnd == IntPtr.Zero || Disable)
                 return false;
 
-            NotifyIcon trayIcon;
-            bool exists = false;
+            NotifyIcon trayIcon = TrayIcons.FirstOrDefault(ti => ti.Equals(nicData));
+            bool exists = true;
 
-            if (TrayIcons.Any(ti => ti.Equals(nicData)))
+            if (trayIcon == null)
             {
-                exists = true;
-                trayIcon = TrayIcons.First(ti => ti.Equals(nicData));
-            }
-            else
-            {
+                ShellLogger.Debug($"No NotifyIcon found for hWnd={nicData.hWnd}, uID={nicData.uID}, Guid={nicData.guidItem}, Title={nicData.szTip}");
+#if DEBUG
+                if (DateTime.UtcNow.Subtract(_lastLogged).TotalSeconds > 60)
+                {
+                    _lastLogged = DateTime.UtcNow;
+                    StringBuilder sb = new();
+                    sb.AppendLine("List of NotifyIcon actually in memory :");
+                    if (TrayIcons.Count > 0)
+                        foreach (NotifyIcon ni in TrayIcons)
+                            sb.AppendLine($"NotifyIcon hWnd={ni.HWnd}, uID={ni.UID}, Guid={ni.GUID}, Title={ni.Title}");
+                    else
+                        sb.AppendLine("No notifyIcon in actual list");
+                    ShellLogger.Debug(sb.ToString());
+                }
+#endif
                 trayIcon = new(this, nicData.hWnd)
                 {
                     UID = nicData.uID,
                 };
+                exists = false;
             }
 
             if ((NIM)message == NIM.NIM_ADD || (NIM)message == NIM.NIM_MODIFY)
@@ -267,7 +268,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                         if (nicData.uFlags.HasFlag(NIF.INFO))
                             HandleBalloonData(nicData, trayIcon);
 
-                        ShellLogger.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID} Version: {trayIcon.Version}");
+                        ShellLogger.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID} Version: {trayIcon.Version} hWnd: {trayIcon.HWnd}");
 
                         if ((NIM)message == NIM.NIM_MODIFY)
                         {
@@ -292,12 +293,10 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
             {
                 try
                 {
-                    if (TrayIcons.Any(icon => icon.Equals(trayIcon)))
+                    if (trayIcon != null)
                     {
                         TrayIcons.Remove(trayIcon);
-
                         ShellLogger.Debug($"NotificationArea: Removed: {trayIcon.Title}");
-
                         return true;
                     }
 
@@ -313,11 +312,10 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                 if (nicData.uVersion > 4)
                     return false;
 
-                if (TrayIcons.Any(item => item.Equals(nicData)))
+                if (trayIcon != null)
                 {
-                    NotifyIcon ti = TrayIcons.First(item => item.Equals(nicData));
-                    ti.Version = nicData.uVersion;
-                    ShellLogger.Debug($"NotificationArea: Modified version to {ti.Version} on: {ti.Title}");
+                    trayIcon.Version = nicData.uVersion;
+                    ShellLogger.Debug($"NotificationArea: Modified version to {trayIcon.Version} on: {trayIcon.Title}");
                 }
             }
         }

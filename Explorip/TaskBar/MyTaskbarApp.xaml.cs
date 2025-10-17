@@ -303,13 +303,13 @@ public partial class MyTaskbarApp : Application
                         NativeMethods.CloseHandle(handle.DangerousGetHandle());
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
                     }
-                    if ((lockSession || handle.IsInvalid) && Monitorian.MonitorsManager.AllMonitorsOff())
+                    if ((lockSession || handle.IsInvalid) && Monitorian.MonitorsManager.AllMonitorsOff(true))
                     {
                         ShellLogger.Debug("Auto lock");
                         ShellHelper.Lock();
                     }
                     handle.Dispose();
-                    Thread.Sleep(5000);
+                    Thread.Sleep(3000);
                 }
             }
         }

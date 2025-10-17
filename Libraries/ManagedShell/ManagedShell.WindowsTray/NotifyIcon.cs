@@ -33,6 +33,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     /// <param name="hWnd">The window handle of the icon.</param>
     public NotifyIcon(NotificationArea notificationArea, IntPtr hWnd)
     {
+        ShellLogger.Debug($"Create NotifyIcon from hWnd={hWnd}");
         _notificationArea = notificationArea;
         HWnd = hWnd;
         MissedNotifications = [];

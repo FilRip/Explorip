@@ -51,6 +51,7 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     public static void RefreshAllCollectionView()
     {
+        ShellLogger.Debug("Refresh All Collection of SysTray");
         Application.Current.Dispatcher.BeginInvoke(() =>
         {
             foreach (Controls.Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
@@ -60,6 +61,7 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     public void RebuildCollectionView()
     {
+        ShellLogger.Debug("Rebuild All Collection of SysTray");
         ListSystrayIcons = new ListCollectionView(MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons);
         ListSystrayIcons.SortDescriptions.Add(new SortDescription(nameof(NotifyIcon.PinOrder), ListSortDirection.Ascending));
         ListSystrayIcons.Filter = FilterSystrayIcon;
@@ -130,7 +132,8 @@ public partial class NotifyIconListViewModel : ObservableObject
     {
         // This is used to promote unpinned icons to show when the tray is collapsed.
 
-        if (MyTaskbarApp.MyShellManager.NotificationArea == null)
+        if (MyTaskbarApp.MyShellManager.NotificationArea == null ||
+            MyTaskbarApp.MyShellManager.NotificationArea.Disable)
             return;
 
         ShellLogger.Debug($"NotificationBalloonShown of {e.Balloon.Title}");
