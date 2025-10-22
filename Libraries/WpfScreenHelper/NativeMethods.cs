@@ -173,14 +173,10 @@ internal static class NativeMethods
             this.y = y;
         }
 
-#if DEBUG
-
         public override string ToString()
         {
             return "{x=" + x + ", y=" + y + "}";
         }
-
-#endif
     }
 
     [Flags()]

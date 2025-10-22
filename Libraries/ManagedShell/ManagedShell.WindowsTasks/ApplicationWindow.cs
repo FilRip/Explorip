@@ -158,8 +158,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get { return _position; }
         set
         {
-            _position = value;
-            OnPropertyChanged();
+            if (_position != value)
+            {
+                _position = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -195,8 +198,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
         private set
         {
-            _title = value;
-            OnPropertyChanged();
+            if (_title != value)
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -265,8 +271,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
         set
         {
-            _icon = value;
-            OnPropertyChanged();
+            if (_icon != value)
+            {
+                _icon = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -278,8 +287,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
         private set
         {
-            _overlayIcon = value;
-            OnPropertyChanged();
+            if ( _overlayIcon != value)
+            {
+                _overlayIcon = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -291,8 +303,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
         private set
         {
-            _overlayIconDescription = value;
-            OnPropertyChanged();
+            if (_overlayIconDescription != value)
+            {
+                _overlayIconDescription = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -309,13 +324,18 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
         set
         {
-            _progressState = value;
+            if (_progressState != value)
+            {
+                _progressState = value;
 
-            if (value == NativeMethods.TBPFLAG.TBPF_NOPROGRESS)
-                ProgressValue = 0;
+                if (value == NativeMethods.TBPFLAG.TBPF_NOPROGRESS)
+                    ProgressValue = 0;
 
-            OnPropertyChanged();
-            OnPropertyChanged(nameof(IsInProgress));
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsInProgress));
+                OnPropertyChanged(nameof(ProgressValue));
+                OnPropertyChanged(nameof(PercentProgressValue));
+            }
         }
     }
 
@@ -330,6 +350,8 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             _progressValue = value;
             OnPropertyChanged();
             OnPropertyChanged(nameof(PercentProgressValue));
+            OnPropertyChanged(nameof(IsInProgress));
+            OnPropertyChanged(nameof(ProgressState));
         }
     }
 
@@ -346,8 +368,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
         set
         {
-            _state = value;
-            OnPropertyChanged();
+            if (_state != value)
+            {
+                _state = value;
+                OnPropertyChanged();
+            }
         }
     }
 

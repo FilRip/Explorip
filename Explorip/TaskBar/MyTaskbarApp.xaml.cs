@@ -53,6 +53,8 @@ public partial class MyTaskbarApp : Application
 
     public void ExitGracefully()
     {
+        SetExiting();
+        _threadAutoLock?.Abort();
         Models.HookRefreshLanguageLayout.UnHook();
         foreach (Taskbar taskbar in _taskbarList)
         {
@@ -195,7 +197,6 @@ public partial class MyTaskbarApp : Application
 
     private void App_OnExit(object sender, ExitEventArgs e)
     {
-        _threadAutoLock?.Abort();
         ExitGracefully();
     }
 
@@ -232,7 +233,7 @@ public partial class MyTaskbarApp : Application
         DictionaryManager.Dispose();
         MyShellManager.Dispose();
         _startMenuMonitor.Dispose();
-        Monitorian.MonitorsManager.Clean();
+        //Monitorian.MonitorsManager.Clean();
 #if DEBUG
         _logger?.Dispose();
 #endif
@@ -282,15 +283,24 @@ public partial class MyTaskbarApp : Application
             Explorip.Helpers.HookTaskbarListHelper.InstallHook();
     }
 
+    private static void SetExiting()
+    {
+        _exiting = true;
+    }
+    private static bool _exiting;
+    //private static bool _lastAllMonitorOff;
+    /*[System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions()]
+    [System.Security.SecurityCritical()]*/
     private static void CheckMonitorPower()
     {
-        try
+        while (!_exiting)
         {
-            while (true)
+            try
             {
                 if (!DisableAutoLock)
                 {
                     bool lockSession = false;
+                    // This work only on laptop
                     Microsoft.Win32.SafeHandles.SafeFileHandle handle = NativeMethods.CreateFile("\\\\.\\LCD", 0, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
                     if (!handle.IsInvalid)
                     {
@@ -303,16 +313,18 @@ public partial class MyTaskbarApp : Application
                         NativeMethods.CloseHandle(handle.DangerousGetHandle());
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
                     }
-                    if ((lockSession || handle.IsInvalid) && Monitorian.MonitorsManager.AllMonitorsOff(true))
+                    //bool allMonitorOff = Monitorian.MonitorsManager.AllMonitorsOff(true);
+                    if ((lockSession/* || handle.IsInvalid) && (allMonitorOff || _lastAllMonitorOff*/))
                     {
                         ShellLogger.Debug("Auto lock");
                         ShellHelper.Lock();
                     }
+                    //_lastAllMonitorOff = allMonitorOff;
                     handle.Dispose();
                     Thread.Sleep(3000);
                 }
             }
+            catch (Exception) { /* Ignore errors */ }
         }
-        catch (Exception) { /* Ignore errors */ }
     }
 }

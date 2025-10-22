@@ -95,7 +95,8 @@ namespace WindowsDesktop
             static bool Core()
             {
 #if DEBUG
-                if (Environment.OSVersion.Version.Major < 10) return false;
+                if (Environment.OSVersion.Version.Major < 10)
+                    return false;
 #endif
                 try
                 {

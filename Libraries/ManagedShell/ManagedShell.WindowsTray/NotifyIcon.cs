@@ -56,8 +56,11 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         }
         set
         {
-            _icon = value;
-            OnPropertyChanged();
+            if (_icon != value)
+            {
+                _icon = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -74,8 +77,11 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         }
         set
         {
-            _title = value;
-            OnPropertyChanged();
+            if (_title != value)
+            {
+                _title = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -97,8 +103,11 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         }
         set
         {
-            _isPinned = value;
-            OnPropertyChanged();
+            if (_isPinned != value)
+            {
+                _isPinned = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -115,8 +124,11 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         }
         set
         {
-            _isHidden = value;
-            OnPropertyChanged();
+            if (_isHidden != value)
+            {
+                _isHidden = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -133,8 +145,11 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         }
         set
         {
-            _pinOrder = value;
-            OnPropertyChanged();
+            if (_pinOrder != value)
+            {
+                _pinOrder = value;
+                OnPropertyChanged();
+            }
         }
     }
 
@@ -355,6 +370,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
     public void OnPropertyChanged([CallerMemberName()] string PropertyName = "")
     {
+        ShellLogger.Debug($"Update property {PropertyName} for TrayIcon {Title}");
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
     }
 

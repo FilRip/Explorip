@@ -151,9 +151,6 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
         return IntPtr.Zero;
     }
 
-#if DEBUG
-    private DateTime _lastLogged = DateTime.UtcNow;
-#endif
     private bool SysTrayCallback(uint message, SafeNotifyIconData nicData)
     {
         lock (_lockObject)
@@ -167,20 +164,6 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
             if (trayIcon == null)
             {
                 ShellLogger.Debug($"No NotifyIcon found for hWnd={nicData.hWnd}, uID={nicData.uID}, Guid={nicData.guidItem}, Title={nicData.szTip}");
-#if DEBUG
-                if (DateTime.UtcNow.Subtract(_lastLogged).TotalSeconds > 60)
-                {
-                    _lastLogged = DateTime.UtcNow;
-                    StringBuilder sb = new();
-                    sb.AppendLine("List of NotifyIcon actually in memory :");
-                    if (TrayIcons.Count > 0)
-                        foreach (NotifyIcon ni in TrayIcons)
-                            sb.AppendLine($"NotifyIcon hWnd={ni.HWnd}, uID={ni.UID}, Guid={ni.GUID}, Title={ni.Title}");
-                    else
-                        sb.AppendLine("No notifyIcon in actual list");
-                    ShellLogger.Debug(sb.ToString());
-                }
-#endif
                 trayIcon = new(this, nicData.hWnd)
                 {
                     UID = nicData.uID,
