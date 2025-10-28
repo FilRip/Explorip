@@ -33,9 +33,6 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\icone.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\Libraries\ExploripConfig\ExploripConfig.csproj" />
     <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
     <ProjectReference Include="..\..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj" />
@@ -51,5 +48,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\SystrayIconR.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

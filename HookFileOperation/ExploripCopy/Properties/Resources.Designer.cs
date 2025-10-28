@@ -61,12 +61,12 @@ namespace ExploripCopy.Properties {
         }
         
         /// <summary>
-        ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Icon icone {
+        internal static System.Drawing.Bitmap StartNow {
             get {
-                object obj = ResourceManager.GetObject("icone", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
+                object obj = ResourceManager.GetObject("StartNow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

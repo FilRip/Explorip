@@ -91,7 +91,7 @@ public partial class WpfExplorerBrowser : Window
         if (!ConfigManager.StartTwoExplorer && !newInstance)
             HideRightTab(newInstance);
 
-        Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.IconeExplorateur.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+        Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.FileExplorerIcon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
 
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
         {

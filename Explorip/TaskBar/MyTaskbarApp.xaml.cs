@@ -56,11 +56,14 @@ public partial class MyTaskbarApp : Application
         SetExiting();
         _threadAutoLock?.Abort();
         Models.HookRefreshLanguageLayout.UnHook();
-        foreach (Taskbar taskbar in _taskbarList)
+        Current.Dispatcher.Invoke(() =>
         {
-            taskbar.AllowClose = true;
-            taskbar.Close();
-        }
+            foreach (Taskbar taskbar in _taskbarList)
+            {
+                taskbar.AllowClose = true;
+                taskbar.Close();
+            }
+        });
         _taskbarList.Clear();
         MyShellManager.AppBarManager.SignalGracefulShutdown();
         ExitApp();
@@ -121,6 +124,11 @@ public partial class MyTaskbarApp : Application
             MyShellManager.NotificationArea.Disable = false;
             MyShellManager.FullScreenHelper.Disable = false;
             DisableAutoLock = false;
+            Current.Dispatcher.Invoke(() =>
+            {
+                foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
+                    tb.MySystray.MyDataContext.Resume();
+            });
         }
         else
         {
@@ -129,6 +137,11 @@ public partial class MyTaskbarApp : Application
             MyShellManager.NotificationArea.Disable = true;
             MyShellManager.FullScreenHelper.Disable = true;
             DisableAutoLock = true;
+            Current.Dispatcher.Invoke(() =>
+            {
+                foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
+                    tb.MySystray.MyDataContext.Pause();
+            });
         }
     }
 
@@ -230,9 +243,12 @@ public partial class MyTaskbarApp : Application
     private void ExitApp()
     {
         MyShellManager.ExplorerHelper.HideExplorerTaskbar = false;
-        DictionaryManager.Dispose();
-        MyShellManager.Dispose();
-        _startMenuMonitor.Dispose();
+        Current.Dispatcher.Invoke(() =>
+        {
+            DictionaryManager.Dispose();
+            MyShellManager.Dispose();
+            _startMenuMonitor.Dispose();
+        });
         //Monitorian.MonitorsManager.Clean();
 #if DEBUG
         _logger?.Dispose();
@@ -289,8 +305,8 @@ public partial class MyTaskbarApp : Application
     }
     private static bool _exiting;
     //private static bool _lastAllMonitorOff;
-    /*[System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions()]
-    [System.Security.SecurityCritical()]*/
+    [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions()]
+    //[System.Security.SecurityCritical()]
     private static void CheckMonitorPower()
     {
         while (!_exiting)
@@ -305,12 +321,11 @@ public partial class MyTaskbarApp : Application
                     if (!handle.IsInvalid)
                     {
 #pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
-                        NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out bool on);
-                        if (!on)
+                        if (NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out bool on) &&!on)
                         {
                             lockSession = true;
                         }
-                        NativeMethods.CloseHandle(handle.DangerousGetHandle());
+                        handle.Dispose();
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
                     }
                     //bool allMonitorOff = Monitorian.MonitorsManager.AllMonitorsOff(true);
@@ -320,11 +335,10 @@ public partial class MyTaskbarApp : Application
                         ShellHelper.Lock();
                     }
                     //_lastAllMonitorOff = allMonitorOff;
-                    handle.Dispose();
-                    Thread.Sleep(3000);
                 }
             }
             catch (Exception) { /* Ignore errors */ }
+            Thread.Sleep(3000);
         }
     }
 }

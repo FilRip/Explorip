@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
@@ -19,7 +20,7 @@ public partial class DesktopButtonViewModel : ObservableObject
 {
     private Timer _timer;
     private IntPtr _thumbPtr = IntPtr.Zero;
-    private Window _windowPreview = null;
+    private Controls.PreviewDesktopWindow _windowPreview = null;
 
     [RelayCommand()]
     private void MouseEnter()
@@ -47,18 +48,22 @@ public partial class DesktopButtonViewModel : ObservableObject
         {
             _windowPreview?.Close();
             Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
-            _windowPreview = new()
+            _windowPreview = new Controls.PreviewDesktopWindow()
             {
-                WindowStyle = WindowStyle.None,
-                Topmost = true,
-                //Background = System.Windows.Media.Brushes.Transparent,
                 Height = screen.WorkingArea.Height / screen.ScaleFactor,
                 Width = screen.WorkingArea.Width / screen.ScaleFactor,
-                AllowsTransparency = true,
                 Left = screen.WpfWorkingArea.Left,
                 Top = screen.WpfWorkingArea.Top,
-                ShowInTaskbar = false,
             };
+            int lowerX = 0;
+            int lowerY = 0;
+            foreach (Rect srcRect in Screen.AllScreens.Select(s => s.WorkingArea))
+            {
+                lowerX = (int)Math.Min(lowerX, srcRect.X);
+                lowerY = (int)Math.Min(lowerY, srcRect.Y);
+            }
+            lowerX = Math.Abs(lowerX);
+            lowerY = Math.Abs(lowerY);
             _windowPreview.Show();
             IntPtr destPtr = new WindowInteropHelper(_windowPreview).EnsureHandle();
             IntPtr desktopPtr = NativeMethods.FindWindow("Progman", "Program Manager");
@@ -70,7 +75,7 @@ public partial class DesktopButtonViewModel : ObservableObject
                     dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.OPACITY | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.RECTSOURCE,
                     fVisible = true,
                     opacity = 255,
-                    rcSource = new NativeMethods.Rect((int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Right, (int)screen.WorkingArea.Bottom),
+                    rcSource = new NativeMethods.Rect(lowerX + (int)screen.WorkingArea.X, lowerY + (int)screen.WorkingArea.Y, lowerX + (int)screen.WorkingArea.Right, lowerY + (int)screen.WorkingArea.Bottom),
                     rcDestination = new NativeMethods.Rect(0, 0, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height),
                 };
                 NativeMethods.DwmUpdateThumbnailProperties(_thumbPtr, ref preview);

@@ -46,7 +46,7 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     public void RefreshCollectionView()
     {
-        ListSystrayIcons.Refresh();
+        ListSystrayIcons?.Refresh();
     }
 
     public static void RefreshAllCollectionView()
@@ -116,11 +116,9 @@ public partial class NotifyIconListViewModel : ObservableObject
                         foreach (NotifyIcon notifIcon in listNotifIcon)
                             notifIcon.IsPinned = true;
                 }
-
-            MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged += SystrayIcons_CollectionChanged;
-            MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
         }
 
+        RegisterEvents();
         RebuildCollectionView();
 
         ShowAllIcons = !ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).CollapseNotifyIcons;
@@ -177,10 +175,39 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     public void Unload()
     {
-        if (MyTaskbarApp.MyShellManager.NotificationArea != null)
+        UnregisterEvents();
+    }
+
+    private void UnregisterEvents()
+    {
+        if (ParentTaskbar.MainScreen && MyTaskbarApp.MyShellManager.NotificationArea != null)
         {
             MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged -= SystrayIcons_CollectionChanged;
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
         }
+    }
+
+    private void RegisterEvents()
+    {
+        if (ParentTaskbar.MainScreen && MyTaskbarApp.MyShellManager.NotificationArea != null)
+        {
+            UnregisterEvents();
+            MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged += SystrayIcons_CollectionChanged;
+            MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
+        }
+    }
+
+    public void Pause()
+    {
+        // For unknown reason, for now, when session is locked, on some computers/windows (not all)
+        // There is a memoryleak of systray icons. So we disable it when session locked, and restore/refresh it when session is back
+        UnregisterEvents();
+        ListSystrayIcons = null;
+    }
+
+    public void Resume()
+    {
+        RegisterEvents();
+        RebuildCollectionView();
     }
 }

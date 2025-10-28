@@ -63,9 +63,9 @@ namespace Explorip.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon ErreurIcone {
+        internal static System.Drawing.Icon ErrorIcon {
             get {
-                object obj = ResourceManager.GetObject("ErreurIcone", resourceCulture);
+                object obj = ResourceManager.GetObject("ErrorIcon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -73,9 +73,9 @@ namespace Explorip.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Icon semblable à (Icône).
         /// </summary>
-        internal static System.Drawing.Icon IconeExplorateur {
+        internal static System.Drawing.Icon FileExplorerIcon {
             get {
-                object obj = ResourceManager.GetObject("IconeExplorateur", resourceCulture);
+                object obj = ResourceManager.GetObject("FileExplorerIcon", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
