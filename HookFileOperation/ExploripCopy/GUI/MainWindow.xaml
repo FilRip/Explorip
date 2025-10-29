@@ -79,7 +79,7 @@
                         <DataGridTemplateColumn Width="16">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Grid.Column="0" BorderThickness="0" Click="StartNow_Click" Background="Transparent">
+                                    <Button Grid.Column="0" BorderThickness="0" Click="StartNow_Click" Background="Transparent" BorderBrush="Transparent">
                                         <Image Source="/ExploripCopy;component/Resources/StartNow.png"/>
                                     </Button>
                                 </DataTemplate>

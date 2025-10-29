@@ -77,6 +77,19 @@ public partial class TaskThumbButton : Window
                     Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
                     MaxWidth = MyDataContext.ThumbWidth - 16,
                 };
+                Image icon = null;
+                if (ConfigManager.ShowIconOnThumbnailWindow)
+                {
+                    txtTitle.Margin = new Thickness(17, 0, 0, 0);
+                    txtTitle.MaxWidth -= 17;
+                    icon = new()
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        Height = 16,
+                        Width = 16,
+                        Source = MyDataContext.ParentTask.ApplicationWindow.Icon,
+                    };
+                }
                 Button closeButton = new()
                 {
                     Style = (Style)FindResource("CloseButtonStyle"),
@@ -102,6 +115,11 @@ public partial class TaskThumbButton : Window
                 thumbnailButton.SetBinding(Button.CommandProperty, new Binding(nameof(MyDataContext.ClickWindowCommand)));
                 thumbnailButton.MouseRightButtonDown += ThumbnailButton_MouseRightButtonDown;
 
+                if (icon != null)
+                {
+                    MainGrid.Children.Add(icon);
+                    Grid.SetColumn(icon, numColumn);
+                }
                 MainGrid.Children.Add(txtTitle);
                 MainGrid.Children.Add(closeButton);
                 MainGrid.Children.Add(thumbnailButton);

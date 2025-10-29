@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 
 using Explorip.Helpers;
+using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
 
@@ -19,6 +20,11 @@ namespace Explorip.TaskBar.Controls
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             MyDesktopButton.Width = ConfigManager.GetTaskbarConfig(this.FindVisualParent<Taskbar>().NumScreen).DesktopButtonWidth;
+        }
+
+        public DesktopButtonViewModel MyDataContext
+        {
+            get { return (DesktopButtonViewModel)DataContext; }
         }
     }
 }

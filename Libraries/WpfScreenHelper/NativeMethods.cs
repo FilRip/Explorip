@@ -9,6 +9,10 @@ namespace WpfScreenHelper;
 
 internal static class NativeMethods
 {
+    private const string User32 = "user32.dll";
+    private const string Shcore = "shcore.dll";
+    private const string D2D1 = "d2d1.dll";
+
     public delegate bool MonitorEnumProc(IntPtr monitor, IntPtr hdc, IntPtr lprcMonitor, IntPtr lParam);
 
     public enum DpiType
@@ -75,45 +79,45 @@ internal static class NativeMethods
 
     public static readonly HandleRef NullHandleRef = new(null, IntPtr.Zero);
 
-    [DllImport(ExternDll.Shcore, CharSet = CharSet.Auto)]
+    [DllImport(Shcore, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
     public static extern IntPtr GetDpiForMonitor([In()] IntPtr hmonitor, [In()] DpiType dpiType, [Out()] out uint dpiX, [Out()] out uint dpiY);
 
-    [DllImport(ExternDll.User32, CharSet = CharSet.Auto)]
+    [DllImport(User32, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
     public static extern bool GetMonitorInfo(HandleRef hmonitor, [In()][Out()] MonitorInfoEx info);
 
-    [DllImport(ExternDll.User32, ExactSpelling = true)]
+    [DllImport(User32, ExactSpelling = true)]
     [ResourceExposure(ResourceScope.None)]
     public static extern bool EnumDisplayMonitors(HandleRef hdc, ComRect rcClip, MonitorEnumProc lpfnEnum, IntPtr dwData);
 
-    [DllImport(ExternDll.User32, ExactSpelling = true)]
+    [DllImport(User32, ExactSpelling = true)]
     [ResourceExposure(ResourceScope.None)]
     public static extern IntPtr MonitorFromWindow(HandleRef handle, int flags);
 
-    [DllImport(ExternDll.User32, ExactSpelling = true, CharSet = CharSet.Auto)]
+    [DllImport(User32, ExactSpelling = true, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
     public static extern int GetSystemMetrics(SystemMetric nIndex);
 
-    [DllImport(ExternDll.User32, CharSet = CharSet.Auto)]
+    [DllImport(User32, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
     public static extern bool SystemParametersInfo(SPI nAction, int nParam, ref Rect rc, SPIF nUpdate);
 
-    [DllImport(ExternDll.User32, ExactSpelling = true)]
+    [DllImport(User32, ExactSpelling = true)]
     [ResourceExposure(ResourceScope.None)]
     public static extern IntPtr MonitorFromPoint(PointStruct pt, MonitorDefault flags);
 
-    [DllImport(ExternDll.User32, ExactSpelling = true, CharSet = CharSet.Auto)]
+    [DllImport(User32, ExactSpelling = true, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
     public static extern bool GetCursorPos([In()][Out()] Point pt);
 
-    [DllImport(ExternDll.User32, SetLastError = true)]
+    [DllImport(User32, SetLastError = true)]
     public static extern bool IsProcessDPIAware();
 
-    [DllImport(ExternDll.User32, SetLastError = true)]
+    [DllImport(User32, SetLastError = true)]
     public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
-    [DllImport(ExternDll.D2D1)]
+    [DllImport(D2D1)]
     public static extern int D2D1CreateFactory(D2D1_FACTORY_TYPE factoryType, [MarshalAs(UnmanagedType.LPStruct)] Guid riid, IntPtr pFactoryOptions, out ID2D1Factory ppIFactory);
 
     [StructLayout(LayoutKind.Sequential)]
@@ -275,7 +279,7 @@ internal static class NativeMethods
     }
 
 #nullable enable
-    [DllImport(ExternDll.User32, SetLastError = false, CharSet = CharSet.Auto)]
+    [DllImport(User32, SetLastError = false, CharSet = CharSet.Auto)]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static extern bool EnumDisplayDevices([Optional()] string? lpDevice, uint iDevNum, ref DisplayDevice lpDisplayDevice, EDD dwFlags);
 }

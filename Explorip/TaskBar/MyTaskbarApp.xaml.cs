@@ -249,7 +249,7 @@ public partial class MyTaskbarApp : Application
             MyShellManager.Dispose();
             _startMenuMonitor.Dispose();
         });
-        //Monitorian.MonitorsManager.Clean();
+        Monitorian.MonitorsManager.Clean();
 #if DEBUG
         _logger?.Dispose();
 #endif
@@ -304,9 +304,7 @@ public partial class MyTaskbarApp : Application
         _exiting = true;
     }
     private static bool _exiting;
-    //private static bool _lastAllMonitorOff;
     [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions()]
-    //[System.Security.SecurityCritical()]
     private static void CheckMonitorPower()
     {
         while (!_exiting)
@@ -315,7 +313,8 @@ public partial class MyTaskbarApp : Application
             {
                 if (!DisableAutoLock)
                 {
-                    bool lockSession = false;
+                    bool laptopScreenOff = false;
+
                     // This work only on laptop
                     Microsoft.Win32.SafeHandles.SafeFileHandle handle = NativeMethods.CreateFile("\\\\.\\LCD", 0, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
                     if (!handle.IsInvalid)
@@ -323,18 +322,25 @@ public partial class MyTaskbarApp : Application
 #pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
                         if (NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out bool on) &&!on)
                         {
-                            lockSession = true;
+                            laptopScreenOff = true;
                         }
-                        handle.Dispose();
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
+                        handle.Dispose();
                     }
-                    //bool allMonitorOff = Monitorian.MonitorsManager.AllMonitorsOff(true);
-                    if ((lockSession/* || handle.IsInvalid) && (allMonitorOff || _lastAllMonitorOff*/))
+
+                    // This work only on no laptop (return monitors plugged on the laptop, exclude the integrate one)
+                    int allMonitorOff = Monitorian.MonitorsManager.NumberOfMonitorsOff();
+
+                    // If we are on laptop, previous line return power off of plugged monitors, so we increase with the one integrate to the laptop
+                    if (laptopScreenOff)
+                        allMonitorOff++;
+
+                    // If all monitors are power off, then lock session
+                    if (allMonitorOff >= Screen.AllScreens.Count())
                     {
                         ShellLogger.Debug("Auto lock");
                         ShellHelper.Lock();
                     }
-                    //_lastAllMonitorOff = allMonitorOff;
                 }
             }
             catch (Exception) { /* Ignore errors */ }

@@ -27,6 +27,10 @@
         Drop="Window_Drop"
         DragEnter="Window_DragOver"
         Closing="Window_Closing">
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="0"
+                      CaptionHeight="0"/>
+    </WindowChrome.WindowChrome>
     <Grid Name="MainGrid">
     </Grid>
 </Window>

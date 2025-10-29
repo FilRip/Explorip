@@ -30,7 +30,7 @@ public static class MonitorsManager
         MonitorsList = null;
     }
 
-    public static bool AllMonitorsOff(bool withCapabilities = false, bool forceRefreshMonitorList = false)
+    public static int NumberOfMonitorsOff(bool withCapabilities = false, bool forceRefreshMonitorList = false)
     {
         if (MonitorsList == null || forceRefreshMonitorList)
         {
@@ -42,10 +42,11 @@ public static class MonitorsManager
                     MonitorsList.AddRange(EnumeratePhysicalMonitors(hMon.MonitorHandle, withCapabilities: withCapabilities));
         }
 
-        if (MonitorsList.Count == 0)
-            return true;
+        int result = 0;
 
-        bool allOff = true;
+        if (MonitorsList.Count == 0)
+            return result;
+
         foreach (SafePhysicalMonitorHandle physicalMonitorHandler in MonitorsList.Select(pm => pm.Handle))
         {
             if (GetCapabilitiesStringLength(physicalMonitorHandler, out uint size))
@@ -55,13 +56,13 @@ public static class MonitorsManager
                     StringBuilder sb = new((int)size);
                     bool on = CapabilitiesRequestAndCapabilitiesReply(physicalMonitorHandler, sb, size);
                     if (on)
-                        allOff = false;
+                        result++;
                 }
                 else
-                    allOff = false;
+                    result++;
             }
         }
-        return allOff;
+        return result;
     }
 
     public static MonitorCapability GetMonitorCapability(SafePhysicalMonitorHandle physicalMonitorHandle, bool verbose)

@@ -10,6 +10,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Helpers;
 
+using ExploripConfig.Configuration;
+
 using ExploripSharedCopy.Controls;
 
 using ManagedShell.Common.Helpers;
@@ -69,6 +71,16 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
             return 48;
             //return Icon?.Height ?? 0;
         }
+    }
+
+    public GridLength ItemSizeX
+    {
+        get { return new GridLength(CurrentDesktop.ParentDesktop.MyDesktopConfig.ItemSizeX, GridUnitType.Pixel); }
+    }
+
+    public GridLength ItemSizeY
+    {
+        get { return new GridLength(CurrentDesktop.ParentDesktop.MyDesktopConfig.ItemSizeY, GridUnitType.Pixel); }
     }
 
     [RelayCommand()]

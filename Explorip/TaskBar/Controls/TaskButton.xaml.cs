@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 using Explorip.Constants;
 using Explorip.Helpers;
@@ -172,6 +173,7 @@ public partial class TaskButton : UserControl
     private void DragMouseUp()
     {
         _startDrag = false;
+        //DragGhostAdorner.EndDragGhost();
     }
 
     private void AppButton_OnDragEnter(object sender, DragEventArgs e)
@@ -209,6 +211,7 @@ public partial class TaskButton : UserControl
             data.SetData(_appWindow);
             DragDrop.DoDragDrop(this, _appWindow, DragDropEffects.Move);
             _startDrag = true;
+            //DragGhostAdorner.StartDragGhost(this, this.FindVisualParent<TaskList>(), Mouse.GetPosition(TaskbarParent));
         }
     }
 
@@ -225,6 +228,11 @@ public partial class TaskButton : UserControl
             }
             _appWindow.StartNewInstance(arguments.ToString());
         }
+    }
+
+    private void UserControl_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+    {
+        //DragGhostAdorner.UpdateDragGhost(Mouse.GetPosition(this.FindVisualParent<TaskList>()));
     }
 
     #endregion

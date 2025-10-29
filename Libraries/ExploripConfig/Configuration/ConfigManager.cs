@@ -21,7 +21,8 @@ public static class ConfigManager
 
     public static bool AllowWrite { get; set; }
     private static RegistryKey _registryKeyExplorer, _registryDesktop, _registryRootTaskbar, _registryStartMenu;
-    private static readonly List<TaskbarConfig> _listScreens = [];
+    private static readonly List<TaskbarConfig> _listTaskbar = [];
+    private static readonly List<DesktopConfig> _listDesktop = [];
 
     public static void Init(bool allowWrite = true)
     {
@@ -119,25 +120,52 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("DelayBeforeCloseThumbnail", "1000");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("HookTaskbarList", "").ToString()))
                 _registryRootTaskbar.SetValue("HookTaskbarList", "False");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ShowIconOnThumbnailWindow", "").ToString()))
+                _registryRootTaskbar.SetValue("ShowIconOnThumbnailWindow", "True");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
                 TaskbarConfig tbc = new();
                 tbc.Init(numScreen, _registryRootTaskbar, true);
-                _listScreens.Add(tbc);
+                _listTaskbar.Add(tbc);
+                DesktopConfig dtc = new();
+                dtc.Init(numScreen, _registryDesktop, true);
+                _listDesktop.Add(dtc);
             }
         }
     }
 
     public static TaskbarConfig GetTaskbarConfig(int numScreen)
     {
-        TaskbarConfig tbc = _listScreens.SingleOrDefault(tbc => tbc.NumScreen == numScreen);
+        TaskbarConfig tbc = _listTaskbar.SingleOrDefault(tbc => tbc.NumScreen == numScreen);
         if (tbc != null)
             return tbc;
         tbc = new();
         tbc.Init(numScreen, _registryRootTaskbar, AllowWrite);
-        _listScreens.Add(tbc);
+        _listTaskbar.Add(tbc);
         return tbc;
+    }
+
+    public static DesktopConfig GetDesktopConfig(int numScreen)
+    {
+        DesktopConfig dtc = _listDesktop.SingleOrDefault(dtc => dtc.NumScreen == numScreen);
+        if (dtc != null)
+            return dtc;
+        dtc = new();
+        dtc.Init(numScreen, _registryDesktop, AllowWrite);
+        _listDesktop.Add(dtc);
+        return dtc;
+    }
+
+    public static int GetDesktopScreen(string itemName)
+    {
+        foreach (DesktopConfig dc in _listDesktop)
+        {
+            (int, int) position = dc.GetItemPosition(itemName);
+            if (position.Item1 >= 0 && position.Item2 >= 0)
+                return dc.NumScreen;
+        }
+        return -1;
     }
 
     public static bool AutoLockOnMonitorPowerOff
@@ -147,6 +175,16 @@ public static class ConfigManager
         {
             if (AutoLockOnMonitorPowerOff != value && AllowWrite)
                 _registryRootTaskbar.SetValue("LockOnMonitorPowerOff", value.ToString());
+        }
+    }
+
+    public static bool ShowDesktopPreviewAllMonitors
+    {
+        get { return _registryRootTaskbar.ReadBoolean("ShowDesktopPreviewAllMonitors"); }
+        set
+        {
+            if (ShowDesktopPreviewAllMonitors != value && AllowWrite)
+                _registryRootTaskbar.SetValue("ShowDesktopPreviewAllMonitors", value.ToString());
         }
     }
 
@@ -602,6 +640,16 @@ public static class ConfigManager
         {
             if (PopUpCornerRadius.TopLeft != value.TopLeft && AllowWrite)
                 _registryRootTaskbar.SetValue("ThumbnailCornerRadius", value.TopLeft.ToString());
+        }
+    }
+
+    public static bool ShowIconOnThumbnailWindow
+    {
+        get { return _registryRootTaskbar.ReadBoolean("ShowIconOnThumbnailWindow"); }
+        set
+        {
+            if (ShowIconOnThumbnailWindow != value && AllowWrite)
+                _registryRootTaskbar.SetValue("ShowIconOnThumbnailWindow", value.ToString());
         }
     }
 

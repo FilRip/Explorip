@@ -14,10 +14,10 @@
     </UserControl.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="{x:Static constants:Desktop.ITEM_SIZE_Y}"/>
+            <RowDefinition Height="{Binding ItemSizeX}"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{x:Static constants:Desktop.ITEM_SIZE_X}"/>
+            <ColumnDefinition Width="{Binding ItemSizeY}"/>
         </Grid.ColumnDefinitions>
         <Button MouseDoubleClick="Button_MouseDoubleClick" Click="Button_Click">
             <Button.Style>

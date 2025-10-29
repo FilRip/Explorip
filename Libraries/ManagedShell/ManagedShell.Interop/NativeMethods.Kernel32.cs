@@ -678,4 +678,8 @@ public partial class NativeMethods
         /// </summary>
         PROCESS_MODE_BACKGROUND_END = 0x00200000,
     }
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
 }

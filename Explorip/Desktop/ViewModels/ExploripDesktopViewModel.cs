@@ -13,6 +13,8 @@ using Explorip.Desktop.Controls;
 using Explorip.Desktop.Windows;
 using Explorip.Helpers;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.Interop;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;
@@ -31,6 +33,11 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     private bool disposedValue;
 
     internal string DesktopPath { get; set; }
+
+    public ExploripDesktop ParentDesktop
+    {
+        get { return _parentDesktop; }
+    }
 
     public ExploripDesktopViewModel(ExploripDesktop parent, string path = null) : base()
     {
@@ -60,14 +67,19 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     {
         foreach (OneDesktopItemViewModel vm in Configuration.RegistrySettings.ListDesktopSystemIcons())
         {
-            if (vm.Icon == null)
-                vm.GetIcon();
-            vm.CurrentDesktop = this;
-            OneDesktopItem ctrl = new()
+            int numScreenSave = ConfigManager.GetDesktopScreen(vm.Name);
+            if (numScreenSave < 0 || numScreenSave == _parentDesktop.AssociateScreen.DisplayNumber || !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreenSave))
             {
-                MyDataContext = vm,
-            };
-            _parentDesktop.AddItem(ctrl);
+
+                if (vm.Icon == null)
+                    vm.GetIcon();
+                vm.CurrentDesktop = this;
+                OneDesktopItem ctrl = new()
+                {
+                    MyDataContext = vm,
+                };
+                _parentDesktop.AddItem(ctrl);
+            }
         }
     }
 
@@ -77,19 +89,23 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         OneDesktopItemViewModel item;
         foreach (ShellObject filename in desktop.Where(filename => filename.Name.Trim().ToLower() != "desktop.ini"))
         {
-            item = new()
+            int numScreenSave = ConfigManager.GetDesktopScreen(filename.Name);
+            if (numScreenSave < 0 || numScreenSave == _parentDesktop.AssociateScreen.DisplayNumber || !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreenSave))
             {
-                Name = filename.Name,
-                FullPath = filename.ParsingName,
-                CurrentShellObject = filename,
-                CurrentDesktop = this,
-            };
-            item.GetIcon();
-            OneDesktopItem ctrl = new()
-            {
-                MyDataContext = item,
-            };
-            _parentDesktop.AddItem(ctrl);
+                item = new()
+                {
+                    Name = filename.Name,
+                    FullPath = filename.ParsingName,
+                    CurrentShellObject = filename,
+                    CurrentDesktop = this,
+                };
+                item.GetIcon();
+                OneDesktopItem ctrl = new()
+                {
+                    MyDataContext = item,
+                };
+                _parentDesktop.AddItem(ctrl);
+            }
         }
     }
 
@@ -242,8 +258,8 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     internal void Drop(DragEventArgs e)
     {
         double dpi = _parentDesktop.AssociateScreen.ScaleFactor;
-        int x = (int)(e.GetPosition(_parentDesktop).X / (Constants.Desktop.ITEM_SIZE_X.Value * dpi));
-        int y = (int)(e.GetPosition(_parentDesktop).Y / (Constants.Desktop.ITEM_SIZE_Y.Value * dpi));
+        int x = (int)(e.GetPosition(_parentDesktop).X / (_parentDesktop.MyDesktopConfig.ItemSizeX * dpi));
+        int y = (int)(e.GetPosition(_parentDesktop).Y / (_parentDesktop.MyDesktopConfig.ItemSizeY * dpi));
         List<OneDesktopItem> listItems = ListItems();
         OneDesktopItem dest = listItems.Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
         if (e.Data is DataObject && e.Data.GetDataPresent("FileDrop"))
@@ -275,7 +291,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                         {
                             Grid.SetColumn(item, x);
                             Grid.SetRow(item, y);
-                            _parentDesktop.DesktopRegistryKey.SetValue(item.Name, $"{x}, {y}");
+                            _parentDesktop.MyDesktopConfig.SetItemPosition(item.Name, (x, y));
                         }
                     }
                     else

@@ -11,7 +11,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
              Loaded="TaskButton_OnLoaded"
-             Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave" PreviewMouseUp="AppButton_OnPreviewMouseUp">
+             Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave" PreviewMouseUp="AppButton_OnPreviewMouseUp" GiveFeedback="UserControl_GiveFeedback">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
         <converters:MultipleInstanceAlignmentConverter x:Key="multipleInstanceAlignmentConverter"/>

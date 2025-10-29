@@ -11,15 +11,12 @@ using Explorip.Desktop.ViewModels;
 using Explorip.Helpers;
 
 using ExploripConfig.Configuration;
-using ExploripConfig.Helpers;
 
 using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
-
-using Microsoft.Win32;
 
 using WpfScreenHelper;
 
@@ -31,7 +28,7 @@ namespace Explorip.Desktop.Windows;
 public partial class ExploripDesktop : Window
 {
     private IntPtr _handle;
-    public RegistryKey DesktopRegistryKey { get; private set; }
+    public DesktopConfig MyDesktopConfig { get; private set; }
 
     public ExploripDesktop() : this(Screen.PrimaryScreen) { }
 
@@ -45,9 +42,11 @@ public partial class ExploripDesktop : Window
             WindowsSettings.UseImmersiveDarkMode(GetHandle(), true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
-        DesktopRegistryKey = ConfigManager.DesktopRegistryKey.CreateSubKey(ScreenId);
-        if (DesktopRegistryKey.GetValueNames().Contains("HideBackgroundDesktop", StringComparer.InvariantCultureIgnoreCase))
-            Background = new SolidColorBrush(DesktopRegistryKey.ReadColor("BackgroundColor", ExploripSharedCopy.Constants.Colors.BackgroundColor));
+        MyDesktopConfig = ConfigManager.GetDesktopConfig(ScreenId);
+        if (!MyDesktopConfig.HideBackground)
+            Background = MyDesktopConfig.DesktopBackground;
+
+        HwndSource.FromHwnd(new WindowInteropHelper(this).EnsureHandle()).AddHook(WndProc);
     }
 
     internal void RefreshGrid()
@@ -55,19 +54,19 @@ public partial class ExploripDesktop : Window
         MainGrid.ColumnDefinitions.Clear();
         MainGrid.RowDefinitions.Clear();
 
-        MyDataContext.NbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(Constants.Desktop.ITEM_SIZE_X.Value * AssociateScreen.ScaleFactor);
-        MyDataContext.NbRows = (int)AssociateScreen.WorkingArea.Height / (int)(Constants.Desktop.ITEM_SIZE_Y.Value * AssociateScreen.ScaleFactor);
+        MyDataContext.NbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(MyDesktopConfig.ItemSizeX * AssociateScreen.ScaleFactor);
+        MyDataContext.NbRows = (int)AssociateScreen.WorkingArea.Height / (int)(MyDesktopConfig.ItemSizeY * AssociateScreen.ScaleFactor);
 
         for (int i = 0; i < MyDataContext.NbColumns; i++)
             MainGrid.ColumnDefinitions.Add(new ColumnDefinition()
             {
-                Width = Constants.Desktop.ITEM_SIZE_X,
+                Width = new GridLength(MyDesktopConfig.ItemSizeX, GridUnitType.Pixel),
             });
 
         for (int i = 0; i < MyDataContext.NbRows; i++)
             MainGrid.RowDefinitions.Add(new RowDefinition()
             {
-                Height = Constants.Desktop.ITEM_SIZE_Y,
+                Height = new GridLength(MyDesktopConfig.ItemSizeY, GridUnitType.Pixel),
             });
     }
 
@@ -91,11 +90,11 @@ public partial class ExploripDesktop : Window
         {
             if (!MainGrid.Children.Contains(item))
                 MainGrid.Children.Add(item);
-            if (DesktopRegistryKey.GetValueNames().Contains(item.MyDataContext.Name, StringComparer.InvariantCultureIgnoreCase))
+            (int, int) position = MyDesktopConfig.GetItemPosition(item.MyDataContext.Name);
+            if (position.Item1 >= 0 && position.Item2 >= 0)
             {
-                Point point = DesktopRegistryKey.ReadPoint(item.MyDataContext.Name);
-                nbColumn = (int)point.X;
-                nbRow = (int)point.Y;
+                nbColumn = position.Item1;
+                nbRow = position.Item2;
             }
             Grid.SetColumn(item, nbColumn);
             Grid.SetRow(item, nbRow);
@@ -103,9 +102,9 @@ public partial class ExploripDesktop : Window
     }
 
     internal Screen AssociateScreen { get; set; }
-    private string ScreenId
+    private int ScreenId
     {
-        get { return AssociateScreen.DeviceName.TrimStart('.', '\\'); }
+        get { return AssociateScreen.DisplayNumber; }
     }
 
     internal ExploripDesktopViewModel MyDataContext
@@ -125,7 +124,9 @@ public partial class ExploripDesktop : Window
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
-        if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
+        if (msg == (int)NativeMethods.WM.SYSCOMMAND)
+            handled = true;
+        else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
         {
             NativeMethods.WindowPos wndPos = NativeMethods.WindowPos.FromMessage(lParam);
 
