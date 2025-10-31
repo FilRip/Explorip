@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using Explorip.Helpers;
 
 using ExploripConfig.Configuration;
 
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
@@ -131,13 +133,13 @@ public partial class TaskButton : UserControl
         if (e.ChangedButton == MouseButton.Left)
         {
             PressedWindowState = _appWindow.State;
-            DragMouseDown();
+            DragMouseDown(e);
         }
     }
 
     private void AppButton_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
     {
-        if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl) == KeyStates.Down || Keyboard.GetKeyStates(Key.RightCtrl) == KeyStates.Down)))
+        if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down) || Keyboard.GetKeyStates(Key.RightCtrl).HasFlag(KeyStates.Down))))
         {
             if (_appWindow == null)
                 return;
@@ -162,18 +164,17 @@ public partial class TaskButton : UserControl
 
     #region Drag'n Drop
 
-    private void DragMouseDown()
+    private void DragMouseDown(MouseEventArgs e)
     {
         _startDrag = true;
 #pragma warning disable CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
-        StartDrag();
+        StartDrag(e);
 #pragma warning restore CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
     }
 
     private void DragMouseUp()
     {
         _startDrag = false;
-        //DragGhostAdorner.EndDragGhost();
     }
 
     private void AppButton_OnDragEnter(object sender, DragEventArgs e)
@@ -187,6 +188,9 @@ public partial class TaskButton : UserControl
                 {
                     (_appWindow.Position, appWin.Position) = (appWin.Position, _appWindow.Position);
                     this.FindVisualParent<TaskList>().MyDataContext.RefreshMyCollectionView();
+                    DragGhostAdorner.StopDragGhost();
+                    TaskButton tb = this.FindVisualParent<TaskList>().MyDataContext.TaskListCollection.OfType<TaskButton>().SingleOrDefault(tb => tb.ApplicationWindow.Id == appWin.Id);
+                    DragGhostAdorner.StartDragGhost(tb, null);
                 }
             }
             else if (data.GetFileDropList()?.Count > 0)
@@ -202,16 +206,16 @@ public partial class TaskButton : UserControl
         }
     }
 
-    private async Task StartDrag()
+    private async Task StartDrag(MouseEventArgs e)
     {
         await Task.Delay(WindowsConstants.DelayIgnoreDrag);
         if (_startDrag)
         {
             DataObject data = new();
             data.SetData(_appWindow);
+            DragGhostAdorner.StartDragGhost(this, e);
             DragDrop.DoDragDrop(this, _appWindow, DragDropEffects.Move);
-            _startDrag = true;
-            //DragGhostAdorner.StartDragGhost(this, this.FindVisualParent<TaskList>(), Mouse.GetPosition(TaskbarParent));
+            DragGhostAdorner.StopDragGhost();
         }
     }
 
@@ -228,11 +232,12 @@ public partial class TaskButton : UserControl
             }
             _appWindow.StartNewInstance(arguments.ToString());
         }
+        DragMouseUp();
     }
 
     private void UserControl_GiveFeedback(object sender, GiveFeedbackEventArgs e)
     {
-        //DragGhostAdorner.UpdateDragGhost(Mouse.GetPosition(this.FindVisualParent<TaskList>()));
+        DragGhostAdorner.UpdateDragGhost();
     }
 
     #endregion

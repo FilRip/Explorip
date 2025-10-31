@@ -1,94 +1,85 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System;
+using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
+
+using ManagedShell.Common.Logging;
+using ManagedShell.Interop;
 
 namespace Explorip.Helpers;
 
 public class DragGhostAdorner : Adorner
 {
-    private readonly UIElement _visual;
+    private readonly VisualBrush _vBrush;
     private Point _offset;
-    private readonly AdornerLayer _layer;
+    private Point _location;
 
-    public DragGhostAdorner(UIElement adornedElement, UIElement visual)
+    public DragGhostAdorner(UIElement adornedElement, Point? offset)
         : base(adornedElement)
     {
-        _visual = visual;
         IsHitTestVisible = false;
-        _layer = AdornerLayer.GetAdornerLayer(adornedElement);
-        _layer?.Add(this);
+        if (offset.HasValue)
+            _offset = offset.Value;
+        _vBrush = new(adornedElement)
+        {
+            Opacity = 0.5,
+        };
     }
 
     public void UpdatePosition(Point mousePosition)
     {
-        _offset = mousePosition;
-        _layer?.Update(AdornedElement);
+        _location = mousePosition;
+        InvalidateVisual();
     }
 
-    public void Detach()
+    protected override void OnRender(DrawingContext drawingContext)
     {
-        _layer?.Remove(this);
-    }
-
-    protected override int VisualChildrenCount => 1;
-    protected override Visual GetVisualChild(int index) => _visual;
-
-    protected override Size MeasureOverride(Size constraint)
-    {
-        _visual.Measure(constraint);
-        return _visual.DesiredSize;
-    }
-
-    protected override Size ArrangeOverride(Size finalSize)
-    {
-        _visual.Arrange(new Rect(_visual.DesiredSize));
-        return finalSize;
-    }
-
-    public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
-    {
-        GeneralTransform baseTransform = base.GetDesiredTransform(transform);
-        TranslateTransform offsetTransform = new(_offset.X, _offset.Y);
-
-        GeneralTransformGroup group = new();
-        group.Children.Add(baseTransform);
-        group.Children.Add(offsetTransform);
-        return group;
+        Point p = _location;
+        p.Offset(-_offset.X, -_offset.Y);
+        drawingContext.DrawRectangle(_vBrush, null, new Rect(p, RenderSize));
     }
 
     #region Static
 
-    private static DragGhostAdorner _ghost;
+    private static DragGhostAdorner _ghostAdorner;
+    private static UIElement _source;
 
-    public static void StartDragGhost(UIElement source, UIElement reference, Point mousePosition)
+    public static void StartDragGhost(UIElement source, MouseEventArgs e)
     {
-        Border ghostVisual = new()
-        {
-            Width = source.RenderSize.Width,
-            Height = source.RenderSize.Height,
-            Background = new VisualBrush(source),
-            Opacity = 0.5,
-            IsHitTestVisible = false,
-        };
+        if (source == null)
+            return;
 
-        if (_ghost != null)
+        _source = source;
+        _ghostAdorner = new(source, (e?.GetPosition(source)));
+        AdornerLayer.GetAdornerLayer(source).Add(_ghostAdorner);
+        ShellLogger.Debug("Start Ghost Adorner");
+    }
+
+    public static void UpdateDragGhost()
+    {
+        if (_ghostAdorner != null && _source != null)
         {
-            EndDragGhost();
+            try
+            {
+                System.Drawing.Point p = new();
+                NativeMethods.GetCursorPos(ref p);
+                Point mousePos = new(p.X, p.Y);
+                _ghostAdorner.UpdatePosition(_source.PointFromScreen(mousePos));
+            }
+            catch (Exception) { /* Ignore errors */ }
         }
-        _ghost = new(reference, ghostVisual);
-        _ghost.UpdatePosition(mousePosition);
     }
 
-    public static void UpdateDragGhost(Point mousePosition)
+    public static void StopDragGhost()
     {
-        _ghost?.UpdatePosition(mousePosition);
-    }
-
-    public static void EndDragGhost()
-    {
-        _ghost?.Detach();
-        _ghost = null;
+        ShellLogger.Debug("Stop Ghost Adorner");
+        if (_ghostAdorner != null && _source != null)
+        {
+            AdornerLayer.GetAdornerLayer(_source)?.Remove(_ghostAdorner);
+            _ghostAdorner = null;
+            _source = null;
+        }
     }
 
     #endregion

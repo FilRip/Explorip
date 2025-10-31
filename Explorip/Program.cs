@@ -170,5 +170,6 @@ public static class Program
     {
         // TODO : Warn taskbar and/or dekstop
         WpfScreenHelper.Screen.ResetMultiMonitorSupport();
+        Monitorian.MonitorsManager.Clean();
     }
 }

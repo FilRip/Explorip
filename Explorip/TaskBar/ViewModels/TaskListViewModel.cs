@@ -300,6 +300,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     PinnedShortcut = file,
                     WinFileName = string.IsNullOrWhiteSpace(pinnedApp.Target) ? Environment.ExpandEnvironmentVariables(@"%windir%\explorer.exe") : pinnedApp.Target,
                     Arguments = pinnedApp.StringData?.CommandLineArguments,
+                    WorkingDirectory = pinnedApp.StringData?.WorkingDir,
                 };
                 if (string.Compare(appWin.WinFileName, Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe"), StringComparison.OrdinalIgnoreCase) == 0 && !string.IsNullOrWhiteSpace(appWin.Arguments) && appWin.Arguments.StartsWith("shell:AppsFolder\\"))
                     appWin.SetIsUWP();
@@ -315,7 +316,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     appWin.Icon = IconManager.Convert(IconManager.Extract(appWin.WinFileName, 0, true));
                 else
                     appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
-                appWin.Arguments = pinnedApp.StringData?.CommandLineArguments;
                 if (numPinnedApp > MyTaskbarApp.MyShellManager.TasksService.Windows.Count)
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Add(appWin);
                 else

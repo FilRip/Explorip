@@ -59,7 +59,7 @@ public static class ShellHelper
         }
     }
 
-    public static bool StartProcess(string filename, string args = null, bool hidden = false, bool useShellExecute = false, string verb = null, bool loadUserProfile = false)
+    public static bool StartProcess(string filename, string args = null, bool hidden = false, bool useShellExecute = false, string verb = null, bool loadUserProfile = false, string workingDir = "")
     {
         try
         {
@@ -70,6 +70,7 @@ public static class ShellHelper
                 WindowStyle = hidden ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                 Verb = verb,
                 LoadUserProfile = loadUserProfile,
+                WorkingDirectory = (string.IsNullOrWhiteSpace(workingDir) ? Path.GetDirectoryName(filename) : workingDir),
             };
 
             if (filename.StartsWith("appx:"))
@@ -108,7 +109,7 @@ public static class ShellHelper
         }
     }
 
-    public static bool StartProcess(string filename, string args, bool useShellExecute)
+    public static bool StartProcess(string filename, string args, bool useShellExecute, string workingDir)
     {
         try
         {
@@ -117,6 +118,7 @@ public static class ShellHelper
                 UseShellExecute = useShellExecute,
                 FileName = filename,
                 Arguments = args,
+                WorkingDirectory = (string.IsNullOrWhiteSpace(workingDir) ? Path.GetDirectoryName(filename) : workingDir),
             };
 
             Process.Start(psi);

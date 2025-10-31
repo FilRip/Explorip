@@ -833,6 +833,8 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         Unknown = 999,
     }
 
+    public string WorkingDirectory { get; set; }
+
     public bool IsPinnedApp { get; set; }
 
     public string PinnedShortcut { get; set; }
@@ -854,9 +856,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     public bool StartNewInstance(string arguments = null)
     {
         if (IsUWP)
-            return ShellHelper.StartProcess("explorer.exe", $"shell:AppsFolder\\{AppUserModelID}", false);
+            return ShellHelper.StartProcess("explorer.exe", $"shell:AppsFolder\\{AppUserModelID}", false, "");
         else
-            return ShellHelper.StartProcess(WinFileName, (string.IsNullOrWhiteSpace(arguments) ? Arguments : arguments), false);
+            return ShellHelper.StartProcess(WinFileName, (string.IsNullOrWhiteSpace(arguments) ? Arguments : arguments), false, WorkingDirectory);
     }
 
     public int ParentProcessId()

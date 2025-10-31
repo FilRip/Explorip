@@ -3,6 +3,8 @@ using System.Windows;
 
 using Explorip.TaskBar.Controls;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.Models;
@@ -27,7 +29,8 @@ public static class HookRefreshLanguageLayout
             (lParam.vkCode == (int)NativeMethods.VK.LWIN || lParam.vkCode == (int)NativeMethods.VK.RWIN) && Application.Current is MyTaskbarApp myApp)
         {
             foreach (Taskbar tb in myApp.ListAllTaskbar())
-                tb.LanguageLayoutButton.MyDataContext.RefreshCurrentLayout();
+                if (ConfigManager.GetTaskbarConfig(tb.NumScreen).ShowKeyboardLayout)
+                    tb.LanguageLayoutButton.MyDataContext.RefreshCurrentLayout();
         }
         return NativeMethods.CallNextHookEx(IntPtr.Zero, code, wParam, ref lParam);
     }
