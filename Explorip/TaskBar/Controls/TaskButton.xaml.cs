@@ -188,9 +188,6 @@ public partial class TaskButton : UserControl
                 {
                     (_appWindow.Position, appWin.Position) = (appWin.Position, _appWindow.Position);
                     this.FindVisualParent<TaskList>().MyDataContext.RefreshMyCollectionView();
-                    DragGhostAdorner.StopDragGhost();
-                    TaskButton tb = this.FindVisualParent<TaskList>().MyDataContext.TaskListCollection.OfType<TaskButton>().SingleOrDefault(tb => tb.ApplicationWindow.Id == appWin.Id);
-                    DragGhostAdorner.StartDragGhost(tb, null);
                 }
             }
             else if (data.GetFileDropList()?.Count > 0)
@@ -213,7 +210,7 @@ public partial class TaskButton : UserControl
         {
             DataObject data = new();
             data.SetData(_appWindow);
-            DragGhostAdorner.StartDragGhost(this, e);
+            DragGhostAdorner.StartDragGhost(this, e, this.FindVisualParent<TaskList>());
             DragDrop.DoDragDrop(this, _appWindow, DragDropEffects.Move);
             DragGhostAdorner.StopDragGhost();
         }
@@ -238,6 +235,8 @@ public partial class TaskButton : UserControl
     private void UserControl_GiveFeedback(object sender, GiveFeedbackEventArgs e)
     {
         DragGhostAdorner.UpdateDragGhost();
+        /*e.UseDefaultCursors = false;
+        e.Handled = true;*/
     }
 
     #endregion

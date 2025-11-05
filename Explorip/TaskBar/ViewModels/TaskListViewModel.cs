@@ -17,6 +17,7 @@ using Explorip.TaskBar.Helpers;
 using ExploripConfig.Configuration;
 
 using ManagedShell.AppBar;
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
@@ -84,11 +85,13 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void RefreshMyCollectionView()
     {
+        ShellLogger.Debug($"Refresh TaskList of screen {TaskbarParent.NumScreen}");
         TaskListCollection.Refresh();
     }
 
     public void RebuildCollectionView()
     {
+        ShellLogger.Debug($"Rebuild TaskList of screen {TaskbarParent?.NumScreen}");
         TaskListCollection = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
         TaskListCollection.SortDescriptions.Add(new SortDescription(nameof(ApplicationWindow.Position), ListSortDirection.Ascending));
         TaskListCollection.Filter = FilterAppWindow;
