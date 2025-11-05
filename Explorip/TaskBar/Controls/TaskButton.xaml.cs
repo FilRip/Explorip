@@ -1,21 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 using Explorip.Constants;
 using Explorip.Helpers;
 
 using ExploripConfig.Configuration;
 
-using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
@@ -28,6 +25,8 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class TaskButton : UserControl
 {
+    #region Fields
+
     private ApplicationWindow _appWindow;
     private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
     private TaskThumbButton _thumb;
@@ -35,6 +34,10 @@ public partial class TaskButton : UserControl
     private Timer _timerBeforeShowThumbnail;
     private bool _mouseOver;
     private bool _startDrag;
+
+    #endregion
+
+    #region Constructor/Initializer
 
     public TaskButton()
     {
@@ -104,6 +107,10 @@ public partial class TaskButton : UserControl
         CloseThumbnail();
     }
 
+    #endregion
+
+    #region Actions button
+
     private void AppButton_OnClick(object sender, RoutedEventArgs e)
     {
         try
@@ -147,6 +154,8 @@ public partial class TaskButton : UserControl
         }
         DragMouseUp();
     }
+
+    #endregion
 
     #region Properties
 
@@ -210,7 +219,7 @@ public partial class TaskButton : UserControl
         {
             DataObject data = new();
             data.SetData(_appWindow);
-            DragGhostAdorner.StartDragGhost(this, e, this.FindVisualParent<TaskList>());
+            DragGhostAdorner.StartDragGhost(this, e);
             DragDrop.DoDragDrop(this, _appWindow, DragDropEffects.Move);
             DragGhostAdorner.StopDragGhost();
         }
@@ -235,8 +244,8 @@ public partial class TaskButton : UserControl
     private void UserControl_GiveFeedback(object sender, GiveFeedbackEventArgs e)
     {
         DragGhostAdorner.UpdateDragGhost();
-        /*e.UseDefaultCursors = false;
-        e.Handled = true;*/
+        e.UseDefaultCursors = false;
+        e.Handled = true;
     }
 
     #endregion

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Explorip.Helpers;
 
@@ -86,5 +87,26 @@ internal static class ExtensionsWpf
     {
         Point location = control.PointToScreen(new Point(0, 0));
         return new Rect(location, control.RenderSize);
+    }
+
+    public static ImageSource CreateImageFromWpfControl(UIElement source)
+    {
+        Rect bounds = VisualTreeHelper.GetDescendantBounds(source);
+        RenderTargetBitmap rtb = new((int)bounds.Width,
+                                     (int)bounds.Height,
+                                     96,
+                                     96,
+                                     PixelFormats.Pbgra32);
+
+        DrawingVisual dv = new();
+        using (DrawingContext ctx = dv.RenderOpen())
+        {
+            VisualBrush vb = new(source);
+            ctx.DrawRectangle(vb, null, new Rect(new Point(), bounds.Size));
+        }
+
+        rtb.Render(dv);
+
+        return rtb;
     }
 }
