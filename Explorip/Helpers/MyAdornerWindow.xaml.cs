@@ -38,7 +38,8 @@ public partial class MyAdornerWindow : Window
     {
         System.Drawing.Point p = new();
         NativeMethods.GetCursorPos(ref p);
-        Left = p.X - _offset.X;
-        Top = p.Y - _offset.Y;
+        double dpiScale = WpfScreenHelper.MouseHelper.MouseScreen.ScaleFactor;
+        Left = (p.X - _offset.X * dpiScale) / dpiScale;
+        Top = (p.Y - _offset.Y * dpiScale) / dpiScale;
     }
 }

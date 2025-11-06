@@ -92,10 +92,11 @@ internal static class ExtensionsWpf
     public static ImageSource CreateImageFromWpfControl(UIElement source)
     {
         Rect bounds = VisualTreeHelper.GetDescendantBounds(source);
-        RenderTargetBitmap rtb = new((int)bounds.Width,
-                                     (int)bounds.Height,
-                                     96,
-                                     96,
+        DpiScale dpi = VisualTreeHelper.GetDpi(source);
+        RenderTargetBitmap rtb = new((int)(bounds.Width * dpi.DpiScaleX),
+                                     (int)(bounds.Height * dpi.DpiScaleY),
+                                     dpi.PixelsPerInchX,
+                                     dpi.PixelsPerInchY,
                                      PixelFormats.Pbgra32);
 
         DrawingVisual dv = new();
