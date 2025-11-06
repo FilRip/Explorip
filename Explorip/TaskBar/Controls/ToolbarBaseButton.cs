@@ -39,6 +39,12 @@ public class ToolbarBaseButton : UserControl
         Drop += OnDrop;
         MouseEnter += ToolbarBaseButton_MouseEnter;
         MouseLeave += ToolbarBaseButton_MouseLeave;
+        GiveFeedback += ToolbarBaseButton_GiveFeedback;
+    }
+
+    public ShellFile MyDataContext
+    {
+        get { return (ShellFile)DataContext; }
     }
 
     private void ToolbarBaseButton_MouseLeave(object sender, MouseEventArgs e)
@@ -237,22 +243,19 @@ public class ToolbarBaseButton : UserControl
         return builder;
     }
 
+    #region Drag'n Drop
+
     protected void DragMouseDown(object sender, MouseButtonEventArgs e)
     {
         _startDrag = true;
 #pragma warning disable CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
-        StartDrag();
+        StartDrag(e);
 #pragma warning restore CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
     }
 
     protected void DragMouseUp(object sender, MouseButtonEventArgs e)
     {
         _startDrag = false;
-    }
-
-    public ShellFile MyDataContext
-    {
-        get { return (ShellFile)DataContext; }
     }
 
     protected void OnDragEnter(object sender, DragEventArgs e)
@@ -300,15 +303,26 @@ public class ToolbarBaseButton : UserControl
         }
     }
 
-    private async Task StartDrag()
+    private async Task StartDrag(MouseEventArgs e)
     {
         await Task.Delay(WindowsConstants.DelayIgnoreDrag);
         if (_startDrag)
         {
             DataObject data = new();
             data.SetData(MyDataContext);
+            DragGhostAdorner.StartDragGhost(this, e);
             DragDrop.DoDragDrop(this, DataContext, DragDropEffects.Move);
+            DragGhostAdorner.StopDragGhost();
             _startDrag = true;
         }
     }
+
+    private void ToolbarBaseButton_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+    {
+        DragGhostAdorner.UpdateDragGhost();
+        e.UseDefaultCursors = false;
+        e.Handled = true;
+    }
+
+    #endregion
 }

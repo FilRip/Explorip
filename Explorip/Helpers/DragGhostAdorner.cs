@@ -1,6 +1,7 @@
 ﻿using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
+
+using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Logging;
 
@@ -16,7 +17,7 @@ public static class DragGhostAdorner
             return;
         Point offset = e.GetPosition(source);
         _ghostAdorner = new();
-        _ghostAdorner.SetImage(ExtensionsWpf.CreateImageFromWpfControl(source), offset, null, 0.75);
+        _ghostAdorner.SetImage(ExtensionsWpf.CreateImageFromWpfControl(source), offset, ConfigManager.DragGhostBorder, ConfigManager.DragGhostOpacity);
         _ghostAdorner.Show();
         ShellLogger.Debug("Start Ghost Adorner");
     }

@@ -21,8 +21,8 @@ public partial class MyAdornerWindow : Window
     public void SetImage(ImageSource img, Point offset, Pen border = null, double opacity = 1)
     {
         MyAdornerImage.Source = img;
-        Width = img.Width;
-        Height = img.Height;
+        Width = img.Width + (border.Thickness * 2);
+        Height = img.Height + (border.Thickness * 2);
         _offset = offset;
         UpdatePosition();
         if (border != null)

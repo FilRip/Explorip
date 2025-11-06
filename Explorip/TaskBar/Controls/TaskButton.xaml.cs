@@ -219,6 +219,7 @@ public partial class TaskButton : UserControl
         {
             DataObject data = new();
             data.SetData(_appWindow);
+            CloseThumbnail();
             DragGhostAdorner.StartDragGhost(this, e);
             DragDrop.DoDragDrop(this, _appWindow, DragDropEffects.Move);
             DragGhostAdorner.StopDragGhost();

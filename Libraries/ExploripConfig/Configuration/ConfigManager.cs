@@ -122,6 +122,12 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("HookTaskbarList", "False");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ShowIconOnThumbnailWindow", "").ToString()))
                 _registryRootTaskbar.SetValue("ShowIconOnThumbnailWindow", "True");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DragGhostBorderSize", "").ToString()))
+                _registryRootTaskbar.SetValue("DragGhostBorderSize", "1");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DragGhostBorderColor", "").ToString()))
+                _registryRootTaskbar.SetValue("DragGhostBorderColor", $"255,{Colors.Red.R},{Colors.Red.G},{Colors.Red.B}");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DragGhostOpacity", "").ToString()))
+                _registryRootTaskbar.SetValue("DragGhostOpacity", "0.75");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
@@ -670,6 +676,58 @@ public static class ConfigManager
         {
             if (HookTaskbarList != value && AllowWrite)
                 _registryRootTaskbar.SetValue("HookTaskbarList", value.ToString());
+        }
+    }
+
+    public static int DragGhostBorderSize
+    {
+        get { return _registryRootTaskbar.ReadInteger("DragGhostBorderSize"); }
+        set
+        {
+            if (DragGhostBorderSize != value && AllowWrite)
+                _registryRootTaskbar.SetValue("DragGhostBorderSize", value.ToString());
+        }
+    }
+
+    public static Color DragGhostBorderColor
+    {
+        get { return _registryRootTaskbar.ReadColor("DragGhostBorderColor", Colors.Transparent); }
+        set
+        {
+            if (AllowWrite)
+                _registryRootTaskbar.SetValue("DragGhostBorderColor", $"{value.A},{value.R},{value.G},{value.B}");
+        }
+    }
+
+    public static double DragGhostOpacity
+    {
+        get { return _registryRootTaskbar.ReadDouble("DragGhostOpacity"); }
+        set
+        {
+            if (DragGhostOpacity != value && AllowWrite)
+                _registryRootTaskbar.SetValue("DragGhostOpacity", value.ToString());
+        }
+    }
+
+    public static Pen DragGhostBorder
+    {
+        get
+        {
+            Pen ret = new()
+            {
+                Thickness = _registryRootTaskbar.ReadInteger("DragGhostBorderSize"),
+                Brush = new SolidColorBrush(_registryRootTaskbar.ReadColor("DragGhostBorderColor", Colors.Transparent)),
+            };
+            return ret;
+        }
+        set
+        {
+            if (AllowWrite)
+            {
+                if (DragGhostBorderSize != (int)value.Thickness)
+                    DragGhostBorderSize = (int)value.Thickness;
+                DragGhostBorderColor = ((SolidColorBrush)value.Brush).Color;
+            }
         }
     }
 

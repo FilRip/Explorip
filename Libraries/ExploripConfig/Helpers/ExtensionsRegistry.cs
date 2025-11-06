@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
@@ -24,7 +25,7 @@ public static class ExtensionsRegistry
 
     public static double ReadDouble(this RegistryKey registryKey, string keyName, double defaultValue = 0)
     {
-        if (double.TryParse(registryKey.GetValue(keyName, defaultValue.ToString()).ToString(), out double result))
+        if (double.TryParse(registryKey.GetValue(keyName, defaultValue.ToString()).ToString(), NumberStyles.AllowDecimalPoint | NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out double result))
             return result;
         return defaultValue;
     }
