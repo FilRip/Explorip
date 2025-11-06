@@ -85,7 +85,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.Helpers", "Librar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitorian", "Libraries\Monitorian\Monitorian.csproj", "{30574F83-3A99-4BE1-86EB-2E68C5D2CC4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerInfo", "ComputerInfo\ComputerInfo.csproj", "{2026A44F-4D7C-492B-A8D4-6F486E246F4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerInfo", "Plugins\ComputerInfo\ComputerInfo.csproj", "{2026A44F-4D7C-492B-A8D4-6F486E246F4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

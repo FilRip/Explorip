@@ -7,7 +7,7 @@
 	<Version>1.0.0.0</Version>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Plugins\ExploripPlugins\ExploripPlugins.csproj" />
+    <ProjectReference Include="..\ExploripPlugins\ExploripPlugins.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
