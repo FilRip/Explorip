@@ -59,4 +59,9 @@ public partial class Toolbar : BaseToolbar
     }
 
     #endregion
+
+    private void BaseToolbar_Unloaded(object sender, RoutedEventArgs e)
+    {
+        _isLoaded = false;
+    }
 }

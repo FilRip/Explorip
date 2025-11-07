@@ -39,4 +39,13 @@ public partial class TaskList : UserControl
                 MyDataContext.FirstRefresh();
         }
     }
+
+    private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            return;
+
+        MyDataContext.RemoveTaskServiceEvent();
+        _isLoaded = false;
+    }
 }

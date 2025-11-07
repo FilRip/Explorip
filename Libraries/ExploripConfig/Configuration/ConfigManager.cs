@@ -128,6 +128,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("DragGhostBorderColor", $"255,{Colors.Red.R},{Colors.Red.G},{Colors.Red.B}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("DragGhostOpacity", "").ToString()))
                 _registryRootTaskbar.SetValue("DragGhostOpacity", "0.75");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("SwitchToDesktopWhenDragEnter", "").ToString()))
+                _registryRootTaskbar.SetValue("SwitchToDesktopWhenDragEnter", "True");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
@@ -728,6 +730,16 @@ public static class ConfigManager
                     DragGhostBorderSize = (int)value.Thickness;
                 DragGhostBorderColor = ((SolidColorBrush)value.Brush).Color;
             }
+        }
+    }
+
+    public static bool SwitchToDesktopWhenDragEnter
+    {
+        get { return _registryRootTaskbar.ReadBoolean("SwitchToDesktopWhenDragEnter"); }
+        set
+        {
+            if (SwitchToDesktopWhenDragEnter != value && AllowWrite)
+                _registryRootTaskbar.SetValue("SwitchToDesktopWhenDragEnter", value.ToString());
         }
     }
 

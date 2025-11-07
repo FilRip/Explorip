@@ -23,6 +23,8 @@ namespace Explorip.TaskBar.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+                return;
             MyDataContext.SetTaskbar(this.FindControlParent<Taskbar>());
         }
     }

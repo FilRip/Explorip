@@ -6,7 +6,7 @@
              xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             Loaded="UserControl_Loaded"
+             Loaded="UserControl_Loaded" Unloaded="BaseToolbar_Unloaded"
              Background="Transparent"
              Margin="{Binding Margin}">
     

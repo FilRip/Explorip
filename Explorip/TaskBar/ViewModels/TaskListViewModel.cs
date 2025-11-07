@@ -109,7 +109,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         get { return _taskbarParent; }
         set
         {
-            if (_taskbarParent != value && value != null)
+            if (value != null)
             {
                 _taskbarParent = value;
                 if (_taskbarParent.MainScreen)
@@ -165,8 +165,10 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             TitleLength = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow;
     }
 
-    private static void RemoveTaskServiceEvent()
+    public void RemoveTaskServiceEvent()
     {
+        if (VirtualDesktopProvider.Default.Initialized)
+            VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
         MyTaskbarApp.MyShellManager.TasksService.WindowDestroy -= RefreshAllCollectionView;
         MyTaskbarApp.MyShellManager.TasksService.WindowCreate -= RefreshAllCollectionView;
         MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= UncloakedUwp;
@@ -187,6 +189,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
     {
+        ShellLogger.Debug("Rebuild TaskList from new virtual desktop");
         Application.Current.Dispatcher.Invoke(() =>
         {
             lock (_lockChangeDesktop)
@@ -371,8 +374,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             if (disposing)
             {
                 RemoveTaskServiceEvent();
-                if (VirtualDesktopProvider.Default.Initialized)
-                    VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
             }
 
             disposedValue = true;

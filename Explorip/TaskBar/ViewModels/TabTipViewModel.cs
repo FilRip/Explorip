@@ -38,7 +38,7 @@ public partial class TabTipViewModel : ObservableObject
             }
             catch (Exception ex)
             {
-                if (ex.HResult == unchecked((int)0x80040154))
+                if (ex.HResult == unchecked((int)CoolBytes.Helpers.Win32Error.REGDB_E_CLASSNOTREG))
                 {
                     ProcessStartInfo psi = new()
                     {

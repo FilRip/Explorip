@@ -112,4 +112,11 @@ public partial class DesktopButtonViewModel : ObservableObject
     {
         ShellHelper.ShellKeyCombo(NativeMethods.VK.LWIN, NativeMethods.VK.KEY_D);
     }
+
+    [RelayCommand()]
+    private void DragEnter(DragEventArgs e)
+    {
+        if (ConfigManager.SwitchToDesktopWhenDragEnter)
+            ClickDesktop();
+    }
 }

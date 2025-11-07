@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
-             Loaded="UserControl_Loaded">
+             Loaded="UserControl_Loaded" AllowDrop="True">
     <UserControl.DataContext>
         <viewmodels:DesktopButtonViewModel/>
     </UserControl.DataContext>
@@ -17,6 +17,9 @@
             </i:EventTrigger>
             <i:EventTrigger EventName="MouseLeave">
                 <i:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="DragEnter">
+                <i:InvokeCommandAction Command="{Binding DragEnterCommand}" PassEventArgsToCommand="True"/>
             </i:EventTrigger>
         </i:Interaction.Triggers>
     </Button>

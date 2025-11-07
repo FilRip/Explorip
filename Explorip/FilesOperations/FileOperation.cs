@@ -112,7 +112,8 @@ public class FileOperation : IDisposable
         {
             if (disposing)
             {
-                if (_callbackSink != null) _fileOperation.Unadvise(_sinkCookie);
+                if (_callbackSink != null)
+                    _fileOperation.Unadvise(_sinkCookie);
                 Marshal.FinalReleaseComObject(_fileOperation);
             }
 

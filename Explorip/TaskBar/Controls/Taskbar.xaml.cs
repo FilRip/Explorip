@@ -47,6 +47,9 @@ public partial class Taskbar : AppBarWindow
     {
         InitializeComponent();
 
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            return;
+
         _mainScreen = screen.Primary;
         _numScreen = screen.NumScreen;
 
@@ -284,6 +287,9 @@ public partial class Taskbar : AppBarWindow
 
     private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            return;
+
         MyDataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
         {
@@ -376,7 +382,7 @@ public partial class Taskbar : AppBarWindow
         }
     }
 
-    private void Taskbar_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void Taskbar_MouseDown(object sender, MouseButtonEventArgs e)
     {
         _lastMousePosition = e.GetPosition(ToolsBars);
     }
@@ -497,7 +503,7 @@ public partial class Taskbar : AppBarWindow
 
     #endregion
 
-    private void MenuToolbars_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    private void MenuToolbars_MouseEnter(object sender, MouseEventArgs e)
     {
         MyDataContext.BuildToolbarsMenu();
     }

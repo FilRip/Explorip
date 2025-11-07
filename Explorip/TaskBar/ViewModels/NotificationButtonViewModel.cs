@@ -35,11 +35,17 @@ public partial class NotificationButtonViewModel : ObservableObject
                 Right = (int)(screen.WorkingArea.Right),
             };
             IntPtr ptrRect = Marshal.AllocHGlobal(Marshal.SizeOf<NativeMethods.Rect>());
-            Marshal.StructureToPtr(rect, ptrRect, false);
-            NativeMethods.MoveWindow(ptrNotifCenterWindow, rect.Left, rect.Top, rect.Width, rect.Height, true);
-            IntPtr wParam = NativeMethods.MakeParam((int)(screen.ScaleFactor * 96), (int)(screen.ScaleFactor * 96));
-            NativeMethods.SendMessage(ptrNotifCenterWindow, NativeMethods.WM.DPICHANGED, wParam, ptrRect);
-            Marshal.FreeHGlobal(ptrRect);
+            try
+            {
+                Marshal.StructureToPtr(rect, ptrRect, false);
+                NativeMethods.MoveWindow(ptrNotifCenterWindow, rect.Left, rect.Top, rect.Width, rect.Height, true);
+                IntPtr wParam = NativeMethods.MakeParam((int)(screen.ScaleFactor * 96), (int)(screen.ScaleFactor * 96));
+                NativeMethods.SendMessage(ptrNotifCenterWindow, NativeMethods.WM.DPICHANGED, wParam, ptrRect);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(ptrRect);
+            }
         }
         NumberOfNotifications = 0;
     }

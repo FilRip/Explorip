@@ -48,9 +48,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private readonly Guid _id;
     private ThumbButton[] _thumbButtons;
 
-    public delegate void GetButtonRectEventHandler(ref NativeMethods.ShortRect rect);
-    public event GetButtonRectEventHandler GetButtonRect;
-
     public ApplicationWindow(TasksService tasksService, IntPtr handle)
     {
         _hIcon = IntPtr.Zero;
@@ -604,13 +601,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         if (!hWnd.HasValue)
             return NativeMethods.MonitorFromWindow(_windows[0], NativeMethods.EMonitorFromWindow.DefaultToNearest);
         return NativeMethods.MonitorFromWindow(hWnd.Value, NativeMethods.EMonitorFromWindow.DefaultToNearest);
-    }
-
-    internal NativeMethods.ShortRect GetButtonRectFromShell()
-    {
-        NativeMethods.ShortRect rect = new();
-        GetButtonRect?.Invoke(ref rect);
-        return rect;
     }
 
     public void SetOverlayIcon(IntPtr hIcon)

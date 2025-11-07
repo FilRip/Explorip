@@ -449,20 +449,6 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             FullScreenChanged?.Invoke(this, fsArgs);
                             ShellLogger.Debug($"TasksService: Full screen exited by window {msg.LParam}");
                             break;
-                        case HSHELL.GETMINRECT:
-                            ShellHookInfo minRectInfo = Marshal.PtrToStructure<ShellHookInfo>(msg.LParam);
-                            if (Windows.Any(i => i.ListWindows.Contains(minRectInfo.hwnd)))
-                            {
-                                win = Windows.First(wnd => wnd.ListWindows.Contains(minRectInfo.hwnd));
-                                minRectInfo.rc = win.GetButtonRectFromShell();
-                                if (minRectInfo.rc.Width <= 0 && minRectInfo.rc.Height <= 0)
-                                    break;
-                                Marshal.StructureToPtr(minRectInfo, msg.LParam, false);
-                                msg.Result = (IntPtr)1;
-                                ShellLogger.Debug($"TasksService: MinRect {minRectInfo.rc.Width}x{minRectInfo.rc.Height} provided for {minRectInfo.hwnd} ({win.Title})");
-                                return; // return here so the result isnt reset to DefWindowProc
-                            }
-                            break;
                         default:
                             break;
                     }
