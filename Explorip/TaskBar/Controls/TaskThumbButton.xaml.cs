@@ -139,7 +139,10 @@ public partial class TaskThumbButton : Window
         Point positionParent = MyDataContext.ParentTask.PointToScreen(Mouse.GetPosition(this));
         Left = (int)((positionParent.X - (Width / 2)) / screen.ScaleFactor);
         if (parent.ApplicationWindow.ListWindows.Count == 1)
+        {
             Left += Width / screen.ScaleFactor / 2;
+            Left -= (Width - parent.ActualWidth) / 2;
+        }
         Top = parent.TaskbarParent.Top - Height;
 
         // Cancel System menu
