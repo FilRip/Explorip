@@ -67,4 +67,4 @@ Tested under
 ------------
 - Windows 10 22H2 build 19041 (no more tested since v1.2 but still should work)
 - Windows 11 23H2 build 22631
-- Windows 11 24H2 build 26100
+- Windows 11 25H2 build 26200
