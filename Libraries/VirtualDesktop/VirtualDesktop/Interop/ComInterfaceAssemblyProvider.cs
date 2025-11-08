@@ -23,7 +23,7 @@ namespace WindowsDesktop.Interop
         private static readonly Regex _assemblyRegex = new(@"VirtualDesktop\.(?<build>\d{5}?)(\.\w*|)\.dll");
         private static readonly string _defaultAssemblyDirectoryPath = Path.Combine(ProductInfo.LocalAppData.FullName, "assemblies");
         private static readonly Version _requireVersion = new("1.0");
-        private static readonly int[] _interfaceVersions = [10240, 20231, 21313, 21359, 22449, 22631, 26100];
+        private static readonly int[] _interfaceVersions = [10240, 20231, 21313, 21359, 22449, 22631, 26100, 26200];
 
         private readonly string _assemblyDirectoryPath = assemblyDirectoryPath ?? _defaultAssemblyDirectoryPath;
 

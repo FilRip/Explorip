@@ -69,7 +69,8 @@ public partial class MyTaskbarApp : Application
         ExitApp();
         if (ConfigManager.TaskbarReplaceStartMenu)
             StartMenuWindow.MyStartMenu?.Close();
-        Explorip.Helpers.HookTaskbarListHelper.UninstallHook();
+        if (ConfigManager.HookTaskbarList)
+            Explorip.Helpers.HookTaskbarListHelper.UninstallHook();
         Current?.Shutdown();
     }
 

@@ -45,7 +45,7 @@ public static class MonitorsManager
         int result = 0;
 
         if (MonitorsList.Count == 0)
-            return result;
+            return 0;
 
         foreach (SafePhysicalMonitorHandle physicalMonitorHandler in MonitorsList.Select(pm => pm.Handle))
         {
@@ -55,12 +55,12 @@ public static class MonitorsManager
                 {
                     StringBuilder sb = new((int)size);
                     bool on = CapabilitiesRequestAndCapabilitiesReply(physicalMonitorHandler, sb, size);
-                    if (on)
+                    if (!on)
                         result++;
                 }
-                else
-                    result++;
             }
+            else
+                result++;
         }
         return result;
     }
