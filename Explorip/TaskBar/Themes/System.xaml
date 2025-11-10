@@ -14,7 +14,6 @@
 
     <SolidColorBrush x:Key="ButtonForeground" Color="White" />
     <SolidColorBrush x:Key="ButtonFlashingForeground" Color="DarkRed" />
-    <SolidColorBrush x:Key="ClockForeground" Color="White" />
 
     <SolidColorBrush x:Key="ToolTipBackground" Color="{x:Static SystemColors.InfoColor}" />
     <SolidColorBrush x:Key="ToolTipForeground" Color="{x:Static SystemColors.InfoTextColor}" />
@@ -181,7 +180,7 @@
                                  Value="True">
                             <Setter TargetName="ButtonBorder"
                                     Property="Background"
-                                    Value="#303030" />
+                                    Value="{x:Static config:ConfigManager.MouseOverBackgroundColor}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -567,7 +566,7 @@
         <Setter Property="TextOptions.TextRenderingMode"
                 Value="Auto" />
         <Setter Property="Foreground"
-                Value="{DynamicResource ClockForeground}" />
+                Value="{x:Static colors:Colors.ForegroundColorBrush}" />
         <Setter Property="Margin"
                 Value="8,0" />
         <Setter Property="TextAlignment"
@@ -674,7 +673,7 @@
         <Setter Property="Background"
                 Value="Transparent" />
         <Setter Property="Foreground"
-                Value="White"/>
+                Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
         <Setter Property="Margin"
                 Value="-2,-3,1,-3" />
         <Setter Property="Template">

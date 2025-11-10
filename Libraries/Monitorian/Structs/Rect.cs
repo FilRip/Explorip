@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace Monitorian.Structs;
 

@@ -10,8 +10,6 @@ using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Helpers;
 
-using ExploripConfig.Configuration;
-
 using ExploripSharedCopy.Controls;
 
 using ManagedShell.Common.Helpers;

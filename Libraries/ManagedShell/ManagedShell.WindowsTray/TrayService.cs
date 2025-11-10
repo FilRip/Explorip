@@ -31,6 +31,7 @@ public class TrayService : IDisposable
     }
 
     #region Set callbacks
+
     internal void SetSystrayCallback(SystrayDelegate theDelegate)
     {
         trayDelegate = theDelegate;
@@ -45,6 +46,7 @@ public class TrayService : IDisposable
     {
         trayHostSizeDelegate = theDelegate;
     }
+
     #endregion
 
     internal IntPtr Initialize()

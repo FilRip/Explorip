@@ -13,7 +13,7 @@ public static class Colors
     public static SolidColorBrush BackgroundColorBrush { get; private set; }
     public static SolidColorBrush ForegroundColorBrush { get; private set; }
     public static SolidColorBrush TransparentColorBrush { get; private set; }
-    public static SolidColorBrush SelectedBackgroundShellObject { get; private set; }
+    public static SolidColorBrush SelectedBackgroundShellObject { get; set; }
 
     public static void LoadTheme()
     {

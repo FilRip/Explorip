@@ -284,7 +284,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         }
         private set
         {
-            if ( _overlayIcon != value)
+            if (_overlayIcon != value)
             {
                 _overlayIcon = value;
                 OnPropertyChanged();

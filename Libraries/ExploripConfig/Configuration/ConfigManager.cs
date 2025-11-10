@@ -130,6 +130,10 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("DragGhostOpacity", "0.75");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("SwitchToDesktopWhenDragEnter", "").ToString()))
                 _registryRootTaskbar.SetValue("SwitchToDesktopWhenDragEnter", "True");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MouseOverBackgroundColor", "").ToString()))
+                _registryRootTaskbar.SetValue("MouseOverBackgroundColor", $"255,{Colors.LightBlue.R},{Colors.LightBlue.G},{Colors.LightBlue.B}");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ReplaceStartMenu", "").ToString()))
+                _registryRootTaskbar.SetValue("ReplaceStartMenu", "True");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
@@ -588,6 +592,24 @@ public static class ConfigManager
         {
             if (AllowWrite)
                 _registryRootTaskbar.SetValue("TaskButtonProgressBarColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static SolidColorBrush MouseOverBackgroundColor
+    {
+        get
+        {
+            string bgColor = _registryRootTaskbar.GetValue("MouseOverBackgroundColor")?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                return new SolidColorBrush(_registryRootTaskbar.ReadColor("MouseOverBackgroundColor", Colors.DarkGray));
+            }
+            return null;
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryRootTaskbar.SetValue("MouseOverBackgroundColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 

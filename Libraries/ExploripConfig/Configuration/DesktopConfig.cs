@@ -86,7 +86,7 @@ public class DesktopConfig
         if (!string.IsNullOrWhiteSpace(pos))
         {
             string[] splitter = pos.Split(',');
-            return (int.Parse(splitter[0]),  int.Parse(splitter[1]));
+            return (int.Parse(splitter[0]), int.Parse(splitter[1]));
         }
         return (-1, -1);
     }

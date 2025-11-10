@@ -182,8 +182,13 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     [RelayCommand()]
     private void ShowSearchZone()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone = true;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton = false;
+        if (ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton)
+        {
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone = true;
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton = false;
+        }
+        else
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone = false;
         RefreshSearch();
     }
 
@@ -196,8 +201,13 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     [RelayCommand()]
     private void ShowSearchButton()
     {
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone = false;
-        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton = true;
+        if (ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone)
+        {
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchZone = false;
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton = true;
+        }
+        else
+            ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSearchButton = false;
         RefreshSearch();
     }
 

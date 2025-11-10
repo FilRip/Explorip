@@ -321,10 +321,8 @@ public partial class MyTaskbarApp : Application
                     if (!handle.IsInvalid)
                     {
 #pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
-                        if (NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out bool on) &&!on)
-                        {
+                        if (NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out bool on) && !on)
                             laptopScreenOff = true;
-                        }
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
                         handle.Dispose();
                     }
