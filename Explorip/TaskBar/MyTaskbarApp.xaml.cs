@@ -314,15 +314,14 @@ public partial class MyTaskbarApp : Application
             {
                 if (!DisableAutoLock)
                 {
-                    bool laptopScreenOff = false;
+                    bool laptopScreenOn = false;
 
                     // This work only on laptop
                     Microsoft.Win32.SafeHandles.SafeFileHandle handle = NativeMethods.CreateFile("\\\\.\\LCD", 0, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
                     if (!handle.IsInvalid)
                     {
 #pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
-                        if (NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out bool on) && !on)
-                            laptopScreenOff = true;
+                        NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out laptopScreenOn);
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
                         handle.Dispose();
                     }
@@ -331,8 +330,8 @@ public partial class MyTaskbarApp : Application
                     int allMonitorOff = Monitorian.MonitorsManager.NumberOfMonitorsOff();
 
                     // If we are on laptop, previous line return power off of plugged monitors, so we increase with the one integrate to the laptop
-                    if (laptopScreenOff)
-                        allMonitorOff++;
+                    if (laptopScreenOn)
+                        allMonitorOff--;
 
                     // If all monitors are power off, then lock session
                     if (allMonitorOff >= Screen.AllScreens.Count())
