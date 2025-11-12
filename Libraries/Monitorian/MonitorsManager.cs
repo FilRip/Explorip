@@ -45,7 +45,7 @@ public static class MonitorsManager
         int result = 0;
 
         if (MonitorsList.Count == 0)
-            return 0;
+            return int.MaxValue;
 
         foreach (SafePhysicalMonitorHandle physicalMonitorHandler in MonitorsList.Select(pm => pm.Handle))
         {

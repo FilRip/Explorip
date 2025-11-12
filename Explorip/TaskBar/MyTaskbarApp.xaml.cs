@@ -316,6 +316,9 @@ public partial class MyTaskbarApp : Application
                 {
                     bool laptopScreenOn = false;
 
+                    // This work only on no laptop (return monitors plugged and turned off/sleep. On the laptop, the integrate one is always count as power off/sleep)
+                    int allMonitorOff = Monitorian.MonitorsManager.NumberOfMonitorsOff();
+
                     // This work only on laptop
                     Microsoft.Win32.SafeHandles.SafeFileHandle handle = NativeMethods.CreateFile("\\\\.\\LCD", 0, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
                     if (!handle.IsInvalid)
@@ -324,14 +327,10 @@ public partial class MyTaskbarApp : Application
                         NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out laptopScreenOn);
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
                         handle.Dispose();
+                        // As see at initialization of allMonitorOff, just before, the screen integrate in laptop always count as power off/sleep. So if not, we decrease number of monitor power off/sleep
+                        if (laptopScreenOn)
+                            allMonitorOff--;
                     }
-
-                    // This work only on no laptop (return monitors plugged on the laptop, exclude the integrate one)
-                    int allMonitorOff = Monitorian.MonitorsManager.NumberOfMonitorsOff();
-
-                    // If we are on laptop, previous line return power off of plugged monitors, so we increase with the one integrate to the laptop
-                    if (laptopScreenOn)
-                        allMonitorOff--;
 
                     // If all monitors are power off, then lock session
                     if (allMonitorOff >= Screen.AllScreens.Count())
@@ -342,7 +341,7 @@ public partial class MyTaskbarApp : Application
                 }
             }
             catch (Exception) { /* Ignore errors */ }
-            Thread.Sleep(3000);
+            Thread.Sleep(1000);
         }
     }
 }
