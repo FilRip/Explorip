@@ -40,6 +40,19 @@ public class ToolbarBaseButton : UserControl
         MouseEnter += ToolbarBaseButton_MouseEnter;
         MouseLeave += ToolbarBaseButton_MouseLeave;
         GiveFeedback += ToolbarBaseButton_GiveFeedback;
+        Unloaded += ToolbarBaseButton_Unloaded;
+    }
+
+    private void ToolbarBaseButton_Unloaded(object sender, RoutedEventArgs e)
+    {
+        PreviewMouseDown -= DragMouseDown;
+        PreviewMouseUp -= DragMouseUp;
+        DragEnter -= OnDragEnter;
+        Drop -= OnDrop;
+        MouseEnter -= ToolbarBaseButton_MouseEnter;
+        MouseLeave -= ToolbarBaseButton_MouseLeave;
+        GiveFeedback -= ToolbarBaseButton_GiveFeedback;
+        Unloaded -= ToolbarBaseButton_Unloaded;
     }
 
     public ShellFile MyDataContext

@@ -102,13 +102,18 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     public override void Init(BaseToolbar parentControl)
     {
         base.Init(parentControl);
-        ((Border)_moreItems.Child).Background = ConfigManager.GetTaskbarConfig(parentControl.FindVisualParent<Taskbar>().NumScreen).TaskbarBackground;
+        ((Border)_moreItems.Child).Background = ConfigManager.GetTaskbarConfig(parentControl.FindControlParent<Taskbar>().NumScreen).TaskbarBackground;
         SetupFolder(Path);
     }
 
     private void SetupFolder(string path)
     {
-        Folder?.Dispose();
+        if (Folder != null)
+        {
+            if (Folder.Files != null)
+                Folder.Files.CollectionChanged -= Files_CollectionChanged;
+            Folder.Dispose();
+        }
         if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)) && ParentTaskbar != null)
         {
             Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);

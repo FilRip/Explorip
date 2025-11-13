@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -23,6 +24,9 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class TaskThumbButton : Window
 {
+    private readonly List<Button> _listCloseButton = [];
+    private readonly List<Button> _listThumbnailButton = [];
+
     public TaskThumbButton(TaskButton parent)
     {
         InitializeComponent();
@@ -100,6 +104,8 @@ public partial class TaskThumbButton : Window
                     Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
                 };
                 closeButton.Click += CloseWindowButton_Click;
+                _listCloseButton.Add(closeButton);
+
                 Button thumbnailButton = new()
                 {
                     HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -114,6 +120,7 @@ public partial class TaskThumbButton : Window
                 thumbnailButton.MouseEnter += ThumbnailButton_MouseEnter;
                 thumbnailButton.SetBinding(Button.CommandProperty, new Binding(nameof(MyDataContext.ClickWindowCommand)));
                 thumbnailButton.MouseRightButtonDown += ThumbnailButton_MouseRightButtonDown;
+                _listThumbnailButton.Add(thumbnailButton);
 
                 if (icon != null)
                 {
@@ -175,6 +182,13 @@ public partial class TaskThumbButton : Window
 
     private void Window_Unloaded(object sender, RoutedEventArgs e)
     {
+        foreach (Button closeButton in _listCloseButton)
+            closeButton.Click -= CloseWindowButton_Click;
+        foreach (Button thumbnailButton in _listThumbnailButton)
+        {
+            thumbnailButton.MouseRightButtonDown -= ThumbnailButton_MouseRightButtonDown;
+            thumbnailButton.MouseEnter -= ThumbnailButton_MouseEnter;
+        }
         MyDataContext.Dispose();
     }
 

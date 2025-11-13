@@ -59,6 +59,7 @@ public class ExplorerHelper
 
     public void SetTaskbarVisibility(SWP swp)
     {
+        ShellLogger.Debug("ExplorerHelper.SetTaskbarVisibility");
         // only run this if our TaskBar is enabled, or if we are showing the Windows TaskBar
         if (swp != SWP.SWP_HIDEWINDOW || HideExplorerTaskbar)
         {
@@ -80,6 +81,7 @@ public class ExplorerHelper
 
     public static void SetSecondaryTaskbarVisibility(SWP swp)
     {
+        ShellLogger.Debug("ExplorerHelper.SetSecondaryTaskbarVisibility");
         // if we have 3+ monitors there may be multiple secondary TaskBars
         IntPtr secTaskbarHwnd = FindWindowEx(IntPtr.Zero, IntPtr.Zero, "Shell_SecondaryTrayWnd", null);
         if (secTaskbarHwnd != IntPtr.Zero && swp == SWP.SWP_HIDEWINDOW == IsWindowVisible(secTaskbarHwnd))

@@ -32,6 +32,8 @@ public class AppBarWindow : Window, INotifyPropertyChanged
     protected double DesiredWidth;
     private bool EnableBlur;
 
+    public bool Disable { get; set; }
+
     // AppBar properties
     private int AppBarMessageId = -1;
 
@@ -141,6 +143,9 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
     private void FullScreenApps_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
+        if (Disable)
+            return;
+
         bool found = false;
 
         ShellLogger.Debug("FullScreenApps CollectionChanged");
@@ -166,17 +171,22 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
     protected virtual IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
+        if (Disable)
+            return IntPtr.Zero;
+
         if (msg == AppBarMessageId && AppBarMessageId != -1)
         {
             switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
             {
                 case NativeMethods.AppBarNotifications.PosChanged:
+                    ShellLogger.Debug("AppBarWindow.WndProc PosChanged");
                     if (Orientation == Orientation.Vertical)
                         _appBarManager.ABSetPos(this, DesiredWidth * DpiScale, ActualHeight * DpiScale, AppBarEdge);
                     else
                         _appBarManager.ABSetPos(this, ActualWidth * DpiScale, DesiredHeight * DpiScale, AppBarEdge);
                     break;
                 case NativeMethods.AppBarNotifications.WindowArrange:
+                    ShellLogger.Debug("AppBarWindow.WndProc WindowArrange");
                     if ((int)lParam != 0) // before
                         Visibility = Visibility.Collapsed;
                     else // after
@@ -191,6 +201,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         }
         else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
         {
+            ShellLogger.Debug("AppBarWindow.WndProc WINDOWPOSCHANGING");
             // Extract the WINDOWPOS structure corresponding to this message
             NativeMethods.WindowPos wndPos = NativeMethods.WindowPos.FromMessage(lParam);
 
@@ -289,6 +300,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
     private void ProcessScreenChange(ScreenSetupReason reason)
     {
+        ShellLogger.Debug($"AppBarWindow.ProcessScreenChange, reason : {reason:G}");
         // process screen changes if we are on the primary display and the designated window
         // (or any display in the case of a DPI change, since only the changed display receives that message and not all windows receive it reliably)
         // suppress this if we are shutting down (which can trigger this method on multi-dpi setups due to window movements)

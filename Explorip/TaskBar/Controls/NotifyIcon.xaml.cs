@@ -18,7 +18,7 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class NotifyIcon : UserControl
 {
-    private bool isLoaded;
+    private bool _isLoaded;
     private ManagedShell.WindowsTray.NotifyIcon TrayIcon;
 
     public NotifyIcon()
@@ -28,7 +28,7 @@ public partial class NotifyIcon : UserControl
 
     private void NotifyIcon_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (!isLoaded)
+        if (!_isLoaded)
         {
             TrayIcon = DataContext as ManagedShell.WindowsTray.NotifyIcon;
 
@@ -48,7 +48,7 @@ public partial class NotifyIcon : UserControl
                 TrayIcon.MissedNotifications.Remove(firstUnexpiredNotification);
             }
 
-            isLoaded = true;
+            _isLoaded = true;
         }
     }
 
@@ -58,7 +58,7 @@ public partial class NotifyIcon : UserControl
         {
             TrayIcon.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
         }
-        isLoaded = false;
+        _isLoaded = false;
     }
 
     private void TrayIcon_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)

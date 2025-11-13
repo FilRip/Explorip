@@ -276,9 +276,11 @@ public partial class Taskbar : AppBarWindow
     {
         if (AllowClose && !IsReopening)
         {
+            PreviewKeyUp -= Taskbar_PreviewKeyUp;
             MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= ClosePopup;
             if (_mainScreen)
             {
+                MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
                 _explorerHelper.HideExplorerTaskbar = false;
                 MySystray.MyDataContext.Unload();
             }
