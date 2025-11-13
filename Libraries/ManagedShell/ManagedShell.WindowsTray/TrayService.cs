@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 using ManagedShell.Common.Helpers;
@@ -140,6 +141,8 @@ public class TrayService : IDisposable
     }
 
     public bool Disable { get; set; }
+
+    public Color DefaultThemeColor { get; set; }
 
     #region IDisposable
 

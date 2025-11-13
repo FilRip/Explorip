@@ -22,7 +22,7 @@
             Focusable="False"
             AllowDrop="False">
         <Image Name="MyAdornerImage"
-               Source="/Ressources/ErrorIcon.ico"
+               Source="/Resources/ErrorIcon.ico"
                UseLayoutRounding="True"
                IsHitTestVisible="False"
                Focusable="False"

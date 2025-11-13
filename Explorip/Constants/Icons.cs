@@ -27,6 +27,7 @@ internal static class Icons
     public static ImageSource SwitchUser { get; private set; }
     public static ImageSource SignOut { get; private set; }
     public static ImageSource Sleep { get; private set; }
+    public static ImageSource SearchButton { get; private set; }
 
     internal static void Init()
     {
@@ -49,5 +50,6 @@ internal static class Icons
         SwitchUser = IconManager.GetIconFromFile("imageres.dll", 74);
         SignOut = IconManager.StringToImageSource("\uF3B1", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush);
         Sleep = IconManager.GetIconFromFile("imageres.dll", 96);
+        SearchButton = IconManager.StringToImageSource("\uE721", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, width: 32, height: 32, fontSize: 32);
     }
 }

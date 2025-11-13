@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -193,27 +194,13 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                     if ((NIF.TIP & nicData.uFlags) != 0 && !string.IsNullOrEmpty(nicData.szTip))
                         trayIcon.Title = nicData.szTip;
 
-                    if ((NIF.ICON & nicData.uFlags) != 0)
+                    if ((NIF.ICON & nicData.uFlags) != 0 && nicData.hIcon != IntPtr.Zero)
                     {
-                        if (nicData.hIcon != IntPtr.Zero)
-                        {
-                            System.Windows.Media.ImageSource icon = IconImageConverter.GetImageFromHIcon(nicData.hIcon, false);
-
-                            if (icon != null)
-                            {
-                                trayIcon.Icon = icon;
-                            }
-                            else if (icon == null && trayIcon.Icon == null)
-                            {
-                                // Use default only if we don't have a valid icon already
-                                trayIcon.Icon = IconImageConverter.GetDefaultIcon();
-                            }
-                        }
-                        else
-                        {
-                            trayIcon.Icon = null;
-                        }
+                        ImageSource icon = IconImageConverter.GetImageFromHIcon(nicData.hIcon);
+                        if (icon != null)
+                            trayIcon.Icon = icon;
                     }
+                    trayIcon.Icon ??= IconImageConverter.GetDefaultIcon();
 
                     trayIcon.HWnd = nicData.hWnd;
                     trayIcon.UID = nicData.uID;
@@ -234,16 +221,16 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
 
                         // set properties used for pinning
                         trayIcon.Path = ShellHelper.GetPathForHandle(trayIcon.HWnd);
-                        if (PinDefaultIcons && (nicData.guidItem == new Guid(HEALTH_GUID) ||
+                        if (nicData.guidItem == new Guid(HEALTH_GUID) ||
                             nicData.guidItem == new Guid(MEETNOW_GUID) ||
                             nicData.guidItem == new Guid(NETWORK_GUID) ||
                             nicData.guidItem == new Guid(POWER_GUID) ||
-                            nicData.guidItem == new Guid(VOLUME_GUID)))
+                            nicData.guidItem == new Guid(VOLUME_GUID))
                         {
-                            trayIcon.IsPinned = true;
+                            if (PinDefaultIcons)
+                                trayIcon.IsPinned = true;
+                            trayIcon.Icon = IconImageConverter.RecolorImageSource(trayIcon.Icon, _trayService.DefaultThemeColor);
                         }
-
-                        trayIcon.Icon ??= IconImageConverter.GetDefaultIcon();
 
                         TrayIcons.Add(trayIcon);
 

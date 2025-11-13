@@ -96,7 +96,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
         {
             cbSize = Marshal.SizeOf(typeof(AppBarData)),
             hWnd = hwnd,
-            lParam = (IntPtr)Convert.ToInt32(true)
+            lParam = (IntPtr)Convert.ToInt32(true),
         };
 
         SHAppBarMessage((int)ABMsg.ABM_ACTIVATE, ref abd);
@@ -113,7 +113,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
         AppBarData abd = new()
         {
             cbSize = Marshal.SizeOf(typeof(AppBarData)),
-            hWnd = hwnd
+            hWnd = hwnd,
         };
 
         SHAppBarMessage((int)ABMsg.ABM_WINDOWPOSCHANGED, ref abd);
@@ -133,7 +133,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
             {
                 cbSize = Marshal.SizeOf(typeof(AppBarData)),
                 hWnd = abWindow.Handle,
-                uEdge = (int)edge
+                uEdge = (int)edge,
             };
 
             int sWidth = (int)width;

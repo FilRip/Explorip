@@ -77,6 +77,12 @@ public static class Program
         ExploripSharedCopy.Constants.Localization.LoadTranslation();
         Constants.Icons.Init();
         ConfigManager.Init();
+        if (ConfigManager.OverrideDefaultColor)
+        {
+            ExploripSharedCopy.Constants.Colors.BackgroundColor = ConfigManager.DefaultBackgroundColor;
+            ExploripSharedCopy.Constants.Colors.ForegroundColor = ConfigManager.DefaultBackgroundColor;
+            ExploripSharedCopy.Constants.Colors.ResetBrush();
+        }
 
         if (ArgumentExists("StartMenu"))
         {

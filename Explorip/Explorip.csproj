@@ -17,7 +17,7 @@
 	<Version>1.8.0.0</Version>
 	<StartupObject>Explorip.Program</StartupObject>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
-	<ApplicationIcon>Ressources\icon.ico</ApplicationIcon>
+	<ApplicationIcon>Resources/FileExplorerIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -70,18 +70,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="TaskBar\Resources\notification10.png" />
-    <Resource Include="TaskBar\Resources\search10.png" />
     <Resource Include="TaskBar\Resources\start10.png" />
     <Resource Include="TaskBar\Resources\taskman10.png" />
 	<Resource Include="TaskBar\Resources\tabtip.png" />
 	<Resource Include="TaskBar\Resources\widget11.png" />
-	<Resource Include="TaskBar\Resources\search11.png" />
 	<Resource Include="TaskBar\Resources\start11.png" />
 	<Resource Include="TaskBar\Resources\taskman11.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Ressources\NextButton.png" />
-	<None Include="Ressources\PreviousButton.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />

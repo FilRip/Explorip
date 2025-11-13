@@ -471,7 +471,7 @@
         <Setter Property="Height"
                 Value="32"/>
         <Setter Property="Source"
-                Value="{DynamicResource SearchIconImage}" />
+                Value="{x:Static constants:Icons.SearchButton}" />
     </Style>
 
     <Style TargetType="Image"

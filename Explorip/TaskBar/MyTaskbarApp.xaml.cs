@@ -128,7 +128,10 @@ public partial class MyTaskbarApp : Application
             Current.Dispatcher.Invoke(() =>
             {
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
+                {
                     tb.MySystray.MyDataContext.Resume();
+                    tb.RefreshAllInvisibleIcons();
+                }
             });
         }
         else
@@ -277,6 +280,7 @@ public partial class MyTaskbarApp : Application
         MyShellManager = SetupManagedShell();
         MyShellManager.Tasks.SetInitialWindows = false;
         MyShellManager.TasksService.GroupApplicationsWindows = ConfigManager.GroupedApplicationWindow;
+        MyShellManager.TrayService.DefaultThemeColor = ConfigManager.DefaultSystemIconColor;
 
         _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
         DictionaryManager = new DictionaryManager();

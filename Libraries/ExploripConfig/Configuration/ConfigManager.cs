@@ -37,6 +37,12 @@ public static class ConfigManager
         if (allowWrite && _registryKeyExplorer != null)
         {
             // If empty config in registry, set default settings
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("OverrideDefaultColor", "").ToString()))
+                _registryKeyExplorer.SetValue("OverrideDefaultColor", "False");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("DefaultBackgroundColor", "").ToString()))
+                _registryKeyExplorer.SetValue("DefaultBackgroundColor", $"255,{ExploripSharedCopy.Constants.Colors.BackgroundColor.R},{ExploripSharedCopy.Constants.Colors.BackgroundColor.G},{ExploripSharedCopy.Constants.Colors.BackgroundColor.B}");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("DefaultForegroundColor", "").ToString()))
+                _registryKeyExplorer.SetValue("DefaultForegroundColor", $"255,{ExploripSharedCopy.Constants.Colors.ForegroundColor.R},{ExploripSharedCopy.Constants.Colors.ForegroundColor.G},{ExploripSharedCopy.Constants.Colors.ForegroundColor.B}");
 
             // Explorer
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue("Theme", "").ToString()))
@@ -131,7 +137,7 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("SwitchToDesktopWhenDragEnter", "").ToString()))
                 _registryRootTaskbar.SetValue("SwitchToDesktopWhenDragEnter", "True");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MouseOverBackgroundColor", "").ToString()))
-                _registryRootTaskbar.SetValue("MouseOverBackgroundColor", $"255,{Colors.LightBlue.R},{Colors.LightBlue.G},{Colors.LightBlue.B}");
+                _registryRootTaskbar.SetValue("MouseOverBackgroundColor", $"255,{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.R},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.G},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.B}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ReplaceStartMenu", "").ToString()))
                 _registryRootTaskbar.SetValue("ReplaceStartMenu", "True");
 
@@ -144,6 +150,70 @@ public static class ConfigManager
                 dtc.Init(numScreen, _registryDesktop, true);
                 _listDesktop.Add(dtc);
             }
+        }
+    }
+
+    public static bool OverrideDefaultColor
+    {
+        get { return _registryKeyExplorer.ReadBoolean("OverrideDefaultColor"); }
+        set
+        {
+            if (OverrideDefaultColor != value && AllowWrite)
+                _registryKeyExplorer.SetValue("OverrideDefaultColor", value.ToString());
+        }
+    }
+
+    public static Color DefaultBackgroundColor
+    {
+        get
+        {
+            string bgColor = _registryKeyExplorer.GetValue("DefaultBackgroundColor")?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                return _registryKeyExplorer.ReadColor("DefaultBackgroundColor", ExploripSharedCopy.Constants.Colors.BackgroundColor);
+            }
+            return Brushes.Transparent.Color;
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue("DefaultBackgroundColor", $"{value.A},{value.R},{value.G},{value.B}");
+        }
+    }
+
+    public static Color DefaultForegroundColor
+    {
+        get
+        {
+            string bgColor = _registryKeyExplorer.GetValue("DefaultForegroundColor")?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                return _registryKeyExplorer.ReadColor("DefaultForegroundColor", ExploripSharedCopy.Constants.Colors.ForegroundColor);
+            }
+            return Color.FromArgb(255, 128, 128, 128);
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue("DefaultForegroundColor", $"{value.A},{value.R},{value.G},{value.B}");
+        }
+    }
+
+    public static Color DefaultSystemIconColor
+    {
+        get
+        {
+            string bgColor = _registryKeyExplorer.GetValue("DefaultSystemIconColor")?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                return _registryKeyExplorer.ReadColor("DefaultSystemIconColor", ExploripSharedCopy.Constants.Colors.ForegroundColor);
+            }
+            return ExploripSharedCopy.Constants.Colors.ForegroundColor;
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue("DefaultSystemIconColor", $"{value.A},{value.R},{value.G},{value.B}");
         }
     }
 

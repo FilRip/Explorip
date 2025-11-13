@@ -151,4 +151,33 @@ public static class IconImageConverter
             return GenerateEmptyBitmapSource();
         }
     }
+
+    public static ImageSource RecolorImageSource(ImageSource source, Color targetColor)
+    {
+        if (source is not BitmapSource bitmapSource)
+            throw new ArgumentException("ImageSource must be a BitmapSource.");
+
+        WriteableBitmap wb = new(bitmapSource);
+        int width = wb.PixelWidth;
+        int height = wb.PixelHeight;
+        int[] pixels = new int[width * height];
+        wb.CopyPixels(pixels, width * 4, 0);
+
+        for (int i = 0; i < pixels.Length; i++)
+        {
+            byte a = (byte)((pixels[i] >> 24) & 0xFF);
+            byte r = (byte)((pixels[i] >> 16) & 0xFF);
+            byte g = (byte)((pixels[i] >> 8) & 0xFF);
+            byte b = (byte)(pixels[i] & 0xFF);
+
+            // Détection des pixels clairs (blancs ou presque)
+            if (r > 200 && g > 200 && b > 200)
+            {
+                pixels[i] = (a << 24) | (targetColor.R << 16) | (targetColor.G << 8) | targetColor.B;
+            }
+        }
+
+        wb.WritePixels(new Int32Rect(0, 0, width, height), pixels, width * 4, 0);
+        return wb;
+    }
 }

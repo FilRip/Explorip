@@ -7,8 +7,8 @@ namespace ExploripSharedCopy.Constants;
 public static class Colors
 {
     public static Color AccentColor { get; private set; }
-    public static Color BackgroundColor { get; private set; }
-    public static Color ForegroundColor { get; private set; }
+    public static Color BackgroundColor { get; set; }
+    public static Color ForegroundColor { get; set; }
     public static SolidColorBrush AccentColorBrush { get; private set; }
     public static SolidColorBrush BackgroundColorBrush { get; private set; }
     public static SolidColorBrush ForegroundColorBrush { get; private set; }
@@ -29,9 +29,14 @@ public static class Colors
             BackgroundColor = Color.FromArgb(255, 255, 255, 255);
             ForegroundColor = Color.FromArgb(255, 0, 0, 0);
         }
-        BackgroundColorBrush = new SolidColorBrush(Color.FromArgb(255, BackgroundColor.R, BackgroundColor.G, BackgroundColor.B));
-        ForegroundColorBrush = new SolidColorBrush(Color.FromArgb(255, ForegroundColor.R, ForegroundColor.G, ForegroundColor.B));
+        ResetBrush();
         TransparentColorBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         SelectedBackgroundShellObject = new SolidColorBrush(Color.FromArgb(128, System.Drawing.Color.DarkGray.R, System.Drawing.Color.DarkGray.G, System.Drawing.Color.DarkGray.B));
+    }
+
+    public static void ResetBrush()
+    {
+        BackgroundColorBrush = new SolidColorBrush(Color.FromArgb(255, BackgroundColor.R, BackgroundColor.G, BackgroundColor.B));
+        ForegroundColorBrush = new SolidColorBrush(Color.FromArgb(255, ForegroundColor.R, ForegroundColor.G, ForegroundColor.B));
     }
 }

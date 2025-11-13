@@ -97,10 +97,10 @@ public partial class ClockViewModel : ObservableObject
 
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void TimeChanged(object sender, EventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         TimeZoneInfo.ClearCachedData();
     }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
     private void Dispatcher_ShutdownStarted(object sender, EventArgs e)
     {

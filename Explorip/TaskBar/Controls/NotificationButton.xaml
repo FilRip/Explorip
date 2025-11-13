@@ -26,7 +26,7 @@
                       Command="{Binding ShowNotificationCommand}"
                       Name="NotificationCenter"
                       Style="{DynamicResource NotificationButton}">
-            <Image Style="{DynamicResource NotificationIcon}"/>
+            <Image Style="{DynamicResource NotificationIcon}" UseLayoutRounding="True"/>
         </ToggleButton>
         <TextBlock Background="Transparent" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Name="NumberOfNotifications" Text="{Binding NumberOfNotifications}" FontSize="14" FontWeight="Bold" Margin="0,0,10,10" Visibility="{Binding NumberOfNotificationsVisible, Converter={StaticResource boolToVisible}}"/>
     </Grid>

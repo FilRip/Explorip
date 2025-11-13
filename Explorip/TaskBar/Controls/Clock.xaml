@@ -29,7 +29,7 @@
                FontSize="12"
                LineStackingStrategy="BlockLineHeight"
                LineHeight="20"
-               Background="{x:Static colors:Colors.BackgroundColorBrush}"
+               Background="Transparent"
                Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
                Visibility="{Binding ClockVisibility}" />
     <UserControl.ContextMenu>

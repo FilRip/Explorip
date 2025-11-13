@@ -182,6 +182,6 @@ public class ExplorerHelper
     public enum TaskbarState
     {
         AutoHide = 1,
-        OnTop = 0
+        OnTop = 0,
     }
 }

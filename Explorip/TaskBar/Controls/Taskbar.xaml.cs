@@ -396,6 +396,18 @@ public partial class Taskbar : AppBarWindow
         get { return ToolsBars; }
     }
 
+    public void RefreshAllInvisibleIcons()
+    {
+        System.Threading.Tasks.Task.Run(async () =>
+        {
+            await System.Threading.Tasks.Task.Delay(1000);
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ToolsBars.Children.OfType<Toolbar>().ToList().ForEach(tb => tb.MyDataContext.UpdateInvisibleIcons());
+            });
+        });
+    }
+
     public Toolbar AddToolbar(string path, bool resize = true)
     {
         if (!Directory.Exists(Environment.ExpandEnvironmentVariables(path)))

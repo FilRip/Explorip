@@ -11,6 +11,6 @@
                   Name="Search"
                   Background="Transparent"
                   Style="{DynamicResource SearchButton}">
-        <Image Style="{DynamicResource SearchIcon}"/>
+        <Image Style="{DynamicResource SearchIcon}" UseLayoutRounding="True"/>
     </ToggleButton>
 </UserControl>

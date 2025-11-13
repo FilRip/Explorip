@@ -366,7 +366,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                     Tag = path,
                     IsChecked = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarShowTitle(title),
                 });
-                ((MenuItem)item.Items[1]).Click += ChangeShowTitile;
+                ((MenuItem)item.Items[1]).Click += ChangeShowTitle;
                 item.Items.Add(new MenuItem()
                 {
                     Header = Constants.Localization.LARGE_ICON,
@@ -439,7 +439,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         }
     }
 
-    private void ChangeShowTitile(object sender, RoutedEventArgs e)
+    private void ChangeShowTitle(object sender, RoutedEventArgs e)
     {
         if (sender is MenuItem mi && mi.Tag is string path)
         {

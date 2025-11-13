@@ -13,7 +13,7 @@ public static class ExtensionsTimer
         object timerHolder = timer.GetType().GetField("m_timer", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(timer);
         object timerQueue = timerHolder.GetType().GetField("m_timer", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(timerHolder);
         bool disposed = (bool)timerQueue.GetType().GetField("m_canceled", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(timerQueue);
-        return disposed;
 #pragma warning restore S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+        return disposed;
     }
 }
