@@ -15,7 +15,6 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Helpers;
 using Explorip.TaskBar.Controls;
 
 using ExploripConfig.Configuration;
@@ -102,7 +101,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     public override void Init(BaseToolbar parentControl)
     {
         base.Init(parentControl);
-        ((Border)_moreItems.Child).Background = ConfigManager.GetTaskbarConfig(parentControl.FindControlParent<Taskbar>().NumScreen).TaskbarBackground;
+        try
+        {
+            ((Border)_moreItems.Child).Background = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskbarBackground;
+        }
+        catch (Exception) { /* Ignore errors */ }
         SetupFolder(Path);
     }
 
@@ -273,11 +276,13 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         {
             Header = item.DisplayName,
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
+            Background = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskbarBackground,
             Icon = new Image()
             {
                 Source = item.SmallIcon,
             },
             BorderThickness = new Thickness(1),
+            BorderBrush = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskbarBackground,
             Margin = new Thickness(0),
             Tag = item,
             IsCheckable = false,

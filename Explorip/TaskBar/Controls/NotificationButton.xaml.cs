@@ -40,7 +40,7 @@ public partial class NotificationButton : UserControl
     {
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
-        if (this.FindControlParent<Taskbar>().MainScreen)
+        if (((Taskbar)Window.GetWindow(this)).MainScreen)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
     }
 
@@ -48,7 +48,7 @@ public partial class NotificationButton : UserControl
     {
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
-        if (this.FindControlParent<Taskbar>().MainScreen)
+        if (((Taskbar)Window.GetWindow(this)).MainScreen)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
     }
 }

@@ -10,6 +10,7 @@ using System.Windows.Controls;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using Explorip.Constants;
 using Explorip.Helpers;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Helpers;
@@ -30,14 +31,6 @@ namespace Explorip.TaskBar.ViewModels;
 public partial class TaskListViewModel : ObservableObject, IDisposable
 {
     private const int ScrollBarWidth = 22;
-
-    [Flags()]
-    private enum ERefreshList
-    {
-        None,
-        Rebuild,
-        Refresh,
-    }
 
     private AppBarEdge _currentEdge;
     private Taskbar _taskbarParent;

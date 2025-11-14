@@ -6,10 +6,12 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 
+using Explorip.Constants;
 using Explorip.Plugins;
 using Explorip.StartMenu.Window;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
+using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
 using ExploripConfig.Helpers;
@@ -132,6 +134,7 @@ public partial class MyTaskbarApp : Application
                     tb.MySystray.MyDataContext.Resume();
                     tb.RefreshAllInvisibleIcons();
                 }
+                TaskListViewModel.RefreshAllCollectionView(ERefreshList.Refresh, EventArgs.Empty);
             });
         }
         else
@@ -310,6 +313,7 @@ public partial class MyTaskbarApp : Application
     }
     private static bool _exiting;
     [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions()]
+    // WARN : This code doesn't seems to work if a debugger is attached
     private static void CheckMonitorPower()
     {
         while (!_exiting)

@@ -116,7 +116,7 @@ public abstract partial class BaseToolbarViewModel : ObservableObject
     public virtual void Init(BaseToolbar parentControl)
     {
         _parentControl = parentControl;
-        ParentTaskbar = parentControl.FindVisualParent<Taskbar>();
+        ParentTaskbar = Window.GetWindow(parentControl) as Taskbar;
     }
 
     protected void DefaultSavedPosition()

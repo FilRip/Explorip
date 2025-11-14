@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
 
 namespace Explorip.TaskBar.Controls
@@ -25,7 +24,7 @@ namespace Explorip.TaskBar.Controls
         {
             if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
                 return;
-            MyDataContext.SetTaskbar(this.FindControlParent<Taskbar>());
+            MyDataContext.SetTaskbar((Taskbar)Window.GetWindow(this));
         }
     }
 }

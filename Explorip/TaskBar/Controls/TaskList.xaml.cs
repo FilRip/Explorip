@@ -31,7 +31,7 @@ public partial class TaskList : UserControl
         if (!_isLoaded && MyTaskbarApp.MyShellManager.Tasks != null)
         {
             _isLoaded = true;
-            Taskbar tb = this.FindControlParent<Taskbar>();
+            Taskbar tb = (Taskbar)Window.GetWindow(this);
             MyDataContext.TaskbarParent = tb;
             MyDataContext.ChangeEdge(tb.AppBarEdge);
 

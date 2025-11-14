@@ -22,7 +22,7 @@ namespace Explorip.TaskBar.Controls
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            MyDataContext.ParentTaskbar = this.FindVisualParent<Taskbar>();
+            MyDataContext.ParentTaskbar = (Taskbar)System.Windows.Window.GetWindow(this);
         }
     }
 }
