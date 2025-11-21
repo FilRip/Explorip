@@ -1187,11 +1187,8 @@ public sealed class TaskDialog : IDialogControlHost, IDisposable
 
             // Clean up unmanaged resources SECOND, NTD counts on 
             // being closed before being disposed.
-            if (nativeDialog != null)
-            {
-                nativeDialog.Dispose();
-                nativeDialog = null;
-            }
+            nativeDialog?.Dispose();
+            nativeDialog = null;
 
             if (staticDialog != null)
             {

@@ -9,11 +9,11 @@ namespace Microsoft.WindowsAPICodePack.PropertySystem;
 /// Defines a unique key for a Shell Property
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
-public struct PropertyKey : IEquatable<PropertyKey>
+public readonly struct PropertyKey : IEquatable<PropertyKey>
 {
     #region Private Fields
 
-    private Guid formatId;
+    private readonly Guid formatId;
     private readonly int propertyId;
 
     #endregion

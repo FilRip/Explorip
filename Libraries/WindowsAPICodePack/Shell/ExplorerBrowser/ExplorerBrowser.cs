@@ -49,11 +49,8 @@ public sealed class ExplorerBrowser :
                 Marshal.ReleaseComObject(shellItemsArray);
             }
 
-            if (itemsCollection != null)
-            {
-                itemsCollection.Dispose();
-                itemsCollection = null;
-            }
+            itemsCollection?.Dispose();
+            itemsCollection = null;
 
             shellItemsArray = GetItemsArray();
             itemsCollection = new ShellObjectCollection(shellItemsArray, true);
@@ -76,11 +73,8 @@ public sealed class ExplorerBrowser :
                 Marshal.ReleaseComObject(selectedShellItemsArray);
             }
 
-            if (selectedItemsCollection != null)
-            {
-                selectedItemsCollection.Dispose();
-                selectedItemsCollection = null;
-            }
+            selectedItemsCollection?.Dispose();
+            selectedItemsCollection = null;
 
             selectedShellItemsArray = GetSelectedItemsArray();
             selectedItemsCollection = new ShellObjectCollection(selectedShellItemsArray, true);

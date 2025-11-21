@@ -13,7 +13,7 @@ class ManagedShellLogger : IDisposable
     private readonly string _logName = DateTime.Now.ToString("yyyy-MM-dd_HHmmssfff");
     private readonly string _logExt = "log";
     private readonly LogSeverity _logSeverity = LogSeverity.Debug;
-    private TimeSpan _logRetention = new(7, 0, 0);
+    private readonly TimeSpan _logRetention = new(7, 0, 0);
     private FileLog _fileLog;
     private bool disposedValue;
 

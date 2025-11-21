@@ -87,8 +87,7 @@ public partial class TabItemRegedit : TabItemExplorip
             OneRegistryKey? find = FindNextOne(current, e.Key.ToString().ToLower());
             find ??= FindNextOne((OneRegistryKey)KeyTV.Items[0], e.Key.ToString().ToLower());
 
-            if (find != null)
-                find.IsSelected = true;
+            find?.IsSelected = true;
         }
     }
 

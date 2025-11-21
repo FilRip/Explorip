@@ -39,11 +39,8 @@ internal class HookTaskbarListHelper : IDisposable
 
     public static void UninstallHook()
     {
-        if (_instance != null)
-        {
-            _instance.Dispose();
-            _instance = null;
-        }
+        _instance?.Dispose();
+        _instance = null;
     }
 
     internal void Init()
