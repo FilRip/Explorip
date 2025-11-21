@@ -292,6 +292,7 @@ public partial class Taskbar : AppBarWindow
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
 
+        ShellLogger.Debug("OnLoaded on Taskbar " + NumScreen);
         MyDataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
         {
@@ -520,5 +521,10 @@ public partial class Taskbar : AppBarWindow
     private void MenuToolbars_MouseEnter(object sender, MouseEventArgs e)
     {
         MyDataContext.BuildToolbarsMenu();
+    }
+
+    private void AppBarWindow_Unloaded(object sender, RoutedEventArgs e)
+    {
+        ShellLogger.Debug("OnUnloaded Taskbar " + NumScreen);
     }
 }

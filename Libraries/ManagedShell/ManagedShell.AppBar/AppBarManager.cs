@@ -110,7 +110,6 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
 
     public void AppBarWindowPosChanged(IntPtr hwnd)
     {
-        ShellLogger.Debug("AppBarWindow PosChanged");
         AppBarData abd = new()
         {
             cbSize = Marshal.SizeOf(typeof(AppBarData)),

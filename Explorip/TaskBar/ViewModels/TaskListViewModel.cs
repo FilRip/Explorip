@@ -187,11 +187,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         {
             lock (_lockChangeDesktop)
             {
-                for (int i = MyTaskbarApp.MyShellManager.TasksService.Windows.Count - 1; i >= 0; i--)
-                    MyTaskbarApp.MyShellManager.TasksService.Windows[i].Dispose();
-                MyTaskbarApp.MyShellManager.TasksService.Windows?.Clear();
-                MyTaskbarApp.MyShellManager.TasksService.Windows = [];
-
+                DisposeAllApplicationWindow();
                 NativeMethods.EnumWindows((hwnd, lParam) =>
                 {
                     if (!VirtualDesktopProvider.Default.Initialized || VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
@@ -367,10 +363,19 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             if (disposing)
             {
                 RemoveTaskServiceEvent();
+                DisposeAllApplicationWindow();
             }
 
             disposedValue = true;
         }
+    }
+
+    public static void DisposeAllApplicationWindow()
+    {
+        for (int i = MyTaskbarApp.MyShellManager.TasksService.Windows.Count - 1; i >= 0; i--)
+            MyTaskbarApp.MyShellManager.TasksService.Windows[i].Dispose();
+        MyTaskbarApp.MyShellManager.TasksService.Windows?.Clear();
+        MyTaskbarApp.MyShellManager.TasksService.Windows = [];
     }
 
     public void Dispose()

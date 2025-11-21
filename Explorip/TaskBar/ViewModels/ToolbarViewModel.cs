@@ -394,7 +394,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
 
     #endregion
 
-    private void UnloadFolder()
+    public void UnloadFolder()
     {
         try
         {

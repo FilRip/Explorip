@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
-             Loaded="NotifyIconList_OnLoaded">
+             Loaded="NotifyIconList_OnLoaded" Visibility="Visible" Unloaded="UserControl_Unloaded">
     <UserControl.DataContext>
         <viewmodels:NotifyIconListViewModel/>
     </UserControl.DataContext>
@@ -13,7 +13,7 @@
                       IsChecked="{Binding ShowAllIcons}"
                       Style="{DynamicResource TrayToggleButton}"/>
         <ItemsControl x:Name="NotifyIcons" ItemsSource="{Binding ListSystrayIcons}"
-                      Focusable="False"
+                      Focusable="False" Visibility="Visible"
                       HorizontalAlignment="Center" VerticalAlignment="Center">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

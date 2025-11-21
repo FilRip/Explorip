@@ -1,6 +1,5 @@
 ﻿using System.Windows.Controls;
 
-using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
 
 namespace Explorip.TaskBar.Controls

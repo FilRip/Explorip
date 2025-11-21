@@ -179,14 +179,14 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
             {
                 case NativeMethods.AppBarNotifications.PosChanged:
-                    ShellLogger.Debug("AppBarWindow.WndProc PosChanged");
+                    ShellLogger.Debug("AppBarWindow.WndProc PosChanged Screen " + Screen.NumScreen.ToString());
                     if (Orientation == Orientation.Vertical)
                         _appBarManager.ABSetPos(this, DesiredWidth * DpiScale, ActualHeight * DpiScale, AppBarEdge);
                     else
                         _appBarManager.ABSetPos(this, ActualWidth * DpiScale, DesiredHeight * DpiScale, AppBarEdge);
                     break;
                 case NativeMethods.AppBarNotifications.WindowArrange:
-                    ShellLogger.Debug("AppBarWindow.WndProc WindowArrange");
+                    ShellLogger.Debug("AppBarWindow.WndProc WindowArrange Screen " + Screen.NumScreen.ToString());
                     if ((int)lParam != 0) // before
                         Visibility = Visibility.Collapsed;
                     else // after
@@ -216,10 +216,12 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         }
         else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGED && EnableAppBar && !EnvironmentHelper.IsAppRunningAsShell && !AllowClose && !_positionAlreadyUnderChanged)
         {
+            ShellLogger.Debug("AppBarWindowPosChanged Screen " + Screen.NumScreen.ToString());
             _appBarManager.AppBarWindowPosChanged(hwnd);
         }
         else if ((msg == (int)NativeMethods.WM.DPICHANGED) && !_positionAlreadyUnderChanged)
         {
+            ShellLogger.Debug("AppBarWindow DpiChanged Screen " + Screen.NumScreen.ToString());
             if (Screen.Primary)
                 DpiHelper.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
 

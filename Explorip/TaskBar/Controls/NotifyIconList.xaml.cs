@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -13,13 +14,25 @@ namespace Explorip.TaskBar.Controls;
 [ObservableObject()]
 public partial class NotifyIconList : UserControl
 {
-    private bool isLoaded;
+    private bool _isLoaded;
     private readonly object _lockLoaded;
+    private bool _ignoreReload = false;
 
     public NotifyIconList()
     {
         InitializeComponent();
         _lockLoaded = new object();
+        this.IsVisibleChanged += NotifyIconList_IsVisibleChanged;
+    }
+
+    private void NotifyIconList_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        _ignoreReload = true;
+        Application.Current.Dispatcher.BeginInvoke(async () =>
+        {
+            await Task.Delay(1000);
+            _ignoreReload = false;
+        });
     }
 
     public NotifyIconListViewModel MyDataContext
@@ -31,11 +44,25 @@ public partial class NotifyIconList : UserControl
     {
         lock (_lockLoaded)
         {
-            if (!isLoaded && MyTaskbarApp.MyShellManager.NotificationArea != null)
+            if ((!_isLoaded || !_ignoreReload) && MyTaskbarApp.MyShellManager.NotificationArea != null)
             {
-                isLoaded = true;
+                _isLoaded = true;
                 MyDataContext.Init(this);
+                MyDataContext.Resume();
             }
+        }
+    }
+
+    private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+    {
+        lock (_lockLoaded)
+        {
+            if (_ignoreReload)
+                return;
+
+            MyDataContext.Unload();
+            MyDataContext.Pause();
+            _isLoaded = false;
         }
     }
 }

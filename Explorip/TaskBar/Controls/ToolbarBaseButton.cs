@@ -28,6 +28,7 @@ public class ToolbarBaseButton : UserControl
     protected bool? _isFolder = null;
     protected string _folderPath;
     private ShellFolder _shellFolder;
+    private bool _ignoreReload;
 
     public bool DisableFolderPreview { get; set; }
 
@@ -41,10 +42,24 @@ public class ToolbarBaseButton : UserControl
         MouseLeave += ToolbarBaseButton_MouseLeave;
         GiveFeedback += ToolbarBaseButton_GiveFeedback;
         Unloaded += ToolbarBaseButton_Unloaded;
+        IsVisibleChanged += ToolbarBaseButton_IsVisibleChanged;
+    }
+
+    private void ToolbarBaseButton_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        _ignoreReload = true;
+        Application.Current.Dispatcher.BeginInvoke(async () =>
+        {
+            await Task.Delay(1000);
+            _ignoreReload = false;
+        });
     }
 
     private void ToolbarBaseButton_Unloaded(object sender, RoutedEventArgs e)
     {
+        if (_ignoreReload)
+            return;
+
         PreviewMouseDown -= DragMouseDown;
         PreviewMouseUp -= DragMouseUp;
         DragEnter -= OnDragEnter;
@@ -106,7 +121,7 @@ public class ToolbarBaseButton : UserControl
             }
             if (_isFolder.Value)
             {
-                Popup myPopup = this.FindVisualParent<Taskbar>().MyPopup;
+                Popup myPopup = ((Taskbar)Window.GetWindow(this)).MyPopup;
                 if (myPopup != null)
                 {
                     ((ItemsControl)((Border)myPopup.Child).Child).Items.Clear();
@@ -127,7 +142,7 @@ public class ToolbarBaseButton : UserControl
     private void AddMenuItem(ShellFile item)
     {
         MenuItem mi = CreateMenuItem(item);
-        ((ItemsControl)((Border)this.FindVisualParent<Taskbar>().MyPopup.Child).Child).Items.Add(mi);
+        ((ItemsControl)((Border)((Taskbar)Window.GetWindow(this)).MyPopup.Child).Child).Items.Add(mi);
         if (Path.GetExtension(item.FileName) == ".lnk")
         {
             try

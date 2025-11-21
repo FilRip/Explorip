@@ -3,6 +3,7 @@ using System.Windows.Input;
 
 using Explorip.TaskBar.ViewModels;
 
+using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
 
 namespace Explorip.TaskBar.Controls;
@@ -12,7 +13,7 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class Toolbar : BaseToolbar
 {
-    public Toolbar()
+    public Toolbar() : base()
     {
         InitializeComponent();
     }
@@ -51,8 +52,9 @@ public partial class Toolbar : BaseToolbar
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
-        if (!_isLoaded)
+        if (!_isLoaded || !_ignoreReload)
         {
+            ShellLogger.Debug("OnLoaded on Toolbar " + MyDataContext.Id + " on scren : " + ((Taskbar)Window.GetWindow(this)).NumScreen.ToString());
             _isLoaded = true;
             MyDataContext.Init(this);
         }
@@ -62,6 +64,11 @@ public partial class Toolbar : BaseToolbar
 
     private void BaseToolbar_Unloaded(object sender, RoutedEventArgs e)
     {
+        if (_ignoreReload)
+            return;
+
+        ShellLogger.Debug("OnUnloaded on Toolbar " + MyDataContext.Id + " on scren : " + MyDataContext.ParentTaskbar.NumScreen.ToString());
         _isLoaded = false;
+        MyDataContext.UnloadFolder();
     }
 }

@@ -86,6 +86,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 _tasksService.RemoveWindow(this, IntPtr.Zero);
                 _windows.Clear();
                 _icon = null;
+                _overlayIcon = null;
                 if (_hIcon != IntPtr.Zero)
                     NativeMethods.DestroyIcon(_hIcon);
             }

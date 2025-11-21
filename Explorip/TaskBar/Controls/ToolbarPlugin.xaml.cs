@@ -25,7 +25,7 @@ namespace Explorip.TaskBar.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!_isLoaded)
+            if (!_isLoaded || !_ignoreReload)
             {
                 _isLoaded = true;
                 MyDataContext.Init(this);

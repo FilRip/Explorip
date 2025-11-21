@@ -8,7 +8,8 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=systray:NotifyIcon}"
              Loaded="NotifyIcon_OnLoaded"
-             Unloaded="NotifyIcon_OnUnloaded">
+             Unloaded="NotifyIcon_OnUnloaded"
+             IsVisibleChanged="UserControl_IsVisibleChanged">
     <StackPanel>
         <Border x:Name="NotifyIconBorder"
                 ToolTip="{Binding Path=Title}"

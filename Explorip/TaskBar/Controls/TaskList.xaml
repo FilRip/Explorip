@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              Loaded="TaskList_OnLoaded" Unloaded="UserControl_Unloaded"
-             Background="Transparent">
+             Background="Transparent" Visibility="Visible">
     <UserControl.DataContext>
         <viewmodels:TaskListViewModel/>
     </UserControl.DataContext>
@@ -14,6 +14,7 @@
         <ItemsControl x:Name="TasksList"
                       Focusable="False"
                       ItemsSource="{Binding TaskListCollection}"
+                      Visibility="Visible"
                       HorizontalAlignment="Stretch">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>

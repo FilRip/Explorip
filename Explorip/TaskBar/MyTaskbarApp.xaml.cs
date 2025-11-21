@@ -6,12 +6,10 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 
-using Explorip.Constants;
 using Explorip.Plugins;
 using Explorip.StartMenu.Window;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Utilities;
-using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
 using ExploripConfig.Helpers;
@@ -127,15 +125,16 @@ public partial class MyTaskbarApp : Application
             MyShellManager.NotificationArea.Disable = false;
             MyShellManager.FullScreenHelper.Disable = false;
             DisableAutoLock = false;
-            Current.Dispatcher.Invoke(() =>
+            /*Current.Dispatcher.Invoke(() =>
             {
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
+                    tb.Disable = false;
                     tb.MySystray.MyDataContext.Resume();
                     tb.RefreshAllInvisibleIcons();
                 }
                 TaskListViewModel.RefreshAllCollectionView(ERefreshList.Refresh, EventArgs.Empty);
-            });
+            });*/
         }
         else
         {
@@ -144,11 +143,14 @@ public partial class MyTaskbarApp : Application
             MyShellManager.NotificationArea.Disable = true;
             MyShellManager.FullScreenHelper.Disable = true;
             DisableAutoLock = true;
-            Current.Dispatcher.Invoke(() =>
+            /*Current.Dispatcher.Invoke(() =>
             {
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
+                {
+                    tb.Disable = true;
                     tb.MySystray.MyDataContext.Pause();
-            });
+                }
+            });*/
         }
     }
 

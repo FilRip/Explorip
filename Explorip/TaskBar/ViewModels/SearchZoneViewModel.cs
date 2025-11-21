@@ -34,6 +34,8 @@ public partial class SearchZoneViewModel : ObservableObject
     public void SetTaskbar(Taskbar taskbar)
     {
         _parentTaskbar = taskbar;
+        if (_parentTaskbar == null)
+            return;
         Width = ConfigManager.GetTaskbarConfig(_parentTaskbar.NumScreen).SearchWidth;
         double height = ConfigManager.GetTaskbarConfig(_parentTaskbar.NumScreen).SearchHeight;
         Height = height > 0 ? height : ConfigManager.GetTaskbarConfig(_parentTaskbar.NumScreen).TaskButtonSize;

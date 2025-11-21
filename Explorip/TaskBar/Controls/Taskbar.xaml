@@ -8,6 +8,7 @@
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      Title="Explorip's taskbar"
                      Loaded="AppBarWindow_Loaded"
+                     Unloaded="AppBarWindow_Unloaded"
                      Left="0"
                      LocationChanged="Taskbar_OnLocationChanged"
                      AllowDrop="True"
@@ -71,13 +72,13 @@
                 </Grid>
                 <controls:TaskList HorizontalContentAlignment="{Binding DataContext.HorizontalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
                                    VerticalContentAlignment="{Binding DataContext.VerticalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
-                                   Grid.Column="4" Grid.Row="1" x:Name="MyTaskList"/>
+                                   Grid.Column="4" Grid.Row="1" x:Name="MyTaskList" Visibility="Visible"/>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                     <StackPanel Orientation="{Binding DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
-                        <controls:NotifyIconList VerticalAlignment="Center" x:Name="MySystray"/>
+                        <controls:NotifyIconList VerticalAlignment="Center" x:Name="MySystray" Visibility="Visible"/>
                         <controls:Clock VerticalAlignment="Center"/>
                     </StackPanel>
                 </GroupBox>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,7 +19,7 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class NotifyIcon : UserControl
 {
-    private bool _isLoaded;
+    private bool _isLoaded, _ignoreReload;
     private ManagedShell.WindowsTray.NotifyIcon TrayIcon;
 
     public NotifyIcon()
@@ -28,7 +29,7 @@ public partial class NotifyIcon : UserControl
 
     private void NotifyIcon_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (!_isLoaded)
+        if (!_isLoaded || !_ignoreReload)
         {
             TrayIcon = DataContext as ManagedShell.WindowsTray.NotifyIcon;
 
@@ -54,6 +55,9 @@ public partial class NotifyIcon : UserControl
 
     private void NotifyIcon_OnUnloaded(object sender, RoutedEventArgs e)
     {
+        if (_ignoreReload)
+            return;
+
         if (TrayIcon != null)
         {
             TrayIcon.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
@@ -146,5 +150,15 @@ public partial class NotifyIcon : UserControl
         }
         if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down) || Keyboard.GetKeyStates(Key.RightCtrl).HasFlag(KeyStates.Down))))
             e.Handled = true;
+    }
+
+    private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        _ignoreReload = true;
+        Application.Current.Dispatcher.BeginInvoke(async () =>
+        {
+            await Task.Delay(1000);
+            _ignoreReload = false;
+        });
     }
 }

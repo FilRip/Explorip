@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
 
 using ManagedShell.Common.Logging;
@@ -40,7 +39,7 @@ public partial class NotificationButton : UserControl
     {
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
-        if (((Taskbar)Window.GetWindow(this)).MainScreen)
+        if (((Taskbar)Window.GetWindow(this)).MainScreen && MyTaskbarApp.MyShellManager != null)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
     }
 
@@ -48,7 +47,7 @@ public partial class NotificationButton : UserControl
     {
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
-        if (((Taskbar)Window.GetWindow(this)).MainScreen)
+        if (Window.GetWindow(this) is Taskbar parentTaskbar && parentTaskbar.MainScreen && MyTaskbarApp.MyShellManager != null)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
     }
 }
