@@ -30,6 +30,8 @@
                  UriSource="/Taskbar/Resources/tabtip.png"/>
     <BitmapImage x:Key="WidgetsIconImage"
                  UriSource="/Taskbar/Resources/widget11.png"/>
+    <BitmapImage x:Key="CopilotIconImage"
+                 UriSource="/Taskbar/Resources/Copilot.png"/>
 
     <system:Double x:Key="GlobalFontSize">11</system:Double>
     <FontFamily x:Key="GlobalFontFamily">Segoe UI</FontFamily>
@@ -444,6 +446,11 @@
            BasedOn="{StaticResource StartButton}">
     </Style>
 
+    <Style TargetType="ToggleButton"
+           x:Key="CopilotButton"
+           BasedOn="{StaticResource StartButton}">
+    </Style>
+
     <Style TargetType="Image"
            x:Key="TaskIcon">
         <Setter Property="RenderOptions.EdgeMode"
@@ -516,6 +523,17 @@
                 Value="32"/>
         <Setter Property="Source"
                 Value="{DynamicResource WidgetsIconImage}" />
+    </Style>
+
+    <Style TargetType="Image"
+           x:Key="CopilotIcon"
+           BasedOn="{StaticResource StartIcon}">
+        <Setter Property="Width"
+                Value="32"/>
+        <Setter Property="Height"
+                Value="32"/>
+        <Setter Property="Source"
+                Value="{DynamicResource CopilotIconImage}" />
     </Style>
 
     <Style TargetType="Image"

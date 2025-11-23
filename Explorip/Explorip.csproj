@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Explorip.args.json" />
+    <None Remove="TaskBar\Resources\Copilot.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -69,6 +70,7 @@
     <ProjectReference Include="..\Plugins\ExploripPlugins\ExploripPlugins.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="TaskBar\Resources\Copilot.png" />
     <Resource Include="TaskBar\Resources\notification10.png" />
     <Resource Include="TaskBar\Resources\start10.png" />
     <Resource Include="TaskBar\Resources\taskman10.png" />

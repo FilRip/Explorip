@@ -46,15 +46,16 @@ public partial class Toolbar : BaseToolbar
 
         ShellFile file = icon.DataContext as ShellFile;
 
-        if (MyDataContext.InvokeContextMenu(file, true))
-            e.Handled = true;
+        ((ToolbarBaseButton)sender).StopDrag();
+        e.Handled = true;
+        MyDataContext.InvokeContextMenu(file, true);
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded || !_ignoreReload)
         {
-            ShellLogger.Debug("OnLoaded on Toolbar " + MyDataContext.Id + " on scren : " + ((Taskbar)Window.GetWindow(this)).NumScreen.ToString());
+            ShellLogger.Debug("OnLoaded on Toolbar " + MyDataContext.Id + " on screen : " + ((Taskbar)Window.GetWindow(this)).NumScreen.ToString());
             _isLoaded = true;
             MyDataContext.Init(this);
         }
@@ -67,7 +68,7 @@ public partial class Toolbar : BaseToolbar
         if (_ignoreReload)
             return;
 
-        ShellLogger.Debug("OnUnloaded on Toolbar " + MyDataContext.Id + " on scren : " + MyDataContext.ParentTaskbar.NumScreen.ToString());
+        ShellLogger.Debug("OnUnloaded on Toolbar " + MyDataContext.Id + " on screen : " + MyDataContext.ParentTaskbar.NumScreen.ToString());
         _isLoaded = false;
         MyDataContext.UnloadFolder();
     }

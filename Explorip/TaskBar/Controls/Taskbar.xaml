@@ -33,6 +33,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
@@ -65,15 +66,20 @@
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:WidgetsButton>
-                <Grid Grid.Column="4" Grid.Row="0" Name="ToolsBars">
+                <controls:CopilotButton x:Name="CopilotButton" Grid.Column="4" Grid.RowSpan="2" Visibility="{Binding DataContext.CopilotVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                    <DockPanel.Dock>
+                        <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                    </DockPanel.Dock>
+                </controls:CopilotButton>
+                <Grid Grid.Column="5" Grid.Row="0" Name="ToolsBars">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                 </Grid>
                 <controls:TaskList HorizontalContentAlignment="{Binding DataContext.HorizontalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
                                    VerticalContentAlignment="{Binding DataContext.VerticalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
-                                   Grid.Column="4" Grid.Row="1" x:Name="MyTaskList" Visibility="Visible"/>
-                <GroupBox Style="{DynamicResource Tray}" Grid.Column="5" Grid.RowSpan="2">
+                                   Grid.Column="5" Grid.Row="1" x:Name="MyTaskList" Visibility="Visible"/>
+                <GroupBox Style="{DynamicResource Tray}" Grid.Column="6" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
@@ -82,22 +88,22 @@
                         <controls:Clock VerticalAlignment="Center"/>
                     </StackPanel>
                 </GroupBox>
-                <controls:TabTipButton x:Name="TabTipButton" Grid.Column="6" Grid.RowSpan="2" Visibility="{Binding DataContext.TabTipVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                <controls:TabTipButton x:Name="TabTipButton" Grid.Column="7" Grid.RowSpan="2" Visibility="{Binding DataContext.TabTipVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:TabTipButton>
-                <controls:LanguageButton x:Name="LanguageLayoutButton" Grid.Column="7" Grid.RowSpan="2" Visibility="{Binding DataContext.KeyboardLayoutVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                <controls:LanguageButton x:Name="LanguageLayoutButton" Grid.Column="8" Grid.RowSpan="2" Visibility="{Binding DataContext.KeyboardLayoutVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:LanguageButton>
-                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="8" Grid.RowSpan="2">
+                <controls:NotificationButton x:Name="NotificationButton" Grid.Column="9" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:NotificationButton>
-                <controls:DesktopButton x:Name="DesktopButton" Grid.Column="9" Grid.RowSpan="2" Visibility="{Binding DataContext.DesktopPreviewVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                <controls:DesktopButton x:Name="DesktopButton" Grid.Column="10" Grid.RowSpan="2" Visibility="{Binding DataContext.DesktopPreviewVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}"/>
                     </DockPanel.Dock>
@@ -129,6 +135,7 @@
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_TASKMGR}" Name="MenuShowTaskmgr" Command="{Binding ShowTaskManCommand}" IsChecked="{Binding TaskManVisible}"/>
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_WIDGET}" Name="MenuShowWidget" Command="{Binding ShowWidgetsCommand}" IsChecked="{Binding WidgetsVisible}"/>
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_DESKTOP}" Name="MenuShowDesktopButton" Command="{Binding ShowDesktopPreviewCommand}" IsChecked="{Binding DesktopPreviewVisible}"/>
+                <MenuItem Header="Copilot" Name="MenuShowCopilotButton" Command="{Binding ShowCopilotCommand}" IsChecked="{Binding CopilotVisible}"/>
                 <MenuItem Header="{x:Static localization:Localization.SMALL_ICON_TASKBAR}" Name="MenuSmallIcon" Command="{Binding SmallIconTaskbarCommand}" IsChecked="{Binding IsShowSmallIcon}"/>
                 <MenuItem Header="{x:Static localization:Localization.SHOW_TITLE}" Name="MenuShowTitleWindow" Command="{Binding ShowTitleWindowCommand}" IsChecked="{Binding ShowApplicationWindowTitle}"/>
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_GROUP_APPLICATION_WINDOW}" Name="MenuGroupApplicationWindow" Command="{Binding GroupApplicationWindowsCommand}" IsChecked="{Binding IsGroupedApplicationWindow}"/>

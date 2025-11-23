@@ -216,6 +216,16 @@ public class TaskbarConfig
         }
     }
 
+    public bool ShowCopilotButton
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowCopilot"); }
+        set
+        {
+            if (ShowCopilotButton != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowCopilot", value.ToString());
+        }
+    }
+
     public bool ShowKeyboardLayout
     {
         get { return _registryTaskbar.ReadBoolean("ShowKeyboardLayout"); }

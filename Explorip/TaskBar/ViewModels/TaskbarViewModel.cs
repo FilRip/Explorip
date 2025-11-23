@@ -37,6 +37,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         SetShowTaskMan();
         SetShowWidget();
         SetShowDesktopPreview();
+        SetShowCopilot();
         SetSmallIcon();
         SetGroupApplicationWindows();
         SetShowTitleWindow();
@@ -83,7 +84,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private Taskbar _parentTaskbar = parentControl;
 
     [ObservableProperty()]
-    private bool _resizeOn, _tabTipVisible, _keyboardLayoutVisible, _searchZoneVisible, _searchButtonVisible, _taskManVisible, _widgetsVisible, _desktopPreviewVisible, _showApplicationWindowTitle, _isGroupedApplicationWindow, _isShowSmallIcon;
+    private bool _resizeOn, _tabTipVisible, _keyboardLayoutVisible, _searchZoneVisible, _searchButtonVisible, _taskManVisible, _widgetsVisible, _desktopPreviewVisible, _showApplicationWindowTitle, _isGroupedApplicationWindow, _isShowSmallIcon, _copilotVisible;
 
     [ObservableProperty()]
     private bool _isTaskListToLeft, _isTaskListToRight, _isTaskListToCenter, _isTaskListToTop, _isTaskListToBottom, _isTaskListToVCenter;
@@ -244,6 +245,18 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private void SetShowDesktopPreview()
     {
         DesktopPreviewVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowDesktopPreview;
+    }
+
+    [RelayCommand()]
+    private void ShowCopilot()
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowCopilotButton = !CopilotVisible;
+        SetShowCopilot();
+    }
+
+    private void SetShowCopilot()
+    {
+        CopilotVisible = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowCopilotButton;
     }
 
     [RelayCommand()]

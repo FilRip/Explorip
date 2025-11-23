@@ -227,9 +227,7 @@ public class ToolbarBaseButton : UserControl
     public bool InvokeContextMenu(ShellFile file, bool isInteractive, ShellFolder parentFolder)
     {
         if (file == null)
-        {
             return false;
-        }
 
         _ = new ShellItemContextMenu([file], parentFolder, IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
         return true;
@@ -281,9 +279,14 @@ public class ToolbarBaseButton : UserControl
 #pragma warning restore CS4014 // Dans la mesure où cet appel n'est pas attendu, l'exécution de la méthode actuelle continue avant la fin de l'appel
     }
 
-    protected void DragMouseUp(object sender, MouseButtonEventArgs e)
+    public void StopDrag()
     {
         _startDrag = false;
+    }
+
+    protected void DragMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        StopDrag();
     }
 
     protected void OnDragEnter(object sender, DragEventArgs e)

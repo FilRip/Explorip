@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="Explorip.TaskBar.Controls.CopilotButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels">
+    <UserControl.DataContext>
+        <viewmodels:CopilotButtonViewModel/>
+    </UserControl.DataContext>
+    <ToggleButton ToolTip="Copilot"
+                  Command="{Binding ShowCopilotCommand}"
+                  Name="Copilot"
+                  Style="{DynamicResource CopilotButton}">
+        <Image Style="{DynamicResource CopilotIcon}"/>
+    </ToggleButton>
+</UserControl>
