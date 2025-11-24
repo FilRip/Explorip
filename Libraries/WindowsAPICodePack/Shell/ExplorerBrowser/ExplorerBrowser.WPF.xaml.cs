@@ -97,7 +97,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnAlignLeftChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.AlignLeft = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.AlignLeft = (bool)e.NewValue;
     }
 
 
@@ -119,7 +120,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnAutoArrangeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.AutoArrange = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.AutoArrange = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -140,7 +142,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnCheckSelectChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.CheckSelect = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.CheckSelect = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -161,7 +164,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnExtendedTilesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.ExtendedTiles = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.ExtendedTiles = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -182,7 +186,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnFullRowSelectChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.FullRowSelect = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.FullRowSelect = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -203,7 +208,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnHideFileNamesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.HideFileNames = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.HideFileNames = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -224,7 +230,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnNoBrowserViewStateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.NoBrowserViewState = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.NoBrowserViewState = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -245,7 +252,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnNoColumnHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.NoColumnHeader = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.NoColumnHeader = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -266,7 +274,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnNoHeaderInAllViewsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.NoHeaderInAllViews = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.NoHeaderInAllViews = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -287,7 +296,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnNoIconsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.NoIcons = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.NoIcons = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -308,7 +318,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnNoSubfoldersChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.NoSubfolders = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.NoSubfolders = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -329,7 +340,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnSingleClickActivateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.SingleClickActivate = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.SingleClickActivate = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -350,7 +362,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnSingleSelectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.SingleSelection = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.SingleSelection = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -371,7 +384,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnThumbnailSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.ContentOptions.ThumbnailSize = (int)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.ContentOptions.ThumbnailSize = (int)e.NewValue;
     }
 
 
@@ -430,7 +444,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnAlwaysNavigateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.AlwaysNavigate = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.AlwaysNavigate = (bool)e.NewValue;
     }
 
     /// <summary>
@@ -451,7 +466,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnNavigateOnceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.NavigateOnce = (bool)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.NavigateOnce = (bool)e.NewValue;
     }
 
     #endregion
@@ -476,7 +492,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnAdvancedQueryPaneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.PaneVisibility.AdvancedQuery = (PaneVisibilityState)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.PaneVisibility.AdvancedQuery = (PaneVisibilityState)e.NewValue;
     }
 
     /// <summary>
@@ -497,7 +514,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnCommandsPaneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.PaneVisibility.Commands =
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.PaneVisibility.Commands =
                 (PaneVisibilityState)e.NewValue;
     }
 
@@ -519,7 +537,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnCommandsOrganizePaneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.PaneVisibility.CommandsOrganize =
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.PaneVisibility.CommandsOrganize =
                 (PaneVisibilityState)e.NewValue;
     }
 
@@ -541,7 +560,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnCommandsViewPaneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.PaneVisibility.CommandsView = (PaneVisibilityState)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.PaneVisibility.CommandsView = (PaneVisibilityState)e.NewValue;
     }
 
     /// <summary>
@@ -562,7 +582,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnDetailsPaneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.PaneVisibility.Details = (PaneVisibilityState)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.PaneVisibility.Details = (PaneVisibilityState)e.NewValue;
     }
 
     /// <summary>
@@ -583,7 +604,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnNavigationPaneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.PaneVisibility.Navigation = (PaneVisibilityState)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.PaneVisibility.Navigation = (PaneVisibilityState)e.NewValue;
     }
 
     /// <summary>
@@ -604,7 +626,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnPreviewPaneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.PaneVisibility.Preview = (PaneVisibilityState)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.PaneVisibility.Preview = (PaneVisibilityState)e.NewValue;
     }
 
     /// <summary>
@@ -625,7 +648,8 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     private static void OnQueryPaneChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         ExplorerBrowser instance = d as ExplorerBrowser;
-        instance.ExplorerBrowserControl?.NavigationOptions.PaneVisibility.Query = (PaneVisibilityState)e.NewValue;
+        if (instance.ExplorerBrowserControl != null)
+            instance.ExplorerBrowserControl.NavigationOptions.PaneVisibility.Query = (PaneVisibilityState)e.NewValue;
     }
 
     #endregion

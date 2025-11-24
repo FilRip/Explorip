@@ -115,7 +115,8 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
         get { return _trayService?.Disable ?? false; }
         set
         {
-            _trayService?.Disable = value;
+            if (_trayService != null)
+                _trayService.Disable = value;
         }
     }
 

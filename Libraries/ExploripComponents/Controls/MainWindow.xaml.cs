@@ -235,7 +235,8 @@ namespace ExploripComponents.Controls
                     _currentlyChangingSelection = false;
                     Dispatcher.BeginInvoke(() =>
                     {
-                        _lastSelected?.IsSelected = true;
+                        if (_lastSelected != null)
+                            _lastSelected.IsSelected = true;
                     }, System.Windows.Threading.DispatcherPriority.Background);
                 }
                 else
