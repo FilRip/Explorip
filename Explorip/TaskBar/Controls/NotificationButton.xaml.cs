@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
+using Explorip.TaskBar.Helpers;
 using Explorip.TaskBar.ViewModels;
 
 using ManagedShell.Common.Logging;
@@ -41,6 +43,11 @@ public partial class NotificationButton : UserControl
     private void NotificationArea_NotificationBalloonShown(object sender, ManagedShell.WindowsTray.NotificationBalloonEventArgs e)
     {
         //MyDataContext.IncreaseNumberOfNotifications();
+#pragma warning disable CS0618
+        DesktopNotificationManagerCompat.RegisterAumidAndComServer<MyNotificationActivator>("CoolBytes.Explorip");
+        DesktopNotificationManagerCompat.RegisterActivator<MyNotificationActivator>();
+#pragma warning restore CS0618
+
         ShellLogger.Debug($"NotificationArea Show NotificationBalloon of {e.Balloon.Title}");
 
         string title = e.Balloon.Title;
