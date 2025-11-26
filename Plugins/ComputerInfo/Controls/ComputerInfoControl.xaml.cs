@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 using ComputerInfo.ViewModels;
 
@@ -17,7 +16,13 @@ public partial class ComputerInfoControl : UserControl
         get { return (ComputerInfoViewModel)DataContext; }
     }
 
-    private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+    private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        if (MyDataContext.IsPause)
+            MyDataContext.Pause();
+    }
+
+    private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
     {
         MyDataContext.Dispose();
     }

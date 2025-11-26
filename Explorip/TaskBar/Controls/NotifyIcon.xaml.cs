@@ -38,7 +38,10 @@ public partial class NotifyIcon : UserControl
 
             ShellLogger.Debug($"Create Systray Icon for {TrayIcon.Title}");
 
-            TrayIcon.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
+            if (((Taskbar)Window.GetWindow(this)).MainScreen)
+            {
+                //TrayIcon.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
+            }
 
             // If a notification was received before we started listening, it will be here. Show the first one that is not expired.
             NotificationBalloon firstUnexpiredNotification = TrayIcon.MissedNotifications.FirstOrDefault(balloon => balloon.Received.AddMilliseconds(balloon.Timeout) > DateTime.Now);
@@ -58,9 +61,9 @@ public partial class NotifyIcon : UserControl
         if (_ignoreReload)
             return;
 
-        if (TrayIcon != null)
+        if (TrayIcon != null && ((Taskbar)Window.GetWindow(this)).MainScreen)
         {
-            TrayIcon.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
+            //TrayIcon.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
         }
         _isLoaded = false;
     }

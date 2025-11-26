@@ -167,6 +167,11 @@ public class ExplorerTrayService
             }
         }
 
+        /*if (hTBButton != IntPtr.Zero)
+            Marshal.FreeHGlobal(hTBButton);*/
+        /*if (hTrayItem != IntPtr.Zero)
+            Marshal.FreeHGlobal(hTrayItem);*/
+
         return trayItem;
     }
 
@@ -213,6 +218,7 @@ public class ExplorerTrayService
                 {
                     enableAutoTray = Convert.ToInt32(enableAutoTrayValue);
                 }
+                explorerKey.Dispose();
             }
         }
         catch (Exception e)
@@ -249,7 +255,7 @@ public class ExplorerTrayService
     private enum TB : uint
     {
         GETBUTTON = WM.USER + 23,
-        BUTTONCOUNT = WM.USER + 24
+        BUTTONCOUNT = WM.USER + 24,
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

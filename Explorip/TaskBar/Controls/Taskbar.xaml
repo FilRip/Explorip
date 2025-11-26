@@ -6,6 +6,7 @@
                      xmlns:localization="clr-namespace:Explorip.Constants"
                      xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                     xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
                      Title="Explorip's taskbar"
                      Loaded="AppBarWindow_Loaded"
                      Unloaded="AppBarWindow_Unloaded"
@@ -121,7 +122,7 @@
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static localization:Localization.TOOLBAR}" Name="ToolbarSubMenu" Style="{DynamicResource MenuItemWithSubMenuStyle}">
                 <MenuItem Header="{x:Static localization:Localization.NEW_TOOLBAR}" Name="MenuAddToolbar" Click="AddToolbar_Click"/>
-                <MenuItem Header="Plugins" Name="ToolbarListPlugins" ItemsSource="{Binding ListPlugins}" Style="{DynamicResource MenuItemWithSubMenuStyle}" Click="ToolbarListPlugins_Click"/>
+                <MenuItem Header="Plugins" Name="ToolbarListPlugins" ItemsSource="{Binding MenuItemsPlugins}" Style="{DynamicResource MenuItemWithSubMenuStyle}" Click="ToolbarListPlugins_Click"/>
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
                 <MenuItem Header="{x:Static localization:Localization.TOOLBAR}" Name="MenuToolbars" Style="{DynamicResource MenuItemWithSubMenuStyle}" MouseEnter="MenuToolbars_MouseEnter"/>
             </MenuItem>

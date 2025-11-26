@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 using Explorip.TaskBar.ViewModels;
@@ -14,9 +15,22 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class NotificationButton : UserControl
 {
+    private bool _isLoaded, _ignoreReload = false;
+
     public NotificationButton()
     {
         InitializeComponent();
+        this.IsVisibleChanged += NotificationButton_IsVisibleChanged;
+    }
+
+    private void NotificationButton_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        _ignoreReload = true;
+        Application.Current.Dispatcher.BeginInvoke(async () =>
+        {
+            await Task.Delay(1000);
+            _ignoreReload = false;
+        });
     }
 
     public NotificationButtonViewModel MyDataContext
@@ -29,25 +43,34 @@ public partial class NotificationButton : UserControl
         //MyDataContext.IncreaseNumberOfNotifications();
         ShellLogger.Debug($"NotificationArea Show NotificationBalloon of {e.Balloon.Title}");
 
+        string title = e.Balloon.Title;
+        string message = e.Balloon.Info;
+
         new ToastContentBuilder()
-            .AddHeader(e.Balloon.Title, e.Balloon.Title, "")
-            .AddText(e.Balloon.Info)
+            .AddHeader(title, title, "")
+            .AddText(message)
             .Show();
+
+        e.Handled = true;
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
-        if (((Taskbar)Window.GetWindow(this)).MainScreen && MyTaskbarApp.MyShellManager != null)
+
+        if ((!_isLoaded || !_ignoreReload) && ((Taskbar)Window.GetWindow(this)).MainScreen && MyTaskbarApp.MyShellManager != null)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
+        _isLoaded = true;
     }
 
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)
     {
-        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this) || _ignoreReload)
             return;
+
         if (Window.GetWindow(this) is Taskbar parentTaskbar && parentTaskbar.MainScreen && MyTaskbarApp.MyShellManager != null)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
+        _isLoaded = false;
     }
 }

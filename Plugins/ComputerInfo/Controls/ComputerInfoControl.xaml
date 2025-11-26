@@ -5,25 +5,48 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ComputerInfo.Controls"
              xmlns:viewmodels="clr-namespace:ComputerInfo.ViewModels"
-             mc:Ignorable="d" Unloaded="UserControl_Unloaded" Panel.ZIndex="-1">
+             xmlns:converters="clr-namespace:ComputerInfo.Converters"
+             Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded"
+             mc:Ignorable="d" Panel.ZIndex="1" Background="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding ForegroundColor, UpdateSourceTrigger=PropertyChanged}">
     <UserControl.DataContext>
         <viewmodels:ComputerInfoViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="auto"/>
-        </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="CPU Usage : "/>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CpuUsage}"/>
-        <TextBlock Grid.Row="0" Grid.Column="2" Text=" %"/>
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="Free RAM : "/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FreeRam}"/>
-        <TextBlock Grid.Row="1" Grid.Column="2" Text=" Mb"/>
-    </Grid>
+    <UserControl.Resources>
+        <converters:IntToBoolConverter x:Key="intToBool"/>
+    </UserControl.Resources>
+    
+    <StackPanel Orientation="{Binding CurrentOrientation}" Background="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}">
+        <StackPanel.ContextMenu>
+            <ContextMenu ItemsPanel="{DynamicResource MyMenuItemPanel}" Background="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding ForegroundColor, UpdateSourceTrigger=PropertyChanged}" BorderBrush="{Binding ForegroundColor}">
+                <MenuItem Header="Pause" Command="{Binding PauseCommand}" IsChecked="{Binding IsPause, UpdateSourceTrigger=PropertyChanged}"/>
+                <MenuItem Header="Orientation" Style="{DynamicResource MenuItemWithSubMenuStyle}">
+                    <MenuItem Header="Horizontal" Command="{Binding SetOrientationCommand}" CommandParameter="H" IsChecked="{Binding HorizontalIsChecked, Mode=OneWay}"/>
+                    <MenuItem Header="Vertical" Command="{Binding SetOrientationCommand}" CommandParameter="V" IsChecked="{Binding VerticalIsChecked, Mode=OneWay}"/>
+                </MenuItem>
+                <MenuItem Header="Precision CPU" Style="{DynamicResource MenuItemWithSubMenuStyle}">
+                    <MenuItem Header="0" Command="{Binding ChangePrecisionCpuCommand}" CommandParameter="0" IsChecked="{Binding PrecisionCpu, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=0}"/>
+                    <MenuItem Header="1" Command="{Binding ChangePrecisionCpuCommand}" CommandParameter="1" IsChecked="{Binding PrecisionCpu, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=1}"/>
+                    <MenuItem Header="2" Command="{Binding ChangePrecisionCpuCommand}" CommandParameter="2" IsChecked="{Binding PrecisionCpu, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=2}"/>
+                </MenuItem>
+                <MenuItem Header="Refresh rate" Style="{DynamicResource MenuItemWithSubMenuStyle}">
+                    <MenuItem Header="1sec" Command="{Binding ChangePeriodCommand}" CommandParameter="1000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=1000}"/>
+                    <MenuItem Header="5sec" Command="{Binding ChangePeriodCommand}" CommandParameter="5000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=5000}"/>
+                    <MenuItem Header="10sec" Command="{Binding ChangePeriodCommand}" CommandParameter="10000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=10000}"/>
+                    <MenuItem Header="30sec" Command="{Binding ChangePeriodCommand}" CommandParameter="30000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=30000}"/>
+                    <MenuItem Header="60sec" Command="{Binding ChangePeriodCommand}" CommandParameter="60000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=60000}"/>
+                </MenuItem>
+            </ContextMenu>
+        </StackPanel.ContextMenu>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Grid.Column="0" Text="CPU Usage : "/>
+            <TextBlock Text="{Binding CpuUsage, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text=" % "/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Free RAM : "/>
+            <TextBlock Text="{Binding FreeRam, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N}}"/>
+            <TextBlock Text=" Mb"/>
+        </StackPanel>
+    </StackPanel>
+        
 </UserControl>

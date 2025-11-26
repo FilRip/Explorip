@@ -337,6 +337,18 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
 
+    public IEnumerable<string> MenuItemsPlugins
+    {
+        get
+        {
+            List<string> result;
+            result = [.. ListPlugins];
+            result.Add("-");
+            result.Add("Reload plugins");
+            return result;
+        }
+    }
+
     public void BuildToolbarsMenu()
     {
         ParentTaskbar.MenuToolbars.Items.Clear();

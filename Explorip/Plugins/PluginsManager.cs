@@ -71,4 +71,10 @@ public static class PluginsManager
     {
         return _listPlugins.FirstOrDefault(plugin => plugin.GuidKey.Equals(guid));
     }
+
+    public static void Reload()
+    {
+        _listPlugins.Clear();
+        LoadPlugins();
+    }
 }

@@ -9,11 +9,11 @@ internal class TrayNotify
 {
 }
 
-internal enum NOTIFYITEM_PREFERENCE
+internal enum NotifyItemPreference
 {
     PREFERENCE_SHOW_WHEN_ACTIVE = 0,
     PREFERENCE_SHOW_NEVER = 1,
-    PREFERENCE_SHOW_ALWAYS = 2
+    PREFERENCE_SHOW_ALWAYS = 2,
 };
 
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -25,7 +25,7 @@ internal struct NotifyItem
     public string pszIconText;
     public IntPtr hIcon;
     public IntPtr hWnd;
-    public NOTIFYITEM_PREFERENCE dwUserPref;
+    public NotifyItemPreference dwUserPref;
     public uint uID;
     public Guid guidItem;
 };

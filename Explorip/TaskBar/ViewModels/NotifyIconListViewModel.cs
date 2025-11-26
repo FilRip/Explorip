@@ -132,7 +132,9 @@ public partial class NotifyIconListViewModel : ObservableObject
 
         if (MyTaskbarApp.MyShellManager.NotificationArea == null ||
             MyTaskbarApp.MyShellManager.NotificationArea.Disable)
+        {
             return;
+        }
 
         ShellLogger.Debug($"NotificationBalloonShown of {e.Balloon.Title}");
 
@@ -144,7 +146,7 @@ public partial class NotifyIconListViewModel : ObservableObject
             RefreshCollectionView();
             DispatcherTimer unpromoteTimer = new()
             {
-                Interval = TimeSpan.FromMilliseconds(e.Balloon.Timeout + 500) // Keep it around for a few ms for the animation to complete
+                Interval = TimeSpan.FromMilliseconds(e.Balloon.Timeout + 500), // Keep it around for a few ms for the animation to complete
             };
             unpromoteTimer.Tick += (mysender, ea) =>
             {

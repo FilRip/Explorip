@@ -36,10 +36,9 @@ public static class Program
             appDomainSetup.ShadowCopyDirectories = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
             appDomainSetup.ApplicationBase = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
             AppDomain myAppDomain = AppDomain.CreateDomain(AppDomainName, null, appDomainSetup);
-#if DEBUG
-            myAppDomain.ExecuteAssembly(Environment.GetCommandLineArgs()[0], args);
-#else
+#if !DEBUG
             myAppDomain.UnhandledException += CurrentDomain_UnhandledException;
+#endif
             try
             {
                 myAppDomain.ExecuteAssembly(Environment.GetCommandLineArgs()[0], args);
@@ -48,12 +47,10 @@ public static class Program
             {
                 CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(ex, false));
             }
-#endif
-            try
+            finally
             {
                 (_WpfHost as TaskBar.MyTaskbarApp)?.ExitGracefully();
             }
-            catch (Exception) { /* Ignore errors when trying to gracefully closed taskbar */ }
             return;
         }
 

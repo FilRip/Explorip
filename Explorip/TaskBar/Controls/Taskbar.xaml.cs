@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -438,13 +439,13 @@ public partial class Taskbar : AppBarWindow
         Grid.SetColumn(plugin.ExploripToolbar, 1);
         tp.MainGrid.Children.Add(plugin.ExploripToolbar);
         tp.PluginLinked = plugin;
-        ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, GridUnitType.Pixel) });
+        ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, (plugin.MinHeight == 0 ? GridUnitType.Auto : GridUnitType.Pixel)) });
         Grid.SetRow(tp, ToolsBars.RowDefinitions.Count - 1);
         Grid.SetColumn(tp, 0);
         ToolsBars.Children.Add(tp);
         if (resize)
         {
-            Height += height;
+            Height += height > 0 ? height : plugin.ExploripToolbar.ActualHeight;
             DesiredHeight = Height;
             ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(tp.MyDataContext.Id, true);
         }
@@ -464,8 +465,7 @@ public partial class Taskbar : AppBarWindow
             Toolbar newTb = AddToolbar(dialog.FileName);
             if (newTb != null)
             {
-                if (MainScreen)
-                    ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
+                ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
                 ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = DesiredHeight;
                 newTb.MyDataContext.ShowHideTitle();
                 newTb.MyDataContext.CurrentShowLargeIcon = true;
@@ -500,13 +500,42 @@ public partial class Taskbar : AppBarWindow
         if (e.OriginalSource is MenuItem mi)
         {
             string pluginName = mi.Header.ToString();
-            if (pluginName == "Plugins" || pluginName == "No plugins loaded")
+            if (pluginName == "Plugins" || pluginName == "No plugins loaded" || pluginName == "-")
                 return;
+            if (pluginName == "Reload plugins")
+            {
+                ReloadPlugins();
+                return;
+            }
+
             IExploripToolbar plugin = PluginsManager.GetPlugin(pluginName);
             AddToolbar(plugin);
             if (MainScreen)
                 ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
             ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = DesiredHeight;
+        }
+    }
+
+    private void ReloadPlugins()
+    {
+        PluginsManager.Reload();
+        List<ToolbarPlugin> listToRemove = [];
+        List<(ToolbarPlugin, IExploripToolbar)> listToReplace = [];
+        foreach (ToolbarPlugin tp in ToolsBars.Children.OfType<ToolbarPlugin>())
+        {
+            IExploripToolbar toolbar = PluginsManager.ListPlugins().FirstOrDefault(i => i.GuidKey == tp.PluginLinked.GuidKey);
+            if (toolbar == null)
+                listToRemove.Add(tp);
+            else if (toolbar.Version.CompareTo(tp.PluginLinked.Version) > 0)
+                listToReplace.Add((tp, toolbar));
+        }
+        foreach (ToolbarPlugin tp in listToRemove)
+            ToolsBars.Children.Remove(tp);
+        foreach ((ToolbarPlugin, IExploripToolbar) tp in listToReplace)
+        {
+            tp.Item1.MainGrid.Children.Clear();
+            tp.Item1.MainGrid.Children.Add(tp.Item2.ExploripToolbar);
+            tp.Item1.PluginLinked = tp.Item2;
         }
     }
 

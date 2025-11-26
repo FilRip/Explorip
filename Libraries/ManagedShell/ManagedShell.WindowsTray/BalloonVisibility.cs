@@ -4,5 +4,5 @@ public enum BalloonVisibility
 {
     Visible,
     Hidden,
-    TimedOut
+    TimedOut,
 }
