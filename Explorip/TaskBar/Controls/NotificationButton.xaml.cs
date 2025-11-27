@@ -8,8 +8,6 @@ using Explorip.TaskBar.ViewModels;
 
 using ManagedShell.Common.Logging;
 
-using Microsoft.Toolkit.Uwp.Notifications;
-
 namespace Explorip.TaskBar.Controls;
 
 /// <summary>
@@ -43,22 +41,20 @@ public partial class NotificationButton : UserControl
     private void NotificationArea_NotificationBalloonShown(object sender, ManagedShell.WindowsTray.NotificationBalloonEventArgs e)
     {
         //MyDataContext.IncreaseNumberOfNotifications();
-#pragma warning disable CS0618
-        DesktopNotificationManagerCompat.RegisterAumidAndComServer<MyNotificationActivator>("CoolBytes.Explorip");
-        DesktopNotificationManagerCompat.RegisterActivator<MyNotificationActivator>();
-#pragma warning restore CS0618
-
         ShellLogger.Debug($"NotificationArea Show NotificationBalloon of {e.Balloon.Title}");
 
         string title = e.Balloon.Title;
         string message = e.Balloon.Info;
 
-        new ToastContentBuilder()
-            .AddHeader(title, title, "")
-            .AddText(message)
-            .Show();
-
-        e.Handled = true;
+        try
+        {
+            ToastHelper.Show(title, message);
+            e.Handled = true;
+        }
+        catch (Exception ex)
+        {
+            ShellLogger.Error($"Unable to create windows notification : {ex.Message}");
+        }
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)

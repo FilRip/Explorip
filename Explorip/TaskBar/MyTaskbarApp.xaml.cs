@@ -63,12 +63,12 @@ public partial class MyTaskbarApp : Application
                 taskbar.AllowClose = true;
                 taskbar.Close();
             }
+            if (ConfigManager.TaskbarReplaceStartMenu)
+                StartMenuWindow.MyStartMenu?.Close();
         });
         _taskbarList.Clear();
         MyShellManager.AppBarManager.SignalGracefulShutdown();
         ExitApp();
-        if (ConfigManager.TaskbarReplaceStartMenu)
-            StartMenuWindow.MyStartMenu?.Close();
         if (ConfigManager.HookTaskbarList)
             Explorip.Helpers.HookTaskbarListHelper.UninstallHook();
         Current?.Shutdown();
@@ -333,9 +333,11 @@ public partial class MyTaskbarApp : Application
                     Microsoft.Win32.SafeHandles.SafeFileHandle handle = NativeMethods.CreateFile("\\\\.\\LCD", 0, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
                     if (!handle.IsInvalid)
                     {
+#pragma warning disable IDE0079
 #pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
                         NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out laptopScreenOn);
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
+#pragma warning restore IDE0079
                         handle.Dispose();
                         // As see at initialization of allMonitorOff, just before, the screen integrate in laptop always count as power off/sleep. So if not, we decrease number of monitor power off/sleep
                         if (laptopScreenOn)
