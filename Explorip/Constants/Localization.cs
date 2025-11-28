@@ -163,6 +163,9 @@ public static class Localization
     public static string STYLE_LIST_OF_TASKS { get; private set; }
     public static string UP { get; private set; }
     public static string DOWN { get; private set; }
+    public static string PLUGINS { get; private set; }
+    public static string RELOAD_PLUGINS { get; private set; }
+    public static string NO_PLUGINS { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -334,6 +337,9 @@ public static class Localization
         STYLE_LIST_OF_TASKS = Load("mmcbase.dll", 14138, "Style of list of tasks");
         DOWN = Load("windows.ui.xaml.dll", 5377, "Down");
         UP = Load("windows.ui.xaml.dll", 5513, "Up");
+        PLUGINS = "Plugins";
+        RELOAD_PLUGINS = "Reload plugins";
+        NO_PLUGINS = "No plugins loaded";
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

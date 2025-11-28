@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using Explorip.TaskBar.Helpers;
 using Explorip.TaskBar.ViewModels;
 
+using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
 namespace Explorip.TaskBar.Controls;
@@ -48,6 +49,7 @@ public partial class NotificationButton : UserControl
 
         try
         {
+            string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(e.Balloon.HandleWindow);
             ToastHelper.Show(title, message);
             e.Handled = true;
         }
