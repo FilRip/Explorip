@@ -324,6 +324,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         }
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public IEnumerable<string> ListPlugins
     {
@@ -336,6 +337,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         }
     }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+#pragma warning restore IDE0079
 
     public IEnumerable<string> MenuItemsPlugins
     {

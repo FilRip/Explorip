@@ -90,6 +90,7 @@ internal class HookTaskbarListHelper : IDisposable
         }
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     private void Server_AddButtonsEvent(object sender, AddButtonsEventArgs e)
     {
@@ -98,6 +99,7 @@ internal class HookTaskbarListHelper : IDisposable
         appWin?.SetThumbButtons(e.Buttons);
     }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+#pragma warning restore IDE0079
 
     internal void InjectToProcess(uint processId)
     {

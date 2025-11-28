@@ -29,9 +29,11 @@ public static class PluginsManager
         {
             try
             {
+#pragma warning disable IDE0079
 #pragma warning disable S3885 // "Assembly.Load" should be used
                 Assembly assembly = Assembly.LoadFrom(files);
 #pragma warning restore S3885 // "Assembly.Load" should be used
+#pragma warning restore IDE0079
                 foreach (Type type in assembly.GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(IExploripToolbar).IsAssignableFrom(t)))
                 {
                     try

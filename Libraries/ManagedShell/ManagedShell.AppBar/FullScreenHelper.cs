@@ -303,9 +303,11 @@ public sealed class FullScreenHelper : IDisposable
     private static void ResetScreenCache()
     {
         // use reflection to empty screens cache
+#pragma warning disable IDE0079
 #pragma warning disable S3011
         System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic;
 #pragma warning restore S3011
+#pragma warning restore IDE0079
         var fi = typeof(Screen).GetField("screens", flags) ?? typeof(Screen).GetField("s_screens", flags);
 
         if (fi == null)

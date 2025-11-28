@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 
+using Explorip.Exceptions;
+
 namespace Explorip.Updater;
 
 internal static class AutoUpdater
@@ -43,7 +45,6 @@ internal static class AutoUpdater
         return result;
     }
 
-#pragma warning disable S112 // General or reserved exceptions should never be thrown
     internal static void InstallNewVersion(string version, bool beta)
     {
         ExtendWebClient client = null;
@@ -55,12 +56,12 @@ internal static class AutoUpdater
             client = new ExtendWebClient();
             client.DownloadFile(new Uri($"https://github.com/FilRip/{ApplicationName}/releases/download/v{version}/{ApplicationName}{(beta ? "Beta" : "")}.zip"), destFile);
             if (!File.Exists(destFile) || new FileInfo(destFile).Length == 0)
-                throw new Exception("Can't download new version");
+                throw new ExploripException("Can't download new version");
             if (!ZipManager.Extract(AutoUpdateDirectory, destFile))
-                throw new Exception("Can't extract zip file of new version");
+                throw new ExploripException("Can't extract zip file of new version");
             File.Delete(destFile);
             if (!UpdateFile(AutoUpdateDirectory))
-                throw new Exception("Can't install new version");
+                throw new ExploripException("Can't install new version");
             RemoveAllAutoUpdateDir(AutoUpdateDirectory);
             if (MessageBox.Show(Constants.Localization.ASK_INSTALL_NEW_VERSION.Replace("%1", ApplicationName), ApplicationName, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 Restart();
@@ -71,7 +72,6 @@ internal static class AutoUpdater
             client?.Dispose();
         }
     }
-#pragma warning restore S112 // General or reserved exceptions should never be thrown
 
     internal static void SearchNewVersion(bool beta)
     {

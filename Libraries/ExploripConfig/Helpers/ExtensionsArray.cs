@@ -22,10 +22,12 @@ public static class ExtensionsArray
         if (list == null)
             throw new ArgumentNullException(nameof(list));
 
+#pragma warning disable IDE0079
 #pragma warning disable S112 // It's the best exception. There is no better
         if (index > list.Length - 1)
             throw new IndexOutOfRangeException("The index is greater than the number of item in list");
 #pragma warning restore S112
+#pragma warning restore IDE0079
 
         T[] retour = list;
         for (int i = index; i < index + nb; i++)
@@ -45,10 +47,12 @@ public static class ExtensionsArray
     {
         if (list == null)
             throw new ArgumentNullException(nameof(list));
+#pragma warning disable IDE0079
 #pragma warning disable S112 // It's the best exception to use, remove Sonar warning
         if (index >= list.Length || list.Length == 0)
             throw new IndexOutOfRangeException("The index is greater than the number of item in list");
 #pragma warning restore S112
+#pragma warning restore IDE0079
 
         T[] newListe = new T[list.Length - 1];
         for (int i = 0; i < list.Length; i++)

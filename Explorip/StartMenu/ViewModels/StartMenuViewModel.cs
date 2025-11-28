@@ -161,6 +161,7 @@ public partial class StartMenuViewModel : ObservableObject
         return false;
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S1144 // Unused private types or members should be removed
     private static bool IsPendingFileRenameOperations()
     {
@@ -172,6 +173,7 @@ public partial class StartMenuViewModel : ObservableObject
         return false;
     }
 #pragma warning restore S1144 // Unused private types or members should be removed
+#pragma warning restore IDE0079
 
     public void RefreshAll()
     {

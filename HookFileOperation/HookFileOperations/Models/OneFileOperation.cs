@@ -101,9 +101,11 @@ public class OneFileOperation : INotifyPropertyChanged
                 currentFileOperation.SetProgressMessage(ProgressMessage);
                 break;
             default:
+#pragma warning disable IDE0079
 #pragma warning disable S112 // General exceptions should never be thrown
                 throw new Exception("Unknown IFileOperation command");
 #pragma warning restore S112 // General exceptions should never be thrown
+#pragma warning restore IDE0079
         }
     }
 
