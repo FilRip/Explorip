@@ -500,19 +500,20 @@ public partial class Taskbar : AppBarWindow
         if (e.OriginalSource is MenuItem mi)
         {
             string pluginName = mi.Header.ToString();
-            if (pluginName == "Plugins" || pluginName == "No plugins loaded" || pluginName == "-")
+            if (pluginName == Constants.Localization.PLUGINS || pluginName == Constants.Localization.NO_PLUGINS)
                 return;
-            if (pluginName == "Reload plugins")
+            if (pluginName == Constants.Localization.RELOAD_PLUGINS)
             {
                 ReloadPlugins();
-                return;
             }
-
-            IExploripToolbar plugin = PluginsManager.GetPlugin(pluginName);
-            AddToolbar(plugin);
-            if (MainScreen)
-                ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
-            ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = DesiredHeight;
+            else if (mi.Tag is Guid guidKey)
+            {
+                IExploripToolbar plugin = PluginsManager.GetPlugin(guidKey);
+                AddToolbar(plugin);
+                if (MainScreen)
+                    ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
+                ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = DesiredHeight;
+            }
         }
     }
 

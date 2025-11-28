@@ -8,6 +8,7 @@
              xmlns:converters="clr-namespace:ComputerInfo.Converters"
              Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded"
              mc:Ignorable="d" Panel.ZIndex="1" Background="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding ForegroundColor, UpdateSourceTrigger=PropertyChanged}">
+
     <UserControl.DataContext>
         <viewmodels:ComputerInfoViewModel/>
     </UserControl.DataContext>
