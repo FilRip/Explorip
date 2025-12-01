@@ -185,10 +185,12 @@ public class SearchHelper : DependencyObject
         set { SetValue(SearchTextProperty, value); }
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
     public ReadOnlyObservableCollection<SearchResult> Results
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
     {
         get { return new ReadOnlyObservableCollection<SearchResult>(m_results); }
     }
+#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+#pragma warning restore IDE0079
 }

@@ -53,9 +53,7 @@ public static class PowerHelper
     public static void Shutdown()
     {
         AdjustTokenPrivilegesForShutdown();
-#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
         NativeMethods.ExitWindowsEx((uint)(NativeMethods.ExitWindows.Shutdown | NativeMethods.ExitWindows.ForceIfHung), 0x40000000);
-#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
     }
 
     /// <summary>
@@ -64,9 +62,7 @@ public static class PowerHelper
     public static void Reboot()
     {
         AdjustTokenPrivilegesForShutdown();
-#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
         NativeMethods.ExitWindowsEx((uint)(NativeMethods.ExitWindows.Reboot | NativeMethods.ExitWindows.ForceIfHung), 0x40000000);
-#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
     }
 
     /// <summary>

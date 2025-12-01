@@ -1,10 +1,13 @@
+using System;
+
 namespace Hardcodet.Wpf.TaskbarNotification.Interop;
 
 /// <summary>
 /// Flags that define the icon that is shown on a balloon
 /// tooltip.
 /// </summary>
-public enum EBalloon
+[Flags()]
+public enum EBalloons
 {
     /// <summary>
     /// No icon is displayed.

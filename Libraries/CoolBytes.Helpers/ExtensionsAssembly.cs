@@ -260,9 +260,11 @@ public static class ExtensionsAssembly
         if (assembly == null)
             throw new ArgumentNullException(nameof(assembly));
 
+#pragma warning disable IDE0079
 #pragma warning disable S3011
         MethodInfo mi = assembly.GetType().GetMethod("GetRawBytes", BindingFlags.Instance | BindingFlags.NonPublic);
 #pragma warning restore S3011
+#pragma warning restore IDE0079
 
         if (mi != null)
             return (byte[])mi.Invoke(assembly, null);

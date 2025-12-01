@@ -98,7 +98,7 @@ public struct NotifyIconData
     /// Adds an icon to a balloon ToolTip, which is placed to the left of the title. If the
     /// <see cref="BalloonTitle"/> member is zero-length, the icon is not shown.
     /// </summary>
-    public EBalloon BalloonFlags;
+    public EBalloons BalloonFlags;
 
     /// <summary>
     /// Windows XP (Shell32.dll version 6.0) and later.<br/>
@@ -111,7 +111,7 @@ public struct NotifyIconData
     /// <summary>
     /// Windows Vista (Shell32.dll version 6.0.6) and later. The handle of a customized
     /// balloon icon provided by the application that should be used independently
-    /// of the tray icon. If this member is non-NULL and the <see cref="TaskbarNotification.Interop.EBalloon.User"/>
+    /// of the tray icon. If this member is non-NULL and the <see cref="TaskbarNotification.Interop.EBalloons.User"/>
     /// flag is set, this icon is used as the balloon icon.<br/>
     /// If this member is NULL, the legacy behavior is carried out.
     /// </summary>

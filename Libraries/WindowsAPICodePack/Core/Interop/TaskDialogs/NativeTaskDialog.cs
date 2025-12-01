@@ -422,6 +422,7 @@ hresult),
 
     #region Helpers
 
+#pragma warning disable IDE0079
 #pragma warning disable S3241 // Methods should not return values that are never used
     private int SendMessageHelper(TaskDialogNativeMethods.TaskDialogMessages message, int wparam, long lparam)
     {
@@ -436,6 +437,7 @@ hresult),
             new IntPtr(lparam));
     }
 #pragma warning restore S3241 // Methods should not return values that are never used
+#pragma warning restore IDE0079
 
     private bool IsOptionSet(TaskDialogNativeMethods.TaskDialogOptions flag)
     {

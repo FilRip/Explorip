@@ -156,7 +156,7 @@ public class ExplorerBrowserNavigationLog
 
             // determine if new location is the same as the traversal request
             pendingNavigation.Location.NativeShellItem.Compare(
-                args.NewLocation.NativeShellItem, SICHINTF.SICHINT_ALLFIELDS, out int result);
+                args.NewLocation.NativeShellItem, SichInt.SICHINT_ALLFIELDS, out int result);
             bool shellItemsEqual = result == 0;
             if (!shellItemsEqual)
             {

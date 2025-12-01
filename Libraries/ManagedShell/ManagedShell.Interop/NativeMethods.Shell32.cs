@@ -87,7 +87,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum SHGFI
+    public enum ShGetFileInfos
     {
         /// <summary>get icon</summary>
         Icon = 0x000000100,
@@ -161,7 +161,7 @@ public partial class NativeMethods
     /// Possible flags for the SHFileOperation method.
     /// </summary>
     [Flags()]
-    public enum FileOperation : ushort
+    public enum FileOperations : ushort
     {
         /// <summary>
         /// Do not show a dialog during the process
@@ -225,7 +225,7 @@ public partial class NativeMethods
         public FileOperationType wFunc;
         public string pFrom;
         public string pTo;
-        public FileOperation fFlags;
+        public FileOperations fFlags;
         [MarshalAs(UnmanagedType.Bool)]
         public bool fAnyOperationsAborted;
         public IntPtr hNameMappings;
@@ -235,7 +235,7 @@ public partial class NativeMethods
     [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
     internal static extern int SHFileOperation(ref ShFileOpStruct FileOp);
 
-    public enum NIN : uint
+    public enum NotifyIconNotification : uint
     {
         SELECT = 0x400,
         BALLOONSHOW = 0x402,
@@ -249,7 +249,7 @@ public partial class NativeMethods
     /// <summary>
     /// Numerical values of the NIM_* messages represented as an enumeration.
     /// </summary>
-    public enum NIM : uint
+    public enum NotifyIconMessage : uint
     {
         /// <summary>
         /// Add a new icon.
@@ -281,7 +281,7 @@ public partial class NativeMethods
     /// Shell_NotifyIcon flags.  NIF_*
     /// </summary>
     [Flags()]
-    public enum NIF : uint
+    public enum ShellNotifyIcons : uint
     {
         MESSAGE = 0x0001,
         ICON = 0x0002,
@@ -303,13 +303,13 @@ public partial class NativeMethods
         VISTA_MASK = REALTIME | SHOWTIP,
     }
 
+#pragma warning disable IDE0079
+#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     /// <summary>
     /// Notify icon info balloon flags
     /// </summary>
     [Flags()]
-#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
-    public enum NIIF : uint
-#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+    public enum ENotifyIconInfos : uint
     {
         NONE = 0x00000000,
         INFO = 0x00000001,
@@ -326,9 +326,11 @@ public partial class NativeMethods
         /// <summary>Reserved. XP and later.</summary>
         ICON_MASK = 0x0000000F,
     }
+#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+#pragma warning restore IDE0079
 
     [Flags()]
-    public enum NIS
+    public enum ENotifyIconStatus
     {
         /// <summary>The icon is hidden.</summary>
         NIS_HIDDEN = 0x00000001,
@@ -345,19 +347,19 @@ public partial class NativeMethods
         public uint cbSize;
         public uint hWnd;
         public uint uID;
-        public NIF uFlags;
+        public ShellNotifyIcons uFlags;
         public uint uCallbackMessage;
         public uint hIcon;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 128)]
         public string szTip;
-        public NIS dwState;
-        public NIS dwStateMask;
+        public ENotifyIconStatus dwState;
+        public ENotifyIconStatus dwStateMask;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
         public string szInfo;
         public uint uTimeoutOrVersion;  // used with NIM_SETVERSION, values 0, 3 and 4
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 64)]
         public string szInfoTitle;
-        public NIIF dwInfoFlags;
+        public ENotifyIconInfos dwInfoFlags;
         public Guid guidItem;
         public uint hBalloonIcon;
     }
@@ -436,7 +438,7 @@ public partial class NativeMethods
     internal static extern int SHGetPropertyStoreForWindow(IntPtr handle, ref Guid riid, out IPropertyStore propertyStore);
 
     [Flags()]
-    public enum RunFileDialog : uint
+    public enum RunFileDialogs : uint
     {
 
         /// <summary>
@@ -476,8 +478,9 @@ public partial class NativeMethods
         string lpszPath,
         string lpszDialogTitle,
         string lpszDialogTextBody,
-        RunFileDialog uflags);
+        RunFileDialogs uflags);
 
+#pragma warning disable IDE0079
 #pragma warning disable S1104 // Fields should not have public accessibility
     public struct ImageListDrawParams
     {
@@ -500,6 +503,7 @@ public partial class NativeMethods
         public int crEffect;
     }
 #pragma warning restore S1104 // Fields should not have public accessibility
+#pragma warning restore IDE0079
 
     [StructLayout(LayoutKind.Sequential)]
     public struct ImageInfo
@@ -511,9 +515,10 @@ public partial class NativeMethods
         public Rect rcImage;
     }
 
-    [Flags()]
+#pragma warning disable IDE0079
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
-    public enum ILD
+    [Flags()]
+    public enum ImageListDraws
     {
         NORMAL = 0x00000000,
         TRANSPARENT = 0x00000001,
@@ -532,6 +537,7 @@ public partial class NativeMethods
         BLEND = BLEND50,
     }
 #pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+#pragma warning restore IDE0079
 
     [ComImport()]
     [Guid("46EB5926-582E-4017-9FDF-E8998DAA0950")]
@@ -578,7 +584,7 @@ public partial class NativeMethods
         [PreserveSig()]
         int GetIcon(
             int i,
-            ILD flags,
+            ImageListDraws flags,
             ref IntPtr picon);
 
         [PreserveSig()]
@@ -706,10 +712,10 @@ public partial class NativeMethods
         out IntPtr ppszPath);
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-    internal extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolder flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
+    internal extern static int SHGetKnownFolderPath(ref Guid folderId, KnownFolders flags, IntPtr token, [MarshalAs(UnmanagedType.LPWStr)] out string pszPath);
 
     [Flags()]
-    public enum KnownFolder : uint
+    public enum KnownFolders : uint
     {
         None = 0,
         SimpleIDList = 0x00000100,
@@ -758,7 +764,7 @@ public partial class NativeMethods
     internal static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, CSIDL nFolder, ref IntPtr ppidl);
 
     [Flags()]
-    public enum FILE_ATTRIBUTE : uint
+    public enum EFileAttributes : uint
     {
         NULL = 0x0000000,
         NORMAL = 0x00000080,
@@ -766,10 +772,10 @@ public partial class NativeMethods
     }
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-    internal static extern IntPtr SHGetFileInfo(string pszPath, FILE_ATTRIBUTE dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, SHGFI uFlags);
+    internal static extern IntPtr SHGetFileInfo(string pszPath, EFileAttributes dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, ShGetFileInfos uFlags);
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-    internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, FILE_ATTRIBUTE dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, SHGFI uFlags);
+    internal static extern IntPtr SHGetFileInfo(IntPtr pszPath, EFileAttributes dwFileAttributes, ref ShFileInfo psfi, uint cbFileInfo, ShGetFileInfos uFlags);
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
     internal static extern int SHCreateShellItem(IntPtr parentPidl, IntPtr parentShellFolder, IntPtr pidl, out IntPtr shellItemPtr);
@@ -784,5 +790,5 @@ public partial class NativeMethods
     internal static extern IntPtr ILCombine(IntPtr pidl1, IntPtr pidl2);
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
-    internal static extern bool Shell_NotifyIcon(NIM dwMessage, ref NotifyIconData lpData);
+    internal static extern bool Shell_NotifyIcon(NotifyIconMessage dwMessage, ref NotifyIconData lpData);
 }

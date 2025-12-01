@@ -102,12 +102,14 @@ public static class ExtensionsString
     {
         string result = "";
 
+#pragma warning disable IDE0079
 #pragma warning disable S5542 // Encryption algorithms should be used with secure mode and padding scheme
         AesManaged aes = new()
         {
             Key = key,
         };
 #pragma warning restore S5542 // Encryption algorithms should be used with secure mode and padding scheme
+#pragma warning restore IDE0079
         if (vector.Length > 16)
             Array.Resize(ref vector, 16);
         aes.IV = vector;
@@ -128,12 +130,14 @@ public static class ExtensionsString
     {
         byte[] result = null;
 
+#pragma warning disable IDE0079
 #pragma warning disable S5542 // Encryption algorithms should be used with secure mode and padding scheme
         AesManaged aes = new()
         {
             Key = key,
         };
 #pragma warning restore S5542 // Encryption algorithms should be used with secure mode and padding scheme
+#pragma warning restore IDE0079
         if (vector.Length > 16)
             Array.Resize(ref vector, 16);
         aes.IV = vector;

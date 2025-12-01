@@ -15,7 +15,7 @@ public partial class MyAdornerWindow : Window
     {
         InitializeComponent();
         IntPtr hwnd = new WindowInteropHelper(this).EnsureHandle();
-        NativeMethods.SetWindowLong(hwnd, NativeMethods.GWL.GWL_EXSTYLE, NativeMethods.GetWindowLong(hwnd, NativeMethods.GWL.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TRANSPARENT | (int)NativeMethods.ExtendedWindowStyles.WS_EX_LAYERED);
+        NativeMethods.SetWindowLong(hwnd, NativeMethods.EGetWindowLong.GWL_EXSTYLE, NativeMethods.GetWindowLong(hwnd, NativeMethods.EGetWindowLong.GWL_EXSTYLE) | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW | (int)NativeMethods.ExtendedWindowStyles.WS_EX_TRANSPARENT | (int)NativeMethods.ExtendedWindowStyles.WS_EX_LAYERED);
     }
 
     public void SetImage(ImageSource img, Point offset, Pen border = null, double opacity = 1)

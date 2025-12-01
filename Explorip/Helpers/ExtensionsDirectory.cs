@@ -40,7 +40,7 @@ public static class ExtensionsDirectory
                 IntPtr Pidl = IntPtr.Zero;
                 SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref Pidl);
                 ShFileInfo info = new();
-                if (SHGetFileInfo(Pidl, FILE_ATTRIBUTE.NULL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), SHGFI.TypeName | SHGFI.PIDL | SHGFI.DisplayName) != IntPtr.Zero)
+                if (SHGetFileInfo(Pidl, EFileAttributes.NULL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), ShGetFileInfos.TypeName | ShGetFileInfos.PIDL | ShGetFileInfos.DisplayName) != IntPtr.Zero)
                 {
                     return info.szDisplayName;
                 }
@@ -48,7 +48,7 @@ public static class ExtensionsDirectory
             else
             {
                 ShFileInfo info = new();
-                if (SHGetFileInfo(path, FILE_ATTRIBUTE.NORMAL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), SHGFI.DisplayName) != IntPtr.Zero)
+                if (SHGetFileInfo(path, EFileAttributes.NORMAL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), ShGetFileInfos.DisplayName) != IntPtr.Zero)
                 {
                     return info.szDisplayName;
                 }

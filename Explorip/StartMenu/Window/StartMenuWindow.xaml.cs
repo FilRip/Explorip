@@ -106,10 +106,10 @@ namespace Explorip.StartMenu.Window
         {
             if (code >= 0 && wParam == (int)NativeMethods.WM.KEYDOWN)
             {
-                _lastPressedKey = lParam.vkCode;
+                _lastPressedKey = lParam.VkCode;
             }
             else if (code >= 0 && wParam == (int)NativeMethods.WM.KEYUP &&
-                     _lastPressedKey == lParam.vkCode && (lParam.vkCode == (int)NativeMethods.VK.LWIN || lParam.vkCode == (int)NativeMethods.VK.RWIN))
+                     _lastPressedKey == lParam.VkCode && (lParam.VkCode == (int)NativeMethods.VK.LWIN || lParam.VkCode == (int)NativeMethods.VK.RWIN))
             {
                 if (MyStartMenu.IsVisible)
                     MyStartMenu.Hide();

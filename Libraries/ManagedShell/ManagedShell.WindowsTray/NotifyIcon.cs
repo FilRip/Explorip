@@ -213,7 +213,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         SendMessage((uint)WM.MOUSEHOVER, mouse);
 
         if (Version > 3)
-            SendMessage((uint)NIN.POPUPOPEN, mouse);
+            SendMessage((uint)NotifyIconNotification.POPUPOPEN, mouse);
     }
 
     public void IconMouseLeave(uint mouse)
@@ -224,7 +224,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
         SendMessage((uint)WM.MOUSELEAVE, mouse);
 
         if (Version > 3)
-            SendMessage((uint)NIN.POPUPCLOSE, mouse);
+            SendMessage((uint)NotifyIconNotification.POPUPCLOSE, mouse);
     }
 
     public void IconMouseMove(uint mouse)
@@ -278,7 +278,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
             // This is documented as version 4, but Explorer does this for version 3 as well
             if (Version >= 3)
-                SendMessage((uint)NIN.SELECT, mouse);
+                SendMessage((uint)NotifyIconNotification.SELECT, mouse);
 
             _lastLClick.Restart();
         }
@@ -359,7 +359,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
 
     public bool Equals(SafeNotifyIconData other)
     {
-        return (HWnd.Equals(other.hWnd) && UID.Equals(other.uID)) || (other.guidItem != Guid.Empty && GUID.Equals(other.guidItem));
+        return (HWnd.Equals(other.Hwnd) && UID.Equals(other.ID)) || (other.GuidItem != Guid.Empty && GUID.Equals(other.GuidItem));
     }
 
     #endregion

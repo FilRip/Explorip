@@ -18,7 +18,7 @@ public static class WindowHelper
             0,
             0,
             0,
-            SWP.SWP_NOSIZE | SWP.SWP_NOMOVE | SWP.SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+            EShowWindowPos.SWP_NOSIZE | EShowWindowPos.SWP_NOMOVE | EShowWindowPos.SWP_NOACTIVATE/* | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
     }
 
     public static void ShowWindowTopMost(IntPtr handle)
@@ -30,7 +30,7 @@ public static class WindowHelper
             0,
             0,
             0,
-            SWP.SWP_NOSIZE | SWP.SWP_NOMOVE | SWP.SWP_SHOWWINDOW/* | (int)SetWindowPosFlags.SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
+            EShowWindowPos.SWP_NOSIZE | EShowWindowPos.SWP_NOMOVE | EShowWindowPos.SWP_SHOWWINDOW/* | (int)SetWindowPosFlags.SWP_NOACTIVATE | SWP_NOZORDER | SWP_NOOWNERZORDER*/);
     }
 
     public static void ShowWindowDesktop(IntPtr hwnd)
@@ -47,7 +47,7 @@ public static class WindowHelper
                 0,
                 0,
                 0,
-                SWP.SWP_NOSIZE | SWP.SWP_NOMOVE | SWP.SWP_NOACTIVATE);
+                EShowWindowPos.SWP_NOSIZE | EShowWindowPos.SWP_NOMOVE | EShowWindowPos.SWP_NOACTIVATE);
         }
         else
         {
@@ -103,7 +103,7 @@ public static class WindowHelper
 
     public static void HideWindowFromTasks(IntPtr hWnd)
     {
-        SetWindowLong(hWnd, GWL.GWL_EXSTYLE, GetWindowLong(hWnd, GWL.GWL_EXSTYLE) | (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW);
+        SetWindowLong(hWnd, EGetWindowLong.GWL_EXSTYLE, GetWindowLong(hWnd, EGetWindowLong.GWL_EXSTYLE) | (int)ExtendedWindowStyles.WS_EX_TOOLWINDOW);
 
         ExcludeWindowFromPeek(hWnd);
     }
@@ -145,9 +145,11 @@ public static class WindowHelper
                 if (EnvironmentHelper.IsWindows10RS4OrBetter)
                 {
                     accent.AccentState = AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND;
+#pragma warning disable IDE0079
 #pragma warning disable S1764, S2437 // Identical expressions should not be used on both sides of a binary operator
                     accent.GradientColor = (0 << 24) | (0xFFFFFF /* BGR */ & 0xFFFFFF);
 #pragma warning restore S1764, S2437 // Identical expressions should not be used on both sides of a binary operator
+#pragma warning restore IDE0079
                 }
                 else
                 {

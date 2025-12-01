@@ -130,7 +130,7 @@ public partial class ExploripDesktop : Window
         {
             NativeMethods.WindowPos wndPos = NativeMethods.WindowPos.FromMessage(lParam);
 
-            if (!wndPos.flags.HasFlag(NativeMethods.SWP.SWP_NOZORDER))
+            if (!wndPos.flags.HasFlag(NativeMethods.EShowWindowPos.SWP_NOZORDER))
             {
                 IntPtr lowestHwnd = WindowHelper.GetLowestDesktopParentHwnd();
 

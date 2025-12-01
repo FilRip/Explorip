@@ -207,7 +207,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
             // Determine if the z-order is changing (absence of SWP_NOZORDER flag)
             // If we are intentionally trying to become topmost, make it so
-            if (IsRaising && (wndPos.flags & NativeMethods.SWP.SWP_NOZORDER) == 0)
+            if (IsRaising && (wndPos.flags & NativeMethods.EShowWindowPos.SWP_NOZORDER) == 0)
             {
                 // Sometimes Windows thinks we shouldn't go topmost, so poke here to make it happen.
                 wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_TOPMOST;

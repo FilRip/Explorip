@@ -223,24 +223,19 @@ internal static class CoreNativeMethods
     /// <summary>
     /// A Wrapper for a SIZE struct
     /// </summary>
-#pragma warning disable S2292 // Trivial properties should be auto-implemented
     [StructLayout(LayoutKind.Sequential)]
     public struct Size
     {
-        private int width;
-        private int height;
-
         /// <summary>
         /// Width
         /// </summary>
-        public int Width { get { return width; } set { width = value; } }
+        public int Width { get; set; }
 
         /// <summary>
         /// Height
         /// </summary>
-        public int Height { get { return height; } set { height = value; } }
+        public int Height { get; set; }
     };
-#pragma warning restore S2292 // Trivial properties should be auto-implemented
 
     // Enable/disable non-client rendering based on window style.
     internal const int DWMNCRP_USEWINDOWSTYLE = 0;

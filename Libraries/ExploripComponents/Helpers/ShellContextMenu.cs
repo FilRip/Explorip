@@ -313,7 +313,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         else
             SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref tempPidl);
 
-        SHGetFileInfo(tempPidl, 0, ref info, (uint)Marshal.SizeOf(info), SHGFI.PIDL | SHGFI.DisplayName | SHGFI.TypeName);
+        SHGetFileInfo(tempPidl, 0, ref info, (uint)Marshal.SizeOf(info), ShGetFileInfos.PIDL | ShGetFileInfos.DisplayName | ShGetFileInfos.TypeName);
 
         string specialName = info.szDisplayName;
 

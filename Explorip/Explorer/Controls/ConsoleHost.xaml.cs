@@ -86,8 +86,8 @@ public partial class ConsoleHost : UserControl, IDisposable
     {
         NativeMethods.SetParent(_srcPtr, _destPtr);
         UserControl_SizeChanged(this, null);
-        int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.GWL.GWL_STYLE);
-        NativeMethods.SetWindowLong(_srcPtr, NativeMethods.GWL.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
+        int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.EGetWindowLong.GWL_STYLE);
+        NativeMethods.SetWindowLong(_srcPtr, NativeMethods.EGetWindowLong.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
     }
 
     private void MyProcess_Exited(object sender, EventArgs e)
@@ -114,7 +114,7 @@ public partial class ConsoleHost : UserControl, IDisposable
     private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (_srcPtr != IntPtr.Zero)
-            NativeMethods.SetWindowPos(_srcPtr, IntPtr.Zero, (int)(OFFSET_X * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)((this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)(OFFSET_Y * VisualTreeHelper.GetDpi(this).DpiScaleY), (int)((ActualWidth - OFFSET_X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)((ActualHeight - OFFSET_SIZE_HEIGHT) * VisualTreeHelper.GetDpi(this).DpiScaleY), NativeMethods.SWP.SWP_SHOWWINDOW | NativeMethods.SWP.SWP_NOACTIVATE);
+            NativeMethods.SetWindowPos(_srcPtr, IntPtr.Zero, (int)(OFFSET_X * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)((this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)(OFFSET_Y * VisualTreeHelper.GetDpi(this).DpiScaleY), (int)((ActualWidth - OFFSET_X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)((ActualHeight - OFFSET_SIZE_HEIGHT) * VisualTreeHelper.GetDpi(this).DpiScaleY), NativeMethods.EShowWindowPos.SWP_SHOWWINDOW | NativeMethods.EShowWindowPos.SWP_NOACTIVATE);
     }
 
     public void Show()

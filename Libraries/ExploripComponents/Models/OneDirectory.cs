@@ -363,9 +363,9 @@ public partial class OneDirectory : OneFileSystem
                 AddChild(Environment.SpecialFolder.MyVideos);
                 // Add special folder "Downloads"
                 Guid guid = new("374DE290-123F-4565-9164-39C4925E467B");
-                NativeMethods.SHGetKnownFolderPath(ref guid, NativeMethods.KnownFolder.None, IntPtr.Zero, out string pathDownload);
+                NativeMethods.SHGetKnownFolderPath(ref guid, NativeMethods.KnownFolders.None, IntPtr.Zero, out string pathDownload);
                 NativeMethods.ShFileInfo fi = new();
-                NativeMethods.SHGetFileInfo(pathDownload, NativeMethods.FILE_ATTRIBUTE.NORMAL | NativeMethods.FILE_ATTRIBUTE.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), NativeMethods.SHGFI.DisplayName);
+                NativeMethods.SHGetFileInfo(pathDownload, NativeMethods.EFileAttributes.NORMAL | NativeMethods.EFileAttributes.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), NativeMethods.ShGetFileInfos.DisplayName);
                 Children.Add(new OneDirectory(pathDownload, this, true, fi.szDisplayName) { IsItemVisible = true });
 
                 foreach (DriveInfo di in DriveInfo.GetDrives())

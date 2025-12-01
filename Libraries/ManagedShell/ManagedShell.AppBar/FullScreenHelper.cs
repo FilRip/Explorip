@@ -132,7 +132,7 @@ public sealed class FullScreenHelper : IDisposable
                 else
                 {
                     // Still full screen but no longer active
-                    if ((GetWindowLong(hWnd, GWL.GWL_EXSTYLE) & (int)ExtendedWindowStyles.WS_EX_TOPMOST) == (int)ExtendedWindowStyles.WS_EX_TOPMOST)
+                    if ((GetWindowLong(hWnd, EGetWindowLong.GWL_EXSTYLE) & (int)ExtendedWindowStyles.WS_EX_TOPMOST) == (int)ExtendedWindowStyles.WS_EX_TOPMOST)
                     {
                         // If the new foreground window is a topmost window, don't consider this full-screen app inactive
                         continue;
@@ -251,7 +251,7 @@ public sealed class FullScreenHelper : IDisposable
 
     private static Rect GetEffectiveWindowRect(IntPtr hWnd)
     {
-        int style = GetWindowLong(hWnd, GWL.GWL_STYLE);
+        int style = GetWindowLong(hWnd, EGetWindowLong.GWL_STYLE);
         Rect rect;
 
         if ((((int)WindowStyles.WS_CAPTION | (int)WindowStyles.WS_THICKFRAME) & style) == ((int)WindowStyles.WS_CAPTION | (int)WindowStyles.WS_THICKFRAME) ||

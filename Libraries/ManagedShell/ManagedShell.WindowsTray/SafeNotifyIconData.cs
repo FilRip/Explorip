@@ -6,54 +6,49 @@ using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTray;
 
-#pragma warning disable S1104 // Fields should not have public accessibility
 public class SafeNotifyIconData
 {
-    public uint cbSize;
-    public IntPtr hWnd;
-    public uint uID;
-    public NIF uFlags;
-    public uint uCallbackMessage;
-    public IntPtr hIcon;
-    public string szTip;
-    public NIS dwState;
-    public NIS dwStateMask;
-    public string szInfo;
-    public uint uVersion;  // used with NIM_SETVERSION, values 0, 3 and 4
-    public string szInfoTitle;
-    public NIIF dwInfoFlags;
-    public Guid guidItem;
-    public uint hBalloonIcon;
+    public IntPtr Hwnd { get; set; }
+    public uint ID { get; set; }
+    public ShellNotifyIcons Flags { get; set; }
+    public uint CallbackMessage { get; set; }
+    public IntPtr IconHandle { get; set; }
+    public string Tip { get; set; }
+    public ENotifyIconStatus State { get; set; }
+    public ENotifyIconStatus StateMask { get; set; }
+    public string Info { get; set; }
+    public uint Version { get; set; }  // used with NIM_SETVERSION, values 0, 3 and 4
+    public string InfoTitle { get; set; }
+    public ENotifyIconInfos InfoFlags { get; set; }
+    public Guid GuidItem { get; set; }
+    public uint BalloonIconHandle { get; set; }
 
     public SafeNotifyIconData() { }
 
     public SafeNotifyIconData(NotifyIconData nid)
     {
-        cbSize = nid.cbSize;
-        hWnd = (IntPtr)nid.hWnd;
-        uID = nid.uID;
-        uFlags = nid.uFlags;
-        uCallbackMessage = nid.uCallbackMessage;
+        Hwnd = (IntPtr)nid.hWnd;
+        ID = nid.uID;
+        Flags = nid.uFlags;
+        CallbackMessage = nid.uCallbackMessage;
 
         try
         {
-            hIcon = (IntPtr)nid.hIcon;
+            IconHandle = (IntPtr)nid.hIcon;
         }
         catch (Exception e)
         {
             ShellLogger.Error($"SafeNotifyIconData: Unable to convert icon handle: {e.Message}");
         }
 
-        szTip = nid.szTip;
-        dwState = nid.dwState;
-        dwStateMask = nid.dwStateMask;
-        szInfo = nid.szInfo;
-        uVersion = nid.uTimeoutOrVersion;
-        szInfoTitle = nid.szInfoTitle;
-        dwInfoFlags = nid.dwInfoFlags;
-        guidItem = nid.guidItem;
-        hBalloonIcon = nid.hBalloonIcon;
+        Tip = nid.szTip;
+        State = nid.dwState;
+        StateMask = nid.dwStateMask;
+        Info = nid.szInfo;
+        Version = nid.uTimeoutOrVersion;
+        InfoTitle = nid.szInfoTitle;
+        InfoFlags = nid.dwInfoFlags;
+        GuidItem = nid.guidItem;
+        BalloonIconHandle = nid.hBalloonIcon;
     }
 }
-#pragma warning restore S1104 // Fields should not have public accessibility
-

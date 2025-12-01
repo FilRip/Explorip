@@ -25,7 +25,7 @@ public static class ShellHelper
             szDisplayName = string.Empty,
             szTypeName = string.Empty
         };
-        SHGetFileInfo(filename, FILE_ATTRIBUTE.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), SHGFI.DisplayName);
+        SHGetFileInfo(filename, EFileAttributes.NORMAL, ref shinfo, (uint)Marshal.SizeOf(shinfo), ShGetFileInfos.DisplayName);
 
         return shinfo.szDisplayName;
     }
@@ -283,7 +283,7 @@ public static class ShellHelper
 
     public static void ShowRunDialog(string title, string info)
     {
-        SHRunFileDialog(IntPtr.Zero, IntPtr.Zero, null, title, info, RunFileDialog.None);
+        SHRunFileDialog(IntPtr.Zero, IntPtr.Zero, null, title, info, RunFileDialogs.None);
     }
 
     public static void ShowWindowSwitcher()
@@ -1055,7 +1055,7 @@ public static class ShellHelper
     /// </summary>
     /// <param name="path">Location of directory or file to recycle</param>
     /// <param name="flags">FileOperationFlags to add in addition to FOF_ALLOWUNDO</param>
-    public static bool SendToRecycleBin(string path, FileOperation flags)
+    public static bool SendToRecycleBin(string path, FileOperations flags)
     {
         try
         {
@@ -1063,7 +1063,7 @@ public static class ShellHelper
             {
                 wFunc = FileOperationType.FO_DELETE,
                 pFrom = path + '\0' + '\0',
-                fFlags = FileOperation.FOF_ALLOWUNDO | flags,
+                fFlags = FileOperations.FOF_ALLOWUNDO | flags,
             };
             SHFileOperation(ref fs);
             return true;
@@ -1080,7 +1080,7 @@ public static class ShellHelper
     /// <param name="path">Location of directory or file to recycle</param>
     public static bool SendToRecycleBin(string path)
     {
-        return SendToRecycleBin(path, FileOperation.FOF_NOCONFIRMATION | FileOperation.FOF_WANTNUKEWARNING);
+        return SendToRecycleBin(path, FileOperations.FOF_NOCONFIRMATION | FileOperations.FOF_WANTNUKEWARNING);
     }
 
     /// <summary>
@@ -1089,7 +1089,7 @@ public static class ShellHelper
     /// <param name="path">Location of directory or file to recycle</param>
     public static bool MoveToRecycleBin(string path)
     {
-        return SendToRecycleBin(path, FileOperation.FOF_NOCONFIRMATION | FileOperation.FOF_NOERRORUI | FileOperation.FOF_SILENT);
+        return SendToRecycleBin(path, FileOperations.FOF_NOCONFIRMATION | FileOperations.FOF_NOERRORUI | FileOperations.FOF_SILENT);
 
     }
 

@@ -102,7 +102,7 @@ public static class ExtensionsDirectory
         while (itemsEnum.Next(1, out IntPtr pidlItem, out uint fetch) == 0 && fetch == 1)
         {
             ShFileInfo fi = new();
-            SHGetFileInfo(pidlItem, FILE_ATTRIBUTE.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), SHGFI.PIDL | SHGFI.DisplayName);
+            SHGetFileInfo(pidlItem, EFileAttributes.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), ShGetFileInfos.PIDL | ShGetFileInfos.DisplayName);
             if (fi.szDisplayName == localizedRecycleName)
             {
                 ret = sfRecycledBin.GetDisplayNameOf(pidlItem, SHGDN.FORPARSING);

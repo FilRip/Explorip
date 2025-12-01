@@ -122,17 +122,17 @@ internal static class Util
     #region GetBalloonFlag
 
     /// <summary>
-    /// Gets a <see cref="EBalloon"/> enum value that
+    /// Gets a <see cref="EBalloons"/> enum value that
     /// matches a given <see cref="BalloonIcon"/>.
     /// </summary>
-    public static EBalloon GetBalloonFlag(this BalloonIcon icon)
+    public static EBalloons GetBalloonFlag(this BalloonIcon icon)
     {
         return icon switch
         {
-            BalloonIcon.None => EBalloon.None,
-            BalloonIcon.Info => EBalloon.Info,
-            BalloonIcon.Warning => EBalloon.Warning,
-            BalloonIcon.Error => EBalloon.Error,
+            BalloonIcon.None => EBalloons.None,
+            BalloonIcon.Info => EBalloons.Info,
+            BalloonIcon.Warning => EBalloons.Warning,
+            BalloonIcon.Error => EBalloons.Error,
             _ => throw new ArgumentOutOfRangeException("icon"),
         };
     }

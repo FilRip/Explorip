@@ -58,7 +58,7 @@ public partial class SearchZoneViewModel : ObservableObject
         if (currentTaskbar != null)
         {
             GetWindowRect(ptrSearchWindow, out NativeMethods.Rect rect);
-            SetWindowPos(ptrSearchWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
+            SetWindowPos(ptrSearchWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.EShowWindowPos.SWP_SHOWWINDOW);
         }
         Thread.Sleep(200);
         List<Input> listKeys = [];

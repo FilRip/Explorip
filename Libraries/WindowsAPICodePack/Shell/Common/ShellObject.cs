@@ -474,7 +474,7 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
             if (ifirst != null && isecond != null)
             {
                 HResult hr = ifirst.Compare(
-                    isecond, SICHINTF.SICHINT_ALLFIELDS, out int result);
+                    isecond, SichInt.SICHINT_ALLFIELDS, out int result);
 
                 areEqual = hr == HResult.Ok && result == 0;
             }

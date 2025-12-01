@@ -92,7 +92,7 @@ public class ExplorerTrayService
 
             if (trayDelegate != null)
             {
-                if (!trayDelegate((uint)NIM.NIM_ADD, nid))
+                if (!trayDelegate((uint)NotifyIconMessage.NIM_ADD, nid))
                 {
                     ShellLogger.Debug("ExplorerTrayService: Ignored notify icon message");
                 }
@@ -179,20 +179,20 @@ public class ExplorerTrayService
     {
         SafeNotifyIconData nid = new()
         {
-            hWnd = trayItem.hWnd,
-            uID = trayItem.uID,
-            uCallbackMessage = trayItem.uCallbackMessage,
-            szTip = trayItem.szIconText,
-            hIcon = trayItem.hIcon,
-            uVersion = trayItem.uVersion,
-            guidItem = trayItem.guidItem,
-            dwState = (trayItem.dwState == 1 ? NIS.NIS_HIDDEN : NIS.NIS_SHAREDICON),
-            uFlags = NIF.GUID | NIF.MESSAGE | NIF.TIP | NIF.STATE
+            Hwnd = trayItem.hWnd,
+            ID = trayItem.uID,
+            CallbackMessage = trayItem.uCallbackMessage,
+            Tip = trayItem.szIconText,
+            IconHandle = trayItem.hIcon,
+            Version = trayItem.uVersion,
+            GuidItem = trayItem.guidItem,
+            State = (trayItem.dwState == 1 ? ENotifyIconStatus.NIS_HIDDEN : ENotifyIconStatus.NIS_SHAREDICON),
+            Flags = ShellNotifyIcons.GUID | ShellNotifyIcons.MESSAGE | ShellNotifyIcons.TIP | ShellNotifyIcons.STATE
         };
 
-        if (nid.hIcon != IntPtr.Zero)
+        if (nid.IconHandle != IntPtr.Zero)
         {
-            nid.uFlags |= NIF.ICON;
+            nid.Flags |= ShellNotifyIcons.ICON;
         }
         else
         {

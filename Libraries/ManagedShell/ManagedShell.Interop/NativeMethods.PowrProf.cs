@@ -6,6 +6,7 @@ public partial class NativeMethods
 {
     const string PowrProf_DllName = "powrprof.dll";
 
+#pragma warning disable IDE0079
 #pragma warning disable S1104 // Fields should not have public accessibility
     public struct BatteryReportingScale
     {
@@ -13,8 +14,9 @@ public partial class NativeMethods
         public uint Capacity;
     }
 #pragma warning restore S1104 // Fields should not have public accessibility
+#pragma warning restore IDE0079
 
-    public enum SYSTEM_POWER_STATE
+    public enum SystemPowerState
     {
         PowerSystemUnspecified = 0,
         PowerSystemWorking = 1,
@@ -26,6 +28,7 @@ public partial class NativeMethods
         PowerSystemMaximum = 7
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S1104 // Fields should not have public accessibility
     public struct SystemPowerCapabilities
     {
@@ -82,13 +85,14 @@ public partial class NativeMethods
         public bool BatteriesAreShortTerm;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
         public BatteryReportingScale[] BatteryScale;
-        public SYSTEM_POWER_STATE AcOnLineWake;
-        public SYSTEM_POWER_STATE SoftLidWake;
-        public SYSTEM_POWER_STATE RtcWake;
-        public SYSTEM_POWER_STATE MinDeviceWakeState;
-        public SYSTEM_POWER_STATE DefaultLowLatencyWake;
+        public SystemPowerState AcOnLineWake;
+        public SystemPowerState SoftLidWake;
+        public SystemPowerState RtcWake;
+        public SystemPowerState MinDeviceWakeState;
+        public SystemPowerState DefaultLowLatencyWake;
     }
 #pragma warning restore S1104 // Fields should not have public accessibility
+#pragma warning restore IDE0079
 
     // There is a method for this in System.Windows.Forms, however it calls the same p/invoke and I would prefer not to reference that lib
     [DllImport(PowrProf_DllName)]

@@ -192,9 +192,7 @@ public class WindowMessageSink : IDisposable
             IntPtr.Zero, IntPtr.Zero);
 
         if (MessageWindowHandle == IntPtr.Zero)
-        {
             throw new Win32Exception("Message window handle was not a valid pointer");
-        }
     }
 
     #endregion

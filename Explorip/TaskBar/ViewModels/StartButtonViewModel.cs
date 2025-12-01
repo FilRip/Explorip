@@ -81,7 +81,7 @@ public partial class StartButtonViewModel : ObservableObject
                     if (ptrStartMenuWindow != IntPtr.Zero)
                     {
                         Screen screen = WpfScreenHelper.MouseHelper.MouseScreen;
-                        NativeMethods.SetWindowPos(ptrStartMenuWindow, IntPtr.Zero, (int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height, NativeMethods.SWP.SWP_NOACTIVATE);
+                        NativeMethods.SetWindowPos(ptrStartMenuWindow, IntPtr.Zero, (int)screen.WorkingArea.X, (int)screen.WorkingArea.Y, (int)screen.WorkingArea.Width, (int)screen.WorkingArea.Height, NativeMethods.EShowWindowPos.SWP_NOACTIVATE);
                     }
                     ShellHelper.ShowStartMenu();
                 }

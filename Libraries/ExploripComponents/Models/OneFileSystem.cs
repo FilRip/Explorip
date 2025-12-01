@@ -73,7 +73,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
             if (string.IsNullOrWhiteSpace(_fileInfo.szTypeName) && !_isNetworkResource)
             {
                 _fileInfo = new();
-                NativeMethods.SHGetFileInfo(FullPath, NativeMethods.FILE_ATTRIBUTE.NULL, ref _fileInfo, (uint)Marshal.SizeOf(_fileInfo), NativeMethods.SHGFI.TypeName);
+                NativeMethods.SHGetFileInfo(FullPath, NativeMethods.EFileAttributes.NULL, ref _fileInfo, (uint)Marshal.SizeOf(_fileInfo), NativeMethods.ShGetFileInfos.TypeName);
                 if (!FullPath.StartsWith("::"))
                 {
                     try

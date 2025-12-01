@@ -11,3 +11,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Major Code Smell", "S1168:Empty arrays and collections should be returned instead of null")]
 [assembly: SuppressMessage("Major Bug", "S1244:Floating point numbers should not be tested for equality")]
 [assembly: SuppressMessage("Style", "IDE0251:Définir comme membre 'readonly'")]
+[assembly: SuppressMessage("S107", "S107")]

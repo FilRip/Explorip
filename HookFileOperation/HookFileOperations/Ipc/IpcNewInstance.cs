@@ -75,10 +75,12 @@ public class IpcNewInstance : MarshalByRefObject
         });
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S3400, S2325
     public bool IsReady()
     {
         return true;
     }
 #pragma warning restore S3400, S2325
+#pragma warning restore IDE0079
 }

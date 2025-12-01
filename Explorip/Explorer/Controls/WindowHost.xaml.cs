@@ -39,9 +39,9 @@ public partial class WindowHost : UserControl, IDisposable
             _destPtr = (PresentationSource.FromVisual(this) as HwndSource).Handle;
             NativeMethods.SetParent(_srcPtr, _destPtr);
             UserControl_SizeChanged(this, null);
-            int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.GWL.GWL_STYLE);
+            int currentStyle = NativeMethods.GetWindowLong(_srcPtr, NativeMethods.EGetWindowLong.GWL_STYLE);
             _previousStyle = currentStyle;
-            NativeMethods.SetWindowLong(_srcPtr, NativeMethods.GWL.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
+            NativeMethods.SetWindowLong(_srcPtr, NativeMethods.EGetWindowLong.GWL_STYLE, (currentStyle & ~(int)NativeMethods.WindowStyles.WS_BORDER & ~(int)NativeMethods.WindowStyles.WS_SIZEBOX));
             NativeMethods.GetWindowThreadProcessId(_srcPtr, out uint pid);
             Task.Run(() => CheckExited((int)pid));
         });
@@ -89,7 +89,7 @@ public partial class WindowHost : UserControl, IDisposable
     private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (_srcPtr != IntPtr.Zero)
-            NativeMethods.SetWindowPos(_srcPtr, IntPtr.Zero, (int)(OFFSET_X * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)((this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)(OFFSET_Y * VisualTreeHelper.GetDpi(this).DpiScaleY), (int)((ActualWidth - OFFSET_X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)((ActualHeight - OFFSET_SIZE_HEIGHT) * VisualTreeHelper.GetDpi(this).DpiScaleY), NativeMethods.SWP.SWP_SHOWWINDOW | NativeMethods.SWP.SWP_NOACTIVATE);
+            NativeMethods.SetWindowPos(_srcPtr, IntPtr.Zero, (int)(OFFSET_X * VisualTreeHelper.GetDpi(this).DpiScaleX) + (int)((this.FindVisualParent<TabExplorerBrowser>().GetVisualOffset().X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)(OFFSET_Y * VisualTreeHelper.GetDpi(this).DpiScaleY), (int)((ActualWidth - OFFSET_X) * VisualTreeHelper.GetDpi(this).DpiScaleX), (int)((ActualHeight - OFFSET_SIZE_HEIGHT) * VisualTreeHelper.GetDpi(this).DpiScaleY), NativeMethods.EShowWindowPos.SWP_SHOWWINDOW | NativeMethods.EShowWindowPos.SWP_NOACTIVATE);
     }
 
     public void Show()
@@ -117,7 +117,7 @@ public partial class WindowHost : UserControl, IDisposable
     {
         if (_srcPtr != IntPtr.Zero)
         {
-            NativeMethods.SetWindowLong(_srcPtr, NativeMethods.GWL.GWL_STYLE, _previousStyle);
+            NativeMethods.SetWindowLong(_srcPtr, NativeMethods.EGetWindowLong.GWL_STYLE, _previousStyle);
             NativeMethods.SetParent(_srcPtr, IntPtr.Zero);
             _srcPtr = IntPtr.Zero;
         }

@@ -222,7 +222,6 @@ public sealed class PropVariant : IDisposable
     [FieldOffset(0)]
     ushort _valueType;
 
-#pragma warning disable S125 // Sections of code should not be commented out
     // Reserved Fields
     //[FieldOffset(2)]
     //ushort _wReserved1;
@@ -230,7 +229,6 @@ public sealed class PropVariant : IDisposable
     //ushort _wReserved2;
     //[FieldOffset(6)]
     //ushort _wReserved3;
-#pragma warning restore S125 // Sections of code should not be commented out
 
     // In order to allow x64 compat, we need to allow for
     // expansion of the IntPtr. However, the BLOB struct
@@ -493,11 +491,14 @@ public sealed class PropVariant : IDisposable
     /// <param name="value">Decimal array to wrap.</param>
     public PropVariant(decimal[] value)
     {
-        if (value == null) { throw new ArgumentNullException("value"); }
+        if (value == null)
+            throw new ArgumentNullException("value");
 
+#pragma warning disable IDE0079
 #pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
         _valueType = (ushort)(VarEnum.VT_DECIMAL | VarEnum.VT_VECTOR);
 #pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
+#pragma warning restore IDE0079
         _int32 = value.Length;
 
         // allocate required memory for array with 128bit elements
@@ -524,11 +525,14 @@ public sealed class PropVariant : IDisposable
     /// </summary>        
     public PropVariant(float[] value)
     {
-        if (value == null) { throw new ArgumentNullException("value"); }
+        if (value == null)
+            throw new ArgumentNullException("value");
 
+#pragma warning disable IDE0079
 #pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
         _valueType = (ushort)(VarEnum.VT_R4 | VarEnum.VT_VECTOR);
 #pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
+#pragma warning restore IDE0079
         _int32 = value.Length;
 
         _ptr2 = Marshal.AllocCoTaskMem(value.Length * sizeof(float));
@@ -663,6 +667,7 @@ public sealed class PropVariant : IDisposable
                 VarEnum.VT_UNKNOWN => Marshal.GetObjectForIUnknown(_ptr),
                 VarEnum.VT_DISPATCH => Marshal.GetObjectForIUnknown(_ptr),
                 VarEnum.VT_DECIMAL => _decimal,
+#pragma warning disable IDE0079
 #pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
                 VarEnum.VT_ARRAY | VarEnum.VT_UNKNOWN => CrackSingleDimSafeArray(_ptr),
                 (VarEnum.VT_VECTOR | VarEnum.VT_LPWSTR) => GetVector<string>(),
@@ -678,6 +683,7 @@ public sealed class PropVariant : IDisposable
                 (VarEnum.VT_VECTOR | VarEnum.VT_FILETIME) => GetVector<DateTime>(),
                 (VarEnum.VT_VECTOR | VarEnum.VT_DECIMAL) => GetVector<decimal>(),
 #pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
+#pragma warning restore IDE0079
                 _ => null,// if the value cannot be marshaled
             };
         }

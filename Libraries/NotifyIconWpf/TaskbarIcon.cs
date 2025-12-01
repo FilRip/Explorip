@@ -784,13 +784,9 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     private void OnBalloonToolTipChanged(bool visible)
     {
         if (visible)
-        {
             RaiseTrayBalloonTipShownEvent();
-        }
         else
-        {
             RaiseTrayBalloonTipClosedEvent();
-        }
     }
 
     /// <summary>
@@ -820,18 +816,15 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// is a null reference.</exception>
     public void ShowBalloonTip(string title, string message, Icon customIcon, bool largeIcon = false)
     {
-        if (customIcon == null) throw new ArgumentNullException(nameof(customIcon));
+        if (customIcon == null)
+            throw new ArgumentNullException(nameof(customIcon));
 
         lock (lockObject)
         {
-            EBalloon flags = EBalloon.User;
+            EBalloons flags = EBalloons.User;
 
             if (largeIcon)
-            {
-#pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
-                flags |= EBalloon.LargeIcon;
-#pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
-            }
+                flags |= EBalloons.LargeIcon;
 
             ShowBalloonTip(title, message, flags, customIcon.Handle);
         }
@@ -847,7 +840,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// <param name="flags">Indicates what icon to use.</param>
     /// <param name="balloonIconHandle">A handle to a custom icon, if any, or
     /// <see cref="IntPtr.Zero"/>.</param>
-    private void ShowBalloonTip(string title, string message, EBalloon flags, IntPtr balloonIconHandle)
+    private void ShowBalloonTip(string title, string message, EBalloons flags, IntPtr balloonIconHandle)
     {
         EnsureNotDisposed();
 

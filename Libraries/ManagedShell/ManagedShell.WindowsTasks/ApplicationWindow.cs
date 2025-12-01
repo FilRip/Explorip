@@ -399,7 +399,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             if (_windows.Count == 0)
                 return 0;
-            return NativeMethods.GetWindowLong(_windows[0], NativeMethods.GWL.GWL_STYLE);
+            return NativeMethods.GetWindowLong(_windows[0], NativeMethods.EGetWindowLong.GWL_STYLE);
         }
     }
 
@@ -409,7 +409,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             if (_windows.Count == 0)
                 return 0;
-            return NativeMethods.GetWindowLong(_windows[0], NativeMethods.GWL.GWL_EXSTYLE);
+            return NativeMethods.GetWindowLong(_windows[0], NativeMethods.EGetWindowLong.GWL_EXSTYLE);
         }
     }
 

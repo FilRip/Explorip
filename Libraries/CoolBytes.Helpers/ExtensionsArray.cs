@@ -12,10 +12,12 @@ public static class ExtensionsArray
         if (list == null)
             throw new ArgumentNullException(nameof(list));
 
-#pragma warning disable S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
+#pragma warning disable IDE0079
+#pragma warning disable S112
         if (index > list.Length - 1)
             throw new IndexOutOfRangeException();
 #pragma warning restore S112
+#pragma warning restore IDE0079
 
         T[] ret = list;
         for (int i = index; i < index + count; i++)
@@ -28,12 +30,14 @@ public static class ExtensionsArray
     {
         if (list == null)
             throw new ArgumentNullException(nameof(list));
-#pragma warning disable S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
+#pragma warning disable IDE0079
+#pragma warning disable S112
         if (index >= list.Length)
             throw new IndexOutOfRangeException();
         if (list.Length == 0)
             throw new IndexOutOfRangeException();
-#pragma warning restore S112 // C'est pourtant la bonne exception. Il n'y en a pas de meilleur
+#pragma warning restore S112
+#pragma warning restore IDE0079
 
         T[] newListe = new T[list.Length - 1];
         for (int i = 0; i < list.Length; i++)

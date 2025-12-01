@@ -12,7 +12,7 @@ using Microsoft.WindowsAPICodePack.Shell.Interop.Taskbar;
 
 namespace Microsoft.WindowsAPICodePack.Shell.Interop.Common;
 
-internal enum SICHINTF
+internal enum SichInt
 {
     SICHINT_DISPLAY = 0x00000000,
     SICHINT_CANONICAL = 0x10000000,
@@ -66,7 +66,7 @@ internal interface IShellItem
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     HResult Compare(
         [In(), MarshalAs(UnmanagedType.Interface)] IShellItem psi,
-        [In()] SICHINTF hint,
+        [In()] SichInt hint,
         out int piOrder);
 }
 

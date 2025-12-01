@@ -26,7 +26,7 @@ public partial class SearchButtonViewModel : ObservableObject
         if (currentTaskbar != null)
         {
             NativeMethods.GetWindowRect(ptrSearchWindow, out NativeMethods.Rect rect);
-            NativeMethods.SetWindowPos(ptrSearchWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.SWP.SWP_SHOWWINDOW);
+            NativeMethods.SetWindowPos(ptrSearchWindow, IntPtr.Zero, (int)(currentTaskbar.Left * screen.ScaleFactor), (int)(currentTaskbar.Top * screen.ScaleFactor) - rect.Height, rect.Width, rect.Height, NativeMethods.EShowWindowPos.SWP_SHOWWINDOW);
         }
     }
 }

@@ -177,7 +177,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum SWP
+    public enum EShowWindowPos
     {
         SWP_NOSIZE = 0x1,
         SWP_NOMOVE = 0x2,
@@ -205,7 +205,7 @@ public partial class NativeMethods
         public int y;
         public int cx;
         public int cy;
-        public SWP flags;
+        public EShowWindowPos flags;
 
         // Returns the WINDOWPOS structure pointed to by the lParam parameter
         // of a WM_WINDOWPOSCHANGING or WM_WINDOWPOSCHANGED message.
@@ -231,6 +231,7 @@ public partial class NativeMethods
 #pragma warning restore IDE0251 // Définir comme membre 'readonly'
     }
 
+    [Flags()]
     public enum ExitWindows : uint
     {
         /// <summary>
@@ -1815,7 +1816,7 @@ public partial class NativeMethods
     internal static extern bool IsWindowVisible(IntPtr hWnd);
 
     [DllImport(User32_DllName)]
-    internal static extern IntPtr SetWindowLong(IntPtr hWnd, GWL nIndex, int dwNewLong);
+    internal static extern IntPtr SetWindowLong(IntPtr hWnd, EGetWindowLong nIndex, int dwNewLong);
 
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
@@ -2030,16 +2031,14 @@ public partial class NativeMethods
     /// </summary>
     public delegate int keyboardHookProc(int code, int wParam, ref KeyboardHookStruct lParam);
 
-#pragma warning disable S1104
     public struct KeyboardHookStruct
     {
-        public int vkCode;
-        public int scanCode;
-        public int flags;
-        public int time;
-        public int dwExtraInfo;
+        public int VkCode { get; set; }
+        public int ScanCode { get; set; }
+        public int Flags { get; set; }
+        public int Time { get; set; }
+        public int ExtraInfo { get; set; }
     }
-#pragma warning restore S1104
 
     /// <summary>
     /// Unhooks the windows hook.
@@ -3973,7 +3972,7 @@ public partial class NativeMethods
     [DllImport(User32_DllName, EntryPoint = "EnumWindows", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
     internal static extern int EnumWindows(EnumWindowDelegate callPtr, int lParam);
 
-    public enum GWL
+    public enum EGetWindowLong
     {
         GWL_WNDPROC = (-4),
         GWL_HINSTANCE = (-6),
@@ -3985,10 +3984,10 @@ public partial class NativeMethods
     }
 
     [DllImport(User32_DllName, SetLastError = true)]
-    internal static extern int GetWindowLong(IntPtr hWnd, GWL gwl);
+    internal static extern int GetWindowLong(IntPtr hWnd, EGetWindowLong gwl);
 
     [DllImport(User32_DllName, EntryPoint = "GetWindowLongPtr")]
-    private static extern IntPtr GetWindowLongPtr(IntPtr hWnd, GWL gwl);
+    private static extern IntPtr GetWindowLongPtr(IntPtr hWnd, EGetWindowLong gwl);
 
     public delegate bool EnumDesktopsDelegate(string desktop, IntPtr lParam);
     [DllImport(User32_DllName)]
@@ -3999,9 +3998,9 @@ public partial class NativeMethods
     internal static extern bool PostMessage(IntPtr hWnd, WM Msg, IntPtr wParam, IntPtr lParam);
 
     [DllImport(User32_DllName, SetLastError = true)]
-    internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SWP uFlags);
+    internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, EShowWindowPos uFlags);
     [DllImport(User32_DllName, SetLastError = true)]
-    internal static extern bool SetWindowPos(IntPtr hWnd, int X, int Y, int cx, int cy, SWP uFlags);
+    internal static extern bool SetWindowPos(IntPtr hWnd, int X, int Y, int cx, int cy, EShowWindowPos uFlags);
 
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern bool AdjustWindowRectExForDpi(ref Rect rect, WindowStyles dwStyle, bool menu, ExtendedWindowStyles dwExStyle, uint dpi);

@@ -54,10 +54,12 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
     public event EventHandler<NotificationBalloonEventArgs> NotificationBalloonShown;
 
     private SystrayDelegate trayDelegate;
+#pragma warning disable IDE0079
 #pragma warning disable S1450 // False positive from Sonar
     private IconDataDelegate iconDataDelegate;
     private TrayHostSizeDelegate trayHostSizeDelegate;
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
+#pragma warning restore IDE0079
     private readonly object _lockObject = new();
     private ShellServiceObject shellServiceObject;
     private TrayHostSizeData trayHostSizeData = new()
@@ -167,61 +169,61 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
 
             if (trayIcon == null)
             {
-                ShellLogger.Debug($"No NotifyIcon found for hWnd={nicData.hWnd}, uID={nicData.uID}, Guid={nicData.guidItem}, Title={nicData.szTip}");
-                trayIcon = new(this, nicData.hWnd)
+                ShellLogger.Debug($"No NotifyIcon found for hWnd={nicData.Hwnd}, uID={nicData.ID}, Guid={nicData.GuidItem}, Title={nicData.Tip}");
+                trayIcon = new(this, nicData.Hwnd)
                 {
-                    UID = nicData.uID,
+                    UID = nicData.ID,
                 };
                 exists = false;
             }
 
-            if ((NIM)message == NIM.NIM_ADD || (NIM)message == NIM.NIM_MODIFY)
+            if ((NotifyIconMessage)message == NotifyIconMessage.NIM_ADD || (NotifyIconMessage)message == NotifyIconMessage.NIM_MODIFY)
             {
                 try
                 {
                     // hide icons while we are shell which require UWP support & we have a separate implementation for
-                    if (nicData.guidItem == new Guid(VOLUME_GUID) && ((EnvironmentHelper.IsAppRunningAsShell && EnvironmentHelper.IsWindows10OrBetter) || GroupPolicyHelper.HideScaVolume))
+                    if (nicData.GuidItem == new Guid(VOLUME_GUID) && ((EnvironmentHelper.IsAppRunningAsShell && EnvironmentHelper.IsWindows10OrBetter) || GroupPolicyHelper.HideScaVolume))
                         return false;
 
                     // hide icons per group policy
-                    if ((nicData.guidItem == new Guid(HEALTH_GUID) && GroupPolicyHelper.HideScaHealth) ||
-                        (nicData.guidItem == new Guid(MEETNOW_GUID) && GroupPolicyHelper.HideScaMeetNow) ||
-                        (nicData.guidItem == new Guid(NETWORK_GUID) && GroupPolicyHelper.HideScaNetwork) ||
-                        (nicData.guidItem == new Guid(POWER_GUID) && GroupPolicyHelper.HideScaPower))
+                    if ((nicData.GuidItem == new Guid(HEALTH_GUID) && GroupPolicyHelper.HideScaHealth) ||
+                        (nicData.GuidItem == new Guid(MEETNOW_GUID) && GroupPolicyHelper.HideScaMeetNow) ||
+                        (nicData.GuidItem == new Guid(NETWORK_GUID) && GroupPolicyHelper.HideScaNetwork) ||
+                        (nicData.GuidItem == new Guid(POWER_GUID) && GroupPolicyHelper.HideScaPower))
                     {
                         return false;
                     }
 
-                    if ((NIF.STATE & nicData.uFlags) != 0)
-                        trayIcon.IsHidden = nicData.dwState == NIS.NIS_HIDDEN;
+                    if ((ShellNotifyIcons.STATE & nicData.Flags) != 0)
+                        trayIcon.IsHidden = nicData.State == ENotifyIconStatus.NIS_HIDDEN;
 
-                    if ((NIF.TIP & nicData.uFlags) != 0 && !string.IsNullOrEmpty(nicData.szTip))
-                        trayIcon.Title = nicData.szTip;
+                    if ((ShellNotifyIcons.TIP & nicData.Flags) != 0 && !string.IsNullOrEmpty(nicData.Tip))
+                        trayIcon.Title = nicData.Tip;
 
-                    if ((NIF.ICON & nicData.uFlags) != 0 && nicData.hIcon != IntPtr.Zero)
+                    if ((ShellNotifyIcons.ICON & nicData.Flags) != 0 && nicData.IconHandle != IntPtr.Zero)
                     {
-                        ImageSource icon = IconImageConverter.GetImageFromHIcon(nicData.hIcon);
+                        ImageSource icon = IconImageConverter.GetImageFromHIcon(nicData.IconHandle);
                         if (icon != null)
                             trayIcon.Icon = icon;
                     }
                     trayIcon.Icon ??= IconImageConverter.GetDefaultIcon();
 
-                    trayIcon.HWnd = nicData.hWnd;
-                    trayIcon.UID = nicData.uID;
+                    trayIcon.HWnd = nicData.Hwnd;
+                    trayIcon.UID = nicData.ID;
 
-                    if ((NIF.GUID & nicData.uFlags) != 0)
-                        trayIcon.GUID = nicData.guidItem;
+                    if ((ShellNotifyIcons.GUID & nicData.Flags) != 0)
+                        trayIcon.GUID = nicData.GuidItem;
 
-                    if (nicData.uVersion > 0 && nicData.uVersion <= 4)
-                        trayIcon.Version = nicData.uVersion;
+                    if (nicData.Version > 0 && nicData.Version <= 4)
+                        trayIcon.Version = nicData.Version;
 
-                    if ((NIF.MESSAGE & nicData.uFlags) != 0)
-                        trayIcon.CallbackMessage = nicData.uCallbackMessage;
+                    if ((ShellNotifyIcons.MESSAGE & nicData.Flags) != 0)
+                        trayIcon.CallbackMessage = nicData.CallbackMessage;
 
                     if (!exists)
                     {
                         // we need a valid hWnd to add a new icon
-                        if (nicData.hWnd == IntPtr.Zero)
+                        if (nicData.Hwnd == IntPtr.Zero)
                             return false;
 
                         // default placement to a menu bar-like rect
@@ -229,11 +231,11 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
 
                         // set properties used for pinning
                         trayIcon.Path = ShellHelper.GetPathForHandle(trayIcon.HWnd);
-                        if (nicData.guidItem == new Guid(HEALTH_GUID) ||
-                            nicData.guidItem == new Guid(MEETNOW_GUID) ||
-                            nicData.guidItem == new Guid(NETWORK_GUID) ||
-                            nicData.guidItem == new Guid(POWER_GUID) ||
-                            nicData.guidItem == new Guid(VOLUME_GUID))
+                        if (nicData.GuidItem == new Guid(HEALTH_GUID) ||
+                            nicData.GuidItem == new Guid(MEETNOW_GUID) ||
+                            nicData.GuidItem == new Guid(NETWORK_GUID) ||
+                            nicData.GuidItem == new Guid(POWER_GUID) ||
+                            nicData.GuidItem == new Guid(VOLUME_GUID))
                         {
                             if (PinDefaultIcons)
                                 trayIcon.IsPinned = true;
@@ -242,12 +244,12 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
 
                         TrayIcons.Add(trayIcon);
 
-                        if (nicData.uFlags.HasFlag(NIF.INFO))
+                        if (nicData.Flags.HasFlag(ShellNotifyIcons.INFO))
                             HandleBalloonData(nicData, trayIcon);
 
                         ShellLogger.Debug($"NotificationArea: Added: {trayIcon.Title} Path: {trayIcon.Path} Hidden: {trayIcon.IsHidden} GUID: {trayIcon.GUID} UID: {trayIcon.UID} Version: {trayIcon.Version} hWnd: {trayIcon.HWnd}");
 
-                        if ((NIM)message == NIM.NIM_MODIFY)
+                        if ((NotifyIconMessage)message == NotifyIconMessage.NIM_MODIFY)
                         {
                             // return an error to the notifyicon as we received a modify for an icon we did not yet have
                             return false;
@@ -255,7 +257,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                     }
                     else
                     {
-                        if (nicData.uFlags.HasFlag(NIF.INFO))
+                        if (nicData.Flags.HasFlag(ShellNotifyIcons.INFO))
                             HandleBalloonData(nicData, trayIcon);
 
                         ShellLogger.Debug($"NotificationArea: Modified: {trayIcon.Title}");
@@ -266,7 +268,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                     ShellLogger.Error("NotificationArea: Unable to modify the icon in the collection.", ex);
                 }
             }
-            else if ((NIM)message == NIM.NIM_DELETE)
+            else if ((NotifyIconMessage)message == NotifyIconMessage.NIM_DELETE)
             {
                 try
                 {
@@ -284,14 +286,14 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                     ShellLogger.Error("NotificationArea: Unable to remove the icon from the collection.", ex);
                 }
             }
-            else if ((NIM)message == NIM.NIM_SETVERSION)
+            else if ((NotifyIconMessage)message == NotifyIconMessage.NIM_SETVERSION)
             {
-                if (nicData.uVersion > 4)
+                if (nicData.Version > 4)
                     return false;
 
                 if (trayIcon != null)
                 {
-                    trayIcon.Version = nicData.uVersion;
+                    trayIcon.Version = nicData.Version;
                     ShellLogger.Debug($"NotificationArea: Modified version to {trayIcon.Version} on: {trayIcon.Title}");
                 }
             }
@@ -305,7 +307,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
         if (Disable)
             return;
 
-        if (string.IsNullOrEmpty(nicData.szInfoTitle) && (string.IsNullOrWhiteSpace(notifyIcon.Title) || string.IsNullOrWhiteSpace(notifyIcon.Path)))
+        if (string.IsNullOrEmpty(nicData.InfoTitle) && (string.IsNullOrWhiteSpace(notifyIcon.Title) || string.IsNullOrWhiteSpace(notifyIcon.Path)))
             return;
 
         NotificationBalloon balloonInfo = new(nicData, notifyIcon);

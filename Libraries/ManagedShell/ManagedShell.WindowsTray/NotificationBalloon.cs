@@ -18,7 +18,7 @@ public class NotificationBalloon
 
     public string Title { get; internal set; }
 
-    public NIIF Flags { get; internal set; }
+    public ENotifyIconInfos Flags { get; internal set; }
 
     public ImageSource Icon { get; internal set; }
 
@@ -36,11 +36,11 @@ public class NotificationBalloon
     {
         NotifyIcon = notifyIcon;
 
-        Title = nicData.szInfoTitle;
-        Info = nicData.szInfo;
-        Flags = nicData.dwInfoFlags;
-        Timeout = (int)nicData.uVersion;
-        HandleWindow = nicData.hWnd;
+        Title = nicData.InfoTitle;
+        Info = nicData.Info;
+        Flags = nicData.InfoFlags;
+        Timeout = (int)nicData.Version;
+        HandleWindow = nicData.Hwnd;
 
         Received = DateTime.Now;
 
@@ -49,27 +49,27 @@ public class NotificationBalloon
         if (string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(notifyIcon.Path))
             Title = Path.GetFileNameWithoutExtension(notifyIcon.Path);
 
-        if (Flags.HasFlag(NIIF.ERROR))
+        if (Flags.HasFlag(ENotifyIconInfos.ERROR))
         {
             Icon = GetSystemIcon(SystemIcons.Error.Handle);
         }
-        else if (Flags.HasFlag(NIIF.INFO))
+        else if (Flags.HasFlag(ENotifyIconInfos.INFO))
         {
             Icon = GetSystemIcon(SystemIcons.Information.Handle);
         }
-        else if (Flags.HasFlag(NIIF.WARNING))
+        else if (Flags.HasFlag(ENotifyIconInfos.WARNING))
         {
             Icon = GetSystemIcon(SystemIcons.Warning.Handle);
         }
-        else if (Flags.HasFlag(NIIF.USER))
+        else if (Flags.HasFlag(ENotifyIconInfos.USER))
         {
-            if (nicData.hBalloonIcon != 0)
+            if (nicData.BalloonIconHandle != 0)
             {
-                SetIconFromHIcon((IntPtr)nicData.hBalloonIcon);
+                SetIconFromHIcon((IntPtr)nicData.BalloonIconHandle);
             }
-            else if (nicData.hIcon != IntPtr.Zero)
+            else if (nicData.IconHandle != IntPtr.Zero)
             {
-                SetIconFromHIcon(nicData.hIcon);
+                SetIconFromHIcon(nicData.IconHandle);
             }
         }
     }
@@ -85,13 +85,13 @@ public class NotificationBalloon
         switch (visibility)
         {
             case BalloonVisibility.Visible:
-                NotifyIcon.SendMessage((uint)NIN.BALLOONSHOW, 0);
+                NotifyIcon.SendMessage((uint)NotifyIconNotification.BALLOONSHOW, 0);
                 break;
             case BalloonVisibility.Hidden:
-                NotifyIcon.SendMessage((uint)NIN.BALLOONHIDE, 0);
+                NotifyIcon.SendMessage((uint)NotifyIconNotification.BALLOONHIDE, 0);
                 break;
             case BalloonVisibility.TimedOut:
-                NotifyIcon.SendMessage((uint)NIN.BALLOONTIMEOUT, 0);
+                NotifyIcon.SendMessage((uint)NotifyIconNotification.BALLOONTIMEOUT, 0);
                 break;
             default:
                 break;
@@ -106,7 +106,7 @@ public class NotificationBalloon
             return;
         }
 
-        NotifyIcon.SendMessage((uint)NIN.BALLOONUSERCLICK, 0);
+        NotifyIcon.SendMessage((uint)NotifyIconNotification.BALLOONUSERCLICK, 0);
     }
 
     private void SetIconFromHIcon(IntPtr hIcon)

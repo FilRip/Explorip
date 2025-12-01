@@ -25,8 +25,8 @@ public class ShellWindow : NativeWindowEx, IDisposable
 
         Init(cp);
         MessageReceived += WndProc;
-        NativeMethods.SetWindowLong(Handle, NativeMethods.GWL.GWL_EXSTYLE,
-            NativeMethods.GetWindowLong(Handle, NativeMethods.GWL.GWL_EXSTYLE) &
+        NativeMethods.SetWindowLong(Handle, NativeMethods.EGetWindowLong.GWL_EXSTYLE,
+            NativeMethods.GetWindowLong(Handle, NativeMethods.EGetWindowLong.GWL_EXSTYLE) &
             ~(int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE);
 
         if (NativeMethods.SetShellWindow(Handle) == 1)
@@ -45,7 +45,7 @@ public class ShellWindow : NativeWindowEx, IDisposable
     {
         NativeMethods.SetWindowPos(Handle, IntPtr.Zero, SystemInformation.VirtualScreen.Left,
             SystemInformation.VirtualScreen.Top, SystemInformation.VirtualScreen.Width, SystemInformation.VirtualScreen.Height,
-            NativeMethods.SWP.SWP_NOZORDER | NativeMethods.SWP.SWP_NOACTIVATE);
+            NativeMethods.EShowWindowPos.SWP_NOZORDER | NativeMethods.EShowWindowPos.SWP_NOACTIVATE);
     }
 
     public void Dispose()
