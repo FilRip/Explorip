@@ -17,6 +17,8 @@ namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 /// </summary>
 public class JumpList
 {
+    private static Guid IObjectArray = new("92CA9DCD-5622-4BBA-A805-5E9F541BD8C9");
+    private static Guid IUnknown = new("00000000-0000-0000-C000-000000000046");
 
     /// <summary>
     /// Create a JumpList for the application's taskbar button.
@@ -141,7 +143,7 @@ public class JumpList
             // Native call to start adding items to the taskbar destination list
             HResult hr = customDestinationList.BeginList(
                 out uint maxSlotsInList,
-                ref TaskbarNativeMethods.TaskbarGuids.IObjectArray,
+                ref IObjectArray,
                 out _);
 
             if (CoreErrorHelper.Succeeded(hr))
@@ -308,7 +310,7 @@ public class JumpList
         // Native call to start adding items to the taskbar destination list
         HResult hr = customDestinationList.BeginList(
             out _,
-            ref TaskbarNativeMethods.TaskbarGuids.IObjectArray,
+            ref IObjectArray,
             out object removedItems);
 
         if (!CoreErrorHelper.Succeeded(hr))
@@ -348,7 +350,7 @@ public class JumpList
         {
             // Get list of removed items from native code
 
-            customDestinationList.GetRemovedDestinations(ref TaskbarNativeMethods.TaskbarGuids.IObjectArray, out object removedItems);
+            customDestinationList.GetRemovedDestinations(ref IObjectArray, out object removedItems);
 
             return ProcessDeletedItems((IObjectArray)removedItems);
         }
@@ -365,7 +367,7 @@ public class JumpList
         {
             // Native call to retrieve objects from IObjectArray
             removedItems.GetAt(i,
-                ref TaskbarNativeMethods.TaskbarGuids.IUnknown,
+                ref IUnknown,
                 out object item);
 
             // Process item

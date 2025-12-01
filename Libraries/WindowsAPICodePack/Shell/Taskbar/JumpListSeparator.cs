@@ -16,9 +16,7 @@ namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 /// </summary>
 public class JumpListSeparator : JumpListTask, IDisposable
 {
-#pragma warning disable S2223 // Non-constant static fields should not be visible
-    internal static PropertyKey PKEY_AppUserModel_IsDestListSeparator = SystemProperties.System.AppUserModel.IsDestinationListSeparator;
-#pragma warning restore S2223 // Non-constant static fields should not be visible
+    private static PropertyKey PKEY_AppUserModel_IsDestListSeparator = SystemProperties.System.AppUserModel.IsDestinationListSeparator;
 
     private IPropertyStore nativePropertyStore;
     private IShellLinkW nativeShellLink;
@@ -50,9 +48,11 @@ public class JumpListSeparator : JumpListTask, IDisposable
                 HResult result = nativePropertyStore.SetValue(ref PKEY_AppUserModel_IsDestListSeparator, propVariant);
                 if (!CoreErrorHelper.Succeeded(result))
                 {
+#pragma warning disable IDE0079
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
                     throw new ShellException(result);
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
+#pragma warning restore IDE0079
                 }
                 nativePropertyStore.Commit();
             }

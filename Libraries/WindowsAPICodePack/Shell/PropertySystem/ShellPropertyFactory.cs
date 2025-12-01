@@ -94,6 +94,7 @@ internal static class ShellPropertyFactory
             (VarEnum.VT_LPWSTR) => typeof(string),
             (VarEnum.VT_UNKNOWN) => typeof(IntPtr?),
             (VarEnum.VT_STREAM) => typeof(IStream),
+#pragma warning disable IDE0079
 #pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
             (VarEnum.VT_VECTOR | VarEnum.VT_UI1) => typeof(byte[]),
             (VarEnum.VT_VECTOR | VarEnum.VT_I2) => typeof(short[]),
@@ -109,6 +110,7 @@ internal static class ShellPropertyFactory
             (VarEnum.VT_VECTOR | VarEnum.VT_CF) => typeof(IntPtr[]),
             (VarEnum.VT_VECTOR | VarEnum.VT_LPWSTR) => typeof(string[]),
 #pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
+#pragma warning restore IDE0079
             _ => typeof(object),
         };
     }
@@ -121,9 +123,12 @@ internal static class ShellPropertyFactory
         int typeHash = GetTypeHash(argTypes);
 
         // Finds the correct constructor by matching the hash of the types.
+#pragma warning disable IDE0079
 #pragma warning disable S3011
         ConstructorInfo ctorInfo = Array.Find(type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
             , x => typeHash == GetTypeHash(x.GetParameters().Select(a => a.ParameterType))) ?? throw new ArgumentException(LocalizedMessages.ShellPropertyFactoryConstructorNotFound, "type");
+#pragma warning restore S3011
+#pragma warning restore IDE0079
         ParameterExpression key = Expression.Parameter(argTypes[0], "propKey");
         ParameterExpression desc = Expression.Parameter(argTypes[1], "desc");
         ParameterExpression third = Expression.Parameter(typeof(object), "third"); //needs to be object to avoid casting later

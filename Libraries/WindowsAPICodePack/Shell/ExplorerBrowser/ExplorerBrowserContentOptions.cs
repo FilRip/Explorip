@@ -279,9 +279,11 @@ public class ExplorerBrowserContentOptions
                     HResult hr = iFV2.GetViewModeAndIconSize(out _, out iconSize);
                     if (hr != HResult.Ok)
                     {
+#pragma warning disable IDE0079
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
                         throw new CommonControlException(LocalizedMessages.ExplorerBrowserIconSize, hr);
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
+#pragma warning restore IDE0079
                     }
                 }
                 finally

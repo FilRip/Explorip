@@ -31,9 +31,11 @@ internal class MessageListener : IDisposable
     private static readonly object _crossThreadWindowLock = new();
     private static IntPtr _tempHandle = IntPtr.Zero;
 
+#pragma warning disable IDE0079
 #pragma warning disable S3264 // Events should be invoked
     public event EventHandler<WindowMessageEventArgs> MessageReceived;
 #pragma warning restore S3264 // Events should be invoked
+#pragma warning restore IDE0079
 
     private static void SetFirstWindowHandle(IntPtr newValue)
     {

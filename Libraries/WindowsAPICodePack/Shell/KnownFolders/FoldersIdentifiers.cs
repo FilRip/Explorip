@@ -18,9 +18,11 @@ internal static class FolderIdentifiers
         folders = [];
         Type folderIDs = typeof(FolderIdentifiers);
 
+#pragma warning disable IDE0079
 #pragma warning disable S3011
         FieldInfo[] fields = folderIDs.GetFields(BindingFlags.NonPublic | BindingFlags.Static);
 #pragma warning restore S3011
+#pragma warning restore IDE0079
         foreach (FieldInfo f in fields)
         {
             // Ignore dictionary field.

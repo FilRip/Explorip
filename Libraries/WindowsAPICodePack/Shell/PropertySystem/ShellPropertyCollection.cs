@@ -186,9 +186,11 @@ public class ShellPropertyCollection : ReadOnlyCollection<IShellProperty>, IDisp
             IShellProperty prop = Items.FirstOrDefault(p => p.PropertyKey == key);
             if (prop != null) return prop;
 
+#pragma warning disable IDE0079
 #pragma warning disable S112
             throw new IndexOutOfRangeException(LocalizedMessages.PropertyCollectionInvalidIndex);
 #pragma warning restore S112
+#pragma warning restore IDE0079
         }
     }
 

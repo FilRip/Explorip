@@ -460,7 +460,7 @@ public sealed class ExplorerBrowser :
     /// <param name="explorerPane">a guid identifying the pane</param>
     /// <param name="peps">the pane state desired</param>
     /// <returns></returns>
-    HResult IExplorerPaneVisibility.GetPaneState(ref Guid explorerPane, out ExplorerPaneState peps)
+    HResult IExplorerPaneVisibility.GetPaneState(ref Guid explorerPane, out ExplorerPaneStates peps)
     {
         peps = explorerPane.ToString() switch
         {
@@ -477,13 +477,13 @@ public sealed class ExplorerBrowser :
         return HResult.Ok;
     }
 
-    private static ExplorerPaneState VisibilityToPaneState(PaneVisibilityState visibility)
+    private static ExplorerPaneStates VisibilityToPaneState(PaneVisibilityState visibility)
     {
         return visibility switch
         {
-            PaneVisibilityState.DoNotCare => ExplorerPaneState.DoNotCare,
-            PaneVisibilityState.Hide => ExplorerPaneState.DefaultOff | ExplorerPaneState.Force,
-            PaneVisibilityState.Show => ExplorerPaneState.DefaultOn | ExplorerPaneState.Force,
+            PaneVisibilityState.DoNotCare => ExplorerPaneStates.DoNotCare,
+            PaneVisibilityState.Hide => ExplorerPaneStates.DefaultOff | ExplorerPaneStates.Force,
+            PaneVisibilityState.Show => ExplorerPaneStates.DefaultOn | ExplorerPaneStates.Force,
             _ => throw new ArgumentException("unexpected PaneVisibilityState"),
         };
     }

@@ -72,7 +72,7 @@ internal enum FolderViewMode
 }
 
 [Flags()]
-internal enum ExplorerPaneState
+internal enum ExplorerPaneStates
 {
     DoNotCare = 0x00000000,
     DefaultOn = 0x00000001,
@@ -537,7 +537,7 @@ internal interface IExplorerPaneVisibility
 {
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    HResult GetPaneState(ref Guid explorerPane, out ExplorerPaneState peps);
+    HResult GetPaneState(ref Guid explorerPane, out ExplorerPaneStates peps);
 };
 
 [ComImport(),
@@ -564,6 +564,7 @@ internal interface IExplorerBrowserEvents
 
 #region Unused - Keeping for debugging bug #885228
 
+#pragma warning disable IDE0079
 #pragma warning disable S125 // Sections of code should not be commented out
 //[ComImport(),
 // Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser),
@@ -632,6 +633,7 @@ internal interface IExplorerBrowserEvents
 //}
 
 #pragma warning restore S125 // Sections of code should not be commented out
+#pragma warning restore IDE0079
 
 #endregion
 
