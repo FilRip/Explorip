@@ -135,14 +135,14 @@ public partial class ExploripDesktop : Window
                 IntPtr lowestHwnd = WindowHelper.GetLowestDesktopParentHwnd();
 
                 if (lowestHwnd != IntPtr.Zero)
-                    wndPos.hwndInsertAfter = NativeMethods.GetWindow(lowestHwnd, NativeMethods.GetWindow_Cmd.GW_HWNDPREV);
+                    wndPos.hwndInsertAfter = NativeMethods.GetWindow(lowestHwnd, NativeMethods.GetWindowCmd.GW_HWNDPREV);
                 else
                     wndPos.hwndInsertAfter = (IntPtr)NativeMethods.WindowZOrder.HWND_BOTTOM;
 
                 wndPos.UpdateMessage(lParam);
             }
         }
-        else if ((msg == (int)NativeMethods.WM.SETTINGCHANGE && wParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA) ||
+        else if ((msg == (int)NativeMethods.WM.SETTINGCHANGE && wParam.ToInt32() == (int)NativeMethods.ESystemParametersInfo.SETWORKAREA) ||
             (msg == (int)NativeMethods.WM.DPICHANGED))
         {
             RefreshGrid();
@@ -266,7 +266,7 @@ public partial class ExploripDesktop : Window
 
     private void Window_DragOver(object sender, DragEventArgs e)
     {
-        MyDataContext.DragOver(e);
+        ExploripDesktopViewModel.DragOver(e);
     }
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

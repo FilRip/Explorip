@@ -112,7 +112,7 @@ internal static class Interop
         CharSet = CharSet.Auto)]
     public static extern uint TrackPopupMenuEx(
         IntPtr hmenu,
-        NativeMethods.TPM flags,
+        NativeMethods.TrackPopUpMenuActions flags,
         int x,
         int y,
         IntPtr hwnd,

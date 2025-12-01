@@ -22,9 +22,11 @@ public static class Invocations
             Type objectType;
             objectType = objectSource.GetType();
             MethodInfo method;
+#pragma warning disable IDE0079
 #pragma warning disable S3011
             method = objectType.GetMethod(methodName, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase | BindingFlags.Static);
 #pragma warning restore S3011
+#pragma warning restore IDE0079
 
             if (method == null)
                 return false;

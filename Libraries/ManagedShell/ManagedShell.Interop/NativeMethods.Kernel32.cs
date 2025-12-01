@@ -94,11 +94,12 @@ public partial class NativeMethods
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern IntPtr OpenProcess(ProcessAccess processAccess, bool bInheritHandle, int processId);
 
+#pragma warning disable IDE0079
 #pragma warning disable S4070
     [Flags()]
     public enum ProcessAccess : uint
     {
-        All = STANDARD_RIGHTS_REQUIRED | Synchronize,
+        All = STANDARD_RIGHTS_REQUIRED | Synchronize | AllAccess,
         Terminate = 0x00000001,
         CreateThread = 0x00000002,
         VirtualMemoryOperation = 0x00000008,
@@ -113,8 +114,10 @@ public partial class NativeMethods
         Delete = 0x00010000,
         STANDARD_RIGHTS_REQUIRED = 0x000F0000,
         Synchronize = 0x00100000,
+        AllAccess = 0x0000FFFF,
     }
 #pragma warning restore S4070
+#pragma warning restore IDE0079
 
     [DllImport(Kernel32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
     internal static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, [Out(), MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpExeName, ref int lpdwSize);
@@ -122,10 +125,10 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName, SetLastError = true, ExactSpelling = true)]
     internal static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress,
-        uint dwSize, AllocationType flAllocationType, MemoryProtection flProtect);
+        uint dwSize, AllocationTypes flAllocationType, MemoryProtections flProtect);
 
     [Flags()]
-    public enum AllocationType
+    public enum AllocationTypes
     {
         Commit = 0x1000,
         Reserve = 0x2000,
@@ -139,7 +142,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum MemoryProtection
+    public enum MemoryProtections
     {
         Execute = 0x10,
         ExecuteRead = 0x20,
@@ -172,7 +175,7 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName, SetLastError = true, ExactSpelling = true)]
     internal static extern bool VirtualFreeEx(IntPtr hProcess, IntPtr lpAddress,
-        int dwSize, AllocationType dwFreeType);
+        int dwSize, AllocationTypes dwFreeType);
 
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern int GetApplicationUserModelId(IntPtr hProcess, ref uint applicationUserModelIdLength, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder sbAppUserModelID);
@@ -197,7 +200,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum ControlKeyState
+    public enum ControlKeyStates
     {
         RIGHT_ALT_PRESSED = 0x1,
         LEFT_ALT_PRESSED = 0x2,
@@ -224,11 +227,11 @@ public partial class NativeMethods
         [FieldOffset(10)]
         public char UnicodeChar;
         [FieldOffset(12), MarshalAs(UnmanagedType.U4)]
-        public ControlKeyState dwControlKeyState;
+        public ControlKeyStates dwControlKeyState;
     }
 
     [Flags()]
-    public enum MouseEvent
+    public enum MouseEvents
     {
         MOUSE_MOVED = 0x1,
         DOUBLE_CLICK = 0x2,
@@ -241,8 +244,8 @@ public partial class NativeMethods
     {
         public Coord dwMousePosition;
         public MouseButtonState dwButtonState;
-        public ControlKeyState dwControlKeyState;
-        public MouseEvent dwEventFlags;
+        public ControlKeyStates dwControlKeyState;
+        public MouseEvents dwEventFlags;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -291,7 +294,7 @@ public partial class NativeMethods
     internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPTStr)] string lpFileName);
 
     [Flags()]
-    internal enum ELoadLibrary : uint
+    internal enum ELoadLibrairies : uint
     {
         None = 0,
         DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
@@ -310,7 +313,7 @@ public partial class NativeMethods
     }
 
     [DllImport(Kernel32_DllName, SetLastError = true)]
-    internal static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, ELoadLibrary dwFlags);
+    internal static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, ELoadLibrairies dwFlags);
 
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern bool FreeLibrary(IntPtr hModule);
@@ -391,7 +394,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum Snapshot : uint
+    public enum Snapshots : uint
     {
         HeapList = 0x00000001,
         Process = 0x00000002,
@@ -437,7 +440,7 @@ public partial class NativeMethods
     }
 
     [DllImport(Kernel32_DllName, SetLastError = true)]
-    internal static extern SafeSnapshotHandle CreateToolhelp32Snapshot(Snapshot flags, uint id);
+    internal static extern SafeSnapshotHandle CreateToolhelp32Snapshot(Snapshots flags, uint id);
 
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern bool Process32First(SafeSnapshotHandle hSnapshot, ref ProcessEntry32 lppe);

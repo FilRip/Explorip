@@ -1248,7 +1248,7 @@ public static class ShellHelper
 
     private static bool IsDesktopVisible()
     {
-        IntPtr hWnd = GetWindow(FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", ""), GetWindow_Cmd.GW_CHILD);
+        IntPtr hWnd = GetWindow(FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", ""), GetWindowCmd.GW_CHILD);
 
 
         if (hWnd == IntPtr.Zero)
@@ -1307,7 +1307,7 @@ public static class ShellHelper
             inputs[position].mkhi.ki.wScan = 0;
             inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
             inputs[position].mkhi.ki.wVk = (ushort)wVk_3;
-            inputs[position].mkhi.ki.dwFlags = KeyEventF.KeyUp;
+            inputs[position].mkhi.ki.dwFlags = KeyEventScans.KeyUp;
             position++;
         }
 
@@ -1315,14 +1315,14 @@ public static class ShellHelper
         inputs[position].mkhi.ki.wScan = 0;
         inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
         inputs[position].mkhi.ki.wVk = (ushort)wVk_2;
-        inputs[position].mkhi.ki.dwFlags = KeyEventF.KeyUp;
+        inputs[position].mkhi.ki.dwFlags = KeyEventScans.KeyUp;
         position++;
 
         inputs[position].type = TypeInput.Keyboard;
         inputs[position].mkhi.ki.wScan = 0;
         inputs[position].mkhi.ki.dwExtraInfo = GetMessageExtraInfo();
         inputs[position].mkhi.ki.wVk = (ushort)wVk_1;
-        inputs[position].mkhi.ki.dwFlags = KeyEventF.KeyUp;
+        inputs[position].mkhi.ki.dwFlags = KeyEventScans.KeyUp;
 
         SendInput((uint)(wVk_3 == VK.NONE ? 4 : 6), inputs, Marshal.SizeOf(typeof(Input)));
     }

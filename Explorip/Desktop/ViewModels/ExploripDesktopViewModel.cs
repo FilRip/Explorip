@@ -342,9 +342,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 
     #endregion
 
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
-    internal void DragOver(DragEventArgs e)
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+    internal static void DragOver(DragEventArgs e)
     {
         if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             e.Effects = DragDropEffects.Copy;

@@ -310,6 +310,7 @@ public class ShellFolder : ShellItem
 
     #region Helpers
 
+#pragma warning disable IDE0079
 #pragma warning disable S3241
     private bool AddFile(string parsingName, int position = -1)
     {
@@ -325,6 +326,7 @@ public class ShellFolder : ShellItem
         return AddFile(file, position);
     }
 #pragma warning restore S3241
+#pragma warning restore IDE0079
 
     private bool AddFile(ShellFile file, int position = -1)
     {

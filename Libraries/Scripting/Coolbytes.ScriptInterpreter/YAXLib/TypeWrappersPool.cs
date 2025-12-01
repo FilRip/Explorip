@@ -63,9 +63,11 @@ internal class TypeWrappersPool
         if (s_instance != null)
         {
             s_instance = null;
+#pragma warning disable IDE0079
 #pragma warning disable S1215 // Sert à nettoyer tous les Serialiseurs de toutes les classes qui ont pu être rencontrées
             GC.Collect();
 #pragma warning restore S1215
+#pragma warning restore IDE0079
         }
     }
 

@@ -255,7 +255,7 @@ public interface IShellBrowser : IOleWindow
     /// </remarks>
     // https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellbrowser-getcontrolwindow
     [PreserveSig()]
-    int GetControlWindow(FCW id, out IntPtr pIntPtr);
+    int GetControlWindow(FrameControlWindows id, out IntPtr pIntPtr);
 
     /// <summary>Sends control messages to either the toolbar or the status bar in a Windows Explorer window.</summary>
     /// <param name="id">
@@ -291,7 +291,7 @@ public interface IShellBrowser : IOleWindow
     /// </remarks>
     // https://docs.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellbrowser-sendcontrolmsg
     [PreserveSig()]
-    int SendControlMsg(FCW id, uint uMsg, IntPtr wParam, IntPtr lParam, out IntPtr pret);
+    int SendControlMsg(FrameControlWindows id, uint uMsg, IntPtr wParam, IntPtr lParam, out IntPtr pret);
 
     /// <summary>Retrieves the currently active (displayed) Shell view object.</summary>
     /// <param name="ppshv">

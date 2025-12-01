@@ -143,7 +143,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 IntPtr wMenu = NativeMethods.GetSystemMenu(window, false);
                 // Display the menu
                 uint command = NativeMethods.TrackPopupMenuEx(wMenu,
-                    NativeMethods.TPM.RIGHTBUTTON | NativeMethods.TPM.RETURNCMD | NativeMethods.TPM.NONOTIFY, posMouse.X, posMouse.Y, WindowHandle, IntPtr.Zero);
+                    NativeMethods.TrackPopUpMenuActions.RIGHTBUTTON | NativeMethods.TrackPopUpMenuActions.RETURNCMD | NativeMethods.TrackPopUpMenuActions.NONOTIFY, posMouse.X, posMouse.Y, WindowHandle, IntPtr.Zero);
                 if (command != 0)
                     NativeMethods.PostMessage(window, NativeMethods.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
             });

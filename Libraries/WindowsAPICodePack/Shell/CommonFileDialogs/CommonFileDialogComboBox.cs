@@ -67,11 +67,11 @@ public class CommonFileDialogComboBox : CommonFileDialogProminentControl, ICommo
                 ApplyPropertyChange("SelectedIndex");
             }
             else
-            {
+#pragma warning disable IDE0079
 #pragma warning disable S112
                 throw new IndexOutOfRangeException(LocalizedMessages.ComboBoxIndexOutsideBounds);
 #pragma warning restore S112
-            }
+#pragma warning restore IDE0079
         }
     }
 
@@ -127,9 +127,11 @@ public class CommonFileDialogComboBox : CommonFileDialogProminentControl, ICommo
         }
         else if (selectedIndex != -1)
         {
+#pragma warning disable IDE0079
 #pragma warning disable S112
             throw new IndexOutOfRangeException(LocalizedMessages.ComboBoxIndexOutsideBounds);
 #pragma warning restore S112
+#pragma warning restore IDE0079
         }
 
         // Make this control prominent if needed

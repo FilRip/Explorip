@@ -64,9 +64,11 @@ public class SearchCondition : IDisposable
                 int hr = PropertySystemNativeMethods.PSGetPropertyKeyFromName(PropertyCanonicalName, out propertyKey);
                 if (!CoreErrorHelper.Succeeded(hr))
                 {
+#pragma warning disable IDE0079
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
                     throw new ShellException(hr);
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
+#pragma warning restore IDE0079
                 }
             }
 

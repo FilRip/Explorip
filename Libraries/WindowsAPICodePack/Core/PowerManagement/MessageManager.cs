@@ -28,7 +28,7 @@ internal static class MessageManager
     internal static void RegisterPowerEvent(Guid eventId, EventHandler eventToRegister)
     {
         EnsureInitialized();
-        window.RegisterPowerEvent(eventId, eventToRegister);
+        window.RegisterNewPowerEvent(eventId, eventToRegister);
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ internal static class MessageManager
     internal static void UnregisterPowerEvent(Guid eventId, EventHandler eventToUnregister)
     {
         EnsureInitialized();
-        window.UnregisterPowerEvent(eventId, eventToUnregister);
+        window.UnregisterNewPowerEvent(eventId, eventToUnregister);
     }
 
     #endregion
@@ -81,8 +81,7 @@ internal static class MessageManager
         /// </summary>
         /// <param name="eventId">Guid for the event.</param>
         /// <param name="eventToRegister">Event handler for the event.</param>
-#pragma warning disable S3218 // Inner class members should not shadow outer class "static" or type members
-        internal void RegisterPowerEvent(Guid eventId, EventHandler eventToRegister)
+        internal void RegisterNewPowerEvent(Guid eventId, EventHandler eventToRegister)
         {
             readerWriterLock.AcquireWriterLock(Timeout.Infinite);
             if (!eventList.Contains(eventId))
@@ -101,7 +100,6 @@ internal static class MessageManager
             }
             readerWriterLock.ReleaseWriterLock();
         }
-#pragma warning restore S3218 // Inner class members should not shadow outer class "static" or type members
 
         /// <summary>
         /// Removes an event handler.
@@ -110,8 +108,7 @@ internal static class MessageManager
         /// <param name="eventToUnregister">Event handler to remove.</param>
         /// <exception cref="InvalidOperationException">Cannot unregister 
         /// a function that is not registered.</exception>
-#pragma warning disable S3218 // Inner class members should not shadow outer class "static" or type members
-        internal void UnregisterPowerEvent(Guid eventId, EventHandler eventToUnregister)
+        internal void UnregisterNewPowerEvent(Guid eventId, EventHandler eventToUnregister)
         {
             try
             {
@@ -131,7 +128,6 @@ internal static class MessageManager
                 readerWriterLock.ReleaseWriterLock();
             }
         }
-#pragma warning restore S3218 // Inner class members should not shadow outer class "static" or type members
 
         #endregion
 

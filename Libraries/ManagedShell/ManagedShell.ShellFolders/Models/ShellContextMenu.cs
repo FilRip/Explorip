@@ -305,9 +305,9 @@ internal class ShellContextMenu : NativeWindow
                 0,
                 CMD_FIRST,
                 CMD_LAST,
-                CMF.EXPLORE |
-                CMF.NORMAL |
-                ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? CMF.EXTENDEDVERBS : 0));
+                ContextMenuStates.EXPLORE |
+                ContextMenuStates.NORMAL |
+                ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? ContextMenuStates.EXTENDEDVERBS : 0));
 
             if (iContextMenuPtr != IntPtr.Zero)
             {
@@ -327,7 +327,7 @@ internal class ShellContextMenu : NativeWindow
 
             uint nSelected = NativeMethods.TrackPopupMenuEx(
                 pMenu,
-                NativeMethods.TPM.RETURNCMD,
+                NativeMethods.TrackPopUpMenuActions.RETURNCMD,
                 (int)pointScreen.X,
                 (int)pointScreen.Y,
                 this.Handle,

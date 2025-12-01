@@ -60,9 +60,11 @@ public class CommonFileDialogRadioButtonList : CommonFileDialogControl, ICommonF
             }
             else
             {
+#pragma warning disable IDE0079
 #pragma warning disable S112
                 throw new IndexOutOfRangeException(LocalizedMessages.RadioButtonListIndexOutOfBounds);
 #pragma warning restore S112
+#pragma warning restore IDE0079
             }
         }
     }
@@ -119,9 +121,11 @@ public class CommonFileDialogRadioButtonList : CommonFileDialogControl, ICommonF
         }
         else if (selectedIndex != -1)
         {
+#pragma warning disable IDE0079
 #pragma warning disable S112
             throw new IndexOutOfRangeException(LocalizedMessages.RadioButtonListIndexOutOfBounds);
 #pragma warning restore S112
+#pragma warning restore IDE0079
         }
 
         // Sync unmanaged properties with managed properties

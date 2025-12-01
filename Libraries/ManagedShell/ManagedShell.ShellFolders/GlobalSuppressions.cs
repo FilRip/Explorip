@@ -11,3 +11,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0251:Définir comme membre 'readonly'")]
 [assembly: SuppressMessage("Major Code Smell", "S1123:\"Obsolete\" attributes should include explanations")]
 [assembly: SuppressMessage("Info Code Smell", "S1133:Deprecated code should be removed")]
+[assembly: SuppressMessage("S3776", "S3776")]

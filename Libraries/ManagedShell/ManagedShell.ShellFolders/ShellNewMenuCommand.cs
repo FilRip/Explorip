@@ -29,7 +29,7 @@ public class ShellNewMenuCommand : ShellMenuCommand
                 (uint)position,
                 Interop.CMD_FIRST,
                 Interop.CMD_LAST,
-                CMF.NORMAL);
+                ContextMenuStates.NORMAL);
 
             nativeMenuPtr = Interop.GetSubMenu(parentNativeMenuPtr, position);
 

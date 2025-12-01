@@ -75,8 +75,8 @@ public class ExplorerTrayService
 
         GetWindowThreadProcessId(toolbarHwnd, out uint processId);
         IntPtr hProcess = OpenProcess(ProcessAccess.All, false, (int)processId);
-        IntPtr hBuffer = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)Marshal.SizeOf(new TbButton()), AllocationType.Commit,
-            MemoryProtection.ReadWrite);
+        IntPtr hBuffer = VirtualAllocEx(hProcess, IntPtr.Zero, (uint)Marshal.SizeOf(new TbButton()), AllocationTypes.Commit,
+            MemoryProtections.ReadWrite);
 
         for (int i = 0; i < count; i++)
         {
@@ -103,7 +103,7 @@ public class ExplorerTrayService
             }
         }
 
-        VirtualFreeEx(hProcess, hBuffer, 0, AllocationType.Release);
+        VirtualFreeEx(hProcess, hBuffer, 0, AllocationTypes.Release);
 
         CloseHandle(hProcess);
     }

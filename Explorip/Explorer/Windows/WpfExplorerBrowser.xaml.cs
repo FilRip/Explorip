@@ -188,7 +188,7 @@ public partial class WpfExplorerBrowser : Window
                     {
                         IntPtr hMenu = NativeMethods.GetSystemMenu(_windowHandle, false);
                         Point posMouse = PointToScreen(Mouse.GetPosition(this));
-                        int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, _windowHandle, IntPtr.Zero);
+                        int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TrackPopUpMenuActions.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, _windowHandle, IntPtr.Zero);
                         if (cmd > 0)
                             NativeMethods.SendMessage(_windowHandle, NativeMethods.WM.SYSCOMMAND, (uint)cmd, 0);
                     }

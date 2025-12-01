@@ -164,9 +164,11 @@ public abstract class Roslyn<TLanguage, TCompiler, TInterpreter> where TLanguage
                 object result;
 
                 myDynamicObject = ret.AssemblyGenerate.CreateInstance(typeName);
+#pragma warning disable IDE0079
 #pragma warning disable S3011
                 myDynamicMethod = myDynamicObject.GetType().GetMethod(methodName, BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
 #pragma warning restore S3011
+#pragma warning restore IDE0079
 
                 result = myDynamicMethod.Invoke(myDynamicObject, parameters);
                 if (result != null)

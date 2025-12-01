@@ -21,7 +21,7 @@ using Securify.ShellLink;
 using static ManagedShell.Interop.NativeMethods;
 
 using Localization = Explorip.Constants.Localization;
-using MFT = ManagedShell.Interop.NativeMethods.MFT;
+using MenuItemTypes = ManagedShell.Interop.NativeMethods.MenuItemTypes;
 using Point = ManagedShell.Interop.NativeMethods.Point;
 
 namespace ExploripComponents.Helpers;
@@ -496,12 +496,12 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
             _pMenu = CreatePopupMenu();
 
-            CMF flag = CMF.NORMAL;
+            ContextMenuStates flag = ContextMenuStates.NORMAL;
             if (!background)
             {
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                    flag |= CMF.EXTENDEDVERBS;
-                flag |= CMF.CANRENAME;
+                    flag |= ContextMenuStates.EXTENDEDVERBS;
+                flag |= ContextMenuStates.CANRENAME;
             }
 
             if (_contextMenu2 == null && _contextMenuPtr != IntPtr.Zero)
@@ -539,7 +539,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             {
                 nSelected = TrackPopupMenuEx(
                     _pMenu,
-                    TPM.RETURNCMD | TPM.RIGHTBUTTON,
+                    TrackPopUpMenuActions.RETURNCMD | TrackPopUpMenuActions.RIGHTBUTTON,
                     (int)pointScreen.X,
                     (int)pointScreen.Y,
                     _viewModel.CurrentControl.Handle,
@@ -691,7 +691,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         int nbMenu = GetMenuItemCount(pMenu);
         string? libelle = GetMenuItemString(nbMenu - 1, pMenu, true, out _);
         if (string.IsNullOrWhiteSpace(libelle))
-            RemoveMenu(pMenu, (uint)nbMenu - 1, MF.BYPOSITION);
+            RemoveMenu(pMenu, (uint)nbMenu - 1, MenuItemPos.BYPOSITION);
     }
 
     private void GetSpecialCmd(IntPtr pMenu, bool background)
@@ -721,8 +721,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                             MenuItemInfo mi = new()
                             {
                                 cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
-                                fMask = MIIM.STATE,
-                                fState = MFS.ENABLED,
+                                fMask = MenuItemIntegrateMembers.STATE,
+                                fState = MenuItemStates.ENABLED,
                             };
                             if (bPaste)
                                 _cmdPaste = cmd;
@@ -820,8 +820,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                     {
                                         dwTypeData = "",
                                         cch = 0,
-                                        fMask = MIIM.FTYPE,
-                                        fType = MFT.SEPARATOR,
+                                        fMask = MenuItemIntegrateMembers.FTYPE,
+                                        fType = MenuItemTypes.SEPARATOR,
                                     };
                                     newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
                                     InsertMenuItem(hMenu, (uint)nbSubMenu, true, ref newMenuItem);
@@ -830,9 +830,9 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                     {
                                         dwTypeData = Localization.GROUPBY_NONE_SUBMENU,
                                         cch = Localization.GROUPBY_NONE_SUBMENU.Length,
-                                        fMask = MIIM.STATE | MIIM.STRING | MIIM.ID,
-                                        fType = MFT.STRING,
-                                        fState = MFS.ENABLED,
+                                        fMask = MenuItemIntegrateMembers.STATE | MenuItemIntegrateMembers.STRING | MenuItemIntegrateMembers.ID,
+                                        fType = MenuItemTypes.STRING,
+                                        fState = MenuItemStates.ENABLED,
                                         wID = _cmdGbNone,
                                     };
                                     newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
@@ -890,8 +890,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                     {
                                         dwTypeData = "",
                                         cch = 0,
-                                        fMask = MIIM.FTYPE,
-                                        fType = MFT.SEPARATOR,
+                                        fMask = MenuItemIntegrateMembers.FTYPE,
+                                        fType = MenuItemTypes.SEPARATOR,
                                     };
                                     newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
                                     InsertMenuItem(hMenu, (uint)nbSubMenu, true, ref newMenuItem);
@@ -900,9 +900,9 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                                     {
                                         dwTypeData = Localization.GROUPBY_NONE_SUBMENU,
                                         cch = Localization.GROUPBY_NONE_SUBMENU.Length,
-                                        fMask = MIIM.STATE | MIIM.STRING | MIIM.ID,
-                                        fType = MFT.STRING,
-                                        fState = MFS.ENABLED,
+                                        fMask = MenuItemIntegrateMembers.STATE | MenuItemIntegrateMembers.STRING | MenuItemIntegrateMembers.ID,
+                                        fType = MenuItemTypes.STRING,
+                                        fState = MenuItemStates.ENABLED,
                                         wID = _cmdOrderByNone,
                                     };
                                     newMenuItem.cbSize = (uint)Marshal.SizeOf(newMenuItem);
@@ -927,8 +927,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         MenuItemInfo mi = new()
         {
             cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
-            fMask = MIIM.STATE,
-            fState = isChecked ? MFS.CHECKED : MFS.UNCHECKED,
+            fMask = MenuItemIntegrateMembers.STATE,
+            fState = isChecked ? MenuItemStates.CHECKED : MenuItemStates.UNCHECKED,
         };
         SetMenuItemInfo(pMenu, numMenu, usePosition, ref mi);
     }
@@ -947,8 +947,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             {
                 cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
                 dwTypeData = new string('\0', 256),
-                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID,
-                fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED,
+                fMask = MenuItemIntegrateMembers.STRING | MenuItemIntegrateMembers.STATE | MenuItemIntegrateMembers.ID,
+                fType = MenuItemTypes.STRING | MenuItemTypes.DISABLED | MenuItemTypes.GRAYED,
             };
             result.cch = result.dwTypeData.Length - 1;
             if (GetMenuItemInfo(pMenu, (uint)IdOrPositionMenu, usePosition, ref result))
@@ -971,8 +971,8 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             {
                 cbSize = (uint)Marshal.SizeOf(typeof(MenuItemInfo)),
                 dwTypeData = new string('\0', 256),
-                fMask = MIIM.STRING | MIIM.STATE | MIIM.ID | MIIM.SUBMENU,
-                fType = MFT.STRING | MFT.DISABLED | MFT.GRAYED,
+                fMask = MenuItemIntegrateMembers.STRING | MenuItemIntegrateMembers.STATE | MenuItemIntegrateMembers.ID | MenuItemIntegrateMembers.SUBMENU,
+                fType = MenuItemTypes.STRING | MenuItemTypes.DISABLED | MenuItemTypes.GRAYED,
             };
             result.cch = result.dwTypeData.Length - 1;
             if (GetMenuItemInfo(pMenu, (uint)IdOrPositionMenu, usePosition, ref result))

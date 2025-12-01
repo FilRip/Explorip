@@ -5,6 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags")]
-[assembly: SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out")]
 [assembly: SuppressMessage("S3776", "S3776")]
+[assembly: SuppressMessage("S2436", "S2436")]

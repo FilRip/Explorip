@@ -126,12 +126,14 @@ public class WpfObjectViewModel : ViewModelBase
             foreach (XmlNode subNode in currentWmlNode.ChildNodes.OfType<XmlNode>().OrderBy(item => item.Name).ToList())
             {
                 IncrementCounter();
+#pragma warning disable IDE0079
 #pragma warning disable S3358
                 TreeViewItem tvi = new()
                 {
                     Header = subNode.HasChildNodes ? subNode.Name : string.IsNullOrWhiteSpace(subNode.Value) ? subNode.Name : subNode.Value,
                 };
 #pragma warning restore S3358
+#pragma warning restore IDE0079
                 currentTreeViewNode.Items.Add(tvi);
                 if (subNode.HasChildNodes)
                     AddNode(tvi, subNode);

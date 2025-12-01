@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,15 +43,20 @@ public partial class NotificationButton : UserControl
     private void NotificationArea_NotificationBalloonShown(object sender, ManagedShell.WindowsTray.NotificationBalloonEventArgs e)
     {
         //MyDataContext.IncreaseNumberOfNotifications();
-        ShellLogger.Debug($"NotificationArea Show NotificationBalloon of {e.Balloon.Title}");
+        ShellLogger.Debug($"NotificationArea Show NotificationBalloon for {e.Balloon.Title}");
 
-        string title = e.Balloon.Title;
         string message = e.Balloon.Info;
 
         try
         {
             string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(e.Balloon.HandleWindow);
-            ToastHelper.Show(title, message);
+            if (string.IsNullOrWhiteSpace(appUserModelId))
+            {
+                uint procId = ShellHelper.GetProcIdForHandle(e.Balloon.HandleWindow);
+                Process process = Process.GetProcessById((int)procId);
+                appUserModelId = process.ProcessName;
+            }
+            ToastHelper.Show(appUserModelId, message, e.Balloon.NotifyIcon.Icon);
             e.Handled = true;
         }
         catch (Exception ex)

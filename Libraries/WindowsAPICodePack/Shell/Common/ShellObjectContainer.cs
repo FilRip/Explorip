@@ -39,9 +39,11 @@ public abstract class ShellContainer : ShellObject, IEnumerable<ShellObject>
                     string str = ShellHelper.GetParsingName(NativeShellItem);
                     if (str != null && str != Environment.GetFolderPath(Environment.SpecialFolder.Desktop))
                     {
+#pragma warning disable IDE0079
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
                         throw new ShellException(hr);
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
+#pragma warning restore IDE0079
                     }
                 }
             }
@@ -54,11 +56,13 @@ public abstract class ShellContainer : ShellObject, IEnumerable<ShellObject>
 
     #region Internal Constructor
 
-#pragma warning disable S3442 // "abstract" classes should not have "public" constructors
-    internal ShellContainer() { }
+    protected ShellContainer() { }
 
+#pragma warning disable IDE0079
+#pragma warning disable S3442 // "abstract" classes should not have "public" constructors
     internal ShellContainer(IShellItem2 shellItem) : base(shellItem) { }
-#pragma warning restore S3442 // "abstract" classes should not have "public" constructors
+#pragma warning disable IDE0079
+#pragma warning disable S3442 // "abstract" classes should not have "public" constructors
 
     #endregion
 

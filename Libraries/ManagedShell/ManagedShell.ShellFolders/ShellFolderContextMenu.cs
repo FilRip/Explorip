@@ -90,7 +90,7 @@ public class ShellFolderContextMenu : ShellContextMenu
 
         uint selected = Interop.TrackPopupMenuEx(
             contextMenu,
-            NativeMethods.TPM.RETURNCMD,
+            NativeMethods.TrackPopUpMenuActions.RETURNCMD,
             x,
             y,
             Handle,

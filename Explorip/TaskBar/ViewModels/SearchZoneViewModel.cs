@@ -68,13 +68,13 @@ public partial class SearchZoneViewModel : ObservableObject
             i = new()
             {
                 type = TypeInput.Keyboard,
-                mkhi = new MouseKeybdHardwareInputUnion() { ki = new KeyBDInput() { wScan = c, dwFlags = KeyEventF.KeyDown | KeyEventF.Unicode } }
+                mkhi = new MouseKeybdHardwareInputUnion() { ki = new KeyBDInput() { wScan = c, dwFlags = KeyEventScans.KeyDown | KeyEventScans.Unicode } }
             };
             listKeys.Add(i);
             i = new()
             {
                 type = TypeInput.Keyboard,
-                mkhi = new MouseKeybdHardwareInputUnion() { ki = new KeyBDInput() { wScan = c, dwFlags = KeyEventF.KeyUp | KeyEventF.Unicode } }
+                mkhi = new MouseKeybdHardwareInputUnion() { ki = new KeyBDInput() { wScan = c, dwFlags = KeyEventScans.KeyUp | KeyEventScans.Unicode } }
             };
             listKeys.Add(i);
         }

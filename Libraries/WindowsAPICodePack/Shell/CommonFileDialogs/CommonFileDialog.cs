@@ -46,9 +46,11 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
 
     private IFileDialog nativeDialog;
     private IFileDialogCustomize customize;
+#pragma warning disable IDE0079
 #pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
     private NativeDialogEventSink nativeEventSink;
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
+#pragma warning restore IDE0079
     private bool? canceled;
     private bool resetSelections;
     private IntPtr parentWindow = IntPtr.Zero;
@@ -645,13 +647,9 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         if (parentWindow == IntPtr.Zero)
         {
             if (Application.Current != null && Application.Current.MainWindow != null)
-            {
                 parentWindow = new WindowInteropHelper(Application.Current.MainWindow).EnsureHandle();
-            }
             else if (System.Windows.Forms.Application.OpenForms.Count > 0)
-            {
                 parentWindow = System.Windows.Forms.Application.OpenForms[0].Handle;
-            }
         }
 
         Guid guid = new(ShellIidGuid.IShellItem2);

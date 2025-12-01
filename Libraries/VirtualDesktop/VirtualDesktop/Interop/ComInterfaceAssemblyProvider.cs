@@ -61,9 +61,11 @@ namespace WindowsDesktop.Interop
                         if (name.Version >= _requireVersion)
                         {
                             Debug.WriteLine($"Assembly found: {file.FullName}");
+#pragma warning disable IDE0079
 #pragma warning disable S3885 // "Assembly.Load" should be used
                             return Assembly.LoadFile(file.FullName);
 #pragma warning restore S3885 // "Assembly.Load" should be used
+#pragma warning restore IDE0079
                         }
                     }
                 }

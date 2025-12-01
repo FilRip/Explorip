@@ -76,11 +76,11 @@ public class ShellWindow : NativeWindowEx, IDisposable
     {
         // Window procedure for the native window
         // Because other desktop windows are children, we need to pass them some received events.
-        if (msg.Msg == (int)NativeMethods.WM.SETTINGCHANGE && msg.WParam.ToInt32() == (int)NativeMethods.SPI.SETWORKAREA)
+        if (msg.Msg == (int)NativeMethods.WM.SETTINGCHANGE && msg.WParam.ToInt32() == (int)NativeMethods.ESystemParametersInfo.SETWORKAREA)
         {
             WorkAreaChanged?.Invoke(this, new EventArgs());
         }
-        else if (msg.Msg == (int)NativeMethods.WM.SETTINGCHANGE && msg.WParam.ToInt32() == (int)NativeMethods.SPI.SETDESKWALLPAPER)
+        else if (msg.Msg == (int)NativeMethods.WM.SETTINGCHANGE && msg.WParam.ToInt32() == (int)NativeMethods.ESystemParametersInfo.SETDESKWALLPAPER)
         {
             WallpaperChanged?.Invoke(this, new EventArgs());
             msg.Result = new IntPtr(NativeMethods.MA_NOACTIVATE);

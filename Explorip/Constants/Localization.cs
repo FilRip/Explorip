@@ -394,8 +394,8 @@ public static class Localization
                 {
                     NativeMethods.MenuItemInfo myMenuItemInfo = new()
                     {
-                        fMask = NativeMethods.MIIM.STRING,
-                        fType = NativeMethods.MFT.STRING,
+                        fMask = NativeMethods.MenuItemIntegrateMembers.STRING,
+                        fType = NativeMethods.MenuItemTypes.STRING,
                     };
                     if (NativeMethods.GetMenuItemInfo(hSubMenu, idSubMenu, false, ref myMenuItemInfo))
                     {

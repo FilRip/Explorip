@@ -82,9 +82,11 @@ internal class UdtWrapper
         Alias = StringUtils.RefineSingleElement(ReflectionUtils.GetTypeFriendlyName(m_udtType));
         Comment = null;
         FieldsToSerialize = YAXSerializationFields.PublicProperties;
+#pragma warning disable IDE0079
 #pragma warning disable S3011
         Portee = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
 #pragma warning restore S3011
+#pragma warning restore IDE0079
         IsAttributedAsNotCollection = false;
 
         SetYAXSerializerOptions(callerSerializer);

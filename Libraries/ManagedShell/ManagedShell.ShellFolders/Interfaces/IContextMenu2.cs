@@ -19,7 +19,7 @@ public interface IContextMenu2
         uint iMenu,
         uint idCmdFirst,
         uint idCmdLast,
-        CMF uFlags);
+        ContextMenuStates uFlags);
 
     // Carries out the command associated with a shortcut menu item
     [PreserveSig()]

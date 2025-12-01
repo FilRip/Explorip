@@ -1,11 +1,9 @@
-﻿using System;
+﻿namespace ManagedShell.ShellFolders.Enums;
 
-namespace ManagedShell.ShellFolders.Enums;
-
-[Flags()]
-#pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
-public enum FCW : uint
-#pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+/// <summary>
+/// A value that indicates the frame control to show or hide or -1 for fullscreen/kiosk mode
+/// </summary>
+public enum FrameControlWindows : uint
 {
     /// <summary>The browser's media bar.</summary>
     FCW_INTERNETBAR = 0x0006,

@@ -20,9 +20,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
     #region Private Fields
 
     private INativeShellLibrary nativeShellLibrary;
-#pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
-    private readonly IKnownFolder knownFolder;
-#pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
+    private readonly IKnownFolder _knownFolder;
 
     private static readonly Guid[] FolderTypesGuids =
     [
@@ -61,7 +59,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
         Debug.Assert(sourceKnownFolder != null);
 
         // Keep a reference locally
-        knownFolder = sourceKnownFolder;
+        _knownFolder = sourceKnownFolder;
 
         nativeShellLibrary = (INativeShellLibrary)new ShellLibraryCoClass();
 
@@ -133,10 +131,10 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
             throw new ArgumentException(LocalizedMessages.ShellLibraryEmptyName, "libraryName");
         }
 
-        knownFolder = sourceKnownFolder;
+        _knownFolder = sourceKnownFolder;
 
         Name = libraryName;
-        Guid guid = knownFolder.FolderId;
+        Guid guid = _knownFolder.FolderId;
 
         ShellNativeMethods.LibrarySaveOptions flags = overwrite ?
                 ShellNativeMethods.LibrarySaveOptions.OverrideExisting :
@@ -183,6 +181,11 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
     #endregion
 
     #region Public Properties
+
+    public IKnownFolder KnownFolders
+    {
+        get { return _knownFolder; }
+    }
 
     /// <summary>
     /// The name of the library, every library must 
@@ -399,7 +402,7 @@ public sealed class ShellLibrary : ShellContainer, IList<ShellFileSystemFolder>
     {
         CoreHelpers.ThrowIfNotWin7();
 
-        IKnownFolder kf = KnownFolders.KnownFolders.Libraries;
+        IKnownFolder kf = Shell.KnownFolders.KnownFolders.Libraries;
         string librariesFolderPath = kf != null ? kf.Path : string.Empty;
 
         Guid guid = new(ShellIidGuid.IShellItem);

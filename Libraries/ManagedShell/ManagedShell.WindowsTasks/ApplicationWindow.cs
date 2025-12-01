@@ -37,7 +37,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private string _className;
     private ImageSource _overlayIcon;
     private string _overlayIconDescription;
-    private NativeMethods.TBPFLAG _progressState;
+    private NativeMethods.ToolbarProgressBarState _progressState;
     private int _progressValue;
     private WindowState _state;
     private bool? _showInTaskbar;
@@ -311,10 +311,10 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
     public bool IsInProgress
     {
-        get { return ProgressState != NativeMethods.TBPFLAG.TBPF_NOPROGRESS; }
+        get { return ProgressState != NativeMethods.ToolbarProgressBarState.TBPF_NOPROGRESS; }
     }
 
-    public NativeMethods.TBPFLAG ProgressState
+    public NativeMethods.ToolbarProgressBarState ProgressState
     {
         get
         {
@@ -326,7 +326,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             {
                 _progressState = value;
 
-                if (value == NativeMethods.TBPFLAG.TBPF_NOPROGRESS)
+                if (value == NativeMethods.ToolbarProgressBarState.TBPF_NOPROGRESS)
                     ProgressValue = 0;
 
                 OnPropertyChanged();
@@ -426,7 +426,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             bool isAppWindow = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
             bool isNoActivate = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE) != 0;
             bool isDeleted = NativeMethods.GetProp(_windows[0], "ITaskList_Deleted") != IntPtr.Zero;
-            IntPtr ownerWin = NativeMethods.GetWindow(_windows[0], NativeMethods.GetWindow_Cmd.GW_OWNER);
+            IntPtr ownerWin = NativeMethods.GetWindow(_windows[0], NativeMethods.GetWindowCmd.GW_OWNER);
 
             return isWindow && isVisible && (ownerWin == IntPtr.Zero || isAppWindow) && (!isNoActivate || isAppWindow) && !isToolWindow && !isDeleted;
         }
@@ -858,7 +858,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             dwSize = (uint)Marshal.SizeOf(typeof(NativeMethods.ProcessEntry32)),
         };
-        using var hSnapshot = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.Snapshot.Process, _procId.Value);
+        using var hSnapshot = NativeMethods.CreateToolhelp32Snapshot(NativeMethods.Snapshots.Process, _procId.Value);
         if (hSnapshot.IsInvalid)
             throw new Win32Exception();
 

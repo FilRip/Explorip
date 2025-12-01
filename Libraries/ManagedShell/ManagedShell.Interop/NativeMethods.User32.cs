@@ -13,15 +13,16 @@ public partial class NativeMethods
     public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
 
     [Flags()]
-    public enum MF : uint
+    public enum MenuItemPos : uint
     {
         BYCOMMAND = 0x00000000,
         BYPOSITION = 0x00000400,
     }
 
+#pragma warning disable IDE0079
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     [Flags()]
-    public enum MFT : uint
+    public enum MenuItemTypes : uint
     {
         GRAYED = 0x00000003,
         DISABLED = 0x00000003,
@@ -40,11 +41,13 @@ public partial class NativeMethods
         POPUP = 0x00000010,
     }
 #pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+#pragma warning restore IDE0079
 
     // Specifies the state of the new menu item
+#pragma warning disable IDE0079
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     [Flags()]
-    public enum MFS : uint
+    public enum MenuItemStates : uint
     {
         GRAYED = 0x00000003,
         DISABLED = 0x00000003,
@@ -56,10 +59,11 @@ public partial class NativeMethods
         DEFAULT = 0x00001000
     }
 #pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
+#pragma warning restore IDE0079
 
     // Specifies the content of the new menu item
     [Flags()]
-    public enum MIIM : uint
+    public enum MenuItemIntegrateMembers : uint
     {
         STATE = 0x01,
         ID = 0x02,
@@ -76,9 +80,9 @@ public partial class NativeMethods
     public struct MenuItemInfo
     {
         public uint cbSize;
-        public MIIM fMask;
-        public MFT fType;
-        public MFS fState;
+        public MenuItemIntegrateMembers fMask;
+        public MenuItemTypes fType;
+        public MenuItemStates fState;
         public uint wID;
         public IntPtr hSubMenu;
         public IntPtr hbmpChecked;
@@ -108,13 +112,13 @@ public partial class NativeMethods
     internal static extern bool InsertMenuItem(IntPtr hMenu, uint uItem, bool fByPosition, ref MenuItemInfo lpmii);
 
     [DllImport(User32_DllName, SetLastError = true)]
-    internal static extern bool RemoveMenu(IntPtr hMenu, uint uItem, MF fByPosition);
+    internal static extern bool RemoveMenu(IntPtr hMenu, uint uItem, MenuItemPos fByPosition);
 
     [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
     internal static extern int GetMenuDefaultItem(IntPtr hMenu, bool fByPos, uint gmdiFlags);
 
     [DllImport(User32_DllName, ExactSpelling = true, CharSet = CharSet.Auto, SetLastError = true)]
-    internal static extern uint TrackPopupMenuEx(IntPtr hmenu, TPM flags, int x, int y, IntPtr hwnd, IntPtr lptpm);
+    internal static extern uint TrackPopupMenuEx(IntPtr hmenu, TrackPopUpMenuActions flags, int x, int y, IntPtr hwnd, IntPtr lptpm);
 
     [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
     internal static extern IntPtr CreatePopupMenu();
@@ -269,9 +273,9 @@ public partial class NativeMethods
     internal static extern int DestroyIcon(IntPtr hIcon);
 
     [DllImport(User32_DllName, SetLastError = true)]
-    internal static extern IntPtr GetWindow(IntPtr hWnd, GetWindow_Cmd uCmd);
+    internal static extern IntPtr GetWindow(IntPtr hWnd, GetWindowCmd uCmd);
 
-    public enum GetWindow_Cmd : uint
+    public enum GetWindowCmd : uint
     {
         GW_HWNDFIRST = 0,
         GW_HWNDLAST = 1,
@@ -377,11 +381,11 @@ public partial class NativeMethods
         public int iWidth;
         public int iHorzGap;
         public int iVertGap;
-        public MinimizedMetricsArrangement iArrange;
+        public MinimizedMetricsArrangements iArrange;
     }
 
     [Flags()]
-    public enum MinimizedMetricsArrangement
+    public enum MinimizedMetricsArrangements
     {
         BottomLeft = 0,
         BottomRight = 1,
@@ -480,16 +484,16 @@ public partial class NativeMethods
     internal static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref Rect pvParam, uint fWinIni);
 
     [DllImport(User32_DllName, SetLastError = true)]
-    internal static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, string pvParam, SPIF fWinIni);
+    internal static extern bool SystemParametersInfo(ESystemParametersInfo uiAction, uint uiParam, string pvParam, SystemParametersInfoUpdateMethods fWinIni);
 
     [DllImport(User32_DllName)]
-    internal static extern bool SystemParametersInfo(SPI uiAction, uint uiParam, IntPtr pvParam, SPIF fWinIni);
+    internal static extern bool SystemParametersInfo(ESystemParametersInfo uiAction, uint uiParam, IntPtr pvParam, SystemParametersInfoUpdateMethods fWinIni);
 
     /// <summary>
     /// SPI System-wide parameter - Used in SystemParametersInfo function
     /// </summary>
     [Description("SPI (System-wide parameter - Used in SystemParametersInfo function )")]
-    public enum SPI : uint
+    public enum ESystemParametersInfo : uint
     {
         /// <summary>
         /// Determines whether the warning beeper is on.
@@ -1676,7 +1680,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum SPIF : uint
+    public enum SystemParametersInfoUpdateMethods : uint
     {
         None = 0x00,
         UPDATEINIFILE = 0x01,  // Writes the new system-wide parameter setting to the user profile.
@@ -1901,7 +1905,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum KeyEventF : uint
+    public enum KeyEventScans : uint
     {
         KeyDown = 0x0000,
         ExtendedKey = 0x0001,
@@ -1911,7 +1915,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum MouseEventF : uint
+    public enum MouseEventScans : uint
     {
         MOVE = 0x0001,
         LEFTDOWN = 0x0002,
@@ -1942,7 +1946,7 @@ public partial class NativeMethods
         int dx;
         int dy;
         uint mouseData;
-        MouseEventF dwFlags;
+        MouseEventScans dwFlags;
         uint time;
         IntPtr dwExtraInfo;
     }
@@ -1953,7 +1957,7 @@ public partial class NativeMethods
     {
         public ushort wVk;
         public ushort wScan;
-        public KeyEventF dwFlags;
+        public KeyEventScans dwFlags;
         public uint time;
         public IntPtr dwExtraInfo;
     }
@@ -2077,7 +2081,7 @@ public partial class NativeMethods
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern bool SetProp(IntPtr hWnd, string lpString, IntPtr hData);
 
-    public enum TBPFLAG
+    public enum ToolbarProgressBarState
     {
         TBPF_NOPROGRESS = 0,
         TBPF_INDETERMINATE = 0x1,
@@ -3053,7 +3057,7 @@ public partial class NativeMethods
         TB_SETPADDING = 0x0457,
     }
 
-    public enum HSHELL : uint
+    public enum HShell : uint
     {
         /// <summary>
         /// The accessibility state has changed.
@@ -3235,10 +3239,10 @@ public partial class NativeMethods
     internal static extern int TrackPopupMenu(IntPtr hMenu, uint uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
 
     [DllImport(User32_DllName)]
-    internal static extern int TrackPopupMenu(IntPtr hMenu, TPM uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
+    internal static extern int TrackPopupMenu(IntPtr hMenu, TrackPopUpMenuActions uFlags, int x, int y, int nReserved, IntPtr hWnd, IntPtr prcRect);
 
     [Flags()]
-    public enum TPM : uint
+    public enum TrackPopUpMenuActions : uint
     {
         LEFTBUTTON = 0x0000,
         RIGHTBUTTON = 0x0002,
@@ -4236,24 +4240,6 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern bool SetWindowText(IntPtr hWnd, string lpString);
-
-    public enum PBT
-    {
-        PBT_APMQUERYSUSPEND = 0x0000,
-        PBT_APMQUERYSTANDBY = 0x0001,
-        PBT_APMQUERYSUSPENDFAILED = 0x0002,
-        PBT_APMQUERYSTANDBYFAILED = 0x0003,
-        PBT_APMSUSPEND = 0x0004,
-        PBT_APMSTANDBY = 0x0005,
-        PBT_APMRESUMECRITICAL = 0x0006,
-        PBT_APMRESUMESUSPEND = 0x0007,
-        PBT_APMRESUMESTANDBY = 0x0008,
-        PBT_APMBATTERYLOW = 0x0009,
-        PBT_APMPOWERSTATUSCHANGE = 0x000A,
-        PBT_APMOEMEVENT = 0x000B,
-        PBT_APMRESUMEAUTOMATIC = 0x0012,
-        PBT_POWERSETTINGCHANGE = 0x8013,
-    }
 
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern IntPtr GetProp(IntPtr hWnd, string lpString);

@@ -58,9 +58,7 @@ public partial class WindowHost : UserControl, IDisposable
                 {
                     if (Process.GetProcessById(pid) == null)
                     {
-#pragma warning disable S112 // General or reserved exceptions should never be thrown
-                        throw new Exception();
-#pragma warning restore S112 // General or reserved exceptions should never be thrown
+                        throw new Exceptions.ExploripException();
                     }
                 }
                 catch (Exception)

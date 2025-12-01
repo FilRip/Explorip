@@ -39,7 +39,7 @@ public static class WindowHelper
 
         if (desktopHwnd != IntPtr.Zero)
         {
-            IntPtr nextHwnd = GetWindow(desktopHwnd, GetWindow_Cmd.GW_HWNDPREV);
+            IntPtr nextHwnd = GetWindow(desktopHwnd, GetWindowCmd.GW_HWNDPREV);
             SetWindowPos(
                 hwnd,
                 nextHwnd,

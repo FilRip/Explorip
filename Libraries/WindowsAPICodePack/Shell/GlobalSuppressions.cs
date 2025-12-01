@@ -12,3 +12,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Major Bug", "S1244:Floating point numbers should not be tested for equality")]
 [assembly: SuppressMessage("Style", "IDE0251:Définir comme membre 'readonly'")]
 [assembly: SuppressMessage("S107", "S107")]
+[assembly: SuppressMessage("S3776", "S3776")]

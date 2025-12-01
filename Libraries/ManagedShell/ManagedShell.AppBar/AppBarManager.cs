@@ -322,7 +322,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
         double dpiScale = 1;
         Rect rc = GetWorkArea(ref dpiScale, screen, false, true);
 
-        SystemParametersInfo((int)SPI.SETWORKAREA, 1, ref rc, (uint)(SPIF.UPDATEINIFILE | SPIF.SENDWININICHANGE | SPIF.SENDCHANGE));
+        SystemParametersInfo((int)ESystemParametersInfo.SETWORKAREA, 1, ref rc, (uint)(SystemParametersInfoUpdateMethods.UPDATEINIFILE | SystemParametersInfoUpdateMethods.SENDWININICHANGE | SystemParametersInfoUpdateMethods.SENDCHANGE));
     }
 
     public static void ResetWorkArea()
@@ -337,8 +337,8 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
             oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
             oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
 
-            SystemParametersInfo((int)SPI.SETWORKAREA, 1, ref oldWorkArea,
-                (uint)(SPIF.UPDATEINIFILE | SPIF.SENDWININICHANGE));
+            SystemParametersInfo((int)ESystemParametersInfo.SETWORKAREA, 1, ref oldWorkArea,
+                (uint)(SystemParametersInfoUpdateMethods.UPDATEINIFILE | SystemParametersInfoUpdateMethods.SENDWININICHANGE));
         }
     }
     #endregion

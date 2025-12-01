@@ -98,7 +98,7 @@ public partial class MainWindow : Window
         IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
         IntPtr hMenu = NativeMethods.GetSystemMenu(hWnd, false);
         Point posMouse = PointToScreen(Mouse.GetPosition(this));
-        int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TPM.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
+        int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TrackPopUpMenuActions.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
         if (cmd > 0)
             NativeMethods.SendMessage(hWnd, NativeMethods.WM.SYSCOMMAND, (uint)cmd, 0);
     }

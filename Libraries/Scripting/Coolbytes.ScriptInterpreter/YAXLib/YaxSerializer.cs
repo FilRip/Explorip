@@ -30,6 +30,9 @@ namespace CoolBytes.ScriptInterpreter.YAXLib;
 /// </summary>
 public class YaxSerializer
 {
+    private const string NodeKeyName = "Key";
+    private const string NodeValueName = "Value";
+
     /// <summary>
     /// The class or structure that is to be serialized/deserialized.
     /// </summary>
@@ -53,9 +56,11 @@ public class YaxSerializer
     /// <summary>
     /// Specifies whether an exception is occurred during the deserialization of the current member
     /// </summary>
-#pragma warning disable S1450 // Erreur/bug de Sonar, ce warning est faux ici
+#pragma warning disable IDE0079
+#pragma warning disable S1450 // False positive
     private bool m_exceptionOccurredDuringMemberDeserialization;
 #pragma warning restore S1450
+#pragma warning restore IDE0079
 
     /// <summary>
     /// The serialization option enumeration which can be set during initialization.
@@ -1127,8 +1132,8 @@ public class YaxSerializer
         bool isValueContent = false;
         string keyFormat = null;
         string valueFormat = null;
-        XName keyAlias = elementName.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone() + "Key";
-        XName valueAlias = elementName.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone() + "Value";
+        XName keyAlias = elementName.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone() + NodeKeyName;
+        XName valueAlias = elementName.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone() + NodeValueName;
 
         XName eachElementName = null;
         if (collectionAttrInst != null && !string.IsNullOrEmpty(collectionAttrInst.EachElementName))
@@ -1170,12 +1175,12 @@ public class YaxSerializer
             keyFormat = dicAttrInst.KeyFormatString;
             valueFormat = dicAttrInst.ValueFormatString;
 
-            keyAlias = StringUtils.RefineSingleElement(dicAttrInst.KeyName ?? "Key");
+            keyAlias = StringUtils.RefineSingleElement(dicAttrInst.KeyName ?? NodeKeyName);
             if (keyAlias.Namespace.IsEmpty())
                 RegisterNamespace(keyAlias.Namespace, null);
             keyAlias = keyAlias.OverrideNsIfEmpty(elementName.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone());
 
-            valueAlias = StringUtils.RefineSingleElement(dicAttrInst.ValueName ?? "Value");
+            valueAlias = StringUtils.RefineSingleElement(dicAttrInst.ValueName ?? NodeValueName);
             if (valueAlias.Namespace.IsEmpty())
                 RegisterNamespace(valueAlias.Namespace, null);
             valueAlias = valueAlias.OverrideNsIfEmpty(elementName.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone());
@@ -1183,8 +1188,8 @@ public class YaxSerializer
 
         foreach (object obj in dicInst)
         {
-            object keyObj = obj.GetType().GetProperty("Key").GetValue(obj, null);
-            object valueObj = obj.GetType().GetProperty("Value").GetValue(obj, null);
+            object keyObj = obj.GetType().GetProperty(NodeKeyName).GetValue(obj, null);
+            object valueObj = obj.GetType().GetProperty(NodeValueName).GetValue(obj, null);
 
             bool areKeyOfSameType = true;
             bool areValueOfSameType = true;
@@ -2157,8 +2162,8 @@ public class YaxSerializer
 
             foreach (object lstItem in lst)
             {
-                object key = itemType.GetProperty("Key").GetValue(lstItem, null);
-                object value = itemType.GetProperty("Value").GetValue(lstItem, null);
+                object key = itemType.GetProperty(NodeKeyName).GetValue(lstItem, null);
+                object value = itemType.GetProperty(NodeValueName).GetValue(lstItem, null);
                 try
                 {
                     colType.InvokeMethod("Add", dic, [key, value]);
@@ -2176,8 +2181,8 @@ public class YaxSerializer
             object col = containerObj;
             foreach (object lstItem in lst)
             {
-                object key = lstItem.GetType().GetProperty("Key", BindingFlags.Instance | BindingFlags.Public).GetValue(lstItem, null);
-                object value = lstItem.GetType().GetProperty("Value", BindingFlags.Instance | BindingFlags.Public).GetValue(lstItem, null);
+                object key = lstItem.GetType().GetProperty(NodeKeyName, BindingFlags.Instance | BindingFlags.Public).GetValue(lstItem, null);
+                object value = lstItem.GetType().GetProperty(NodeValueName, BindingFlags.Instance | BindingFlags.Public).GetValue(lstItem, null);
 
                 try
                 {
@@ -2346,8 +2351,8 @@ public class YaxSerializer
         bool isValueAttrib = false;
         bool isKeyContent = false;
         bool isValueContent = false;
-        XName keyAlias = alias.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone() + "Key";
-        XName valueAlias = alias.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone() + "Value";
+        XName keyAlias = alias.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone() + NodeKeyName;
+        XName valueAlias = alias.Namespace.IfEmptyThen(TypeNamespace).IfEmptyThenNone() + NodeValueName;
 
         if (colAttributeInstance != null && colAttributeInstance.EachElementName != null)
         {
@@ -2595,8 +2600,8 @@ public class YaxSerializer
         Type keyType = genArgs[0];
         Type valueType = genArgs[1];
 
-        XName xnameKey = TypeNamespace.IfEmptyThenNone() + "Key";
-        XName xnameValue = TypeNamespace.IfEmptyThenNone() + "Value";
+        XName xnameKey = TypeNamespace.IfEmptyThenNone() + NodeKeyName;
+        XName xnameValue = TypeNamespace.IfEmptyThenNone() + NodeValueName;
 
         object keyValue, valueValue;
         if (ReflectionUtils.IsBasicType(keyType))

@@ -66,11 +66,13 @@ public static class VolumeHelper
 
     [ComImport()]
     [Guid("BCDE0395-E52F-467C-8E3D-C4579291692E")]
+#pragma warning disable IDE0079
 #pragma warning disable S3260 // Non-derived "private" classes and records should be "sealed"
     private class MMDeviceEnumerator
-#pragma warning restore S3260 // Non-derived "private" classes and records should be "sealed"
     {
     }
+#pragma warning restore S3260 // Non-derived "private" classes and records should be "sealed"
+#pragma warning restore IDE0079
 
 #pragma warning disable IDE1006
     [Guid("5CDF2C82-841E-4546-9722-0CF74078229A"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]

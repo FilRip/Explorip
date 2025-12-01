@@ -72,18 +72,18 @@ public class ShellItemContextMenu : ShellContextMenu
                 // get some properties about our file(s)
                 bool allFolders = ItemsAllFolders(files);
 
-                CMF flags = CMF.EXPLORE |
-                    CMF.ITEMMENU |
-                    ((Control.ModifierKeys & Keys.Shift) != 0 ? CMF.EXTENDEDVERBS : 0);
+                ContextMenuStates flags = ContextMenuStates.EXPLORE |
+                    ContextMenuStates.ITEMMENU |
+                    ((Control.ModifierKeys & Keys.Shift) != 0 ? ContextMenuStates.EXTENDEDVERBS : 0);
 
                 if (canRename)
                 {
-                    flags |= CMF.CANRENAME;
+                    flags |= ContextMenuStates.CANRENAME;
                 }
 
                 if (!isInteractive)
                 {
-                    flags |= CMF.DEFAULTONLY;
+                    flags |= ContextMenuStates.DEFAULTONLY;
                 }
 
                 nativeMenuPtr = Interop.CreatePopupMenu();
@@ -172,7 +172,7 @@ public class ShellItemContextMenu : ShellContextMenu
 
         uint selected = Interop.TrackPopupMenuEx(
             nativeMenuPtr,
-            NativeMethods.TPM.RETURNCMD,
+            NativeMethods.TrackPopUpMenuActions.RETURNCMD,
             x,
             y,
             Handle,
