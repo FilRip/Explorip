@@ -8,6 +8,7 @@
              xmlns:windowstask="clr-namespace:ManagedShell.WindowsTasks;assembly=ManagedShell.WindowsTasks"
              xmlns:explorerConverters="clr-namespace:Explorip.Explorer.Converters"
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
+             xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
              Loaded="TaskButton_OnLoaded"
@@ -41,7 +42,7 @@
                        Style="{DynamicResource TaskIcon}" HorizontalAlignment="Right" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}"/>
                 <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
                        Style="{DynamicResource TaskIcon}" HorizontalAlignment="{Binding MultipleInstanceLaunched, Converter={StaticResource multipleInstanceAlignmentConverter}}"/>
-                <TextBlock x:Name="TxtTitle" Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0,0,10,0"/>
+                <TextBlock x:Name="TxtTitle" MaxWidth="{Binding DataContext.MaxTitleLength, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=local:TaskList, Mode=FindAncestor}}" Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0,0,10,0"/>
             </Grid>
             <Button.ContextMenu>
                 <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">

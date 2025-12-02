@@ -50,13 +50,13 @@ public partial class NotificationButton : UserControl
         try
         {
             string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(e.Balloon.HandleWindow);
+            int procId = (int)ShellHelper.GetProcIdForHandle(e.Balloon.HandleWindow);
             if (string.IsNullOrWhiteSpace(appUserModelId))
             {
-                uint procId = ShellHelper.GetProcIdForHandle(e.Balloon.HandleWindow);
-                Process process = Process.GetProcessById((int)procId);
+                Process process = Process.GetProcessById(procId);
                 appUserModelId = process.ProcessName;
             }
-            ToastHelper.Show(appUserModelId, message, e.Balloon.NotifyIcon.Icon);
+            ToastHelper.Show(appUserModelId, message, procId);
             e.Handled = true;
         }
         catch (Exception ex)

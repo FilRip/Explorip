@@ -11,3 +11,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out")]
 [assembly: SuppressMessage("Major Bug", "S1244:Floating point numbers should not be tested for equality")]
 [assembly: SuppressMessage("S3776", "S3776")]
+[assembly: SuppressMessage("S107", "S107")]

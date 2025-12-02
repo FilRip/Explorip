@@ -44,7 +44,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     [ObservableProperty()]
     private GridLength _buttonRightMargin, _buttonBottomMargin;
     [ObservableProperty()]
-    private double _titleLength;
+    private double _taskButtonLength, _maxTitleLength;
 
     public TaskListViewModel() : base()
     {
@@ -128,11 +128,11 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         ButtonWidth = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20, GridUnitType.Pixel);
         ButtonHeight = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 13, GridUnitType.Pixel);
-        TitleLength = ButtonWidth.Value;
+        TaskButtonLength = ButtonWidth.Value;
         if (ConfigManager.ShowTitleApplicationWindow)
         {
             ButtonWidth = GridLength.Auto;
-            TitleLength += ConfigManager.MaxWidthTitleApplicationWindow;
+            TaskButtonLength += ConfigManager.MaxWidthTitleApplicationWindow;
         }
 
         ButtonRightMargin = new GridLength(0, GridUnitType.Pixel);
@@ -152,10 +152,15 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         if (currentWidth > TaskbarParent.MyTaskList.ActualWidth)
         {
             double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - ScrollBarWidth - ButtonRightMargin.Value * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
-            TitleLength = Math.Max(minWidth, newMaxWidth);
+            TaskButtonLength = Math.Max(minWidth, newMaxWidth);
         }
         else
-            TitleLength = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow;
+            TaskButtonLength = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow;
+    }
+
+    partial void OnTaskButtonLengthChanged(double value)
+    {
+        MaxTitleLength = value - (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ButtonBottomMargin.Value + ButtonRightMargin.Value);
     }
 
     public void RemoveTaskServiceEvent()

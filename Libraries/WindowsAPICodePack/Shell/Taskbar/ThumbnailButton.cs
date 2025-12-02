@@ -115,6 +115,7 @@ public sealed class ThumbnailToolBarButton : IDisposable
     /// <summary>
     /// Gets or sets the thumbnail button's visibility. Default is true.
     /// </summary>
+#pragma warning disable IDE0079
 #pragma warning disable S4275 // Getters and setters should access the expected fields
     public bool Visible
     {
@@ -240,6 +241,7 @@ public sealed class ThumbnailToolBarButton : IDisposable
         }
     }
 #pragma warning restore S4275 // Getters and setters should access the expected fields
+#pragma warning restore IDE0079
 
     #endregion
 

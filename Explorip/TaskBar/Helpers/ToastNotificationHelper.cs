@@ -1,42 +1,64 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows.Media;
 
+using Explorip.Helpers;
+
+using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
 using Windows.Data.Xml.Dom;
-using Windows.Storage;
 using Windows.UI.Notifications;
 
 namespace Explorip.TaskBar.Helpers;
 
 public static class ToastHelper
 {
-    private const string MyAppUserModelId = "CoolBytes.Explorip";
+    private const string MyAppUserModelId = "Explorip";
 
     /// <summary>
     /// Send new toast notifications windows
     /// </summary>
-    public static void Show(string title, string message, ImageSource icon)
+    public static void Show(string title, string message, int processId)
     {
         if (string.IsNullOrWhiteSpace(title))
             title = MyAppUserModelId;
 
+        if (processId <= 0)
+            processId = Process.GetCurrentProcess().Id;
+        string filepath = Process.GetProcessById(processId).MainModule.FileName;
+        IntPtr hicon = IconHelper.GetIconByFilename(filepath, ManagedShell.Common.Enums.IconSize.ExtraLarge, out _);
+        ImageSource icon = IconManager.Convert(hicon);
+        string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName() + ".png");
+        icon?.SaveImageSource(tempFile, 32, 32);
+        Uri uriIcon = new(tempFile);
+
         Thread thread = new(() =>
         {
+            // https://learn.microsoft.com/en-us/windows/apps/develop/notifications/app-notifications/
             XmlDocument template = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText01);
-            //((XmlElement)template.GetElementsByTagName("image")[0]).SetAttribute("src", icon.);
+            XmlElement imageTag = ((XmlElement)template.GetElementsByTagName("image")[0]);
+            imageTag.SetAttribute("src", uriIcon.ToString());
+            //imageTag.SetAttribute("width", "32");
+            //imageTag.SetAttribute("height", "32");
             template.GetElementsByTagName("text")[0].AppendChild(template.CreateTextNode(message));
             ToastNotification toast = new(template);
             toast.Activated += Toast_Activated;
+            toast.Dismissed += Toast_Dismissed;
             ToastNotificationManager.CreateToastNotifier(title).Show(toast);
         });
         thread.Start();
     }
 
+    private static void Toast_Dismissed(ToastNotification sender, ToastDismissedEventArgs args)
+    {
+        ShellLogger.Debug($"Dismiss Toast Notification {sender}");
+    }
+
     private static void Toast_Activated(ToastNotification sender, object args)
     {
-        ShellLogger.Debug($"Click on Toast Notification {sender}");
+        ShellLogger.Debug($"Activated Toast Notification {sender}");
     }
 }

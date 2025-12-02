@@ -9,9 +9,11 @@ namespace Microsoft.WindowsAPICodePack.Shell.Taskbar;
 
 internal class ThumbnailToolbarProxyWindow : NativeWindow, IDisposable
 {
+#pragma warning disable IDE0079
 #pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
     private ThumbnailToolBarButton[] _thumbnailButtons;
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
+#pragma warning restore IDE0079
     private readonly IntPtr _internalWindowHandle;
 
     internal System.Windows.UIElement WindowsControl { get; set; }

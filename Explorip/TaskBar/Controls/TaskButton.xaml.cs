@@ -72,7 +72,6 @@ public partial class TaskButton : UserControl
         if (ConfigManager.ShowTitleApplicationWindow)
         {
             IconColumn.Width = new GridLength(size + 20, GridUnitType.Pixel);
-            TitleColumn.MaxWidth = ConfigManager.MaxWidthTitleApplicationWindow;
             TxtTitle.Margin = new Thickness(0, 0, ConfigManager.MarginTitleApplicationWindow, 0);
         }
         else

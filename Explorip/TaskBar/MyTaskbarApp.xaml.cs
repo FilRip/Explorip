@@ -71,7 +71,7 @@ public partial class MyTaskbarApp : Application
         ExitApp();
         if (ConfigManager.HookTaskbarList)
             Explorip.Helpers.HookTaskbarListHelper.UninstallHook();
-        Current?.Shutdown();
+        Current?.Dispatcher?.Invoke(() => Current?.Shutdown());
     }
 
     private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)

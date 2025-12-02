@@ -25,14 +25,14 @@ internal static class TaskbarWindowManager
         // Try to get an existing taskbar window for this user windowhandle            
         TaskbarWindow taskbarWindow = GetTaskbarWindow(userWindowHandle, TaskbarProxyWindowType.ThumbnailToolbar);
         TaskbarWindow temp = null;
+        if (taskbarWindow == null)
+            temp = new TaskbarWindow(userWindowHandle, buttons);
         try
         {
-#pragma warning disable S1121,S1854
             AddThumbnailButtons(
-                taskbarWindow ?? (temp = new TaskbarWindow(userWindowHandle, buttons)),
+                taskbarWindow ?? temp,
                 taskbarWindow == null,
                 buttons);
-#pragma warning restore S1854, S1121
         }
         catch
         {
@@ -46,14 +46,14 @@ internal static class TaskbarWindowManager
         // Try to get an existing taskbar window for this user uielement            
         TaskbarWindow taskbarWindow = GetTaskbarWindow(control, TaskbarProxyWindowType.ThumbnailToolbar);
         TaskbarWindow temp = null;
+        if (taskbarWindow == null)
+            temp = new TaskbarWindow(control, buttons);
         try
         {
-#pragma warning disable S1121, S1854
             AddThumbnailButtons(
-                taskbarWindow ?? (temp = new TaskbarWindow(control, buttons)),
+                taskbarWindow ?? temp,
                 taskbarWindow == null,
                 buttons);
-#pragma warning restore S1121, S1854
         }
         catch
         {
@@ -190,19 +190,12 @@ internal static class TaskbarWindowManager
     #region Message dispatch methods
     private static void DispatchTaskbarButtonMessages(ref System.Windows.Forms.Message m, TaskbarWindow taskbarWindow)
     {
-        if (m.Msg == (int)TaskbarNativeMethods.WmTaskbarButtonCreated)
+        if (m.Msg == (int)TaskbarNativeMethods.WmTaskbarButtonCreated || !_buttonsAdded)
         {
             AddButtons(taskbarWindow);
         }
         else
         {
-#pragma warning disable S1871 // Two branches in a conditional structure should not have exactly the same implementation
-            if (!_buttonsAdded)
-            {
-                AddButtons(taskbarWindow);
-            }
-#pragma warning restore S1871 // Two branches in a conditional structure should not have exactly the same implementation
-
             if (m.Msg == TaskbarNativeMethods.WmCommand &&
                 CoreNativeMethods.GetHiWord(m.WParam.ToInt64(), 16) == ThumbButton.Clicked)
             {
@@ -350,7 +343,6 @@ internal static class TaskbarWindowManager
         return false;
     }
 
-#pragma warning disable S125 // Sections of code should not be commented out
     private static bool DispatchLivePreviewBitmapMessage(ref System.Windows.Forms.Message m, TaskbarWindow taskbarWindow)
     {
         if (m.Msg == (int)TaskbarNativeMethods.WmDwmSendIconicLivePreviewBitmap)
@@ -501,7 +493,6 @@ internal static class TaskbarWindowManager
         }
         return false;
     }
-#pragma warning restore S125 // Sections of code should not be commented out
 
     private static bool DispatchDestroyMessage(ref System.Windows.Forms.Message m, TaskbarWindow taskbarWindow)
     {

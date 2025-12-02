@@ -182,9 +182,11 @@ public sealed class ExplorerBrowser :
     /// <summary>
     /// Fires when a navigation has been initiated, but is not yet complete.
     /// </summary>
+#pragma warning disable IDE0079
 #pragma warning disable S3264 // Events should be invoked
     public event EventHandler<NavigationPendingEventArgs> NavigationPending;
 #pragma warning restore S3264 // Events should be invoked
+#pragma warning restore IDE0079
 
     /// <summary>
     /// Fires when a navigation has been 'completed': no NavigationPending listener 
@@ -399,7 +401,6 @@ public sealed class ExplorerBrowser :
     /// <param name="riid">requested interface guid</param>
     /// <param name="ppvObject">caller-allocated memory for interface pointer</param>
     /// <returns></returns>
-#pragma warning disable S125, S1871 // Sections of code should not be commented out
     HResult Interop.ExplorerBrowser.IServiceProvider.QueryService(
         ref Guid guidService, ref Guid riid, out IntPtr ppvObject)
     {
@@ -413,7 +414,8 @@ public sealed class ExplorerBrowser :
                 Marshal.GetComInterfaceForObject(this, typeof(IExplorerPaneVisibility));
             hr = HResult.Ok;
         }
-        else if (guidService.CompareTo(new Guid(ExplorerBrowserIidGuid.ICommDlgBrowser)) == 0)
+        else if (guidService.CompareTo(new Guid(ExplorerBrowserIidGuid.ICommDlgBrowser)) == 0 ||
+                 riid.CompareTo(new Guid(ExplorerBrowserIidGuid.ICommDlgBrowser3)) == 0)
         {
             if (riid.CompareTo(new Guid(ExplorerBrowserIidGuid.ICommDlgBrowser)) == 0)
             {
@@ -429,11 +431,6 @@ public sealed class ExplorerBrowser :
             //    ppvObject = Marshal.GetComInterfaceForObject(this, typeof(ICommDlgBrowser3));
             //    hr = HResult.Ok;                    
             //}
-            else if (riid.CompareTo(new Guid(ExplorerBrowserIidGuid.ICommDlgBrowser3)) == 0)
-            {
-                ppvObject = Marshal.GetComInterfaceForObject(this, typeof(ICommDlgBrowser3));
-                hr = HResult.Ok;
-            }
             else
             {
                 ppvObject = IntPtr.Zero;
@@ -449,7 +446,7 @@ public sealed class ExplorerBrowser :
 
         return hr;
     }
-#pragma warning restore S125, S1871 // Sections of code should not be commented out
+
     #endregion
 
     #region IExplorerPaneVisibility
@@ -600,7 +597,6 @@ public sealed class ExplorerBrowser :
         //other if error
     }
 
-#pragma warning disable S125 // Sections of code should not be commented out
     HResult ICommDlgBrowser3.GetViewFlags(ref CommDlgBrowser2View pdwFlags)
     {
         //var flags = CommDlgBrowser2ViewFlags.NoSelectVerb;
@@ -608,7 +604,6 @@ public sealed class ExplorerBrowser :
         pdwFlags = CommDlgBrowser2View.ShowAllFiles;
         return HResult.Ok;
     }
-#pragma warning restore S125 // Sections of code should not be commented out
 
     HResult ICommDlgBrowser3.Notify(IntPtr pshv, CommDlgBrowserNotifyType notifyType)
     {

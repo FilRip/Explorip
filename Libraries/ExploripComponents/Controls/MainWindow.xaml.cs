@@ -203,6 +203,7 @@ namespace ExploripComponents.Controls
 
         #region auto focus on item name when rename it
 
+#pragma warning disable IDE0079
 #pragma warning disable S2325 // Methods and properties that don't access instance data should be static
         private void EditBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -214,6 +215,7 @@ namespace ExploripComponents.Controls
             }
         }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static
+#pragma warning restore IDE0079
 
         #endregion
 

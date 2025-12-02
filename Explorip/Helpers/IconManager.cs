@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -45,6 +46,23 @@ public static class IconManager
             BitmapSource result = Imaging.CreateBitmapSourceFromHIcon(icon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
             if (disposeIcon)
                 icon.Dispose();
+            return result;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    public static BitmapSource Convert(IntPtr icon, bool disposeHandler = true)
+    {
+        try
+        {
+            if (icon == null)
+                return null;
+            BitmapSource result = Imaging.CreateBitmapSourceFromHIcon(icon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            if (disposeHandler)
+                NativeMethods.DestroyIcon(icon);
             return result;
         }
         catch (Exception)
@@ -124,5 +142,27 @@ public static class IconManager
         if (disposeBmp)
             image.Dispose();
         return result;
+    }
+
+    public static bool SaveImageSource(this ImageSource image, string path, double width = 0, double height = 0)
+    {
+        try
+        {
+            PngBitmapEncoder encoder = new();
+            double scaleX = 1, scaleY = 1;
+            if (width > 0)
+                scaleX = width / image.Width;
+            if (height > 0)
+                scaleY = height / image.Height;
+            encoder.Frames.Add(BitmapFrame.Create(new TransformedBitmap(image as BitmapSource, new ScaleTransform(scaleX, scaleY))));
+            FileStream fs = new(path, FileMode.Create);
+            encoder.Save(fs);
+            fs.Flush();
+            fs.Close();
+            fs.Dispose();
+            return true;
+        }
+        catch (Exception) { /* Ignore errors */ }
+        return false;
     }
 }

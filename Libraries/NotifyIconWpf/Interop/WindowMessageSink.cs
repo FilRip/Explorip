@@ -61,9 +61,11 @@ public class WindowMessageSink : IDisposable
     /// this reference makes sure we don't loose our reference
     /// to the message window.
     /// </summary>
+#pragma warning disable IDE0079
 #pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
     private WindowProcedureHandler messageHandler;
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
+#pragma warning restore IDE0079
 
     /// <summary>
     /// Window class ID.

@@ -13,3 +13,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0251:Définir comme membre 'readonly'")]
 [assembly: SuppressMessage("S107", "S107")]
 [assembly: SuppressMessage("S3776", "S3776")]
+[assembly: SuppressMessage("S125", "S125")]
