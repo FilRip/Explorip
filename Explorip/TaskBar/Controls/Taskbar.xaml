@@ -72,7 +72,7 @@
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:CopilotButton>
-                <Grid Grid.Column="5" Grid.Row="0" Name="ToolsBars">
+                <Grid Grid.Column="5" Grid.Row="0" Name="ToolsBars" AllowDrop="True">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>

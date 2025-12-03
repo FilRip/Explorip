@@ -29,12 +29,12 @@
         </ResourceDictionary>
     </local:BaseToolbar.Resources>
     
-    <Grid Name="MainGrid" Margin="0">
+    <Grid Name="MainGrid" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <Label Content="&#xE759;" VerticalAlignment="Top" VerticalContentAlignment="Top" FontSize="12" FontFamily="Segoe MDL2 Assets" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0" Visibility="{Binding DataContext.ResizeOn, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+        <Label Content="&#xE759;" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="12" FontFamily="Segoe MDL2 Assets" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0" Visibility="{Binding DataContext.ResizeOn, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
     </Grid>
     
 </local:BaseToolbar>

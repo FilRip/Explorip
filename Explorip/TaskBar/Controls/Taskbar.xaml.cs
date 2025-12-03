@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 using Explorip.Helpers;
 using Explorip.Plugins;
@@ -412,46 +413,106 @@ public partial class Taskbar : AppBarWindow
         });
     }
 
+    /// <summary>
+    /// Add toolbar (like QuickLaunch)
+    /// </summary>
+    /// <param name="path">Path/Directory where shortcuts to display are stored</param>
+    /// <param name="resize">The Taskbar must be resized ?</param>
     public Toolbar AddToolbar(string path, bool resize = true)
     {
         if (!Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
             return null;
-        ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+        AddBaseGrid(0, 0);
+        (int, int) gridPos = ConfigManager.GetTaskbarConfig(NumScreen).ToolbarGrid(path);
+        if (gridPos.Item1 >= 0 || gridPos.Item2 >= 0)
+            AddMissingGrid(gridPos.Item1 + 1, gridPos.Item2 + 1, 0, 22);
+        else if (ToolsBars.Children.Count > 0)
+            AddMissingGrid(ToolsBars.ColumnDefinitions.Count, ToolsBars.RowDefinitions.Count + 1, 0, 0);
         Toolbar newToolbar = new();
         newToolbar.MyDataContext.Path = path;
-        Grid.SetRow(newToolbar, ToolsBars.RowDefinitions.Count - 1);
-        Grid.SetColumn(newToolbar, 0);
+        Grid.SetRow(newToolbar, (gridPos.Item2 < 0 ? ToolsBars.RowDefinitions.Count - 1 : gridPos.Item2));
+        Grid.SetColumn(newToolbar, (gridPos.Item1 < 0 ? 0 : gridPos.Item1));
         ToolsBars.Children.Add(newToolbar);
         if (resize)
         {
-            Height += 22;
-            DesiredHeight = Height;
+            if (AppBarEdge == AppBarEdge.Top ||  AppBarEdge == AppBarEdge.Bottom)
+            {
+                Height += 22;
+                DesiredHeight = Height;
+            }
+            else
+            {
+                Width += 22;
+                DesiredWidth = Width;
+            }
             ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(path, true);
         }
         _appBarManager.SetWorkArea(Screen);
         return newToolbar;
     }
 
+    /// <summary>
+    /// Add a plugin Toolbar
+    /// </summary>
+    /// <param name="plugin">Plugin to add</param>
+    /// <param name="resize">The Taskbar must be resized ?</param>
     public void AddToolbar(IExploripToolbar plugin, bool resize = true)
     {
         double height = Math.Max(24, plugin.MinHeight);
+        double width = Math.Max(24, plugin.MinWidth);
         ToolbarPlugin tp = new();
         Grid.SetColumn(plugin.ExploripToolbar, 1);
         tp.MainGrid.Children.Add(plugin.ExploripToolbar);
         tp.PluginLinked = plugin;
-        ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, (plugin.MinHeight == 0 ? GridUnitType.Auto : GridUnitType.Pixel)) });
-        Grid.SetRow(tp, ToolsBars.RowDefinitions.Count - 1);
-        Grid.SetColumn(tp, 0);
+        AddBaseGrid(width, height);
+        (int, int) gridPos = ConfigManager.GetTaskbarConfig(NumScreen).ToolbarGrid(plugin.GuidKey.ToString());
+        if (gridPos.Item1 >= 0 || gridPos.Item2 >= 0)
+            AddMissingGrid(gridPos.Item1 + 1, gridPos.Item2 + 1, 0, height);
+        else if (ToolsBars.Children.Count > 0)
+            AddMissingGrid(ToolsBars.ColumnDefinitions.Count, ToolsBars.RowDefinitions.Count + 1, plugin.MinWidth, plugin.MinHeight);
+        int numRow = (gridPos.Item2 < 0 ? ToolsBars.RowDefinitions.Count - 1 : gridPos.Item2);
+        int numColumn = (gridPos.Item1 < 0 ? 0 : gridPos.Item1);
+        if (gridPos.Item1 >= 0 || gridPos.Item2 >= 0)
+        {
+            ToolsBars.RowDefinitions[numRow].Height = new GridLength(height, (height == 0 ? GridUnitType.Auto : GridUnitType.Pixel));
+            ToolsBars.ColumnDefinitions[numColumn].Width = new GridLength(width, (width == 0 ? GridUnitType.Auto : GridUnitType.Pixel));
+        }
+        Grid.SetRow(tp, numRow);
+        Grid.SetColumn(tp, numColumn);
         ToolsBars.Children.Add(tp);
         if (resize)
         {
-            Height += height > 0 ? height : plugin.ExploripToolbar.ActualHeight;
-            DesiredHeight = Height;
+            if (AppBarEdge == AppBarEdge.Top || AppBarEdge == AppBarEdge.Bottom)
+            {
+                Height += height > 0 ? height : plugin.ExploripToolbar.ActualHeight;
+                DesiredHeight = Height;
+            }
+            else
+            {
+                Width += width > 0 ? width : plugin.ExploripToolbar.ActualWidth;
+                DesiredWidth = width;
+            }
             ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(tp.MyDataContext.Id, true);
         }
         _appBarManager.SetWorkArea(Screen);
         plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
         plugin.UpdateTaskbar(_numScreen, ActualWidth, ActualHeight, Background, AppBarEdge);
+    }
+
+    private void AddBaseGrid(double width, double height)
+    {
+        if (ToolsBars.ColumnDefinitions.Count == 0)
+            ToolsBars.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(width, (width == 0 ? GridUnitType.Auto : GridUnitType.Pixel)) });
+        if (ToolsBars.RowDefinitions.Count == 0)
+            ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, (height == 0 ? GridUnitType.Auto : GridUnitType.Pixel)) });
+    }
+
+    private void AddMissingGrid(int numColumn, int numRow, double width, double height)
+    {
+        while (numColumn > 0 && ToolsBars.ColumnDefinitions.Count < numColumn)
+            ToolsBars.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(width, (width == 0 ? GridUnitType.Auto : GridUnitType.Pixel)) });
+        while (numRow > 0 && ToolsBars.RowDefinitions.Count < numRow)
+            ToolsBars.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(height, (height == 0 ? GridUnitType.Auto : GridUnitType.Pixel)) });
     }
 
     private void AddToolbar_Click(object sender, RoutedEventArgs e)

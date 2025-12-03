@@ -38,9 +38,9 @@ public partial class NotifyIcon : UserControl
 
             ShellLogger.Debug($"Create Systray Icon for {TrayIcon.Title}");
 
-            if (((Taskbar)Window.GetWindow(this)).MainScreen)
+            if (Window.GetWindow(this) is Taskbar { MainScreen: true })
             {
-                //TrayIcon.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
+                TrayIcon.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
             }
 
             // If a notification was received before we started listening, it will be here. Show the first one that is not expired.
@@ -61,9 +61,9 @@ public partial class NotifyIcon : UserControl
         if (_ignoreReload)
             return;
 
-        if (TrayIcon != null && ((Taskbar)Window.GetWindow(this)).MainScreen)
+        if (TrayIcon != null && Window.GetWindow(this) is Taskbar { MainScreen: true })
         {
-            //TrayIcon.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
+            TrayIcon.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
         }
         _isLoaded = false;
     }

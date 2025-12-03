@@ -150,7 +150,23 @@ public partial class TaskThumbButton : Window
             Left += Width / screen.ScaleFactor / 2;
             Left -= (Width - parent.ActualWidth) / 2;
         }
-        Top = parent.TaskbarParent.Top - Height;
+
+        // Position
+        switch (parent.TaskbarParent.AppBarEdge)
+        {
+            case ManagedShell.AppBar.AppBarEdge.Left:
+                Left = parent.TaskbarParent.Left + parent.TaskbarParent.ActualWidth;
+                break;
+            case ManagedShell.AppBar.AppBarEdge.Top:
+                Top = parent.TaskbarParent.Top + parent.TaskbarParent.ActualHeight;
+                break;
+            case ManagedShell.AppBar.AppBarEdge.Right:
+                Top = parent.TaskbarParent.Left - Width;
+                break;
+            case ManagedShell.AppBar.AppBarEdge.Bottom:
+                Top = parent.TaskbarParent.Top - Height;
+                break;
+        }
 
         // Cancel System menu
         HwndSource.FromHwnd(MyDataContext.WindowHandle).AddHook(WndProc);

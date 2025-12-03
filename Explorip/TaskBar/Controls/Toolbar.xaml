@@ -51,7 +51,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <Label Content="&#xE759;" FontFamily="Segoe MDL2 Assets" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0" Visibility="{Binding DataContext.ResizeOn, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
+        <Label Content="&#xE759;" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Segoe MDL2 Assets" FontSize="12" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="0" Visibility="{Binding DataContext.ResizeOn, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"/>
         <Label Name="Title" Width="auto" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Grid.Column="1" Visibility="{Binding ShowTitle, Converter={StaticResource boolToVisible}}" Content="{Binding Title}">
             <Label.ContextMenu>
                 <ContextMenu ItemsPanel="{DynamicResource MyMenuItemPanel}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Background="{x:Static colors:Colors.BackgroundColorBrush}">
