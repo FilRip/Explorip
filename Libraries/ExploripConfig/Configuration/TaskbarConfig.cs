@@ -358,6 +358,25 @@ public class TaskbarConfig
 
     #region Toolbars
 
+    public int ToolbarZIndex(string path)
+    {
+        int i = ConfigManager.ToolbarNumber(path);
+        if (i >= 0)
+        {
+            return _registryTaskbar.ReadInteger($"{ConfigManager.ToolBarNameInRegistry}({i}).ZIndex", 0);
+        }
+        return 0;
+    }
+
+    public void ToolbarZIndex(string path, int zindex)
+    {
+        int i = ConfigManager.ToolbarNumber(path);
+        if (i >= 0)
+        {
+            _registryTaskbar.SetValue($"{ConfigManager.ToolBarNameInRegistry}({i}).ZIndex", zindex.ToString());
+        }
+    }
+
     public (int, int) ToolbarGrid(string path)
     {
         int i = ConfigManager.ToolbarNumber(path);
@@ -367,7 +386,7 @@ public class TaskbarConfig
             int row = _registryTaskbar.ReadInteger($"{ConfigManager.ToolBarNameInRegistry}({i}).Row", -1);
             return (column, row);
         }
-        return (0, 0);
+        return (-1, -1);
     }
 
     public void ToolbarGrid(string path, (int, int) gridPos)

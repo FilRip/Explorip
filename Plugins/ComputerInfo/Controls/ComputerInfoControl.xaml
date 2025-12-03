@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ComputerInfo.Controls"
              xmlns:viewmodels="clr-namespace:ComputerInfo.ViewModels"
              xmlns:converters="clr-namespace:ComputerInfo.Converters"
-             Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded"
+             Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" Margin="0"
              mc:Ignorable="d" Background="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding ForegroundColor, UpdateSourceTrigger=PropertyChanged}">
 
     <UserControl.DataContext>
@@ -16,7 +16,7 @@
         <converters:IntToBoolConverter x:Key="intToBool"/>
     </UserControl.Resources>
     
-    <StackPanel Orientation="{Binding CurrentOrientation}" Background="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}">
+    <StackPanel Orientation="{Binding CurrentOrientation}" Background="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}" Margin="0">
         <StackPanel.ContextMenu>
             <ContextMenu ItemsPanel="{DynamicResource MyMenuItemPanel}" Background="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding ForegroundColor, UpdateSourceTrigger=PropertyChanged}" BorderBrush="{Binding ForegroundColor}">
                 <MenuItem Header="Pause" Command="{Binding PauseCommand}" IsChecked="{Binding IsPause, UpdateSourceTrigger=PropertyChanged}"/>
@@ -38,12 +38,12 @@
                 </MenuItem>
             </ContextMenu>
         </StackPanel.ContextMenu>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Margin="0">
             <TextBlock Grid.Column="0" Text="CPU Usage : "/>
             <TextBlock Text="{Binding CpuUsage, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text=" % "/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" Margin="0">
             <TextBlock Text="Free RAM : "/>
             <TextBlock Text="{Binding FreeRam, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N}}"/>
             <TextBlock Text=" Mb"/>

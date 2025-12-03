@@ -8,7 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Media3D;
 
 using Explorip.Helpers;
 using Explorip.Plugins;
@@ -127,6 +126,8 @@ public partial class Taskbar : AppBarWindow
         MyPopup.IsOpen = false;
     }
 
+    #region Properties
+
     public TaskbarViewModel MyDataContext
     {
         get { return (TaskbarViewModel)DataContext; }
@@ -143,6 +144,8 @@ public partial class Taskbar : AppBarWindow
     }
 
     public bool IsReopening { get; set; }
+
+    #endregion
 
     protected override void OnSourceInitialized(object sender, EventArgs e)
     {
@@ -174,6 +177,8 @@ public partial class Taskbar : AppBarWindow
 
         return IntPtr.Zero;
     }
+
+    #region Position and size
 
     public void SetPositionAndSize()
     {
@@ -244,11 +249,6 @@ public partial class Taskbar : AppBarWindow
         });
     }
 
-    private void SetFontSmoothing()
-    {
-        VisualTextRenderingMode = ConfigManager.GetTaskbarConfig(NumScreen).AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
-    }
-
     private void Taskbar_OnLocationChanged(object sender, EventArgs e)
     {
         // primarily for win7/8, they will set up the appbar correctly but then put it in the wrong place
@@ -272,6 +272,13 @@ public partial class Taskbar : AppBarWindow
             if (Top != desiredTop)
                 Top = desiredTop;
         }
+    }
+
+    #endregion
+
+    private void SetFontSmoothing()
+    {
+        VisualTextRenderingMode = ConfigManager.GetTaskbarConfig(NumScreen).AllowFontSmoothing ? TextRenderingMode.Auto : TextRenderingMode.Aliased;
     }
 
     protected override void CustomClosing()
@@ -448,6 +455,7 @@ public partial class Taskbar : AppBarWindow
             ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(path, true);
         }
         _appBarManager.SetWorkArea(Screen);
+        Panel.SetZIndex(newToolbar, ConfigManager.GetTaskbarConfig(NumScreen).ToolbarZIndex(path));
         return newToolbar;
     }
 
@@ -497,6 +505,7 @@ public partial class Taskbar : AppBarWindow
         _appBarManager.SetWorkArea(Screen);
         plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
         plugin.UpdateTaskbar(_numScreen, ActualWidth, ActualHeight, Background, AppBarEdge);
+        Panel.SetZIndex(tp, ConfigManager.GetTaskbarConfig(NumScreen).ToolbarZIndex(plugin.GuidKey.ToString()));
     }
 
     private void AddBaseGrid(double width, double height)
