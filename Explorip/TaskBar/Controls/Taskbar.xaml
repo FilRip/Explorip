@@ -72,14 +72,29 @@
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:CopilotButton>
-                <Grid Grid.Column="5" Grid.Row="0" Name="ToolsBars" AllowDrop="True">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
-                <controls:TaskList HorizontalContentAlignment="{Binding DataContext.HorizontalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
-                                   VerticalContentAlignment="{Binding DataContext.VerticalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
-                                   Grid.Column="5" Grid.Row="1" x:Name="MyTaskList" Visibility="Visible"/>
+                <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="5" Grid.RowSpan="2">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Name="ToolsBars" AllowDrop="True" Grid.Column="{Binding DataContext.ToolbarColumnPosition, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
+                                                                Grid.Row="{Binding DataContext.ToolbarRowPosition, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                        <controls:TaskList Grid.Column="{Binding DataContext.TasklistColumnPosition, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
+                                           Grid.Row="{Binding DataContext.TasklistRowPosition, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
+                                           HorizontalContentAlignment="{Binding DataContext.HorizontalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
+                                           VerticalContentAlignment="{Binding DataContext.VerticalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
+                                           x:Name="MyTaskList" Visibility="Visible"/>
+                    </Grid>
+                </StackPanel>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="6" Grid.RowSpan="2">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
@@ -125,6 +140,13 @@
                 <MenuItem Header="Plugins" Name="ToolbarListPlugins" ItemsSource="{Binding MenuItemsPlugins}" Style="{DynamicResource MenuItemWithSubMenuStyle}" Click="ToolbarListPlugins_Click"/>
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
                 <MenuItem Header="{x:Static localization:Localization.TOOLBAR}" Name="MenuToolbars" Style="{DynamicResource MenuItemWithSubMenuStyle}" MouseEnter="MenuToolbars_MouseEnter"/>
+                <Separator Style="{DynamicResource MySeparatorStyle}"/>
+                <MenuItem Header="{x:Static localization:Localization.SHOW_TOOLBARS_POSITION}" Style="{DynamicResource MenuItemWithSubMenuStyle}">
+                    <MenuItem Header="{x:Static localization:Localization.ALIGN_TO_LEFT}" IsChecked="{Binding IsToolbarLeft, Mode=OneWay}" Command="{Binding ToolbarToLeftCommand}"/>
+                    <MenuItem Header="{x:Static localization:Localization.ALIGN_TO_RIGHT}" IsChecked="{Binding IsToolbarRight, Mode=OneWay}" Command="{Binding ToolbarToRightCommand}"/>
+                    <MenuItem Header="{x:Static localization:Localization.UP}" IsChecked="{Binding IsToolbarTop, Mode=OneWay}" Command="{Binding ToolbarToTopCommand}"/>
+                    <MenuItem Header="{x:Static localization:Localization.DOWN}" IsChecked="{Binding IsToolbarBottom, Mode=OneWay}" Command="{Binding ToolbarToBottomCommand}"/>
+                </MenuItem>
             </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Command="{Binding TaskbarAllScreenCommand}"/>

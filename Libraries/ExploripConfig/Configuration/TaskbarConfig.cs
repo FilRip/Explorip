@@ -65,6 +65,14 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue("TaskbarMinHeight", "52");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistVerticalAlignment", "").ToString()))
                 _registryTaskbar.SetValue("TasklistVerticalAlignment", VerticalAlignment.Bottom.ToString("G"));
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ToolbarColumn", "").ToString()))
+                _registryTaskbar.SetValue("ToolbarColumn", "0");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ToolbarRow", "").ToString()))
+                _registryTaskbar.SetValue("ToolbarRow", "0");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistColumn", "").ToString()))
+                _registryTaskbar.SetValue("TasklistColumn", "0");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistRow", "").ToString()))
+                _registryTaskbar.SetValue("TasklistRow", "1");
         }
     }
 
@@ -353,6 +361,46 @@ public class TaskbarConfig
         {
             if (TaskListVerticalAlignment != value && AllowWrite)
                 _registryTaskbar.SetValue("TasklistVerticalAlignment", value.ToString("G"));
+        }
+    }
+
+    public int ToolbarColumn
+    {
+        get { return _registryTaskbar.ReadInteger("ToolbarColumn"); }
+        set
+        {
+            if (ToolbarColumn != value && AllowWrite)
+                _registryTaskbar.SetValue("ToolbarColumn", value.ToString());
+        }
+    }
+
+    public int ToolbarRow
+    {
+        get { return _registryTaskbar.ReadInteger("ToolbarRow"); }
+        set
+        {
+            if (ToolbarRow != value && AllowWrite)
+                _registryTaskbar.SetValue("ToolbarRow", value.ToString());
+        }
+    }
+
+    public int TasklistColumn
+    {
+        get { return _registryTaskbar.ReadInteger("TasklistColumn"); }
+        set
+        {
+            if (TasklistColumn != value && AllowWrite)
+                _registryTaskbar.SetValue("TasklistColumn", value.ToString());
+        }
+    }
+
+    public int TasklistRow
+    {
+        get { return _registryTaskbar.ReadInteger("TasklistRow"); }
+        set
+        {
+            if (TasklistRow != value && AllowWrite)
+                _registryTaskbar.SetValue("TasklistRow", value.ToString());
         }
     }
 

@@ -80,6 +80,26 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment; }
     }
 
+    public int ToolbarColumnPosition
+    {
+        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarColumn; }
+    }
+
+    public int ToolbarRowPosition
+    {
+        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarRow; }
+    }
+
+    public int TasklistColumnPosition
+    {
+        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TasklistColumn; }
+    }
+
+    public int TasklistRowPosition
+    {
+        get { return ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TasklistRow; }
+    }
+
     [ObservableProperty()]
     private Taskbar _parentTaskbar = parentControl;
 
@@ -137,6 +157,70 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private void AlignTaskListToBottom()
     {
         SetTaskListAlignment(ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskListHorizontalAlignment, VerticalAlignment.Bottom);
+    }
+
+    [RelayCommand()]
+    private void ToolbarToTop()
+    {
+        SetBarRow(0, 1);
+    }
+
+    [RelayCommand()]
+    private void ToolbarToBottom()
+    {
+        SetBarRow(1, 0);
+    }
+
+    [RelayCommand()]
+    private void ToolbarToLeft()
+    {
+        SetBarColumn(0, 1);
+    }
+
+    [RelayCommand()]
+    private void ToolbarToRight()
+    {
+        SetBarColumn(1, 0);
+    }
+
+    public bool IsToolbarTop
+    {
+        get { return ToolbarRowPosition == 0; }
+    }
+
+    public bool IsToolbarBottom
+    {
+        get { return ToolbarRowPosition == 1; }
+    }
+
+    public bool IsToolbarLeft
+    {
+        get { return ToolbarColumnPosition == 0; }
+    }
+
+    public bool IsToolbarRight
+    {
+        get { return ToolbarColumnPosition == 1; }
+    }
+
+    private void SetBarColumn(int toolbarColumn, int tasklistColumn)
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarColumn = toolbarColumn;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TasklistColumn = tasklistColumn;
+        OnPropertyChanged(nameof(ToolbarColumnPosition));
+        OnPropertyChanged(nameof(TasklistColumnPosition));
+        OnPropertyChanged(nameof(IsToolbarLeft));
+        OnPropertyChanged(nameof(IsToolbarRight));
+    }
+
+    private void SetBarRow(int toolbarRow, int tasklistRow)
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarRow = toolbarRow;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TasklistRow = tasklistRow;
+        OnPropertyChanged(nameof(ToolbarRowPosition));
+        OnPropertyChanged(nameof(TasklistRowPosition));
+        OnPropertyChanged(nameof(IsToolbarTop));
+        OnPropertyChanged(nameof(IsToolbarBottom));
     }
 
     [RelayCommand()]
@@ -376,7 +460,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                     Tag = path,
                     Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush,
                     Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-                    Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle"),
+                    Style = (Style)Application.Current.FindResource(Constants.WindowsConstants.StyleMenuItemWithSubMenu),
                 };
 
                 item.Items.Add(new MenuItem()

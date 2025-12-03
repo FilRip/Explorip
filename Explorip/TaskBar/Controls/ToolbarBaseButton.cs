@@ -152,7 +152,7 @@ public class ToolbarBaseButton : UserControl
                 if (!string.IsNullOrWhiteSpace(newPath) && Directory.Exists(newPath))
                 {
                     ShellFolder sf = new(newPath, IntPtr.Zero);
-                    mi.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
+                    mi.Style = (Style)Application.Current.FindResource(WindowsConstants.StyleMenuItemWithSubMenu);
                     ExpandFolder(mi, sf);
                 }
             }
@@ -160,7 +160,7 @@ public class ToolbarBaseButton : UserControl
         }
         else if (item.IsFolder)
         {
-            mi.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
+            mi.Style = (Style)Application.Current.FindResource(WindowsConstants.StyleMenuItemWithSubMenu);
             ExpandFolder(mi, new ShellFolder(item.Path, IntPtr.Zero));
         }
     }
@@ -175,7 +175,7 @@ public class ToolbarBaseButton : UserControl
             mi.Items.Add(subMenu);
             if (sf.IsFolder)
             {
-                subMenu.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
+                subMenu.Style = (Style)Application.Current.FindResource(WindowsConstants.StyleMenuItemWithSubMenu);
                 ExpandFolder(subMenu, new ShellFolder(sf.Path, IntPtr.Zero), nbRecursive++);
             }
             else if (Path.GetExtension(sf.FileName) == ".lnk")
@@ -184,7 +184,7 @@ public class ToolbarBaseButton : UserControl
                 string newPath = sc.Target;
                 if (!string.IsNullOrWhiteSpace(newPath) && Directory.Exists(newPath))
                 {
-                    mi.Style = (Style)Application.Current.FindResource("MenuItemWithSubMenuStyle");
+                    mi.Style = (Style)Application.Current.FindResource(WindowsConstants.StyleMenuItemWithSubMenu);
                     ExpandFolder(subMenu, new ShellFolder(newPath, IntPtr.Zero), nbRecursive++);
                 }
             }
