@@ -43,6 +43,8 @@ public partial class StartMenuViewModel : ObservableObject
     private bool _showApplicationsPrograms;
     [ObservableProperty()]
     private double _height;
+    [ObservableProperty()]
+    private CornerRadius _pinnedAppCornerRadius;
 
     public Action ShowWindow { get; set; }
     public Action HideWindow { get; set; }
@@ -93,6 +95,7 @@ public partial class StartMenuViewModel : ObservableObject
         _showApplicationsPrograms = ConfigManager.ShowApplicationsPrograms;
 
         _height = ConfigManager.StartMenuHeight;
+        _pinnedAppCornerRadius = ConfigManager.StartMenuPinnedAppCornerRadius;
 
         RefreshAll();
     }

@@ -113,8 +113,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     MyTaskbarApp.MyShellManager.TasksService.WindowDestroy += RefreshAllCollectionView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowCreate += RefreshAllCollectionView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += UncloakedUwp;
-                    ChangeButtonSize();
                 }
+                ChangeButtonSize();
             }
         }
     }
@@ -151,7 +151,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20;
         if (currentWidth > TaskbarParent.MyTaskList.ActualWidth)
         {
-            double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - ScrollBarWidth - ButtonRightMargin.Value * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
+            double newMaxWidth = (TaskbarParent.MyTaskList.ActualWidth - ScrollBarWidth - (ButtonRightMargin.Value + ButtonBottomMargin.Value) * TaskbarParent.MyTaskList.TasksList.Items.Count) / TaskbarParent.MyTaskList.TasksList.Items.Count;
             TaskButtonLength = Math.Max(minWidth, newMaxWidth);
         }
         else

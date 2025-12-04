@@ -168,13 +168,14 @@
                     </i:Interaction.Triggers>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="32"/>
+                        <ColumnDefinition Width="5"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="16"/>
                     </Grid.ColumnDefinitions>
                     <Image Source="{Binding Icon}" Grid.Column="0"/>
-                    <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96E;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowDown, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center"/>
-                    <TextBlock Grid.Column="2" FontFamily="Segoe MDL2 Assets" Text="&#xE96D;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowUp, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" Text="{Binding Name}" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" FontFamily="Segoe MDL2 Assets" Text="&#xE96E;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowDown, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="3" FontFamily="Segoe MDL2 Assets" Text="&#xE96D;" FontSize="12" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" Visibility="{Binding ShowUp, Converter={StaticResource boolToVisible}}" Background="Transparent" VerticalAlignment="Center"/>
                 </Grid>
                 <Grid Grid.Row="3" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
@@ -264,9 +265,9 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <Border BorderThickness="2" BorderBrush="{Binding BackgroundItem}" Grid.Column="0" Grid.Row="0" Background="{x:Static constants:Colors.SelectedBackgroundShellObject}" Width="100" Height="100"/>
+                                <Border BorderThickness="2" BorderBrush="{Binding BackgroundItem}" Grid.Column="0" Grid.Row="0" Background="{x:Static constants:Colors.SelectedBackgroundShellObject}" Width="100" Height="100" CornerRadius="{Binding DataContext.PinnedAppCornerRadius, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                                 <Image Source="{Binding Icon}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="{Binding IconWidth}" Height="{Binding IconHeight}"/>
-                                <TextBlock Text="{Binding Name}" Margin="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" Background="Transparent"/>
+                                <TextBlock Text="{Binding Name}" Margin="5,2,2,2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Column="0" Grid.Row="0" Foreground="{x:Static constants:Colors.ForegroundColorBrush}" TextWrapping="Wrap" Background="Transparent"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

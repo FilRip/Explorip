@@ -114,7 +114,8 @@ public partial class TaskButton : UserControl
     {
         try
         {
-            _timerBeforeShowThumbnail?.Change(ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
+            if (!_timerBeforeShowThumbnail.IsDisposed())
+                _timerBeforeShowThumbnail?.Change(ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
         }
         catch (Exception) { /* Ignore errors */ }
         if (_appWindow.ListWindows.Count == 1)
