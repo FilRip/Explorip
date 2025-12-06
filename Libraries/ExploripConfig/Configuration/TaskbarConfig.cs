@@ -73,6 +73,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue("TasklistColumn", "0");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistRow", "").ToString()))
                 _registryTaskbar.SetValue("TasklistRow", "1");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("MaxWidthTitleApplicationWindow", "").ToString()))
+                _registryTaskbar.SetValue("MaxWidthTitleApplicationWindow", "100");
         }
     }
 
@@ -401,6 +403,26 @@ public class TaskbarConfig
         {
             if (TasklistRow != value && AllowWrite)
                 _registryTaskbar.SetValue("TasklistRow", value.ToString());
+        }
+    }
+
+    public bool ShowTitleApplicationWindow
+    {
+        get { return _registryTaskbar.ReadBoolean("ShowTitleApplicationWindow"); }
+        set
+        {
+            if (ShowTitleApplicationWindow != value && AllowWrite)
+                _registryTaskbar.SetValue("ShowTitleApplicationWindow", value.ToString());
+        }
+    }
+
+    public double MaxWidthTitleApplicationWindow
+    {
+        get { return _registryTaskbar.ReadDouble("MaxWidthTitleApplicationWindow"); }
+        set
+        {
+            if (MaxWidthTitleApplicationWindow != value && AllowWrite)
+                _registryTaskbar.SetValue("MaxWidthTitleApplicationWindow", value.ToString());
         }
     }
 

@@ -370,14 +370,14 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     [RelayCommand()]
     private void ShowTitleWindow()
     {
-        ConfigManager.ShowTitleApplicationWindow = !ShowApplicationWindowTitle;
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowTitleApplicationWindow = !ShowApplicationWindowTitle;
         SetShowTitleWindow();
         RefreshTaskList();
     }
 
     private void SetShowTitleWindow()
     {
-        ShowApplicationWindowTitle = ConfigManager.ShowTitleApplicationWindow;
+        ShowApplicationWindowTitle = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowTitleApplicationWindow;
     }
 
     [RelayCommand()]

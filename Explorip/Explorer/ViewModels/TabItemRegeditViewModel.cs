@@ -400,8 +400,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
                     currentKey = currentKey.Children.FirstOrDefault(k => k.DisplayText == key);
                 }
             }
-            if (currentKey != null)
-                currentKey.IsSelected = true;
+            currentKey?.IsSelected = true;
         }
         RefreshNavigation();
     }
@@ -448,8 +447,7 @@ public partial class TabItemRegeditViewModel : TabItemExploripViewModel, IDispos
             if (disposing)
             {
                 _historic.Clear();
-                if (CurrentValueChange != null)
-                    CurrentValueChange.EditValueName = false;
+                CurrentValueChange?.EditValueName = false;
                 _currentValueChange = null;
                 foreach (OneRegistryKey registryKey in RegKeyItems)
                     registryKey.Dispose();

@@ -225,8 +225,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         // if was closed the last time - just make sure it doesn't have
         // a parent that is a popup
         Popup parent = LogicalTreeHelper.GetParent(balloon) as Popup;
-        if (parent != null)
-            parent.Child = null;
+        parent?.Child = null;
 
         if (parent != null)
         {

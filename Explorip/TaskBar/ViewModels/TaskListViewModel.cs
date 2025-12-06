@@ -129,10 +129,10 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         ButtonWidth = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20, GridUnitType.Pixel);
         ButtonHeight = new GridLength(ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 13, GridUnitType.Pixel);
         TaskButtonLength = ButtonWidth.Value;
-        if (ConfigManager.ShowTitleApplicationWindow)
+        if (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowTitleApplicationWindow)
         {
             ButtonWidth = GridLength.Auto;
-            TaskButtonLength += ConfigManager.MaxWidthTitleApplicationWindow;
+            TaskButtonLength += ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).MaxWidthTitleApplicationWindow;
         }
 
         ButtonRightMargin = new GridLength(0, GridUnitType.Pixel);
@@ -145,9 +145,9 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void UpdateMaxWidth()
     {
-        if (!ConfigManager.ShowTitleApplicationWindow)
+        if (!ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowTitleApplicationWindow)
             return;
-        double currentWidth = TaskbarParent.MyTaskList.TasksList.Items.Count * (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).SpaceBetweenTaskButton);
+        double currentWidth = TaskbarParent.MyTaskList.TasksList.Items.Count * (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).MaxWidthTitleApplicationWindow + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).SpaceBetweenTaskButton);
         double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20;
         if (currentWidth > TaskbarParent.MyTaskList.ActualWidth)
         {
@@ -155,7 +155,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             TaskButtonLength = Math.Max(minWidth, newMaxWidth);
         }
         else
-            TaskButtonLength = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.MaxWidthTitleApplicationWindow;
+            TaskButtonLength = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).MaxWidthTitleApplicationWindow;
     }
 
     partial void OnTaskButtonLengthChanged(double value)

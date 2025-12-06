@@ -98,8 +98,6 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue("DelayBeforeShowThumbnail", "1000");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("GroupedApplicationWindow", "").ToString()))
                 _registryRootTaskbar.SetValue("GroupedApplicationWindow", "True");
-            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MaxWidthTitleApplicationWindow", "").ToString()))
-                _registryRootTaskbar.SetValue("MaxWidthTitleApplicationWindow", "100");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("MaxRecursiveSubFolderInToolbar", "").ToString()))
                 _registryRootTaskbar.SetValue("MaxRecursiveSubFolderInToolbar", "5");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue("ProgressBarHeight", "").ToString()))
@@ -598,26 +596,6 @@ public static class ConfigManager
         {
             if (GroupedApplicationWindow != value && AllowWrite)
                 _registryRootTaskbar.SetValue("GroupedApplicationWindow", value.ToString());
-        }
-    }
-
-    public static bool ShowTitleApplicationWindow
-    {
-        get { return _registryRootTaskbar.ReadBoolean("ShowTitleApplicationWindow"); }
-        set
-        {
-            if (ShowTitleApplicationWindow != value && AllowWrite)
-                _registryRootTaskbar.SetValue("ShowTitleApplicationWindow", value.ToString());
-        }
-    }
-
-    public static double MaxWidthTitleApplicationWindow
-    {
-        get { return _registryRootTaskbar.ReadDouble("MaxWidthTitleApplicationWindow"); }
-        set
-        {
-            if (MaxWidthTitleApplicationWindow != value && AllowWrite)
-                _registryRootTaskbar.SetValue("MaxWidthTitleApplicationWindow", value.ToString());
         }
     }
 

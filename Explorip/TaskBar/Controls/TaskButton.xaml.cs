@@ -69,7 +69,7 @@ public partial class TaskButton : UserControl
         MyTaskIconBack.Height = size;
         MyTaskIconBack.Width = size;
 
-        if (ConfigManager.ShowTitleApplicationWindow)
+        if (ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).ShowTitleApplicationWindow)
         {
             IconColumn.Width = new GridLength(size + 20, GridUnitType.Pixel);
             TxtTitle.Margin = new Thickness(0, 0, ConfigManager.MarginTitleApplicationWindow, 0);

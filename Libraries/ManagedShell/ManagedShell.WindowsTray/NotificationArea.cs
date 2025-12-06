@@ -116,15 +116,18 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
         _trayService?.Resume();
     }
 
+#pragma warning disable IDE0079
+#pragma warning disable S1121
     public bool Disable
     {
         get { return _trayService?.Disable ?? false; }
         set
         {
-            if (_trayService != null)
-                _trayService.Disable = value;
+            _trayService?.Disable = value;
         }
     }
+#pragma warning restore S1121
+#pragma warning restore IDE0079
 
     #region Callbacks
     private TrayHostSizeData TrayHostSizeCallback()

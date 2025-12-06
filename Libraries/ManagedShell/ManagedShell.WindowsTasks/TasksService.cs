@@ -492,15 +492,13 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                 case (int)WM.TB_SETBUTTONINFOW:
                     // SetProgressValue
                     ShellLogger.Debug("TasksService: ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
-                    if (win != null)
-                        win.ProgressValue = (int)msg.LParam;
+                    win?.ProgressValue = (int)msg.LParam;
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETBUTTONINFOA:
                     // SetProgressState
                     ShellLogger.Debug("TasksService: ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
-                    if (win != null)
-                        win.ProgressState = (ToolbarProgressBarState)msg.LParam;
+                    win?.ProgressState = (ToolbarProgressBarState)msg.LParam;
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_INSERTBUTTONW:
