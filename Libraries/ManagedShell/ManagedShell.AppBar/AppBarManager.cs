@@ -280,36 +280,36 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
         double rightEdgeWindowWidth = 0;
         Rect rc;
 
-        // get appropriate windows for this display
-        foreach (AppBarWindow window in AppBars)
-        {
-            if (window.Screen.DeviceName == screen.DeviceName)
-            {
-                if ((window.EnableAppBar || !enabledBarsOnly) && (window.RequiresScreenEdge || !edgeBarsOnly))
-                {
-                    if (window.AppBarEdge == AppBarEdge.Top)
-                    {
-                        topEdgeWindowHeight += window.ActualHeight;
-                    }
-                    else if (window.AppBarEdge == AppBarEdge.Bottom)
-                    {
-                        bottomEdgeWindowHeight += window.ActualHeight;
-                    }
-                    else if (window.AppBarEdge == AppBarEdge.Left)
-                    {
-                        leftEdgeWindowWidth += window.ActualWidth;
-                    }
-                    else if (window.AppBarEdge == AppBarEdge.Right)
-                    {
-                        rightEdgeWindowWidth += window.ActualWidth;
-                    }
-                }
+		// get appropriate windows for this display
+		foreach (AppBarWindow window in AppBars)
+		{
+			if (window.Screen.DeviceName == screen.DeviceName)
+			{
+				if ((window.EnableAppBar || !enabledBarsOnly) && (window.RequiresScreenEdge || !edgeBarsOnly))
+				{
+					if (window.AppBarEdge == AppBarEdge.Top)
+					{
+						topEdgeWindowHeight += window.ActualHeight;
+					}
+					else if (window.AppBarEdge == AppBarEdge.Bottom)
+					{
+						bottomEdgeWindowHeight += window.ActualHeight;
+					}
+					else if (window.AppBarEdge == AppBarEdge.Left)
+					{
+						leftEdgeWindowWidth += window.ActualWidth;
+					}
+					else if (window.AppBarEdge == AppBarEdge.Right)
+					{
+						rightEdgeWindowWidth += window.ActualWidth;
+					}
+				}
 
-                dpiScale = window.DpiScale;
-            }
-        }
+				dpiScale = window.DpiScale;
+			}
+		}
 
-        rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
+		rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
         rc.Bottom = screen.Bounds.Bottom - (int)(bottomEdgeWindowHeight * dpiScale);
         rc.Left = screen.Bounds.Left + (int)(leftEdgeWindowWidth * dpiScale);
         rc.Right = screen.Bounds.Right - (int)(rightEdgeWindowWidth * dpiScale);
@@ -322,7 +322,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
         double dpiScale = 1;
         Rect rc = GetWorkArea(ref dpiScale, screen, false, true);
 
-        SystemParametersInfo((int)ESystemParametersInfo.SETWORKAREA, 1, ref rc, (uint)(SystemParametersInfoUpdateMethods.UPDATEINIFILE | SystemParametersInfoUpdateMethods.SENDWININICHANGE | SystemParametersInfoUpdateMethods.SENDCHANGE));
+        SystemParametersInfo(ESystemParametersInfo.SETWORKAREA, 1, ref rc, SystemParametersInfoUpdateMethods.SENDWININICHANGE);
     }
 
     public static void ResetWorkArea()
@@ -337,11 +337,12 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
             oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
             oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
 
-            SystemParametersInfo((int)ESystemParametersInfo.SETWORKAREA, 1, ref oldWorkArea,
-                (uint)(SystemParametersInfoUpdateMethods.UPDATEINIFILE | SystemParametersInfoUpdateMethods.SENDWININICHANGE));
+            SystemParametersInfo(ESystemParametersInfo.SETWORKAREA, 1, ref oldWorkArea, SystemParametersInfoUpdateMethods.SENDWININICHANGE);
         }
     }
     #endregion
+
+    #region IDisposable
 
     public void Dispose()
     {
@@ -364,4 +365,6 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
             _isDisposed = true;
         }
     }
+
+    #endregion
 }

@@ -92,7 +92,7 @@ public partial class StartMenuItemViewModel : ObservableObject
     [RelayCommand()]
     private void PinToStartMenu()
     {
-        string path = ConfigManager.StartMenuPinnedShortcutPath;
+        string path = ConfigManager.StartMenu.StartMenuPinnedShortcutPath;
         path = Environment.ExpandEnvironmentVariables(path);
         string file = _shellFile.Path;
         string dest = Path.Combine(path, Path.GetFileName(file));

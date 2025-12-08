@@ -230,6 +230,8 @@ public partial class Taskbar : AppBarWindow
             DesiredHeight = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight;
         if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarWidth > 0)
             DesiredWidth = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarWidth;
+        FloatingButton.Height = DesiredHeight;
+        FloatingButtonImage.Height = DesiredHeight;
     }
 
     public override void SetPosition()
@@ -626,5 +628,14 @@ public partial class Taskbar : AppBarWindow
     private void AppBarWindow_Unloaded(object sender, RoutedEventArgs e)
     {
         ShellLogger.Debug("OnUnloaded Taskbar " + NumScreen);
+    }
+
+    public void FloatingTaskbar()
+    {
+        if (MyDataContext.TaskbarVisible)
+            RegisterAppBar();
+        else
+            UnregisterAppBar();
+        _appBarManager.SetWorkArea(Screen);
     }
 }

@@ -31,7 +31,7 @@ public abstract class TabItemExplorip : TabItem, IDisposable
     /// </summary>
     protected void SetTitle(string newTitle)
     {
-        MyHeader?.MyDataContext.Title = newTitle.Replace("_", "__");
+        MyHeader?.MyDataContext?.Title = newTitle.Replace("_", "__");
     }
 
     #region Events for selecting/deselecting
@@ -73,19 +73,19 @@ public abstract class TabItemExplorip : TabItem, IDisposable
     protected override void OnSelected(RoutedEventArgs e)
     {
         base.OnSelected(e);
-        MyHeader?.ButtonClose.Visibility = Visibility.Visible;
+        MyHeader?.ButtonClose?.Visibility = Visibility.Visible;
     }
 
     protected override void OnUnselected(RoutedEventArgs e)
     {
         base.OnUnselected(e);
-        MyHeader?.ButtonClose.Visibility = Visibility.Hidden;
+        MyHeader?.ButtonClose?.Visibility = Visibility.Hidden;
     }
 
     protected override void OnMouseEnter(MouseEventArgs e)
     {
         base.OnMouseEnter(e);
-        MyHeader?.ButtonClose.Visibility = Visibility.Visible;
+        MyHeader?.ButtonClose?.Visibility = Visibility.Visible;
     }
 
     protected override void OnMouseLeave(MouseEventArgs e)

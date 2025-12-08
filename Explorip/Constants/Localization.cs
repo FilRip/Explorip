@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 
+using CoolBytes.Helpers;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 
@@ -180,6 +182,9 @@ public static class Localization
     public static string RELOAD_PLUGINS { get; private set; }
     public static string NO_PLUGINS { get; private set; }
     public static string SHOW_TOOLBARS_POSITION { get; private set; }
+    public static string COLLAPSE { get; private set; }
+    public static string EXPAND { get; private set; }
+    public static string FLOATING { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -355,6 +360,9 @@ public static class Localization
         RELOAD_PLUGINS = "Reload plugins";
         NO_PLUGINS = "No plugins loaded";
         SHOW_TOOLBARS_POSITION = Load(IEFrameDll, 10324, "Show the toolbars...");
+        EXPAND = Load("uiautomationcore.dll", 204, "Expand");
+        COLLAPSE = Load("uiautomationcore.dll", 205, "Collapse");
+        FLOATING = Load(OleAccRcDll, 1013, "Floating").FirstCharToUpperCase();
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

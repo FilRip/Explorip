@@ -483,7 +483,13 @@ public partial class NativeMethods
     [DllImport(User32_DllName, SetLastError = true)]
     internal static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref Rect pvParam, uint fWinIni);
 
-    [DllImport(User32_DllName, SetLastError = true)]
+	[DllImport(User32_DllName, SetLastError = true)]
+	internal static extern bool SystemParametersInfo(ESystemParametersInfo uiAction, uint uiParam, ref Rect pvParam, uint fWinIni);
+
+	[DllImport(User32_DllName, SetLastError = true)]
+	internal static extern bool SystemParametersInfo(ESystemParametersInfo uiAction, uint uiParam, ref Rect pvParam, SystemParametersInfoUpdateMethods fWinIni);
+
+	[DllImport(User32_DllName, SetLastError = true)]
     internal static extern bool SystemParametersInfo(ESystemParametersInfo uiAction, uint uiParam, string pvParam, SystemParametersInfoUpdateMethods fWinIni);
 
     [DllImport(User32_DllName)]

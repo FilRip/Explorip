@@ -25,7 +25,7 @@ public partial class CustomColorViewModel : ObservableObject
     private void Save()
     {
         SolidColorBrush brush = new(CurrentColor);
-        ConfigManager.StartMenuBackground = brush;
+        ConfigManager.StartMenu.StartMenuBackground = brush;
         StartMenuWindow.MyStartMenu.Background = brush;
     }
 
@@ -38,7 +38,7 @@ public partial class CustomColorViewModel : ObservableObject
 
     public void Init()
     {
-        SolidColorBrush brush = ConfigManager.StartMenuBackground;
+        SolidColorBrush brush = ConfigManager.StartMenu.StartMenuBackground;
         if (brush != null)
         {
             CurrentBackground = brush;

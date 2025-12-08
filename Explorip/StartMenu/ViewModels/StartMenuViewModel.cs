@@ -86,16 +86,16 @@ public partial class StartMenuViewModel : ObservableObject
 
         #endregion
 
-        _iconSizeHeight = ConfigManager.StartMenuIconSizeHeight;
-        _iconSizeWidth = ConfigManager.StartMenuIconSizeWidth;
-        _iconSizeHeight2 = ConfigManager.StartMenuIconSizeHeight2;
-        _iconSizeWidth2 = ConfigManager.StartMenuIconSizeWidth2;
+        _iconSizeHeight = ConfigManager.StartMenu.StartMenuIconSizeHeight;
+        _iconSizeWidth = ConfigManager.StartMenu.StartMenuIconSizeWidth;
+        _iconSizeHeight2 = ConfigManager.StartMenu.StartMenuIconSizeHeight2;
+        _iconSizeWidth2 = ConfigManager.StartMenu.StartMenuIconSizeWidth2;
 
-        _showPanel2 = ConfigManager.StartMenuShowPinnedApp2;
-        _showApplicationsPrograms = ConfigManager.ShowApplicationsPrograms;
+        _showPanel2 = ConfigManager.StartMenu.StartMenuShowPinnedApp2;
+        _showApplicationsPrograms = ConfigManager.StartMenu.StartMenuShowApplicationsPrograms;
 
-        _height = ConfigManager.StartMenuHeight;
-        _pinnedAppCornerRadius = ConfigManager.StartMenuPinnedAppCornerRadius;
+        _height = ConfigManager.StartMenu.StartMenuHeight;
+        _pinnedAppCornerRadius = ConfigManager.StartMenu.StartMenuPinnedAppCornerRadius;
 
         RefreshAll();
     }
@@ -188,10 +188,10 @@ public partial class StartMenuViewModel : ObservableObject
     public void RefreshPrograms()
     {
         StartMenuItems = [];
-        string commonSMFolder = Environment.ExpandEnvironmentVariables(ConfigManager.CommonProgramsPath);
+        string commonSMFolder = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenu.StartMenuCommonProgramsPath);
         if (string.IsNullOrWhiteSpace(commonSMFolder))
             commonSMFolder = Path.Combine(Environment.SpecialFolder.CommonStartMenu.FullPath(), "Programs");
-        string mySMFolder = Environment.ExpandEnvironmentVariables(ConfigManager.CurrentUserProgramsPath);
+        string mySMFolder = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenu.StartMenuCurrentUserProgramsPath);
         if (string.IsNullOrWhiteSpace(mySMFolder))
             mySMFolder = Path.Combine(Environment.SpecialFolder.StartMenu.FullPath(), "Programs");
         List<StartMenuItemViewModel> commonSM = GetRootSM(new ShellFolder(commonSMFolder, IntPtr.Zero));
@@ -230,7 +230,7 @@ public partial class StartMenuViewModel : ObservableObject
     public void RefreshPinnedShortcut()
     {
         PinnedShortcut = [];
-        string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenuPinnedShortcutPath);
+        string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenu.StartMenuPinnedShortcutPath);
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
         ShellFolder sf = new(path, IntPtr.Zero);
@@ -241,7 +241,7 @@ public partial class StartMenuViewModel : ObservableObject
     public void RefreshPinnedShortcut2()
     {
         PinnedShortcut2 = [];
-        string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenuPinnedShortcutPath2);
+        string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenu.StartMenuPinnedShortcutPath2);
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
         ShellFolder sf = new(path, IntPtr.Zero);
@@ -287,13 +287,13 @@ public partial class StartMenuViewModel : ObservableObject
     private void ChangeShowPanel2()
     {
         ShowPanel2 = !ShowPanel2;
-        ConfigManager.StartMenuShowPinnedApp2 = ShowPanel2;
+        ConfigManager.StartMenu.StartMenuShowPinnedApp2 = ShowPanel2;
     }
 
     private void ChangeShowStartPrograms()
     {
         ShowApplicationsPrograms = !ShowApplicationsPrograms;
-        ConfigManager.ShowApplicationsPrograms = ShowApplicationsPrograms;
+        ConfigManager.StartMenu.StartMenuShowApplicationsPrograms = ShowApplicationsPrograms;
     }
 
     public static void Shutdown()
@@ -349,9 +349,9 @@ public partial class StartMenuViewModel : ObservableObject
         if (e.Source is ListView lv)
         {
             if (lv.Name == "FirstPanel")
-                DropToPanel(e, ConfigManager.StartMenuPinnedShortcutPath, RefreshPinnedShortcut);
+                DropToPanel(e, ConfigManager.StartMenu.StartMenuPinnedShortcutPath, RefreshPinnedShortcut);
             else
-                DropToPanel(e, ConfigManager.StartMenuPinnedShortcutPath2, RefreshPinnedShortcut2);
+                DropToPanel(e, ConfigManager.StartMenu.StartMenuPinnedShortcutPath2, RefreshPinnedShortcut2);
         }
     }
 

@@ -145,7 +145,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void UpdateMaxWidth()
     {
-        if (!ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowTitleApplicationWindow)
+        if (!ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowTitleApplicationWindow || !TaskbarParent.MyDataContext.TaskbarVisible)
             return;
         double currentWidth = TaskbarParent.MyTaskList.TasksList.Items.Count * (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).MaxWidthTitleApplicationWindow + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).SpaceBetweenTaskButton);
         double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20;

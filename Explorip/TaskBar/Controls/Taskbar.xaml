@@ -7,6 +7,7 @@
                      xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                      xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
+                     xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
                      Title="Explorip's taskbar"
                      Loaded="AppBarWindow_Loaded"
                      Unloaded="AppBarWindow_Unloaded"
@@ -20,6 +21,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+            <converters:InverseBooleanToVisibilityConverter x:Key="inverseBootToVisible"/>
         </ResourceDictionary>
     </Window.Resources>
     <WindowChrome.WindowChrome>
@@ -45,11 +47,19 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <controls:StartButton x:Name="StartButton" Grid.Column="0">
+                
+                <controls:StartButton x:Name="StartButton" Grid.Column="0" Visibility="{Binding DataContext.TaskbarVisible, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                 </controls:StartButton>
+                <ToggleButton Grid.Column="0" x:Name="FloatingButton" Width="16" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Focusable="False"
+                              Background="Transparent"
+                              ToolTip="{x:Static localization:Localization.EXPAND}"
+                              Visibility="{Binding DataContext.TaskbarVisible, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource inverseBootToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Command="{Binding CollapseTaskbarCommand}">
+                    <Image x:Name="FloatingButtonImage" Source="{x:Static localization:Icons.ExpandButton}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="16"/>
+                </ToggleButton>
+                
                 <controls:SearchButton x:Name="SearchButton" Grid.Column="1" Visibility="{Binding DataContext.SearchButtonVisible, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
@@ -170,6 +180,8 @@
                     <MenuItem Header="{x:Static localization:Localization.ALIGN_CENTER}" Name="CenterVAlignListOfTasks" IsChecked="{Binding IsTaskListToVCenter}" Command="{Binding AlignTaskListToCenterVCommand}"/>
                     <MenuItem Header="{x:Static localization:Localization.DOWN}" Name="DownAlignListOfTasks" IsChecked="{Binding IsTaskListToBottom}" Command="{Binding AlignTaskListToBottomCommand}"/>
                 </MenuItem>
+                <Separator Style="{DynamicResource MySeparatorStyle}"/>
+                <MenuItem Header="{x:Static localization:Localization.FLOATING}" Name="MenuCollapseTaskbar" Command="{Binding CollapseTaskbarCommand}"/>
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
                 <MenuItem Header="{x:Static localization:Localization.CUSTOM_COLOR}" Name="MenuCustomColor" Command="{Binding CustomColorCommand}"/>
             </MenuItem>

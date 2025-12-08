@@ -34,9 +34,9 @@ namespace Explorip.StartMenu.Window
             SetMyStartMenu(this);
             HookWinKey();
             Application.Current.Deactivated += Current_Deactivated;
-            if (ConfigManager.StartMenuBackground != null)
-                MyBorder.Background = ConfigManager.StartMenuBackground;
-            MyBorder.CornerRadius = ConfigManager.StartMenuCornerRadius;
+            if (ConfigManager.StartMenu.StartMenuBackground != null)
+                MyBorder.Background = ConfigManager.StartMenu.StartMenuBackground;
+            MyBorder.CornerRadius = ConfigManager.StartMenu.StartMenuCornerRadius;
             if (MyStartMenuApp.MyShellManager == null)
                 MyTaskbarApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
             else

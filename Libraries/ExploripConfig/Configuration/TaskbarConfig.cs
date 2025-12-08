@@ -14,7 +14,31 @@ namespace ExploripConfig.Configuration;
 
 public class TaskbarConfig
 {
-    private RegistryKey _registryTaskbar;
+    #region Constants
+    private const string ConfigShowClock = "ShowClock";
+	private const string ConfigCollapseNotifyIcons = "CollapseNotifyIcons";
+	private const string ConfigAllowFontSmoothing = "AllowFontSmoothing";
+	private const string ConfigTaskbarThumbHeight = "TaskbarThumbHeight";
+	private const string ConfigTaskbarThumbWidth = "TaskbarThumbWidth";
+	private const string ConfigShowTaskbar = "ShowTaskbar";
+	private const string ConfigShowTaskMan = "ShowTaskMan";
+	private const string ConfigShowSearch = "ShowSearch";
+	private const string ConfigShowWidget = "ShowWidget";
+	private const string ConfigTaskButtonSize = "TaskButtonSize";
+	private const string ConfigSearchWidth = "SearchWidth";
+	private const string ConfigSpaceBetweenTaskButton = "SpaceBetweenTaskButton";
+	private const string ConfigDesktopButtonWidth = "DesktopButtonWidth";
+	private const string ConfigTasklistHorizontalAlignment = "TasklistHorizontalAlignment";
+	private const string ConfigTaskbarMinHeight = "TaskbarMinHeight";
+	private const string ConfigTasklistVerticalAlignment = "TasklistVerticalAlignment";
+	private const string ConfigToolbarColumn = "ToolbarColumn";
+	private const string ConfigToolbarRow = "ToolbarRow";
+	private const string ConfigTasklistColumn = "TasklistColumn";
+	private const string ConfigTasklistRow = "TasklistRow";
+	private const string ConfigMaxWidthTitleApplicationWindow = "MaxWidthTitleApplicationWindow";
+	#endregion
+
+	private RegistryKey _registryTaskbar;
 
     public int NumScreen { get; private set; }
     public bool AllowWrite { get; private set; }
@@ -28,83 +52,83 @@ public class TaskbarConfig
 
         if (allowWrite && _registryTaskbar != null)
         {
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowClock", "").ToString()))
-                _registryTaskbar.SetValue("ShowClock", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("CollapseNotifyIcons", "").ToString()))
-                _registryTaskbar.SetValue("CollapseNotifyIcons", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("AllowFontSmoothing", "").ToString()))
-                _registryTaskbar.SetValue("AllowFontSmoothing", "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowClock, "").ToString()))
+                _registryTaskbar.SetValue(ConfigShowClock, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigCollapseNotifyIcons, "").ToString()))
+                _registryTaskbar.SetValue(ConfigCollapseNotifyIcons, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigAllowFontSmoothing, "").ToString()))
+                _registryTaskbar.SetValue(ConfigAllowFontSmoothing, "True");
             string edge = _registryTaskbar.GetValue("Edge", "").ToString();
             if (string.IsNullOrWhiteSpace(edge) || !Enum.TryParse<AppBarEdge>(edge, out _))
                 Edge = AppBarEdge.Bottom;
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarThumbHeight", "").ToString()))
-                _registryTaskbar.SetValue("TaskbarThumbHeight", "150");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarThumbWidth", "").ToString()))
-                _registryTaskbar.SetValue("TaskbarThumbWidth", "250");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarThumbHeight, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTaskbarThumbHeight, "150");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarThumbWidth, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTaskbarThumbWidth, "250");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarDisableThumb", "").ToString()))
                 _registryTaskbar.SetValue("TaskbarDisableThumb", "False");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowTaskbar", "").ToString()))
-                _registryTaskbar.SetValue("ShowTaskbar", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowTaskMan", "").ToString()))
-                _registryTaskbar.SetValue("ShowTaskMan", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowSearch", "").ToString()))
-                _registryTaskbar.SetValue("ShowSearch", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ShowWidget", "").ToString()) && WindowsSettings.IsWindows11OrGreater())
-                _registryTaskbar.SetValue("ShowWidget", "True");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskButtonSize", "").ToString()))
-                _registryTaskbar.SetValue("TaskButtonSize", "32");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("SearchWidth", "").ToString()))
-                _registryTaskbar.SetValue("SearchWidth", "100");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("SpaceBetweenTaskButton", "").ToString()))
-                _registryTaskbar.SetValue("SpaceBetweenTaskButton", "5");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("DesktopButtonWidth", "").ToString()))
-                _registryTaskbar.SetValue("DesktopButtonWidth", "5");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistHorizontalAlignment", "").ToString()))
-                _registryTaskbar.SetValue("TasklistHorizontalAlignment", HorizontalAlignment.Left.ToString("G"));
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarMinHeight", "").ToString()))
-                _registryTaskbar.SetValue("TaskbarMinHeight", "52");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistVerticalAlignment", "").ToString()))
-                _registryTaskbar.SetValue("TasklistVerticalAlignment", VerticalAlignment.Bottom.ToString("G"));
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ToolbarColumn", "").ToString()))
-                _registryTaskbar.SetValue("ToolbarColumn", "0");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("ToolbarRow", "").ToString()))
-                _registryTaskbar.SetValue("ToolbarRow", "0");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistColumn", "").ToString()))
-                _registryTaskbar.SetValue("TasklistColumn", "0");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TasklistRow", "").ToString()))
-                _registryTaskbar.SetValue("TasklistRow", "1");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("MaxWidthTitleApplicationWindow", "").ToString()))
-                _registryTaskbar.SetValue("MaxWidthTitleApplicationWindow", "100");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowTaskbar, "").ToString()))
+                _registryTaskbar.SetValue(ConfigShowTaskbar, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowTaskMan, "").ToString()))
+                _registryTaskbar.SetValue(ConfigShowTaskMan, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowSearch, "").ToString()))
+                _registryTaskbar.SetValue(ConfigShowSearch, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowWidget, "").ToString()) && WindowsSettings.IsWindows11OrGreater())
+                _registryTaskbar.SetValue(ConfigShowWidget, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskButtonSize, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTaskButtonSize, "32");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigSearchWidth, "").ToString()))
+                _registryTaskbar.SetValue(ConfigSearchWidth, "100");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigSpaceBetweenTaskButton, "").ToString()))
+                _registryTaskbar.SetValue(ConfigSpaceBetweenTaskButton, "5");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigDesktopButtonWidth, "").ToString()))
+                _registryTaskbar.SetValue(ConfigDesktopButtonWidth, "5");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTasklistHorizontalAlignment, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTasklistHorizontalAlignment, HorizontalAlignment.Left.ToString("G"));
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarMinHeight, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTaskbarMinHeight, "52");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTasklistVerticalAlignment, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTasklistVerticalAlignment, VerticalAlignment.Bottom.ToString("G"));
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigToolbarColumn, "").ToString()))
+                _registryTaskbar.SetValue(ConfigToolbarColumn, "0");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigToolbarRow, "").ToString()))
+                _registryTaskbar.SetValue(ConfigToolbarRow, "0");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTasklistColumn, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTasklistColumn, "0");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTasklistRow, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTasklistRow, "1");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigMaxWidthTitleApplicationWindow, "").ToString()))
+                _registryTaskbar.SetValue(ConfigMaxWidthTitleApplicationWindow, "100");
         }
     }
 
     public bool ShowClock
     {
-        get { return _registryTaskbar.ReadBoolean("ShowClock", true); }
+        get { return _registryTaskbar.ReadBoolean(ConfigShowClock, true); }
         set
         {
             if (ShowClock != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowClock", value.ToString());
+                _registryTaskbar.SetValue(ConfigShowClock, value.ToString());
         }
     }
 
     public bool CollapseNotifyIcons
     {
-        get { return _registryTaskbar.ReadBoolean("CollapseNotifyIcons"); }
+        get { return _registryTaskbar.ReadBoolean(ConfigCollapseNotifyIcons); }
         set
         {
             if (CollapseNotifyIcons != value && AllowWrite)
-                _registryTaskbar.SetValue("CollapseNotifyIcons", value.ToString());
+                _registryTaskbar.SetValue(ConfigCollapseNotifyIcons, value.ToString());
         }
     }
 
     public bool AllowFontSmoothing
     {
-        get { return _registryTaskbar.ReadBoolean("AllowFontSmoothing"); }
+        get { return _registryTaskbar.ReadBoolean(ConfigAllowFontSmoothing); }
         set
         {
             if (AllowFontSmoothing != value && AllowWrite)
-                _registryTaskbar.SetValue("AllowFontSmoothing", value.ToString());
+                _registryTaskbar.SetValue(ConfigAllowFontSmoothing, value.ToString());
         }
     }
 
@@ -130,11 +154,11 @@ public class TaskbarConfig
 
     public double TaskbarMinHeight
     {
-        get { return _registryTaskbar.ReadDouble("TaskbarMinHeight"); }
+        get { return _registryTaskbar.ReadDouble(ConfigTaskbarMinHeight); }
         set
         {
             if (TaskbarMinHeight != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarMinHeight", value.ToString());
+                _registryTaskbar.SetValue(ConfigTaskbarMinHeight, value.ToString());
         }
     }
 
@@ -178,31 +202,31 @@ public class TaskbarConfig
 
     public bool ShowTaskbar
     {
-        get { return _registryTaskbar.ReadBoolean("ShowTaskbar"); }
+        get { return _registryTaskbar.ReadBoolean(ConfigShowTaskbar); }
         set
         {
             if (ShowTaskbar != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowTaskbar", value.ToString());
+                _registryTaskbar.SetValue(ConfigShowTaskbar, value.ToString());
         }
     }
 
     public bool ShowTaskManButton
     {
-        get { return _registryTaskbar.ReadBoolean("ShowTaskMan"); }
+        get { return _registryTaskbar.ReadBoolean(ConfigShowTaskMan); }
         set
         {
             if (ShowTaskManButton != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowTaskMan", value.ToString());
+                _registryTaskbar.SetValue(ConfigShowTaskMan, value.ToString());
         }
     }
 
     public bool ShowSearchButton
     {
-        get { return _registryTaskbar.ReadBoolean("ShowSearch"); }
+        get { return _registryTaskbar.ReadBoolean(ConfigShowSearch); }
         set
         {
             if (ShowSearchButton != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowSearch", value.ToString());
+                _registryTaskbar.SetValue(ConfigShowSearch, value.ToString());
         }
     }
 
@@ -218,11 +242,11 @@ public class TaskbarConfig
 
     public bool ShowWidgetButton
     {
-        get { return _registryTaskbar.ReadBoolean("ShowWidget"); }
+        get { return _registryTaskbar.ReadBoolean(ConfigShowWidget); }
         set
         {
             if (ShowWidgetButton != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowWidget", value.ToString());
+                _registryTaskbar.SetValue(ConfigShowWidget, value.ToString());
         }
     }
 
@@ -258,21 +282,21 @@ public class TaskbarConfig
 
     public int TaskbarThumbHeight
     {
-        get { return _registryTaskbar.ReadInteger("TaskbarThumbHeight"); }
+        get { return _registryTaskbar.ReadInteger(ConfigTaskbarThumbHeight); }
         set
         {
             if (TaskbarThumbHeight != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarThumbHeight", value.ToString());
+                _registryTaskbar.SetValue(ConfigTaskbarThumbHeight, value.ToString());
         }
     }
 
     public int TaskbarThumbWidth
     {
-        get { return _registryTaskbar.ReadInteger("TaskbarThumbWidth"); }
+        get { return _registryTaskbar.ReadInteger(ConfigTaskbarThumbWidth); }
         set
         {
             if (TaskbarThumbWidth != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarThumbWidth", value.ToString());
+                _registryTaskbar.SetValue(ConfigTaskbarThumbWidth, value.ToString());
         }
     }
 
@@ -288,21 +312,21 @@ public class TaskbarConfig
 
     public double TaskButtonSize
     {
-        get { return _registryTaskbar.ReadDouble("TaskButtonSize"); }
+        get { return _registryTaskbar.ReadDouble(ConfigTaskButtonSize); }
         set
         {
             if (TaskButtonSize != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskButtonSize", value.ToString());
+                _registryTaskbar.SetValue(ConfigTaskButtonSize, value.ToString());
         }
     }
 
     public double SearchWidth
     {
-        get { return _registryTaskbar.ReadDouble("SearchWidth"); }
+        get { return _registryTaskbar.ReadDouble(ConfigSearchWidth); }
         set
         {
             if (SearchWidth != value && AllowWrite)
-                _registryTaskbar.SetValue("SearchWidth", value.ToString());
+                _registryTaskbar.SetValue(ConfigSearchWidth, value.ToString());
         }
     }
 
@@ -318,11 +342,11 @@ public class TaskbarConfig
 
     public double SpaceBetweenTaskButton
     {
-        get { return _registryTaskbar.ReadDouble("SpaceBetweenTaskButton"); }
+        get { return _registryTaskbar.ReadDouble(ConfigSpaceBetweenTaskButton); }
         set
         {
             if (TaskButtonSize != value && AllowWrite)
-                _registryTaskbar.SetValue("SpaceBetweenTaskButton", value.ToString());
+                _registryTaskbar.SetValue(ConfigSpaceBetweenTaskButton, value.ToString());
         }
     }
 
@@ -338,71 +362,71 @@ public class TaskbarConfig
 
     public double DesktopButtonWidth
     {
-        get { return _registryTaskbar.ReadDouble("DesktopButtonWidth"); }
+        get { return _registryTaskbar.ReadDouble(ConfigDesktopButtonWidth); }
         set
         {
             if (DesktopButtonWidth != value && AllowWrite)
-                _registryTaskbar.SetValue("DesktopButtonWidth", value.ToString());
+                _registryTaskbar.SetValue(ConfigDesktopButtonWidth, value.ToString());
         }
     }
 
     public HorizontalAlignment TaskListHorizontalAlignment
     {
-        get { return _registryTaskbar.ReadEnum<HorizontalAlignment>("TasklistHorizontalAlignment"); }
+        get { return _registryTaskbar.ReadEnum<HorizontalAlignment>(ConfigTasklistHorizontalAlignment); }
         set
         {
             if (TaskListHorizontalAlignment != value && AllowWrite)
-                _registryTaskbar.SetValue("TasklistHorizontalAlignment", value.ToString("G"));
+                _registryTaskbar.SetValue(ConfigTasklistHorizontalAlignment, value.ToString("G"));
         }
     }
 
     public VerticalAlignment TaskListVerticalAlignment
     {
-        get { return _registryTaskbar.ReadEnum<VerticalAlignment>("TasklistVerticalAlignment"); }
+        get { return _registryTaskbar.ReadEnum<VerticalAlignment>(ConfigTasklistVerticalAlignment); }
         set
         {
             if (TaskListVerticalAlignment != value && AllowWrite)
-                _registryTaskbar.SetValue("TasklistVerticalAlignment", value.ToString("G"));
+                _registryTaskbar.SetValue(ConfigTasklistVerticalAlignment, value.ToString("G"));
         }
     }
 
     public int ToolbarColumn
     {
-        get { return _registryTaskbar.ReadInteger("ToolbarColumn"); }
+        get { return _registryTaskbar.ReadInteger(ConfigToolbarColumn); }
         set
         {
             if (ToolbarColumn != value && AllowWrite)
-                _registryTaskbar.SetValue("ToolbarColumn", value.ToString());
+                _registryTaskbar.SetValue(ConfigToolbarColumn, value.ToString());
         }
     }
 
     public int ToolbarRow
     {
-        get { return _registryTaskbar.ReadInteger("ToolbarRow"); }
+        get { return _registryTaskbar.ReadInteger(ConfigToolbarRow); }
         set
         {
             if (ToolbarRow != value && AllowWrite)
-                _registryTaskbar.SetValue("ToolbarRow", value.ToString());
+                _registryTaskbar.SetValue(ConfigToolbarRow, value.ToString());
         }
     }
 
     public int TasklistColumn
     {
-        get { return _registryTaskbar.ReadInteger("TasklistColumn"); }
+        get { return _registryTaskbar.ReadInteger(ConfigTasklistColumn); }
         set
         {
             if (TasklistColumn != value && AllowWrite)
-                _registryTaskbar.SetValue("TasklistColumn", value.ToString());
+                _registryTaskbar.SetValue(ConfigTasklistColumn, value.ToString());
         }
     }
 
     public int TasklistRow
     {
-        get { return _registryTaskbar.ReadInteger("TasklistRow"); }
+        get { return _registryTaskbar.ReadInteger(ConfigTasklistRow); }
         set
         {
             if (TasklistRow != value && AllowWrite)
-                _registryTaskbar.SetValue("TasklistRow", value.ToString());
+                _registryTaskbar.SetValue(ConfigTasklistRow, value.ToString());
         }
     }
 
@@ -418,11 +442,11 @@ public class TaskbarConfig
 
     public double MaxWidthTitleApplicationWindow
     {
-        get { return _registryTaskbar.ReadDouble("MaxWidthTitleApplicationWindow"); }
+        get { return _registryTaskbar.ReadDouble(ConfigMaxWidthTitleApplicationWindow); }
         set
         {
             if (MaxWidthTitleApplicationWindow != value && AllowWrite)
-                _registryTaskbar.SetValue("MaxWidthTitleApplicationWindow", value.ToString());
+                _registryTaskbar.SetValue(ConfigMaxWidthTitleApplicationWindow, value.ToString());
         }
     }
 

@@ -27,6 +27,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
 
     public void ChangeEdge(AppBarEdge newEdge)
     {
+        TaskbarVisible = true;
         _currentEdge = newEdge;
         OnPropertyChanged(nameof(PanelOrientation));
         OnPropertyChanged(nameof(LeadingDockOrientation));
@@ -104,7 +105,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private Taskbar _parentTaskbar = parentControl;
 
     [ObservableProperty()]
-    private bool _resizeOn, _tabTipVisible, _keyboardLayoutVisible, _searchZoneVisible, _searchButtonVisible, _taskManVisible, _widgetsVisible, _desktopPreviewVisible, _showApplicationWindowTitle, _isGroupedApplicationWindow, _isShowSmallIcon, _copilotVisible;
+    private bool _resizeOn, _tabTipVisible, _keyboardLayoutVisible, _searchZoneVisible, _searchButtonVisible, _taskManVisible, _widgetsVisible, _desktopPreviewVisible, _showApplicationWindowTitle, _isGroupedApplicationWindow, _isShowSmallIcon, _copilotVisible, _taskbarVisible;
 
     [ObservableProperty()]
     private bool _isTaskListToLeft, _isTaskListToRight, _isTaskListToCenter, _isTaskListToTop, _isTaskListToBottom, _isTaskListToVCenter;
@@ -573,5 +574,13 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
             Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
             tb.MyDataContext.ShowLargeIcon();
         }
+    }
+
+    [RelayCommand()]
+    private void CollapseTaskbar()
+    {
+        TaskbarVisible = !TaskbarVisible;
+        ParentTaskbar.FloatingTaskbar();
+        ParentTaskbar.Width = (TaskbarVisible ? ParentTaskbar.Screen.Bounds.Width : 16);
     }
 }

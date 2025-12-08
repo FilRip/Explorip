@@ -424,4 +424,9 @@ public static class ExtensionsString
         }
         return sb.ToString();
     }
+
+    public static string FirstCharToUpperCase(this string str)
+    {
+        return str[0].ToString().ToUpper() + str.Substring(1);
+    }
 }
