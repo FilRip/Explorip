@@ -577,10 +577,13 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     }
 
     [RelayCommand()]
-    private void CollapseTaskbar()
+    public void ExpandCollapseTaskbar(object param)
     {
-        TaskbarVisible = !TaskbarVisible;
-        ParentTaskbar.FloatingTaskbar();
-        ParentTaskbar.Width = (TaskbarVisible ? ParentTaskbar.Screen.Bounds.Width : 16);
+        if (bool.TryParse(param?.ToString(), out bool visible))
+        {
+            TaskbarVisible = visible;
+            ParentTaskbar.FloatingTaskbar();
+            ParentTaskbar.Width = (visible ? ParentTaskbar.Screen.Bounds.Width : 16);
+        }
     }
 }

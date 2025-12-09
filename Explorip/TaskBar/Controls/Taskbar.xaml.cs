@@ -231,7 +231,7 @@ public partial class Taskbar : AppBarWindow
         if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarWidth > 0)
             DesiredWidth = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarWidth;
         FloatingButton.Height = DesiredHeight;
-        FloatingButtonImage.Height = DesiredHeight;
+        FloatingButton.FloatingButtonImage.Height = DesiredHeight;
     }
 
     public override void SetPosition()
