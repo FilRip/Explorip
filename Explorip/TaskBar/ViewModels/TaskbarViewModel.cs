@@ -27,7 +27,6 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
 
     public void ChangeEdge(AppBarEdge newEdge)
     {
-        TaskbarVisible = true;
         _currentEdge = newEdge;
         OnPropertyChanged(nameof(PanelOrientation));
         OnPropertyChanged(nameof(LeadingDockOrientation));

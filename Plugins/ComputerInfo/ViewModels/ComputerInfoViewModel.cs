@@ -28,6 +28,8 @@ public partial class ComputerInfoViewModel : ObservableObject, IDisposable
     private bool _isPause;
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(HorizontalIsChecked), nameof(VerticalIsChecked))]
     private Orientation _currentOrientation;
+    [ObservableProperty()]
+    private Brush _cpuColor, _ramColor;
 
     public ComputerInfoViewModel() : base()
     {
@@ -46,6 +48,12 @@ public partial class ComputerInfoViewModel : ObservableObject, IDisposable
     {
         CpuUsage = Math.Round(Math.Min(100, ComputerInfoCpu.PercentCpuUsed), PrecisionCpu);
         FreeRam = Math.Round((double)ComputerInfoMemory.TotalFree / 1024, 2);
+        if (CpuUsage < 33)
+            CpuColor = Brushes.Green;
+        else if (CpuUsage < 66)
+            CpuColor = Brushes.Yellow;
+        else
+            CpuColor = Brushes.Red;
     }
 
     public bool HorizontalIsChecked

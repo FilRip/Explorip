@@ -55,6 +55,7 @@ public partial class Taskbar : AppBarWindow
         _numScreen = screen.NumScreen;
 
         DataContext = new TaskbarViewModel(this);
+        MyDataContext.TaskbarVisible = !ConfigManager.GetTaskbarConfig(_numScreen).StartFloating;
 
         StartButton.StartMenuMonitor = startMenuMonitor;
 
@@ -236,6 +237,9 @@ public partial class Taskbar : AppBarWindow
 
     public override void SetPosition()
     {
+        if (!MyDataContext.TaskbarVisible)
+            return;
+
         base.SetPosition();
 
         MyTaskbarApp.MyShellManager.NotificationArea.SetTrayHostSizeData(new TrayHostSizeData()
@@ -253,6 +257,9 @@ public partial class Taskbar : AppBarWindow
 
     private void Taskbar_OnLocationChanged(object sender, EventArgs e)
     {
+        if (!IsRegistered)
+            return;
+
         // primarily for win7/8, they will set up the appbar correctly but then put it in the wrong place
         if (Orientation == Orientation.Vertical)
         {

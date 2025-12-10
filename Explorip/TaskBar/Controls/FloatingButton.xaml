@@ -12,10 +12,14 @@
     <UserControl.DataContext>
         <viewmodels:FloatingButtonViewModel/>
     </UserControl.DataContext>
-    <ToggleButton Width="16" HorizontalAlignment="Stretch" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Focusable="False"
+    <ToggleButton Width="{Binding MaxWidth}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False"
                   Style="{DynamicResource FloatingButton}"
                   ToolTip="{DynamicResource FloatingButtonTip}"
-                  Command="{Binding ExpandTaskbarCommand}">
-        <Image x:Name="FloatingButtonImage" Source="{x:Static constants:Icons.ExpandButton}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="16"/>
+                  Command="{Binding ExpandTaskbarCommand}"
+                  PreviewMouseDown="ToggleButton_MouseDown"
+                  MouseLeave="ToggleButton_MouseLeave"
+                  PreviewMouseUp="ToggleButton_MouseUp"
+                  PreviewKeyDown="ToggleButton_KeyDown">
+        <Image x:Name="FloatingButtonImage" Source="{x:Static constants:Icons.ExpandButton}" Width="{Binding MaxWidth}" Stretch="{Binding StretchMode}"/>
     </ToggleButton>
 </UserControl>

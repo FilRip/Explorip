@@ -42,6 +42,9 @@ public partial class NotifyIconList : UserControl
 
     private void NotifyIconList_OnLoaded(object sender, RoutedEventArgs e)
     {
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            return;
+
         lock (_lockLoaded)
         {
             if ((!_isLoaded || !_ignoreReload) && MyTaskbarApp.MyShellManager.NotificationArea != null)

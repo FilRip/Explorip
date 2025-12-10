@@ -40,7 +40,7 @@
         </StackPanel.ContextMenu>
         <StackPanel Orientation="Horizontal" Margin="0">
             <TextBlock Grid.Column="0" Text="CPU Usage : "/>
-            <TextBlock Text="{Binding CpuUsage, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="{Binding CpuUsage, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding CpuColor}"/>
             <TextBlock Text=" % "/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0">

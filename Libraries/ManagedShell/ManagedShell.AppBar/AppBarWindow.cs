@@ -15,29 +15,35 @@ namespace ManagedShell.AppBar;
 
 public class AppBarWindow : Window, INotifyPropertyChanged
 {
+    #region Fields
+
     protected readonly AppBarManager _appBarManager;
     protected readonly ExplorerHelper _explorerHelper;
     protected readonly FullScreenHelper _fullScreenHelper;
+    protected internal bool EnableAppBar = true;
+    protected internal bool RequiresScreenEdge;
+    protected bool ProcessScreenChanges = true;
+    protected WindowInteropHelper windowInteropHelper;
+    protected double DesiredHeight;
+    protected double DesiredWidth;
+
+    private bool _positionAlreadyUnderChanged;
+    private bool IsRaising;
+    private bool _enableBlur;
+    private int AppBarMessageId = -1;
+    private AppBarEdge _appBarEdge;
+
+    #endregion
+
+    #region Properties
+
     public AppBarScreen Screen { get; set; }
     public double DpiScale { get; set; } = 1.0;
-    protected bool ProcessScreenChanges = true;
-
-    // Window properties
-    protected WindowInteropHelper windowInteropHelper;
-    private bool IsRaising;
     public IntPtr Handle { get; set; }
     public bool AllowClose { get; set; }
     public bool IsClosing { get; set; }
-    protected double DesiredHeight;
-    protected double DesiredWidth;
-    private bool EnableBlur;
-
     public bool Disable { get; set; }
 
-    // AppBar properties
-    private int AppBarMessageId = -1;
-
-    private AppBarEdge _appBarEdge;
     public AppBarEdge AppBarEdge
     {
         get
@@ -51,13 +57,27 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             OnPropertyChanged(nameof(Orientation));
         }
     }
-    protected internal bool EnableAppBar = true;
-    protected internal bool RequiresScreenEdge;
 
     public Orientation Orientation
     {
         get => (AppBarEdge == AppBarEdge.Left || AppBarEdge == AppBarEdge.Right) ? Orientation.Vertical : Orientation.Horizontal;
     }
+
+    public bool IsRegistered
+    {
+        get { return _appBarManager.AppBars.Contains(this); }
+    }
+
+    #endregion
+
+    #region Events
+
+    public event EventHandler ExitFullScreen;
+    public event EventHandler EnterFullScreen;
+
+    #endregion
+
+    #region Constructors
 
     public AppBarWindow(AppBarManager appBarManager, ExplorerHelper explorerHelper, FullScreenHelper fullScreenHelper, AppBarScreen screen, AppBarEdge edge, double size)
     {
@@ -84,7 +104,10 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             DesiredHeight = size;
     }
 
-    #region Events
+    #endregion
+
+    #region Override Events
+
     protected virtual void OnSourceInitialized(object sender, EventArgs e)
     {
         // set up helper and get handle
@@ -199,7 +222,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         {
             _appBarManager.AppBarActivate(hwnd);
         }
-        else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING)
+        else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGING && IsRegistered)
         {
             ShellLogger.Debug("AppBarWindow.WndProc WINDOWPOSCHANGING");
             // Extract the WINDOWPOS structure corresponding to this message
@@ -214,7 +237,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
                 wndPos.UpdateMessage(lParam);
             }
         }
-        else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGED && EnableAppBar && !EnvironmentHelper.IsAppRunningAsShell && !AllowClose && !_positionAlreadyUnderChanged)
+        else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGED && EnableAppBar && !EnvironmentHelper.IsAppRunningAsShell && !AllowClose && !_positionAlreadyUnderChanged && IsRegistered)
         {
             ShellLogger.Debug("AppBarWindowPosChanged Screen " + Screen.NumScreen.ToString());
             _appBarManager.AppBarWindowPosChanged(hwnd);
@@ -248,9 +271,11 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
         return IntPtr.Zero;
     }
+
     #endregion
 
     #region Helpers
+
     protected void DelaySetPosition()
     {
         // delay changing things when we are shell. it seems that explorer AppBars do this too.
@@ -283,8 +308,6 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             }
         }
     }
-
-    private bool _positionAlreadyUnderChanged;
 
     internal void SetAppBarPosition(NativeMethods.Rect rect)
     {
@@ -334,14 +357,11 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         }
     }
 
-    public event EventHandler ExitFullScreen;
-    public event EventHandler EnterFullScreen;
-
     protected void SetBlur(bool enable)
     {
-        if (EnableBlur != enable && Handle != IntPtr.Zero && AllowsTransparency)
+        if (_enableBlur != enable && Handle != IntPtr.Zero && AllowsTransparency)
         {
-            EnableBlur = enable;
+            _enableBlur = enable;
             WindowHelper.SetWindowBlur(Handle, enable);
         }
     }
@@ -379,9 +399,11 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             _appBarManager.RegisterBar(this, ActualWidth * DpiScale, DesiredHeight * DpiScale);
         }
     }
+
     #endregion
 
     #region Virtual methods
+
     public virtual void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
     {
         if (!isSameCoords)

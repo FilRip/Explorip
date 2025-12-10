@@ -36,6 +36,9 @@ public class TaskbarConfig
 	private const string ConfigTasklistColumn = "TasklistColumn";
 	private const string ConfigTasklistRow = "TasklistRow";
 	private const string ConfigMaxWidthTitleApplicationWindow = "MaxWidthTitleApplicationWindow";
+    private const string ConfigFloatingButtonWidth = "MaxWidthFloatingButton";
+    private const string ConfigFloatingButtonStretchMode = "FloatingButtonStretchMode";
+    private const string ConfigStartFloating = "StartFloating";
 	#endregion
 
 	private RegistryKey _registryTaskbar;
@@ -99,6 +102,42 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigTasklistRow, "1");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigMaxWidthTitleApplicationWindow, "").ToString()))
                 _registryTaskbar.SetValue(ConfigMaxWidthTitleApplicationWindow, "100");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigFloatingButtonWidth, "").ToString()))
+                _registryTaskbar.SetValue(ConfigFloatingButtonWidth, "16");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigFloatingButtonStretchMode, "").ToString()))
+                _registryTaskbar.SetValue(ConfigFloatingButtonStretchMode, Stretch.None.ToString("G"));
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigStartFloating, "").ToString()))
+                _registryTaskbar.SetValue(ConfigStartFloating, "False");
+        }
+    }
+
+    public double FloatingButtonWidth
+    {
+        get { return _registryTaskbar.ReadDouble(ConfigFloatingButtonWidth, 16); }
+        set
+        {
+            if (FloatingButtonWidth != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigFloatingButtonWidth, value.ToString());
+        }
+    }
+
+    public Stretch FloatingButtonStretchMode
+    {
+        get { return _registryTaskbar.ReadEnum<Stretch>(ConfigFloatingButtonStretchMode); }
+        set
+        {
+            if (FloatingButtonStretchMode != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigFloatingButtonStretchMode, value.ToString("G"));
+        }
+    }
+
+    public bool StartFloating
+    {
+        get { return _registryTaskbar.ReadBoolean(ConfigStartFloating); }
+        set
+        {
+            if (StartFloating != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigStartFloating, value.ToString());
         }
     }
 

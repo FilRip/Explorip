@@ -30,8 +30,6 @@ public partial class Toolbar : BaseToolbar
         if (sender is not ToolbarButton icon)
             return;
 
-        Mouse.Capture(null);
-
         if (icon.DataContext is not ShellFile file || string.IsNullOrWhiteSpace(file.Path))
             return;
 
