@@ -18,17 +18,46 @@ public partial class FloatingButtonViewModel : ObservableObject
     private Stretch _stretchMode;
     [ObservableProperty()]
     private double _maxWidth;
+    [ObservableProperty()]
+    private double _newYPos;
+    [ObservableProperty()]
+    private ImageSource _floatingImage;
 
     public void SetParentTaskbar(Taskbar parentTaskbar)
     {
         ParentTaskbar = parentTaskbar;
         StretchMode = ConfigManager.GetTaskbarConfig(parentTaskbar.NumScreen).FloatingButtonStretchMode;
-        MaxWidth = Math.Min(ConfigManager.GetTaskbarConfig(parentTaskbar.NumScreen).FloatingButtonWidth, parentTaskbar.StartButton.Width);
+        double posY = ConfigManager.GetTaskbarConfig(parentTaskbar.NumScreen).FloatingButtonPosY;
+        if (posY < 0)
+            posY = parentTaskbar.Top;
+        NewYPos = posY;
+        MaxWidth = Math.Min(ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).FloatingButtonWidth, 52);
+    }
+
+    partial void OnNewYPosChanged(double value)
+    {
+        ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).FloatingButtonPosY = value;
     }
 
     [RelayCommand()]
     private void ExpandTaskbar()
     {
         ParentTaskbar.MyDataContext.ExpandCollapseTaskbar(true.ToString());
+    }
+
+    public void SetPos()
+    {
+        if (ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).FloatingButtonSide == System.Windows.HorizontalAlignment.Left)
+        {
+            ParentTaskbar.Left = 0;
+            FloatingImage = Constants.Icons.ExpandButtonToRight;
+        }
+        else
+        {
+            ParentTaskbar.Left = ParentTaskbar.Screen.Bounds.Right - MaxWidth;
+            FloatingImage = Constants.Icons.ExpandButtonToLeft;
+        }
+        ParentTaskbar.Top = NewYPos;
+        ParentTaskbar.Width = MaxWidth;
     }
 }

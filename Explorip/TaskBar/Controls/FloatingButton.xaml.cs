@@ -7,7 +7,6 @@ using System.Windows.Input;
 using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
 
-using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.Controls;
@@ -32,11 +31,12 @@ public partial class FloatingButton : UserControl
         get { return (FloatingButtonViewModel)DataContext; }
     }
 
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    public void SaveNewPos()
     {
-        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
-            return;
-        MyDataContext.SetParentTaskbar((Taskbar)Window.GetWindow(this));
+        Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            MyDataContext.NewYPos = MyDataContext.ParentTaskbar.Top;
+        }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
     private void ToggleButton_MouseDown(object sender, MouseButtonEventArgs e)
@@ -46,7 +46,6 @@ public partial class FloatingButton : UserControl
             _timer = new Timer(StartDrag, null, DelayBeforeStartDrag, Timeout.Infinite);
         else
             _timer.Change(DelayBeforeStartDrag, Timeout.Infinite);
-        ShellLogger.Debug("Start Timer to drag floating button");
     }
 
     private void StartDrag(object userData)
@@ -59,7 +58,6 @@ public partial class FloatingButton : UserControl
         });
         System.Drawing.Point posReference = new();
         NativeMethods.GetCursorPos(ref posReference);
-        ShellLogger.Debug("Start moving floating button");
         while (!_exitDrag)
         {
             System.Drawing.Point pos = new();
@@ -69,17 +67,14 @@ public partial class FloatingButton : UserControl
                 StopDrag();
             Thread.Sleep(10);
         }
-        Application.Current.Dispatcher.Invoke(() => { Mouse.OverrideCursor = Cursors.None; });
-        ShellLogger.Debug("Stop moving floating button");
-    }
-
-    private void ToggleButton_MouseLeave(object sender, MouseEventArgs e)
-    {
-        StopDrag();
+        SaveNewPos();
+        Application.Current.Dispatcher.Invoke(() => { Mouse.OverrideCursor = null; });
     }
 
     private void ToggleButton_MouseUp(object sender, MouseButtonEventArgs e)
     {
+        if (Mouse.OverrideCursor != null)
+            e.Handled = true;
         StopDrag();
     }
 
@@ -88,7 +83,6 @@ public partial class FloatingButton : UserControl
         if (_timer != null && !_timer.IsDisposed())
             _timer.Dispose();
         _exitDrag = true;
-        ShellLogger.Debug("End Timer to drag floating button");
     }
 
     private void ToggleButton_KeyDown(object sender, KeyEventArgs e)

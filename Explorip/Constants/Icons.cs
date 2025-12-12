@@ -31,7 +31,8 @@ internal static class Icons
     public static ImageSource SignOut { get; private set; }
     public static ImageSource Sleep { get; private set; }
     public static ImageSource SearchButton { get; private set; }
-    public static ImageSource ExpandButton { get; private set; }
+    public static ImageSource ExpandButtonToRight { get; private set; }
+    public static ImageSource ExpandButtonToLeft { get; private set; }
 
     internal static void Init()
     {
@@ -55,6 +56,7 @@ internal static class Icons
         SignOut = IconManager.StringToImageSource("\uF3B1", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush);
         Sleep = IconManager.GetIconFromFile(ImageResDll, 96);
         SearchButton = IconManager.StringToImageSource("\uE721", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, width: 32, height: 32, fontSize: 32);
-        ExpandButton = IconManager.StringToImageSource("\uE970", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush);
+        ExpandButtonToRight = IconManager.StringToImageSource("\uE970", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush);
+        ExpandButtonToLeft = IconManager.StringToImageSource("\uE96F", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush);
     }
 }

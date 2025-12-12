@@ -582,7 +582,10 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         {
             TaskbarVisible = visible;
             ParentTaskbar.FloatingTaskbar();
-            ParentTaskbar.Width = (visible ? ParentTaskbar.Screen.Bounds.Width : 16);
+            if (visible)
+                ParentTaskbar.Width = ParentTaskbar.Screen.Bounds.Width;
+            else
+                ParentTaskbar.FloatingButton.MyDataContext.SetPos();
         }
     }
 }

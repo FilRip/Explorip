@@ -36,9 +36,12 @@ public class TaskbarConfig
 	private const string ConfigTasklistColumn = "TasklistColumn";
 	private const string ConfigTasklistRow = "TasklistRow";
 	private const string ConfigMaxWidthTitleApplicationWindow = "MaxWidthTitleApplicationWindow";
-    private const string ConfigFloatingButtonWidth = "MaxWidthFloatingButton";
+    private const string ConfigFloatingButtonWidth = "FloatingButtonWidth";
     private const string ConfigFloatingButtonStretchMode = "FloatingButtonStretchMode";
     private const string ConfigStartFloating = "StartFloating";
+    private const string ConfigFloatingButtonPosY = "FloatingButtonPosY";
+    private const string ConfigFloatingButtonSide = "FloatingButtonSide";
+
 	#endregion
 
 	private RegistryKey _registryTaskbar;
@@ -108,6 +111,28 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigFloatingButtonStretchMode, Stretch.None.ToString("G"));
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigStartFloating, "").ToString()))
                 _registryTaskbar.SetValue(ConfigStartFloating, "False");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigFloatingButtonSide, "").ToString()))
+                _registryTaskbar.SetValue(ConfigFloatingButtonSide, HorizontalAlignment.Left.ToString("G"));
+        }
+    }
+
+    public HorizontalAlignment FloatingButtonSide
+    {
+        get { return _registryTaskbar.ReadEnum<HorizontalAlignment>(ConfigFloatingButtonSide); }
+        set
+        {
+            if (FloatingButtonSide != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigFloatingButtonSide, value.ToString("G"));
+        }
+    }
+
+    public double FloatingButtonPosY
+    {
+        get { return _registryTaskbar.ReadDouble(ConfigFloatingButtonPosY, -1); }
+        set
+        {
+            if (FloatingButtonPosY != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigFloatingButtonPosY, value.ToString());
         }
     }
 

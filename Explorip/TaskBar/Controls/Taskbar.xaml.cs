@@ -55,7 +55,7 @@ public partial class Taskbar : AppBarWindow
         _numScreen = screen.NumScreen;
 
         DataContext = new TaskbarViewModel(this);
-        MyDataContext.TaskbarVisible = !ConfigManager.GetTaskbarConfig(_numScreen).StartFloating;
+        MyDataContext.TaskbarVisible = true;
 
         StartButton.StartMenuMonitor = startMenuMonitor;
 
@@ -314,6 +314,7 @@ public partial class Taskbar : AppBarWindow
         MyDataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
         {
+            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
             MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
             try
@@ -343,6 +344,11 @@ public partial class Taskbar : AppBarWindow
                 }
             }
         }
+
+        FloatingButton.MyDataContext.SetParentTaskbar(this);
+        // TODO : Start in floatinng mode, not working yet
+        /*if (ConfigManager.GetTaskbarConfig(_numScreen).StartFloating)
+            MyDataContext.ExpandCollapseTaskbar(false.ToString());*/
     }
 
     private DateTimeOffset _dtLastExitFullScreen = DateTimeOffset.MinValue;

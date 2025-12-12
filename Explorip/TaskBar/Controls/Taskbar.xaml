@@ -47,7 +47,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
                 <controls:StartButton x:Name="StartButton" Grid.Column="0" Visibility="{Binding DataContext.TaskbarVisible, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource boolToVisible}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
                     <DockPanel.Dock>
                         <Binding Path="DataContext.LeadingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
