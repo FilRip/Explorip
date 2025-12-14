@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
@@ -132,7 +133,7 @@ public class TaskbarConfig
         set
         {
             if (FloatingButtonPosY != value && AllowWrite)
-                _registryTaskbar.SetValue(ConfigFloatingButtonPosY, value.ToString());
+                _registryTaskbar.SetValue(ConfigFloatingButtonPosY, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -142,7 +143,7 @@ public class TaskbarConfig
         set
         {
             if (FloatingButtonWidth != value && AllowWrite)
-                _registryTaskbar.SetValue(ConfigFloatingButtonWidth, value.ToString());
+                _registryTaskbar.SetValue(ConfigFloatingButtonWidth, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -212,7 +213,7 @@ public class TaskbarConfig
         set
         {
             if (TaskbarHeight != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarHeight", value.ToString());
+                _registryTaskbar.SetValue("TaskbarHeight", value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -222,7 +223,7 @@ public class TaskbarConfig
         set
         {
             if (TaskbarMinHeight != value && AllowWrite)
-                _registryTaskbar.SetValue(ConfigTaskbarMinHeight, value.ToString());
+                _registryTaskbar.SetValue(ConfigTaskbarMinHeight, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -232,7 +233,7 @@ public class TaskbarConfig
         set
         {
             if (TaskbarWidth != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarWidth", value.ToString());
+                _registryTaskbar.SetValue("TaskbarWidth", value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -380,7 +381,7 @@ public class TaskbarConfig
         set
         {
             if (TaskButtonSize != value && AllowWrite)
-                _registryTaskbar.SetValue(ConfigTaskButtonSize, value.ToString());
+                _registryTaskbar.SetValue(ConfigTaskButtonSize, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -390,7 +391,7 @@ public class TaskbarConfig
         set
         {
             if (SearchWidth != value && AllowWrite)
-                _registryTaskbar.SetValue(ConfigSearchWidth, value.ToString());
+                _registryTaskbar.SetValue(ConfigSearchWidth, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -400,7 +401,7 @@ public class TaskbarConfig
         set
         {
             if (SearchHeight != value && AllowWrite)
-                _registryTaskbar.SetValue("SearchHeight", value.ToString());
+                _registryTaskbar.SetValue("SearchHeight", value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -410,7 +411,7 @@ public class TaskbarConfig
         set
         {
             if (TaskButtonSize != value && AllowWrite)
-                _registryTaskbar.SetValue(ConfigSpaceBetweenTaskButton, value.ToString());
+                _registryTaskbar.SetValue(ConfigSpaceBetweenTaskButton, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -430,7 +431,7 @@ public class TaskbarConfig
         set
         {
             if (DesktopButtonWidth != value && AllowWrite)
-                _registryTaskbar.SetValue(ConfigDesktopButtonWidth, value.ToString());
+                _registryTaskbar.SetValue(ConfigDesktopButtonWidth, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -510,7 +511,7 @@ public class TaskbarConfig
         set
         {
             if (MaxWidthTitleApplicationWindow != value && AllowWrite)
-                _registryTaskbar.SetValue(ConfigMaxWidthTitleApplicationWindow, value.ToString());
+                _registryTaskbar.SetValue(ConfigMaxWidthTitleApplicationWindow, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
