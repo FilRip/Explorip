@@ -41,7 +41,7 @@
         <StackPanel Orientation="Horizontal" Margin="0">
             <TextBlock Grid.Column="0" Text="CPU Usage : "/>
             <TextBlock Text="{Binding CpuUsage, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding CpuColor}"/>
-            <TextBlock Text=" % "/>
+            <TextBlock Text=" % " Foreground="{Binding CpuColor}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="0">
             <TextBlock Text="Free RAM : "/>

@@ -49,11 +49,11 @@ public partial class ComputerInfoViewModel : ObservableObject, IDisposable
         CpuUsage = Math.Round(Math.Min(100, ComputerInfoCpu.PercentCpuUsed), PrecisionCpu);
         FreeRam = Math.Round((double)ComputerInfoMemory.TotalFree / 1024, 2);
         if (CpuUsage < 33)
-            CpuColor = Brushes.Green;
+            CpuColor = Brushes.LightGreen;
         else if (CpuUsage < 66)
             CpuColor = Brushes.Yellow;
         else
-            CpuColor = Brushes.Red;
+            CpuColor = Brushes.OrangeRed;
     }
 
     public bool HorizontalIsChecked

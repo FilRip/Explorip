@@ -18,6 +18,8 @@ namespace Microsoft.WindowsAPICodePack.Dialogs.TaskDialogs;
 /// </summary>
 public sealed class TaskDialog : IDialogControlHost, IDisposable
 {
+#pragma warning disable IDE0079
+#pragma warning disable S1192
     // Global instance of TaskDialog, to be used by static Show() method.
     // As most parameters of a dialog created via static Show() will have
     // identical parameters, we'll create one TaskDialog and treat it
@@ -1215,4 +1217,6 @@ public sealed class TaskDialog : IDialogControlHost, IDisposable
             return CoreHelpers.RunningOnVista;
         }
     }
+#pragma warning restore S1192
+#pragma warning restore IDE0079
 }

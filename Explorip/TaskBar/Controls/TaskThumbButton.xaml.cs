@@ -161,7 +161,7 @@ public partial class TaskThumbButton : Window
                 Top = parent.TaskbarParent.Top + parent.TaskbarParent.ActualHeight;
                 break;
             case ManagedShell.AppBar.AppBarEdge.Right:
-                Top = parent.TaskbarParent.Left - Width;
+                Left = parent.TaskbarParent.Left - Width;
                 break;
             case ManagedShell.AppBar.AppBarEdge.Bottom:
                 Top = parent.TaskbarParent.Top - Height;
