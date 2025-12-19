@@ -7,6 +7,7 @@ using System.Windows.Input;
 using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
 
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.Controls;
@@ -62,9 +63,7 @@ public partial class FloatingButton : UserControl
         {
             System.Drawing.Point pos = new();
             NativeMethods.GetCursorPos(ref pos);
-            Application.Current.Dispatcher.Invoke(() => { MyDataContext.ParentTaskbar.Top = pos.Y - offset.Y; });
-            if (Math.Abs(pos.X - posReference.X) > 56)
-                StopDrag();
+            Application.Current.Dispatcher.Invoke(() => { MyDataContext.ParentTaskbar.Top = (pos.Y / MyDataContext.ParentTaskbar.Screen.DpiScale) - offset.Y; });
             Thread.Sleep(10);
         }
         SaveNewPos();
@@ -83,11 +82,5 @@ public partial class FloatingButton : UserControl
         if (_timer != null && !_timer.IsDisposed())
             _timer.Dispose();
         _exitDrag = true;
-    }
-
-    private void ToggleButton_KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape && !_exitDrag)
-            StopDrag();
     }
 }

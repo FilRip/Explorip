@@ -17,8 +17,7 @@
                   ToolTip="{DynamicResource FloatingButtonTip}"
                   Command="{Binding ExpandTaskbarCommand}"
                   PreviewMouseDown="ToggleButton_MouseDown"
-                  PreviewMouseUp="ToggleButton_MouseUp"
-                  PreviewKeyDown="ToggleButton_KeyDown">
+                  PreviewMouseUp="ToggleButton_MouseUp">
         <Image x:Name="FloatingButtonImage" Source="{Binding FloatingImage}" Width="{Binding MaxWidth}" Stretch="{Binding StretchMode}"/>
     </ToggleButton>
 </UserControl>

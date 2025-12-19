@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Globalization;
+using System.Windows;
 using System.Windows.Media;
 
 using ExploripConfig.Helpers;
@@ -106,7 +107,7 @@ public class StartMenuConfig
 		set
 		{
 			if (StartMenuIconSizeWidth != value && AllowWrite)
-				_registryStartMenu.SetValue(IconSizeWidth, value.ToString());
+				_registryStartMenu.SetValue(IconSizeWidth, value.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 
@@ -116,7 +117,7 @@ public class StartMenuConfig
 		set
 		{
 			if (StartMenuIconSizeHeight != value && AllowWrite)
-				_registryStartMenu.SetValue(IconSizeHeight, value.ToString());
+				_registryStartMenu.SetValue(IconSizeHeight, value.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 
@@ -126,7 +127,7 @@ public class StartMenuConfig
 		set
 		{
 			if (StartMenuIconSizeWidth2 != value && AllowWrite)
-				_registryStartMenu.SetValue(IconSizeWidth2, value.ToString());
+				_registryStartMenu.SetValue(IconSizeWidth2, value.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 
@@ -136,7 +137,7 @@ public class StartMenuConfig
 		set
 		{
 			if (StartMenuIconSizeHeight2 != value && AllowWrite)
-				_registryStartMenu.SetValue(IconSizeHeight2, value.ToString());
+				_registryStartMenu.SetValue(IconSizeHeight2, value.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 
@@ -164,7 +165,7 @@ public class StartMenuConfig
 		set
 		{
 			if (StartMenuCornerRadius != value && AllowWrite)
-				_registryStartMenu.SetValue(CornerRadius, value.TopRight.ToString());
+				_registryStartMenu.SetValue(CornerRadius, value.TopRight.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 
@@ -174,7 +175,7 @@ public class StartMenuConfig
 		set
 		{
 			if (StartMenuPinnedAppCornerRadius != value && AllowWrite)
-				_registryStartMenu.SetValue(CornerRadiusPinnedApp, value.TopRight.ToString());
+				_registryStartMenu.SetValue(CornerRadiusPinnedApp, value.TopRight.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 
@@ -184,7 +185,7 @@ public class StartMenuConfig
 		set
 		{
 			if (StartMenuHeight != value && AllowWrite)
-				_registryStartMenu.SetValue(Height, value.ToString());
+				_registryStartMenu.SetValue(Height, value.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 

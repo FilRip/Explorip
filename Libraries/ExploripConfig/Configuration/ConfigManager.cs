@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -624,7 +625,7 @@ public static class ConfigManager
         set
         {
             if (MarginTitleApplicationWindow != value && AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigMarginTitleApplicationWindow, value.ToString());
+                _registryRootTaskbar.SetValue(ConfigMarginTitleApplicationWindow, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -688,7 +689,7 @@ public static class ConfigManager
         set
         {
             if (TaskButtonCornerRadius.TopLeft != value.TopLeft && AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigTaskButtonCornerRadius, value.TopLeft.ToString());
+                _registryRootTaskbar.SetValue(ConfigTaskButtonCornerRadius, value.TopLeft.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -718,7 +719,7 @@ public static class ConfigManager
         set
         {
             if (TaskbarProgressBarHeight != value && AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigProgressBarHeight, value.ToString());
+                _registryRootTaskbar.SetValue(ConfigProgressBarHeight, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -728,7 +729,7 @@ public static class ConfigManager
         set
         {
             if (PopUpCornerRadius.TopLeft != value.TopLeft && AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigPopUpCornerRadius, value.TopLeft.ToString());
+                _registryRootTaskbar.SetValue(ConfigPopUpCornerRadius, value.TopLeft.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -738,7 +739,7 @@ public static class ConfigManager
         set
         {
             if (PopUpCornerRadius.TopLeft != value.TopLeft && AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigThumbnailCornerRadius, value.TopLeft.ToString());
+                _registryRootTaskbar.SetValue(ConfigThumbnailCornerRadius, value.TopLeft.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -758,7 +759,7 @@ public static class ConfigManager
         set
         {
             if (SpaceBetweenThumbnail != value && AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigSpaceBetweenThumbnail, value.ToString());
+                _registryRootTaskbar.SetValue(ConfigSpaceBetweenThumbnail, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
@@ -798,7 +799,7 @@ public static class ConfigManager
         set
         {
             if (DragGhostOpacity != value && AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigDragGhostOpacity, value.ToString());
+                _registryRootTaskbar.SetValue(ConfigDragGhostOpacity, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 
