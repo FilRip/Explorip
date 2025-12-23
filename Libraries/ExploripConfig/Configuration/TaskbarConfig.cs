@@ -31,7 +31,8 @@ public class TaskbarConfig
 	private const string ConfigDesktopButtonWidth = "DesktopButtonWidth";
 	private const string ConfigTasklistHorizontalAlignment = "TasklistHorizontalAlignment";
 	private const string ConfigTaskbarMinHeight = "TaskbarMinHeight";
-	private const string ConfigTasklistVerticalAlignment = "TasklistVerticalAlignment";
+    private const string ConfigTaskbarHeight = "TaskbarHeight";
+    private const string ConfigTasklistVerticalAlignment = "TasklistVerticalAlignment";
 	private const string ConfigToolbarColumn = "ToolbarColumn";
 	private const string ConfigToolbarRow = "ToolbarRow";
 	private const string ConfigTasklistColumn = "TasklistColumn";
@@ -94,6 +95,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigTasklistHorizontalAlignment, HorizontalAlignment.Left.ToString("G"));
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarMinHeight, "").ToString()))
                 _registryTaskbar.SetValue(ConfigTaskbarMinHeight, "52");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarHeight, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTaskbarHeight, "52");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTasklistVerticalAlignment, "").ToString()))
                 _registryTaskbar.SetValue(ConfigTasklistVerticalAlignment, VerticalAlignment.Bottom.ToString("G"));
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigToolbarColumn, "").ToString()))
@@ -209,11 +212,11 @@ public class TaskbarConfig
 
     public double TaskbarHeight
     {
-        get { return _registryTaskbar.ReadDouble("TaskbarHeight"); }
+        get { return _registryTaskbar.ReadDouble(ConfigTaskbarHeight); }
         set
         {
             if (TaskbarHeight != value && AllowWrite)
-                _registryTaskbar.SetValue("TaskbarHeight", value.ToString(CultureInfo.InvariantCulture));
+                _registryTaskbar.SetValue(ConfigTaskbarHeight, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 

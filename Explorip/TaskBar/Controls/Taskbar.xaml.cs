@@ -227,8 +227,6 @@ public partial class Taskbar : AppBarWindow
 
         MinHeight = Math.Max(ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarMinHeight ?? 0, DesiredHeight);
 
-        if (MinHeight == 0)
-            MinHeight = 52;
         if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarHeight > 0)
             DesiredHeight = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight;
         if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarWidth > 0)

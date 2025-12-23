@@ -27,6 +27,21 @@ public static class WindowsSettings
         return false;
     }
 
+    public static bool IsWindowsSystemInDarkMode()
+    {
+        try
+        {
+            RegistryKey reg = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", false);
+            if (reg != null)
+            {
+                int lightMode = int.Parse(reg.GetValue("SystemUsesLightTheme").ToString());
+                return (lightMode == 0);
+            }
+        }
+        catch (Exception) { /* Ignore errors */ }
+        return false;
+    }
+
     public static bool IsWindows10OrGreater(int build = 0)
     {
         return Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
