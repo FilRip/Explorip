@@ -22,6 +22,8 @@ public static class Localization
     private const string ExplorerFrameDll = "explorerframe.dll";
     private const string ShutdownUXDll = "shutdownux.dll";
     private const string ExplorerExe = "explorer.exe";
+    private const string DeskMonDll = "deskmon.dll";
+    private const string ComDlg32 = "comdlg32.dll";
 
     public static string PASTE { get; private set; }
     public static string PASTE_SHORTCUT { get; private set; }
@@ -185,6 +187,10 @@ public static class Localization
     public static string COLLAPSE { get; private set; }
     public static string EXPAND { get; private set; }
     public static string FLOATING { get; private set; }
+    public static string SCREEN { get; private set; }
+    public static string CONFIRM_LEAVE { get; private set; }
+    public static string DESKTOP { get; private set; }
+    public static string WARNING { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -209,7 +215,7 @@ public static class Localization
         TOOLBAR = Load(IEFrameDll, 17986, "Toolbars");
         QUIT = Load("srh.dll", 8032, "Quit") + " Explorip";
         START = Load(Shell32Dll, 22073, "Start");
-        MOVE = Load(OleAccRcDll, 120, "Move");
+        MOVE = Load(Shell32Dll, 30382, "Move");
         MINIMIZE = Load(OleAccRcDll, 142, "Minimize");
         MAXIMIZE = Load(OleAccRcDll, 143, "Maximize");
         CLOSE = Load(OleAccRcDll, 145, "Close");
@@ -363,6 +369,10 @@ public static class Localization
         EXPAND = Load("uiautomationcore.dll", 204, "Expand");
         COLLAPSE = Load("uiautomationcore.dll", 205, "Collapse");
         FLOATING = Load(OleAccRcDll, 1013, "Floating").FirstCharToUpperCase();
+        SCREEN = Load(DeskMonDll, 1, "Screen");
+        CONFIRM_LEAVE = Load(ComDlg32, 259, "Are you sure you want to leave ?");
+        DESKTOP = Load(Shell32Dll, 34625, "Desktop");
+        WARNING = Load(Shell32Dll, 9021, "Warning");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

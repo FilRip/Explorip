@@ -19,12 +19,41 @@ public static class WindowScreenHelper
     /// <param name="y">Y coordinate for moving.</param>
     /// <param name="width">New width of the window.</param>
     /// <param name="height">New height of the window.</param>
-    public static void SetWindowPosition(this Window window, int x, int y, int width, int height)
+    public static void SetWindowPosition(this Window window, int x, int y, int width = 0, int height = 0)
     {
+        if (width == 0)
+            width = (int)window.ActualWidth;
+        if (height == 0)
+            height = (int)window.ActualHeight;
         // The first move puts it on the correct monitor, which triggers WM_DPICHANGED
         // The +1/-1 coerces WPF to update Window.Top/Left/Width/Height in the second move
         NativeMethods.MoveWindow(new WindowInteropHelper(window).EnsureHandle(), x - 1, y, width + 1, height, false);
         NativeMethods.MoveWindow(new WindowInteropHelper(window).EnsureHandle(), x, y, width, height, true);
+    }
+
+    /// <summary>
+    /// Moves window to desired position on screen.
+    /// </summary>
+    /// <param name="hWnd">Handle of Window to move.</param>
+    /// <param name="x">X coordinate for moving.</param>
+    /// <param name="y">Y coordinate for moving.</param>
+    /// <param name="width">New width of the window.</param>
+    /// <param name="height">New height of the window.</param>
+    public static void SetWindowPosition(this IntPtr hWnd, int x, int y, int width = 0, int height = 0)
+    {
+        if (width == 0 || height == 0)
+        {
+            NativeMethods.Rect rect = new();
+            if (NativeMethods.GetWindowRect(hWnd, ref rect))
+            {
+                width = (int)rect.Size.Width;
+                height = (int)rect.Size.Height;
+            }
+        }
+        // The first move puts it on the correct monitor, which triggers WM_DPICHANGED
+        // The +1/-1 coerces WPF to update Window.Top/Left/Width/Height in the second move
+        NativeMethods.MoveWindow(hWnd, x - 1, y, width + 1, height, false);
+        NativeMethods.MoveWindow(hWnd, x, y, width, height, true);
     }
 
     /// <summary>

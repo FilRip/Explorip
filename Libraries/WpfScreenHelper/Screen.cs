@@ -20,6 +20,7 @@ public class Screen
     /// </summary>
     private static bool MultiMonitorSupport = IsMultiMonitorSupport();
     private static IEnumerable<Screen> _listScreens;
+    private static int _lastId = 0;
 
     // This identifier is just for us, so that we don't try to call the multimon
     // functions if we just need the primary monitor... this is safer for
@@ -64,7 +65,7 @@ public class Screen
             catch
             {
                 // Windows 7 fallback
-                int hr = NativeMethods.D2D1CreateFactory(NativeMethods.D2D1_FACTORY_TYPE.D2D1_FACTORY_TYPE_SINGLE_THREADED, typeof(NativeMethods.ID2D1Factory).GUID, IntPtr.Zero, out NativeMethods.ID2D1Factory factory);
+                int hr = NativeMethods.D2D1CreateFactory(NativeMethods.D2D1FactoryType.D2D1_FACTORY_TYPE_SINGLE_THREADED, typeof(NativeMethods.ID2D1Factory).GUID, IntPtr.Zero, out NativeMethods.ID2D1Factory factory);
                 if (hr < 0)
                     dpiX = 96;
                 else
@@ -89,7 +90,7 @@ public class Screen
             Bounds = new Rect(0, 0, size.Width, size.Height);
             Primary = true;
             DeviceName = "\\\\.\\DISPLAY1";
-            deviceOk = NativeMethods.EnumDisplayDevices(null, 0, ref dd, NativeMethods.EDD.GET_DEVICE_INTERFACE_NAME);
+            deviceOk = NativeMethods.EnumDisplayDevices(null, 0, ref dd, NativeMethods.Edd.GET_DEVICE_INTERFACE_NAME);
         }
         else
         {
@@ -102,9 +103,9 @@ public class Screen
                 info.rcMonitor.top,
                 info.rcMonitor.right - info.rcMonitor.left,
                 info.rcMonitor.bottom - info.rcMonitor.top);
-            Primary = info.dwFlags.HasFlag(NativeMethods.EMonitorInfo.Primary);
+            Primary = info.dwFlags.HasFlag(NativeMethods.EMonitorInfos.Primary);
             DeviceName = info.szDevice;
-            deviceOk = NativeMethods.EnumDisplayDevices(DeviceName, 0, ref dd, NativeMethods.EDD.GET_DEVICE_INTERFACE_NAME);
+            deviceOk = NativeMethods.EnumDisplayDevices(DeviceName, 0, ref dd, NativeMethods.Edd.GET_DEVICE_INTERFACE_NAME);
         }
 
         if (deviceOk)
@@ -114,11 +115,21 @@ public class Screen
             Description = dd.String;
             InternalName = dd.Name;
             DisplayDevice = dd.StateFlags;
-            string[] keySplitter = dd.Key.Split('\\');
-            DisplayNumber = int.Parse(keySplitter[keySplitter.Length - 1]);
+            DisplayNumber = GetLastId();
         }
 
         monitorHandle = monitor;
+    }
+
+    private static int GetLastId()
+    {
+        _lastId++;
+        return _lastId;
+    }
+
+    private static void ResetLastId()
+    {
+        _lastId = 0;
     }
 
     /// <summary>
@@ -131,6 +142,7 @@ public class Screen
         {
             if (_listScreens == null)
             {
+                ResetLastId();
                 if (MultiMonitorSupport)
                 {
                     MonitorEnumCallback closure = new();
@@ -151,6 +163,7 @@ public class Screen
         ResetMultiMonitorSupport();
         _listScreens = null;
         _ = AllScreens;
+        ResetLastId();
     }
 
     /// <summary>
@@ -255,7 +268,7 @@ public class Screen
             {
                 NativeMethods.Rect rc = new();
 
-                NativeMethods.SystemParametersInfo(NativeMethods.SPI.SPI_GETWORKAREA, 0, ref rc, NativeMethods.SPIF.SPIF_SENDCHANGE);
+                NativeMethods.SystemParametersInfo(NativeMethods.Spi.SPI_GETWORKAREA, 0, ref rc, NativeMethods.Spifs.SPIF_SENDCHANGE);
 
                 workingArea = new Rect(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
             }

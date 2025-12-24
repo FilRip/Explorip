@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,13 +18,19 @@ using ExploripPlugins;
 
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
+
+using WindowsDesktop;
+
+using WpfScreenHelper;
 
 namespace Explorip.TaskBar.ViewModels;
 
 public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject()
 {
     private AppBarEdge _currentEdge;
+    private ObservableCollection<MenuItem> _listScreens;
 
     public void ChangeEdge(AppBarEdge newEdge)
     {
@@ -358,7 +365,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     [RelayCommand()]
     private void Exit()
     {
-        ((MyTaskbarApp)Application.Current).ExitGracefully();
+        if (MessageBox.Show(Constants.Localization.CONFIRM_LEAVE, Constants.Localization.WARNING, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            ((MyTaskbarApp)Application.Current).ExitGracefully();
     }
 
     [RelayCommand()]
@@ -586,6 +594,75 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                 ParentTaskbar.Width = ParentTaskbar.Screen.Bounds.Width;
             else
                 ParentTaskbar.FloatingButton.MyDataContext.SetPos();
+        }
+    }
+
+#pragma warning disable IDE0079
+#pragma warning disable S2325
+    public bool MoveToScreen(IntPtr hWnd, int numScreen)
+    {
+        try
+        {
+            Screen screen = Screen.AllScreens.SingleOrDefault(s => s.DisplayNumber == numScreen);
+            if (screen != null)
+            {
+                WindowScreenHelper.SetWindowPosition(hWnd, (int)screen.WpfBounds.X, (int)screen.WpfBounds.Y);
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            ShellLogger.Error(ex.Message, ex);
+        }
+        return false;
+    }
+#pragma warning restore S2325
+#pragma warning restore IDE0079
+
+#pragma warning disable IDE0079
+#pragma warning disable S2325
+    public bool MoveToVirtualDesktop(IntPtr hWnd, int numDesktop)
+    {
+        try
+        {
+            VirtualDesktop vd = VirtualDesktop.GetDesktops().SingleOrDefault(d => d.Index == numDesktop);
+            if (vd != null)
+            {
+                VirtualDesktopHelper.MoveToDesktop(hWnd, vd);
+                return true;
+            }
+        }
+        catch (Exception ex)
+        {
+            ShellLogger.Error(ex.Message, ex);
+        }
+        return false;
+    }
+#pragma warning restore S2325
+#pragma warning restore IDE0079
+
+    public ObservableCollection<MenuItem> ListScreen
+    {
+        get
+        {
+            if (_listScreens == null || _listScreens.Count == 0)
+            {
+                _listScreens = [];
+                foreach (Screen screen in Screen.AllScreens)
+                    _listScreens.Add(new MenuItem() { Header = screen.DisplayNumber.ToString()});
+            }
+            return _listScreens;
+        }
+    }
+
+    public ObservableCollection<MenuItem> ListVirtualDesktop
+    {
+        get
+        {
+            ObservableCollection<MenuItem> list = [];
+            foreach (VirtualDesktop vd in VirtualDesktop.GetDesktops())
+                list.Add(new MenuItem() { Header = vd.Name });
+            return list;
         }
     }
 }

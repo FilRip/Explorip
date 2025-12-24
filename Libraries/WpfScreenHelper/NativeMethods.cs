@@ -33,7 +33,7 @@ internal static class NativeMethods
         SM_CMONITORS = 80
     }
 
-    public enum SPI : uint
+    public enum Spi : uint
     {
         /// <summary>
         /// Retrieves the size of the work area on the primary display monitor. The work area is the portion of the screen not obscured
@@ -44,8 +44,8 @@ internal static class NativeMethods
         SPI_GETWORKAREA = 0x0030
     }
 
-    [Flags]
-    public enum SPIF
+    [Flags()]
+    public enum Spifs
     {
         None = 0x00,
 
@@ -71,7 +71,7 @@ internal static class NativeMethods
         MONITOR_DEFAULTTOPRIMARY = 0x00000001
     }
 
-    public enum D2D1_FACTORY_TYPE
+    public enum D2D1FactoryType
     {
         D2D1_FACTORY_TYPE_SINGLE_THREADED = 0,
         D2D1_FACTORY_TYPE_MULTI_THREADED = 1,
@@ -101,7 +101,7 @@ internal static class NativeMethods
 
     [DllImport(User32, CharSet = CharSet.Auto)]
     [ResourceExposure(ResourceScope.None)]
-    public static extern bool SystemParametersInfo(SPI nAction, int nParam, ref Rect rc, SPIF nUpdate);
+    public static extern bool SystemParametersInfo(Spi nAction, int nParam, ref Rect rc, Spifs nUpdate);
 
     [DllImport(User32, ExactSpelling = true)]
     [ResourceExposure(ResourceScope.None)]
@@ -117,8 +117,11 @@ internal static class NativeMethods
     [DllImport(User32, SetLastError = true)]
     public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
 
+    [DllImport(User32, SetLastError = true)]
+    public static extern bool GetWindowRect(IntPtr hWnd, ref Rect rect);
+
     [DllImport(D2D1)]
-    public static extern int D2D1CreateFactory(D2D1_FACTORY_TYPE factoryType, [MarshalAs(UnmanagedType.LPStruct)] Guid riid, IntPtr pFactoryOptions, out ID2D1Factory ppIFactory);
+    public static extern int D2D1CreateFactory(D2D1FactoryType factoryType, [MarshalAs(UnmanagedType.LPStruct)] Guid riid, IntPtr pFactoryOptions, out ID2D1Factory ppIFactory);
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Rect
@@ -184,7 +187,7 @@ internal static class NativeMethods
     }
 
     [Flags()]
-    public enum EMonitorInfo
+    public enum EMonitorInfos
     {
         Primary = 0x00000001,
     }
@@ -196,7 +199,7 @@ internal static class NativeMethods
 
         internal Rect rcMonitor = new();
         internal Rect rcWork = new();
-        internal EMonitorInfo dwFlags = 0;
+        internal EMonitorInfos dwFlags = 0;
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
         internal string szDevice;
@@ -272,7 +275,7 @@ internal static class NativeMethods
         public string Key;
     }
 
-    public enum EDD
+    public enum Edd
     {
         None = 0,
         GET_DEVICE_INTERFACE_NAME = 0x00000001,
@@ -281,5 +284,5 @@ internal static class NativeMethods
 #nullable enable
     [DllImport(User32, SetLastError = false, CharSet = CharSet.Auto)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static extern bool EnumDisplayDevices([Optional()] string? lpDevice, uint iDevNum, ref DisplayDevice lpDisplayDevice, EDD dwFlags);
+    public static extern bool EnumDisplayDevices([Optional()] string? lpDevice, uint iDevNum, ref DisplayDevice lpDisplayDevice, Edd dwFlags);
 }

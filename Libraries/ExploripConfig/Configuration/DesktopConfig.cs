@@ -8,57 +8,74 @@ namespace ExploripConfig.Configuration;
 
 public class DesktopConfig
 {
+    #region Constants
+    private const string ConfigItemSizeX = "ItemSizeX";
+    private const string ConfigItemSizeY = "ItemSizeY";
+    private const string ConfigHideBackground = "HideBackground";
+    private const string ConfigBackgroundColor = "BackgroundColor";
+    #endregion
+
     private RegistryKey _registryDesktop;
 
     public int NumScreen { get; private set; }
     public bool AllowWrite { get; private set; }
+    public string UniqueId { get; private set; }
 
-    public void Init(int numScreen, RegistryKey rootDesktop, bool allowWrite)
+    public void Init(int numScreen, RegistryKey rootDesktop, bool allowWrite, string uniqueId)
     {
         NumScreen = numScreen;
         AllowWrite = allowWrite;
+        UniqueId = uniqueId;
+
         _registryDesktop = rootDesktop.CreateSubKey($"DISPLAY{numScreen}", true);
 
         if (allowWrite && _registryDesktop != null)
         {
-            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue("ItemSizeX", "").ToString()))
-                _registryDesktop.SetValue("ItemSizeX", "96");
-            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue("ItemSizeY", "").ToString()))
-                _registryDesktop.SetValue("ItemSizeY", "96");
-            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue("HideBackground", "").ToString()))
-                _registryDesktop.SetValue("HideBackground", "True");
-            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue("BackgroundColor", "").ToString()))
-                _registryDesktop.SetValue("BackgroundColor", "255,0,0,0");
+            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue("", "").ToString()))
+                _registryDesktop.SetValue("", uniqueId);
+            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigItemSizeX, "").ToString()))
+                _registryDesktop.SetValue(ConfigItemSizeX, "96");
+            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigItemSizeY, "").ToString()))
+                _registryDesktop.SetValue(ConfigItemSizeY, "96");
+            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigHideBackground, "").ToString()))
+                _registryDesktop.SetValue(ConfigHideBackground, "True");
+            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigBackgroundColor, "").ToString()))
+                _registryDesktop.SetValue(ConfigBackgroundColor, "255,0,0,0");
         }
+    }
+
+    public string GetUniqueId
+    {
+        get { return _registryDesktop.GetValue("", "").ToString(); }
     }
 
     public int ItemSizeX
     {
-        get { return _registryDesktop.ReadInteger("ItemSizeX"); }
+        get { return _registryDesktop.ReadInteger(ConfigItemSizeX); }
         set
         {
             if (ItemSizeX != value && AllowWrite)
-                _registryDesktop.SetValue("ItemSizeX", value.ToString());
+                _registryDesktop.SetValue(ConfigItemSizeX, value.ToString());
         }
     }
 
     public int ItemSizeY
     {
-        get { return _registryDesktop.ReadInteger("ItemSizeY"); }
+        get { return _registryDesktop.ReadInteger(ConfigItemSizeY); }
         set
         {
             if (ItemSizeY != value && AllowWrite)
-                _registryDesktop.SetValue("ItemSizeY", value.ToString());
+                _registryDesktop.SetValue(ConfigItemSizeY, value.ToString());
         }
     }
 
     public bool HideBackground
     {
-        get { return _registryDesktop.ReadBoolean("HideBackground"); }
+        get { return _registryDesktop.ReadBoolean(ConfigHideBackground); }
         set
         {
             if (HideBackground != value && AllowWrite)
-                _registryDesktop.SetValue("HideBackground", value.ToString());
+                _registryDesktop.SetValue(ConfigHideBackground, value.ToString());
         }
     }
 
@@ -66,17 +83,17 @@ public class DesktopConfig
     {
         get
         {
-            string bgColor = _registryDesktop.GetValue("BackgroundColor")?.ToString();
+            string bgColor = _registryDesktop.GetValue(ConfigBackgroundColor)?.ToString();
             if (!string.IsNullOrWhiteSpace(bgColor))
             {
-                return new SolidColorBrush(_registryDesktop.ReadColor("BackgroundColor", ExploripSharedCopy.Constants.Colors.BackgroundColor));
+                return new SolidColorBrush(_registryDesktop.ReadColor(ConfigBackgroundColor, ExploripSharedCopy.Constants.Colors.BackgroundColor));
             }
             return null;
         }
         set
         {
             if (AllowWrite)
-                _registryDesktop.SetValue("BackgroundColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+                _registryDesktop.SetValue(ConfigBackgroundColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 

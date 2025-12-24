@@ -59,7 +59,7 @@ public static class ConfigManager
 	#endregion
 
 	public static bool AllowWrite { get; set; }
-    private static RegistryKey _registryKeyExplorer, _registryDesktop, _registryRootTaskbar;
+    private static RegistryKey _registryKeyExplorer, _registryRootDesktop, _registryRootTaskbar;
     private static readonly List<TaskbarConfig> _listTaskbar = [];
     private static readonly List<DesktopConfig> _listDesktop = [];
     private static readonly StartMenuConfig _startMenuConfig = new();
@@ -72,7 +72,7 @@ public static class ConfigManager
         _registryKeyExplorer = Registry.CurrentUser.CreateSubKey(HKeyRoot, true);
         if (_registryKeyExplorer == null)
             AllowWrite = false;
-        _registryDesktop = _registryKeyExplorer?.CreateSubKey("Desktop");
+        _registryRootDesktop = _registryKeyExplorer?.CreateSubKey("Desktops");
         _registryRootTaskbar = _registryKeyExplorer?.CreateSubKey("Taskbars");
 		startMenuRegistry = _registryKeyExplorer?.CreateSubKey("StartMenu");
 
@@ -159,13 +159,13 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigReplaceStartMenu, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigReplaceStartMenu, "True");
 
-            foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
+            foreach (Screen screen in Screen.AllScreens)
             {
                 TaskbarConfig tbc = new();
-                tbc.Init(numScreen, _registryRootTaskbar, true);
+                tbc.Init(screen.DisplayNumber, _registryRootTaskbar, true, screen.Id);
                 _listTaskbar.Add(tbc);
                 DesktopConfig dtc = new();
-                dtc.Init(numScreen, _registryDesktop, true);
+                dtc.Init(screen.DisplayNumber, _registryRootDesktop, true, screen.Id);
                 _listDesktop.Add(dtc);
             }
 
@@ -239,22 +239,32 @@ public static class ConfigManager
 
     public static TaskbarConfig GetTaskbarConfig(int numScreen)
     {
-        TaskbarConfig tbc = _listTaskbar.SingleOrDefault(tbc => tbc.NumScreen == numScreen);
-        if (tbc != null)
-            return tbc;
+        TaskbarConfig tbc;
+        Screen screen = Screen.AllScreens.SingleOrDefault(s => s.DisplayNumber == numScreen);
+        if (screen != null)
+        {
+            tbc = _listTaskbar.SingleOrDefault(tbc => tbc.GetUniqueId == screen.Id);
+            if (tbc != null)
+                return tbc;
+        }
         tbc = new();
-        tbc.Init(numScreen, _registryRootTaskbar, AllowWrite);
+        tbc.Init(numScreen, _registryRootTaskbar, AllowWrite, screen.Id);
         _listTaskbar.Add(tbc);
         return tbc;
     }
 
     public static DesktopConfig GetDesktopConfig(int numScreen)
     {
-        DesktopConfig dtc = _listDesktop.SingleOrDefault(dtc => dtc.NumScreen == numScreen);
-        if (dtc != null)
-            return dtc;
+        DesktopConfig dtc;
+        Screen screen = Screen.AllScreens.SingleOrDefault(s => s.DisplayNumber == numScreen);
+        if (screen != null)
+        {
+            dtc = _listDesktop.SingleOrDefault(dtc => dtc.GetUniqueId == screen.Id);
+            if (dtc != null)
+                return dtc;
+        }
         dtc = new();
-        dtc.Init(numScreen, _registryDesktop, AllowWrite);
+        dtc.Init(numScreen, _registryRootDesktop, AllowWrite, screen.Id);
         _listDesktop.Add(dtc);
         return dtc;
     }
@@ -462,7 +472,7 @@ public static class ConfigManager
 
     public static RegistryKey DesktopRegistryKey
     {
-        get { return _registryDesktop; }
+        get { return _registryRootDesktop; }
     }
 
     public static RegistryKey TaskbarRegistryKey

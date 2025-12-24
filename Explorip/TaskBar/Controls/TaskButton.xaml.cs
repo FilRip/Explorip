@@ -373,4 +373,14 @@ public partial class TaskButton : UserControl
     }
 
     #endregion
+
+    private void MoveToScreen_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void MoveToVirtualDesktop_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
 }

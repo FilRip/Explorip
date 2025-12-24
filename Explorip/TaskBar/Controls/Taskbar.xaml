@@ -195,7 +195,11 @@
                 </MenuItem.Icon>
             </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
-            <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Command="{Binding ExitCommand}"/>
+            <MenuItem Header="{x:Static localization:Localization.QUIT}" Name="ExitMenuItem" Command="{Binding ExitCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static localization:Icons.Close}"/>
+                </MenuItem.Icon>
+            </MenuItem>
         </ContextMenu>
     </appbar:AppBarWindow.ContextMenu>
 </appbar:AppBarWindow>

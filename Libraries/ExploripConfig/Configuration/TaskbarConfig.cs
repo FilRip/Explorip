@@ -43,6 +43,7 @@ public class TaskbarConfig
     private const string ConfigStartFloating = "StartFloating";
     private const string ConfigFloatingButtonPosY = "FloatingButtonPosY";
     private const string ConfigFloatingButtonSide = "FloatingButtonSide";
+    private const string ConfigTaskbarDisableThumb = "TaskbarDisableThumb";
 
 	#endregion
 
@@ -50,16 +51,20 @@ public class TaskbarConfig
 
     public int NumScreen { get; private set; }
     public bool AllowWrite { get; private set; }
+    public string UniqueId { get; private set; }
 
-    public void Init(int numScreen, RegistryKey rootRK, bool allowWrite)
+    public void Init(int numScreen, RegistryKey rootRK, bool allowWrite, string uniqueId)
     {
         NumScreen = numScreen;
         AllowWrite = allowWrite;
+        UniqueId = uniqueId;
 
         _registryTaskbar = rootRK.CreateSubKey($"DISPLAY{numScreen}", true);
 
         if (allowWrite && _registryTaskbar != null)
         {
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("", "").ToString()))
+                _registryTaskbar.SetValue("", uniqueId);
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowClock, "").ToString()))
                 _registryTaskbar.SetValue(ConfigShowClock, "True");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigCollapseNotifyIcons, "").ToString()))
@@ -73,8 +78,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigTaskbarThumbHeight, "150");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarThumbWidth, "").ToString()))
                 _registryTaskbar.SetValue(ConfigTaskbarThumbWidth, "250");
-            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue("TaskbarDisableThumb", "").ToString()))
-                _registryTaskbar.SetValue("TaskbarDisableThumb", "False");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarDisableThumb, "").ToString()))
+                _registryTaskbar.SetValue(ConfigTaskbarDisableThumb, "False");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowTaskbar, "").ToString()))
                 _registryTaskbar.SetValue(ConfigShowTaskbar, "True");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowTaskMan, "").ToString()))
@@ -118,6 +123,11 @@ public class TaskbarConfig
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigFloatingButtonSide, "").ToString()))
                 _registryTaskbar.SetValue(ConfigFloatingButtonSide, HorizontalAlignment.Left.ToString("G"));
         }
+    }
+
+    public string GetUniqueId
+    {
+        get { return _registryTaskbar.GetValue("", "").ToString(); }
     }
 
     public HorizontalAlignment FloatingButtonSide
@@ -370,11 +380,11 @@ public class TaskbarConfig
 
     public bool TaskbarDisableThumb
     {
-        get { return _registryTaskbar.ReadBoolean("DisableThumb"); }
+        get { return _registryTaskbar.ReadBoolean(ConfigTaskbarDisableThumb); }
         set
         {
             if (TaskbarDisableThumb != value && AllowWrite)
-                _registryTaskbar.SetValue("DisableThumb", value.ToString());
+                _registryTaskbar.SetValue(ConfigTaskbarDisableThumb, value.ToString());
         }
     }
 
