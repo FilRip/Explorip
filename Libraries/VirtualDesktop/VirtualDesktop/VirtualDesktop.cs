@@ -83,6 +83,22 @@ namespace WindowsDesktop
             }
         }
 
+        internal VirtualDesktop(ComInterfaceAssembly assembly, object comObject)
+            : base(assembly, comObject, latestVersion: 2)
+        {
+            Id = Invoke<Guid>(Args(), "GetID");
+
+            if (ProductInfo.OSBuild >= 20231 || ComVersion >= 2)
+            {
+                _name = Invoke<string>(Args(), "GetName");
+
+                if (ProductInfo.OSBuild >= 21313)
+                {
+                    _wallpaperPath = Invoke<string>(Args(), "GetWallpaperPath");
+                }
+            }
+        }
+
         /// <summary>
         /// Switches to this virtual desktop.
         /// </summary>

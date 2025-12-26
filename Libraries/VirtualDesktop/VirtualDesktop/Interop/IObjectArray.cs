@@ -10,6 +10,7 @@ namespace WindowsDesktop.Interop
     {
         uint GetCount();
 
-        object GetAt(uint iIndex, ref Guid riid, [Out(), MarshalAs(UnmanagedType.Interface)] out object ppvObject);
+        [return: MarshalAs(UnmanagedType.Interface)]
+        object GetAt(uint iIndex, in Guid riid);
     }
 }

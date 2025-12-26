@@ -383,4 +383,18 @@ public partial class TaskButton : UserControl
     {
 
     }
+
+    private void MoveToScreen_MouseEnter(object sender, MouseEventArgs e)
+    {
+        MoveToScreen.Items.Clear();
+        foreach (MenuItem mi in TaskbarParent.MyDataContext.ListScreen)
+            MoveToScreen.Items.Add(mi);
+    }
+
+    private void MoveToVirtualDesktop_MouseEnter(object sender, MouseEventArgs e)
+    {
+        MoveToVirtualDesktop.Items.Clear();
+        foreach (MenuItem mi in TaskbarParent.MyDataContext.ListVirtualDesktop)
+            MoveToVirtualDesktop.Items.Add(mi);
+    }
 }

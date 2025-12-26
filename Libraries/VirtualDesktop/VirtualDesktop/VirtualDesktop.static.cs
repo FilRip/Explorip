@@ -75,7 +75,8 @@ namespace WindowsDesktop
         {
             VirtualDesktopHelper.ThrowIfNotSupported();
 
-            if (hWnd == IntPtr.Zero) return null;
+            if (hWnd == IntPtr.Zero)
+                return null;
 
             try
             {

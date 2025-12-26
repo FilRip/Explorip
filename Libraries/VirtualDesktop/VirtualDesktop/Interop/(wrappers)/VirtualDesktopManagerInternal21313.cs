@@ -25,7 +25,7 @@ namespace WindowsDesktop.Interop
 
             for (uint i = 0; i < count; i++)
             {
-                array.GetAt(i, vdType.GUID, out object ppvObject);
+                object ppvObject = array.GetAt(i, vdType.GUID);
                 yield return VirtualDesktopCache.GetOrCreate(ppvObject);
             }
         }

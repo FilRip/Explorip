@@ -106,15 +106,11 @@ namespace WindowsDesktop.Interop
                     continue;
 
                 if (texts != null && int.TryParse(string.Concat(texts[texts.Length - 2].Skip(1)), out int build) && build != interfaceVersion)
-                {
                     continue;
-                }
 
                 string interfaceName = Array.Find(interfaceNames, x => typeName == x);
                 if ((interfaceName == null) || (!iids.ContainsKey(interfaceName)))
-                {
                     continue;
-                }
 
                 Stream stream = executingAssembly.GetManifestResourceStream(name);
                 if (stream == null)
@@ -144,6 +140,10 @@ namespace WindowsDesktop.Interop
                 OutputAssembly = path,
                 GenerateExecutable = false,
                 GenerateInMemory = false,
+#if DEBUG
+                CompilerOptions = "/optimize- /debug+ /debug:pdbonly",
+                IncludeDebugInformation = true,
+#endif
             };
             cp.ReferencedAssemblies.Add("System.dll");
             cp.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);

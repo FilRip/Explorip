@@ -187,7 +187,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
     {
-        ShellLogger.Debug("Rebuild TaskList from new virtual desktop");
+        ShellLogger.Debug("Rebuild TaskList from new virtual desktop" + (e != null ? " to " + e.NewDesktop.Name : ""));
         Application.Current.Dispatcher.Invoke(() =>
         {
             lock (_lockChangeDesktop)

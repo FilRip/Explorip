@@ -30,7 +30,7 @@ namespace Explorip.TaskBar.ViewModels;
 public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject()
 {
     private AppBarEdge _currentEdge;
-    private ObservableCollection<MenuItem> _listScreens;
+    private List<MenuItem> _listScreens;
 
     public void ChangeEdge(AppBarEdge newEdge)
     {
@@ -641,7 +641,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
 #pragma warning restore S2325
 #pragma warning restore IDE0079
 
-    public ObservableCollection<MenuItem> ListScreen
+    public List<MenuItem> ListScreen
     {
         get
         {
@@ -655,14 +655,22 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         }
     }
 
-    public ObservableCollection<MenuItem> ListVirtualDesktop
+    public List<MenuItem> ListVirtualDesktop
     {
         get
         {
-            ObservableCollection<MenuItem> list = [];
-            foreach (VirtualDesktop vd in VirtualDesktop.GetDesktops())
-                list.Add(new MenuItem() { Header = vd.Name });
-            return list;
+            try
+            {
+                List<MenuItem> list = [];
+                foreach (VirtualDesktop vd in VirtualDesktop.GetDesktops())
+                    list.Add(new MenuItem() { Header = vd.Name });
+                return list;
+            }
+            catch (Exception ex)
+            {
+                ShellLogger.Error(ex.Message, ex);
+            }
+            return [];
         }
     }
 }

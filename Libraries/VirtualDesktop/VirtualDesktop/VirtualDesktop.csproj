@@ -8,6 +8,8 @@
     <Version>6.0</Version>
     <Description>C# wrapper for IVirtualDesktopManager on Windows 10 and 11.</Description>
     <LangVersion>latest</LangVersion>
+    <Company>CoolBytes</Company>
+    <Product>Explorip</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
