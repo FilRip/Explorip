@@ -270,16 +270,16 @@ public sealed class FullScreenHelper : IDisposable
     private static bool CanFullScreen(ApplicationWindow window)
     {
         // make sure this is not us
-        GetWindowThreadProcessId(window.ListWindows[0], out uint hwndProcId);
+        GetWindowThreadProcessId(window.ListWindows[0].Handle, out uint hwndProcId);
         if (hwndProcId == GetCurrentProcessId())
             return false;
 
         // make sure this is fullscreen-able
-        if (!IsWindow(window.ListWindows[0]) || !IsWindowVisible(window.ListWindows[0]) || IsIconic(window.ListWindows[0]))
+        if (!IsWindow(window.ListWindows[0].Handle) || !IsWindowVisible(window.ListWindows[0].Handle) || IsIconic(window.ListWindows[0].Handle))
             return false;
 
         // Make sure this isn't explicitly marked as being non-rude
-        IntPtr isNonRudeHwnd = GetProp(window.ListWindows[0], "NonRudeHWND");
+        IntPtr isNonRudeHwnd = GetProp(window.ListWindows[0].Handle, "NonRudeHWND");
         if (isNonRudeHwnd != IntPtr.Zero)
             return false;
 
@@ -287,7 +287,7 @@ public sealed class FullScreenHelper : IDisposable
         if (EnvironmentHelper.IsWindows8OrBetter)
         {
             int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
-            DwmGetWindowAttribute(window.ListWindows[0], DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
+            DwmGetWindowAttribute(window.ListWindows[0].Handle, DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
             if (cloaked > 0)
                 return false;
         }

@@ -56,7 +56,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 return;
             }
             IntPtr newPeek;
-            newPeek = ParentTask.ApplicationWindow.ListWindows[_currentWindow];
+            newPeek = ParentTask.ApplicationWindow.ListWindows[_currentWindow].Handle;
             if (newPeek != _lastPeeked)
             {
                 UnPeek();
@@ -75,7 +75,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
 
     public void CloseWindow(int numWindow)
     {
-        IntPtr windowHandle = ParentTask.ApplicationWindow.ListWindows[numWindow];
+        IntPtr windowHandle = ParentTask.ApplicationWindow.ListWindows[numWindow].Handle;
         if (windowHandle == IntPtr.Zero)
             return;
         UnPeek();
@@ -109,7 +109,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 return;
         }
         IntPtr window;
-        window = ParentTask.ApplicationWindow.ListWindows[_currentWindow];
+        window = ParentTask.ApplicationWindow.ListWindows[_currentWindow].Handle;
         UnPeek();
         if (window != IntPtr.Zero)
             ParentTask.ApplicationWindow.BringToFront(window);
@@ -135,7 +135,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 }
                 _timerBeforePeek.Change(Timeout.Infinite, Timeout.Infinite);
                 IntPtr window;
-                window = ParentTask.ApplicationWindow.ListWindows[_currentWindow];
+                window = ParentTask.ApplicationWindow.ListWindows[_currentWindow].Handle;
                 ShowContextMenu = true;
                 UnPeek();
                 System.Drawing.Point posMouse = new();
@@ -177,7 +177,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 for (int i = 0; i < ParentTask.ApplicationWindow.ListWindows.Count; i++)
                 {
                     currentLeft += SpaceBetweenThumbnail;
-                    int result = NativeMethods.DwmRegisterThumbnail(WindowHandle, ParentTask.ApplicationWindow.ListWindows[i], out IntPtr thumbPtr);
+                    int result = NativeMethods.DwmRegisterThumbnail(WindowHandle, ParentTask.ApplicationWindow.ListWindows[i].Handle, out IntPtr thumbPtr);
                     if (result == (int)NativeMethods.HResult.SUCCESS)
                     {
                         Point buttonPosition = ListThumbnailButtons[i].TransformToAncestor(ParentControl).Transform(new Point(0, 0));

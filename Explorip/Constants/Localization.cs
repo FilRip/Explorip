@@ -24,6 +24,7 @@ public static class Localization
     private const string ExplorerExe = "explorer.exe";
     private const string DeskMonDll = "deskmon.dll";
     private const string ComDlg32 = "comdlg32.dll";
+    private const string TwinUiPcShellDll = "twinui.pcshell.dll";
 
     public static string PASTE { get; private set; }
     public static string PASTE_SHORTCUT { get; private set; }
@@ -191,6 +192,7 @@ public static class Localization
     public static string CONFIRM_LEAVE { get; private set; }
     public static string DESKTOP { get; private set; }
     public static string WARNING { get; private set; }
+    public static string NONAME_DESKTOP { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -373,6 +375,7 @@ public static class Localization
         CONFIRM_LEAVE = Load(ComDlg32, 259, "Are you sure you want to leave ?");
         DESKTOP = Load(Shell32Dll, 34625, "Desktop");
         WARNING = Load(Shell32Dll, 9021, "Warning");
+        NONAME_DESKTOP = Load(TwinUiPcShellDll, 13011, "Desktop %d");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

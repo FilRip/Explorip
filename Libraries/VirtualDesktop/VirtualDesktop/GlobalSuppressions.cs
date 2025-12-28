@@ -5,4 +5,10 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Major Code Smell", "S4220:Events should have proper arguments")]
+[assembly: SuppressMessage("Style", "IDE0130:Le namespace ne correspond pas à la structure de dossiers", Justification = "<En attente>", Scope = "namespace", Target = "~N:VirtualDesktop.Interop.Build10240")]
+[assembly: SuppressMessage("Style", "IDE0130:Le namespace ne correspond pas à la structure de dossiers", Justification = "<En attente>", Scope = "namespace", Target = "~N:VirtualDesktop.Interop.Build20348")]
+[assembly: SuppressMessage("Style", "IDE0130:Le namespace ne correspond pas à la structure de dossiers", Justification = "<En attente>", Scope = "namespace", Target = "~N:VirtualDesktop.Interop.Build22000")]
+[assembly: SuppressMessage("Style", "IDE0130:Le namespace ne correspond pas à la structure de dossiers", Justification = "<En attente>", Scope = "namespace", Target = "~N:VirtualDesktop.Interop.Build22621")]
+[assembly: SuppressMessage("Style", "IDE0130:Le namespace ne correspond pas à la structure de dossiers", Justification = "<En attente>", Scope = "namespace", Target = "~N:VirtualDesktop.Interop.Build26100")]
+[assembly: SuppressMessage("S3776", "S3776")]
+[assembly: SuppressMessage("S1135", "S1135")]

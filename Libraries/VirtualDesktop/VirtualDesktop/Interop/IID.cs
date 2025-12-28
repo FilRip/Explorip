@@ -7,76 +7,104 @@ using System.Text.RegularExpressions;
 
 using Microsoft.Win32;
 
-using WindowsDesktop.Exceptions;
-using WindowsDesktop.Properties;
+using VirtualDesktop.Utils;
+using VirtualDesktop.Properties;
 
-namespace WindowsDesktop.Interop
+namespace VirtualDesktop.Interop;
+
+internal class OsBuildSettings
 {
-    public static class IiD
+    internal Version? OSBuild { get; set; }
+    internal SettingsProperty? Properties { get; set; }
+}
+
+internal static class Iid
+{
+    private static readonly Regex _osBuildRegex = new(@"v_(?<build>\d+_\d+)");
+
+    // ReSharper disable once InconsistentNaming
+    public static Dictionary<string, Guid> GetIIDs(string[] interfaceNames)
     {
-        private static readonly Regex _osBuildRegex = new(@"v_(?<build>\d{5}?)");
+        Dictionary<string, Guid> result = [];
 
-        public static Dictionary<string, Guid> GetIIDs(string[] targets)
-        {
-            Dictionary<string, Guid> known = [];
-
-            foreach (string prop in Settings.Default.Properties.OfType<SettingsProperty>().Select(item => item.Name))
+        // Order configuration props by build version
+        OsBuildSettings?[] orderedProps = [.. Settings.Default.Properties.OfType<SettingsProperty>()
+            .Select(prop =>
             {
-                if (int.TryParse(_osBuildRegex.Match(prop).Groups["build"]?.ToString(), out int build)
-                    && build == ProductInfo.OSBuild)
+                if (Version.TryParse(OS.VersionPrefix + _osBuildRegex.Match(prop.Name).Groups["build"].ToString().Replace('_', '.'), out Version? build))
                 {
-                    foreach (string str in (StringCollection)Settings.Default[prop])
+                    return new OsBuildSettings()
                     {
-                        string[] pair = str.Split(',');
-                        if (pair.Length != 2)
-                            continue;
-
-                        string @interface = pair[0];
-                        if (Array.TrueForAll(targets, x => @interface != x) || known.ContainsKey(@interface))
-                            continue;
-
-                        if (!Guid.TryParse(pair[1], out Guid guid))
-                            continue;
-
-                        known.Add(@interface, guid);
-                    }
-
-                    break;
+                        OSBuild = build,
+                        Properties = prop,
+                    };
                 }
-            }
 
-            string[] except = [.. targets.Except(known.Keys)];
-            if (except.Length > 0)
-            {
-                Dictionary<string, Guid> fromRegistry = GetIIDsFromRegistry(except);
-                foreach (KeyValuePair<string, Guid> kvp in fromRegistry)
-                    known.Add(kvp.Key, kvp.Value);
-            }
+                return null;
+            })
+            .Where(s => s != null)
+            .OrderByDescending(s => s!.OSBuild)];
 
-            return known;
+        // TODO: Select per major version first?
+        // Find first prop with build version <= current OS version
+        OsBuildSettings? selectedSettings = orderedProps.FirstOrDefault(p => p != null && p.OSBuild <= OS.Build);
+
+        if (selectedSettings == null)
+        {
+            Version?[] supportedBuilds = [.. orderedProps.Select(v => v!.OSBuild)];
+            throw new VirtualDesktopException(
+                "Invalid application configuration. Unable to determine interop interfaces for " +
+                $"current OS Build: {OS.Build}. All configured OS Builds " +
+                $"have build version greater than current OS: {supportedBuilds}");
         }
 
-        private static Dictionary<string, Guid> GetIIDsFromRegistry(string[] targets)
+        foreach (string? str in (StringCollection)Settings.Default[selectedSettings.Properties!.Name])
         {
-            using RegistryKey interfaceKey = Registry.ClassesRoot.OpenSubKey("Interface") ?? throw new VirtualDesktopException(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");
-            Dictionary<string, Guid> result = [];
-            string[] names = interfaceKey.GetSubKeyNames();
+            if (str == null)
+                continue;
 
-            foreach (string name in names)
-            {
-                using RegistryKey key = interfaceKey.OpenSubKey(name);
-                if (key?.GetValue("") is string value)
-                {
-                    string match = Array.Find(targets, x => x == value);
-                    string[] splitter = key.Name.Split('\\');
-                    if (match != null && Guid.TryParse(splitter[splitter.Length - 1], out Guid guid))
-                    {
-                        result[match] = guid;
-                    }
-                }
-            }
+            string[] pair = str.Split(',');
+            if (pair.Length != 2)
+                continue;
+            if (!interfaceNames.Contains(pair[0]) || result.ContainsKey(pair[0]))
+                continue;
+            if (!Guid.TryParse(pair[1], out Guid guid))
+                continue;
 
-            return result;
+            result.Add(pair[0], guid);
         }
+
+        string[] except = [.. interfaceNames.Except(result.Keys)];
+        if (except.Length > 0)
+        {
+            foreach (KeyValuePair<string, Guid> kvp in GetIIDsFromRegistry(except))
+                result.Add(kvp.Key, kvp.Value);
+        }
+
+        return result;
+    }
+
+    // ReSharper disable once InconsistentNaming
+    private static Dictionary<string, Guid> GetIIDsFromRegistry(string[] targets)
+    {
+        using RegistryKey interfaceKey = Registry.ClassesRoot.OpenSubKey("Interface")
+            ?? throw new VirtualDesktopException(@"Registry key '\HKEY_CLASSES_ROOT\Interface' is missing.");
+
+        Dictionary<string, Guid> result = [];
+
+        foreach (string? name in interfaceKey.GetSubKeyNames())
+        {
+            using RegistryKey key = interfaceKey.OpenSubKey(name);
+
+            if (key?.GetValue("") is string value)
+            {
+                string match = targets.FirstOrDefault(x => x == value);
+                string[] splitter = key.Name.Split('\\');
+                if (match != null && Guid.TryParse(splitter[splitter.Length - 1], out Guid guid))
+                    result[match] = guid;
+            }
+        }
+
+        return result;
     }
 }

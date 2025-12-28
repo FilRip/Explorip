@@ -28,8 +28,6 @@ using ManagedShell.WindowsTray;
 
 using Microsoft.WindowsAPICodePack.Shell.CommonFileDialogs;
 
-using WindowsDesktop;
-
 namespace Explorip.TaskBar.Controls;
 
 /// <summary>
@@ -298,7 +296,6 @@ public partial class Taskbar : AppBarWindow
             MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= ClosePopup;
             if (_mainScreen)
             {
-                MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
                 _explorerHelper.HideExplorerTaskbar = false;
                 MySystray.MyDataContext.Unload();
             }
@@ -314,20 +311,7 @@ public partial class Taskbar : AppBarWindow
         MyDataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
         {
-            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
-            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
-            try
-            {
-                VirtualDesktopProvider.Default.Initialize().Wait();
-                VirtualDesktopProvider.Default.TerminatedInitializedTask.Wait();
-                if (!VirtualDesktopProvider.Default.Initialized)
-                    throw new Exceptions.ExploripException("VirtualDesktop not initialized");
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Error during initialization of VirtualDesktop support." + Environment.NewLine + "VirtualDesktop will not be supported");
-            }
         }
         string[] listToolbars = ConfigManager.ToolbarsPath;
         if (listToolbars?.Length > 0)
@@ -349,22 +333,6 @@ public partial class Taskbar : AppBarWindow
         // TODO : Start in floatinng mode, not working yet
         /*if (ConfigManager.GetTaskbarConfig(_numScreen).StartFloating)
             MyDataContext.ExpandCollapseTaskbar(false.ToString());*/
-    }
-
-    private DateTimeOffset _dtLastExitFullScreen = DateTimeOffset.MinValue;
-    private void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
-    {
-        if (!e.IsEntering)
-        {
-            NativeMethods.GetWindowThreadProcessId(e.Handle, out uint processId);
-            if (processId == 0 && DateTimeOffset.UtcNow.Subtract(_dtLastExitFullScreen).TotalSeconds > 1)
-            {
-                ShellLogger.Debug("Refresh all task list after exited fullscreen");
-                _dtLastExitFullScreen = DateTimeOffset.UtcNow;
-                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
-                    tb.MyTaskList.MyDataContext.FirstRefresh();
-            }
-        }
     }
 
     public void SetBackground(SolidColorBrush newBackground)

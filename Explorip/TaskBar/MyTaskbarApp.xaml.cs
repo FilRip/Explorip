@@ -25,6 +25,8 @@ using ManagedShell.Interop;
 
 using Microsoft.Win32;
 
+using VirtualDesktop;
+
 using WpfScreenHelper;
 
 namespace Explorip.TaskBar;
@@ -259,6 +261,8 @@ public partial class MyTaskbarApp : Application
             _startMenuMonitor.Dispose();
         });
         Monitorian.MonitorsManager.Clean();
+        if (VirtualDesktop.VirtualDesktop.IsInitialized)
+            VirtualDesktop.VirtualDesktop.StopExplorerSpy();
 #if DEBUG
         _logger?.Dispose();
 #endif
@@ -291,6 +295,19 @@ public partial class MyTaskbarApp : Application
         DictionaryManager = new DictionaryManager();
 
         PluginsManager.LoadPlugins();
+
+        try
+        {
+            VirtualDesktopCompilerConfiguration configVirtualDesktop = new();
+            configVirtualDesktop.ChangeDirectory("CoolBytes", "Explorip", "Assemblies");
+            VirtualDesktop.VirtualDesktop.Configure(configVirtualDesktop);
+            if (!VirtualDesktop.VirtualDesktop.IsInitialized)
+                throw new Exceptions.ExploripException("VirtualDesktop not initialized");
+        }
+        catch (Exception)
+        {
+            MessageBox.Show("Error during initialization of VirtualDesktop support." + Environment.NewLine + "VirtualDesktop will not be supported");
+        }
 
         // Startup
         DictionaryManager.SetThemeFromSettings();

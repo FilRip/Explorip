@@ -95,7 +95,7 @@ internal class HookTaskbarListHelper : IDisposable
     private void Server_AddButtonsEvent(object sender, AddButtonsEventArgs e)
     {
         ShellLogger.Debug($"Process {e.ProcessId} has sent {e.NbButtons} Thumbnail Buttons for window {e.Handle}");
-        ApplicationWindow appWin = MyTaskbarApp.MyShellManager.TasksService.Windows.SingleOrDefault(w => w.ListWindows?.Count > 0 && w.ListWindows.Contains(e.Handle));
+        ApplicationWindow appWin = MyTaskbarApp.MyShellManager.TasksService.Windows.SingleOrDefault(w => w.ListWindows?.Count > 0 && w.ListWindows.Any(w => w.Handle == e.Handle));
         appWin?.SetThumbButtons(e.Buttons);
     }
 #pragma warning restore S2325 // Methods and properties that don't access instance data should be static

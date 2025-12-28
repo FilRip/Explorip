@@ -71,7 +71,7 @@ public partial class TaskThumbButton : Window
                 MainGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(MyDataContext.ThumbWidth, GridUnitType.Pixel) });
 
                 StringBuilder sb = new(255);
-                NativeMethods.GetWindowText(MyDataContext.ParentTask.ApplicationWindow.ListWindows[i], sb, 255);
+                NativeMethods.GetWindowText(MyDataContext.ParentTask.ApplicationWindow.ListWindows[i].Handle, sb, 255);
 
                 TextBlock txtTitle = new()
                 {

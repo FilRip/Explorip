@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,8 +19,7 @@ using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
-
-using WindowsDesktop;
+using ManagedShell.WindowsTasks;
 
 using WpfScreenHelper;
 
@@ -597,50 +595,6 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         }
     }
 
-#pragma warning disable IDE0079
-#pragma warning disable S2325
-    public bool MoveToScreen(IntPtr hWnd, int numScreen)
-    {
-        try
-        {
-            Screen screen = Screen.AllScreens.SingleOrDefault(s => s.DisplayNumber == numScreen);
-            if (screen != null)
-            {
-                WindowScreenHelper.SetWindowPosition(hWnd, (int)screen.WpfBounds.X, (int)screen.WpfBounds.Y);
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            ShellLogger.Error(ex.Message, ex);
-        }
-        return false;
-    }
-#pragma warning restore S2325
-#pragma warning restore IDE0079
-
-#pragma warning disable IDE0079
-#pragma warning disable S2325
-    public bool MoveToVirtualDesktop(IntPtr hWnd, int numDesktop)
-    {
-        try
-        {
-            VirtualDesktop vd = VirtualDesktop.GetDesktops().SingleOrDefault(d => d.Index == numDesktop);
-            if (vd != null)
-            {
-                VirtualDesktopHelper.MoveToDesktop(hWnd, vd);
-                return true;
-            }
-        }
-        catch (Exception ex)
-        {
-            ShellLogger.Error(ex.Message, ex);
-        }
-        return false;
-    }
-#pragma warning restore S2325
-#pragma warning restore IDE0079
-
     public List<MenuItem> ListScreen
     {
         get
@@ -649,7 +603,11 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
             {
                 _listScreens = [];
                 foreach (Screen screen in Screen.AllScreens)
-                    _listScreens.Add(new MenuItem() { Header = screen.DisplayNumber.ToString()});
+                    _listScreens.Add(new MenuItem()
+                    {
+                        Header = screen.DisplayNumber.ToString(),
+                        Tag = screen,
+                    });
             }
             return _listScreens;
         }
@@ -662,8 +620,12 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
             try
             {
                 List<MenuItem> list = [];
-                foreach (VirtualDesktop vd in VirtualDesktop.GetDesktops())
-                    list.Add(new MenuItem() { Header = vd.Name });
+                foreach (VirtualDesktop.VirtualDesktop vd in VirtualDesktop.VirtualDesktop.GetDesktops())
+                    list.Add(new MenuItem()
+                    {
+                        Header = vd.Name,
+                        Tag = vd,
+                    });
                 return list;
             }
             catch (Exception ex)

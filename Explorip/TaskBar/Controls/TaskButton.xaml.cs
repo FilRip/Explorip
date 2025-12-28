@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 
 using Securify.ShellLink;
+
+using WpfScreenHelper;
 
 namespace Explorip.TaskBar.Controls;
 
@@ -368,33 +371,46 @@ public partial class TaskButton : UserControl
     private void CloseMenuItem_Click(object sender, RoutedEventArgs e)
     {
         if (_appWindow.ListWindows?.Count > 0)
-            foreach (IntPtr handle in _appWindow.ListWindows)
+            foreach (IntPtr handle in _appWindow.ListWindows.Select(w => w.Handle))
                 NativeMethods.SendMessage(handle, NativeMethods.WM.CLOSE, 0, 0);
     }
 
     #endregion
 
-    private void MoveToScreen_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
-    private void MoveToVirtualDesktop_Click(object sender, RoutedEventArgs e)
-    {
-
-    }
-
     private void MoveToScreen_MouseEnter(object sender, MouseEventArgs e)
     {
         MoveToScreen.Items.Clear();
         foreach (MenuItem mi in TaskbarParent.MyDataContext.ListScreen)
+        {
+            mi.Click += MoveToScreen_Click;
             MoveToScreen.Items.Add(mi);
+        }
     }
 
     private void MoveToVirtualDesktop_MouseEnter(object sender, MouseEventArgs e)
     {
         MoveToVirtualDesktop.Items.Clear();
         foreach (MenuItem mi in TaskbarParent.MyDataContext.ListVirtualDesktop)
+        {
+            mi.Click += MoveToVirtualDesktop_Click;
             MoveToVirtualDesktop.Items.Add(mi);
+        }
+    }
+
+    private void MoveToScreen_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is Screen screen)
+        {
+            WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screen.WpfBounds.X, (int)screen.WpfBounds.Y);
+        }
+    }
+
+    private void MoveToVirtualDesktop_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is MenuItem mi && mi.Tag is VirtualDesktop.VirtualDesktop vd)
+        {
+            VirtualDesktop.VirtualDesktop.MoveToDesktop(ApplicationWindow.ListWindows[0].Handle, vd);
+            TaskbarParent.MyTaskList.MyDataContext.ForceRefresh();
+        }
     }
 }

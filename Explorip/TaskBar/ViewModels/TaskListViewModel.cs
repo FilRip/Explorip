@@ -24,7 +24,7 @@ using ManagedShell.WindowsTasks;
 
 using Securify.ShellLink;
 
-using WindowsDesktop;
+using VirtualDesktop;
 
 namespace Explorip.TaskBar.ViewModels;
 
@@ -36,6 +36,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     private Taskbar _taskbarParent;
     private readonly object _lockChangeDesktop;
     private bool disposedValue;
+    private Guid _currentVirtualDesktopId;
 
     [ObservableProperty()]
     private ICollectionView _taskListCollection;
@@ -49,6 +50,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     public TaskListViewModel() : base()
     {
         _lockChangeDesktop = new object();
+        _currentVirtualDesktopId = VirtualDesktop.VirtualDesktop.IsInitialized ? VirtualDesktop.VirtualDesktop.Current.Id : Guid.Empty;
         RebuildCollectionView();
     }
 
@@ -66,10 +68,10 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         {
             foreach (TaskListViewModel tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList.MyDataContext))
             {
-                if (function.HasFlag(ERefreshList.Refresh))
-                    tl.RefreshMyCollectionView();
                 if (function.HasFlag(ERefreshList.Rebuild))
                     tl.RebuildCollectionView();
+                if (function.HasFlag(ERefreshList.Refresh))
+                    tl.RefreshMyCollectionView();
                 if (ConfigManager.ReduceTitleWidthWhenTaskbarFull)
                     tl.UpdateMaxWidth();
             }
@@ -108,8 +110,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 if (_taskbarParent.MainScreen)
                 {
                     RemoveTaskServiceEvent();
-                    if (VirtualDesktopProvider.Default.Initialized)
-                        VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
+                    if (VirtualDesktop.VirtualDesktop.IsInitialized)
+                        VirtualDesktop.VirtualDesktop.CurrentChanged += VirtualDesktop_CurrentChanged;
                     MyTaskbarApp.MyShellManager.TasksService.WindowDestroy += RefreshAllCollectionView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowCreate += RefreshAllCollectionView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += UncloakedUwp;
@@ -165,17 +167,23 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void RemoveTaskServiceEvent()
     {
-        if (VirtualDesktopProvider.Default.Initialized)
-            VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
+        if (VirtualDesktop.VirtualDesktop.IsInitialized)
+            VirtualDesktop.VirtualDesktop.CurrentChanged -= VirtualDesktop_CurrentChanged;
         MyTaskbarApp.MyShellManager.TasksService.WindowDestroy -= RefreshAllCollectionView;
         MyTaskbarApp.MyShellManager.TasksService.WindowCreate -= RefreshAllCollectionView;
         MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= UncloakedUwp;
     }
 
-    private static bool FilterAppWindow(object item)
+    private bool FilterAppWindow(object item)
     {
-        if (item is ApplicationWindow window && window.ShowInTaskbar && !window.IsDisposed)
+        if (item is ApplicationWindow window &&
+            window.ShowInTaskbar &&
+            !window.IsDisposed &&
+            (window.ListWindows.Count > 0 || window.IsPinnedApp) &&
+            (window.ListWindows.Count == 0 || window.ListWindows[0].VirtualDesktopId == _currentVirtualDesktopId))
+        {
             return true;
+        }
 
         return false;
     }
@@ -188,6 +196,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
     {
         ShellLogger.Debug("Rebuild TaskList from new virtual desktop" + (e != null ? " to " + e.NewDesktop.Name : ""));
+        if (e?.NewDesktop != null)
+            _currentVirtualDesktopId = e.NewDesktop.Id;
         Application.Current.Dispatcher.Invoke(() =>
         {
             lock (_lockChangeDesktop)
@@ -195,16 +205,12 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 DisposeAllApplicationWindow();
                 NativeMethods.EnumWindows((hwnd, lParam) =>
                 {
-                    if (!VirtualDesktopProvider.Default.Initialized || VirtualDesktopHelper.IsCurrentVirtualDesktop(hwnd))
+                    ApplicationWindow win = new(MyTaskbarApp.MyShellManager.TasksService, hwnd);
+                    if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyTaskbarApp.MyShellManager.TasksService.Windows.Contains(win))
                     {
-                        ApplicationWindow win = new(MyTaskbarApp.MyShellManager.TasksService, hwnd);
-
-                        if (win.CanAddToTaskbar && win.ShowInTaskbar && !MyTaskbarApp.MyShellManager.TasksService.Windows.Contains(win))
-                        {
-                            MyTaskbarApp.MyShellManager.TasksService.Windows.Add(win);
-                            if (ManagedShell.Common.Helpers.EnvironmentHelper.IsAppRunningAsShell)
-                                TasksService.SendTaskbarButtonCreatedMessage(hwnd);
-                        }
+                        MyTaskbarApp.MyShellManager.TasksService.Windows.Add(win);
+                        if (ManagedShell.Common.Helpers.EnvironmentHelper.IsAppRunningAsShell)
+                            TasksService.SendTaskbarButtonCreatedMessage(hwnd);
                     }
                     return true;
                 }, 0);
@@ -218,7 +224,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 IntPtr hWndForeground = NativeMethods.GetForegroundWindow();
                 if (hWndForeground != IntPtr.Zero)
                 {
-                    ApplicationWindow win = MyTaskbarApp.MyShellManager.TasksService.Windows.FirstOrDefault(wnd => wnd.ListWindows.Contains(hWndForeground));
+                    ApplicationWindow win = MyTaskbarApp.MyShellManager.TasksService.Windows.FirstOrDefault(wnd => wnd.ListWindows.Any(w => w.Handle == hWndForeground));
                     if (win != null && win.ShowInTaskbar)
                     {
                         win.State = ApplicationWindow.WindowState.Active;

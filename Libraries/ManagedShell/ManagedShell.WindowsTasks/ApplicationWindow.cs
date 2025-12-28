@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -42,7 +43,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private WindowState _state;
     private bool? _showInTaskbar;
     private DateTime? _dateStart;
-    private readonly List<IntPtr> _windows;
+    private readonly ObservableCollection<ApplicationWindowsProperty> _windows;
     private readonly object _lockUpdate;
     private int _position;
     private readonly Guid _id;
@@ -57,7 +58,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         _lockUpdate = new object();
         _windows = [];
         if (handle != IntPtr.Zero)
-            _windows.Add(handle);
+            _windows.Add(new ApplicationWindowsProperty(handle));
         _tasksService = tasksService;
         State = WindowState.Inactive;
         if (tasksService.Windows.Count > 0)
@@ -101,7 +102,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get
         {
             if (string.IsNullOrEmpty(_appUserModelId) && _windows.Count > 0)
-                _appUserModelId = ShellHelper.GetAppUserModelIdPropertyForHandle(_windows[0]);
+                _appUserModelId = ShellHelper.GetAppUserModelIdPropertyForHandle(_windows[0].Handle);
 
             return _appUserModelId;
         }
@@ -130,7 +131,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get
         {
             if (string.IsNullOrEmpty(_winFileName) && _windows.Count > 0)
-                _winFileName = ShellHelper.GetPathForHandle(_windows[0]);
+                _winFileName = ShellHelper.GetPathForHandle(_windows[0].Handle);
 
             return _winFileName;
         }
@@ -145,8 +146,8 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     {
         get
         {
-            if (!_procId.HasValue && _windows[0] != IntPtr.Zero)
-                _procId = ShellHelper.GetProcIdForHandle(_windows[0]);
+            if (!_procId.HasValue && _windows.Count > 0 && _windows[0].Handle != IntPtr.Zero)
+                _procId = ShellHelper.GetProcIdForHandle(_windows[0].Handle);
             return _procId;
         }
     }
@@ -212,7 +213,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             if (_windows?.Count > 0)
             {
                 StringBuilder stringBuilder = new(MAX_STRING_SIZE);
-                NativeMethods.GetWindowText((ptrWindow ?? _windows[0]), stringBuilder, MAX_STRING_SIZE);
+                NativeMethods.GetWindowText((ptrWindow ?? _windows[0].Handle), stringBuilder, MAX_STRING_SIZE);
 
                 title = stringBuilder.ToString();
             }
@@ -249,7 +250,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         try
         {
             StringBuilder stringBuilder = new(MAX_STRING_SIZE);
-            NativeMethods.GetClassName(_windows[0], stringBuilder, MAX_STRING_SIZE);
+            NativeMethods.GetClassName(_windows[0].Handle, stringBuilder, MAX_STRING_SIZE);
 
             className = stringBuilder.ToString();
         }
@@ -377,7 +378,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     public bool IsMinimized(IntPtr handle = default)
     {
         if (handle == default)
-            handle = _windows[0];
+            handle = _windows[0].Handle;
         if (handle == IntPtr.Zero)
             return true;
         return NativeMethods.IsIconic(handle);
@@ -389,7 +390,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             if (_windows.Count == 0)
                 return NativeMethods.WindowShowStyle.Hide;
-            return GetWindowShowStyle(_windows[0]);
+            return GetWindowShowStyle(_windows[0].Handle);
         }
     }
 
@@ -399,7 +400,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             if (_windows.Count == 0)
                 return 0;
-            return NativeMethods.GetWindowLong(_windows[0], NativeMethods.EGetWindowLong.GWL_STYLE);
+            return NativeMethods.GetWindowLong(_windows[0].Handle, NativeMethods.EGetWindowLong.GWL_STYLE);
         }
     }
 
@@ -409,7 +410,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             if (_windows.Count == 0)
                 return 0;
-            return NativeMethods.GetWindowLong(_windows[0], NativeMethods.EGetWindowLong.GWL_EXSTYLE);
+            return NativeMethods.GetWindowLong(_windows[0].Handle, NativeMethods.EGetWindowLong.GWL_EXSTYLE);
         }
     }
 
@@ -420,13 +421,13 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
             if (_windows.Count == 0)
                 return true;
             int extendedWindowStyles = ExtendedWindowStyles;
-            bool isWindow = NativeMethods.IsWindow(_windows[0]);
-            bool isVisible = NativeMethods.IsWindowVisible(_windows[0]);
+            bool isWindow = NativeMethods.IsWindow(_windows[0].Handle);
+            bool isVisible = NativeMethods.IsWindowVisible(_windows[0].Handle);
             bool isToolWindow = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_TOOLWINDOW) != 0;
             bool isAppWindow = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_APPWINDOW) != 0;
             bool isNoActivate = (extendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_NOACTIVATE) != 0;
-            bool isDeleted = NativeMethods.GetProp(_windows[0], "ITaskList_Deleted") != IntPtr.Zero;
-            IntPtr ownerWin = NativeMethods.GetWindow(_windows[0], NativeMethods.GetWindowCmd.GW_OWNER);
+            bool isDeleted = NativeMethods.GetProp(_windows[0].Handle, "ITaskList_Deleted") != IntPtr.Zero;
+            IntPtr ownerWin = NativeMethods.GetWindow(_windows[0].Handle, NativeMethods.GetWindowCmd.GW_OWNER);
 
             return isWindow && isVisible && (ownerWin == IntPtr.Zero || isAppWindow) && (!isNoActivate || isAppWindow) && !isToolWindow && !isDeleted;
         }
@@ -466,7 +467,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         if (EnvironmentHelper.IsWindows8OrBetter && _windows.Count > 0)
         {
             int cbSize = Marshal.SizeOf(typeof(uint));
-            NativeMethods.DwmGetWindowAttribute(_windows[0], NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
+            NativeMethods.DwmGetWindowAttribute(_windows[0].Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
 
             if (cloaked > 0)
             {
@@ -476,7 +477,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
             // UWP shell windows that are not cloaked should be hidden from the taskbar, too.
             StringBuilder cName = new(256);
-            NativeMethods.GetClassName(_windows[0], cName, cName.Capacity);
+            NativeMethods.GetClassName(_windows[0].Handle, cName, cName.Capacity);
             string className = cName.ToString();
             if ((className == "ApplicationFrameWindow" || className == "Windows.UI.Core.CoreWindow") && (ExtendedWindowStyles & (int)NativeMethods.ExtendedWindowStyles.WS_EX_WINDOWEDGE) == 0)
             {
@@ -538,31 +539,31 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
                     if (sizeSetting == IconSize.Small)
                     {
-                        NativeMethods.SendMessageTimeout(_windows[0], WM_GETICON, 2, 0, 2, 1000, ref hIco);
+                        NativeMethods.SendMessageTimeout(_windows[0].Handle, WM_GETICON, 2, 0, 2, 1000, ref hIco);
                         if (hIco == IntPtr.Zero)
-                            NativeMethods.SendMessageTimeout(_windows[0], WM_GETICON, 0, 0, 2, 1000, ref hIco);
+                            NativeMethods.SendMessageTimeout(_windows[0].Handle, WM_GETICON, 0, 0, 2, 1000, ref hIco);
                     }
                     else
-                        NativeMethods.SendMessageTimeout(_windows[0], WM_GETICON, 1, 0, 2, 1000, ref hIco);
+                        NativeMethods.SendMessageTimeout(_windows[0].Handle, WM_GETICON, 1, 0, 2, 1000, ref hIco);
 
                     if (hIco == IntPtr.Zero && sizeSetting == IconSize.Small)
                     {
                         if (!Environment.Is64BitProcess)
-                            hIco = NativeMethods.GetClassLong(_windows[0], GCL_HICONSM);
+                            hIco = NativeMethods.GetClassLong(_windows[0].Handle, GCL_HICONSM);
                         else
-                            hIco = NativeMethods.GetClassLongPtr(_windows[0], GCL_HICONSM);
+                            hIco = NativeMethods.GetClassLongPtr(_windows[0].Handle, GCL_HICONSM);
                     }
 
                     if (hIco == IntPtr.Zero && _windows.Count > 0)
                     {
                         if (!Environment.Is64BitProcess)
-                            hIco = NativeMethods.GetClassLong(_windows[0], GCL_HICON);
+                            hIco = NativeMethods.GetClassLong(_windows[0].Handle, GCL_HICON);
                         else
-                            hIco = NativeMethods.GetClassLongPtr(_windows[0], GCL_HICON);
+                            hIco = NativeMethods.GetClassLongPtr(_windows[0].Handle, GCL_HICON);
                     }
 
                     if (hIco == IntPtr.Zero && _windows.Count > 0)
-                        NativeMethods.SendMessageTimeout(_windows[0], WM_QUERYDRAGICON, 0, 0, 0, 1000, ref hIco);
+                        NativeMethods.SendMessageTimeout(_windows[0].Handle, WM_QUERYDRAGICON, 0, 0, 0, 1000, ref hIco);
 
                     if (hIco == IntPtr.Zero && _icon == null && ShellHelper.Exists(WinFileName))
                     {
@@ -600,7 +601,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     internal IntPtr GetMonitor(IntPtr? hWnd = null)
     {
         if (!hWnd.HasValue)
-            return NativeMethods.MonitorFromWindow(_windows[0], NativeMethods.EMonitorFromWindow.DefaultToNearest);
+            return NativeMethods.MonitorFromWindow(_windows[0].Handle, NativeMethods.EMonitorFromWindow.DefaultToNearest);
         return NativeMethods.MonitorFromWindow(hWnd.Value, NativeMethods.EMonitorFromWindow.DefaultToNearest);
     }
 
@@ -650,8 +651,8 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     {
         lock (_lockUpdate)
         {
-            if (handle != IntPtr.Zero && !_windows.Contains(handle))
-                _windows.Add(handle);
+            if (handle != IntPtr.Zero && !_windows.Any(w => w.Handle == handle))
+                _windows.Add(new ApplicationWindowsProperty(handle));
             if (_windows.Count > 1)
                 State = WindowState.Unknown;
             OnPropertyChanged(nameof(Launched));
@@ -666,7 +667,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     public void BringToFront(IntPtr handle = default)
     {
         if (handle == default)
-            handle = _windows[0];
+            handle = _windows[0].Handle;
 
         // call restore if window is minimized
         if (IsMinimized(handle))
@@ -687,14 +688,14 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         if ((WindowStyles & (int)NativeMethods.WindowStyles.WS_MINIMIZEBOX) != 0)
         {
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(_windows[0], (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(_windows[0].Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MINIMIZE, 0, 2, 200, ref retval);
         }
     }
 
     public void Restore(IntPtr handle = default)
     {
         if (handle == default)
-            handle = _windows[0];
+            handle = _windows[0].Handle;
         IntPtr retval = IntPtr.Zero;
         NativeMethods.SendMessageTimeout(handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
 
@@ -703,20 +704,20 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
     public void Maximize()
     {
-        bool maximizeResult = NativeMethods.ShowWindow(_windows[0], NativeMethods.WindowShowStyle.Maximize);
+        bool maximizeResult = NativeMethods.ShowWindow(_windows[0].Handle, NativeMethods.WindowShowStyle.Maximize);
         if (!maximizeResult)
         {
             // we don't have a fallback for elevated windows here since our only hope, SC_MAXIMIZE, doesn't seem to work for them. fall back to restore.
             IntPtr retval = IntPtr.Zero;
-            NativeMethods.SendMessageTimeout(_windows[0], (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
+            NativeMethods.SendMessageTimeout(_windows[0].Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_RESTORE, 0, 2, 200, ref retval);
         }
-        NativeMethods.SetForegroundWindow(_windows[0]);
+        NativeMethods.SetForegroundWindow(_windows[0].Handle);
     }
 
     internal IntPtr DoClose()
     {
         IntPtr retval = IntPtr.Zero;
-        NativeMethods.SendMessageTimeout(_windows[0], (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_CLOSE, 0, 2, 200, ref retval);
+        NativeMethods.SendMessageTimeout(_windows[0].Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_CLOSE, 0, 2, 200, ref retval);
 
         return retval;
     }
@@ -731,7 +732,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         // move window via arrow keys; must be active window to control
         BringToFront();
         IntPtr retval = IntPtr.Zero;
-        NativeMethods.SendMessageTimeout(_windows[0], (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MOVE, 0, 2, 200, ref retval);
+        NativeMethods.SendMessageTimeout(_windows[0].Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MOVE, 0, 2, 200, ref retval);
     }
 
     public void Size()
@@ -739,7 +740,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         // size window via arrow keys; must be active window to control
         BringToFront();
         IntPtr retval = IntPtr.Zero;
-        NativeMethods.SendMessageTimeout(_windows[0], (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
+        NativeMethods.SendMessageTimeout(_windows[0].Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_SIZE, 0, 2, 200, ref retval);
     }
 
     public DateTime DateStart
@@ -777,7 +778,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         get { return _windows.Count > 0; }
     }
 
-    public List<IntPtr> ListWindows
+    public ObservableCollection<ApplicationWindowsProperty> ListWindows
     {
         get { return _windows; }
     }
@@ -793,7 +794,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     {
         if (_windows.Count == 0 || other.ListWindows.Count == 0)
             return other.Id == Id;
-        return _windows[0].Equals(other.ListWindows[0]);
+        return _windows[0].Handle.Equals(other.ListWindows[0].Handle);
     }
 
     #endregion
@@ -835,10 +836,10 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     {
         get
         {
-            if (_propStore == null && _windows[0] != IntPtr.Zero)
+            if (_propStore == null && _windows[0].Handle != IntPtr.Zero)
             {
                 Guid guid = typeof(NativeMethods.IPropertyStore).GUID;
-                NativeMethods.SHGetPropertyStoreForWindow(_windows[0], ref guid, out _propStore);
+                NativeMethods.SHGetPropertyStoreForWindow(_windows[0].Handle, ref guid, out _propStore);
             }
             return _propStore;
         }
