@@ -7,8 +7,8 @@ using System.Text.RegularExpressions;
 
 using Microsoft.Win32;
 
-using VirtualDesktop.Utils;
 using VirtualDesktop.Properties;
+using VirtualDesktop.Utils;
 
 namespace VirtualDesktop.Interop;
 

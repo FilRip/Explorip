@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-using VirtualDesktop.Interop;
 using VirtualDesktop.Interop.Proxy;
 
 namespace VirtualDesktop.Interop.Build22000;

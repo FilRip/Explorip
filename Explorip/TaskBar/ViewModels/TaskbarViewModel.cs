@@ -17,18 +17,13 @@ using ExploripPlugins;
 
 using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
-using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
-using ManagedShell.WindowsTasks;
-
-using WpfScreenHelper;
 
 namespace Explorip.TaskBar.ViewModels;
 
 public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject()
 {
     private AppBarEdge _currentEdge;
-    private List<MenuItem> _listScreens;
 
     public void ChangeEdge(AppBarEdge newEdge)
     {
@@ -592,47 +587,6 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                 ParentTaskbar.Width = ParentTaskbar.Screen.Bounds.Width;
             else
                 ParentTaskbar.FloatingButton.MyDataContext.SetPos();
-        }
-    }
-
-    public List<MenuItem> ListScreen
-    {
-        get
-        {
-            if (_listScreens == null || _listScreens.Count == 0)
-            {
-                _listScreens = [];
-                foreach (Screen screen in Screen.AllScreens)
-                    _listScreens.Add(new MenuItem()
-                    {
-                        Header = screen.DisplayNumber.ToString(),
-                        Tag = screen,
-                    });
-            }
-            return _listScreens;
-        }
-    }
-
-    public List<MenuItem> ListVirtualDesktop
-    {
-        get
-        {
-            try
-            {
-                List<MenuItem> list = [];
-                foreach (VirtualDesktop.VirtualDesktop vd in VirtualDesktop.VirtualDesktop.GetDesktops())
-                    list.Add(new MenuItem()
-                    {
-                        Header = vd.Name,
-                        Tag = vd,
-                    });
-                return list;
-            }
-            catch (Exception ex)
-            {
-                ShellLogger.Error(ex.Message, ex);
-            }
-            return [];
         }
     }
 }

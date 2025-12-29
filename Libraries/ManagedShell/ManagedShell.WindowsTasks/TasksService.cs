@@ -462,7 +462,6 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
             catch (Exception ex)
             {
                 ShellLogger.Error("TasksService: Error in ShellWinProc. ", ex);
-                Debugger.Break();
             }
         }
         else if (msg.Msg == WM_TASKBARCREATEDMESSAGE)

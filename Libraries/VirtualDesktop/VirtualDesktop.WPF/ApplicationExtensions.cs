@@ -11,8 +11,8 @@ public static class ApplicationExtensions
     /// <returns><see langword="true" /> if pinned, <see langword="false" /> otherwise.</returns>
     public static bool IsPinned(this Application app)
     {
-        return VirtualDesktop.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId)
-            && VirtualDesktop.IsPinnedApplication(appId);
+        return VirtualDesktopManager.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId)
+            && VirtualDesktopManager.IsPinnedApplication(appId);
     }
 
     /// <summary>
@@ -21,8 +21,8 @@ public static class ApplicationExtensions
     /// <returns><see langword="true" /> if already pinned or successfully pinned, <see langword="false" /> otherwise (most of the time, main window is not found).</returns>
     public static bool Pin(this Application app)
     {
-        return VirtualDesktop.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId)
-            && VirtualDesktop.PinApplication(appId);
+        return VirtualDesktopManager.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId)
+            && VirtualDesktopManager.PinApplication(appId);
     }
 
     /// <summary>
@@ -31,8 +31,8 @@ public static class ApplicationExtensions
     /// <returns><see langword="true" /> if already unpinned or successfully unpinned, <see langword="false" /> otherwise (most of the time, main window is not found).</returns>
     public static bool Unpin(this Application app)
     {
-        return VirtualDesktop.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId)
-            && VirtualDesktop.UnpinApplication(appId);
+        return VirtualDesktopManager.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId)
+            && VirtualDesktopManager.UnpinApplication(appId);
     }
 
     /// <summary>
@@ -41,12 +41,12 @@ public static class ApplicationExtensions
     /// <returns><see langword="true" /> if successfully toggled, <see langword="false" /> otherwise (most of the time, main window is not found).</returns>
     public static bool TogglePin(this Application app)
     {
-        if (!VirtualDesktop.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId))
+        if (!VirtualDesktopManager.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId))
             return false;
 
-        return VirtualDesktop.IsPinnedApplication(appId) 
-            ? VirtualDesktop.UnpinApplication(appId) 
-            : VirtualDesktop.PinApplication(appId);
+        return VirtualDesktopManager.IsPinnedApplication(appId) 
+            ? VirtualDesktopManager.UnpinApplication(appId) 
+            : VirtualDesktopManager.PinApplication(appId);
     }
 
     private static IntPtr GetWindowHandle(this Application app)

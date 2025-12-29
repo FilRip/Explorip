@@ -19,6 +19,7 @@ public class ApplicationWindowsProperty(IntPtr handle) : INotifyPropertyChanged
     private string _titre;
     private WindowState _state;
     private string _arguments;
+    private Guid _virtualDesktopId;
 
     public string Name
     {
@@ -62,7 +63,18 @@ public class ApplicationWindowsProperty(IntPtr handle) : INotifyPropertyChanged
 
     public Guid VirtualDesktopId
     {
-        get { return VirtualDesktop.VirtualDesktop.IsInitialized ? VirtualDesktop.VirtualDesktop.FromHwnd(Handle).Id : Guid.Empty; }
+        get
+        {
+            return _virtualDesktopId;
+        }
+        set
+        {
+            if (_virtualDesktopId != value)
+            {
+                _virtualDesktopId = value;
+                OnPropertyChanged();
+            }
+        }
     }
 
     public WindowState State

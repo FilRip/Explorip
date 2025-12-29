@@ -1,7 +1,5 @@
 ﻿using System;
 
-using VirtualDesktop.Interop;
-
 namespace VirtualDesktop.Utils;
 
 internal class ExplorerRestartListenerWindow : TransparentWindow

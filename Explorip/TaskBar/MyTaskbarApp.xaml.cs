@@ -76,6 +76,8 @@ public partial class MyTaskbarApp : Application
         Current?.Dispatcher?.Invoke(() => Current?.Shutdown());
     }
 
+    #region System events
+
     private void SystemEvents_DisplaySettingsChanged(object sender, EventArgs e)
     {
         Current.Dispatcher.Invoke(() =>
@@ -156,6 +158,10 @@ public partial class MyTaskbarApp : Application
         }
     }
 
+    #endregion
+
+    #region Taskbars
+
     public void ReopenTaskbar()
     {
         foreach (Taskbar taskbar in _taskbarList)
@@ -219,6 +225,25 @@ public partial class MyTaskbarApp : Application
         }
     }
 
+    public List<Taskbar> ListAllTaskbar()
+    {
+        return _taskbarList;
+    }
+
+    public Taskbar MainTaskbar
+    {
+        get
+        {
+            if (_taskbarList != null)
+                return _taskbarList.Single(item => item.MainScreen);
+            return null;
+        }
+    }
+
+    #endregion
+
+    #region Application events
+
     private void App_OnExit(object sender, ExitEventArgs e)
     {
         ExitGracefully();
@@ -228,6 +253,54 @@ public partial class MyTaskbarApp : Application
     {
         ExitGracefully();
     }
+
+    private void Application_Startup(object sender, StartupEventArgs e)
+    {
+        _taskbarList = [];
+        MyShellManager = SetupManagedShell();
+        MyShellManager.Tasks.SetInitialWindows = false;
+        MyShellManager.TasksService.GroupApplicationsWindows = ConfigManager.GroupedApplicationWindow;
+        MyShellManager.TrayService.DefaultThemeColor = ConfigManager.DefaultSystemIconColor;
+
+        _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
+        DictionaryManager = new DictionaryManager();
+
+        PluginsManager.LoadPlugins();
+
+        try
+        {
+            VirtualDesktopCompilerConfiguration configVirtualDesktop = new()
+            {
+                NoNamedVirtualDesktop = Constants.Localization.NONAME_DESKTOP,
+            };
+            configVirtualDesktop.ChangeDirectory("CoolBytes", "Explorip", "Assemblies");
+            VirtualDesktopManager.Configure(configVirtualDesktop);
+            if (!VirtualDesktopManager.IsInitialized)
+                throw new Exceptions.ExploripException("VirtualDesktop not initialized");
+        }
+        catch (Exception)
+        {
+            MessageBox.Show("Error during initialization of VirtualDesktop support." + Environment.NewLine + "VirtualDesktop will not be supported");
+        }
+
+        // Startup
+        DictionaryManager.SetThemeFromSettings();
+        OpenTaskbar();
+
+        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
+
+        if (ConfigManager.AutoLockOnMonitorPowerOff)
+        {
+            _threadAutoLock = new Thread(new ThreadStart(CheckMonitorPower));
+            _threadAutoLock.Start();
+        }
+
+        if (ConfigManager.HookTaskbarList)
+            Explorip.Helpers.HookTaskbarListHelper.InstallHook();
+    }
+
+    #endregion
 
     private ShellManager SetupManagedShell()
     {
@@ -261,70 +334,14 @@ public partial class MyTaskbarApp : Application
             _startMenuMonitor.Dispose();
         });
         Monitorian.MonitorsManager.Clean();
-        if (VirtualDesktop.VirtualDesktop.IsInitialized)
-            VirtualDesktop.VirtualDesktop.StopExplorerSpy();
+        if (VirtualDesktopManager.IsInitialized)
+            VirtualDesktopManager.StopExplorerSpy();
 #if DEBUG
         _logger?.Dispose();
 #endif
     }
 
-    public Taskbar MainTaskbar
-    {
-        get
-        {
-            if (_taskbarList != null)
-                return _taskbarList.Single(item => item.MainScreen);
-            return null;
-        }
-    }
-
-    public List<Taskbar> ListAllTaskbar()
-    {
-        return _taskbarList;
-    }
-
-    private void Application_Startup(object sender, StartupEventArgs e)
-    {
-        _taskbarList = [];
-        MyShellManager = SetupManagedShell();
-        MyShellManager.Tasks.SetInitialWindows = false;
-        MyShellManager.TasksService.GroupApplicationsWindows = ConfigManager.GroupedApplicationWindow;
-        MyShellManager.TrayService.DefaultThemeColor = ConfigManager.DefaultSystemIconColor;
-
-        _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
-        DictionaryManager = new DictionaryManager();
-
-        PluginsManager.LoadPlugins();
-
-        try
-        {
-            VirtualDesktopCompilerConfiguration configVirtualDesktop = new();
-            configVirtualDesktop.ChangeDirectory("CoolBytes", "Explorip", "Assemblies");
-            VirtualDesktop.VirtualDesktop.Configure(configVirtualDesktop);
-            if (!VirtualDesktop.VirtualDesktop.IsInitialized)
-                throw new Exceptions.ExploripException("VirtualDesktop not initialized");
-        }
-        catch (Exception)
-        {
-            MessageBox.Show("Error during initialization of VirtualDesktop support." + Environment.NewLine + "VirtualDesktop will not be supported");
-        }
-
-        // Startup
-        DictionaryManager.SetThemeFromSettings();
-        OpenTaskbar();
-
-        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
-        SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
-
-        if (ConfigManager.AutoLockOnMonitorPowerOff)
-        {
-            _threadAutoLock = new Thread(new ThreadStart(CheckMonitorPower));
-            _threadAutoLock.Start();
-        }
-
-        if (ConfigManager.HookTaskbarList)
-            Explorip.Helpers.HookTaskbarListHelper.InstallHook();
-    }
+    #region Auto lock session on monitor power off
 
     private static void SetExiting()
     {
@@ -373,4 +390,6 @@ public partial class MyTaskbarApp : Application
             Thread.Sleep(1000);
         }
     }
+
+    #endregion
 }

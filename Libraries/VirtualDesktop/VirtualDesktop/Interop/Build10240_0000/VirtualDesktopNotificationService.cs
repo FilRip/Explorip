@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using VirtualDesktop.Interop;
 using VirtualDesktop.Interop.Proxy;
 using VirtualDesktop.Utils;
 

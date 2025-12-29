@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -45,6 +44,9 @@ internal class ComInterfaceAssemblyBuilder(VirtualDesktopCompilerConfiguration c
 
     private Assembly? LoadExistingAssembly()
     {
+        if (_configuration.ForceRebuildAssembly)
+            return null;
+
         if (_configuration.CompiledAssemblySaveDirectory.Exists)
         {
             foreach (FileInfo? file in _configuration.CompiledAssemblySaveDirectory.GetFiles())
@@ -58,11 +60,11 @@ internal class ComInterfaceAssemblyBuilder(VirtualDesktopCompilerConfiguration c
                         if (name.Version >= _requireVersion)
                         {
                             Debug.WriteLine($"Assembly found: {file.FullName}");
-#if !DEBUG
+#pragma warning disable IDE0079
+#pragma warning disable S3885
                             return Assembly.LoadFile(file.FullName);
-#else
-                            Debug.WriteLine($"Debug force assembly creation");
-#endif
+#pragma warning restore S3885
+#pragma warning restore IDE0079
                         }
                         else
                         {

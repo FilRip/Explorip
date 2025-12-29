@@ -1,8 +1,9 @@
 ﻿using System;
 
 using VirtualDesktop.Interop.Proxy;
+using VirtualDesktop.Utils;
 
-namespace VirtualDesktop;
+namespace VirtualDesktop.Models;
 
 /// <summary>
 /// Provides data for the <see cref="VirtualDesktop.Renamed" /> event.

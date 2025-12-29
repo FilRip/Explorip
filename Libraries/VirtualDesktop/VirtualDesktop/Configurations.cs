@@ -39,4 +39,6 @@ public class VirtualDesktopCompilerConfiguration
     public bool StartHIddenWindowOfExplorerSpy { get; set; } = true;
 
     public bool ForceRebuildAssembly { get; set; } = false;
+
+    public string NoNamedVirtualDesktop { get; set; } = "Desktop %d";
 }

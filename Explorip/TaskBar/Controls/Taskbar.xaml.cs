@@ -608,6 +608,7 @@ public partial class Taskbar : AppBarWindow
 
     private void AppBarWindow_Unloaded(object sender, RoutedEventArgs e)
     {
+        ToolsBars.Children.Clear();
         ShellLogger.Debug("OnUnloaded Taskbar " + NumScreen);
     }
 

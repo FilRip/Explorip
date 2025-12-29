@@ -12,23 +12,23 @@ public static class VirtualDesktopExtensions
     /// </summary>
     public static bool IsCurrentVirtualDesktop(this Window window)
     {
-        return VirtualDesktop.IsCurrentVirtualDesktop(window.GetHandle());
+        return VirtualDesktopManager.IsCurrentVirtualDesktop(window.GetHandle());
     }
 
     /// <summary>
     /// Returns the virtual desktop this window is located on.
     /// </summary>
-    public static VirtualDesktop? GetCurrentDesktop(this Window window)
+    public static Models.VirtualDesktop? GetCurrentDesktop(this Window window)
     {
-        return VirtualDesktop.FromHwnd(window.GetHandle());
+        return VirtualDesktopManager.FromHwnd(window.GetHandle());
     }
 
     /// <summary>
     /// Moves a window to the specified virtual desktop.
     /// </summary>
-    public static void MoveToDesktop(this Window window, VirtualDesktop virtualDesktop)
+    public static void MoveToDesktop(this Window window, Models.VirtualDesktop virtualDesktop)
     {
-        VirtualDesktop.MoveToDesktop(window.GetHandle(), virtualDesktop);
+        VirtualDesktopManager.MoveToDesktop(window.GetHandle(), virtualDesktop);
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public static class VirtualDesktopExtensions
     /// </summary>
     /// <param name="virtualDesktop">The virtual desktop to move the window to.</param>
     /// <param name="window">The window to move.</param>
-    public static void SwitchAndMove(this VirtualDesktop virtualDesktop, Window window)
+    public static void SwitchAndMove(this Models.VirtualDesktop virtualDesktop, Window window)
     {
         if (!window.IsPinned())
             window.MoveToDesktop(virtualDesktop);
@@ -49,7 +49,7 @@ public static class VirtualDesktopExtensions
     /// <returns><see langword="true" /> if pinned, <see langword="false" /> otherwise.</returns>
     public static bool IsPinned(this Window window)
     {
-        return VirtualDesktop.IsPinnedWindow(window.GetHandle());
+        return VirtualDesktopManager.IsPinnedWindow(window.GetHandle());
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public static class VirtualDesktopExtensions
     /// <returns><see langword="true" /> if already pinned or successfully pinned, <see langword="false" /> otherwise (most of the time, the target window is not found or not ready).</returns>
     public static bool Pin(this Window window)
     {
-        return VirtualDesktop.PinWindow(window.GetHandle());
+        return VirtualDesktopManager.PinWindow(window.GetHandle());
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public static class VirtualDesktopExtensions
     /// <returns><see langword="true" /> if already unpinned or successfully unpinned, <see langword="false" /> otherwise (most of the time, the target window is not found or not ready).</returns>
     public static bool Unpin(this Window window)
     {
-        return VirtualDesktop.UnpinWindow(window.GetHandle());
+        return VirtualDesktopManager.UnpinWindow(window.GetHandle());
     }
 
     /// <summary>
@@ -78,9 +78,9 @@ public static class VirtualDesktopExtensions
     {
         var handle = window.GetHandle();
 
-        return VirtualDesktop.IsPinnedWindow(handle)
-            ? VirtualDesktop.UnpinWindow(handle)
-            : VirtualDesktop.PinWindow(handle);
+        return VirtualDesktopManager.IsPinnedWindow(handle)
+            ? VirtualDesktopManager.UnpinWindow(handle)
+            : VirtualDesktopManager.PinWindow(handle);
     }
 
     /// <summary>

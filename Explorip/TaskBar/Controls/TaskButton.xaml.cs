@@ -19,6 +19,8 @@ using ManagedShell.WindowsTasks;
 
 using Securify.ShellLink;
 
+using VirtualDesktop;
+
 using WpfScreenHelper;
 
 namespace Explorip.TaskBar.Controls;
@@ -380,18 +382,30 @@ public partial class TaskButton : UserControl
     private void MoveToScreen_MouseEnter(object sender, MouseEventArgs e)
     {
         MoveToScreen.Items.Clear();
-        foreach (MenuItem mi in TaskbarParent.MyDataContext.ListScreen)
+        foreach (Screen screen in Screen.AllScreens)
         {
+            MenuItem mi = new()
+            {
+                Header = screen.DisplayNumber.ToString(),
+                Tag = screen,
+            };
             mi.Click += MoveToScreen_Click;
-            MoveToScreen.Items.Add(mi);
+            MoveToScreen.Items.Add(mi); 
         }
     }
 
     private void MoveToVirtualDesktop_MouseEnter(object sender, MouseEventArgs e)
     {
         MoveToVirtualDesktop.Items.Clear();
-        foreach (MenuItem mi in TaskbarParent.MyDataContext.ListVirtualDesktop)
+        foreach (VirtualDesktop.Models.VirtualDesktop vd in VirtualDesktopManager.GetDesktops())
         {
+            MenuItem mi = new()
+            {
+                Header = vd.Name,
+                Tag = vd,
+            };
+            if (ApplicationWindow.ListWindows.Count > 0 && vd.Id == ApplicationWindow.ListWindows[0].VirtualDesktopId)
+                mi.IsEnabled = false;
             mi.Click += MoveToVirtualDesktop_Click;
             MoveToVirtualDesktop.Items.Add(mi);
         }
@@ -407,9 +421,10 @@ public partial class TaskButton : UserControl
 
     private void MoveToVirtualDesktop_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is VirtualDesktop.VirtualDesktop vd)
+        if (sender is MenuItem mi && mi.Tag is VirtualDesktop.Models.VirtualDesktop vd)
         {
-            VirtualDesktop.VirtualDesktop.MoveToDesktop(ApplicationWindow.ListWindows[0].Handle, vd);
+            VirtualDesktopManager.MoveToDesktop(ApplicationWindow.ListWindows[0].Handle, vd);
+            ApplicationWindow.ListWindows[0].VirtualDesktopId = vd.Id;
             TaskbarParent.MyTaskList.MyDataContext.ForceRefresh();
         }
     }

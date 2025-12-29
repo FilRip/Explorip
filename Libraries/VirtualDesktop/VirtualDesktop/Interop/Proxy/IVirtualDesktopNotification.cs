@@ -1,6 +1,4 @@
-﻿using VirtualDesktop.Interop;
-
-namespace VirtualDesktop.Interop.Proxy;
+﻿namespace VirtualDesktop.Interop.Proxy;
 
 [ComInterface()]
 public interface IVirtualDesktopNotification

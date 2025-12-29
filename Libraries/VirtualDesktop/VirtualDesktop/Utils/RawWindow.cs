@@ -2,8 +2,6 @@
 using System.Windows.Interop;
 using System.Windows.Threading;
 
-using VirtualDesktop.Interop;
-
 namespace VirtualDesktop.Utils;
 
 internal abstract class RawWindow
