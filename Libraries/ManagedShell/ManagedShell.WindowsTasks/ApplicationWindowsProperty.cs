@@ -32,7 +32,6 @@ public class ApplicationWindowsProperty(IntPtr handle) : INotifyPropertyChanged
                 OnPropertyChanged();
             }
         }
-
     }
 
     public IntPtr Handle

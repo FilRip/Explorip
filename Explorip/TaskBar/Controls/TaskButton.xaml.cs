@@ -413,15 +413,37 @@ public partial class TaskButton : UserControl
 
     private void MoveToScreen_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is Screen screen)
+        if (sender is MenuItem mi && mi.Tag is Screen screen && ApplicationWindow.ListWindows.Count > 0)
         {
-            WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screen.WpfBounds.X, (int)screen.WpfBounds.Y);
+            Screen screenSrc = Screen.FromHandle(ApplicationWindow.ListWindows[0].Handle);
+            if (screenSrc.ScaleFactor == screen.ScaleFactor)
+                WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screen.WpfWorkingArea.X, (int)screen.WpfWorkingArea.Y);
+            else
+            {
+                NativeMethods.GetWindowRect(ApplicationWindow.ListWindows[0].Handle, out NativeMethods.Rect size);
+                double width = size.Width / screenSrc.ScaleFactor;
+                double height = size.Height / screenSrc.ScaleFactor;
+                if (screen.ScaleFactor > screenSrc.ScaleFactor)
+                {
+                    width /= screen.ScaleFactor;
+                    height /= screen.ScaleFactor;
+                }
+                else
+                {
+                    width *= screen.ScaleFactor;
+                    height *= screen.ScaleFactor;
+                }
+                width = Math.Min(screen.WpfWorkingArea.Width - 16, width);
+                height = Math.Min(screen.WpfWorkingArea.Height - 16, height);
+
+                WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screen.WpfWorkingArea.X, (int)screen.WpfWorkingArea.Y, (int)width, (int)height);
+            }
         }
     }
 
     private void MoveToVirtualDesktop_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is VirtualDesktop.Models.VirtualDesktop vd)
+        if (sender is MenuItem mi && mi.Tag is VirtualDesktop.Models.VirtualDesktop vd && ApplicationWindow.ListWindows.Count > 0)
         {
             VirtualDesktopManager.MoveToDesktop(ApplicationWindow.ListWindows[0].Handle, vd);
             ApplicationWindow.ListWindows[0].VirtualDesktopId = vd.Id;
