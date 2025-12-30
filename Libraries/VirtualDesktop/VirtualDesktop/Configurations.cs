@@ -36,7 +36,7 @@ public class VirtualDesktopCompilerConfiguration
         CompiledAssemblySaveDirectory = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), company, application, subFolder));
     }
 
-    public bool StartHIddenWindowOfExplorerSpy { get; set; } = true;
+    public bool StartHiddenWindowOfExplorerSpy { get; set; } = true;
 
     public bool ForceRebuildAssembly { get; set; } = false;
 

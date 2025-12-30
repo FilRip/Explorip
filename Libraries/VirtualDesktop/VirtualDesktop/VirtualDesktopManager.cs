@@ -279,7 +279,7 @@ public static class VirtualDesktopManager
         if (_provider.IsInitialized)
             return;
 
-        if (_configuration.StartHIddenWindowOfExplorerSpy)
+        if (_configuration.StartHiddenWindowOfExplorerSpy)
         {
             _explorerRestartListener = new ExplorerRestartListenerWindow(() => HandleExplorerRestarted());
             _explorerRestartListener.Show();

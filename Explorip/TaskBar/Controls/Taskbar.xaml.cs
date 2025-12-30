@@ -455,8 +455,8 @@ public partial class Taskbar : AppBarWindow
     /// <param name="resize">The Taskbar must be resized ?</param>
     public void AddToolbar(IExploripToolbar plugin, bool resize = true)
     {
-        double height = Math.Max(24, plugin.MinHeight);
-        double width = Math.Max(24, plugin.MinWidth);
+        double height = plugin.MinHeight;
+        double width = plugin.MinWidth;
         ToolbarPlugin tp = new();
         Grid.SetColumn(plugin.ExploripToolbar, 1);
         tp.MainGrid.Children.Add(plugin.ExploripToolbar);
