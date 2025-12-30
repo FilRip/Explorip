@@ -312,6 +312,7 @@ public partial class Taskbar : AppBarWindow
         if (_mainScreen)
         {
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
+            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
         }
         string[] listToolbars = ConfigManager.ToolbarsPath;
         if (listToolbars?.Length > 0)
@@ -333,6 +334,11 @@ public partial class Taskbar : AppBarWindow
         // TODO : Start in floatinng mode, not working yet
         /*if (ConfigManager.GetTaskbarConfig(_numScreen).StartFloating)
             MyDataContext.ExpandCollapseTaskbar(false.ToString());*/
+    }
+
+    private void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
+    {
+        MyTaskbarApp.MyShellManager.NotificationArea.Disable = e.IsEntering;
     }
 
     public void SetBackground(SolidColorBrush newBackground)
@@ -610,6 +616,8 @@ public partial class Taskbar : AppBarWindow
     {
         ToolsBars.Children.Clear();
         ShellLogger.Debug("OnUnloaded Taskbar " + NumScreen);
+        if (_mainScreen)
+            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
     }
 
     public void FloatingTaskbar()
