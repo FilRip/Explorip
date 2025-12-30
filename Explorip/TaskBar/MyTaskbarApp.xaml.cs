@@ -129,7 +129,7 @@ public partial class MyTaskbarApp : Application
             MyShellManager.NotificationArea.Disable = false;
             MyShellManager.FullScreenHelper.Disable = false;
             DisableAutoLock = false;
-            /*Current.Dispatcher.Invoke(() =>
+            Current.Dispatcher.Invoke(() =>
             {
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
@@ -137,8 +137,8 @@ public partial class MyTaskbarApp : Application
                     tb.MySystray.MyDataContext.Resume();
                     tb.RefreshAllInvisibleIcons();
                 }
-                TaskListViewModel.RefreshAllCollectionView(ERefreshList.Refresh, EventArgs.Empty);
-            });*/
+                ViewModels.TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);
+            });
         }
         else
         {
@@ -147,14 +147,14 @@ public partial class MyTaskbarApp : Application
             MyShellManager.NotificationArea.Disable = true;
             MyShellManager.FullScreenHelper.Disable = true;
             DisableAutoLock = true;
-            /*Current.Dispatcher.Invoke(() =>
+            Current.Dispatcher.Invoke(() =>
             {
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
                     tb.Disable = true;
                     tb.MySystray.MyDataContext.Pause();
                 }
-            });*/
+            });
         }
     }
 

@@ -94,7 +94,7 @@ public class TrayService : IDisposable
         // if we are above another tray, we will receive messages
         if (HwndTray != IntPtr.Zero)
         {
-            SetWindowsTrayBottommost();
+            SetWindowsTrayBottomMost();
             MakeTrayTopmost();
             trayMonitor.Start();
         }
@@ -382,7 +382,7 @@ public class TrayService : IDisposable
         MakeTrayTopmost();
     }
 
-    private void SetWindowsTrayBottommost()
+    private void SetWindowsTrayBottomMost()
     {
         IntPtr taskbarHwnd = WindowHelper.FindWindowsTray(HwndTray);
 

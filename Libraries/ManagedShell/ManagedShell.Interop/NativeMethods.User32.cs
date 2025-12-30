@@ -471,6 +471,10 @@ public partial class NativeMethods
         public System.Drawing.Point ptMinPosition;
         public System.Drawing.Point ptMaxPosition;
         public Rectangle rcNormalPosition;
+        public WindowPlacement()
+        {
+            length = Marshal.SizeOf<WindowPlacement>();
+        }
     }
 
     [DllImport(User32_DllName)]

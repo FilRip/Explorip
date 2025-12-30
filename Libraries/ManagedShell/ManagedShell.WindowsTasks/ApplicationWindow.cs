@@ -730,6 +730,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     {
         // move window via arrow keys; must be active window to control
         BringToFront();
+        NativeMethods.WindowShowStyle show = ShowStyle;
+        if (show == NativeMethods.WindowShowStyle.Maximize || show == NativeMethods.WindowShowStyle.ShowMaximized)
+            NativeMethods.ShowWindow(_windows[0].Handle, NativeMethods.WindowShowStyle.ShowNormal);
         IntPtr retval = IntPtr.Zero;
         NativeMethods.ReleaseCapture();
         NativeMethods.SendMessageTimeout(_windows[0].Handle, (int)NativeMethods.WM.SYSCOMMAND, NativeMethods.SC_MOVE, 0, 2, 200, ref retval);
