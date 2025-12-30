@@ -145,7 +145,11 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 uint command = NativeMethods.TrackPopupMenuEx(wMenu,
                     NativeMethods.TrackPopUpMenuActions.RIGHTBUTTON | NativeMethods.TrackPopUpMenuActions.RETURNCMD | NativeMethods.TrackPopUpMenuActions.NONOTIFY, posMouse.X, posMouse.Y, WindowHandle, IntPtr.Zero);
                 if (command != 0)
-                    NativeMethods.PostMessage(window, NativeMethods.WM.SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+                {
+                    NativeMethods.PostMessage(window, NativeMethods.WM.SYSCOMMAND, (IntPtr)NativeMethods.VK.LEFT, IntPtr.Zero);
+                    if (command == 61456)
+                        ParentTask.ApplicationWindow.Move();
+                }
             });
         }
         finally

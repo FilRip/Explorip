@@ -17,6 +17,7 @@ namespace ManagedShell.Common.Helpers;
 public static class ShellHelper
 {
     public const int MAX_PATH = 260;
+    private const string ShellViewName = "SHELLDLL_DefView";
 
     public static string GetDisplayName(string filename)
     {
@@ -1098,7 +1099,7 @@ public static class ShellHelper
         if (!EnvironmentHelper.IsAppRunningAsShell)
         {
             IntPtr toggleDesktopCommand = new(0x7402);
-            IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", "");
+            IntPtr hWnd = FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, ShellViewName, "");
 
             if (hWnd == IntPtr.Zero)
             {
@@ -1108,7 +1109,7 @@ public static class ShellHelper
                     GetClassName(hwnd, cName, cName.Capacity);
                     if (cName.ToString() == "WorkerW")
                     {
-                        IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                        IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, ShellViewName, null);
                         if (child != IntPtr.Zero)
                         {
                             hWnd = child;
@@ -1248,7 +1249,7 @@ public static class ShellHelper
 
     private static bool IsDesktopVisible()
     {
-        IntPtr hWnd = GetWindow(FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, "SHELLDLL_DefView", ""), GetWindowCmd.GW_CHILD);
+        IntPtr hWnd = GetWindow(FindWindowEx(FindWindow("Progman", "Program Manager"), IntPtr.Zero, ShellViewName, ""), GetWindowCmd.GW_CHILD);
 
 
         if (hWnd == IntPtr.Zero)
@@ -1259,7 +1260,7 @@ public static class ShellHelper
                 GetClassName(hwnd, cName, cName.Capacity);
                 if (cName.ToString() == "WorkerW")
                 {
-                    IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                    IntPtr child = FindWindowEx(hwnd, IntPtr.Zero, ShellViewName, null);
                     if (child != IntPtr.Zero)
                     {
                         hWnd = FindWindowEx(child, IntPtr.Zero, "SysListView32", "FolderView");

@@ -450,4 +450,9 @@ public partial class TaskButton : UserControl
             TaskbarParent.MyTaskList.MyDataContext.ForceRefresh();
         }
     }
+
+    private void MoveWithMouse_Click(object sender, RoutedEventArgs e)
+    {
+        ApplicationWindow.Move();
+    }
 }

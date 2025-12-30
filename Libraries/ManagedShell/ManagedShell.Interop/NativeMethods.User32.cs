@@ -358,6 +358,7 @@ public partial class NativeMethods
     public const int SC_RESTORE = 0xF120;
     public const int SC_SIZE = 0xF000;
     public const int SC_CLOSE = 0xF060;
+    public const int HT_CAPTION = 0x00A1;
 
     [StructLayout(LayoutKind.Sequential)]
     public struct CopyDataStruct
@@ -4259,4 +4260,7 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     internal static extern IntPtr MonitorFromWindow(IntPtr hWnd, EMonitorFromWindow dwFlags);
+
+    [DllImport(User32_DllName)]
+    internal static extern bool ReleaseCapture();
 }
