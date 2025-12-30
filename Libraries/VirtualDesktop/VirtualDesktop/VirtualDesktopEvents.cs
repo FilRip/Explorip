@@ -123,7 +123,6 @@ public sealed class VirtualDesktopEvents : IVirtualDesktopNotification
     {
     }
 
-
     public void VirtualDesktopMoved(IVirtualDesktop pDesktop, int nIndexFrom, int nIndexTo)
         => Moved?.Invoke(null, new VirtualDesktopMovedEventArgs(pDesktop, nIndexFrom, nIndexTo));
 

@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows;
 using System.Windows.Forms;
 
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Common.SupportingClasses;
+using ManagedShell.Interop;
 
 using static ManagedShell.Interop.NativeMethods;
 
 namespace ManagedShell.WindowsTasks;
 
-public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
+public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChanged
 {
     public static readonly IconSize DEFAULT_ICON_SIZE = IconSize.Small;
 
@@ -23,6 +25,7 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     private readonly object _windowsLock = new();
     internal bool IsInitialized;
     public IconSize TaskIconSize { get; set; } = iconSize;
+    private ObservableCollection<ApplicationWindow> _appWindows = [];
 
     private static int WM_SHELLHOOKMESSAGE = -1;
     private static int WM_TASKBARCREATEDMESSAGE = -1;
@@ -436,19 +439,45 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
                             }
                             break;
                         case HShell.FULLSCREENENTER:
+                            StringBuilder title = new(256);
+                            uint processId = 0;
+                            try
+                            {
+                                if (IsWindow(msg.LParam))
+                                {
+                                    GetWindowText(msg.LParam, title, 256);
+                                    processId = ShellHelper.GetProcIdForHandle(msg.LParam);
+                                }
+                            }
+                            catch (Exception) { /* Ignore errors */ }
                             FullScreenEventArgs args = new()
                             {
                                 Handle = msg.LParam,
                                 IsEntering = true,
+                                ProcessId = processId,
+                                Title = title.ToString(),
                             };
                             FullScreenChanged?.Invoke(this, args);
                             ShellLogger.Debug($"TasksService: Full screen entered by window {msg.LParam}");
                             break;
                         case HShell.FULLSCREENEXIT:
+                            StringBuilder titleExit = new(256);
+                            uint processIdExit = 0;
+                            try
+                            {
+                                if (IsWindow(msg.LParam))
+                                {
+                                    GetWindowText(msg.LParam, titleExit, 256);
+                                    processIdExit = ShellHelper.GetProcIdForHandle(msg.LParam);
+                                }
+                            }
+                            catch (Exception) { /* Ignore errors */ }
                             FullScreenEventArgs fsArgs = new()
                             {
                                 Handle = msg.LParam,
                                 IsEntering = false,
+                                ProcessId = processIdExit,
+                                Title = titleExit.ToString(),
                             };
                             FullScreenChanged?.Invoke(this, fsArgs);
                             ShellLogger.Debug($"TasksService: Full screen exited by window {msg.LParam}");
@@ -662,17 +691,32 @@ public class TasksService(IconSize iconSize) : DependencyObject, IDisposable
     {
         get
         {
-            return base.GetValue(windowsProperty) as ObservableCollection<ApplicationWindow>;
+            return _appWindows;
         }
         set
         {
-            SetValue(windowsProperty, value);
+            if (_appWindows != value)
+            {
+                _appWindows = value;
+                OnPropertyChanged(nameof(Windows));
+            }
         }
     }
 
-    private readonly DependencyProperty windowsProperty = DependencyProperty.Register(nameof(Windows),
-        typeof(ObservableCollection<ApplicationWindow>), typeof(TasksService),
-        new PropertyMetadata(new ObservableCollection<ApplicationWindow>()));
+    #region INotifyPropertyChanged Members
+
+#nullable enable
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public void OnPropertyChanged([CallerMemberName()] string? PropertyName = null)
+    {
+        this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+    }
+
+#nullable restore
+
+    #endregion
 
     public bool GroupApplicationsWindows { get; set; } = true;
 }

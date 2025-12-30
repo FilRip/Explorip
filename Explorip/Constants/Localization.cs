@@ -195,6 +195,7 @@ public static class Localization
     public static string NONAME_DESKTOP { get; private set; }
     public static string MOVING { get; private set; }
     public static string MOVE_TO { get; private set; }
+    public static string ACTIVES_APPLICATIONS { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -380,6 +381,7 @@ public static class Localization
         NONAME_DESKTOP = Load(TwinUiPcShellDll, 13011, "Desktop %d");
         MOVING = Load(Shell32Dll, 32945, "Moving...");
         MOVE_TO = Load(Shell32Dll, 30340, "Move to");
+        ACTIVES_APPLICATIONS = Load(TwinUiPcShellDll, 1512, "Actives applications");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

@@ -19,7 +19,7 @@ public class ApplicationWindowsProperty(IntPtr handle) : INotifyPropertyChanged
     private string _titre;
     private WindowState _state;
     private string _arguments;
-    private Guid _virtualDesktopId;
+    private Guid _virtualDesktopId = Guid.Empty;
 
     public string Name
     {

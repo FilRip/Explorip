@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,6 +20,7 @@ using Explorip.TaskBar.Helpers;
 using ExploripConfig.Configuration;
 
 using ManagedShell.AppBar;
+using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
@@ -119,38 +121,57 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     RemoveTaskServiceEvent();
                     if (VirtualDesktopManager.IsInitialized)
                         VirtualDesktopEvents.CurrentChanged += VirtualDesktop_CurrentChanged;
-                    //MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged += Windows_CollectionChanged;
-                    MyTaskbarApp.MyShellManager.TasksService.WindowCreate += TasksService_WindowCreate;
-                    MyTaskbarApp.MyShellManager.TasksService.WindowDestroy += RefreshView;
+                    MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged += Windows_CollectionChanged;
                     MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += RefreshView;
+                    MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
                 }
                 ChangeButtonSize();
             }
         }
     }
 
-    private static void TasksService_WindowCreate(object sender, WindowEventArgs e)
+    private static void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
+    {
+        if (e.IsExiting && e.Handle != IntPtr.Zero &&
+            e.ProcessId == Process.GetProcessesByName("explorer")?[0].Id &&
+            e.Title == Constants.Localization.ACTIVES_APPLICATIONS)
+        {
+            // In case it's task manager who have been leaved, some windows may be changed virtual desktop, we must refresh all
+            foreach (ApplicationWindow appWin in MyTaskbarApp.MyShellManager.TasksService.Windows)
+                foreach (ApplicationWindowsProperty appWinProp in appWin.ListWindows)
+                    appWinProp.VirtualDesktopId = ReturnVirtualDesktopId(appWinProp.Handle);
+            RefreshView(null, null);
+        }
+    }
+
+    private static void Windows_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && VirtualDesktopManager.IsInitialized)
+        {
+            foreach (ApplicationWindow appWin in e.NewItems)
+                foreach (ApplicationWindowsProperty appWinProp in appWin.ListWindows.Where(w => w.VirtualDesktopId == Guid.Empty))
+                    appWinProp.VirtualDesktopId = ReturnVirtualDesktopId(appWinProp.Handle);
+        }
+        RefreshView(null, null);
+    }
+
+    private static Guid ReturnVirtualDesktopId(IntPtr handle)
     {
         Guid virtualDesktopId = Guid.Empty;
         int nbTry = 0;
+        // Sometimes, for unknown reasons, the get virtual desktop of window handle not working the first time
+        // So we loop, until it return the virtual desktop of the window (maximum 5 try, in case of reality not working and break initiny loop)
         while (virtualDesktopId == Guid.Empty && nbTry < 5)
         {
             nbTry++;
             try
             {
-                virtualDesktopId = VirtualDesktopManager.FromHwnd(e.Handle).Id;
+                virtualDesktopId = VirtualDesktopManager.FromHwnd(handle).Id;
             }
             catch (Exception) { /* Ignore errors */ }
             Thread.Sleep(10);
         }
-        ApplicationWindowsProperty appWinProperty = e.Window.ListWindows.Single(w => w.Handle == e.Handle);
-        appWinProperty.VirtualDesktopId = virtualDesktopId;
-        RefreshView(null, null);
-    }
-
-    private static void Windows_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-    {
-        RefreshView(null, null);
+        return virtualDesktopId;
     }
 
     private static void RefreshView(object sender, WindowEventArgs e)
@@ -199,12 +220,14 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void RemoveTaskServiceEvent()
     {
-        if (VirtualDesktopManager.IsInitialized && TaskbarParent.MainScreen)
-            VirtualDesktopEvents.CurrentChanged -= VirtualDesktop_CurrentChanged;
-        //MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged -= Windows_CollectionChanged;
-        MyTaskbarApp.MyShellManager.TasksService.WindowCreate -= TasksService_WindowCreate;
-        MyTaskbarApp.MyShellManager.TasksService.WindowDestroy -= RefreshView;
-        MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= RefreshView;
+        if (TaskbarParent.MainScreen)
+        {
+            if (VirtualDesktopManager.IsInitialized)
+                VirtualDesktopEvents.CurrentChanged -= VirtualDesktop_CurrentChanged;
+            MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged -= Windows_CollectionChanged;
+            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= RefreshView;
+            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
+        }
     }
 
     private static bool FilterAppWindow(object item)
@@ -415,7 +438,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         for (int i = MyTaskbarApp.MyShellManager.TasksService.Windows.Count - 1; i >= 0; i--)
             MyTaskbarApp.MyShellManager.TasksService.Windows[i].Dispose();
         MyTaskbarApp.MyShellManager.TasksService.Windows?.Clear();
-        MyTaskbarApp.MyShellManager.TasksService.Windows = [];
     }
 
     public void Dispose()
