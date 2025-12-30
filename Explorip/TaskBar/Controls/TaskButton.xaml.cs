@@ -390,7 +390,7 @@ public partial class TaskButton : UserControl
                 Tag = screen,
             };
             mi.Click += MoveToScreen_Click;
-            MoveToScreen.Items.Add(mi); 
+            MoveToScreen.Items.Add(mi);
         }
     }
 

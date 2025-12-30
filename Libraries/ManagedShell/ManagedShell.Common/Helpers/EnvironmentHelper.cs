@@ -9,6 +9,8 @@ namespace ManagedShell.Common.Helpers;
 
 public static class EnvironmentHelper
 {
+    private const string ShellRegistryKeyName = "Shell";
+
     private static int osVersionMajor = 0;
     private static int osVersionMinor = 0;
     private static int osVersionBuild = 0;
@@ -143,7 +145,7 @@ public static class EnvironmentHelper
             {
                 // first check if we are the current user's shell
                 RegistryKey userShellKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false);
-                if (userShellKey?.GetValue("Shell") is string userShell)
+                if (userShellKey?.GetValue(ShellRegistryKeyName) is string userShell)
                 {
                     isAppConfiguredAsShell = userShell.ToLower().Contains(AppDomain.CurrentDomain.FriendlyName.ToLower());
                 }
@@ -151,7 +153,7 @@ public static class EnvironmentHelper
                 {
                     // check if we are the current system's shell
                     RegistryKey systemShellKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WinLogon", false);
-                    if (systemShellKey?.GetValue("Shell") is string systemShell)
+                    if (systemShellKey?.GetValue(ShellRegistryKeyName) is string systemShell)
                     {
                         isAppConfiguredAsShell = systemShell.ToLower().Contains(AppDomain.CurrentDomain.FriendlyName.ToLower());
                     }
@@ -173,16 +175,16 @@ public static class EnvironmentHelper
                 if (value)
                 {
                     // set as the user's shell
-                    regKey.SetValue("Shell", AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName);
+                    regKey.SetValue(ShellRegistryKeyName, AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName);
                 }
                 else
                 {
                     // reset user's shell to system default
-                    object userShell = regKey.GetValue("Shell");
+                    object userShell = regKey.GetValue(ShellRegistryKeyName);
 
                     if (userShell != null)
                     {
-                        regKey.DeleteValue("Shell");
+                        regKey.DeleteValue(ShellRegistryKeyName);
                     }
                 }
 

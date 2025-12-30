@@ -84,19 +84,19 @@ public class AppVisibilityHelper : IDisposable
         return pfVisible;
     }
 
-    public MONITOR_APP_VISIBILITY GetAppVisibilityOnMonitor(IntPtr hMonitor)
+    public MonitorAppVisibility GetAppVisibilityOnMonitor(IntPtr hMonitor)
     {
         if (!EnvironmentHelper.IsWindows8OrBetter)
         {
-            return MONITOR_APP_VISIBILITY.MAV_UNKNOWN;
+            return MonitorAppVisibility.MAV_UNKNOWN;
         }
 
         if (_appVis == null)
         {
-            return MONITOR_APP_VISIBILITY.MAV_UNKNOWN;
+            return MonitorAppVisibility.MAV_UNKNOWN;
         }
 
-        _appVis.GetAppVisibilityOnMonitor(hMonitor, out MONITOR_APP_VISIBILITY pMode);
+        _appVis.GetAppVisibilityOnMonitor(hMonitor, out MonitorAppVisibility pMode);
 
         return pMode;
     }

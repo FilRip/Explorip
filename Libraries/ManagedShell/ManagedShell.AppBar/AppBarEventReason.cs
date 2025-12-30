@@ -3,5 +3,5 @@
 public enum AppBarEventReason
 {
     MouseEnter,
-    MouseLeave
+    MouseLeave,
 }

@@ -7,7 +7,6 @@ using System.Windows.Input;
 using Explorip.Helpers;
 using Explorip.TaskBar.ViewModels;
 
-using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
 namespace Explorip.TaskBar.Controls;

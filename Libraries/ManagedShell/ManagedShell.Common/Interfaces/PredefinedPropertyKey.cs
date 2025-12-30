@@ -6,6 +6,8 @@ namespace ManagedShell.Common.Interfaces;
 
 public static class PredefinedPropertyKey
 {
+#pragma warning disable IDE0079
+#pragma warning disable S1192
     public static readonly PropertyKey PKEY_Address_Country = new() { fmtid = new Guid("C07B4199-E1DF-4493-B1E1-DE5946FB58F8"), pid = 100 };
     public static readonly PropertyKey PKEY_Address_CountryCode = new() { fmtid = new Guid("C07B4199-E1DF-4493-B1E1-DE5946FB58F8"), pid = 101 };
     public static readonly PropertyKey PKEY_Address_Region = new() { fmtid = new Guid("C07B4199-E1DF-4493-B1E1-DE5946FB58F8"), pid = 102 };
@@ -1044,4 +1046,6 @@ public static class PredefinedPropertyKey
     public static readonly PropertyKey PKEY_Volume_FileSystem = new() { fmtid = new Guid("9B174B35-40FF-11D2-A27E-00C04FC30871"), pid = 4 };
     public static readonly PropertyKey PKEY_Volume_IsMappedDrive = new() { fmtid = new Guid("149C0B69-2C2D-48FC-808F-D318D78C4636"), pid = 2 };
     public static readonly PropertyKey PKEY_Volume_IsRoot = new() { fmtid = new Guid("9B174B35-40FF-11D2-A27E-00C04FC30871"), pid = 10 };
+#pragma warning restore S1192
+#pragma warning restore IDE0079
 }

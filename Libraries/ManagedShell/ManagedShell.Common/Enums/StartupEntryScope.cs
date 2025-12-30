@@ -1,8 +1,8 @@
 ﻿namespace ManagedShell.Common.Enums;
 
-enum StartupEntryScope
+internal enum StartupEntryScope
 {
     User,
     Machine,
-    All
+    All,
 }

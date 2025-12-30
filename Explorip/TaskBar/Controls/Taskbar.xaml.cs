@@ -425,7 +425,7 @@ public partial class Taskbar : AppBarWindow
         ToolsBars.Children.Add(newToolbar);
         if (resize)
         {
-            if (AppBarEdge == AppBarEdge.Top ||  AppBarEdge == AppBarEdge.Bottom)
+            if (AppBarEdge == AppBarEdge.Top || AppBarEdge == AppBarEdge.Bottom)
             {
                 Height += 22;
                 DesiredHeight = Height;

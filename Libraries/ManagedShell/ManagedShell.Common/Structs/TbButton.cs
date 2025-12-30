@@ -31,10 +31,10 @@ public struct TbButton
     private TbButtonU union;
 
     /// <summary>Button state flags.</summary>
-    public TbState State { readonly get => union.fsState; set => union.fsState = value; }
+    public TbStates State { readonly get => union.fsState; set => union.fsState = value; }
 
     /// <summary>Button style.</summary>
-    public ToolbarStyle Style { readonly get => union.fsStyle; set => union.fsStyle = value; }
+    public ToolbarStyles Style { readonly get => union.fsStyle; set => union.fsStyle = value; }
 
     /// <summary>Application-defined value.</summary>
     public IntPtr dwData;
@@ -46,7 +46,7 @@ public struct TbButton
     private struct TbButtonU
     {
         [FieldOffset(0)] private readonly IntPtr bReserved;
-        [FieldOffset(0)] public TbState fsState;
-        [FieldOffset(1)] public ToolbarStyle fsStyle;
+        [FieldOffset(0)] public TbStates fsState;
+        [FieldOffset(1)] public ToolbarStyles fsStyle;
     }
 }

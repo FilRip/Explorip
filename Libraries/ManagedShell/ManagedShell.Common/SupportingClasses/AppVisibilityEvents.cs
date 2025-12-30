@@ -13,7 +13,7 @@ class AppVisibilityEvents : IAppVisibilityEvents
 
     public AppVisibilityEvents() { }
 
-    public long AppVisibilityOnMonitorChanged([In()] IntPtr hMonitor, [In()] MONITOR_APP_VISIBILITY previousMode, [In()] MONITOR_APP_VISIBILITY currentMode)
+    public long AppVisibilityOnMonitorChanged([In()] IntPtr hMonitor, [In()] MonitorAppVisibility previousMode, [In()] MonitorAppVisibility currentMode)
     {
         AppVisibilityEventArgs args = new()
         {

@@ -11,5 +11,5 @@ public enum IconSize
     ///<summary>48 pixels</summary>
     ExtraLarge = 2,
     ///<summary>96 pixels</summary>
-    Jumbo = 4
+    Jumbo = 4,
 }

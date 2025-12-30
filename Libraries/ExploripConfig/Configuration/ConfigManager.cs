@@ -17,48 +17,48 @@ namespace ExploripConfig.Configuration;
 
 public static class ConfigManager
 {
-	#region Constants
-	internal const string HKeyRoot = "Software\\CoolBytes\\Explorip";
+    #region Constants
+    internal const string HKeyRoot = "Software\\CoolBytes\\Explorip";
     internal const string ToolBarNameInRegistry = "Toolbar";
-	private const string ConfigOverrideDefaultColor = "OverrideDefaultColor";
-	private const string ConfigDefaultBackgroundColor = "DefaultBackgroundColor";
-	private const string ConfigDefaultForegroundColor = "DefaultForegroundColor";
-	private const string ConfigTheme = "Theme";
-	private const string ConfigLanguage = "Language";
-	private const string ConfigHookCopy = "HookCopy";
-	private const string ConfigUseOwnCopier = "UseOwnCopier";
-	private const string ConfigStartTwoExplorer = "StartTwoExplorer";
-	private const string ConfigShowNotificationCopyOperation = "ShowNotificationCopyOperation";
-	private const string ConfigExplorerPosX = "ExplorerPosX";
-	private const string ConfigExplorerPosY = "ExplorerPosY";
-	private const string ConfigExplorerSizeX = "ExplorerSizeX";
-	private const string ConfigExplorerSizeY = "ExplorerSizeY";
-	private const string ConfigDelayBeforeShowThumbnail = "DelayBeforeShowThumbnail";
-	private const string ConfigGroupedApplicationWindow = "GroupedApplicationWindow";
-	private const string ConfigMaxRecursiveSubFolderInToolbar = "MaxRecursiveSubFolderInToolbar";
-	private const string ConfigProgressBarHeight = "ProgressBarHeight";
-	private const string ConfigReduceTitleWidthWhenTaskbarFull = "ReduceTitleWidthWhenTaskbarFull";
-	private const string ConfigMarginTitleApplicationWindow = "MarginTitleApplicationWindow";
-	private const string ConfigTaskButtonSelectedColor = "TaskButtonSelectedColor";
-	private const string ConfigTaskButtonProgressBarColor = "TaskButtonProgressBarColor";
-	private const string ConfigTaskButtonCornerRadius = "TaskButtonCornerRadius";
-	private const string ConfigDateFormat = "DateFormat";
-	private const string ConfigPopUpCornerRadius = "PopUpCornerRadius";
-	private const string ConfigThumbnailCornerRadius = "ThumbnailCornerRadius";
-	private const string ConfigSpaceBetweenThumbnail = "SpaceBetweenThumbnail";
-	private const string ConfigLockOnMonitorPowerOff = "LockOnMonitorPowerOff";
-	private const string ConfigDelayBeforeCloseThumbnail = "DelayBeforeCloseThumbnail";
-	private const string ConfigHookTaskbarList = "HookTaskbarList";
-	private const string ConfigShowIconOnThumbnailWindow = "ShowIconOnThumbnailWindow";
-	private const string ConfigDragGhostBorderSize = "DragGhostBorderSize";
-	private const string ConfigDragGhostBorderColor = "DragGhostBorderColor";
-	private const string ConfigDragGhostOpacity = "DragGhostOpacity";
-	private const string ConfigSwitchToDesktopWhenDragEnter = "SwitchToDesktopWhenDragEnter";
-	private const string ConfigMouseOverBackgroundColor = "MouseOverBackgroundColor";
-	private const string ConfigReplaceStartMenu = "ReplaceStartMenu";
-	#endregion
+    private const string ConfigOverrideDefaultColor = "OverrideDefaultColor";
+    private const string ConfigDefaultBackgroundColor = "DefaultBackgroundColor";
+    private const string ConfigDefaultForegroundColor = "DefaultForegroundColor";
+    private const string ConfigTheme = "Theme";
+    private const string ConfigLanguage = "Language";
+    private const string ConfigHookCopy = "HookCopy";
+    private const string ConfigUseOwnCopier = "UseOwnCopier";
+    private const string ConfigStartTwoExplorer = "StartTwoExplorer";
+    private const string ConfigShowNotificationCopyOperation = "ShowNotificationCopyOperation";
+    private const string ConfigExplorerPosX = "ExplorerPosX";
+    private const string ConfigExplorerPosY = "ExplorerPosY";
+    private const string ConfigExplorerSizeX = "ExplorerSizeX";
+    private const string ConfigExplorerSizeY = "ExplorerSizeY";
+    private const string ConfigDelayBeforeShowThumbnail = "DelayBeforeShowThumbnail";
+    private const string ConfigGroupedApplicationWindow = "GroupedApplicationWindow";
+    private const string ConfigMaxRecursiveSubFolderInToolbar = "MaxRecursiveSubFolderInToolbar";
+    private const string ConfigProgressBarHeight = "ProgressBarHeight";
+    private const string ConfigReduceTitleWidthWhenTaskbarFull = "ReduceTitleWidthWhenTaskbarFull";
+    private const string ConfigMarginTitleApplicationWindow = "MarginTitleApplicationWindow";
+    private const string ConfigTaskButtonSelectedColor = "TaskButtonSelectedColor";
+    private const string ConfigTaskButtonProgressBarColor = "TaskButtonProgressBarColor";
+    private const string ConfigTaskButtonCornerRadius = "TaskButtonCornerRadius";
+    private const string ConfigDateFormat = "DateFormat";
+    private const string ConfigPopUpCornerRadius = "PopUpCornerRadius";
+    private const string ConfigThumbnailCornerRadius = "ThumbnailCornerRadius";
+    private const string ConfigSpaceBetweenThumbnail = "SpaceBetweenThumbnail";
+    private const string ConfigLockOnMonitorPowerOff = "LockOnMonitorPowerOff";
+    private const string ConfigDelayBeforeCloseThumbnail = "DelayBeforeCloseThumbnail";
+    private const string ConfigHookTaskbarList = "HookTaskbarList";
+    private const string ConfigShowIconOnThumbnailWindow = "ShowIconOnThumbnailWindow";
+    private const string ConfigDragGhostBorderSize = "DragGhostBorderSize";
+    private const string ConfigDragGhostBorderColor = "DragGhostBorderColor";
+    private const string ConfigDragGhostOpacity = "DragGhostOpacity";
+    private const string ConfigSwitchToDesktopWhenDragEnter = "SwitchToDesktopWhenDragEnter";
+    private const string ConfigMouseOverBackgroundColor = "MouseOverBackgroundColor";
+    private const string ConfigReplaceStartMenu = "ReplaceStartMenu";
+    #endregion
 
-	public static bool AllowWrite { get; set; }
+    public static bool AllowWrite { get; set; }
     private static RegistryKey _registryKeyExplorer, _registryRootDesktop, _registryRootTaskbar;
     private static readonly List<TaskbarConfig> _listTaskbar = [];
     private static readonly List<DesktopConfig> _listDesktop = [];
@@ -74,7 +74,7 @@ public static class ConfigManager
             AllowWrite = false;
         _registryRootDesktop = _registryKeyExplorer?.CreateSubKey("Desktops");
         _registryRootTaskbar = _registryKeyExplorer?.CreateSubKey("Taskbars");
-		startMenuRegistry = _registryKeyExplorer?.CreateSubKey("StartMenu");
+        startMenuRegistry = _registryKeyExplorer?.CreateSubKey("StartMenu");
 
         if (allowWrite && _registryKeyExplorer != null)
         {
@@ -687,7 +687,7 @@ public static class ConfigManager
         set
         {
             if (AllowWrite)
-				_registryRootTaskbar.SetValue(ConfigTaskButtonSelectedColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+                _registryRootTaskbar.SetValue(ConfigTaskButtonSelectedColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 

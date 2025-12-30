@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj" />
+    <ProjectReference Include="..\ExploripPlugins\ExploripPlugins.csproj" />
+  </ItemGroup>
+
+</Project>

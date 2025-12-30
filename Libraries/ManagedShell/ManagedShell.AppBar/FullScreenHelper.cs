@@ -37,6 +37,7 @@ public sealed class FullScreenHelper : IDisposable
     {
         if (Disable)
             return;
+
         UpdateFullScreenWindows();
     }
 
@@ -196,18 +197,14 @@ public sealed class FullScreenHelper : IDisposable
                 appAdd = InactiveFullScreenApps.First(app => app.HWnd == hWnd);
             }
             else
-            {
                 appAdd = GetFullScreenApp(hWnd);
-            }
 
             if (appAdd != null)
             {
                 ShellLogger.Debug($"FullScreenHelper: Adding{(wasInactive ? " reactivated" : "")} full screen app {appAdd.HWnd} ({appAdd.Title})");
                 FullScreenApps.Add(appAdd);
                 if (wasInactive)
-                {
                     InactiveFullScreenApps.Remove(appAdd);
-                }
             }
         }
     }

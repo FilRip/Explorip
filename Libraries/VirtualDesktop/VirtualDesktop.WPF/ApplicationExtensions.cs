@@ -44,8 +44,8 @@ public static class ApplicationExtensions
         if (!VirtualDesktopManager.TryGetAppUserModelId(app.GetWindowHandle(), out string? appId))
             return false;
 
-        return VirtualDesktopManager.IsPinnedApplication(appId) 
-            ? VirtualDesktopManager.UnpinApplication(appId) 
+        return VirtualDesktopManager.IsPinnedApplication(appId)
+            ? VirtualDesktopManager.UnpinApplication(appId)
             : VirtualDesktopManager.PinApplication(appId);
     }
 

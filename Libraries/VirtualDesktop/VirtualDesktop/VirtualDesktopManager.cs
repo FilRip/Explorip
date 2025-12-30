@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-using static VirtualDesktop.Utils.SafeInvokeHelper;
-
 using VirtualDesktop.Interop;
 using VirtualDesktop.Interop.Build10240;
 using VirtualDesktop.Interop.Build20348;
@@ -15,6 +13,8 @@ using VirtualDesktop.Interop.Build22621;
 using VirtualDesktop.Interop.Build26100;
 using VirtualDesktop.Interop.Proxy;
 using VirtualDesktop.Utils;
+
+using static VirtualDesktop.Utils.SafeInvokeHelper;
 
 namespace VirtualDesktop;
 

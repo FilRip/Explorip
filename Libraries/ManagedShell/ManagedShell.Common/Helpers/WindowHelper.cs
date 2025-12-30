@@ -58,7 +58,7 @@ public static class WindowHelper
     public static IntPtr GetLowestDesktopParentHwnd()
     {
         IntPtr progmanHwnd = FindWindow("Progman", "Program Manager");
-        IntPtr desktopHwnd = FindWindowEx(progmanHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+        IntPtr desktopHwnd = FindWindowEx(progmanHwnd, IntPtr.Zero, ShellHelper.ShellViewName, null);
 
         if (desktopHwnd == IntPtr.Zero)
         {
@@ -67,7 +67,7 @@ public static class WindowHelper
             do
             {
                 workerHwnd = FindWindowEx(IntPtr.Zero, workerHwnd, "WorkerW", null);
-                shellIconsHwnd = FindWindowEx(workerHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                shellIconsHwnd = FindWindowEx(workerHwnd, IntPtr.Zero, ShellHelper.ShellViewName, null);
             } while (shellIconsHwnd == IntPtr.Zero && workerHwnd != IntPtr.Zero);
 
             desktopHwnd = workerHwnd;
@@ -83,7 +83,7 @@ public static class WindowHelper
     public static IntPtr GetLowestDesktopChildHwnd()
     {
         IntPtr progmanHwnd = FindWindow("Progman", "Program Manager");
-        IntPtr desktopHwnd = FindWindowEx(progmanHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+        IntPtr desktopHwnd = FindWindowEx(progmanHwnd, IntPtr.Zero, ShellHelper.ShellViewName, null);
 
         if (desktopHwnd == IntPtr.Zero)
         {
@@ -92,7 +92,7 @@ public static class WindowHelper
             do
             {
                 workerHwnd = FindWindowEx(IntPtr.Zero, workerHwnd, "WorkerW", null);
-                shellIconsHwnd = FindWindowEx(workerHwnd, IntPtr.Zero, "SHELLDLL_DefView", null);
+                shellIconsHwnd = FindWindowEx(workerHwnd, IntPtr.Zero, ShellHelper.ShellViewName, null);
             } while (shellIconsHwnd == IntPtr.Zero && workerHwnd != IntPtr.Zero);
 
             desktopHwnd = shellIconsHwnd;

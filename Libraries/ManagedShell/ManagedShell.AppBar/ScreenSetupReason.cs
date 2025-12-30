@@ -7,5 +7,5 @@ public enum ScreenSetupReason
     DpiChange,
     DwmChange,
     FirstRun,
-    Reconciliation
+    Reconciliation,
 }

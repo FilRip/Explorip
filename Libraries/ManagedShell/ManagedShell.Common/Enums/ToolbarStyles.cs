@@ -3,7 +3,7 @@
 namespace ManagedShell.Common.Enums;
 
 [Flags()]
-public enum ToolbarStyle : ushort
+public enum ToolbarStyles : ushort
 {
     /// <summary>
     /// Allows users to change a toolbar button's position by dragging it while holding down the ALT key. If this style is not specified,

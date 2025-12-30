@@ -10,8 +10,8 @@ public interface IAppVisibilityEvents
 {
     long AppVisibilityOnMonitorChanged(
         [In()] IntPtr hMonitor,
-        [In()] MONITOR_APP_VISIBILITY previousMode,
-        [In()] MONITOR_APP_VISIBILITY currentMode);
+        [In()] MonitorAppVisibility previousMode,
+        [In()] MonitorAppVisibility currentMode);
 
     long LauncherVisibilityChange([In()] bool currentVisibleState);
 }

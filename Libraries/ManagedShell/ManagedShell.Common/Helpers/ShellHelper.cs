@@ -17,7 +17,7 @@ namespace ManagedShell.Common.Helpers;
 public static class ShellHelper
 {
     public const int MAX_PATH = 260;
-    private const string ShellViewName = "SHELLDLL_DefView";
+    internal const string ShellViewName = "SHELLDLL_DefView";
 
     public static string GetDisplayName(string filename)
     {

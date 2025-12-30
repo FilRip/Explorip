@@ -17,27 +17,27 @@ public class TaskbarConfig
 {
     #region Constants
     private const string ConfigShowClock = "ShowClock";
-	private const string ConfigCollapseNotifyIcons = "CollapseNotifyIcons";
-	private const string ConfigAllowFontSmoothing = "AllowFontSmoothing";
-	private const string ConfigTaskbarThumbHeight = "TaskbarThumbHeight";
-	private const string ConfigTaskbarThumbWidth = "TaskbarThumbWidth";
-	private const string ConfigShowTaskbar = "ShowTaskbar";
-	private const string ConfigShowTaskMan = "ShowTaskMan";
-	private const string ConfigShowSearch = "ShowSearch";
-	private const string ConfigShowWidget = "ShowWidget";
-	private const string ConfigTaskButtonSize = "TaskButtonSize";
-	private const string ConfigSearchWidth = "SearchWidth";
-	private const string ConfigSpaceBetweenTaskButton = "SpaceBetweenTaskButton";
-	private const string ConfigDesktopButtonWidth = "DesktopButtonWidth";
-	private const string ConfigTasklistHorizontalAlignment = "TasklistHorizontalAlignment";
-	private const string ConfigTaskbarMinHeight = "TaskbarMinHeight";
+    private const string ConfigCollapseNotifyIcons = "CollapseNotifyIcons";
+    private const string ConfigAllowFontSmoothing = "AllowFontSmoothing";
+    private const string ConfigTaskbarThumbHeight = "TaskbarThumbHeight";
+    private const string ConfigTaskbarThumbWidth = "TaskbarThumbWidth";
+    private const string ConfigShowTaskbar = "ShowTaskbar";
+    private const string ConfigShowTaskMan = "ShowTaskMan";
+    private const string ConfigShowSearch = "ShowSearch";
+    private const string ConfigShowWidget = "ShowWidget";
+    private const string ConfigTaskButtonSize = "TaskButtonSize";
+    private const string ConfigSearchWidth = "SearchWidth";
+    private const string ConfigSpaceBetweenTaskButton = "SpaceBetweenTaskButton";
+    private const string ConfigDesktopButtonWidth = "DesktopButtonWidth";
+    private const string ConfigTasklistHorizontalAlignment = "TasklistHorizontalAlignment";
+    private const string ConfigTaskbarMinHeight = "TaskbarMinHeight";
     private const string ConfigTaskbarHeight = "TaskbarHeight";
     private const string ConfigTasklistVerticalAlignment = "TasklistVerticalAlignment";
-	private const string ConfigToolbarColumn = "ToolbarColumn";
-	private const string ConfigToolbarRow = "ToolbarRow";
-	private const string ConfigTasklistColumn = "TasklistColumn";
-	private const string ConfigTasklistRow = "TasklistRow";
-	private const string ConfigMaxWidthTitleApplicationWindow = "MaxWidthTitleApplicationWindow";
+    private const string ConfigToolbarColumn = "ToolbarColumn";
+    private const string ConfigToolbarRow = "ToolbarRow";
+    private const string ConfigTasklistColumn = "TasklistColumn";
+    private const string ConfigTasklistRow = "TasklistRow";
+    private const string ConfigMaxWidthTitleApplicationWindow = "MaxWidthTitleApplicationWindow";
     private const string ConfigFloatingButtonWidth = "FloatingButtonWidth";
     private const string ConfigFloatingButtonStretchMode = "FloatingButtonStretchMode";
     private const string ConfigStartFloating = "StartFloating";
@@ -45,9 +45,9 @@ public class TaskbarConfig
     private const string ConfigFloatingButtonSide = "FloatingButtonSide";
     private const string ConfigTaskbarDisableThumb = "TaskbarDisableThumb";
 
-	#endregion
+    #endregion
 
-	private RegistryKey _registryTaskbar;
+    private RegistryKey _registryTaskbar;
 
     public int NumScreen { get; private set; }
     public bool AllowWrite { get; private set; }

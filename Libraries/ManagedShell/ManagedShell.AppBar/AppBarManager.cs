@@ -280,36 +280,36 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
         double rightEdgeWindowWidth = 0;
         Rect rc;
 
-		// get appropriate windows for this display
-		foreach (AppBarWindow window in AppBars)
-		{
-			if (window.Screen.DeviceName == screen.DeviceName)
-			{
-				if ((window.EnableAppBar || !enabledBarsOnly) && (window.RequiresScreenEdge || !edgeBarsOnly))
-				{
-					if (window.AppBarEdge == AppBarEdge.Top)
-					{
-						topEdgeWindowHeight += window.ActualHeight;
-					}
-					else if (window.AppBarEdge == AppBarEdge.Bottom)
-					{
-						bottomEdgeWindowHeight += window.ActualHeight;
-					}
-					else if (window.AppBarEdge == AppBarEdge.Left)
-					{
-						leftEdgeWindowWidth += window.ActualWidth;
-					}
-					else if (window.AppBarEdge == AppBarEdge.Right)
-					{
-						rightEdgeWindowWidth += window.ActualWidth;
-					}
-				}
+        // get appropriate windows for this display
+        foreach (AppBarWindow window in AppBars)
+        {
+            if (window.Screen.DeviceName == screen.DeviceName)
+            {
+                if ((window.EnableAppBar || !enabledBarsOnly) && (window.RequiresScreenEdge || !edgeBarsOnly))
+                {
+                    if (window.AppBarEdge == AppBarEdge.Top)
+                    {
+                        topEdgeWindowHeight += window.ActualHeight;
+                    }
+                    else if (window.AppBarEdge == AppBarEdge.Bottom)
+                    {
+                        bottomEdgeWindowHeight += window.ActualHeight;
+                    }
+                    else if (window.AppBarEdge == AppBarEdge.Left)
+                    {
+                        leftEdgeWindowWidth += window.ActualWidth;
+                    }
+                    else if (window.AppBarEdge == AppBarEdge.Right)
+                    {
+                        rightEdgeWindowWidth += window.ActualWidth;
+                    }
+                }
 
-				dpiScale = window.DpiScale;
-			}
-		}
+                dpiScale = window.DpiScale;
+            }
+        }
 
-		rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
+        rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
         rc.Bottom = screen.Bounds.Bottom - (int)(bottomEdgeWindowHeight * dpiScale);
         rc.Left = screen.Bounds.Left + (int)(leftEdgeWindowWidth * dpiScale);
         rc.Right = screen.Bounds.Right - (int)(rightEdgeWindowWidth * dpiScale);
