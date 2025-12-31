@@ -346,6 +346,11 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         set
         {
             _progressValue = value;
+            if (value > 0 && value < ushort.MaxValue - 1 && ProgressState == NativeMethods.ToolbarProgressBarState.TBPF_NOPROGRESS)
+            {
+                // HACK : Some applications (like VisualStudio 2026) do not send the start state of progress, so we do it
+                ProgressState = NativeMethods.ToolbarProgressBarState.TBPF_NORMAL;
+            }
             OnPropertyChanged();
             OnPropertyChanged(nameof(PercentProgressValue));
             OnPropertyChanged(nameof(IsInProgress));
