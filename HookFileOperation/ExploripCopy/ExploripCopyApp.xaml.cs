@@ -37,6 +37,7 @@ public partial class ExploripCopyApp : Application
             Constants.Localization.LoadTranslation();
             Constants.Icons.LoadIcons();
             ExploripConfig.Configuration.ConfigManager.Init();
+            ExploripConfig.Configuration.ExploripCopyConfig.Init();
 
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
             NotifyIconViewModel.Instance.SetControl(notifyIcon);
