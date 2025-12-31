@@ -419,6 +419,7 @@ public partial class Taskbar : AppBarWindow
         if (!Directory.Exists(Environment.ExpandEnvironmentVariables(path)))
             return null;
         AddBaseGrid(0, 0);
+        int maxWidth = ConfigManager.GetTaskbarConfig(NumScreen).ToolbarMaxWidth(path);
         (int, int) gridPos = ConfigManager.GetTaskbarConfig(NumScreen).ToolbarGrid(path);
         if (gridPos.Item1 >= 0 || gridPos.Item2 >= 0)
             AddMissingGrid(gridPos.Item1 + 1, gridPos.Item2 + 1, 0, 22);
@@ -426,6 +427,8 @@ public partial class Taskbar : AppBarWindow
             AddMissingGrid(ToolsBars.ColumnDefinitions.Count, ToolsBars.RowDefinitions.Count + 1, 0, 0);
         Toolbar newToolbar = new();
         newToolbar.MyDataContext.Path = path;
+        if (maxWidth > 0)
+            newToolbar.MaxWidth = maxWidth;
         Grid.SetRow(newToolbar, (gridPos.Item2 < 0 ? ToolsBars.RowDefinitions.Count - 1 : gridPos.Item2));
         Grid.SetColumn(newToolbar, (gridPos.Item1 < 0 ? 0 : gridPos.Item1));
         ToolsBars.Children.Add(newToolbar);
@@ -469,10 +472,13 @@ public partial class Taskbar : AppBarWindow
             AddMissingGrid(ToolsBars.ColumnDefinitions.Count, ToolsBars.RowDefinitions.Count + 1, plugin.MinWidth, plugin.MinHeight);
         int numRow = (gridPos.Item2 < 0 ? ToolsBars.RowDefinitions.Count - 1 : gridPos.Item2);
         int numColumn = (gridPos.Item1 < 0 ? 0 : gridPos.Item1);
+        int maxWidth = ConfigManager.GetTaskbarConfig(NumScreen).ToolbarMaxWidth(plugin.GuidKey.ToString());
         if (gridPos.Item1 >= 0 || gridPos.Item2 >= 0)
         {
             ToolsBars.RowDefinitions[numRow].Height = new GridLength(height, (height == 0 ? GridUnitType.Auto : GridUnitType.Pixel));
             ToolsBars.ColumnDefinitions[numColumn].Width = new GridLength(width, (width == 0 ? GridUnitType.Auto : GridUnitType.Pixel));
+            if (maxWidth > 0)
+                ToolsBars.ColumnDefinitions[numColumn].MaxWidth = maxWidth;
         }
         Grid.SetRow(tp, numRow);
         Grid.SetColumn(tp, numColumn);

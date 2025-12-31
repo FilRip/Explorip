@@ -8,20 +8,31 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="Transparent">
 
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <viewmodels:VirtualDesktopControlViewModel/>
     </UserControl.DataContext>
     
     <StackPanel Orientation="Horizontal" Background="Transparent">
-        <Button BorderThickness="0" Command="{Binding MoveToLeftDesktopCommand}" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding AccentColor}" Background="Transparent"/>
-        <ComboBox IsEditable="False" Width="50" ItemsSource="{Binding ListDesktop}" Height="12" SelectedItem="{Binding SelectedDesktop.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" FontSize="12" Foreground="{Binding Foreground}" Background="Transparent">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Name}" Background="Transparent" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <Button BorderThickness="0" Command="{Binding MoveToRightDesktopCommand}" Content="&#xE761;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding AccentColor}" Background="Transparent"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" BorderThickness="0" Command="{Binding MoveToLeftDesktopCommand}" Content="&#xE760;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding AccentColor}" Background="Transparent"/>
+            <TextBlock Grid.Column="1" Width="50" Text="{Binding SelectedDesktop.Name, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" FontSize="12" Foreground="{Binding Foreground}" Background="Transparent"/>
+            <Popup Placement="Mouse" StaysOpen="False" IsOpen="{Binding ShowDropDown}" AllowsTransparency="True">
+                <Border CornerRadius="10" BorderThickness="0" Background="{Binding Background}">
+                    <ItemsControl Margin="0" Background="Transparent" Foreground="{Binding Foreground}" ItemsSource="{Binding DataContext.ListDesktopName, RelativeSource={RelativeSource AncestorType=StackPanel, Mode=FindAncestor}}"/>
+                </Border>
+            </Popup>
+            <Button Grid.Column="2" BorderThickness="0" Command="{Binding DropDownListDesktopCommand}" Content="&#xEB0F;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding Foreground}" Background="Transparent"/>
+            <Button Grid.Column="3" BorderThickness="0" Command="{Binding MoveToRightDesktopCommand}" Content="&#xE761;" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{Binding AccentColor}" Background="Transparent"/>
+        </Grid>
     </StackPanel>
     
 </UserControl>

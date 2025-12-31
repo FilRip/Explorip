@@ -530,6 +530,16 @@ public class TaskbarConfig
 
     #region Toolbars
 
+    public int ToolbarMaxWidth(string path)
+    {
+        int i = ConfigManager.ToolbarNumber(path);
+        if (i >= 0)
+        {
+            return _registryTaskbar.ReadInteger($"{ConfigManager.ToolBarNameInRegistry}({i}).MaxWidth", 0);
+        }
+        return 0;
+    }
+
     public int ToolbarZIndex(string path)
     {
         int i = ConfigManager.ToolbarNumber(path);
