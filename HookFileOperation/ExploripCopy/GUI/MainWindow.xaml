@@ -7,7 +7,7 @@
         xmlns:converters="clr-namespace:ExploripCopy.Converters"
         xmlns:constants="clr-namespace:ExploripCopy.Constants"
         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
-        mc:Ignorable="d"
+        mc:Ignorable="d" AllowsTransparency="True"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
         Title="ExploripCopy" Height="450" Width="800" Background="{x:Static colors:Colors.BackgroundColorBrush}" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
         Closing="Window_Closing" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseMove="Window_MouseMove" Closed="Window_Closed" WindowStyle="None" ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged">
@@ -62,14 +62,16 @@
             <!-- Buttons -->
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="1" Content="{Binding TxtCurrentSpeed, UpdateSourceTrigger=PropertyChanged}" Name="ShowCurrentSpeed" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Padding="0" Margin="0 0 5 0"/>
-                <Button Grid.Column="2" Content="{x:Static constants:Localization.STOP}" HorizontalAlignment="Right" Name="BtnStop" Command="{Binding IgnoreCurrentCommand}"/>
-                <Button Grid.Column="3" Content="{x:Static constants:Localization.PAUSE}" HorizontalAlignment="Right" Name="BtnPause" Command="{Binding DoPauseCommand}"/>
+                <CheckBox Grid.Column="0" Content="Auto start next operation" IsChecked="{Binding AutoStartOperation}"/>
+                <Label Grid.Column="2" Content="{Binding TxtCurrentSpeed, UpdateSourceTrigger=PropertyChanged}" Name="ShowCurrentSpeed" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Padding="0" Margin="0 0 5 0"/>
+                <Button Grid.Column="3" Content="{x:Static constants:Localization.STOP}" HorizontalAlignment="Right" Name="BtnStop" Command="{Binding IgnoreCurrentCommand}"/>
+                <Button Grid.Column="4" Content="{x:Static constants:Localization.PAUSE}" HorizontalAlignment="Right" Name="BtnPause" Command="{Binding DoPauseCommand}"/>
             </Grid>
             
             <!-- List operations are waiting -->
@@ -79,7 +81,7 @@
                         <DataGridTemplateColumn Width="16">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Grid.Column="0" BorderThickness="0" Click="StartNow_Click" Background="Transparent" BorderBrush="Transparent">
+                                    <Button Grid.Column="0" BorderThickness="0" Click="StartNow_Click" Background="Transparent">
                                         <Image Source="/ExploripCopy;component/Resources/StartNow.png"/>
                                     </Button>
                                 </DataTemplate>

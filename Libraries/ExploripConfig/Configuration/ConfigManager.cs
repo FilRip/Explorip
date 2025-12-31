@@ -18,7 +18,7 @@ namespace ExploripConfig.Configuration;
 public static class ConfigManager
 {
     #region Constants
-    internal const string HKeyRoot = "Software\\CoolBytes\\Explorip";
+    private const string HKeyRoot = "Software\\CoolBytes\\Explorip";
     internal const string ToolBarNameInRegistry = "Toolbar";
     private const string ConfigOverrideDefaultColor = "OverrideDefaultColor";
     private const string ConfigDefaultBackgroundColor = "DefaultBackgroundColor";

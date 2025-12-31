@@ -13,6 +13,8 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.HookFileOperations.FilesOperations;
 using Explorip.HookFileOperations.Models;
 
+using ExploripConfig.Configuration;
+
 using ExploripCopy.Constants;
 using ExploripCopy.GUI;
 using ExploripCopy.Helpers;
@@ -42,6 +44,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     internal MainViewModels() : base()
     {
+        _autoStartOperation = ExploripCopyConfig.AutoStartOperation;
         _lockOperation = new object();
         _listWaiting = [];
         _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
@@ -66,6 +69,9 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(TxtGlobalReport))]
     private double _globalProgress;
+
+    [ObservableProperty()]
+    private bool _autoStartOperation;
 
     public string TxtGlobalReport
     {
@@ -166,7 +172,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         if (ListWaiting.Count == 1)
             NotifyIconViewModel.Instance.SetSystrayIcon(false);
-        if (Settings.ShowBalloon)
+        if (ExploripCopyConfig.NotificationOnEachOperation)
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
         lock (_lockOperation)
         {
@@ -182,13 +188,13 @@ public partial class MainViewModels : ObservableObject, IDisposable
         if (_lastError == null || _lastError.Message == Localization.STOP)
         {
             _currentOperation = null;
-            if (Settings.ShowBalloon)
+            if (ExploripCopyConfig.NotificationOnEachOperation)
                 NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.FINISH, GlobalReport, BalloonIcon.Info);
             GlobalReport = Localization.FINISH;
         }
         else
         {
-            if (Settings.ShowBalloon)
+            if (ExploripCopyConfig.NotificationOnEachOperation)
                 NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.ERROR, GlobalReport, BalloonIcon.Error);
             else
                 MainWindow.Instance.ShowWindow();
@@ -222,7 +228,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         sb = sb.Replace("%s2", _currentOperation.NewName);
         sb = sb.Replace("%s", Path.GetFileName(_currentOperation.DisplaySource));
         GlobalReport = sb.ToString();
-        if (Settings.ShowBalloon)
+        if (ExploripCopyConfig.NotificationOnEachOperation)
         {
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
             NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, BalloonIcon.Info);
@@ -397,12 +403,15 @@ public partial class MainViewModels : ObservableObject, IDisposable
             {
                 if (_currentOperation == null && ListWaiting.Count > 0 && GetLastError == null)
                 {
-                    lock (_lockOperation)
+                    if (AutoStartOperation)
                     {
-                        _nextOperation ??= ListWaiting[0];
-                        resetChoice = _nextOperation.ResetChoice;
-                        Treatment(_nextOperation);
-                        _nextOperation = null;
+                        lock (_lockOperation)
+                        {
+                            _nextOperation ??= ListWaiting[0];
+                            resetChoice = _nextOperation.ResetChoice;
+                            Treatment(_nextOperation);
+                            _nextOperation = null;
+                        }
                     }
                 }
                 else
@@ -410,10 +419,10 @@ public partial class MainViewModels : ObservableObject, IDisposable
                     if (ListWaiting.Count == 0 || resetChoice)
                         CopyHelper.ChoiceOnCollision = EChoiceFileOperation.None;
                 }
-                Thread.Sleep(10);
             }
             catch (ThreadAbortException) { break; }
             catch (Exception) { /* Ignore errors */ }
+            Thread.Sleep(10);
         }
     }
 

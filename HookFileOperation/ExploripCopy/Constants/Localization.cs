@@ -7,6 +7,11 @@ namespace ExploripCopy.Constants;
 
 public static class Localization
 {
+    private const string Shell32Dll = "shell32.dll";
+    private const string DskQuotaDll = "dskquota.dll";
+    private const string appWizCpl = "appwiz.cpl";
+    private const string ParamFilename = "%1!ls!";
+
     public static string COPY_OF { get; private set; }
     public static string FILE_COLLISION_TITLE { get; private set; }
     public static string FILE_NAME_EXIST { get; private set; }
@@ -53,49 +58,49 @@ public static class Localization
 
     internal static void LoadTranslation()
     {
-        COPY_OF = Load("shell32.dll", 4178, " - Copy");
-        FILE_COLLISION_TITLE = Load("shell32.dll", 33163, "Replace or ignore files");
-        FILE_NAME_EXIST = Load("shell32.dll", 33234, "Destination already contain a file named \" %s \"").Replace("%1!s!", "%s");
-        REPLACE_FILE = Load("shell32.dll", 33237, "Replace all files in destination");
-        IGNORE_FILE = Load("shell32.dll", 33239, "Ignore all files");
-        IGNORE_FILE_SAME_DATE_SIZE = Load("shell32.dll", 33197, "Ignore files with same date and size").Replace("%1!lu!", "");
-        CANCEL = Load("shell32.dll", 33187, "Cancel");
-        CONTINUE = Load("shell32.dll", 33188, "Continue");
-        SPEED_COPY = Load("shell32.dll", 33200, "Speed %1!s!/s").Replace("%1!s!", "%s");
-        SPEED_BYTE = Load("dskquota.dll", 14472, "bytes");
-        SPEED_KILO = Load("dskquota.dll", 14473, "kilo");
-        SPEED_MEGA = Load("dskquota.dll", 14474, "mega");
-        SPEED_GIGA = Load("dskquota.dll", 14475, "giga");
-        SPEED_TERA = Load("dskquota.dll", 14476, "tera");
-        SPEED_PETA = Load("dskquota.dll", 14477, "peta");
-        SPEED_EXA = Load("dskquota.dll", 14478, "exa");
+        COPY_OF = Load(Shell32Dll, 4178, " - Copy");
+        FILE_COLLISION_TITLE = Load(Shell32Dll, 33163, "Replace or ignore files");
+        FILE_NAME_EXIST = Load(Shell32Dll, 33234, "Destination already contain a file named \" %s \"").Replace("%1!s!", "%s");
+        REPLACE_FILE = Load(Shell32Dll, 33237, "Replace all files in destination");
+        IGNORE_FILE = Load(Shell32Dll, 33239, "Ignore all files");
+        IGNORE_FILE_SAME_DATE_SIZE = Load(Shell32Dll, 33197, "Ignore files with same date and size").Replace("%1!lu!", "");
+        CANCEL = Load(Shell32Dll, 33187, "Cancel");
+        CONTINUE = Load(Shell32Dll, 33188, "Continue");
+        SPEED_COPY = Load(Shell32Dll, 33200, "Speed %1!s!/s").Replace("%1!s!", "%s");
+        SPEED_BYTE = Load(DskQuotaDll, 14472, "bytes");
+        SPEED_KILO = Load(DskQuotaDll, 14473, "kilo");
+        SPEED_MEGA = Load(DskQuotaDll, 14474, "mega");
+        SPEED_GIGA = Load(DskQuotaDll, 14475, "giga");
+        SPEED_TERA = Load(DskQuotaDll, 14476, "tera");
+        SPEED_PETA = Load(DskQuotaDll, 14477, "peta");
+        SPEED_EXA = Load(DskQuotaDll, 14478, "exa");
         AVERAGE = Load("comres.dll", 2705, "average");
-        MOVE_OF_FILESYSTEM = Load("shell32.dll", 4193, "Move of '%1!ls!'").Replace("%1!ls!", "%s");
-        COPY_OF_FILESYSTEM = Load("shell32.dll", 4194, "Copy of '%1!ls!'").Replace("%1!ls!", "%s");
-        DELETE_OF_FILESYSTEM = Load("shell32.dll", 4195, "Delete of %1!ls!").Replace("%1!ls!", "%s");
-        RENAME_OF_FILESYSTEM = Load("shell32.dll", 4196, "Rename of %1!ls!").Replace("%1!ls!", "%s").Replace("%2!ls!", "%s2");
-        CREATE_OF_FILESYSTEM = Load("shell32.dll", 4199, "Create of %2!ls!").Replace("%2!ls!", "%s2");
-        CALCUL = Load("shell32.dll", 13580, "Calculate...");
-        REMANING = Load("shell32.dll", 33221, "Remaining items...");
-        TOTAL = Load("shell32.dll", 9306, "Total size") + " %s";
-        FINISH = Load("shell32.dll", 51249, "Finished");
+        MOVE_OF_FILESYSTEM = Load(Shell32Dll, 4193, "Move of '%1!ls!'").Replace(ParamFilename, "%s");
+        COPY_OF_FILESYSTEM = Load(Shell32Dll, 4194, "Copy of '%1!ls!'").Replace(ParamFilename, "%s");
+        DELETE_OF_FILESYSTEM = Load(Shell32Dll, 4195, "Delete of %1!ls!").Replace(ParamFilename, "%s");
+        RENAME_OF_FILESYSTEM = Load(Shell32Dll, 4196, "Rename of %1!ls!").Replace(ParamFilename, "%s").Replace("%2!ls!", "%s2");
+        CREATE_OF_FILESYSTEM = Load(Shell32Dll, 4199, "Create of %2!ls!").Replace("%2!ls!", "%s2");
+        CALCUL = Load(Shell32Dll, 13580, "Calculate...");
+        REMANING = Load(Shell32Dll, 33221, "Remaining items...");
+        TOTAL = Load(Shell32Dll, 9306, "Total size") + " %s";
+        FINISH = Load(Shell32Dll, 51249, "Finished");
         QUIT = Load("dinput.dll", 5268, "Exit");
-        ERROR = Load("shell32.dll", 51248, "Error");
-        IN_PROGRESS = Load("shell32.dll", 32908, "Treatment in progress");
-        CANCELED = Load("shell32.dll", 51256, "Canceled");
-        REMOVE = Load("shell32.dll", 33230, "Remove");
+        ERROR = Load(Shell32Dll, 51248, "Error");
+        IN_PROGRESS = Load(Shell32Dll, 32908, "Treatment in progress");
+        CANCELED = Load(Shell32Dll, 51256, "Canceled");
+        REMOVE = Load(Shell32Dll, 33230, "Remove");
         PAUSE = Load("dinput.dll", 709, "Pause");
         STOP = Load("dinput.dll", 661, "Stop");
-        OK = Load("shell32.dll", 33225, "Ok");
-        CREATE_FOLDER = Load("shell32.dll", 31237, "Create a new folder").Replace(".", "");
-        CREATE_SHORTCUT = Load("appwiz.cpl", 2200, "Create a shortcut");
-        CREATE_SHORTCUT_Q1 = Load("appwiz.cpl", 2201, "On which element do you want to create shortcut ?");
-        BROWSE = Load("shell32.dll", 9015, "Browse");
-        LOCATE = Load("appwiz.cpl", 12808, "Location");
-        CREATE_SHORTCUT_Q2 = Load("appwiz.cpl", 2203, "Which name do you want to use for this shortcut ?");
+        OK = Load(Shell32Dll, 33225, "Ok");
+        CREATE_FOLDER = Load(Shell32Dll, 31237, "Create a new folder").Replace(".", "");
+        CREATE_SHORTCUT = Load(appWizCpl, 2200, "Create a shortcut");
+        CREATE_SHORTCUT_Q1 = Load(appWizCpl, 2201, "On which element do you want to create shortcut ?");
+        BROWSE = Load(Shell32Dll, 9015, "Browse");
+        LOCATE = Load(appWizCpl, 12808, "Location");
+        CREATE_SHORTCUT_Q2 = Load(appWizCpl, 2203, "Which name do you want to use for this shortcut ?");
         SHOW_NOTIFICATION = Load("twinui.dll", 5592, "Show notifications");
         SHOW_MAIN_WINDOW = Load("oleaccrc.dll", 146, "Show main window");
-        NOT_ENOUGH_FREE_SPACE = Load("shell32.dll", 16915, "Not enough free space in destination drive");
+        NOT_ENOUGH_FREE_SPACE = Load(Shell32Dll, 16915, "Not enough free space in destination drive");
     }
 
     private static string Load(string libraryName, uint Ident, string DefaultText)
