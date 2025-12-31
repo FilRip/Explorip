@@ -36,6 +36,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
     private readonly Stopwatch _chronoSpeed;
     public event EventHandler ForceRefreshList;
     private Thread _currentThread;
+    private OneFileOperation _currentOperation;
+    private OneFileOperation _nextOperation;
 
     public static MainViewModels Instance
     {
@@ -234,9 +236,6 @@ public partial class MainViewModels : ObservableObject, IDisposable
             NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, BalloonIcon.Info);
         }
     }
-    private OneFileOperation _currentOperation;
-    private OneFileOperation _nextOperation;
-    private bool disposedValue;
 
     private void Treatment(OneFileOperation operation)
     {
@@ -482,6 +481,19 @@ public partial class MainViewModels : ObservableObject, IDisposable
         }
     }
 
+    public bool OperationInProgress
+    {
+        get { return _currentOperation != null; }
+    }
+
+    #region IDisposable
+
+    private bool disposedValue;
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -500,4 +512,6 @@ public partial class MainViewModels : ObservableObject, IDisposable
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
+
+    #endregion
 }

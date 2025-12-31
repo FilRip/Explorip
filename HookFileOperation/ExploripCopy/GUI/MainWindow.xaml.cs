@@ -47,11 +47,17 @@ public partial class MainWindow : Window
 
     public void IconInSystray_Exit()
     {
-        // TODO : Check if an operation is in progress, or remaining in list
-        MainViewModels.Instance.Dispose();
-        _forceClose = true;
-        Close();
-        Environment.Exit(0);
+        if (MyDataContext.ListWaiting?.Count > 0 || MyDataContext.OperationInProgress)
+        {
+            ShowWindow();
+        }
+        else
+        {
+            MainViewModels.Instance.Dispose();
+            _forceClose = true;
+            Close();
+            Environment.Exit(0);
+        }
     }
 
     private MainViewModels MyDataContext
