@@ -41,4 +41,6 @@ public class VirtualDesktopCompilerConfiguration
     public bool ForceRebuildAssembly { get; set; } = false;
 
     public string NoNamedVirtualDesktop { get; set; } = "Desktop %d";
+
+    public bool BuildDebugConfiguration { get; set; } = false;
 }

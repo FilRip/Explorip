@@ -153,7 +153,8 @@ internal class ComInterfaceAssemblyBuilder(VirtualDesktopCompilerConfiguration c
         try
         {
             string name = string.Format(_assemblyName, osBuild);
-            IEnumerable<SyntaxTree> syntaxTrees = sources.Select(x => SyntaxFactory.ParseSyntaxTree(x));
+            ParseOptions po = new CSharpParseOptions(LanguageVersion.Latest);
+            IEnumerable<SyntaxTree> syntaxTrees = sources.Select(x => SyntaxFactory.ParseSyntaxTree(x, po));
             IEnumerable<PortableExecutableReference> references = AppDomain.CurrentDomain.GetAssemblies()
                 .Concat([Assembly.GetExecutingAssembly(),])
                 .Where(x => !x.IsDynamic && !string.IsNullOrWhiteSpace(x.Location))
@@ -161,7 +162,9 @@ internal class ComInterfaceAssemblyBuilder(VirtualDesktopCompilerConfiguration c
                 {
                     return MetadataReference.CreateFromFile(x.Location);
                 });
-            CSharpCompilationOptions options = new(OutputKind.DynamicallyLinkedLibrary);
+            CSharpCompilationOptions options = new(OutputKind.DynamicallyLinkedLibrary,
+                                                   optimizationLevel: _configuration.BuildDebugConfiguration ? OptimizationLevel.Debug : OptimizationLevel.Release,
+                                                   checkOverflow: _configuration.BuildDebugConfiguration);
             CSharpCompilation compilation = CSharpCompilation.Create(name)
                 .WithOptions(options)
                 .WithReferences(references)
@@ -176,7 +179,10 @@ internal class ComInterfaceAssemblyBuilder(VirtualDesktopCompilerConfiguration c
                     dir.Create();
 
                 string path = Path.Combine(dir.FullName, name);
-                EmitResult result = compilation.Emit(path);
+                string? pdbPath = null;
+                if (_configuration.BuildDebugConfiguration)
+                    pdbPath = Path.Combine(dir.FullName, Path.GetFileNameWithoutExtension(name) + ".pdb");
+                EmitResult result = compilation.Emit(path, pdbPath);
 #pragma warning disable IDE0079
 #pragma warning disable S3885
                 if (result.Success)

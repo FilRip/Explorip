@@ -11,7 +11,6 @@ using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Common.SupportingClasses;
-using ManagedShell.Interop;
 
 using static ManagedShell.Interop.NativeMethods;
 
