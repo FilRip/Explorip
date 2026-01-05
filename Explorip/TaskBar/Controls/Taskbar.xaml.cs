@@ -110,11 +110,11 @@ public partial class Taskbar : AppBarWindow
             CoolBytes.ScriptInterpreter.WPF.ExecuteScriptWindow executeScriptWindow = new();
             executeScriptWindow.Show();
         }
+#endif
         else if (e.Key == Key.F11)
         {
             MyDataContext.ExpandCollapseTaskbar(!MyDataContext.TaskbarVisible);
         }
-#endif
     }
 
     private void ClosePopup(object sender, WindowEventArgs e)
