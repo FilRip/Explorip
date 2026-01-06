@@ -68,7 +68,7 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" Content="Auto start next operation" IsChecked="{Binding AutoStartOperation}"/>
+                <CheckBox Grid.Column="0" Content="Auto start next operation" IsChecked="{Binding AutoStartOperation}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
                 <Label Grid.Column="2" Content="{Binding TxtCurrentSpeed, UpdateSourceTrigger=PropertyChanged}" Name="ShowCurrentSpeed" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Padding="0" Margin="0 0 5 0"/>
                 <Button Grid.Column="3" Content="{x:Static constants:Localization.STOP}" HorizontalAlignment="Right" Name="BtnStop" Command="{Binding IgnoreCurrentCommand}"/>
                 <Button Grid.Column="4" Content="{x:Static constants:Localization.PAUSE}" HorizontalAlignment="Right" Name="BtnPause" Command="{Binding DoPauseCommand}"/>

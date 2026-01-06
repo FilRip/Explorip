@@ -76,12 +76,8 @@ public class JumpList
         }
 
         if (customCategories != null)
-        {
             foreach (JumpListCustomCategory category in customCategories)
-            {
                 customCategoriesCollection.Add(category);
-            }
-        }
     }
 
     private JumpListItemCollection<JumpListTask> userTasks;
@@ -103,12 +99,8 @@ public class JumpList
         }
 
         if (tasks != null)
-        {
             foreach (JumpListTask task in tasks)
-            {
                 userTasks.Add(task);
-            }
-        }
     }
 
     /// <summary>
@@ -141,15 +133,10 @@ public class JumpList
             // default
 
             // Native call to start adding items to the taskbar destination list
-            HResult hr = customDestinationList.BeginList(
-                out uint maxSlotsInList,
-                ref IObjectArray,
-                out _);
+            HResult hr = customDestinationList.BeginList(out uint maxSlotsInList, ref IObjectArray, out _);
 
             if (CoreErrorHelper.Succeeded(hr))
-            {
                 customDestinationList.AbortList();
-            }
 
             return maxSlotsInList;
         }
@@ -174,9 +161,7 @@ public class JumpList
         set
         {
             if (value < 0)
-            {
                 throw new ArgumentOutOfRangeException("value", LocalizedMessages.JumpListNegativeOrdinalPosition);
-            }
 
             knownCategoryOrdinalPosition = value;
         }
@@ -234,9 +219,7 @@ public class JumpList
             // we have the same JumpList for all the windows (unless user overrides and creates a new
             // JumpList for a specific child window)
             if (!TaskbarManager.Instance.ApplicationIdSetProcessWide)
-            {
                 TaskbarManager.Instance.ApplicationId = appID;
-            }
 
             TaskbarManager.SetApplicationIdForSpecificWindow(windowHandle, appID);
         }
@@ -261,9 +244,7 @@ public class JumpList
     {
         // Let the taskbar know which specific jumplist we are updating
         if (!string.IsNullOrEmpty(ApplicationId))
-        {
             customDestinationList.SetAppID(ApplicationId);
-        }
 
         // Begins rendering on the taskbar destination list
         BeginList();
@@ -297,9 +278,7 @@ public class JumpList
         // If an exception was thrown while adding the user tasks or
         // custom categories, throw it.
         if (exception != null)
-        {
             throw exception;
-        }
     }
 
     private void BeginList()
@@ -308,24 +287,17 @@ public class JumpList
         // default
 
         // Native call to start adding items to the taskbar destination list
-        HResult hr = customDestinationList.BeginList(
-            out _,
-            ref IObjectArray,
-            out object removedItems);
+        HResult hr = customDestinationList.BeginList(out _, ref IObjectArray, out object removedItems);
 
         if (!CoreErrorHelper.Succeeded(hr))
-        {
             throw new ShellException(hr);
-        }
 
         // Process the deleted items
         IEnumerable removedItemsArray = ProcessDeletedItems((IObjectArray)removedItems);
 
         // Raise the event if items were removed
         if (JumpListItemsRemoved != null && removedItemsArray != null && removedItemsArray.GetEnumerator().MoveNext())
-        {
             JumpListItemsRemoved(this, new UserRemovedJumpListItemsEventArgs(removedItemsArray));
-        }
     }
 
     /// <summary>
@@ -366,19 +338,13 @@ public class JumpList
         for (uint i = 0; i < count; i++)
         {
             // Native call to retrieve objects from IObjectArray
-            removedItems.GetAt(i,
-                ref IUnknown,
-                out object item);
+            removedItems.GetAt(i, ref IUnknown, out object item);
 
             // Process item
             if (item is IShellItem shellItem)
-            {
                 removedItemsArray.Add(RemoveCustomCategoryItem(shellItem));
-            }
             else if (item is IShellLinkW shellLink)
-            {
                 removedItemsArray.Add(RemoveCustomCategoryLink(shellLink));
-            }
         }
         return removedItemsArray;
     }
@@ -399,9 +365,7 @@ public class JumpList
 
             // Remove this item from each category
             foreach (JumpListCustomCategory category in customCategoriesCollection)
-            {
                 category.RemoveJumpListItem(path);
-            }
 
         }
 
@@ -422,9 +386,7 @@ public class JumpList
 
             // Remove this item from each category
             foreach (JumpListCustomCategory category in customCategoriesCollection)
-            {
                 category.RemoveJumpListItem(path);
-            }
         }
 
         return path;
@@ -452,7 +414,8 @@ public class JumpList
                 }
 
                 // Don't process empty categories
-                if (category.JumpListItems.Count == 0) { continue; }
+                if (category.JumpListItems.Count == 0)
+                    continue;
 
                 IObjectCollection categoryContent =
                     (IObjectCollection)new CEnumerableObjectCollection();
@@ -462,26 +425,18 @@ public class JumpList
                 {
                     JumpListItem listItem = link as JumpListItem;
                     if (listItem != null)
-                    {
                         categoryContent.AddObject(listItem.NativeShellItem);
-                    }
                     else if (link is JumpListLink listLink)
-                    {
                         categoryContent.AddObject(listLink.NativeShellLink);
-                    }
                 }
 
                 // Add current category to destination list
-                HResult hr = customDestinationList.AppendCategory(
-                    category.Name,
-                    (IObjectArray)categoryContent);
+                HResult hr = customDestinationList.AppendCategory(category.Name, (IObjectArray)categoryContent);
 
                 if (!CoreErrorHelper.Succeeded(hr))
                 {
                     if ((uint)hr == 0x80040F03)
-                    {
                         throw new InvalidOperationException(LocalizedMessages.JumpListFileTypeNotRegistered);
-                    }
                     else if ((uint)hr == 0x80070005 /*E_ACCESSDENIED*/)
                     {
                         // If the recent documents tracking is turned off by the user,
@@ -505,14 +460,13 @@ public class JumpList
         // If the ordinal position was out of range, append the Known Categories
         // at the end
         if (!knownCategoriesAdded)
-        {
             AppendKnownCategories();
-        }
     }
 
     private void AppendTaskList()
     {
-        if (userTasks == null || userTasks.Count == 0) { return; }
+        if (userTasks == null || userTasks.Count == 0)
+            return;
 
         IObjectCollection taskContent =
                 (IObjectCollection)new CEnumerableObjectCollection();
@@ -521,13 +475,9 @@ public class JumpList
         foreach (JumpListTask task in userTasks)
         {
             if (task is JumpListLink link)
-            {
                 taskContent.AddObject(link.NativeShellLink);
-            }
             else if (task is JumpListSeparator seperator)
-            {
                 taskContent.AddObject(seperator.NativeShellLink);
-            }
         }
 
         // Add tasks to the taskbar
@@ -536,9 +486,7 @@ public class JumpList
         if (!CoreErrorHelper.Succeeded(hr))
         {
             if ((uint)hr == 0x80040F03)
-            {
                 throw new InvalidOperationException(LocalizedMessages.JumpListFileTypeNotRegistered);
-            }
             throw new ShellException(hr);
         }
     }
@@ -546,12 +494,8 @@ public class JumpList
     private void AppendKnownCategories()
     {
         if (KnownCategoryToDisplay == JumpListKnownCategoryType.Recent)
-        {
             customDestinationList.AppendKnownCategory(KnownDestinationCategory.Recent);
-        }
         else if (KnownCategoryToDisplay == JumpListKnownCategoryType.Frequent)
-        {
             customDestinationList.AppendKnownCategory(KnownDestinationCategory.Frequent);
-        }
     }
 }

@@ -12,6 +12,7 @@ public static class ExploripCopyConfig
     private const string AutoStartOperationConfig = "AutoStartOperation";
     private const string NotificationOnEachOperationConfig = "NotificationOnEachOperation";
     private const string AutoExpandSubFolderConfig = "AutoExpandSubfolder";
+    private const string InjectWindowsExplorerConfig = "InjectWindowsExplorer";
 
     private static RegistryKey _registryRootExploripCopy;
 
@@ -31,6 +32,8 @@ public static class ExploripCopyConfig
                 _registryRootExploripCopy.SetValue(NotificationOnEachOperationConfig, "False");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(AutoExpandSubFolderConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(AutoExpandSubFolderConfig, "False");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(InjectWindowsExplorerConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(InjectWindowsExplorerConfig, "False");
         }
     }
 
@@ -61,6 +64,16 @@ public static class ExploripCopyConfig
         {
             if (AutoExpandSubFolder != value)
                 _registryRootExploripCopy.SetValue(AutoExpandSubFolderConfig, value.ToString());
+        }
+    }
+
+    public static bool InjectWindowsExplorer
+    {
+        get { return _registryRootExploripCopy.ReadBoolean(InjectWindowsExplorerConfig); }
+        set
+        {
+            if (InjectWindowsExplorer != value)
+                _registryRootExploripCopy.SetValue(InjectWindowsExplorerConfig, value.ToString());
         }
     }
 }

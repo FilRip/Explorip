@@ -87,6 +87,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualDesktop.WPF", "Libra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualDesktopPlugin", "Plugins\VirtualDesktopPlugin\VirtualDesktopPlugin.csproj", "{009A2477-B033-49AB-B3CA-A37130C08551}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.JumpList", "Libraries\CoolBytes.JumpList\CoolBytes.JumpList.csproj", "{CC51B14A-0D1A-4033-8134-86662BD543A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +227,10 @@ Global
 		{009A2477-B033-49AB-B3CA-A37130C08551}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{009A2477-B033-49AB-B3CA-A37130C08551}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{009A2477-B033-49AB-B3CA-A37130C08551}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC51B14A-0D1A-4033-8134-86662BD543A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC51B14A-0D1A-4033-8134-86662BD543A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC51B14A-0D1A-4033-8134-86662BD543A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC51B14A-0D1A-4033-8134-86662BD543A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -269,6 +275,7 @@ Global
 		{6F66DDA0-D3CE-5AB3-E55F-F9A09BB96586} = {D4060886-926E-4C66-B162-6AF9021DCCB1}
 		{DE34122D-6FCD-B57C-E5C5-43286F8485A3} = {D4060886-926E-4C66-B162-6AF9021DCCB1}
 		{009A2477-B033-49AB-B3CA-A37130C08551} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{CC51B14A-0D1A-4033-8134-86662BD543A4} = {47504A38-602C-43A1-989B-925F53E447E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}
