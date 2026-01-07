@@ -6,9 +6,10 @@
 	<Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OpenMcdf" Version="2.4.1" />
+    <PackageReference Include="OleCf" Version="1.5.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
     <ProjectReference Include="..\Securifybv\ShellLink\Securify.ShellLink.csproj" />
   </ItemGroup>
   <ItemGroup>

@@ -89,6 +89,8 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 _overlayIcon = null;
                 if (_hIcon != IntPtr.Zero)
                     NativeMethods.DestroyIcon(_hIcon);
+                if (_propStore != null)
+                    Marshal.ReleaseComObject(_propStore);
             }
             _isDisposed = true;
         }

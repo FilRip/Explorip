@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -1048,4 +1049,15 @@ public static class PredefinedPropertyKey
     public static readonly PropertyKey PKEY_Volume_IsRoot = new() { fmtid = new Guid("9B174B35-40FF-11D2-A27E-00C04FC30871"), pid = 10 };
 #pragma warning restore S1192
 #pragma warning restore IDE0079
+
+    public static string GetPropertyKeyName(Guid guid, uint pid)
+    {
+        FieldInfo[] listFileds = typeof(PredefinedPropertyKey).GetFields(BindingFlags.Static | BindingFlags.Public);
+        foreach (FieldInfo fi in listFileds)
+        {
+            if (fi.GetValue(null) is PropertyKey propKey && propKey.fmtid == guid && propKey.pid == pid)
+                return fi.Name;
+        }
+        return string.Empty;
+    }
 }

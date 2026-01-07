@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+
+using CoolBytes.JumpList;
+using CoolBytes.JumpList.Automatic;
+using CoolBytes.JumpList.Custom;
 
 using Explorip.Constants;
 using Explorip.Helpers;
@@ -263,6 +268,29 @@ public partial class TaskButton : UserControl
         _mouseOver = true;
         if (_appWindow.ListWindows.Count == 0)
             return;
+
+#if DEBUG
+        try
+        {
+            AutomaticDestination automaticJumpList = ExtensionsJumpList.GetAutomaticJumpList(_appWindow.WinFileName);
+            automaticJumpList?.DumpAllLnkFiles(@"c:\tmp\testlnk");
+            CustomDestination customJumpList = ExtensionsJumpList.GetCustomJumpList(_appWindow.WinFileName);
+            if (customJumpList != null)
+                foreach (Entry entry in customJumpList.Entries)
+                {
+                    int i = 0;
+                    foreach (Shortcut lnk in entry.LnkFiles)
+                    {
+                        i++;
+                        lnk.WriteToFile(@$"c:\tmp\testlnk\custom{i}.lnk");
+                    }
+                }
+        }
+        catch (Exception)
+        {
+            // Ignore errors
+        }
+#endif
 
         if (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskbarDisableThumb)
             return;
