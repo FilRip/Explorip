@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 using CoolBytes.JumpList.Models;
 
@@ -13,56 +12,34 @@ namespace CoolBytes.JumpList;
 
 public static class ExtensionsJumpList
 {
-    public static uint ComputeWindowsCrc32(string appId)
+    public static Models.JumpList? GetAutomaticJumpList(string fullPath)
     {
-        byte[] bytes = Encoding.Unicode.GetBytes(appId);
-
-        uint crc = 0xFFFFFFFF;
-
-        foreach (byte b in bytes)
-        {
-            crc ^= b;
-            for (int i = 0; i < 8; i++)
-            {
-                if ((crc & 1) != 0)
-                    crc = (crc >> 1) ^ 0xEDB88320;
-                else
-                    crc >>= 1;
-            }
-        }
-
-        return ~crc;
-    }
-
-    public static Models.JumpList? GetAutomaticJumpList(string appModelUserId)
-    {
-        uint crc32 = ComputeWindowsCrc32(appModelUserId);
-        string filename = crc32.ToString("X");
         string pathAutomatic;
-        pathAutomatic = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "Recent", "AutomaticDestinations") + filename + ".automaticDestinations-ms";
-        Models.JumpList? result = null;
-        if (File.Exists(pathAutomatic))
+        pathAutomatic = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "Recent", "AutomaticDestinations");
+        foreach (string file in Directory.GetFiles(pathAutomatic, "*.automaticDestinations-ms"))
         {
-            CompoundFile cf = new(pathAutomatic);
+            Models.JumpList? result = null;
+            CompoundFile cf = new(file);
             if (cf.RootStorage.TryGetStream("DestList", out CFStream cfStorage))
             {
                 byte[] destListData = cfStorage.GetData();
                 if (destListData.Length > 32)
                 {
-                    using MemoryStream streamDestListData = new(destListData);
-                    BinaryReader reader = new(streamDestListData);
+                    int offset = 0;
                     result = new Models.JumpList();
-                    result.Header.Version = reader.ReadUInt64();
-                    result.Header.CountEntries = reader.ReadUInt64();
-                    result.Header.LastId = reader.ReadUInt64();
-                    result.Header.Reserved = reader.ReadUInt64();
-                    for (ulong count = 0; count < result.Header.CountEntries; count++)
+                    result.Header.Version = BitConverter.ToInt32(destListData, offset);
+                    result.Header.CountEntries = BitConverter.ToInt32(destListData, offset + 4);
+                    result.Header.CountPinnedEntries = BitConverter.ToInt32(destListData, offset + 8);
+                    result.Header.LastId = BitConverter.ToInt32(destListData, offset + 16);
+                    result.Header.LastRevision = BitConverter.ToInt32(destListData, offset + 24);
+                    offset = 32;
+                    for (int count = 0; count < result.Header.CountEntries; count++)
                     {
                         JumpListItem item = new()
                         {
-                            Id = reader.ReadUInt64(),
+                            //Id = reader.ReadUInt64(),
                         };
-                        ulong timestamp = reader.ReadUInt64();
+                        /*ulong timestamp = reader.ReadUInt64();
                         item.SetTimestamp(timestamp);
                         item.AccessCount = reader.ReadUInt32();
                         item.Pinned = (reader.ReadUInt32() == 1);
@@ -78,7 +55,7 @@ public static class ExtensionsJumpList
                         reader.ReadUInt64();
                         reader.ReadUInt64();
                         reader.ReadUInt64();
-                        item.StreamNumber = reader.ReadUInt64();
+                        item.StreamNumber = reader.ReadUInt64();*/
                         if (cf.RootStorage.TryGetStream(item.StreamNumber.ToString(), out CFStream cfStream))
                         {
                             byte[] lnkData = cfStream.GetData();
@@ -89,42 +66,45 @@ public static class ExtensionsJumpList
                             catch (Exception) { /* Ignore errors */ }
                         }
                         result.Items.Add(item);
-                        reader.Close();
-                        reader.Dispose();
                     }
                 }
             }
+            cf.Close();
+            cf.Dispose();
+            if (result?.Items?.Count > 0 && result.Items[0].FullPath().ToLower() == fullPath.ToLower())
+                return result;
         }
-        return result;
+        return null;
     }
 
-    public static List<Shortcut> GetCustomJumpList(string appModelUserId)
+    public static List<Shortcut> GetCustomJumpList(string fullPath)
     {
-        uint crc32 = ComputeWindowsCrc32(appModelUserId);
-        string filename = crc32.ToString("X");
         string pathCustom;
-        pathCustom = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "Recent", "CustomDestinations") + filename + ".customDestinations-ms";
+        pathCustom = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "Recent", "CustomDestinations");
 
         List<Shortcut> result = [];
 
-        using (FileStream fs = new(pathCustom, FileMode.Open, FileAccess.Read))
+        if (File.Exists(pathCustom))
         {
-            using BinaryReader br = new(fs);
-            br.ReadUInt32(); // Version
-            uint count = br.ReadUInt32();
-            for (int i = 0; i < count; i++)
+            using (FileStream fs = new(pathCustom, FileMode.Open, FileAccess.Read))
             {
-                try
+                using BinaryReader br = new(fs);
+                br.ReadUInt32(); // Version
+                uint count = br.ReadUInt32();
+                for (int i = 0; i < count; i++)
                 {
-                    uint size = br.ReadUInt32();
-                    if (size == 0 || size > fs.Length)
-                        break;
-                    byte[] lnkBytes = br.ReadBytes((int)size);
-                    result.Add(Shortcut.FromByteArray(lnkBytes));
-                }
-                catch (Exception)
-                {
-                    // Ignore errors
+                    try
+                    {
+                        uint size = br.ReadUInt32();
+                        if (size == 0 || size > fs.Length)
+                            break;
+                        byte[] lnkBytes = br.ReadBytes((int)size);
+                        result.Add(Shortcut.FromByteArray(lnkBytes));
+                    }
+                    catch (Exception)
+                    {
+                        // Ignore errors
+                    }
                 }
             }
         }

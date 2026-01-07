@@ -28,7 +28,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private bool _iconLoading;
     private ImageSource _icon;
     private IntPtr _hIcon;
-    private string _appUserModelId;
+    private string _appUserModelId, _appUserModelIdRelaunch;
     private bool? _isUWP;
     private string _winFileName;
     private uint? _procId;
@@ -104,6 +104,17 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 _appUserModelId = ShellHelper.GetAppUserModelIdPropertyForHandle(_windows[0].Handle);
 
             return _appUserModelId;
+        }
+    }
+
+    public string AppUserModelIDRelaunch
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_appUserModelIdRelaunch) && _windows.Count > 0)
+                _appUserModelIdRelaunch = ShellHelper.GetAppUserModelIdPropertyForHandle(_windows[0].Handle, 2);
+
+            return _appUserModelIdRelaunch;
         }
     }
 

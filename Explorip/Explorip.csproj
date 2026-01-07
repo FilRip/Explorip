@@ -53,6 +53,7 @@
     <ProjectReference Include="..\HookFileOperation\HookFileOperations\HookFileOperations.csproj" />
     <ProjectReference Include="..\HookTaskbarList\HookTaskbarListManager\HookTaskbarListManager.csproj" />
     <ProjectReference Include="..\HookTaskbarList\HookTaskbarList\HookTaskbarList.csproj" />
+    <ProjectReference Include="..\Libraries\CoolBytes.JumpList\CoolBytes.JumpList.csproj" />
     <ProjectReference Include="..\Libraries\ExploripConfig\ExploripConfig.csproj" />
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.AppBar\ManagedShell.AppBar.csproj" />
     <ProjectReference Include="..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />

@@ -38,7 +38,7 @@ public partial class NotifyIcon : UserControl
 
             ShellLogger.Debug($"Create Systray Icon for {TrayIcon.Title}");
 
-            if (Window.GetWindow(this) is Taskbar { MainScreen: true })
+            if (Window.GetWindow(this) is Taskbar tb && tb.MainScreen)
             {
                 TrayIcon.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
             }
@@ -61,7 +61,7 @@ public partial class NotifyIcon : UserControl
         if (_ignoreReload)
             return;
 
-        if (TrayIcon != null && Window.GetWindow(this) is Taskbar { MainScreen: true })
+        if (TrayIcon != null && Window.GetWindow(this) is Taskbar tb && tb.MainScreen)
         {
             TrayIcon.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
         }

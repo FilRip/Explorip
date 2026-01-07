@@ -2,11 +2,13 @@
 
 public class JumpListHeader
 {
-    public ulong Version { get; set; }
+    public int Version { get; set; }
 
-    public ulong CountEntries { get; set; }
+    public int CountEntries { get; set; }
 
-    public ulong LastId { get; set; }
+    public int CountPinnedEntries { get; set; }
 
-    public ulong Reserved { get; set; }
+    public int LastId { get; set; }
+
+    public int LastRevision { get; set; }
 }

@@ -27,4 +27,9 @@ public class JumpListItem
     {
         Shortcut = Shortcut.FromByteArray(data);
     }
+
+    public string FullPath()
+    {
+        return string.IsNullOrWhiteSpace(Shortcut?.Target) ? Environment.ExpandEnvironmentVariables(@"%windir%\explorer.exe") : Shortcut!.Target;
+    }
 }
