@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Securify.PropertyStore.Flags;
+namespace Securify.ShellLink.Flags;
 
 /// <summary>
 /// The PropertyType enumeration represents the type of a property in a property set. The set of types supported depends 

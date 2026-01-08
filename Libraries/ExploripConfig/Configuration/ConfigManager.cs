@@ -56,6 +56,7 @@ public static class ConfigManager
     private const string ConfigSwitchToDesktopWhenDragEnter = "SwitchToDesktopWhenDragEnter";
     private const string ConfigMouseOverBackgroundColor = "MouseOverBackgroundColor";
     private const string ConfigReplaceStartMenu = "ReplaceStartMenu";
+    private const string ConfigUseJumpList = "UseJumpList";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -158,6 +159,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue(ConfigMouseOverBackgroundColor, $"255,{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.R},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.G},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.B}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigReplaceStartMenu, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigReplaceStartMenu, "True");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigUseJumpList, "").ToString()))
+                _registryRootTaskbar.SetValue(ConfigUseJumpList, "True");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
@@ -612,6 +615,16 @@ public static class ConfigManager
     #endregion
 
     #region Taskbar
+
+    public static bool UseJumpList
+    {
+        get { return _registryRootTaskbar.ReadBoolean(ConfigUseJumpList); }
+        set
+        {
+            if (UseJumpList != value && AllowWrite)
+                _registryRootTaskbar.SetValue(ConfigUseJumpList, value.ToString());
+        }
+    }
 
     public static string DateFormat
     {

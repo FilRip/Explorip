@@ -44,14 +44,10 @@ internal static class Utils
         string tempValue = guid.ToLowerInvariant();
 
         if (tempValue.StartsWith("{"))
-        {
             tempValue = tempValue.Replace("{", "").Replace("}", "");
-        }
 
         if (Guids.ContainsKey(tempValue))
-        {
             return Guids[tempValue];
-        }
 
         return $"Unmapped GUID: {guid}";
     }

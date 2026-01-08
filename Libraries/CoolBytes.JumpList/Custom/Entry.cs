@@ -100,38 +100,4 @@ public class Entry
     public int HeaderType { get; }
 
     public List<Shortcut> LnkFiles { get; }
-
-    public void DumpAllLnkFiles(string outDir, string appId)
-    {
-        foreach (KeyValuePair<string, byte[]> entry in lnkBytes)
-        {
-            if (entry.Value[0] != 0x4c)
-            {
-                //this isn't a lnk file since it doesn't start with 0x4c, so continue
-                continue;
-            }
-            string fName = $"AppId_{appId}_{entry.Key}";
-            string outPath = Path.Combine(outDir, fName);
-
-            File.WriteAllBytes(outPath, entry.Value);
-        }
-    }
-
-
-    public override string ToString()
-    {
-        StringBuilder sb = new();
-
-
-        sb.AppendLine($"unknown0: {Unknown0}");
-        sb.AppendLine($"Rank: {Rank:F4}");
-        sb.AppendLine($"unknown2: {Unknown2}");
-        sb.AppendLine($"HeaderType: {HeaderType}");
-        if (Name.Length > 0)
-        {
-            sb.AppendLine($"Name: {Name}");
-        }
-
-        return sb.ToString();
-    }
 }

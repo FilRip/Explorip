@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Securify.PropertyStore;
-using Securify.PropertyStore.Structures;
-
 namespace Securify.ShellLink.Structures;
 
 /// <summary>

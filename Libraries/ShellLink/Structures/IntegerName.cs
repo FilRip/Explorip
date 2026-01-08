@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Text;
 
-using Securify.PropertyStore.Flags;
+using Securify.ShellLink.Flags;
 
-namespace Securify.PropertyStore.Structures;
+namespace Securify.ShellLink.Structures;
 
 /// <summary>
 /// The Serialized Property Value (Integer Name) structure specifies a single property 

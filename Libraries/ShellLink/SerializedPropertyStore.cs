@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Securify.PropertyStore.Structures;
+using Securify.ShellLink.Structures;
 
-namespace Securify.PropertyStore;
+namespace Securify.ShellLink;
 
 /// <summary>
 /// The Property Store Binary File Format is a sequence of Serialized Property 

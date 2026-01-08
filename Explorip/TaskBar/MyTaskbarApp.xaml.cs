@@ -73,6 +73,8 @@ public partial class MyTaskbarApp : Application
         ExitApp();
         if (ConfigManager.HookTaskbarList)
             Explorip.Helpers.HookTaskbarListHelper.UninstallHook();
+        if (ConfigManager.UseJumpList)
+            CoolBytes.JumpList.ExtensionsJumpList.Stop();
         Current?.Dispatcher?.Invoke(() => Current?.Shutdown());
     }
 
@@ -286,7 +288,8 @@ public partial class MyTaskbarApp : Application
         // Startup
         DictionaryManager.SetThemeFromSettings();
         OpenTaskbar();
-
+        if (ConfigManager.UseJumpList)
+            CoolBytes.JumpList.ExtensionsJumpList.Init();
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 

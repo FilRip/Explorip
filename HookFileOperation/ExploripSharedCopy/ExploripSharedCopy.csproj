@@ -18,7 +18,7 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\Securifybv\ShellLink\Securify.ShellLink.csproj" />
+    <ProjectReference Include="..\..\Libraries\ShellLink\Securify.ShellLink.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

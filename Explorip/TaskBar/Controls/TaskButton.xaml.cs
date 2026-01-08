@@ -94,6 +94,12 @@ public partial class TaskButton : UserControl
             ProgressBarWindow.Height = ConfigManager.TaskbarProgressBarHeight;
         ProgressBarWindow.Foreground = ConfigManager.TaskButtonProgressBarColor;
 
+        if (!ConfigManager.UseJumpList)
+        {
+            JumpListContextMenu.Visibility = Visibility.Collapsed;
+            SeparatorJumpListContextMenu.Visibility = Visibility.Collapsed;
+        }
+
         _isLoaded = true;
     }
 
@@ -268,29 +274,6 @@ public partial class TaskButton : UserControl
         _mouseOver = true;
         if (_appWindow.ListWindows.Count == 0)
             return;
-
-#if DEBUG
-        try
-        {
-            AutomaticDestination automaticJumpList = ExtensionsJumpList.GetAutomaticJumpList(_appWindow.WinFileName);
-            automaticJumpList?.DumpAllLnkFiles(@"c:\tmp\testlnk");
-            CustomDestination customJumpList = ExtensionsJumpList.GetCustomJumpList(_appWindow.WinFileName);
-            if (customJumpList != null)
-                foreach (Entry entry in customJumpList.Entries)
-                {
-                    int i = 0;
-                    foreach (Shortcut lnk in entry.LnkFiles)
-                    {
-                        i++;
-                        lnk.WriteToFile(@$"c:\tmp\testlnk\custom{i}.lnk");
-                    }
-                }
-        }
-        catch (Exception)
-        {
-            // Ignore errors
-        }
-#endif
 
         if (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskbarDisableThumb)
             return;
@@ -482,5 +465,48 @@ public partial class TaskButton : UserControl
     private void MoveWithMouse_Click(object sender, RoutedEventArgs e)
     {
         ApplicationWindow.Move();
+    }
+
+    private void MainContextMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        try
+        {
+            if (e.NewValue is bool visible && visible && ConfigManager.UseJumpList && ApplicationWindow?.ListWindows != null)
+            {
+                JumpListContextMenu.Items.Clear();
+                AutomaticDestination automaticJumpList = ExtensionsJumpList.GetAutomaticJumpList(ApplicationWindow.ListWindows[0].Handle);
+                CustomDestination customJumpList = ExtensionsJumpList.GetCustomJumpList(ApplicationWindow.ListWindows[0].Handle);
+                if (automaticJumpList?.DestListEntries?.Count > 0)
+                {
+                    foreach (Shortcut lnk in automaticJumpList.DestListEntries.Select(auto => auto.Lnk))
+                    {
+                        MenuItem mi = new()
+                        {
+                            Header = lnk.Name,
+                            Tag = lnk,
+                            Icon = IconManager.Convert(IconManager.Extract(lnk.IconPath, lnk.IconIndex, false)),
+                        };
+                        JumpListContextMenu.Items.Add(mi);
+                    }
+                }
+                if (customJumpList?.Entries?.Count > 0 && customJumpList?.Entries[0].LnkFiles?.Count > 0)
+                {
+                    foreach (Shortcut lnk in customJumpList.Entries[0].LnkFiles)
+                    {
+                        MenuItem mi = new()
+                        {
+                            Header = lnk.Name,
+                            Tag = lnk,
+                            Icon = IconManager.Convert(IconManager.Extract(lnk.IconPath, lnk.IconIndex, false)),
+                        };
+                        JumpListContextMenu.Items.Add(mi);
+                    }
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // Ignore errors
+        }
     }
 }

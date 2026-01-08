@@ -14,8 +14,4 @@
     <langVersion>latest</langVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PropertyStore\Securify.PropertyStore.csproj" />
-  </ItemGroup>
-
 </Project>

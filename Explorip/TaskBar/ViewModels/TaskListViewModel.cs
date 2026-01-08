@@ -155,6 +155,13 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     private static Guid ReturnVirtualDesktopId(IntPtr handle)
     {
+        try
+        {
+            if (handle == IntPtr.Zero || VirtualDesktopManager.IsPinnedWindow(handle))
+                return _currentVirtualDesktopId;
+        }
+        catch (Exception) { /* Ignore errors */ }
+
         Guid virtualDesktopId = Guid.Empty;
         int nbTry = 0;
         // Sometimes, for unknown reasons, the get virtual desktop of window handle not working the first time
@@ -354,7 +361,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 {
                     IsPinnedApp = true,
                     PinnedShortcut = file,
-                    WinFileName = string.IsNullOrWhiteSpace(pinnedApp.Target) ? Environment.ExpandEnvironmentVariables(@"%windir%\explorer.exe") : pinnedApp.Target,
+                    WinFileName = pinnedApp.Target,
                     Arguments = pinnedApp.StringData?.CommandLineArguments,
                     WorkingDirectory = pinnedApp.StringData?.WorkingDir,
                 };
@@ -368,10 +375,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     Debug.WriteLine($"Unable to add {file} as pinned app");
                     continue;
                 }
-                if (string.IsNullOrWhiteSpace(pinnedApp.StringData?.IconLocation))
-                    appWin.Icon = IconManager.Convert(IconManager.Extract(appWin.WinFileName, 0, true));
-                else
-                    appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.StringData.IconLocation, pinnedApp.IconIndex, true));
+                appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.IconPath, pinnedApp.IconIndex, true));
                 if (numPinnedApp > MyTaskbarApp.MyShellManager.TasksService.Windows.Count)
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Add(appWin);
                 else

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 using static ManagedShell.Interop.NativeMethods;
@@ -1050,13 +1051,23 @@ public static class PredefinedPropertyKey
 #pragma warning restore S1192
 #pragma warning restore IDE0079
 
+    private readonly static Dictionary<(Guid, uint), string> _precacheListPropertyKey = [];
+
     public static string GetPropertyKeyName(Guid guid, uint pid)
     {
-        FieldInfo[] listFileds = typeof(PredefinedPropertyKey).GetFields(BindingFlags.Static | BindingFlags.Public);
-        foreach (FieldInfo fi in listFileds)
+        if (_precacheListPropertyKey.Count == 0)
         {
-            if (fi.GetValue(null) is PropertyKey propKey && propKey.fmtid == guid && propKey.pid == pid)
-                return fi.Name;
+            FieldInfo[] listFileds = typeof(PredefinedPropertyKey).GetFields(BindingFlags.Static | BindingFlags.Public);
+            foreach (FieldInfo fi in listFileds)
+            {
+                if (fi.GetValue(null) is PropertyKey pk)
+                    _precacheListPropertyKey.Add((pk.fmtid, pk.pid), fi.Name);
+            }
+        }
+        foreach (KeyValuePair<(Guid, uint), string> pk in _precacheListPropertyKey)
+        {
+            if (pk.Key.Item1 == guid && pk.Key.Item2 == pid)
+                return pk.Value;
         }
         return string.Empty;
     }

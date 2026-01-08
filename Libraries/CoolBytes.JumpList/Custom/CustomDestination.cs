@@ -80,7 +80,7 @@ public class CustomDestination
         }
     }
 
-    public string SourceFile { get; }
+    public string SourceFile { get; internal set; }
 
     public List<Entry> Entries { get; }
 

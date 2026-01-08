@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace CoolBytes.JumpList.Automatic;
 
@@ -43,7 +42,7 @@ public class DestList
                 mruPos += 1;
             }
         }
-    
+
         else
         {
             //windows 10 has version 3              
@@ -58,14 +57,14 @@ public class DestList
                 //128 is offset to the string, 2 for the size itself, double path for unicode
 
                 //after entry size, if the 4 bytes are 0, theres no extra data, but if not, its an SPS
-                int spsSize = BitConverter.ToInt32(rawBytes,index + entrySize);
+                int spsSize = BitConverter.ToInt32(rawBytes, index + entrySize);
 
 
 
-                byte[] entryBytes2 = new byte[entrySize+spsSize+4];
-                Buffer.BlockCopy(rawBytes, index, entryBytes2, 0, entrySize+spsSize);
+                byte[] entryBytes2 = new byte[entrySize + spsSize + 4];
+                Buffer.BlockCopy(rawBytes, index, entryBytes2, 0, entrySize + spsSize);
 
-                DestListEntry entry2 = new(entryBytes2, Header.Version, mruPos,spsSize);
+                DestListEntry entry2 = new(entryBytes2, Header.Version, mruPos, spsSize);
 
                 Entries.Add(entry2);
 
@@ -79,20 +78,4 @@ public class DestList
     public DestListHeader Header { get; }
 
     public List<DestListEntry> Entries { get; }
-
-    public override string ToString()
-    {
-        StringBuilder sb = new();
-
-        sb.AppendLine($"Header: {Header}");
-
-        sb.AppendLine("");
-        sb.AppendLine($"DestList Entries Expected: {Header.NumberOfEntries:N0}, Found: {Entries.Count:N0}");
-        foreach (DestListEntry destListEntry in Entries)
-        {
-            sb.AppendLine(destListEntry.ToString());
-        }
-
-        return sb.ToString();
-    }
 }

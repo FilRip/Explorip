@@ -10,7 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
-    <ProjectReference Include="..\Securifybv\ShellLink\Securify.ShellLink.csproj" />
+    <ProjectReference Include="..\ShellLink\Securify.ShellLink.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />

@@ -11,7 +11,7 @@ namespace CoolBytes.JumpList.Automatic;
 
 public class DestListEntry
 {
-    public DestListEntry(byte[] rawBytes, int version, int mruPosition,int spsSize =0)
+    public DestListEntry(byte[] rawBytes, int version, int mruPosition, int spsSize = 0)
     {
         MRUPosition = mruPosition;
 
@@ -39,8 +39,8 @@ public class DestListEntry
 
         if (rawBytes[73] == 0)
         {
-            
-            Hostname = Encoding.Unicode.GetString(rawBytes, 72, 16).Split('\0')[0];    
+
+            Hostname = Encoding.Unicode.GetString(rawBytes, 72, 16).Split('\0')[0];
         }
         else
         {
@@ -52,9 +52,9 @@ public class DestListEntry
         AccessCount = BitConverter.ToSingle(rawBytes, 96);
 
         LastModified = DateTimeOffset.FromFileTime(BitConverter.ToInt64(rawBytes, 100)).ToUniversalTime();
-   
-        
-        
+
+
+
 
         PinStatus = BitConverter.ToInt32(rawBytes, 108);
 
@@ -115,7 +115,7 @@ public class DestListEntry
                         newPathSegs.Add(pathSeg);
                     }
                 }
-                catch (ArgumentException )
+                catch (ArgumentException)
                 {
                     // Syntax error in the regular expression
                 }
@@ -136,7 +136,7 @@ public class DestListEntry
         {
             Sps = new PropertySheet([.. rawBytes.Skip(rawBytes.Length - spsSize)]);
         }
-        
+
     }
 
     public long Checksum { get; }
@@ -155,8 +155,8 @@ public class DestListEntry
     public int Unknown4 { get; }
     public Guid VolumeBirthDroid { get; }
     public Guid VolumeDroid { get; }
-    
-    public PropertySheet? Sps { get;}
+
+    public PropertySheet? Sps { get; }
 
     public DateTimeOffset CreationTime { get; }
     public string MacAddress { get; }
@@ -167,14 +167,12 @@ public class DestListEntry
         DateTimeOffset gregorianCalendarStart = new(1582, 10, 15, 0, 0, 0, TimeSpan.Zero);
         const int versionByte = 7;
         const int versionByteMask = 0x0f;
-        const int versionByteShift = 4;
         const byte timestampByte = 0;
 
         byte[] bytes = guid.ToByteArray();
 
         // reverse the version
         bytes[versionByte] &= versionByteMask;
-        bytes[versionByte] |= 0x01 >> versionByteShift;
 
         byte[] timestampBytes = new byte[8];
         Array.Copy(bytes, timestampByte, timestampBytes, 0, 8);
@@ -183,31 +181,5 @@ public class DestListEntry
         long ticks = timestamp + gregorianCalendarStart.Ticks;
 
         return new DateTimeOffset(ticks, TimeSpan.Zero);
-    }
-
-    public override string ToString()
-    {
-        StringBuilder sb = new();
-
-        sb.AppendLine($"Checksum: {Checksum}");
-        sb.AppendLine($"VolumeDroid: {VolumeDroid}");
-        sb.AppendLine($"VolumeBirthDroid: {VolumeBirthDroid}");
-        sb.AppendLine($"FileDroid: {FileDroid}");
-        sb.AppendLine($"FileBirthDroid: {FileBirthDroid}");
-        sb.AppendLine($"Hostname: {Hostname}");
-        sb.AppendLine($"EntryNumber: {EntryNumber}");
-        sb.AppendLine($"MRUPosition: {MRUPosition}");
-        sb.AppendLine($"LastMod: {LastModified}");
-        sb.AppendLine($"PinStatus: {PinStatus}");
-        sb.AppendLine($"Path: {Path}");
-        sb.AppendLine($"MacAddress: {MacAddress}");
-        sb.AppendLine($"CreationTime: {CreationTime}");
-        sb.AppendLine($"Unknown0: {Unknown0}");
-        sb.AppendLine($"AccessCount: {AccessCount}");
-        sb.AppendLine($"InteractionCount: {InteractionCount}");
-        sb.AppendLine($"Unknown3: {Unknown3}");
-        sb.AppendLine($"Unknown4: {Unknown4}");
-
-        return sb.ToString();
     }
 }

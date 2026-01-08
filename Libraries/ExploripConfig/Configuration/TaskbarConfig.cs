@@ -44,7 +44,6 @@ public class TaskbarConfig
     private const string ConfigFloatingButtonPosY = "FloatingButtonPosY";
     private const string ConfigFloatingButtonSide = "FloatingButtonSide";
     private const string ConfigTaskbarDisableThumb = "TaskbarDisableThumb";
-
     #endregion
 
     private RegistryKey _registryTaskbar;

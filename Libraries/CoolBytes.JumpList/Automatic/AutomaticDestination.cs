@@ -39,11 +39,11 @@ public class AutomaticDestination
             byte[] destListPropertyStoreBytes = oleContainer.GetPayloadForDirectory(destListPropertyStore);
 
             EmptyDestListPropertyStore = true;
-            
+
             if (BitConverter.ToInt32(destListPropertyStoreBytes, 0) > 0)
             {
                 EmptyDestListPropertyStore = false;
-                DestListPropertyStore = new PropertySheet([.. destListPropertyStoreBytes.Skip(4)]);    
+                DestListPropertyStore = new PropertySheet([.. destListPropertyStoreBytes.Skip(4)]);
             }
         }
 
@@ -69,7 +69,7 @@ public class AutomaticDestination
 
                     Shortcut dlnk = Shortcut.FromByteArray(p);
 
-                    AutoDestList dle = new(entry, dlnk,entry.InteractionCount);
+                    AutoDestList dle = new(entry, dlnk, entry.InteractionCount);
 
                     if (entry.Sps != null && !HasSps)
                     {
@@ -98,46 +98,15 @@ public class AutomaticDestination
 
     public int DestListVersion { get; }
 
-    public string SourceFile { get; }
+    public string SourceFile { get; internal set; }
 
     private DestList? DestList { get; }
-    
+
     public bool HasSps { get; }
-    
+
     public PropertySheet? DestListPropertyStore { get; }
 
     public bool EmptyDestListPropertyStore { get; }
 
     public List<AutoDestList> DestListEntries { get; }
-
-    public void DumpAllLnkFiles(string outDir)
-    {
-        if (!System.IO.Directory.Exists(outDir))
-        {
-            System.IO.Directory.CreateDirectory(outDir);
-        }
-
-        OleCfFile oleContainer = new(File.ReadAllBytes(SourceFile), SourceFile);
-
-        foreach (DirectoryEntry? directoryItem in oleContainer.Directory)
-        {
-            if (directoryItem.DirectoryName.ToLowerInvariant() == "root entry" ||
-                directoryItem.DirectoryName.ToLowerInvariant() == "destlist")
-            {
-                continue;
-            }
-
-            byte[] lnkBytes = oleContainer.GetPayloadForDirectory(directoryItem);
-
-            if (lnkBytes[0] != 0x4c)
-            {
-                //this isn't a lnk file since it doesn't start with 0x4c, so continue
-                continue;
-            }
-            string fName = $"AppId_{Path.GetFileNameWithoutExtension(SourceFile)}_DirName_{directoryItem.DirectoryName}.lnk";
-            string outPath = Path.Combine(outDir, fName);
-
-            File.WriteAllBytes(outPath, lnkBytes);
-        }
-    }
 }

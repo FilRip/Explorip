@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 
 namespace CoolBytes.JumpList.Automatic;
 
@@ -13,20 +12,4 @@ public class DestListHeader(byte[] rawBytes)
     public int Unknown1 { get; } = BitConverter.ToInt32(rawBytes, 20);
     public int LastRevisionNumber { get; } = BitConverter.ToInt32(rawBytes, 24);
     public int Unknown2 { get; } = BitConverter.ToInt32(rawBytes, 28);
-
-    public override string ToString()
-    {
-        StringBuilder sb = new();
-
-        sb.AppendLine($"Version: {Version}");
-        sb.AppendLine($"NumberOfEntries: {NumberOfEntries}");
-        sb.AppendLine($"NumberOfPinnedEntries: {NumberOfPinnedEntries}");
-        sb.AppendLine($"LastEntryNumber: {LastEntryNumber}");
-        sb.AppendLine($"LastRevisionNumber: {LastRevisionNumber}");
-        sb.AppendLine($"Unknown0: {UnknownCounter}");
-        sb.AppendLine($"AccessCount: {Unknown1}");
-        sb.AppendLine($"Unknown2: {Unknown2}");
-
-        return sb.ToString();
-    }
 }

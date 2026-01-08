@@ -196,6 +196,7 @@ public static class Localization
     public static string MOVING { get; private set; }
     public static string MOVE_TO { get; private set; }
     public static string ACTIVES_APPLICATIONS { get; private set; }
+    public static string APPLICATION_SHORTCUTS { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -382,6 +383,7 @@ public static class Localization
         MOVING = Load(Shell32Dll, 32945, "Moving...");
         MOVE_TO = Load(Shell32Dll, 30340, "Move to");
         ACTIVES_APPLICATIONS = Load(TwinUiPcShellDll, 1512, "Actives applications");
+        APPLICATION_SHORTCUTS = Load(Shell32Dll, 50704, "Shortcuts application");
     }
 
     internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

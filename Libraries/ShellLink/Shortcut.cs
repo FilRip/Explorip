@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -176,7 +177,44 @@ public class Shortcut : ShellLinkHeader
             else if (ExtraData?.EnvironmentVariableDataBlock?.TargetUnicode != null)
                 return Path.GetFullPath(ExtraData.EnvironmentVariableDataBlock.TargetUnicode);
             else
-                return null;
+                return Environment.ExpandEnvironmentVariables(@"%windir%\explorer.exe");
+        }
+    }
+
+    public string IconPath
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(StringData?.IconLocation))
+                return StringData?.IconLocation;
+            object iconPs = GetExtraData(new Guid("{9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3}"));
+            if (iconPs is string str)
+                return str;
+            return Target;
+        }
+    }
+
+    public object GetExtraData(Guid guid)
+    {
+        // TODO : Check pid (num of PropertyKey)
+        // TODO : Return VT_LPSTR ?
+        if (ExtraData?.PropertyStoreDataBlock?.PropertyStore?.Count > 0)
+            foreach (List<SerializedPropertyValue> sps in ExtraData.PropertyStoreDataBlock.PropertyStore.Where(p => p.PropertyStorage != null && p.FormatID == guid).Select(p => p.PropertyStorage))
+                if (sps?.Count > 0)
+                    foreach (TypedPropertyValue spv in sps.Select(p => p.TypedPropertyValue))
+                        if (spv.Type == PropertyType.VT_LPSTR || spv.Type == PropertyType.VT_LPWSTR)
+                            return spv.Value;
+        return null;
+    }
+
+    public string Name
+    {
+        get
+        {
+            object searchResult = GetExtraData(new Guid("{f29f85e0-4ff9-1068-ab91-08002b27b3d9}"));
+            if (searchResult is string str)
+                return str;
+            return null;
         }
     }
 

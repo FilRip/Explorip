@@ -45,18 +45,21 @@
                 <TextBlock x:Name="TxtTitle" MaxWidth="{Binding DataContext.MaxTitleLength, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=local:TaskList, Mode=FindAncestor}}" Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0,0,10,0"/>
             </Grid>
             <Button.ContextMenu>
-                <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}">
+                <ContextMenu Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" ItemsPanel="{DynamicResource MyMenuItemPanel}" IsVisibleChanged="MainContextMenu_IsVisibleChanged" Name="MainContextMenu">
+                    <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_WINDOW}" Name="StartNewInstanceMenuItem" Click="StartNewInstanceMenuItem_Click">
+                        <MenuItem.Icon>
+                            <Image Source="{Binding Icon}"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator Style="{DynamicResource MySeparatorStyle}"/>
+                    <MenuItem Header="{x:Static constants:Localization.APPLICATION_SHORTCUTS}" Style="{DynamicResource MenuItemWithSubMenuStyle}" Name="JumpListContextMenu"/>
+                    <Separator Style="{DynamicResource MySeparatorStyle}" Name="SeparatorJumpListContextMenu"/>
                     <MenuItem Header="{x:Static constants:Localization.MOVE_TO}" Style="{DynamicResource MenuItemWithSubMenuStyle}">
                         <MenuItem Header="{x:Static constants:Localization.SCREEN}" Style="{DynamicResource MenuItemWithSubMenuStyle}" Name="MoveToScreen" MouseEnter="MoveToScreen_MouseEnter"/>
                         <MenuItem Header="{x:Static constants:Localization.DESKTOP}" Style="{DynamicResource MenuItemWithSubMenuStyle}" Name="MoveToVirtualDesktop" MouseEnter="MoveToVirtualDesktop_MouseEnter"/>
                     </MenuItem>
                     <MenuItem Header="{x:Static constants:Localization.MOVING}" Name="MoveWithMouse" Click="MoveWithMouse_Click"/>
                     <Separator Style="{DynamicResource MySeparatorStyle}"/>
-                    <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_WINDOW}" Name="StartNewInstanceMenuItem" Click="StartNewInstanceMenuItem_Click">
-                        <MenuItem.Icon>
-                            <Image Source="{Binding Icon}"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
                     <MenuItem Header="{x:Static constants:Localization.UNPIN_FROM_TASKBAR}" Visibility="{Binding IsPinnedApp, Converter={StaticResource BoolToVisibility}}" Name="UnpinMenuItem" Click="UnpinMenuItem_Click">
                         <MenuItem.Icon>
                             <Image Source="{x:Static constants:Icons.Unpin}"/>

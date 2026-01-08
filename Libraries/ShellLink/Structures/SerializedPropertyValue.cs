@@ -1,4 +1,4 @@
-﻿namespace Securify.PropertyStore.Structures;
+﻿namespace Securify.ShellLink.Structures;
 
 /// <summary>
 /// 
