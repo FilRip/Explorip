@@ -155,29 +155,31 @@ public static class ExtensionsJumpList
         _watchCustom?.Dispose();
     }
 
-    public static AutomaticDestination? GetAutomaticJumpList(IntPtr hWnd)
+    public static List<AutomaticDestination> GetAutomaticJumpList(IntPtr hWnd)
     {
+        List<AutomaticDestination> result = [];
         try
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
             foreach (AutomaticDestination ad in _listAutoDest)
                 if (ad.DestListEntries?.Count > 0 && ad.DestListEntries[0].Lnk?.Target == path)
-                    return ad;
+                    result.Add(ad);
         }
         catch (Exception) { /* Ignore errors */ }
-        return null;
+        return result;
     }
 
-    public static CustomDestination? GetCustomJumpList(IntPtr hWnd)
+    public static List<CustomDestination> GetCustomJumpList(IntPtr hWnd)
     {
+        List<CustomDestination> result = [];
         try
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
             foreach (CustomDestination cd in _listCustomDest)
                 if (cd.Entries?.Count > 0 && cd.Entries[0].LnkFiles?.Count > 0 && cd.Entries[0].LnkFiles[0].Target == path)
-                    return cd;
+                    result.Add(cd);
         }
         catch (Exception) { /* Ignore errors */ }
-        return null;
+        return result;
     }
 }

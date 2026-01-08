@@ -194,7 +194,7 @@ public class Shortcut : ShellLinkHeader
         }
     }
 
-    public object GetExtraData(Guid guid)
+    public object GetExtraData(Guid guid/*, uint pid*/)
     {
         // TODO : Check pid (num of PropertyKey)
         // TODO : Return VT_LPSTR ?

@@ -474,32 +474,46 @@ public partial class TaskButton : UserControl
             if (e.NewValue is bool visible && visible && ConfigManager.UseJumpList && ApplicationWindow?.ListWindows != null)
             {
                 JumpListContextMenu.Items.Clear();
-                AutomaticDestination automaticJumpList = ExtensionsJumpList.GetAutomaticJumpList(ApplicationWindow.ListWindows[0].Handle);
-                CustomDestination customJumpList = ExtensionsJumpList.GetCustomJumpList(ApplicationWindow.ListWindows[0].Handle);
-                if (automaticJumpList?.DestListEntries?.Count > 0)
+                List<AutomaticDestination> listAutoDest = ExtensionsJumpList.GetAutomaticJumpList(ApplicationWindow.ListWindows[0].Handle);
+                List<CustomDestination> listCustomDest = ExtensionsJumpList.GetCustomJumpList(ApplicationWindow.ListWindows[0].Handle);
+                foreach (AutomaticDestination auto in listAutoDest)
                 {
-                    foreach (Shortcut lnk in automaticJumpList.DestListEntries.Select(auto => auto.Lnk))
+                    if (auto?.DestListEntries?.Count > 0)
                     {
-                        MenuItem mi = new()
+                        foreach (Shortcut lnk in auto?.DestListEntries.Select(ad => ad.Lnk))
                         {
-                            Header = lnk.Name,
-                            Tag = lnk,
-                            Icon = IconManager.Convert(IconManager.Extract(lnk.IconPath, lnk.IconIndex, false)),
-                        };
-                        JumpListContextMenu.Items.Add(mi);
+                            string iconPath = lnk.IconPath;
+                            Image @is = new();
+                            MenuItem mi = new()
+                            {
+                                Header = lnk.Name,
+                                Tag = lnk,
+                                Icon = @is,
+                            };
+                            JumpListContextMenu.Items.Add(mi);
+                        }
                     }
                 }
-                if (customJumpList?.Entries?.Count > 0 && customJumpList?.Entries[0].LnkFiles?.Count > 0)
+                foreach (CustomDestination customDest in listCustomDest)
                 {
-                    foreach (Shortcut lnk in customJumpList.Entries[0].LnkFiles)
+                    if (customDest?.Entries?.Count > 0 && customDest?.Entries[0].LnkFiles?.Count > 0)
                     {
-                        MenuItem mi = new()
+                        foreach (Entry entry in customDest.Entries)
                         {
-                            Header = lnk.Name,
-                            Tag = lnk,
-                            Icon = IconManager.Convert(IconManager.Extract(lnk.IconPath, lnk.IconIndex, false)),
-                        };
-                        JumpListContextMenu.Items.Add(mi);
+                            _ = entry.Name;
+                            foreach (Shortcut lnk in entry.LnkFiles)
+                            {
+                                string iconPath = lnk.IconPath;
+                                Image @is = new();
+                                MenuItem mi = new()
+                                {
+                                    Header = lnk.Name,
+                                    Tag = lnk,
+                                    Icon = @is,
+                                };
+                                JumpListContextMenu.Items.Add(mi);
+                            }
+                        }
                     }
                 }
             }
