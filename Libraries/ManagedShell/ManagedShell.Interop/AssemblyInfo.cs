@@ -1,7 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Explorip")]
-[assembly: InternalsVisibleTo("CustomWinForm")]
+[assembly: InternalsVisibleTo("Explorip.Desktop")]
+[assembly: InternalsVisibleTo("Explorip.StartMenu")]
+[assembly: InternalsVisibleTo("Explorip.Taskbar")]
 [assembly: InternalsVisibleTo("ManagedShell.AppBar")]
 [assembly: InternalsVisibleTo("ManagedShell.Common")]
 [assembly: InternalsVisibleTo("ManagedShell.WindowsTasks")]

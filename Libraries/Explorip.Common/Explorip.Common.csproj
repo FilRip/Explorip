@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <OutputType>Library</OutputType>
+    <Company>CoolBytes</Company>
+    <Product>Explorip.Common</Product>
+    <Description>Shell for Windows 10 and 11</Description>
+    <Copyright>Copyright © CoolBytes 2021-2025</Copyright>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj" />
+  </ItemGroup>
+</Project>

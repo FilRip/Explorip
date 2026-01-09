@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 using ManagedShell.Interop;
 
-namespace Explorip.Helpers;
+namespace Explorip.Common;
 
 public static class IconManager
 {

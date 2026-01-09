@@ -97,6 +97,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExploripSuite", "ExploripSu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploripUpdater", "Explorip\ExploripUpdater\ExploripUpdater.csproj", "{487599A1-0271-4433-9A82-E8905FCDCE6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorip.Common", "Libraries\Explorip.Common\Explorip.Common.csproj", "{C6F2E5FD-40BD-4C85-AEB3-66897EF412AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -251,6 +253,10 @@ Global
 		{487599A1-0271-4433-9A82-E8905FCDCE6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{487599A1-0271-4433-9A82-E8905FCDCE6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{487599A1-0271-4433-9A82-E8905FCDCE6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6F2E5FD-40BD-4C85-AEB3-66897EF412AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F2E5FD-40BD-4C85-AEB3-66897EF412AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F2E5FD-40BD-4C85-AEB3-66897EF412AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F2E5FD-40BD-4C85-AEB3-66897EF412AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -300,6 +306,7 @@ Global
 		{25CF72B7-B208-412C-BF8D-E40DB717969C} = {2DF9BBCE-8201-4AA7-9994-5150925D9AF1}
 		{137FD9A5-1FAB-4804-AB93-230DA31369E7} = {2DF9BBCE-8201-4AA7-9994-5150925D9AF1}
 		{487599A1-0271-4433-9A82-E8905FCDCE6F} = {2DF9BBCE-8201-4AA7-9994-5150925D9AF1}
+		{C6F2E5FD-40BD-4C85-AEB3-66897EF412AC} = {02E20678-9AD3-4370-904E-02D800F25B35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}

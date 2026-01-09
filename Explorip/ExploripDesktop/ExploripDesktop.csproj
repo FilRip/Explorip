@@ -11,6 +11,10 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
+    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
