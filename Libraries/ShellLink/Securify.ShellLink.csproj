@@ -14,4 +14,8 @@
     <langVersion>latest</langVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
+  </ItemGroup>
+
 </Project>

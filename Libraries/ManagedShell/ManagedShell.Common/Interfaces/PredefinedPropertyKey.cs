@@ -1006,6 +1006,9 @@ public static class PredefinedPropertyKey
     public static readonly PropertyKey PKEY_AppUserModel_SettingsCommand = new() { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 38 };
     public static readonly PropertyKey PKEY_AppUserModel_StartPinOption = new() { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 12 };
     public static readonly PropertyKey PKEY_AppUserModel_ToastActivatorCLSID = new() { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 26 };
+    public static readonly PropertyKey PKEY_AppUserModel_Title = new() { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 27 };
+    public static readonly PropertyKey PKEY_AppUserModel_Description = new() { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 28 };
+    public static readonly PropertyKey PKEY_AppUserModel_LogoUri = new() { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 29 };
     public static readonly PropertyKey PKEY_AppUserModel_UninstallCommand = new() { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 37 };
     public static readonly PropertyKey PKEY_AppUserModel_VisualElementsManifestHintPath = new() { fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"), pid = 31 };
     public static readonly PropertyKey PKEY_EdgeGesture_DisableTouchWhenFullscreen = new() { fmtid = new Guid("32CE38B2-2C9A-41B1-9BC5-B3784394AA44"), pid = 2 };

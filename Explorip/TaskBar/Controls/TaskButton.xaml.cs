@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 using CoolBytes.JumpList;
 using CoolBytes.JumpList.Automatic;
@@ -480,17 +481,7 @@ public partial class TaskButton : UserControl
                 {
                     foreach (Shortcut lnk in autoDest?.DestListEntries.Select(ad => ad.Lnk))
                     {
-                        string iconPath = lnk.IconPath;
-                        Image @is = new()
-                        {
-                            Source = IconManager.Convert(IconManager.Extract(iconPath, lnk.IconIndex, false)),
-                        };
-                        MenuItem mi = new()
-                        {
-                            Header = lnk.Name,
-                            Tag = lnk,
-                            Icon = @is,
-                        };
+                        MenuItem mi = MakeMenuItemEntry(lnk);
                         mi.Click += JumpList_Click;
                         JumpListContextMenu.Items.Add(mi);
                     }
@@ -509,17 +500,7 @@ public partial class TaskButton : UserControl
                             JumpListContextMenu.Items.Add(category);
                             foreach (Shortcut lnk in entry.LnkFiles)
                             {
-                                string iconPath = lnk.IconPath;
-                                Image @is = new()
-                                {
-                                    Source = IconManager.Convert(IconManager.Extract(iconPath, lnk.IconIndex, false)),
-                                };
-                                MenuItem mi = new()
-                                {
-                                    Header = lnk.Name,
-                                    Tag = lnk,
-                                    Icon = @is,
-                                };
+                                MenuItem mi = MakeMenuItemEntry(lnk);
                                 mi.Click += JumpList_Click;
                                 category.Items.Add(mi);
                             }
@@ -535,6 +516,23 @@ public partial class TaskButton : UserControl
         {
             // Ignore errors
         }
+    }
+
+    private MenuItem MakeMenuItemEntry(Shortcut lnk)
+    {
+        string iconPath = lnk.IconPath;
+        Image @is = new();
+        if (Path.GetExtension(iconPath).ToLower() == ".exe" || Path.GetExtension(iconPath).ToLower() == ".dll")
+            @is.Source = IconManager.Convert(IconManager.Extract(iconPath, lnk.IconIndex, false));
+        else if (Uri.TryCreate(iconPath, UriKind.RelativeOrAbsolute, out Uri result))
+            @is.Source = new BitmapImage(result);
+        MenuItem mi = new()
+        {
+            Header = lnk.Name,
+            Tag = lnk,
+            Icon = @is,
+        };
+        return mi;
     }
 
     private void JumpList_Click(object sender, RoutedEventArgs e)

@@ -173,7 +173,8 @@ public static class ExtensionsJumpList
         try
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
-            return _listAutoDest.FirstOrDefault(ad => ad.DestListEntries?.Count > 0 && ad.DestListEntries[0].Lnk?.Target == path);
+            string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(hWnd);
+            return _listAutoDest.FirstOrDefault(ad => ad.DestListEntries?.Count > 0 && (ad.DestListEntries[0].Lnk?.Target == path || (!string.IsNullOrWhiteSpace(appUserModelId) && Path.GetFileName(ad.DestListEntries[0].Lnk?.Target) == appUserModelId)));
         }
         catch (Exception) { /* Ignore errors */ }
         return null;
@@ -184,7 +185,8 @@ public static class ExtensionsJumpList
         try
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
-            return _listCustomDest.FirstOrDefault(cd => cd.Entries?.Count > 0 && cd.Entries[0].LnkFiles?.Count > 0 && cd.Entries[0].LnkFiles[0].Target == path);
+            string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(hWnd);
+            return _listCustomDest.FirstOrDefault(cd => cd.Entries?.Count > 0 && cd.Entries[0].LnkFiles?.Count > 0 && (cd.Entries[0].LnkFiles[0].Target == path || (!string.IsNullOrWhiteSpace(appUserModelId) && Path.GetFileName(cd.Entries[0].LnkFiles[0].Target) == appUserModelId)));
         }
         catch (Exception) { /* Ignore errors */ }
         return null;

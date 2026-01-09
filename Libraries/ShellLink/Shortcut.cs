@@ -5,6 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using ManagedShell.Common.Interfaces;
+using ManagedShell.Interop;
+
 using Securify.ShellLink.Flags;
 using Securify.ShellLink.Structures;
 
@@ -188,23 +191,26 @@ public class Shortcut : ShellLinkHeader
         {
             if (!string.IsNullOrWhiteSpace(StringData?.IconLocation))
                 return StringData?.IconLocation;
-            object iconPs = GetExtraData(new Guid("{9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3}"));
+            object iconPs = GetExtraData(PredefinedPropertyKey.PKEY_AppUserModel_RelaunchIconResource);
             if (iconPs is string str)
                 return str;
+            iconPs = GetExtraData(PredefinedPropertyKey.PKEY_AppUserModel_LogoUri);
+            if (iconPs is string strUri)
+                return strUri;
             return Target;
         }
     }
 
-    public object GetExtraData(Guid guid/*, uint pid*/)
+    public object GetExtraData(NativeMethods.PropertyKey pkey)
     {
-        // TODO : Check pid (num of PropertyKey)
-        // TODO : Return VT_LPSTR ?
         if (ExtraData?.PropertyStoreDataBlock?.PropertyStore?.Count > 0)
-            foreach (List<SerializedPropertyValue> sps in ExtraData.PropertyStoreDataBlock.PropertyStore.Where(p => p.PropertyStorage != null && p.FormatID == guid).Select(p => p.PropertyStorage))
+            foreach (List<SerializedPropertyValue> sps in ExtraData.PropertyStoreDataBlock.PropertyStore.Where(p => p.PropertyStorage != null && p.FormatID == pkey.fmtid).Select(p => p.PropertyStorage))
                 if (sps?.Count > 0)
-                    foreach (TypedPropertyValue spv in sps.Select(p => p.TypedPropertyValue))
-                        if (spv.Type == PropertyType.VT_LPSTR || spv.Type == PropertyType.VT_LPWSTR)
-                            return spv.Value;
+                {
+                    IntegerName spv = sps.OfType<IntegerName>().FirstOrDefault(intName => intName.ID == pkey.pid);
+                    if (spv?.TypedPropertyValue != null)
+                        return spv.TypedPropertyValue.Value;
+                }
         return null;
     }
 
@@ -212,9 +218,23 @@ public class Shortcut : ShellLinkHeader
     {
         get
         {
-            object searchResult = GetExtraData(new Guid("{f29f85e0-4ff9-1068-ab91-08002b27b3d9}"));
+            object searchResult = GetExtraData(PredefinedPropertyKey.PKEY_Title);
             if (searchResult is string str)
                 return str;
+            searchResult = GetExtraData(PredefinedPropertyKey.PKEY_AppUserModel_Title);
+            if (searchResult is string title)
+                return title;
+            return null;
+        }
+    }
+
+    public string Description
+    {
+        get
+        {
+            object searchResult = GetExtraData(PredefinedPropertyKey.PKEY_AppUserModel_Description);
+            if (searchResult is string title)
+                return title;
             return null;
         }
     }
