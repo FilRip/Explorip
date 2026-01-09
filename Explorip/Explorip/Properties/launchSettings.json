@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Explorip": {
+      "commandName": "Project",
+      "commandLineArgs": "taskbars"
+    }
+  }
+}
