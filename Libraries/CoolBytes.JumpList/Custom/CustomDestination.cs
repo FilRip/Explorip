@@ -82,6 +82,8 @@ public class CustomDestination
 
     public string SourceFile { get; internal set; }
 
+    public DateTime HdLastModified { get; internal set; }
+
     public List<Entry> Entries { get; }
 
     public static int ByteSearch(byte[] searchIn, byte[] searchBytes, int start = 0)

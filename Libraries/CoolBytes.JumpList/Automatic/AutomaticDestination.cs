@@ -100,6 +100,8 @@ public class AutomaticDestination
 
     public string SourceFile { get; internal set; }
 
+    public DateTime HdLastModified { get; internal set; }
+
     private DestList? DestList { get; }
 
     public bool HasSps { get; }

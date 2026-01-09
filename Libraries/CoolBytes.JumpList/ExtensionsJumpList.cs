@@ -13,8 +13,8 @@ namespace CoolBytes.JumpList;
 
 public static class ExtensionsJumpList
 {
-    private readonly static List<AutomaticDestination> _listAutoDest = [];
-    private readonly static List<CustomDestination> _listCustomDest = [];
+    private static List<AutomaticDestination> _listAutoDest = [];
+    private static List<CustomDestination> _listCustomDest = [];
     private static FileSystemWatcher? _watchAuto;
     private static FileSystemWatcher? _watchCustom;
     private static Thread? _threadAuto;
@@ -22,6 +22,7 @@ public static class ExtensionsJumpList
 
     public static void Init()
     {
+        #region Precache AutomaticDestinations files
         string pathAutomatic;
         pathAutomatic = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "Recent", "AutomaticDestinations");
         _threadAuto = new(() =>
@@ -30,11 +31,15 @@ public static class ExtensionsJumpList
             {
                 try
                 {
-                    AutomaticDestination ad = new(file);
+                    AutomaticDestination ad = new(file)
+                    {
+                        HdLastModified = File.GetLastWriteTimeUtc(file),
+                    };
                     _listAutoDest.Add(ad);
                 }
                 catch (Exception) { /* Ignore errors */ }
             }
+            _listAutoDest = [.. _listAutoDest.OrderByDescending(ad => ad.HdLastModified)];
         });
         _threadAuto.Start();
         _watchAuto = new FileSystemWatcher(pathAutomatic);
@@ -42,7 +47,9 @@ public static class ExtensionsJumpList
         _watchAuto.Created += WatchAuto_Created;
         _watchAuto.Deleted += WatchAuto_Deleted;
         _watchAuto.Renamed += WatchAuto_Renamed;
+        #endregion
 
+        #region Precache CustomDestinations files
         string pathCustom;
         pathCustom = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "Recent", "CustomDestinations");
         _threadCustom = new(() =>
@@ -51,13 +58,18 @@ public static class ExtensionsJumpList
             {
                 try
                 {
-                    if (new FileInfo(file).Length <= 24)
+                    FileInfo fi = new(file);
+                    if (fi.Length <= 24)
                         continue;
-                    CustomDestination cd = new(file);
+                    CustomDestination cd = new(file)
+                    {
+                        HdLastModified = fi.LastWriteTimeUtc,
+                    };
                     _listCustomDest.Add(cd);
                 }
                 catch (Exception) { /* Ignore errors */ }
             }
+            _listCustomDest = [.. _listCustomDest.OrderByDescending(cd => cd.HdLastModified)];
         });
         _threadCustom.Start();
         _watchCustom = new FileSystemWatcher(pathCustom);
@@ -65,6 +77,7 @@ public static class ExtensionsJumpList
         _watchCustom.Created += WatchCustom_Created;
         _watchCustom.Deleted += WatchCustom_Deleted;
         _watchCustom.Renamed += WatchCustom_Renamed;
+        #endregion
     }
 
     #region Monitoring AutomaticDestinations folder
@@ -155,31 +168,25 @@ public static class ExtensionsJumpList
         _watchCustom?.Dispose();
     }
 
-    public static List<AutomaticDestination> GetAutomaticJumpList(IntPtr hWnd)
+    public static AutomaticDestination? GetAutomaticJumpList(IntPtr hWnd)
     {
-        List<AutomaticDestination> result = [];
         try
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
-            foreach (AutomaticDestination ad in _listAutoDest)
-                if (ad.DestListEntries?.Count > 0 && ad.DestListEntries[0].Lnk?.Target == path)
-                    result.Add(ad);
+            return _listAutoDest.FirstOrDefault(ad => ad.DestListEntries?.Count > 0 && ad.DestListEntries[0].Lnk?.Target == path);
         }
         catch (Exception) { /* Ignore errors */ }
-        return result;
+        return null;
     }
 
-    public static List<CustomDestination> GetCustomJumpList(IntPtr hWnd)
+    public static CustomDestination? GetCustomJumpList(IntPtr hWnd)
     {
-        List<CustomDestination> result = [];
         try
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
-            foreach (CustomDestination cd in _listCustomDest)
-                if (cd.Entries?.Count > 0 && cd.Entries[0].LnkFiles?.Count > 0 && cd.Entries[0].LnkFiles[0].Target == path)
-                    result.Add(cd);
+            return _listCustomDest.FirstOrDefault(cd => cd.Entries?.Count > 0 && cd.Entries[0].LnkFiles?.Count > 0 && cd.Entries[0].LnkFiles[0].Target == path);
         }
         catch (Exception) { /* Ignore errors */ }
-        return result;
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -216,6 +217,17 @@ public class Shortcut : ShellLinkHeader
                 return str;
             return null;
         }
+    }
+
+    public void Start()
+    {
+        ProcessStartInfo startInfo = new()
+        {
+            FileName = Target,
+            Arguments = StringData?.CommandLineArguments,
+            WorkingDirectory = StringData?.WorkingDir,
+        };
+        Process.Start(startInfo);
     }
 
     #region ReadFromFile
