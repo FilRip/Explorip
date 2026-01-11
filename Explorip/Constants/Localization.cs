@@ -388,7 +388,7 @@ public static class Localization
         TASK_JUMPLIST = Load("starttiledata.dll", 2003, "Task");
     }
 
-    internal static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
+    public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
     {
         StringBuilder sb = new(maxChar);
         NativeMethods.SHLoadIndirectString(key, sb, sb.Capacity, IntPtr.Zero);
@@ -398,7 +398,7 @@ public static class Localization
             return sb.ToString();
     }
 
-    internal static string Load(string libraryName, uint Ident, string defaultText)
+    public static string Load(string libraryName, uint Ident, string defaultText)
     {
         IntPtr libraryHandle = LibraryHandle(libraryName);
         if (libraryHandle != IntPtr.Zero)
@@ -427,7 +427,7 @@ public static class Localization
         return libraryHandle;
     }
 
-    internal static string LoadMenuItem(string libraryName, uint idMenu, uint idSubMenu, string defaultText, int numSubMenu = 0)
+    public static string LoadMenuItem(string libraryName, uint idMenu, uint idSubMenu, string defaultText, int numSubMenu = 0)
     {
         IntPtr libraryHandle = LibraryHandle(libraryName);
         if (libraryHandle != IntPtr.Zero)

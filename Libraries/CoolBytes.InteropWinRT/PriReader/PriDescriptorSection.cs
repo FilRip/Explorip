@@ -1,0 +1,84 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+
+using CoolBytes.InteropWinRT.PriReader.Constants;
+using CoolBytes.InteropWinRT.PriReader.Helpers;
+
+namespace CoolBytes.InteropWinRT.PriReader;
+
+public class PriDescriptorSection : Section
+{
+    public EPriDescriptors PriFlags { get; private set; }
+
+    public IReadOnlyList<SectionRef<HierarchicalSchemaSection>> HierarchicalSchemaSections { get; private set; }
+    public IReadOnlyList<SectionRef<DecisionInfoSection>> DecisionInfoSections { get; private set; }
+    public IReadOnlyList<SectionRef<ResourceMapSection>> ResourceMapSections { get; private set; }
+    public IReadOnlyList<SectionRef<ReferencedFileSection>> ReferencedFileSections { get; private set; }
+    public IReadOnlyList<SectionRef<DataItemSection>> DataItemSections { get; private set; }
+
+    public SectionRef<ResourceMapSection>? PrimaryResourceMapSection { get; private set; }
+
+    internal const string Identifier = "[mrm_pridescex]\0";
+
+#pragma warning disable CS8618
+    internal PriDescriptorSection(PriFile priFile) : base(Identifier, priFile)
+#pragma warning restore CS8618
+    {
+    }
+
+    protected override bool ParseSectionContent(BinaryReader binaryReader)
+    {
+        PriFlags = (EPriDescriptors)binaryReader.ReadUInt16();
+        /*ushort includedFileListSection = */binaryReader.ReadUInt16();
+        binaryReader.ExpectUInt16(0);
+        ushort numHierarchicalSchemaSections = binaryReader.ReadUInt16();
+        ushort numDecisionInfoSections = binaryReader.ReadUInt16();
+        ushort numResourceMapSections = binaryReader.ReadUInt16();
+        ushort primaryResourceMapSection = binaryReader.ReadUInt16();
+        if (primaryResourceMapSection != 0xFFFF)
+            PrimaryResourceMapSection = new SectionRef<ResourceMapSection>(primaryResourceMapSection);
+        else
+            PrimaryResourceMapSection = null;
+        ushort numReferencedFileSections = binaryReader.ReadUInt16();
+        ushort numDataItemSections = binaryReader.ReadUInt16();
+        binaryReader.ExpectUInt16(0);
+
+        List<SectionRef<HierarchicalSchemaSection>> hierarchicalSchemaSections = new(numHierarchicalSchemaSections);
+
+        for (int i = 0; i < numHierarchicalSchemaSections; i++)
+            hierarchicalSchemaSections.Add(new SectionRef<HierarchicalSchemaSection>(binaryReader.ReadUInt16()));
+
+        HierarchicalSchemaSections = hierarchicalSchemaSections;
+
+        List<SectionRef<DecisionInfoSection>> decisionInfoSections = new(numDecisionInfoSections);
+
+        for (int i = 0; i < numDecisionInfoSections; i++)
+            decisionInfoSections.Add(new SectionRef<DecisionInfoSection>(binaryReader.ReadUInt16()));
+
+        DecisionInfoSections = decisionInfoSections;
+
+        List<SectionRef<ResourceMapSection>> resourceMapSections = new(numResourceMapSections);
+
+        for (int i = 0; i < numResourceMapSections; i++)
+            resourceMapSections.Add(new SectionRef<ResourceMapSection>(binaryReader.ReadUInt16()));
+
+        ResourceMapSections = resourceMapSections;
+
+        List<SectionRef<ReferencedFileSection>> referencedFileSections = new(numReferencedFileSections);
+
+        for (int i = 0; i < numReferencedFileSections; i++)
+            referencedFileSections.Add(new SectionRef<ReferencedFileSection>(binaryReader.ReadUInt16()));
+
+        ReferencedFileSections = referencedFileSections;
+
+        List<SectionRef<DataItemSection>> dataItemSections = new(numDataItemSections);
+
+        for (int i = 0; i < numDataItemSections; i++)
+            dataItemSections.Add(new SectionRef<DataItemSection>(binaryReader.ReadUInt16()));
+
+        DataItemSections = dataItemSections;
+
+        return true;
+    }
+}

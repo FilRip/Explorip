@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
+using CoolBytes.InteropWinRT;
 using CoolBytes.JumpList;
 using CoolBytes.JumpList.Automatic;
 using CoolBytes.JumpList.Custom;
@@ -19,6 +20,8 @@ using Explorip.Constants;
 using Explorip.Helpers;
 
 using ExploripConfig.Configuration;
+
+using ExploripSharedCopy.Helpers;
 
 using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
@@ -524,11 +527,32 @@ public partial class TaskButton : UserControl
         Image @is = new();
         if (Path.GetExtension(iconPath).ToLower() == ".exe" || Path.GetExtension(iconPath).ToLower() == ".dll")
             @is.Source = IconManager.Convert(IconManager.Extract(iconPath, lnk.IconIndex, false));
-        else if (Uri.TryCreate(iconPath, UriKind.RelativeOrAbsolute, out Uri result))
-            @is.Source = new BitmapImage(result);
+        else if (iconPath.ToLower().StartsWith("ms-appx:/"))
+        {
+            string appUserModelId = ApplicationWindow.AppUserModelID;
+            if (appUserModelId.EndsWith("!App"))
+                appUserModelId = appUserModelId.Substring(0, appUserModelId.Length - 4);
+            string uwpPath = UwpPackageManager.PathOfUwp(appUserModelId);
+            if (!string.IsNullOrWhiteSpace(uwpPath))
+            {
+                iconPath = Path.Combine(uwpPath, iconPath.Replace("ms-appx:", "").TrimStart('/').Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar));
+                if (!File.Exists(iconPath))
+                    iconPath = Path.Combine(Path.GetDirectoryName(iconPath), Path.GetFileNameWithoutExtension(iconPath) + ".targetsize-16_contrast-" + (WindowsSettings.IsWindowsApplicationInDarkMode() ? "black" : "white") + Path.GetExtension(iconPath));
+                if (File.Exists(iconPath))
+                    @is.Source = new BitmapImage(new Uri(iconPath));
+            }
+        }
+        string name = lnk.Name;
+        if (name.StartsWith("ms-resource://"))
+        {
+            string appUserModelId = ApplicationWindow.AppUserModelID;
+            if (appUserModelId.EndsWith("!App"))
+                appUserModelId = appUserModelId.Substring(0, appUserModelId.Length - 4);
+            name = UwpPackageManager.StringOfUwp(appUserModelId, name);
+        }
         MenuItem mi = new()
         {
-            Header = lnk.Name,
+            Header = name,
             Tag = lnk,
             Icon = @is,
         };

@@ -1,0 +1,132 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+using CoolBytes.InteropWinRT.PriReader.Helpers;
+
+namespace CoolBytes.InteropWinRT.PriReader;
+
+public class PriFile
+{
+    public string Version { get; private set; }
+    public uint TotalFileSize { get; private set; }
+    public IReadOnlyList<TocEntry> TableOfContents { get; private set; }
+    public IReadOnlyList<Section> Sections { get; private set; }
+
+#pragma warning disable CS8618
+    private PriFile()
+#pragma warning restore CS8618
+    {
+    }
+
+    public static PriFile Parse(Stream stream)
+    {
+        PriFile priFile = new();
+
+        priFile.ParseInternal(stream);
+
+        return priFile;
+    }
+
+    private void ParseInternal(Stream stream)
+    {
+        using BinaryReader binaryReader = new(stream, Encoding.ASCII, true);
+
+        long fileStartOffset = binaryReader.BaseStream.Position;
+
+        string magic = new(binaryReader.ReadChars(8));
+
+        Version = magic switch
+        {
+            "mrm_pri0" or "mrm_pri1" or "mrm_pri2" or "mrm_pri3" or "mrm_prif" => magic,
+            _ => throw new InvalidDataException("Data does not start with a PRI file header."),
+        };
+
+        binaryReader.ExpectUInt16(0);
+        binaryReader.ExpectUInt16(1);
+        TotalFileSize = binaryReader.ReadUInt32();
+        uint tocOffset = binaryReader.ReadUInt32();
+        uint sectionStartOffset = binaryReader.ReadUInt32();
+        ushort numSections = binaryReader.ReadUInt16();
+
+        binaryReader.ExpectUInt16(0xFFFF);
+        binaryReader.ExpectUInt32(0);
+
+        binaryReader.BaseStream.Seek(fileStartOffset + TotalFileSize - 16, SeekOrigin.Begin);
+
+        binaryReader.ExpectUInt32(0xDEFFFADE);
+        binaryReader.ExpectUInt32(TotalFileSize);
+        binaryReader.ExpectString(magic);
+
+        binaryReader.BaseStream.Seek(tocOffset, SeekOrigin.Begin);
+
+        List<TocEntry> toc = new(numSections);
+
+        for (int i = 0; i < numSections; i++)
+            toc.Add(TocEntry.Parse(binaryReader));
+
+        TableOfContents = toc;
+
+        Section[] sections = new Section[numSections];
+
+        Sections = sections;
+
+        bool parseSuccess = false;
+        bool parseFailure = false;
+
+        do
+        {
+            for (int i = 0; i < sections.Length; i++)
+                if (sections[i] == null)
+                {
+                    binaryReader.BaseStream.Seek(sectionStartOffset + toc[i].SectionOffset, SeekOrigin.Begin);
+
+                    Section section = Section.CreateForIdentifier(toc[i].SectionIdentifier, this);
+
+                    if (section.Parse(binaryReader))
+                    {
+                        sections[i] = section;
+                        parseSuccess = true;
+                    }
+                    else
+                        parseFailure = true;
+                }
+        } while (parseFailure && parseSuccess);
+
+        if (parseFailure)
+            throw new InvalidDataException();
+    }
+
+    PriDescriptorSection? priDescriptorSection;
+
+    public PriDescriptorSection PriDescriptorSection
+    {
+        get
+        {
+            priDescriptorSection ??= Sections.OfType<PriDescriptorSection>().Single();
+
+            return priDescriptorSection;
+        }
+    }
+
+    public T GetSectionByRef<T>(SectionRef<T> sectionRef) where T : Section
+    {
+        return (T)Sections[sectionRef.sectionIndex];
+    }
+
+    public ResourceMapItem GetResourceMapItemByRef(ResourceMapItemRef resourceMapItemRef)
+    {
+        return GetSectionByRef(resourceMapItemRef.schemaSection).Items[resourceMapItemRef.itemIndex];
+    }
+
+    public ByteSpan GetDataItemByRef(DataItemRef dataItemRef)
+    {
+        return GetSectionByRef(dataItemRef.dataItemSection).DataItems[dataItemRef.itemIndex];
+    }
+
+    public ReferencedFile GetReferencedFileByRef(ReferencedFileRef referencedFileRef)
+    {
+        return GetSectionByRef(PriDescriptorSection.ReferencedFileSections[0]).ReferencedFiles[referencedFileRef.fileIndex];
+    }
+}

@@ -13,7 +13,6 @@
     <ProjectReference Include="..\ShellLink\Securify.ShellLink.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <OutputType>Library</OutputType>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <langversion>latest</langversion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Windows.ApplicationModel">
+      <HintPath>..\..\..\..\..\..\Windows\System32\WinMetadata\Windows.ApplicationModel.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+    <Reference Include="Windows.Management">
+      <HintPath>..\..\..\..\..\..\Windows\System32\WinMetadata\Windows.Management.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+    <Reference Include="Windows.Storage">
+      <HintPath>..\..\..\..\..\..\Windows\System32\WinMetadata\Windows.Storage.winmd</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+    </Reference>
+  </ItemGroup>
+</Project>
