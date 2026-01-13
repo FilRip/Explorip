@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,9 +24,18 @@ public static class UwpPackageManager
         return package?.InstalledLocation?.Path;
     }
 
+    public static string? PathOfLocalizedResources(string appUserModelId)
+    {
+        /*PackageManager packageManager = new();
+        Package package = packageManager.FindPackagesWithPackageTypes(PackageTypes.Resource).FirstOrDefault(pkg => pkg.Id.FamilyName == appUserModelId && pkg.Id.ResourceId.Contains("-" + CultureInfo.CurrentCulture.TwoLetterISOLanguageName));
+        if (package != null)
+            return package.InstalledLocation.Path;*/
+        return PathOfUwp(appUserModelId);
+    }
+
     public static string? StringOfUwp(string appUserModelId, string msResource)
     {
-        string? path = PathOfUwp(appUserModelId);
+        string? path = PathOfLocalizedResources(appUserModelId);
         if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
         {
             msResource = msResource.Replace("ms-resource:///Resources/", "");
