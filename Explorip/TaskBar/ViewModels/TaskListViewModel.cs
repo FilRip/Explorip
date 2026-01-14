@@ -171,7 +171,9 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             nbTry++;
             try
             {
-                virtualDesktopId = VirtualDesktopManager.FromHwnd(handle).Id;
+                VirtualDesktop.Models.VirtualDesktop vd = VirtualDesktopManager.FromHwnd(handle);
+                if (vd != null)
+                    virtualDesktopId = vd.Id;
             }
             catch (Exception) { /* Ignore errors */ }
             Thread.Sleep(10);

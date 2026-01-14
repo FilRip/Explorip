@@ -165,4 +165,21 @@ public static class IconManager
         catch (Exception) { /* Ignore errors */ }
         return false;
     }
+
+    public static ImageSource GetWebsiteFavIcon(string website)
+    {
+        try
+        {
+            website = website.Replace("https:", "").Replace("http:", "").Replace("www.", "").TrimStart('/').Split('/')[0];
+            System.Net.WebRequest request = System.Net.WebRequest.Create($"https://www.google.com/s2/favicons?sz=32&domain={website}");
+            using System.Net.WebResponse response = request.GetResponse();
+            using Stream stream = response.GetResponseStream();
+            Bitmap bitmap = new(stream);
+            return Convert(Icon.FromHandle(bitmap.GetHicon()));
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
 }

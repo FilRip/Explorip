@@ -542,6 +542,14 @@ public partial class TaskButton : UserControl
                     @is.Source = new BitmapImage(new Uri(iconPath));
             }
         }
+        else if (iconPath.Contains("JumpListIcon") && Path.GetExtension(iconPath).ToLower() == ".tmp" &&
+            lnk.StringData?.CommandLineArguments != null && lnk.StringData.CommandLineArguments.Contains("http"))
+        {
+            string[] args = lnk.StringData.CommandLineArguments.Split(' ');
+            string website = args.FirstOrDefault(s => s.StartsWith("http"));
+            if (!string.IsNullOrWhiteSpace(website))
+                @is.Source = IconManager.GetWebsiteFavIcon(website);
+        }
         string name = lnk.Name;
         if (name.StartsWith("ms-resource://"))
         {
