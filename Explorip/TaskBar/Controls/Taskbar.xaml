@@ -17,6 +17,7 @@
                      PreviewMouseDown="Taskbar_MouseDown"
                      UseLayoutRounding="True"
                      Background="Transparent"
+                     Topmost="True"
                      Style="{DynamicResource TaskbarWindow}">
     <Window.Resources>
         <ResourceDictionary>

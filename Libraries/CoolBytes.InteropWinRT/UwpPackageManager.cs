@@ -14,8 +14,6 @@ namespace CoolBytes.InteropWinRT;
 
 public static class UwpPackageManager
 {
-    private const string DEFAULT_PRI_FILES = "resources.pri";
-
     public static string? PathOfUwp(string appUserModelId)
     {
         PackageManager packageManager = new();
@@ -26,42 +24,67 @@ public static class UwpPackageManager
 
     public static string? PathOfLocalizedResources(string appUserModelId)
     {
-        /*PackageManager packageManager = new();
-        Package package = packageManager.FindPackagesWithPackageTypes(PackageTypes.Resource).FirstOrDefault(pkg => pkg.Id.FamilyName == appUserModelId && pkg.Id.ResourceId.Contains("-" + CultureInfo.CurrentCulture.TwoLetterISOLanguageName));
+        PackageManager packageManager = new();
+        Package package = packageManager.FindPackagesForUserWithPackageTypes(string.Empty, PackageTypes.Resource).FirstOrDefault(pkg => pkg.Id.FamilyName == appUserModelId && pkg.Id.ResourceId.Contains("-" + CultureInfo.CurrentCulture.TwoLetterISOLanguageName));
         if (package != null)
-            return package.InstalledLocation.Path;*/
-        return PathOfUwp(appUserModelId);
+            return package.InstalledLocation.Path;
+        return null;
     }
 
     public static string? StringOfUwp(string appUserModelId, string msResource)
     {
-        string? path = PathOfLocalizedResources(appUserModelId);
+        msResource = msResource.Replace("ms-resource:///Resources/", "");
+        string? path = PathOfUwp(appUserModelId);
+        ushort itemId = 0;
+        string? result = null;
         if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
         {
-            msResource = msResource.Replace("ms-resource:///Resources/", "");
-            if (File.Exists(Path.Combine(path, DEFAULT_PRI_FILES)))
+            // Search in default language of application first (and to retrieve Index of resource for localized PRI files)
+            result = BrowsePriFiles(path!, msResource, ref itemId);
+        }
+        if (itemId > 0)
+        {
+            path = PathOfLocalizedResources(appUserModelId);
+            if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
             {
-                string? result = GetStringFromPri(Path.Combine(path, DEFAULT_PRI_FILES), msResource);
-                if (result != null)
-                    return result;
+                // Search in localized resources
+                string? localized = BrowsePriFiles(path!, msResource, ref itemId);
+                if (!string.IsNullOrWhiteSpace(localized))
+                    return localized;
             }
-            foreach (string otherPriFile in Directory.GetFiles(path, "*.pri").Where(f => Path.GetFileName(f).ToLower() != DEFAULT_PRI_FILES))
-            {
-                string? result = GetStringFromPri(otherPriFile, msResource);
-                if (result != null)
-                    return result;
-            }
+        }
+        return result;
+    }
+
+    public static string? BrowsePriFiles(string path, string msResource, ref ushort itemId)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return null;
+        foreach (string otherPriFile in Directory.GetFiles(path, "*.pri"))
+        {
+            string? result = GetStringFromPri(otherPriFile, msResource, ref itemId);
+            if (result != null)
+                return result;
         }
         return null;
     }
 
-    public static string? GetStringFromPri(string path, string msResource)
+    public static string? GetStringFromPri(string path, string msResource, ref ushort itemId)
     {
         using FileStream fs = new(path, FileMode.Open, FileAccess.Read);
         PriFile priFile = PriFile.Parse(fs);
         if (priFile.PriDescriptorSection.PrimaryResourceMapSection != null)
         {
             ResourceMapSection resourceMapSection = priFile.GetSectionByRef(priFile.PriDescriptorSection.PrimaryResourceMapSection.Value);
+            if (itemId != 0 && resourceMapSection.CandidateSets.TryGetValue(itemId, out CandidateSet? candidateSetLocalized))
+            {
+                Candidate candidateLocalized = candidateSetLocalized.Candidates.FirstOrDefault(c => c.DataItem != null &&
+                                                                                                    (c.Type == EResourceValueType.String || c.Type == EResourceValueType.AsciiString || c.Type == EResourceValueType.Utf8String));
+                ByteSpan dataLocalized = priFile.GetDataItemByRef(candidateLocalized.DataItem!.Value);
+                string? localizedString = dataLocalized.ReadString(fs, (candidateLocalized.Type == EResourceValueType.Utf8String ? Encoding.UTF8 : Encoding.ASCII));
+                if (!string.IsNullOrWhiteSpace(localizedString))
+                    return localizedString;
+            }
             HierarchicalSchemaSection schemaSection = priFile.GetSectionByRef(resourceMapSection.SchemaSection);
             ResourceMapItem? item = schemaSection.Items.FirstOrDefault(section => section.Name == msResource);
             if (item != null &&
@@ -71,15 +94,10 @@ public static class UwpPackageManager
                                                                                   (c.Type == EResourceValueType.String || c.Type == EResourceValueType.AsciiString || c.Type == EResourceValueType.Utf8String));
                 if (candidate != null)
                 {
+                    itemId = item.Index;
                     ByteSpan data = priFile.GetDataItemByRef(candidate.DataItem!.Value);
-                    fs.Seek(data.Offset, SeekOrigin.Begin);
-                    byte[] buffer = new byte[data.Length];
-                    _ = fs.Read(buffer, 0, buffer.Length);
-                    Encoding encoding = Encoding.ASCII;
-                    if (candidate.Type == EResourceValueType.Utf8String)
-                        encoding = Encoding.UTF8;
-                    string result = encoding.GetString(buffer);
-                    return result.TrimEnd((char)0);
+                    string result = data.ReadString(fs, (candidate.Type == EResourceValueType.Utf8String ? Encoding.UTF8 : Encoding.ASCII));
+                    return result;
                 }
             }
         }
