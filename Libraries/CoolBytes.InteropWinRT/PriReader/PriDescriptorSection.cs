@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 using CoolBytes.InteropWinRT.PriReader.Constants;
@@ -30,7 +29,8 @@ public class PriDescriptorSection : Section
     protected override bool ParseSectionContent(BinaryReader binaryReader)
     {
         PriFlags = (EPriDescriptors)binaryReader.ReadUInt16();
-        /*ushort includedFileListSection = */binaryReader.ReadUInt16();
+        /*ushort includedFileListSection = */
+        binaryReader.ReadUInt16();
         binaryReader.ExpectUInt16(0);
         ushort numHierarchicalSchemaSections = binaryReader.ReadUInt16();
         ushort numDecisionInfoSections = binaryReader.ReadUInt16();

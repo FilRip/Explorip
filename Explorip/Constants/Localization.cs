@@ -198,6 +198,7 @@ public static class Localization
     public static string ACTIVES_APPLICATIONS { get; private set; }
     public static string APPLICATION_SHORTCUTS { get; private set; }
     public static string TASK_JUMPLIST { get; private set; }
+    public static string PINNED_JUMPLIST { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -386,6 +387,7 @@ public static class Localization
         ACTIVES_APPLICATIONS = Load(TwinUiPcShellDll, 1512, "Actives applications");
         APPLICATION_SHORTCUTS = Load(Shell32Dll, 50704, "Shortcuts application");
         TASK_JUMPLIST = Load("starttiledata.dll", 2003, "Task");
+        PINNED_JUMPLIST = Load("starttiledata.dll", 2000, "Pinned");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

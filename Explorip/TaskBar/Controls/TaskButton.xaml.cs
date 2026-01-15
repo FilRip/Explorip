@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using CoolBytes.InteropWinRT;
@@ -24,6 +25,7 @@ using ExploripConfig.Configuration;
 using ExploripSharedCopy.Helpers;
 
 using ManagedShell.Interop;
+using ManagedShell.ShellFolders;
 using ManagedShell.WindowsTasks;
 
 using Securify.ShellLink;
@@ -394,6 +396,8 @@ public partial class TaskButton : UserControl
 
     #endregion
 
+    #region Context menu Moving window
+
     private void MoveToScreen_MouseEnter(object sender, MouseEventArgs e)
     {
         MoveToScreen.Items.Clear();
@@ -471,23 +475,54 @@ public partial class TaskButton : UserControl
         ApplicationWindow.Move();
     }
 
+    #endregion
+
+    #region Context menu JumpList
+
     private void MainContextMenu_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         try
         {
             if (e.NewValue is bool visible && visible && ConfigManager.UseJumpList && ApplicationWindow?.ListWindows != null)
             {
+                _mouseOver = false;
+                _thumb?.Close();
                 JumpListContextMenu.Items.Clear();
                 AutomaticDestination autoDest = ExtensionsJumpList.GetAutomaticJumpList(ApplicationWindow.ListWindows[0].Handle);
                 CustomDestination customDest = ExtensionsJumpList.GetCustomJumpList(ApplicationWindow.ListWindows[0].Handle);
                 if (autoDest?.DestListEntries?.Count > 0)
                 {
-                    foreach (Shortcut lnk in autoDest?.DestListEntries.Select(ad => ad.Lnk))
+                    MenuItem category = new()
                     {
-                        MenuItem mi = MakeMenuItemEntry(lnk);
+                        Header = Constants.Localization.PINNED_JUMPLIST,
+                        Style = (Style)FindResource("MenuItemWithSubMenuStyle"),
+                    };
+                    List<MenuItem> otherItems = [];
+                    foreach (AutoDestList adl in autoDest?.DestListEntries)
+                    {
+                        MenuItem mi = MakeMenuItemEntry(adl.Lnk);
                         mi.Click += JumpList_Click;
-                        JumpListContextMenu.Items.Add(mi);
+                        if (adl.Pinned)
+                            category.Items.Add(mi);
+                        else
+                            otherItems.Add(mi);
                     }
+                    if (category.Items.Count > 0)
+                    {
+                        JumpListContextMenu.Items.Add(category);
+                        if (otherItems.Count > 0)
+                        {
+                            category = new MenuItem()
+                            {
+                                Header = Constants.Localization.TASK_JUMPLIST,
+                                Style = (Style)FindResource("MenuItemWithSubMenuStyle"),
+                            };
+                            otherItems.ForEach(mi => category.Items.Add(mi));
+                            JumpListContextMenu.Items.Add(category);
+                        }
+                    }
+                    else
+                        JumpListContextMenu.Items.Add(otherItems);
                 }
                 if (customDest?.Entries?.Count > 0)
                 {
@@ -525,6 +560,9 @@ public partial class TaskButton : UserControl
     {
         string iconPath = lnk.IconPath;
         Image @is = new();
+        string name = lnk.Name;
+        if (string.IsNullOrWhiteSpace(name))
+            name = lnk.Target;
         if (Path.GetExtension(iconPath).ToLower() == ".exe" || Path.GetExtension(iconPath).ToLower() == ".dll")
             @is.Source = IconManager.Convert(IconManager.Extract(iconPath, lnk.IconIndex, false));
         else if (iconPath.ToLower().StartsWith("ms-appx:/"))
@@ -550,8 +588,26 @@ public partial class TaskButton : UserControl
             if (!string.IsNullOrWhiteSpace(website))
                 @is.Source = IconManager.GetWebsiteFavIcon(website);
         }
-        string name = lnk.Name;
-        if (name.StartsWith("ms-resource://"))
+        else if (Uri.TryCreate(name, UriKind.RelativeOrAbsolute, out Uri dir) && dir.IsFile)
+        {
+            if (Directory.Exists(name))
+            {
+                ShellFolder sf = new(name, IntPtr.Zero);
+                name = sf.DisplayName;
+                ImageSource icon = sf.LargeIcon;
+                @is.Source = icon;
+                sf.Dispose();
+            }
+            else if (File.Exists(name))
+            {
+                ShellItem si = new(name);
+                name = si.DisplayName;
+                ImageSource icon = si.LargeIcon;
+                @is.Source = icon;
+                si.Dispose();
+            }
+        }
+        if (name?.StartsWith("ms-resource://") == true)
         {
             string appUserModelId = ApplicationWindow.AppUserModelID;
             if (appUserModelId.EndsWith("!App"))
@@ -572,4 +628,6 @@ public partial class TaskButton : UserControl
         if (sender is MenuItem mi && mi.Tag is Shortcut sc)
             sc.Start();
     }
+
+    #endregion
 }

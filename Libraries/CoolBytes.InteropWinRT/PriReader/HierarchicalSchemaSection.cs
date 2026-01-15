@@ -32,8 +32,8 @@ public class HierarchicalSchemaSection : Section
         {
             Version = null;
             UniqueName = null;
-            Name = null;                
-            Scopes = []; 
+            Name = null;
+            Scopes = [];
             Items = [];
             return true;
         }
@@ -73,7 +73,8 @@ public class HierarchicalSchemaSection : Section
             throw new InvalidDataException();
 
         binaryReader.ExpectUInt16(0);
-        /*ushort maxFullPathLength = */binaryReader.ReadUInt16();
+        /*ushort maxFullPathLength = */
+        binaryReader.ReadUInt16();
         binaryReader.ExpectUInt16(0);
         binaryReader.ExpectUInt32(numScopes + numItems);
         binaryReader.ExpectUInt32(numScopes);
@@ -90,9 +91,11 @@ public class HierarchicalSchemaSection : Section
         {
             ushort parent = binaryReader.ReadUInt16();
             ushort fullPathLength = binaryReader.ReadUInt16();
-            /*char uppercaseFirstChar = (char)*/binaryReader.ReadUInt16();
-            /*byte nameLength2 = */binaryReader.ReadByte();
-            byte flags = binaryReader.ReadByte();                
+            /*char uppercaseFirstChar = (char)*/
+            binaryReader.ReadUInt16();
+            /*byte nameLength2 = */
+            binaryReader.ReadByte();
+            byte flags = binaryReader.ReadByte();
             uint nameOffset = binaryReader.ReadUInt16() | (uint)((flags & 0xF) << 16);
             ushort index = binaryReader.ReadUInt16();
             scopeAndItemInfos.Add(new ScopeAndItemInfo(parent, fullPathLength, flags, nameOffset, index));
@@ -136,7 +139,7 @@ public class HierarchicalSchemaSection : Section
                 name = binaryReader.ReadNullTerminatedString(scopeAndItemInfos[i].NameInAscii ? Encoding.ASCII : Encoding.Unicode);
             else
                 name = string.Empty;
-           
+
             ushort index = scopeAndItemInfos[i].Index;
 
             if (scopeAndItemInfos[i].IsScope)

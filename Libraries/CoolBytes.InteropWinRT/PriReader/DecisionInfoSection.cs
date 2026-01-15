@@ -28,7 +28,8 @@ public class DecisionInfoSection : Section
         ushort numQualifierSets = binaryReader.ReadUInt16();
         ushort numDecisions = binaryReader.ReadUInt16();
         ushort numIndexTableEntries = binaryReader.ReadUInt16();
-        /*ushort totalDataLength = */binaryReader.ReadUInt16();
+        /*ushort totalDataLength = */
+        binaryReader.ReadUInt16();
 
         List<DecisionInfo> decisionInfos = new(numDecisions);
         for (int i = 0; i < numDecisions; i++)
@@ -80,7 +81,7 @@ public class DecisionInfoSection : Section
         {
             DistinctQualifierInfo distinctQualifierInfo = distinctQualifierInfos[qualifierInfos[i].Index];
 
-            binaryReader.BaseStream.Seek(dataStartOffset + distinctQualifierInfo.OperandValueOffset * 2, SeekOrigin.Begin);                
+            binaryReader.BaseStream.Seek(dataStartOffset + distinctQualifierInfo.OperandValueOffset * 2, SeekOrigin.Begin);
 
             string value = binaryReader.ReadNullTerminatedString(Encoding.Unicode);
 

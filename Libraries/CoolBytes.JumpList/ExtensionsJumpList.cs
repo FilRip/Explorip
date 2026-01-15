@@ -35,7 +35,8 @@ public static class ExtensionsJumpList
                     {
                         HdLastModified = File.GetLastWriteTimeUtc(file),
                     };
-                    _listAutoDest.Add(ad);
+                    if (ad.DestListEntries.Count > 0)
+                        _listAutoDest.Add(ad);
                 }
                 catch (Exception) { /* Ignore errors */ }
             }
@@ -70,6 +71,31 @@ public static class ExtensionsJumpList
                 catch (Exception) { /* Ignore errors */ }
             }
             _listCustomDest = [.. _listCustomDest.OrderByDescending(cd => cd.HdLastModified)];
+            bool change = true;
+            while (change)
+            {
+                change = false;
+                for (int i = 0; i < _listCustomDest.Count; i++)
+                {
+                    CustomDestination currentCd = _listCustomDest[i];
+                    if (currentCd.Entries.Count > 0 && currentCd.Entries[0].LnkFiles.Count > 0)
+                    {
+                        string? path = currentCd.Entries?[0].LnkFiles[0].Target;
+                        if (!string.IsNullOrWhiteSpace(path))
+                        {
+                            int nbRemoved = _listCustomDest.RemoveAll(cd => cd.Entries.Count > 0 &&
+                                                            cd.Entries[0].LnkFiles.Count > 0 &&
+                                                            cd.Entries[0].LnkFiles[0].Target == path &&
+                                                            cd.SourceFile != currentCd.SourceFile);
+                            if (nbRemoved > 0)
+                            {
+                                change = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         });
         _threadCustom.Start();
         _watchCustom = new FileSystemWatcher(pathCustom);
@@ -174,6 +200,10 @@ public static class ExtensionsJumpList
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
             string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(hWnd);
+            // Special case : explorer
+            if (path.ToLower() == Environment.ExpandEnvironmentVariables("%windir%\\explorer.exe").ToLower())
+                return _listAutoDest.FirstOrDefault(ad => Path.GetFileNameWithoutExtension(ad.SourceFile).ToLower() == "f01b4d95cf55d32a");
+            // End special case
             return _listAutoDest.FirstOrDefault(ad => ad.DestListEntries?.Count > 0 && (ad.DestListEntries[0].Lnk?.Target == path || (!string.IsNullOrWhiteSpace(appUserModelId) && Path.GetFileName(ad.DestListEntries[0].Lnk?.Target) == appUserModelId)));
         }
         catch (Exception) { /* Ignore errors */ }

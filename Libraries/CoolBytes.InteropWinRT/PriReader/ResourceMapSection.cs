@@ -50,13 +50,15 @@ public class ResourceMapSection : Section
         ushort itemInfoGroupCount = binaryReader.ReadUInt16();
         uint itemInfoCount = binaryReader.ReadUInt32();
         uint numCandidates = binaryReader.ReadUInt32();
-        /*uint dataLength = */binaryReader.ReadUInt32();
+        /*uint dataLength = */
+        binaryReader.ReadUInt32();
         uint largeTableLength = binaryReader.ReadUInt32();
 
         if (PriFile.GetSectionByRef(DecisionInfoSection) == null)
             return false;
 
-        /*byte[] environmentReferencesData = */binaryReader.ReadBytes(environmentReferencesLength);
+        /*byte[] environmentReferencesData = */
+        binaryReader.ReadBytes(environmentReferencesLength);
 
         byte[] schemaReferenceData = binaryReader.ReadBytes(hierarchicalSchemaReferenceLength);
 

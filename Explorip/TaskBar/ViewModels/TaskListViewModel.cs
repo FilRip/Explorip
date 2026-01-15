@@ -157,7 +157,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         try
         {
-            if (handle == IntPtr.Zero || VirtualDesktopManager.IsPinnedWindow(handle))
+            if (handle == IntPtr.Zero || VirtualDesktopManager.IsPinnedWindow(handle) || !NativeMethods.IsWindow(handle))
                 return _currentVirtualDesktopId;
         }
         catch (Exception) { /* Ignore errors */ }

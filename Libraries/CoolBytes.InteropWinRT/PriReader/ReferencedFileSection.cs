@@ -20,11 +20,13 @@ public class ReferencedFileSection : Section
 
     protected override bool ParseSectionContent(BinaryReader binaryReader)
     {
-        /*ushort numRoots = */binaryReader.ReadUInt16();
+        /*ushort numRoots = */
+        binaryReader.ReadUInt16();
         ushort numFolders = binaryReader.ReadUInt16();
         ushort numFiles = binaryReader.ReadUInt16();
         binaryReader.ExpectUInt16(0);
-        /*uint totalDataLength = */binaryReader.ReadUInt32();
+        /*uint totalDataLength = */
+        binaryReader.ReadUInt32();
 
         List<FolderInfo> folderInfos = new(numFolders);
 
