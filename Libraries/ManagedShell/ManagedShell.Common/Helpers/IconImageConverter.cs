@@ -170,7 +170,7 @@ public static class IconImageConverter
             byte g = (byte)((pixels[i] >> 8) & 0xFF);
             byte b = (byte)(pixels[i] & 0xFF);
 
-            // Détection des pixels clairs (blancs ou presque)
+            // Detect light pixels (white or almost)
             if (r > 200 && g > 200 && b > 200)
             {
                 pixels[i] = (a << 24) | (targetColor.R << 16) | (targetColor.G << 8) | targetColor.B;
