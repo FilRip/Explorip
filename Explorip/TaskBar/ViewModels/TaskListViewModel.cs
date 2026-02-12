@@ -377,7 +377,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     Debug.WriteLine($"Unable to add {file} as pinned app");
                     continue;
                 }
-                appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.IconPath, pinnedApp.IconIndex, true));
+                appWin.Icon = IconManager.Convert(IconManager.Extract(pinnedApp.IconPath, Math.Max(pinnedApp.IconIndex, 0), true));
                 if (numPinnedApp > MyTaskbarApp.MyShellManager.TasksService.Windows.Count)
                     MyTaskbarApp.MyShellManager.TasksService.Windows.Add(appWin);
                 else
