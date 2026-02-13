@@ -13,6 +13,7 @@ public static class ExploripCopyConfig
     private const string NotificationOnEachOperationConfig = "NotificationOnEachOperation";
     private const string AutoExpandSubFolderConfig = "AutoExpandSubfolder";
     private const string InjectWindowsExplorerConfig = "InjectWindowsExplorer";
+    private const string PriorityToLowerOperationsConfig = "PriorityToLowerOperations";
 
     private static RegistryKey _registryRootExploripCopy;
 
@@ -34,6 +35,8 @@ public static class ExploripCopyConfig
                 _registryRootExploripCopy.SetValue(AutoExpandSubFolderConfig, "False");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(InjectWindowsExplorerConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(InjectWindowsExplorerConfig, "False");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(PriorityToLowerOperationsConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(PriorityToLowerOperationsConfig, "True");
         }
     }
 
@@ -74,6 +77,16 @@ public static class ExploripCopyConfig
         {
             if (InjectWindowsExplorer != value)
                 _registryRootExploripCopy.SetValue(InjectWindowsExplorerConfig, value.ToString());
+        }
+    }
+
+    public static bool PriorityToLowerOperations
+    {
+        get { return _registryRootExploripCopy.ReadBoolean(PriorityToLowerOperationsConfig); }
+        set
+        {
+            if (PriorityToLowerOperations != value)
+                _registryRootExploripCopy.SetValue(PriorityToLowerOperationsConfig, value.ToString());
         }
     }
 }

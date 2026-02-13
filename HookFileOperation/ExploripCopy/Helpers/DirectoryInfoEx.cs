@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+
+using Explorip.HookFileOperations.Models;
+
+using static ManagedShell.Interop.NativeMethods;
+
+namespace ExploripCopy.Helpers;
+
+public static class DirectoryInfoEx
+{
+    public static List<OneFileOperation> ExpandDirectory(string path, string dest, EFileOperation operation)
+    {
+        List<OneFileOperation> list = [];
+
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentNullException(nameof(path));
+
+        SafeSearchHandle handle;
+        if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            path += Path.DirectorySeparatorChar;
+
+        handle = FindFirstFile(path + "*.*", out Win32FindData dataFind);
+        if (!handle.IsInvalid)
+        {
+            List<OneFileOperation> listFiles = [];
+            List<OneFileOperation> listDirectory = [];
+            while (true)
+            {
+                if (dataFind.dwFileAttributes.HasFlag(FileAttributes.Directory))
+                {
+                    if (dataFind.cFileName != "." && dataFind.cFileName != "..")
+                        listDirectory.Add(new OneFileOperation(operation)
+                        {
+                            Source = dataFind.cFileName,
+                            Destination = Path.Combine(dest, Path.GetFileName(dataFind.cFileName)),
+                        });
+                }
+                else
+                    listFiles.Add(new OneFileOperation(operation)
+                    {
+                        Source = dataFind.cFileName,
+                        Destination = Path.Combine(dest + Path.DirectorySeparatorChar, Path.GetFileName(dataFind.cFileName)),
+                    });
+
+                if (!FindNextFile(handle, out dataFind))
+                    break;
+            }
+
+            handle.Dispose();
+
+            if (listFiles.Count > 0)
+                list.AddRange(listFiles.OrderBy(f => f.Source));
+            if (listDirectory.Count > 0)
+            {
+                foreach (OneFileOperation op in listDirectory.OrderBy(d => d.Source))
+                {
+                    List<OneFileOperation> listSubDir = ExpandDirectory(op.Source, op.Destination, operation);
+                    if (listSubDir.Count > 0)
+                        list.AddRange(listSubDir);
+                }
+            }
+        }
+        else
+            handle.Dispose();
+
+        return list;
+    }
+
+    public static ulong DirectorySize(string path, CancellationTokenSource token = null)
+    {
+        ulong size = 0;
+        List<string> subFolders = [];
+
+        if (string.IsNullOrWhiteSpace(path))
+            throw new ArgumentNullException(nameof(path));
+
+        SafeSearchHandle handle;
+        if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            path += Path.DirectorySeparatorChar;
+
+        handle = FindFirstFile(path + "*.*", out Win32FindData dataFind);
+        if (!handle.IsInvalid && token?.IsCancellationRequested == true)
+        {
+            while (true)
+            {
+                if (dataFind.dwFileAttributes.HasFlag(FileAttributes.Directory))
+                {
+                    if (dataFind.cFileName != "." && dataFind.cFileName != "..")
+                        subFolders.Add(dataFind.cFileName);
+                }
+                else
+                {
+                    size += ((ulong)dataFind.nFileSizeHigh << 32) + dataFind.nFileSizeLow;
+                }
+                if (!FindNextFile(handle, out dataFind) || token?.IsCancellationRequested == true)
+                    break;
+            }
+        }
+        handle.Dispose();
+
+        if (subFolders.Count > 0 && !token?.IsCancellationRequested == true)
+            foreach (string subFolder in subFolders)
+            {
+                size += DirectorySize(Path.Combine(path, subFolder), token);
+                if (token?.IsCancellationRequested == true)
+                    return size;
+            }
+
+        return size;
+    }
+}

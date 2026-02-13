@@ -60,6 +60,10 @@ public class OneFileOperation : INotifyPropertyChanged
 
     public long CurrentOffset { get; set; }
 
+    public long Size { get; set; }
+
+    public bool IsDirectory { get; set; }
+
     public void WriteOperation(FileOperation currentFileOperation)
     {
         switch (FileOperation)

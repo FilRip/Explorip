@@ -36,8 +36,8 @@ public partial class MainWindow : Window
         }
 
         Instance = this;
-        DataContext = MainViewModels.Instance;
-        MyDataContext.ForceRefreshList += ForceRefresh;
+        base.DataContext = MainViewModels.Instance;
+        DataContext.ForceRefreshList += ForceRefresh;
         _forceClose = false;
 
         IpcServer.CreateIpcServer();
@@ -47,7 +47,7 @@ public partial class MainWindow : Window
 
     public void IconInSystray_Exit()
     {
-        if (MyDataContext.ListWaiting?.Count > 0 || MyDataContext.OperationInProgress)
+        if (DataContext.ListWaiting?.Count > 0 || DataContext.OperationInProgress)
         {
             ShowWindow();
         }
@@ -60,9 +60,9 @@ public partial class MainWindow : Window
         }
     }
 
-    private MainViewModels MyDataContext
+    public new MainViewModels DataContext
     {
-        get { return (MainViewModels)DataContext; }
+        get { return (MainViewModels)base.DataContext; }
     }
 
     #region Window manager
@@ -88,31 +88,15 @@ public partial class MainWindow : Window
         Close();
     }
 
-    private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Maximized;
-        MyDataContext.WindowMaximized = true;
-    }
-
-    private void RestoreWindow_Click(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Normal;
-        MyDataContext.WindowMaximized = false;
-    }
-
     private void TitleBar_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
+        // Show System Context Menu when right click on 'title' bar
         IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
         IntPtr hMenu = NativeMethods.GetSystemMenu(hWnd, false);
         Point posMouse = PointToScreen(Mouse.GetPosition(this));
         int cmd = NativeMethods.TrackPopupMenu(hMenu, NativeMethods.TrackPopUpMenuActions.RETURNCMD, (int)posMouse.X, (int)posMouse.Y, 0, hWnd, IntPtr.Zero);
         if (cmd > 0)
             NativeMethods.SendMessage(hWnd, NativeMethods.WM.SYSCOMMAND, (uint)cmd, 0);
-    }
-
-    private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
-    {
-        WindowState = WindowState.Minimized;
     }
 
     #endregion
@@ -129,7 +113,7 @@ public partial class MainWindow : Window
                 Top = Mouse.GetPosition(Application.Current.MainWindow).Y;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                RestoreWindow_Click(sender, null);
+                WindowState = WindowState.Normal;
                 DragMove();
             }
         }
@@ -150,7 +134,7 @@ public partial class MainWindow : Window
     private void Window_Closed(object sender, EventArgs e)
     {
         IpcServer.ShutdownIpcServer();
-        MyDataContext.ForceRefreshList -= ForceRefresh;
+        DataContext.ForceRefreshList -= ForceRefresh;
     }
 
     private void ForceRefresh(object sender, EventArgs e)
@@ -170,17 +154,14 @@ public partial class MainWindow : Window
 
     private void Window_StateChanged(object sender, EventArgs e)
     {
-        MyDataContext.WindowMaximized = WindowState == WindowState.Maximized;
+        Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            DataContext.WindowMaximized = WindowState == WindowState.Maximized;
+        }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
     private void DgListWaiting_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
-        MyDataContext.SelectedLines = [.. DgListWaiting.SelectedItems.OfType<OneFileOperation>()];
-    }
-
-    private void StartNow_Click(object sender, RoutedEventArgs e)
-    {
-        MyDataContext.SelectedLines = [(OneFileOperation)((FrameworkElement)e.Source).DataContext];
-        MyDataContext.StartNow();
+        DataContext.SelectedLines = [.. DgListWaiting.SelectedItems.OfType<OneFileOperation>()];
     }
 }

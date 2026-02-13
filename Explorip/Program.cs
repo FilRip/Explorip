@@ -21,7 +21,6 @@ public static class Program
 {
     private static Application _WpfHost;
     internal static bool ModeShell { get; private set; }
-    private const string AppDomainName = "ExploripAppDomain";
 
     /// <summary>
     /// The main entry point for the application.
@@ -29,112 +28,101 @@ public static class Program
     [STAThread()]
     public static void Main(string[] args)
     {
-        if (AppDomain.CurrentDomain.FriendlyName != AppDomainName)
-        {
-            AppDomainSetup appDomainSetup = AppDomain.CurrentDomain.SetupInformation;
-            appDomainSetup.ShadowCopyFiles = "true";
-            appDomainSetup.ShadowCopyDirectories = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-            appDomainSetup.ApplicationBase = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-            AppDomain myAppDomain = AppDomain.CreateDomain(AppDomainName, null, appDomainSetup);
 #if !DEBUG
-            myAppDomain.UnhandledException += CurrentDomain_UnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 #endif
-            try
-            {
-                myAppDomain.ExecuteAssembly(Environment.GetCommandLineArgs()[0], args);
-            }
-            catch (Exception ex)
-            {
-                CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(ex, false));
-            }
-            finally
-            {
-                (_WpfHost as TaskBar.MyTaskbarApp)?.ExitGracefully();
-            }
-            return;
-        }
+        try
+        {
+            ModeShell = true;
+            Mutex mutexProcess;
 
-        ModeShell = true;
-        Mutex mutexProcess;
+            Process[] process = Process.GetProcessesByName("explorer");
+            if (process != null && process.Length > 0)
+                ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe")));
 
-        Process[] process = Process.GetProcessesByName("explorer");
-        if (process != null && process.Length > 0)
-            ModeShell = !process.AsEnumerable().Any(proc => StringComparer.OrdinalIgnoreCase.Equals(proc.MainModule?.FileName ?? "", Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe")));
-
-        Constants.Localization.LoadTranslation();
+            Constants.Localization.LoadTranslation();
 
 #if !DEBUG
-        if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), Updater.AutoUpdater.UpdateFolder)))
-        {
-            Process.Start("autoupdate.cmd", Updater.AutoUpdater.UpdateFolder);
-            return;
-        }
-        Updater.AutoUpdater.SearchNewVersion(false);
+            if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), Updater.AutoUpdater.UpdateFolder)))
+            {
+                Process.Start("autoupdate.cmd", Updater.AutoUpdater.UpdateFolder);
+                return;
+            }
+            Updater.AutoUpdater.SearchNewVersion(false);
 #endif
 
-        ExploripSharedCopy.Constants.Colors.LoadTheme();
-        ExploripSharedCopy.Constants.Localization.LoadTranslation();
-        Constants.Icons.Init();
-        ConfigManager.Init();
-        if (ConfigManager.OverrideDefaultColor)
-        {
-            ExploripSharedCopy.Constants.Colors.BackgroundColor = ConfigManager.DefaultBackgroundColor;
-            ExploripSharedCopy.Constants.Colors.ForegroundColor = ConfigManager.DefaultBackgroundColor;
-            ExploripSharedCopy.Constants.Colors.ResetBrush();
-        }
-
-        if (ArgumentExists("StartMenu"))
-        {
-            _WpfHost = new StartMenu.MyStartMenuApp();
-            _WpfHost.Run();
-            return;
-        }
-
-        if (ArgumentExists("desktop") || ArgumentExists("desktops"))
-        {
-            mutexProcess = new Mutex(true, "ExploripDesktop", out bool processNotLaunched);
-            if (processNotLaunched)
+            ExploripSharedCopy.Constants.Colors.LoadTheme();
+            ExploripSharedCopy.Constants.Localization.LoadTranslation();
+            Constants.Icons.Init();
+            ConfigManager.Init();
+            if (ConfigManager.OverrideDefaultColor)
             {
-                RegisterSystemEvents();
-                _WpfHost = new Desktop.MyDesktopApp();
-                _WpfHost.Run();
+                ExploripSharedCopy.Constants.Colors.BackgroundColor = ConfigManager.DefaultBackgroundColor;
+                ExploripSharedCopy.Constants.Colors.ForegroundColor = ConfigManager.DefaultBackgroundColor;
+                ExploripSharedCopy.Constants.Colors.ResetBrush();
             }
-        }
-        else if (ArgumentExists("taskbar") || ArgumentExists("taskbars"))
-        {
-            mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
-            if (processNotLaunched)
+
+            if (ArgumentExists("StartMenu"))
             {
-                RegisterSystemEvents();
-                _WpfHost = new TaskBar.MyTaskbarApp();
+                _WpfHost = new StartMenu.MyStartMenuApp();
                 _WpfHost.Run();
+                return;
             }
-        }
-        else
-        {
-            mutexProcess = new Mutex(true, "ExploripFileExplorer", out bool processNotLaunched);
-            if (processNotLaunched || args.Contains("newinstance"))
+
+            if (ArgumentExists("desktop") || ArgumentExists("desktops"))
             {
+                mutexProcess = new Mutex(true, "ExploripDesktop", out bool processNotLaunched);
                 if (processNotLaunched)
                 {
-                    IpcServerManager.InitChannel(new IpcServer());
-                    AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-                    AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                    RegisterSystemEvents();
+                    _WpfHost = new Desktop.MyDesktopApp();
+                    _WpfHost.Run();
                 }
-                if (ConfigManager.HookCopy)
-                    HookCopyOperationsHelper.InstallHook();
-                _WpfHost = new Explorer.MyExplorerApp();
-                _WpfHost.Run();
+            }
+            else if (ArgumentExists("taskbar") || ArgumentExists("taskbars"))
+            {
+                mutexProcess = new Mutex(true, "ExploripTaskbar", out bool processNotLaunched);
+                if (processNotLaunched)
+                {
+                    RegisterSystemEvents();
+                    _WpfHost = new TaskBar.MyTaskbarApp();
+                    _WpfHost.Run();
+                }
             }
             else
             {
-                if (args?.Length > 0 && Directory.Exists(args[0]))
-                    IpcServerManager.SendNewWindow(args);
+                mutexProcess = new Mutex(true, "ExploripFileExplorer", out bool processNotLaunched);
+                if (processNotLaunched || args.Contains("newinstance"))
+                {
+                    if (processNotLaunched)
+                    {
+                        IpcServerManager.InitChannel(new IpcServer());
+                        AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+                        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                    }
+                    if (ConfigManager.HookCopy)
+                        HookCopyOperationsHelper.InstallHook();
+                    _WpfHost = new Explorer.MyExplorerApp();
+                    _WpfHost.Run();
+                }
                 else
-                    IpcServerManager.SendNewWindow([Environment.SpecialFolder.System.FullPath().Substring(0, 3)]);
+                {
+                    if (args?.Length > 0 && Directory.Exists(args[0]))
+                        IpcServerManager.SendNewWindow(args);
+                    else
+                        IpcServerManager.SendNewWindow([Environment.SpecialFolder.System.FullPath().Substring(0, 3)]);
+                }
             }
+            mutexProcess.Dispose();
         }
-        mutexProcess.Dispose();
+        catch (Exception ex)
+        {
+            CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(ex, false));
+        }
+        finally
+        {
+            (_WpfHost as TaskBar.MyTaskbarApp)?.ExitGracefully();
+        }
     }
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

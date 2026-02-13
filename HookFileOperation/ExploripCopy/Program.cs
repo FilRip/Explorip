@@ -1,37 +1,24 @@
 ﻿using System;
-using System.IO;
 using System.Windows;
 
 namespace ExploripCopy;
 
 public static class Program
 {
-    private const string AppDomainName = "ExploripCopyAppDomain";
-
     [STAThread()]
     public static void Main(string[] args)
     {
-        if (AppDomain.CurrentDomain.FriendlyName != AppDomainName)
-        {
-            AppDomainSetup appDomainSetup = AppDomain.CurrentDomain.SetupInformation;
-            appDomainSetup.ShadowCopyFiles = "true";
-            appDomainSetup.ShadowCopyDirectories = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-            appDomainSetup.ApplicationBase = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-            AppDomain myAppDomain = AppDomain.CreateDomain(AppDomainName, null, appDomainSetup);
 #if !DEBUG
-            myAppDomain.UnhandledException += CurrentDomain_UnhandledException;
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 #endif
-            try
-            {
-                myAppDomain.ExecuteAssembly(Environment.GetCommandLineArgs()[0], args);
-            }
-            catch (Exception ex)
-            {
-                CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(ex, false));
-            }
-            return;
+        try
+        {
+            new ExploripCopyApp().Run();
         }
-        new ExploripCopyApp().Run();
+        catch (Exception ex)
+        {
+            CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(ex, false));
+        }
     }
 
     private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

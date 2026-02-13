@@ -110,7 +110,15 @@ public partial class MainViewModels : ObservableObject, IDisposable
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 foreach (OneFileOperation op in list)
-                    ListWaiting.Add(op);
+                {
+                    if (ExploripCopyConfig.PriorityToLowerOperations &&
+                        (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Create || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Delete || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Rename))
+                    {
+                        ListWaiting.Insert(0, op);
+                    }
+                    else
+                        ListWaiting.Add(op);
+                }
             });
             ForceUpdateWaitingList();
         }
@@ -484,6 +492,24 @@ public partial class MainViewModels : ObservableObject, IDisposable
     public bool OperationInProgress
     {
         get { return _currentOperation != null; }
+    }
+
+    partial void OnAutoStartOperationChanged(bool value)
+    {
+        ExploripCopyConfig.AutoStartOperation = value;
+    }
+
+    [RelayCommand()]
+    private void ChangeWindowState(object param)
+    {
+        WindowMaximized = (param.ToString() == "1");
+    }
+
+    [RelayCommand()]
+    private void StartNowButton(object param)
+    {
+        SelectedLines = [(OneFileOperation)param];
+        StartNow();
     }
 
     #region IDisposable

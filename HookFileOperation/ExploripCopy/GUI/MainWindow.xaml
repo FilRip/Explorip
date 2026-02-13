@@ -7,6 +7,7 @@
         xmlns:converters="clr-namespace:ExploripCopy.Converters"
         xmlns:constants="clr-namespace:ExploripCopy.Constants"
         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d" AllowsTransparency="True"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
         Title="ExploripCopy" Height="450" Width="800" Background="{x:Static colors:Colors.BackgroundColorBrush}" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
@@ -37,9 +38,9 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" Text="ExploripCopy" MouseRightButtonUp="TitleBar_MouseRightButtonUp" Name="TitleBar" MouseDown="TitleBar_MouseDown" MouseUp="TitleBar_MouseUp" Margin="5 0 0 0"/>
-        <Button Grid.Column="1" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" Click="MinimizeWindow_Click" IsTabStop="False"/>
-        <Button Grid.Column="2" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Click="MaximizeWindow_Click" Visibility="{Binding WindowMaximized, Converter={StaticResource inverseBoolToVisibility}}" IsTabStop="False"/>
-        <Button Grid.Column="2" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Click="RestoreWindow_Click" Visibility="{Binding WindowMaximized, Converter={StaticResource boolToVisibility}}" IsTabStop="False"/>
+        <Button Grid.Column="1" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" Command="{Binding ChangeWindowStateCommand}" CommandParameter="0" IsTabStop="False"/>
+        <Button Grid.Column="2" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Visibility="{Binding WindowMaximized, Converter={StaticResource inverseBoolToVisibility}}" IsTabStop="False" Command="{Binding ChangeWindowStateCommand}" CommandParameter="1"/>
+        <Button Grid.Column="2" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Visibility="{Binding WindowMaximized, Converter={StaticResource boolToVisibility}}" Command="{Binding ChangeWindowStateCommand}" CommandParameter="0" IsTabStop="False"/>
         <Button Grid.Column="3" Style="{DynamicResource CloseButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="CloseWindow" Click="CloseWindow_Click" IsTabStop="False"/>
 
         <Grid Grid.Row="1" Name="CurrentProgress" Grid.ColumnSpan="4">
@@ -81,8 +82,8 @@
                         <DataGridTemplateColumn Width="16">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Grid.Column="0" BorderThickness="0" Click="StartNow_Click" Background="Transparent">
-                                        <Image Source="/ExploripCopy;component/Resources/StartNow.png"/>
+                                    <Button Grid.Column="0" BorderThickness="0" Background="Transparent" Command="{Binding DataContext.StartNowButtonCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
+                                        <Image Source="{x:Static constants:Icons.Start}"/>
                                     </Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
