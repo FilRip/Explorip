@@ -1,0 +1,10 @@
+{
+  "FileVersion": 2,
+  "Id": "3eede2b5-f238-42d0-9666-ed4fe1453e23",
+  "Items": [
+    {
+      "Id": "ab9b53b1-57d6-4f2c-a50c-f3da6095f4d3",
+      "Command": "currentdir=C:\\Tools\\Explorip"
+    }
+  ]
+}

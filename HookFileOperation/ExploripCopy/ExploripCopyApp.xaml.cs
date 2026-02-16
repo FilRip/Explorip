@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Windows;
+
+using ExploripConfig.Configuration;
 
 using ExploripCopy.ViewModels;
 
 using Hardcodet.Wpf.TaskbarNotification;
+
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
 
 namespace ExploripCopy;
 
@@ -36,14 +42,21 @@ public partial class ExploripCopyApp : Application
             ExploripSharedCopy.Constants.Localization.LoadTranslation();
             Constants.Localization.LoadTranslation();
             Constants.Icons.LoadIcons();
-            ExploripConfig.Configuration.ConfigManager.Init();
-            ExploripConfig.Configuration.ExploripCopyConfig.Init();
+            ExploripCopyConfig.Init();
 
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
             NotifyIconViewModel.Instance.SetControl(notifyIcon);
 
             GUI.MainWindow mainWindow = new();
             mainWindow.Show();
+
+            if (ExploripCopyConfig.InjectWindowsExplorer && Process.GetProcessesByName("explorer").Length > 0)
+            {
+                string path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+                if (ArgumentVariableExists("currentdir"))
+                    path = ArgumentValue("currentdir");
+                Process.Start(Path.Combine(path, "HookFileOperationsManager.exe"), Process.GetProcessesByName("explorer")[0].Id.ToString());
+            }
         }
         else
         {

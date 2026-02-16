@@ -21,7 +21,7 @@ internal partial class NotifyIconViewModel : ObservableObject
     {
         Instance = this;
         SetSystrayIcon(false);
-        _activeShowNotification = ConfigManager.ShowNotificationCopyOperation;
+        _activeShowNotification = ExploripCopyConfig.NotificationOnEachOperation;
     }
 
     partial void OnActiveShowNotificationChanged(bool value)

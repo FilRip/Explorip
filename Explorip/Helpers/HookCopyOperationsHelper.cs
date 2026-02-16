@@ -13,12 +13,10 @@ internal static class HookCopyOperationsHelper
     {
         string path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
         Process.Start(Path.Combine(path, "HookFileOperationsManager.exe"), Process.GetCurrentProcess().Id.ToString());
-        if (ConfigManager.UseOwnCopier || ExtensionsCommandLineArguments.ArgumentExists("useowncopier"))
+        if ((ConfigManager.UseOwnCopier || ExtensionsCommandLineArguments.ArgumentExists("useowncopier")) &&
+            (Process.GetProcessesByName("exploripcopy").Length == 0))
         {
-            if (Process.GetProcessesByName("exploripcopy").Length == 0)
-                Process.Start(Path.Combine(path, "ExploripCopy.exe"), Process.GetCurrentProcess().Id.ToString());
-            if (ExploripCopyConfig.InjectWindowsExplorer && Process.GetProcessesByName("explorer").Length > 0)
-                Process.Start(Path.Combine(path, "HookFileOperationsManager.exe"), Process.GetProcessesByName("explorer")[0].Id.ToString());
+            Process.Start(Path.Combine(path, "ExploripCopy.exe"), Process.GetCurrentProcess().Id.ToString());
         }
     }
 }
