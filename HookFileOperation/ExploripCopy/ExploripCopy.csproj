@@ -23,6 +23,9 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="ExploripCopy.args.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
