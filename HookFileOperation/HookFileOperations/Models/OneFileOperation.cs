@@ -60,9 +60,12 @@ public class OneFileOperation : INotifyPropertyChanged
 
     public long CurrentOffset { get; set; }
 
-    public long Size { get; set; }
+    public ulong Size { get; set; }
 
-    public bool IsDirectory { get; set; }
+    public bool IsDirectory
+    {
+        get { return Attributes.HasFlag(FileAttributes.Directory); }
+    }
 
     public void WriteOperation(FileOperation currentFileOperation)
     {

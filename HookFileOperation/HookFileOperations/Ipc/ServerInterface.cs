@@ -63,12 +63,12 @@ public class ServerInterface : MarshalByRefObject
 
     public void CopyItem(string src, string dest, string destName)
     {
-        _listOperations.Add(new OneFileOperation(EFileOperation.Copy) { Source = src, Destination = dest, NewName = destName });
+        _listOperations.Add(new OneFileOperation(EFileOperation.Copy) { Source = src, Destination = dest, NewName = destName, Attributes = File.GetAttributes(src) });
     }
 
     public void MoveItem(string src, string dest, string destName)
     {
-        _listOperations.Add(new OneFileOperation(EFileOperation.Move) { Source = src, Destination = dest, NewName = destName });
+        _listOperations.Add(new OneFileOperation(EFileOperation.Move) { Source = src, Destination = dest, NewName = destName, Attributes = File.GetAttributes(src) });
     }
 
     [DllImport("USER32.dll")]

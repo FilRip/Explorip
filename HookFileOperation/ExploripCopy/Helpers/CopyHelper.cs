@@ -248,28 +248,4 @@ internal static class CopyHelper
     {
         return Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories).Length;
     }
-
-    internal static string SizeInText(double size, string fullText)
-    {
-        string word = Constants.Localization.SPEED_BYTE;
-        double speed = size;
-
-        static void ChangeDim(ref double value, string word, ref string currentWord)
-        {
-            if (value > 1024)
-            {
-                value = Math.Round(value / 1024, 2);
-                currentWord = word;
-            }
-        }
-
-        ChangeDim(ref speed, Constants.Localization.SPEED_KILO, ref word);
-        ChangeDim(ref speed, Constants.Localization.SPEED_MEGA, ref word);
-        ChangeDim(ref speed, Constants.Localization.SPEED_GIGA, ref word);
-        ChangeDim(ref speed, Constants.Localization.SPEED_TERA, ref word);
-        ChangeDim(ref speed, Constants.Localization.SPEED_PETA, ref word);
-        ChangeDim(ref speed, Constants.Localization.SPEED_EXA, ref word);
-
-        return fullText.Replace("%s", $"{speed} {word}");
-    }
 }

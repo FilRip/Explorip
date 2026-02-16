@@ -41,7 +41,6 @@ internal class InteractionMainProcess : IInteractionMainProcess
             }
             MainViewModels.Instance.AddOperations(listOperations);
             listOperations[listOperations.Count - 1].ResetChoice = true;
-            MainViewModels.Instance.ForceUpdateWaitingList();
         }
     }
 }

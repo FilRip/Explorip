@@ -8,14 +8,16 @@
         xmlns:constants="clr-namespace:ExploripCopy.Constants"
         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        mc:Ignorable="d" AllowsTransparency="True"
+        xmlns:fs="clr-namespace:Explorip.HookFileOperations.Models;assembly=HookFileOperations"
+        mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
-        Title="ExploripCopy" Height="450" Width="800" Background="{x:Static colors:Colors.BackgroundColorBrush}" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True"
-        Closing="Window_Closing" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseMove="Window_MouseMove" Closed="Window_Closed" WindowStyle="None" ResizeMode="CanResizeWithGrip" StateChanged="Window_StateChanged">
+        Title="ExploripCopy" Height="450" Width="800" Background="{x:Static colors:Colors.BackgroundColorBrush}" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True" Loaded="Window_Loaded"
+        Closing="Window_Closing" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseMove="Window_MouseMove" Closed="Window_Closed" WindowStyle="None" ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
         <ResourceDictionary>
             <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibility"/>
+            <converters:FullSizeToCompactConverter x:Key="fullSizeToCompact"/>
             <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
         </ResourceDictionary>
     </Window.Resources>
@@ -38,9 +40,9 @@
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" Text="ExploripCopy" MouseRightButtonUp="TitleBar_MouseRightButtonUp" Name="TitleBar" MouseDown="TitleBar_MouseDown" MouseUp="TitleBar_MouseUp" Margin="5 0 0 0"/>
-        <Button Grid.Column="1" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" Command="{Binding ChangeWindowStateCommand}" CommandParameter="0" IsTabStop="False"/>
-        <Button Grid.Column="2" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Visibility="{Binding WindowMaximized, Converter={StaticResource inverseBoolToVisibility}}" IsTabStop="False" Command="{Binding ChangeWindowStateCommand}" CommandParameter="1"/>
-        <Button Grid.Column="2" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Visibility="{Binding WindowMaximized, Converter={StaticResource boolToVisibility}}" Command="{Binding ChangeWindowStateCommand}" CommandParameter="0" IsTabStop="False"/>
+        <Button Grid.Column="1" Style="{DynamicResource MinimizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MinimizeWindow" Click="MinimizeWindow_Click" CommandParameter="0" IsTabStop="False"/>
+        <Button Grid.Column="2" Style="{DynamicResource MaximizeButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="MaximizeWindow" Visibility="{Binding WindowMaximized, Converter={StaticResource inverseBoolToVisibility}}" IsTabStop="False" Click="MaximizeWindow_Click" CommandParameter="1"/>
+        <Button Grid.Column="2" Style="{DynamicResource RestoreButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="RestoreWindow" Visibility="{Binding WindowMaximized, Converter={StaticResource boolToVisibility}}" Click="RestoreWindow_Click" CommandParameter="0" IsTabStop="False"/>
         <Button Grid.Column="3" Style="{DynamicResource CloseButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Padding="0" Name="CloseWindow" Click="CloseWindow_Click" IsTabStop="False"/>
 
         <Grid Grid.Row="1" Name="CurrentProgress" Grid.ColumnSpan="4">
@@ -76,55 +78,68 @@
             </Grid>
             
             <!-- List operations are waiting -->
-            <Grid Grid.Row="5" Name="ListOperations">
-                <DataGrid x:Name="DgListWaiting" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged}" Background="Black" Foreground="White" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Extended" SelectionUnit="FullRow" SelectionChanged="DgListWaiting_SelectionChanged" CanUserResizeRows="False" HeadersVisibility="None">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Width="16">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Grid.Column="0" BorderThickness="0" Background="Transparent" Command="{Binding DataContext.StartNowButtonCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
+            <ListView Grid.Row="5" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
+                      SelectionMode="Extended" SelectionChanged="DgListWaiting_SelectionChanged" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged}"
+                      SizeChanged="ListView_SizeChanged"
+                      VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                <ListView.View>
+                    <GridView>
+
+                        <GridViewColumn Width="64">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Content="{x:Static constants:Localization.START}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type fs:OneFileOperation}">
+                                    <Button Grid.Column="0" BorderThickness="0" Width="32" Height="32" Command="{Binding DataContext.StartNowButtonCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}" Background="Transparent">
                                         <Image Source="{x:Static constants:Icons.Start}"/>
                                     </Button>
                                 </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Binding="{Binding DisplaySource}" Width="0.5*" IsReadOnly="True">
-                            <DataGridTextColumn.HeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                                    <Setter Property="Foreground" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                                </Style>
-                            </DataGridTextColumn.HeaderStyle>
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                                    <Setter Property="Foreground" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Destination}" Width="0.5*" IsReadOnly="True">
-                            <DataGridTextColumn.HeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                                    <Setter Property="Foreground" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                                </Style>
-                            </DataGridTextColumn.HeaderStyle>
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                                    <Setter Property="Foreground" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
 
-                    <DataGrid.ContextMenu>
-                        <ContextMenu Name="ListOperationMenu">
-                            <MenuItem Header="{x:Static constants:Localization.REMOVE}" Command="{Binding RemoveLineCommand}"/>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                </DataGrid>
-            </Grid>
+                        <GridViewColumn>
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Content="{x:Static constants:Localization.FROM}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type fs:OneFileOperation}">
+                                    <TextBlock Text="{Binding DisplaySource}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Width="70">
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Content="{x:Static constants:Localization.SIZE}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type fs:OneFileOperation}">
+                                    <TextBlock Text="{Binding Size, Converter={StaticResource fullSizeToCompact}, ConverterParameter=%s}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn>
+                            <GridViewColumn.Header>
+                                <GridViewColumnHeader Content="{x:Static constants:Localization.TO}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate DataType="{x:Type fs:OneFileOperation}">
+                                    <TextBlock Text="{Binding Destination}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                    </GridView>
+                </ListView.View>
+
+                <ListView.ContextMenu>
+                    <ContextMenu Name="ListOperationMenu">
+                        <MenuItem Header="{x:Static constants:Localization.REMOVE}" Command="{Binding RemoveLineCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
         </Grid>
     </Grid>
 </Window>

@@ -31,6 +31,7 @@
                 </MenuItem>
                 <MenuItem Header="Refresh rate" Style="{DynamicResource MenuItemWithSubMenuStyle}">
                     <MenuItem Header="1sec" Command="{Binding ChangePeriodCommand}" CommandParameter="1000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=1000}"/>
+                    <MenuItem Header="3sec" Command="{Binding ChangePeriodCommand}" CommandParameter="3000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=3000}"/>
                     <MenuItem Header="5sec" Command="{Binding ChangePeriodCommand}" CommandParameter="5000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=5000}"/>
                     <MenuItem Header="10sec" Command="{Binding ChangePeriodCommand}" CommandParameter="10000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=10000}"/>
                     <MenuItem Header="30sec" Command="{Binding ChangePeriodCommand}" CommandParameter="30000" IsChecked="{Binding Period, Mode=OneWay, Converter={StaticResource intToBool}, ConverterParameter=30000}"/>

@@ -55,6 +55,10 @@ public static class Localization
     public static string SHOW_NOTIFICATION { get; private set; }
     public static string SHOW_MAIN_WINDOW { get; private set; }
     public static string NOT_ENOUGH_FREE_SPACE { get; private set; }
+    public static string SIZE { get; private set; }
+    public static string FROM { get; private set; }
+    public static string TO { get; private set; }
+    public static string START { get; private set; }
 
     internal static void LoadTranslation()
     {
@@ -101,6 +105,10 @@ public static class Localization
         SHOW_NOTIFICATION = Load("twinui.dll", 5592, "Show notifications");
         SHOW_MAIN_WINDOW = Load("oleaccrc.dll", 146, "Show main window");
         NOT_ENOUGH_FREE_SPACE = Load(Shell32Dll, 16915, "Not enough free space in destination drive");
+        SIZE = Load(Shell32Dll, 8978, "Size");
+        FROM = Load(Shell32Dll, 13577, "From").Trim();
+        TO = Load(Shell32Dll, 13578, "To").Trim();
+        START = Load(Shell32Dll, 22073, "Start");
     }
 
     private static string Load(string libraryName, uint Ident, string DefaultText)

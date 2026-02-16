@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -34,10 +35,10 @@ public partial class MainViewModels : ObservableObject, IDisposable
     private readonly Thread _mainThread;
     private readonly object _lockOperation;
     private readonly Stopwatch _chronoSpeed;
-    public event EventHandler ForceRefreshList;
     private Thread _currentThread;
     private OneFileOperation _currentOperation;
     private OneFileOperation _nextOperation;
+    private bool _forceNext;
 
     public static MainViewModels Instance
     {
@@ -79,7 +80,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         get
         {
-            return CopyHelper.SizeInText(GlobalProgress, Localization.TOTAL);
+            return ExtensionsDirectory.SizeInText(GlobalProgress, Localization.TOTAL);
         }
     }
 
@@ -97,31 +98,46 @@ public partial class MainViewModels : ObservableObject, IDisposable
     [ObservableProperty()]
     private ObservableCollection<OneFileOperation> _listWaiting;
 
-    public void ForceUpdateWaitingList()
-    {
-        OnPropertyChanged(nameof(ListWaiting));
-        ForceRefreshList?.Invoke(this, EventArgs.Empty);
-    }
-
     public void AddOperations(List<OneFileOperation> list)
     {
         lock (_lockOperation)
         {
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            Task.Run(() =>
             {
                 foreach (OneFileOperation op in list)
                 {
+                    if (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Copy || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Move)
+                    {
+                        if (op.Attributes == 0)
+                            op.Attributes = File.GetAttributes(op.Source);
+                        // Calculate size
+                        if (op.IsDirectory)
+                            op.Size = ExtensionsDirectory.DirectorySize(op.Source);
+                        else
+                            op.Size = (ulong)(new FileInfo(op.Source)?.Length ?? 0);
+                    }
+
                     if (ExploripCopyConfig.PriorityToLowerOperations &&
                         (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Create || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Delete || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Rename))
                     {
-                        ListWaiting.Insert(0, op);
+                        AddOrInsertOp(op, 0);
                     }
                     else
-                        ListWaiting.Add(op);
+                        AddOrInsertOp(op);
                 }
             });
-            ForceUpdateWaitingList();
         }
+    }
+
+    private void AddOrInsertOp(OneFileOperation op, int pos = -1)
+    {
+        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+        {
+            if (pos >= 0)
+                ListWaiting.Insert(pos, op);
+            else
+                ListWaiting.Add(op);
+        });
     }
 
     public List<OneFileOperation> SelectedLines { get; set; } = [];
@@ -150,7 +166,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         get
         {
-            return CopyHelper.SizeInText(LastSpeed, Localization.SPEED_COPY);
+            return ExtensionsDirectory.SizeInText(LastSpeed, Localization.SPEED_COPY);
         }
     }
 
@@ -210,7 +226,6 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 MainWindow.Instance.ShowWindow();
             GlobalReport = _lastError.Message;
         }
-        ForceUpdateWaitingList();
         _chronoSpeed.Stop();
     }
 
@@ -410,8 +425,9 @@ public partial class MainViewModels : ObservableObject, IDisposable
             {
                 if (_currentOperation == null && ListWaiting.Count > 0 && GetLastError == null)
                 {
-                    if (AutoStartOperation)
+                    if (AutoStartOperation || _forceNext)
                     {
+                        _forceNext = false;
                         lock (_lockOperation)
                         {
                             _nextOperation ??= ListWaiting[0];
@@ -444,7 +460,6 @@ public partial class MainViewModels : ObservableObject, IDisposable
                     foreach (OneFileOperation op in SelectedLines)
                         ListWaiting.Remove(op);
             }
-            ForceUpdateWaitingList();
         }
         catch (Exception) { /* Ignore errors */ }
     }
@@ -468,7 +483,6 @@ public partial class MainViewModels : ObservableObject, IDisposable
             CopyHelper.Pause = !CopyHelper.Pause;
     }
 
-    [RelayCommand()]
     internal void StartNow()
     {
         if (_currentOperation != null)
@@ -485,6 +499,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         lock (_lockOperation)
         {
             _nextOperation = SelectedLines[0];
+            _forceNext = true;
             GetLastError = null;
         }
     }
@@ -499,8 +514,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         ExploripCopyConfig.AutoStartOperation = value;
     }
 
-    [RelayCommand()]
-    private void ChangeWindowState(object param)
+    public void ChangeWindowState(object param)
     {
         WindowMaximized = (param.ToString() == "1");
     }

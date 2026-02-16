@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 
@@ -9,7 +10,6 @@ using Explorip.HookFileOperations.Models;
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
 
-using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
 using ManagedShell.Interop;
@@ -29,15 +29,14 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        if (WindowsSettings.IsWindowsApplicationInDarkMode())
+        if (ExploripSharedCopy.Helpers.WindowsSettings.IsWindowsApplicationInDarkMode())
         {
-            WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
+            ExploripSharedCopy.Helpers.WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
 
         Instance = this;
         base.DataContext = MainViewModels.Instance;
-        DataContext.ForceRefreshList += ForceRefresh;
         _forceClose = false;
 
         IpcServer.CreateIpcServer();
@@ -134,22 +133,6 @@ public partial class MainWindow : Window
     private void Window_Closed(object sender, EventArgs e)
     {
         IpcServer.ShutdownIpcServer();
-        DataContext.ForceRefreshList -= ForceRefresh;
-    }
-
-    private void ForceRefresh(object sender, EventArgs e)
-    {
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            try
-            {
-                DgListWaiting.Items.Refresh();
-            }
-            catch (Exception)
-            {
-                // Nothing to do
-            }
-        });
     }
 
     private void Window_StateChanged(object sender, EventArgs e)
@@ -160,8 +143,40 @@ public partial class MainWindow : Window
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
-    private void DgListWaiting_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private void DgListWaiting_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        DataContext.SelectedLines = [.. DgListWaiting.SelectedItems.OfType<OneFileOperation>()];
+        if (e.OriginalSource is ListView lv)
+        {
+            DataContext.SelectedLines = [.. lv.SelectedItems.OfType<OneFileOperation>()];
+        }
+    }
+
+    private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        if (e.OriginalSource is ListView lv)
+        {
+            ExtensionsWpf.AdaptSize(lv, [new GridLength(0, GridUnitType.Auto), new GridLength(0.5, GridUnitType.Star), new GridLength(0, GridUnitType.Auto), new GridLength(0.5, GridUnitType.Star)]);
+        }
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        StateChanged -= Window_StateChanged;
+        StateChanged += Window_StateChanged;
+    }
+
+    private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Maximized;
+    }
+
+    private void RestoreWindow_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Normal;
     }
 }
