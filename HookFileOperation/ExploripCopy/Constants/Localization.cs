@@ -11,6 +11,7 @@ public static class Localization
     private const string DskQuotaDll = "dskquota.dll";
     private const string appWizCpl = "appwiz.cpl";
     private const string ParamFilename = "%1!ls!";
+    private const string ParamDouble = "%1!d!";
 
     public static string COPY_OF { get; private set; }
     public static string FILE_COLLISION_TITLE { get; private set; }
@@ -59,6 +60,15 @@ public static class Localization
     public static string FROM { get; private set; }
     public static string TO { get; private set; }
     public static string START { get; private set; }
+    public static string WORK_IN_PROGRESS { get; private set; }
+    public static string TIME_REMAINING { get; private set; }
+    public static string TIME_REMAINING_DAY { get; private set; }
+    public static string TIME_REMAINING_DAYS { get; private set; }
+    public static string TIME_REMAINING_HOUR { get; private set; }
+    public static string TIME_REMAINING_HOURS { get; private set; }
+    public static string TIME_REMAINING_MINUTES_SECONDS { get; private set; }
+    public static string TIME_REMAINING_MINUTE_SECONDS { get; private set; }
+    public static string TIME_REMAINING_SECONDS { get; private set; }
 
     internal static void LoadTranslation()
     {
@@ -109,6 +119,15 @@ public static class Localization
         FROM = Load(Shell32Dll, 13577, "From").Trim();
         TO = Load(Shell32Dll, 13578, "To").Trim();
         START = Load(Shell32Dll, 22073, "Start");
+        WORK_IN_PROGRESS = Load("explorerframe.dll", 41480, "Work in progress...");
+        TIME_REMAINING = Load(Shell32Dll, 33222, "Time remaining :");
+        TIME_REMAINING_DAY = Load(Shell32Dll, 32928, "%1!d! day");
+        TIME_REMAINING_DAYS = Load(Shell32Dll, 32929, "%1!d! days");
+        TIME_REMAINING_HOUR = Load(Shell32Dll, 32930, "1 hour");
+        TIME_REMAINING_HOURS = Load(Shell32Dll, 32931, "%1!d! hours").Replace(ParamDouble, "%h");
+        TIME_REMAINING_MINUTES_SECONDS = Load(Shell32Dll, 32937, "%1!d! minutes and %2!d! seconds").Replace(ParamDouble, "%m").Replace("%2!d!", "%s");
+        TIME_REMAINING_MINUTE_SECONDS = Load(Shell32Dll, 32939, "%1!d! minute and %2!d! seconds").Replace(ParamDouble, "%m").Replace("%2!d!", "%s");
+        TIME_REMAINING_SECONDS = Load(Shell32Dll, 32941, "%1!d! seconds").Replace(ParamDouble, "%s");
     }
 
     private static string Load(string libraryName, uint Ident, string DefaultText)

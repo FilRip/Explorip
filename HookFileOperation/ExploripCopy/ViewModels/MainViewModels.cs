@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,9 +51,19 @@ public partial class MainViewModels : ObservableObject, IDisposable
         _autoStartOperation = ExploripCopyConfig.AutoStartOperation;
         _lockOperation = new object();
         _listWaiting = [];
+        _listWaiting.CollectionChanged += ListWaiting_CollectionChanged;
         _mainThread = new Thread(new ThreadStart(ThreadFileOpWaiting));
         _mainThread.Start();
         _chronoSpeed = new Stopwatch();
+    }
+
+    private void ListWaiting_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+        if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add ||
+            e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
+        {
+            MaxGlobalOperations = ListWaiting.Sum(op => (double)op.Size);
+        }
     }
 
     [ObservableProperty()]
@@ -68,10 +79,13 @@ public partial class MainViewModels : ObservableObject, IDisposable
     private double _currentProgress;
 
     [ObservableProperty()]
-    private double _maxGlobalProgress;
+    private double _maxGlobalProgress, _maxGlobalOperations;
 
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(TxtGlobalReport))]
     private double _globalProgress;
+
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(TxtGlobalOperations))]
+    private double _globalOperations;
 
     [ObservableProperty()]
     private bool _autoStartOperation;
@@ -81,6 +95,43 @@ public partial class MainViewModels : ObservableObject, IDisposable
         get
         {
             return ExtensionsDirectory.SizeInText(GlobalProgress, Localization.TOTAL);
+        }
+    }
+
+    public string TxtGlobalTimeRemaining
+    {
+        get
+        {
+            try
+            {
+                double totalRemainingByte = MaxGlobalOperations - GlobalOperations;
+                double totalReaminingSeconds = totalRemainingByte / LastSpeed;
+                TimeSpan ts = TimeSpan.FromSeconds(totalReaminingSeconds);
+                StringBuilder sb = new();
+                if (ts.Hours > 1)
+                    sb.Append(Localization.TIME_REMAINING_HOURS);
+                else if (ts.Hours == 1)
+                    sb.Append(Localization.TIME_REMAINING_HOUR);
+                if (sb.Length > 0)
+                    sb.Append(", ");
+                if (ts.Minutes > 1)
+                    sb.Append(Localization.TIME_REMAINING_MINUTES_SECONDS);
+                else if (ts.Minutes == 1)
+                    sb.Append(Localization.TIME_REMAINING_MINUTE_SECONDS);
+                else
+                    sb.Append(Localization.TIME_REMAINING_SECONDS);
+                return sb.ToString().Replace("%h", ts.Hours.ToString()).Replace("%m", ts.Minutes.ToString()).Replace("%s", ts.Seconds.ToString());
+            }
+            catch (Exception) { /* Ignore errors */ }
+            return string.Empty;
+        }
+    }
+
+    public string TxtGlobalOperations
+    {
+        get
+        {
+            return ExtensionsDirectory.SizeInText(GlobalOperations, Localization.TOTAL);
         }
     }
 
@@ -162,6 +213,12 @@ public partial class MainViewModels : ObservableObject, IDisposable
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(TxtCurrentSpeed))]
     private double _lastSpeed;
 
+    partial void OnLastSpeedChanged(double value)
+    {
+        if (value > 0)
+            OnPropertyChanged(nameof(TxtGlobalTimeRemaining));
+    }
+
     public string TxtCurrentSpeed
     {
         get
@@ -187,6 +244,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
             diff = fullSize;
         CurrentProgress = diff / (double)fullSize * 100; // Convert in percent
         GlobalProgress += nbBytesRead;
+        GlobalOperations = ListWaiting.Sum(op => op.CurrentOffset);
     }
 
     public string CurrentProgressPercent
@@ -288,12 +346,12 @@ public partial class MainViewModels : ObservableObject, IDisposable
                             GlobalReport = Localization.CALCUL;
                             MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
                             UpdateGlobalReport();
-                            GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, operation.CurrentOffset, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                            GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, operation.CurrentOffset, (uint)ExploripCopyConfig.MaxBufferSize, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                         }
                         else
                         {
                             MaxGlobalProgress = new FileInfo(operation.Source).Length;
-                            GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, operation.CurrentOffset, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
+                            GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, operation.CurrentOffset, (uint)ExploripCopyConfig.MaxBufferSize, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                         }
                     }
                     else if (srcDir.FullName != destDir.FullName) // If Move in same folder, then nothing to do
@@ -321,12 +379,12 @@ public partial class MainViewModels : ObservableObject, IDisposable
                                 GlobalReport = Localization.CALCUL;
                                 MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
                                 UpdateGlobalReport();
-                                GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, operation.CurrentOffset, CallbackRefresh: Callback_Operation);
+                                GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, operation.CurrentOffset, (uint)ExploripCopyConfig.MaxBufferSize, CallbackRefresh: Callback_Operation);
                             }
                             else
                             {
                                 MaxGlobalProgress = new FileInfo(operation.Source).Length;
-                                GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, operation.CurrentOffset, CallbackRefresh: Callback_Operation);
+                                GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, operation.CurrentOffset, (uint)ExploripCopyConfig.MaxBufferSize, CallbackRefresh: Callback_Operation);
                             }
                         }
                     }

@@ -14,6 +14,7 @@ public static class ExploripCopyConfig
     private const string AutoExpandSubFolderConfig = "AutoExpandSubfolder";
     private const string InjectWindowsExplorerConfig = "InjectWindowsExplorer";
     private const string PriorityToLowerOperationsConfig = "PriorityToLowerOperations";
+    private const string MaxBufferSizeConfig = "MaxBufferSize";
 
     private static RegistryKey _registryRootExploripCopy;
 
@@ -37,6 +38,18 @@ public static class ExploripCopyConfig
                 _registryRootExploripCopy.SetValue(InjectWindowsExplorerConfig, "False");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(PriorityToLowerOperationsConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(PriorityToLowerOperationsConfig, "True");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(MaxBufferSizeConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(MaxBufferSizeConfig, "1048576");
+        }
+    }
+
+    public static int MaxBufferSize
+    {
+        get { return _registryRootExploripCopy.ReadInteger(MaxBufferSizeConfig); }
+        set
+        {
+            if (MaxBufferSize != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(MaxBufferSizeConfig, value.ToString());
         }
     }
 
@@ -45,7 +58,7 @@ public static class ExploripCopyConfig
         get { return _registryRootExploripCopy.ReadBoolean(AutoStartOperationConfig); }
         set
         {
-            if (AutoStartOperation != value)
+            if (AutoStartOperation != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(AutoStartOperationConfig, value.ToString());
         }
     }
@@ -55,7 +68,7 @@ public static class ExploripCopyConfig
         get { return _registryRootExploripCopy.ReadBoolean(NotificationOnEachOperationConfig); }
         set
         {
-            if (NotificationOnEachOperation != value)
+            if (NotificationOnEachOperation != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(NotificationOnEachOperationConfig, value.ToString());
         }
     }
@@ -65,7 +78,7 @@ public static class ExploripCopyConfig
         get { return _registryRootExploripCopy.ReadBoolean(AutoExpandSubFolderConfig); }
         set
         {
-            if (AutoExpandSubFolder != value)
+            if (AutoExpandSubFolder != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(AutoExpandSubFolderConfig, value.ToString());
         }
     }
@@ -75,7 +88,7 @@ public static class ExploripCopyConfig
         get { return _registryRootExploripCopy.ReadBoolean(InjectWindowsExplorerConfig); }
         set
         {
-            if (InjectWindowsExplorer != value)
+            if (InjectWindowsExplorer != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(InjectWindowsExplorerConfig, value.ToString());
         }
     }
@@ -85,7 +98,7 @@ public static class ExploripCopyConfig
         get { return _registryRootExploripCopy.ReadBoolean(PriorityToLowerOperationsConfig); }
         set
         {
-            if (PriorityToLowerOperations != value)
+            if (PriorityToLowerOperations != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(PriorityToLowerOperationsConfig, value.ToString());
         }
     }

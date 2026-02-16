@@ -51,19 +51,26 @@
                 <RowDefinition Height="16"/>
                 <RowDefinition Height="16"/>
                 <RowDefinition Height="16"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="16"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="16"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             
-            <!-- Current progress -->
+            <!-- Current file -->
             <TextBlock Grid.Row="0" Text="{Binding CurrentFile, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <ProgressBar Grid.Row="1" TextBlock.FontWeight="Bold" Name="ReportCurrentProgress" Tag="{Binding CurrentProgressPercent, UpdateSourceTrigger=PropertyChanged}" Value="{Binding CurrentProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Foreground="{x:Static colors:Colors.AccentColorBrush}" Style="{DynamicResource MyProgressBarStyle}"/>
-            <!-- Global progress -->
+            <!-- Current operation -->
             <TextBlock Grid.Row="2" Text="{Binding GlobalReport, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{Binding ColorGlobalReport}" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             <ProgressBar Grid.Row="3" TextBlock.FontWeight="Bold" Tag="{Binding TxtGlobalReport, UpdateSourceTrigger=PropertyChanged}" Name="ReportGlobalProgress" Value="{Binding GlobalProgress, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MaxGlobalProgress}" Foreground="{x:Static colors:Colors.AccentColorBrush}" Style="{DynamicResource MyProgressBarStyle}"/>
-            
+            <!-- Global operations -->
+            <TextBlock Grid.Row="4" Text="{Binding TxtGlobalTimeRemaining, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{Binding ColorGlobalReport}" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <ProgressBar Grid.Row="5" TextBlock.FontWeight="Bold" Tag="{Binding TxtGlobalOperations, UpdateSourceTrigger=PropertyChanged}" Value="{Binding GlobalOperations, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="{Binding MaxGlobalOperations}" Foreground="{x:Static colors:Colors.AccentColorBrush}" Style="{DynamicResource MyProgressBarStyle}"/>
+
             <!-- Buttons -->
-            <Grid Grid.Row="4">
+            <Grid Grid.Row="7">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
@@ -78,7 +85,7 @@
             </Grid>
             
             <!-- List operations are waiting -->
-            <ListView Grid.Row="5" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
+            <ListView Grid.Row="9" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
                       SelectionMode="Extended" SelectionChanged="DgListWaiting_SelectionChanged" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged}"
                       SizeChanged="ListView_SizeChanged"
                       VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling">

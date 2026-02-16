@@ -49,6 +49,7 @@ public partial class MainWindow : Window
         if (DataContext.ListWaiting?.Count > 0 || DataContext.OperationInProgress)
         {
             ShowWindow();
+            MessageBox.Show(Constants.Localization.WORK_IN_PROGRESS, "ExploripCopy", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
         else
         {
