@@ -89,6 +89,32 @@
                       SelectionMode="Extended" SelectionChanged="DgListWaiting_SelectionChanged" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged}"
                       SizeChanged="ListView_SizeChanged"
                       VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}">
+                                        <GridViewRowPresenter Columns="{Binding RelativeSource={RelativeSource AncestorType=ListView}, Path=View.Columns}"
+                                              Content="{TemplateBinding Content}" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{x:Static colors:Colors.SelectedBackgroundShellObject}"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                                            <Setter Property="Foreground" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
 
@@ -98,7 +124,28 @@
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="{x:Type fs:OneFileOperation}">
-                                    <Button Grid.Column="0" BorderThickness="0" Width="32" Height="32" Command="{Binding DataContext.StartNowButtonCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}" Background="Transparent">
+                                    <Button Grid.Column="0" BorderThickness="0" Width="32" Height="32" Command="{Binding DataContext.StartNowButtonCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding}">
+                                        <Button.Style>
+                                            <Style TargetType="{x:Type Button}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                            <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Background" Value="{x:Static colors:Colors.AccentColorBrush}"/>
+                                                                </Trigger>
+                                                                <Trigger Property="IsMouseOver" Value="False">
+                                                                    <Setter Property="Background" Value="Transparent"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Button.Style>
                                         <Image Source="{x:Static constants:Icons.Start}"/>
                                     </Button>
                                 </DataTemplate>
