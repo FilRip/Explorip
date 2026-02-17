@@ -22,6 +22,7 @@ internal partial class NotifyIconViewModel : ObservableObject
         Instance = this;
         SetSystrayIcon(false);
         _activeShowNotification = ExploripCopyConfig.NotificationOnEachOperation;
+        _activeExpandDirectories = ExploripCopyConfig.AutoExpandSubFolder;
     }
 
     partial void OnActiveShowNotificationChanged(bool value)
@@ -63,5 +64,19 @@ internal partial class NotifyIconViewModel : ObservableObject
     public void SetControl(TaskbarIcon myControl)
     {
         _notifyIcon = myControl;
+    }
+
+    [ObservableProperty()]
+    private bool _activeExpandDirectories;
+
+    [RelayCommand()]
+    private void AutoExpandDirectories()
+    {
+        ActiveExpandDirectories = !ActiveExpandDirectories;
+    }
+
+    partial void OnActiveExpandDirectoriesChanged(bool value)
+    {
+        ExploripCopyConfig.AutoExpandSubFolder = value;
     }
 }
