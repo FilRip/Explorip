@@ -69,7 +69,7 @@ internal static class ExtensionsWpf
     {
         if (VisualTreeHelper.GetChildrenCount(control) == 0)
             return null;
-        var x = VisualTreeHelper.GetChild(control, 0);
+        DependencyObject x = VisualTreeHelper.GetChild(control, 0);
         if (x == null)
             return null;
         if (VisualTreeHelper.GetChildrenCount(x) == 0)

@@ -7,6 +7,7 @@ using System.Windows.Interop;
 
 using Explorip.HookFileOperations.Models;
 
+using ExploripCopy.Controls;
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
 
@@ -22,6 +23,7 @@ namespace ExploripCopy.GUI;
 public partial class MainWindow : Window
 {
     private bool _forceClose;
+    private readonly ListViewDragDropManager<OneFileOperation> _dragItemManager;
 
     public static MainWindow Instance { get; private set; }
 
@@ -42,6 +44,8 @@ public partial class MainWindow : Window
         IpcServer.CreateIpcServer();
 
         Icon = Constants.Icons.MainIconSource;
+
+        _dragItemManager = new ListViewDragDropManager<OneFileOperation>(LvOperations);
     }
 
     public void IconInSystray_Exit()
@@ -56,6 +60,7 @@ public partial class MainWindow : Window
             MainViewModels.Instance.Dispose();
             _forceClose = true;
             Close();
+            _dragItemManager.Stop();
             Environment.Exit(0);
         }
     }
@@ -160,6 +165,8 @@ public partial class MainWindow : Window
         }
     }
 
+    #region Window buttons
+
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
         StateChanged -= Window_StateChanged;
@@ -180,4 +187,6 @@ public partial class MainWindow : Window
     {
         WindowState = WindowState.Normal;
     }
+
+    #endregion
 }

@@ -9,6 +9,7 @@
         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:fs="clr-namespace:Explorip.HookFileOperations.Models;assembly=HookFileOperations"
+        xmlns:controls="clr-namespace:ExploripCopy.Controls"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
         Title="ExploripCopy" Height="450" Width="800" Background="{x:Static colors:Colors.BackgroundColorBrush}" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True" Loaded="Window_Loaded"
@@ -129,9 +130,9 @@
             </Grid>
             
             <!-- List operations are waiting -->
-            <ListView Grid.Row="9" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"
+            <ListView Grid.Row="9" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Name="LvOperations"
                       SelectionMode="Extended" SelectionChanged="DgListWaiting_SelectionChanged" ItemsSource="{Binding ListWaiting, UpdateSourceTrigger=PropertyChanged}"
-                      SizeChanged="ListView_SizeChanged"
+                      SizeChanged="ListView_SizeChanged" AllowDrop="True"
                       VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -152,6 +153,9 @@
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter Property="Background" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
                                             <Setter Property="Foreground" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
+                                        </Trigger>
+                                        <Trigger Property="controls:ListViewItemDragState.IsUnderDragCursor" Value="True">
+                                            <Setter Property="Background" Value="{x:Static colors:Colors.SelectedBackgroundShellObject}"/>
                                         </Trigger>
                                     </ControlTemplate.Triggers>
                                 </ControlTemplate>

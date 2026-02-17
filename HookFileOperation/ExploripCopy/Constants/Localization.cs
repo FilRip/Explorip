@@ -71,6 +71,7 @@ public static class Localization
     public static string TIME_REMAINING_SECONDS { get; private set; }
     public static string REMOVE_ALL { get; private set; }
     public static string AUTO_EXPAND_DIRECTORY { get; private set; }
+    public static string OPERATION_ALREADY_EXISTS { get; private set; }
 
     internal static void LoadTranslation()
     {
@@ -132,6 +133,7 @@ public static class Localization
         TIME_REMAINING_SECONDS = Load(Shell32Dll, 32941, "%1!d! seconds").Replace(ParamDouble, "%s");
         REMOVE_ALL = Load("ieframe.dll", 41059, "Remove all");
         AUTO_EXPAND_DIRECTORY = Load(Shell32Dll, 32788, "Expand folders");
+        OPERATION_ALREADY_EXISTS = Load("dsprop.dll", 2095, "The object %s is already in the list and can't be added twice");
     }
 
     private static string Load(string libraryName, uint Ident, string DefaultText)

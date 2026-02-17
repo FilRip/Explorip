@@ -55,6 +55,8 @@ public partial class MyTaskbarApp : Application
 
     public void ExitGracefully()
     {
+        if (Current == null)
+            return;
         SetExiting();
         _threadAutoLock?.Abort();
         Models.HookRefreshLanguageLayout.UnHook();
@@ -382,7 +384,7 @@ public partial class MyTaskbarApp : Application
                     }
 
                     // If all monitors are power off, then lock session
-                    if (allMonitorOff >= Screen.AllScreens.Count())
+                    if (allMonitorOff >= Screen.AllScreens.Count() && !_exiting)
                     {
                         ShellLogger.Debug("Auto lock");
                         ShellHelper.Lock();
