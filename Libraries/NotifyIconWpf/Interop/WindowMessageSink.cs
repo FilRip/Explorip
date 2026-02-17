@@ -332,7 +332,9 @@ public class WindowMessageSink : IDisposable
                 break;
 
             default:
+#if DEBUG
                 Debug.WriteLine("Unhandled NotifyIcon message ID: " + lParam);
+#endif
                 break;
         }
     }

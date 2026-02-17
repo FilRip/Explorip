@@ -69,6 +69,7 @@ public static class Localization
     public static string TIME_REMAINING_MINUTES_SECONDS { get; private set; }
     public static string TIME_REMAINING_MINUTE_SECONDS { get; private set; }
     public static string TIME_REMAINING_SECONDS { get; private set; }
+    public static string REMOVE_ALL { get; private set; }
 
     internal static void LoadTranslation()
     {
@@ -128,6 +129,7 @@ public static class Localization
         TIME_REMAINING_MINUTES_SECONDS = Load(Shell32Dll, 32937, "%1!d! minutes and %2!d! seconds").Replace(ParamDouble, "%m").Replace("%2!d!", "%s");
         TIME_REMAINING_MINUTE_SECONDS = Load(Shell32Dll, 32939, "%1!d! minute and %2!d! seconds").Replace(ParamDouble, "%m").Replace("%2!d!", "%s");
         TIME_REMAINING_SECONDS = Load(Shell32Dll, 32941, "%1!d! seconds").Replace(ParamDouble, "%s");
+        REMOVE_ALL = Load("ieframe.dll", 41059, "Remove all");
     }
 
     private static string Load(string libraryName, uint Ident, string DefaultText)

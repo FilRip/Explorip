@@ -78,10 +78,54 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <CheckBox Grid.Column="0" Content="Auto start next operation" IsChecked="{Binding AutoStartOperation}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                <Label Grid.Column="2" Content="{Binding TxtCurrentSpeed, UpdateSourceTrigger=PropertyChanged}" Name="ShowCurrentSpeed" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Padding="0" Margin="0 0 5 0"/>
-                <Button Grid.Column="3" Content="{x:Static constants:Localization.STOP}" HorizontalAlignment="Right" Name="BtnStop" Command="{Binding IgnoreCurrentCommand}"/>
-                <Button Grid.Column="4" Content="{x:Static constants:Localization.PAUSE}" HorizontalAlignment="Right" Name="BtnPause" Command="{Binding DoPauseCommand}"/>
+                <CheckBox Grid.Column="0" Content="Auto start next operation" IsChecked="{Binding AutoStartOperation}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" VerticalContentAlignment="Center"/>
+                <Label Grid.Column="2" Content="{Binding TxtCurrentSpeed, UpdateSourceTrigger=PropertyChanged}" Name="ShowCurrentSpeed" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Padding="0" Margin="0 0 10 0" VerticalAlignment="Center"/>
+                <Button Grid.Column="3" Content="{x:Static constants:Localization.STOP}" HorizontalAlignment="Right" Name="BtnStop" Command="{Binding IgnoreCurrentCommand}" Margin="0 0 5 0">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{x:Static colors:Colors.AccentColorBrush}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="False">
+                                                <Setter Property="Background" Value="{x:Static colors:Colors.SelectedBackgroundShellObject}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Grid.Column="4" Content="{x:Static constants:Localization.PAUSE}" HorizontalAlignment="Right" Name="BtnPause" Command="{Binding DoPauseCommand}">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border Background="{TemplateBinding Background}" BorderThickness="0">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{x:Static colors:Colors.AccentColorBrush}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="False">
+                                                <Setter Property="Background" Value="{x:Static colors:Colors.SelectedBackgroundShellObject}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </Grid>
             
             <!-- List operations are waiting -->
@@ -191,6 +235,7 @@
                 <ListView.ContextMenu>
                     <ContextMenu Name="ListOperationMenu">
                         <MenuItem Header="{x:Static constants:Localization.REMOVE}" Command="{Binding RemoveLineCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                        <MenuItem Header="{x:Static constants:Localization.REMOVE_ALL}" Command="{Binding RemoveAllLinesCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>

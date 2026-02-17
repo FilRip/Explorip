@@ -37,6 +37,7 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\CoolBytes.Helpers\CoolBytes.Helpers.csproj" />
     <ProjectReference Include="..\..\Libraries\ExploripConfig\ExploripConfig.csproj" />
     <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
     <ProjectReference Include="..\..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj" />

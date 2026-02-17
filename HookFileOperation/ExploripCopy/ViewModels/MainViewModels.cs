@@ -12,6 +12,8 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using CoolBytes.Helpers;
+
 using Explorip.HookFileOperations.FilesOperations;
 using Explorip.HookFileOperations.Models;
 
@@ -163,7 +165,17 @@ public partial class MainViewModels : ObservableObject, IDisposable
                             op.Attributes = File.GetAttributes(op.Source);
                         // Calculate size
                         if (op.IsDirectory)
-                            op.Size = ExtensionsDirectory.DirectorySize(op.Source);
+                        {
+                            if (ExploripCopyConfig.AutoExpandSubFolder)
+                            {
+                                List<OneFileOperation> subItems = ExtensionsDirectory.ExpandDirectory(op.Source, op.Destination, op.FileOperation);
+                                foreach (OneFileOperation subItem in subItems)
+                                    AddOrInsertOp(subItem);
+                                continue;
+                            }
+                            else
+                                op.Size = ExtensionsDirectory.DirectorySize(op.Source);
+                        }
                         else
                             op.Size = (ulong)(new FileInfo(op.Source)?.Length ?? 0);
                     }
@@ -514,12 +526,33 @@ public partial class MainViewModels : ObservableObject, IDisposable
         {
             lock (_lockOperation)
             {
-                if (SelectedLines.Count > 0)
-                    foreach (OneFileOperation op in SelectedLines)
-                        ListWaiting.Remove(op);
+                ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
+                ListWaiting.RemoveAll(op => SelectedLines.Contains(op));
             }
         }
-        catch (Exception) { /* Ignore errors */ }
+        finally
+        {
+            ListWaiting.CollectionChanged += ListWaiting_CollectionChanged;
+            OnPropertyChanged(nameof(ListWaiting));
+        }
+    }
+
+    [RelayCommand()]
+    private void RemoveAllLines()
+    {
+        try
+        {
+            lock (_lockOperation)
+            {
+                ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
+                ListWaiting.Clear();
+            }
+        }
+        finally
+        {
+            ListWaiting.CollectionChanged += ListWaiting_CollectionChanged;
+            OnPropertyChanged(nameof(ListWaiting));
+        }
     }
 
     [RelayCommand()]

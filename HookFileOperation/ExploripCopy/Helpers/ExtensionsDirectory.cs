@@ -35,15 +35,17 @@ public static class ExtensionsDirectory
                     if (dataFind.cFileName != "." && dataFind.cFileName != "..")
                         listDirectory.Add(new OneFileOperation(operation)
                         {
-                            Source = dataFind.cFileName,
-                            Destination = Path.Combine(dest, Path.GetFileName(dataFind.cFileName)),
+                            Source = Path.Combine(path, dataFind.cFileName),
+                            Destination = Path.Combine(dest, Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar))),
+                            Attributes = dataFind.dwFileAttributes,
                         });
                 }
                 else
                     listFiles.Add(new OneFileOperation(operation)
                     {
-                        Source = dataFind.cFileName,
-                        Destination = Path.Combine(dest + Path.DirectorySeparatorChar, Path.GetFileName(dataFind.cFileName)),
+                        Source = Path.Combine(path, dataFind.cFileName),
+                        Destination = Path.Combine(dest, Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar)), dataFind.cFileName),
+                        Attributes = dataFind.dwFileAttributes,
                     });
 
                 if (!FindNextFile(handle, out dataFind))
