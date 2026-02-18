@@ -237,9 +237,14 @@
                 </ListView.View>
 
                 <ListView.ContextMenu>
-                    <ContextMenu Name="ListOperationMenu">
-                        <MenuItem Header="{x:Static constants:Localization.REMOVE}" Command="{Binding RemoveLineCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                        <MenuItem Header="{x:Static constants:Localization.REMOVE_ALL}" Command="{Binding RemoveAllLinesCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                    <ContextMenu Name="ListOperationMenu" ItemsPanel="{DynamicResource MyMenuItemPanel}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Background="{x:Static colors:Colors.BackgroundColorBrush}">
+                        <MenuItem Header="{x:Static constants:Localization.FIRST}" Command="{Binding GoFirstCommand}"/>
+                        <MenuItem Header="{x:Static constants:Localization.UP}" Command="{Binding MoveUpCommand}"/>
+                        <MenuItem Header="{x:Static constants:Localization.DOWN}" Command="{Binding MoveDownCommand}"/>
+                        <MenuItem Header="{x:Static constants:Localization.LAST}" Command="{Binding GoLastCommand}"/>
+                        <Separator Style="{DynamicResource MySeparatorStyle}"/>
+                        <MenuItem Header="{x:Static constants:Localization.REMOVE}" Command="{Binding RemoveLineCommand}"/>
+                        <MenuItem Header="{x:Static constants:Localization.REMOVE_ALL}" Command="{Binding RemoveAllLinesCommand}"/>
                     </ContextMenu>
                 </ListView.ContextMenu>
             </ListView>

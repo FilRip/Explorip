@@ -12,6 +12,7 @@ public static class Localization
     private const string appWizCpl = "appwiz.cpl";
     private const string ParamFilename = "%1!ls!";
     private const string ParamDouble = "%1!d!";
+    private const string IEFrameDll = "ieframe.dll";
 
     public static string COPY_OF { get; private set; }
     public static string FILE_COLLISION_TITLE { get; private set; }
@@ -72,6 +73,10 @@ public static class Localization
     public static string REMOVE_ALL { get; private set; }
     public static string AUTO_EXPAND_DIRECTORY { get; private set; }
     public static string OPERATION_ALREADY_EXISTS { get; private set; }
+    public static string UP { get; private set; }
+    public static string DOWN { get; private set; }
+    public static string FIRST { get; private set; }
+    public static string LAST { get; private set; }
 
     internal static void LoadTranslation()
     {
@@ -131,9 +136,13 @@ public static class Localization
         TIME_REMAINING_MINUTES_SECONDS = Load(Shell32Dll, 32937, "%1!d! minutes and %2!d! seconds").Replace(ParamDouble, "%m").Replace("%2!d!", "%s");
         TIME_REMAINING_MINUTE_SECONDS = Load(Shell32Dll, 32939, "%1!d! minute and %2!d! seconds").Replace(ParamDouble, "%m").Replace("%2!d!", "%s");
         TIME_REMAINING_SECONDS = Load(Shell32Dll, 32941, "%1!d! seconds").Replace(ParamDouble, "%s");
-        REMOVE_ALL = Load("ieframe.dll", 41059, "Remove all");
+        REMOVE_ALL = Load(IEFrameDll, 41059, "Remove all");
         AUTO_EXPAND_DIRECTORY = Load(Shell32Dll, 32788, "Expand folders");
         OPERATION_ALREADY_EXISTS = Load("dsprop.dll", 2095, "The object %s is already in the list and can't be added twice");
+        UP = Load(IEFrameDll, 41060, "Up");
+        DOWN = Load(IEFrameDll, 41061, "Down");
+        FIRST = Load("mfc42.dll", 59648, "\\nFirst record").Split((char)10)[1];
+        LAST = Load("mfc42.dll", 59649, "\\nLast record").Split((char)10)[1];
     }
 
     private static string Load(string libraryName, uint Ident, string DefaultText)

@@ -22,6 +22,8 @@ public class ListViewDragDropManager<T> where T : class
     private Point _ptMouseDown;
     private int _firstVisibleIndex, _nbVisibleItem;
     private Thread _threadScrollTo;
+    private readonly int _speedScrolling;
+    private readonly int _stepScrolling;
 
     private ListViewDragDropManager()
     {
@@ -29,7 +31,7 @@ public class ListViewDragDropManager<T> where T : class
         _indexToSelect = -1;
     }
 
-    public ListViewDragDropManager(ListView listView, double dragAdornerOpacity = 0.7)
+    public ListViewDragDropManager(ListView listView, double dragAdornerOpacity = 0.7, int speedScrolling = 500, int stepScrolling = 50)
         : this()
     {
         _listView = listView;
@@ -47,6 +49,8 @@ public class ListViewDragDropManager<T> where T : class
             _listView.Loaded += ListView_Loaded;
 
         DragAdornerOpacity = dragAdornerOpacity;
+        _speedScrolling = speedScrolling;
+        _stepScrolling = stepScrolling;
     }
 
     private void ListView_Loaded(object sender, RoutedEventArgs e)
@@ -135,38 +139,77 @@ public class ListViewDragDropManager<T> where T : class
         int index = IndexUnderDragCursor;
         ItemUnderDragCursor = index < 0 ? null : ListView.Items[index] as T;
 
-        if (index == _firstVisibleIndex + _nbVisibleItem - 1)
-        {
-            int indexItem = Math.Min(_firstVisibleIndex + _nbVisibleItem, _listView.Items.Count - 1);
-            LoopScroll(indexItem);
-        }
+        if (index >= _firstVisibleIndex + _nbVisibleItem - 1)
+            CreateLoopScroll(AutoScroll.Down);
         else if (index == _firstVisibleIndex && index > 0)
-        {
-            int indexItem = Math.Max(_firstVisibleIndex - 1, 0);
-            LoopScroll(indexItem);
-        }
-        else if (_threadScrollTo != null && _threadScrollTo.ThreadState != ThreadState.Aborted && _threadScrollTo.ThreadState != ThreadState.Stopped)
+            CreateLoopScroll(AutoScroll.Up);
+        else if (_threadScrollTo != null && _threadScrollTo.ThreadState != System.Threading.ThreadState.Aborted && _threadScrollTo.ThreadState != System.Threading.ThreadState.Stopped)
             _threadScrollTo.Abort();
     }
 
-    private void LoopScroll(int indexItem)
+    private enum AutoScroll
     {
-        if (_threadScrollTo == null || _threadScrollTo.ThreadState == ThreadState.Stopped || _threadScrollTo.ThreadState == ThreadState.Aborted)
+        Up = 0,
+        Down = 1,
+    }
+
+    private void CreateLoopScroll(AutoScroll autoScroll)
+    {
+        if (_threadScrollTo == null)
+            CreateThread();
+        else if (_threadScrollTo.Name != "AutoScroll=" + autoScroll.ToString())
         {
-            _threadScrollTo = new Thread(new ParameterizedThreadStart(ScrollToItem));
-            _threadScrollTo.Start(_listView.Items[indexItem]);
+            if (_threadScrollTo.ThreadState == System.Threading.ThreadState.Running)
+                _threadScrollTo.Abort();
+            CreateThread();
+        }
+        else if (_threadScrollTo.ThreadState == System.Threading.ThreadState.Stopped || _threadScrollTo.ThreadState == System.Threading.ThreadState.Aborted)
+            CreateThread();
+
+        void CreateThread()
+        {
+            _threadScrollTo = new Thread(new ParameterizedThreadStart(LoopScroll))
+            {
+                Name = "AutoScroll=" + autoScroll.ToString(),
+            };
+            _threadScrollTo.Start(autoScroll);
         }
     }
 
-    private void ScrollToItem(object item)
+    private void LoopScroll(object userState)
     {
         try
         {
+            int currentSpeed = _speedScrolling;
             Thread.Sleep(3000);
-            Application.Current.Dispatcher.BeginInvoke(() =>
+            if (userState is AutoScroll direction)
             {
-                _listView.ScrollIntoView(item);
-            });
+                while (true)
+                {
+                    int indexItem = 0;
+                    switch (direction)
+                    {
+                        case AutoScroll.Up:
+                            indexItem = Math.Max(_firstVisibleIndex - 1, 0);
+                            break;
+                        case AutoScroll.Down:
+                            indexItem = Math.Min(_firstVisibleIndex + _nbVisibleItem + 1, _listView.Items.Count - 1);
+                            break;
+                    }
+
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        try
+                        {
+                            _listView.ScrollIntoView(_listView.Items[indexItem]);
+                        }
+                        catch (Exception) { /* Ignore errors */ }
+                    });
+
+                    Thread.Sleep(currentSpeed);
+                    currentSpeed = Math.Max(50, currentSpeed - _stepScrolling);
+                }
+            }
         }
         catch (Exception) { /* Ignore errors */ }
     }

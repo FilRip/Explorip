@@ -532,8 +532,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         }
         finally
         {
-            ListWaiting.CollectionChanged += ListWaiting_CollectionChanged;
-            OnPropertyChanged(nameof(ListWaiting));
+            RegisterListWaiting();
         }
     }
 
@@ -550,8 +549,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         }
         finally
         {
-            ListWaiting.CollectionChanged += ListWaiting_CollectionChanged;
-            OnPropertyChanged(nameof(ListWaiting));
+            RegisterListWaiting();
         }
     }
 
@@ -615,6 +613,105 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         SelectedLines = [(OneFileOperation)param];
         StartNow();
+    }
+
+    [RelayCommand()]
+    private void GoFirst()
+    {
+        if (SelectedLines?.Count > 0)
+        {
+            try
+            {
+                lock (_lockOperation)
+                {
+                    ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
+                    for (int i = 0; i < SelectedLines.Count; i++)
+                        ListWaiting.Move(ListWaiting.IndexOf(SelectedLines[i]), i);
+                }
+            }
+            finally
+            {
+                RegisterListWaiting();
+            }
+        }
+    }
+
+    [RelayCommand()]
+    private void GoLast()
+    {
+        if (SelectedLines?.Count > 0)
+        {
+            try
+            {
+                lock (_lockOperation)
+                {
+                    ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
+                    for (int i = 0; i < SelectedLines.Count; i++)
+                        ListWaiting.Move(ListWaiting.IndexOf(SelectedLines[i]), ListWaiting.Count - 1);
+                }
+            }
+            finally
+            {
+                RegisterListWaiting();
+            }
+        }
+    }
+
+    [RelayCommand()]
+    private void MoveUp()
+    {
+        if (SelectedLines?.Count > 0)
+        {
+            try
+            {
+                lock (_lockOperation)
+                {
+                    ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
+                    for (int i = 0; i < SelectedLines.Count; i++)
+                    {
+                        int index = ListWaiting.IndexOf(SelectedLines[i]);
+                        if (index > 0)
+                            ListWaiting.Move(index, index - 1);
+                    }
+                }
+            }
+            finally
+            {
+                RegisterListWaiting();
+            }
+        }
+    }
+
+    [RelayCommand()]
+    private void MoveDown()
+    {
+        if (SelectedLines?.Count > 0)
+        {
+            try
+            {
+                lock (_lockOperation)
+                {
+                    ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
+                    for (int i = 0; i < SelectedLines.Count; i++)
+                    {
+                        int index = ListWaiting.IndexOf(SelectedLines[i]);
+                        if (index < ListWaiting.Count - 1)
+                            ListWaiting.Move(index, index + 1);
+                    }
+                }
+            }
+            finally
+            {
+                RegisterListWaiting();
+            }
+        }
+    }
+
+    private void RegisterListWaiting(bool withNotification = true)
+    {
+        ListWaiting.CollectionChanged += ListWaiting_CollectionChanged;
+        if (withNotification)
+            OnPropertyChanged(nameof(ListWaiting));
     }
 
     #region IDisposable

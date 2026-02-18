@@ -2,7 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:constants="clr-namespace:ExploripCopy.Constants"
                     xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy">
-    
+
+    <ItemsPanelTemplate x:Key="MyMenuItemPanel">
+        <StackPanel Background="{x:Static colors:Colors.BackgroundColorBrush}"/>
+    </ItemsPanelTemplate>
+
+    <Style TargetType="{x:Type Separator}" BasedOn="{StaticResource {x:Type Separator}}" x:Key="MySeparatorStyle">
+        <Setter Property="Margin" Value="3,0,0,0"/>
+    </Style>
+
     <SolidColorBrush x:Key="Menu.Static.Background" Color="#FFF0F0F0"/>
     <SolidColorBrush x:Key="Menu.Static.Border" Color="#FF999999"/>
     <SolidColorBrush x:Key="Menu.Static.Foreground" Color="#FF212121"/>
