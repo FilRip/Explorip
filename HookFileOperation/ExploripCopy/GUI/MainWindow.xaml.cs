@@ -7,6 +7,8 @@ using System.Windows.Interop;
 
 using Explorip.HookFileOperations.Models;
 
+using ExploripConfig.Configuration;
+
 using ExploripCopy.Controls;
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
@@ -45,7 +47,7 @@ public partial class MainWindow : Window
 
         Icon = Constants.Icons.MainIconSource;
 
-        _dragItemManager = new ListViewDragDropManager<OneFileOperation>(LvOperations);
+        _dragItemManager = new ListViewDragDropManager<OneFileOperation>(LvOperations, ExploripCopyConfig.DragGhostOpacity, ExploripCopyConfig.WaitBetweenTwoDragScrolling, ExploripCopyConfig.SpeedForDragScrolling, ExploripCopyConfig.WaitBeforeStartDragScrolling);
     }
 
     public void IconInSystray_Exit()

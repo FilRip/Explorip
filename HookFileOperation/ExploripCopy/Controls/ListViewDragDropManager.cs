@@ -24,6 +24,7 @@ public class ListViewDragDropManager<T> where T : class
     private Thread _threadScrollTo;
     private readonly int _speedScrolling;
     private readonly int _stepScrolling;
+    private readonly int _waitBeforeStartScrolling;
 
     private ListViewDragDropManager()
     {
@@ -31,7 +32,7 @@ public class ListViewDragDropManager<T> where T : class
         _indexToSelect = -1;
     }
 
-    public ListViewDragDropManager(ListView listView, double dragAdornerOpacity = 0.7, int speedScrolling = 500, int stepScrolling = 50)
+    public ListViewDragDropManager(ListView listView, double dragAdornerOpacity = 0.7, int speedScrolling = 500, int stepScrolling = 50, int waitBeforeStartScrolling = 2000)
         : this()
     {
         _listView = listView;
@@ -51,6 +52,7 @@ public class ListViewDragDropManager<T> where T : class
         DragAdornerOpacity = dragAdornerOpacity;
         _speedScrolling = speedScrolling;
         _stepScrolling = stepScrolling;
+        _waitBeforeStartScrolling = waitBeforeStartScrolling;
     }
 
     private void ListView_Loaded(object sender, RoutedEventArgs e)
@@ -143,7 +145,7 @@ public class ListViewDragDropManager<T> where T : class
             CreateLoopScroll(AutoScroll.Down);
         else if (index == _firstVisibleIndex && index > 0)
             CreateLoopScroll(AutoScroll.Up);
-        else if (_threadScrollTo != null && _threadScrollTo.ThreadState != System.Threading.ThreadState.Aborted && _threadScrollTo.ThreadState != System.Threading.ThreadState.Stopped)
+        else if (_threadScrollTo != null && _threadScrollTo.ThreadState != ThreadState.Aborted && _threadScrollTo.ThreadState != ThreadState.Stopped)
             _threadScrollTo.Abort();
     }
 
@@ -159,11 +161,11 @@ public class ListViewDragDropManager<T> where T : class
             CreateThread();
         else if (_threadScrollTo.Name != "AutoScroll=" + autoScroll.ToString())
         {
-            if (_threadScrollTo.ThreadState == System.Threading.ThreadState.Running)
+            if (_threadScrollTo.ThreadState == ThreadState.Running)
                 _threadScrollTo.Abort();
             CreateThread();
         }
-        else if (_threadScrollTo.ThreadState == System.Threading.ThreadState.Stopped || _threadScrollTo.ThreadState == System.Threading.ThreadState.Aborted)
+        else if (_threadScrollTo.ThreadState == ThreadState.Stopped || _threadScrollTo.ThreadState == ThreadState.Aborted)
             CreateThread();
 
         void CreateThread()
@@ -181,7 +183,7 @@ public class ListViewDragDropManager<T> where T : class
         try
         {
             int currentSpeed = _speedScrolling;
-            Thread.Sleep(3000);
+            Thread.Sleep(_waitBeforeStartScrolling);
             if (userState is AutoScroll direction)
             {
                 while (true)

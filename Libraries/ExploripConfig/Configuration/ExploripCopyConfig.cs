@@ -1,4 +1,6 @@
-﻿using ExploripConfig.Helpers;
+﻿using System.Globalization;
+
+using ExploripConfig.Helpers;
 
 using Microsoft.Win32;
 
@@ -15,6 +17,10 @@ public static class ExploripCopyConfig
     private const string InjectWindowsExplorerConfig = "InjectWindowsExplorer";
     private const string PriorityToLowerOperationsConfig = "PriorityToLowerOperations";
     private const string MaxBufferSizeConfig = "MaxBufferSize";
+    private const string ConfigDragGhostOpacity = "DragGhostOpacity";
+    private const string WaitBeforeStartScrollConfig = "WaitBeforeStartDragScroll";
+    private const string WaitBetweenTwoScrollingConfig = "WaitBetweenTwoDragScrolling";
+    private const string SpeedForDragScrollingConfig = "SpeedForDragScrolling";
 
     private static RegistryKey _registryRootExploripCopy;
 
@@ -40,6 +46,14 @@ public static class ExploripCopyConfig
                 _registryRootExploripCopy.SetValue(PriorityToLowerOperationsConfig, "True");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(MaxBufferSizeConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(MaxBufferSizeConfig, "1048576");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(ConfigDragGhostOpacity, "").ToString()))
+                _registryRootExploripCopy.SetValue(ConfigDragGhostOpacity, "0.7");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(WaitBeforeStartScrollConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(WaitBeforeStartScrollConfig, "2000");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(WaitBetweenTwoScrollingConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(WaitBetweenTwoScrollingConfig, "500");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(SpeedForDragScrollingConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(SpeedForDragScrollingConfig, "50");
         }
     }
 
@@ -100,6 +114,46 @@ public static class ExploripCopyConfig
         {
             if (PriorityToLowerOperations != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(PriorityToLowerOperationsConfig, value.ToString());
+        }
+    }
+
+    public static double DragGhostOpacity
+    {
+        get { return _registryRootExploripCopy.ReadDouble(ConfigDragGhostOpacity); }
+        set
+        {
+            if (DragGhostOpacity != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(ConfigDragGhostOpacity, value.ToString(CultureInfo.InvariantCulture));
+        }
+    }
+
+    public static int WaitBeforeStartDragScrolling
+    {
+        get { return _registryRootExploripCopy.ReadInteger(WaitBeforeStartScrollConfig); }
+        set
+        {
+            if (WaitBeforeStartDragScrolling != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(WaitBeforeStartScrollConfig, value.ToString());
+        }
+    }
+
+    public static int WaitBetweenTwoDragScrolling
+    {
+        get { return _registryRootExploripCopy.ReadInteger(WaitBetweenTwoScrollingConfig); }
+        set
+        {
+            if (WaitBetweenTwoDragScrolling != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(WaitBetweenTwoScrollingConfig, value.ToString());
+        }
+    }
+
+    public static int SpeedForDragScrolling
+    {
+        get { return _registryRootExploripCopy.ReadInteger(SpeedForDragScrollingConfig); }
+        set
+        {
+            if (SpeedForDragScrolling != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(SpeedForDragScrollingConfig, value.ToString());
         }
     }
 }
