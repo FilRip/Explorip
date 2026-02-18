@@ -92,6 +92,9 @@ public partial class MainViewModels : ObservableObject, IDisposable
     [ObservableProperty()]
     private bool _autoStartOperation;
 
+    [ObservableProperty()]
+    private bool _isFolder;
+
     public string TxtGlobalReport
     {
         get
@@ -709,9 +712,43 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     private void RegisterListWaiting(bool withNotification = true)
     {
+        ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
         ListWaiting.CollectionChanged += ListWaiting_CollectionChanged;
         if (withNotification)
             OnPropertyChanged(nameof(ListWaiting));
+    }
+
+    [RelayCommand()]
+    private void BrowseFolder()
+    {
+        try
+        {
+            ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
+            lock (_lockOperation)
+            {
+                foreach (OneFileOperation op in SelectedLines.Where(op => op.IsDirectory && (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Copy || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Move)))
+                {
+                    int index = ListWaiting.IndexOf(op);
+                    List<OneFileOperation> subItems = ExtensionsDirectory.ExpandDirectory(op.Source, op.Destination, op.FileOperation);
+                    ListWaiting.RemoveAt(index);
+                    if (subItems?.Count > 0)
+                    {
+                        subItems.Reverse();
+                        foreach (OneFileOperation subItem in subItems)
+                            ListWaiting.Insert(index, subItem);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            RegisterListWaiting();
+        }
+    }
+
+    public void RefreshIsFolderVisible()
+    {
+        IsFolder = SelectedLines.Any(op => op.IsDirectory && (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Copy || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Move));
     }
 
     #region IDisposable

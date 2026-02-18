@@ -156,6 +156,7 @@ public partial class MainWindow : Window
         if (e.OriginalSource is ListView lv)
         {
             DataContext.SelectedLines = [.. lv.SelectedItems.OfType<OneFileOperation>()];
+            DataContext.RefreshIsFolderVisible();
         }
     }
 

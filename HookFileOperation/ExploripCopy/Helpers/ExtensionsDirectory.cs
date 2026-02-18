@@ -46,6 +46,7 @@ public static class ExtensionsDirectory
                         Source = Path.Combine(path, dataFind.cFileName),
                         Destination = Path.Combine(dest, Path.GetFileName(path.TrimEnd(Path.DirectorySeparatorChar)), dataFind.cFileName),
                         Attributes = dataFind.dwFileAttributes,
+                        Size = dataFind.GetSize(),
                     });
 
                 if (!FindNextFile(handle, out dataFind))
@@ -96,7 +97,7 @@ public static class ExtensionsDirectory
                 }
                 else
                 {
-                    size += ((ulong)dataFind.nFileSizeHigh << 32) + dataFind.nFileSizeLow;
+                    size += dataFind.GetSize();
                 }
                 if (!FindNextFile(handle, out dataFind) || token?.IsCancellationRequested == true)
                     break;

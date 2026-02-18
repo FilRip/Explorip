@@ -243,6 +243,8 @@
                         <MenuItem Header="{x:Static constants:Localization.DOWN}" Command="{Binding MoveDownCommand}"/>
                         <MenuItem Header="{x:Static constants:Localization.LAST}" Command="{Binding GoLastCommand}"/>
                         <Separator Style="{DynamicResource MySeparatorStyle}"/>
+                        <MenuItem Header="{x:Static constants:Localization.AUTO_EXPAND_DIRECTORY}" Command="{Binding BrowseFolderCommand}" Visibility="{Binding IsFolder, Converter={StaticResource boolToVisibility}}"/>
+                        <Separator Style="{DynamicResource MySeparatorStyle}" Visibility="{Binding IsFolder, Converter={StaticResource boolToVisibility}}"/>
                         <MenuItem Header="{x:Static constants:Localization.REMOVE}" Command="{Binding RemoveLineCommand}"/>
                         <MenuItem Header="{x:Static constants:Localization.REMOVE_ALL}" Command="{Binding RemoveAllLinesCommand}"/>
                     </ContextMenu>

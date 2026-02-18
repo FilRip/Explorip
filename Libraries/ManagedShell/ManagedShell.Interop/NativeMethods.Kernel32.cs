@@ -391,6 +391,11 @@ public partial class NativeMethods
         public string cFileName;
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
         public string cAlternateFileName;
+
+        public readonly ulong GetSize()
+        {
+            return ((ulong)nFileSizeHigh << 32) + nFileSizeLow;
+        }
     }
 
     [Flags()]

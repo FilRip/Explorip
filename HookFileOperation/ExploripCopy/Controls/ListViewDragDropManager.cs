@@ -30,6 +30,8 @@ public class ListViewDragDropManager<T> where T : class
     {
         _canInitiateDrag = false;
         _indexToSelect = -1;
+        _firstVisibleIndex = -1;
+        _nbVisibleItem = -1;
     }
 
     public ListViewDragDropManager(ListView listView, double dragAdornerOpacity = 0.7, int speedScrolling = 500, int stepScrolling = 50, int waitBeforeStartScrolling = 2000)
@@ -141,12 +143,15 @@ public class ListViewDragDropManager<T> where T : class
         int index = IndexUnderDragCursor;
         ItemUnderDragCursor = index < 0 ? null : ListView.Items[index] as T;
 
-        if (index >= _firstVisibleIndex + _nbVisibleItem - 1)
-            CreateLoopScroll(AutoScroll.Down);
-        else if (index == _firstVisibleIndex && index > 0)
-            CreateLoopScroll(AutoScroll.Up);
-        else if (_threadScrollTo != null && _threadScrollTo.ThreadState != ThreadState.Aborted && _threadScrollTo.ThreadState != ThreadState.Stopped)
-            _threadScrollTo.Abort();
+        if (_firstVisibleIndex >= 0)
+        {
+            if (index >= _firstVisibleIndex + _nbVisibleItem - 1)
+                CreateLoopScroll(AutoScroll.Down);
+            else if (index == _firstVisibleIndex && index > 0)
+                CreateLoopScroll(AutoScroll.Up);
+            else if (_threadScrollTo != null && _threadScrollTo.ThreadState != ThreadState.Aborted && _threadScrollTo.ThreadState != ThreadState.Stopped)
+                _threadScrollTo.Abort();
+        }
     }
 
     private enum AutoScroll
@@ -262,7 +267,6 @@ public class ListViewDragDropManager<T> where T : class
 
             else if (oldIndex < 0)
                 newIndex = itemsSource.Count;
-
             else
                 return;
         }
