@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,13 +20,14 @@ public class ListViewDragDropManager<T> where T : class
     private DragAdorner _dragAdorner;
     private int _indexToSelect;
     private T _itemUnderDragCursor;
-    private readonly ListView _listView;
+    private ListView _listView;
     private Point _ptMouseDown;
     private int _firstVisibleIndex, _nbVisibleItem;
     private Thread _threadScrollTo;
     private readonly int _speedScrolling;
     private readonly int _stepScrolling;
     private readonly int _waitBeforeStartScrolling;
+    private IEnumerable<T> _itemsToDrag;
 
     private ListViewDragDropManager()
     {
@@ -97,11 +100,13 @@ public class ListViewDragDropManager<T> where T : class
         {
             _ptMouseDown = ExtensionsWpf.GetMousePosition(_listView);
             _indexToSelect = index;
+            _itemsToDrag = _listView.SelectedItems.OfType<T>().Reverse();
         }
         else
         {
             _ptMouseDown = new Point(short.MinValue, short.MinValue);
             _indexToSelect = -1;
+            _itemsToDrag = [];
         }
     }
 
@@ -110,10 +115,7 @@ public class ListViewDragDropManager<T> where T : class
         if (!CanStartDragOperation)
             return;
 
-        if (_listView.SelectedIndex != _indexToSelect)
-            _listView.SelectedIndex = _indexToSelect;
-
-        if (_listView.SelectedItem == null)
+        if (_listView.SelectedItems == null || _listView.SelectedItems.Count == 0)
             return;
 
         ListViewItem itemToDrag = GetListViewItem(_listView.SelectedIndex);
@@ -129,9 +131,22 @@ public class ListViewDragDropManager<T> where T : class
         T selectedItem = _listView.SelectedItem as T;
         DragDropEffects allowedEffects = DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link;
         if (DragDrop.DoDragDrop(_listView, selectedItem, allowedEffects) != DragDropEffects.None)
-            _listView.SelectedItem = selectedItem;
+        {
+            if (_itemsToDrag.Count() > 1)
+            {
+                for (int i = 0; i < _itemsToDrag.Count(); i++)
+                {
+                    _listView.Items.Remove(_itemsToDrag.ElementAt(i));
+                    _listView.Items.Insert(_indexToSelect, _itemsToDrag.ElementAt(i));
+                }
+            }
+            else
+                _listView.SelectedItem = selectedItem;
+        }
 
-        FinishDragOperation(itemToDrag, adornerLayer);
+        ListViewItemDragState.SetIsBeingDragged(itemToDrag, false);
+        adornerLayer?.Remove(_dragAdorner);
+        Stop(false);
     }
 
     private void ListView_DragOver(object sender, DragEventArgs e)
@@ -153,6 +168,8 @@ public class ListViewDragDropManager<T> where T : class
                 _threadScrollTo.Abort();
         }
     }
+
+    #region Auto scroll
 
     private enum AutoScroll
     {
@@ -220,6 +237,8 @@ public class ListViewDragDropManager<T> where T : class
         }
         catch (Exception) { /* Ignore errors */ }
     }
+
+    #endregion
 
     private void ListView_DragLeave(object sender, DragEventArgs e)
     {
@@ -302,15 +321,6 @@ public class ListViewDragDropManager<T> where T : class
         }
     }
 
-    private void FinishDragOperation(ListViewItem draggedItem, AdornerLayer adornerLayer)
-    {
-        ListViewItemDragState.SetIsBeingDragged(draggedItem, false);
-
-        adornerLayer?.Remove(_dragAdorner);
-
-        Stop(false);
-    }
-
     private ListViewItem GetListViewItem(int index)
     {
         if (_listView.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
@@ -358,7 +368,7 @@ public class ListViewDragDropManager<T> where T : class
         get
         {
             int index = -1;
-            for (int i = _firstVisibleIndex; i < _firstVisibleIndex + _nbVisibleItem; ++i)
+            for (int i = (_firstVisibleIndex >= 0 ? _firstVisibleIndex : 0); i < (_firstVisibleIndex >= 0 ? _firstVisibleIndex + _nbVisibleItem : _listView.Items.Count); ++i)
             {
                 ListViewItem item = GetListViewItem(i);
                 if (IsMouseOver(item))
@@ -472,6 +482,7 @@ public class ListViewDragDropManager<T> where T : class
             _listView.DragLeave -= ListView_DragLeave;
             _listView.DragEnter -= ListView_DragEnter;
             _listView.Drop -= ListView_Drop;
+            _listView = null;
         }
 
         IsDragInProgress = false;

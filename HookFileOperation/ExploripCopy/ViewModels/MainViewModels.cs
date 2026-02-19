@@ -333,6 +333,11 @@ public partial class MainViewModels : ObservableObject, IDisposable
         }
     }
 
+    partial void OnMaxGlobalProgressChanged(double value)
+    {
+        UpdateGlobalReport();
+    }
+
     private void Treatment(OneFileOperation operation)
     {
         _currentOperation = operation;
@@ -358,14 +363,12 @@ public partial class MainViewModels : ObservableObject, IDisposable
                     {
                         if (isDirectory)
                         {
-                            GlobalReport = Localization.CALCUL;
-                            MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
-                            UpdateGlobalReport();
+                            MaxGlobalProgress = operation.Size;
                             GetLastError = CopyHelper.CopyDirectory(operation.Source, operation.Destination, operation.CurrentOffset, (uint)ExploripCopyConfig.MaxBufferSize, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                         }
                         else
                         {
-                            MaxGlobalProgress = new FileInfo(operation.Source).Length;
+                            MaxGlobalProgress = operation.Size;
                             GetLastError = CopyHelper.CopyFile(operation.Source, operation.Destination, operation.CurrentOffset, (uint)ExploripCopyConfig.MaxBufferSize, CallbackRefresh: Callback_Operation, renameOnCollision: (srcDir.FullName == destDir.FullName));
                         }
                     }
@@ -391,14 +394,12 @@ public partial class MainViewModels : ObservableObject, IDisposable
                             // Finally, else, we must Copy/Delete
                             if (isDirectory)
                             {
-                                GlobalReport = Localization.CALCUL;
-                                MaxGlobalProgress = CopyHelper.TotalSizeDirectory(operation.Source);
-                                UpdateGlobalReport();
+                                MaxGlobalProgress = operation.Size;
                                 GetLastError = CopyHelper.MoveDirectory(operation.Source, operation.Destination, operation.CurrentOffset, (uint)ExploripCopyConfig.MaxBufferSize, CallbackRefresh: Callback_Operation);
                             }
                             else
                             {
-                                MaxGlobalProgress = new FileInfo(operation.Source).Length;
+                                MaxGlobalProgress = operation.Size;
                                 GetLastError = CopyHelper.MoveFile(operation.Source, operation.Destination, operation.CurrentOffset, (uint)ExploripCopyConfig.MaxBufferSize, CallbackRefresh: Callback_Operation);
                             }
                         }
@@ -426,6 +427,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 {
                     fo = new(NativeMethods.GetDesktopWindow());
                     fo.ChangeOperationFlags(fo.CurrentFileOperationFlags | Explorip.HookFileOperations.FilesOperations.EFileOperation.FOF_SILENT);
+                    MaxGlobalProgress = 0;
                     switch (operation.FileOperation)
                     {
                         case Explorip.HookFileOperations.Models.EFileOperation.Delete:
