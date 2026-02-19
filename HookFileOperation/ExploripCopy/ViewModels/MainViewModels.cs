@@ -302,7 +302,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         _chronoSpeed.Stop();
     }
 
-    private void UpdateGlobalReport()
+    private void UpdateGlobalReport(bool withNotification = true)
     {
         StringBuilder sb = new();
         switch (_currentOperation.FileOperation)
@@ -326,7 +326,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
         sb = sb.Replace("%s2", _currentOperation.NewName);
         sb = sb.Replace("%s", Path.GetFileName(_currentOperation.DisplaySource));
         GlobalReport = sb.ToString();
-        if (ExploripCopyConfig.NotificationOnEachOperation)
+        if (withNotification && ExploripCopyConfig.NotificationOnEachOperation)
         {
             NotifyIconViewModel.Instance.SystrayControl.HideBalloonTip();
             NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.IN_PROGRESS, GlobalReport, BalloonIcon.Info);
@@ -335,7 +335,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     partial void OnMaxGlobalProgressChanged(double value)
     {
-        UpdateGlobalReport();
+        UpdateGlobalReport(false);
     }
 
     private void Treatment(OneFileOperation operation)
