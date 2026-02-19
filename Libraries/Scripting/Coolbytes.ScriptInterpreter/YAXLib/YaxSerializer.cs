@@ -783,9 +783,7 @@ public class YaxSerializer
                         if (!XmlUtils.CanCreateLocation(m_baseElement, serializationLocation))
                             throw new YaxBadLocationException(serializationLocation);
                         // try to create the location
-                        parElem = XmlUtils.CreateLocation(m_baseElement, serializationLocation);
-                        if (parElem == null)
-                            throw new YaxBadLocationException(serializationLocation);
+                        parElem = XmlUtils.CreateLocation(m_baseElement, serializationLocation) ?? throw new YaxBadLocationException(serializationLocation);
                     }
 
                     // if control is moved here, it means that the parent 
@@ -831,9 +829,7 @@ public class YaxSerializer
                         if (!XmlUtils.CanCreateLocation(m_baseElement, serializationLocation))
                             throw new YaxBadLocationException(serializationLocation);
                         // try to create the location
-                        parElem = XmlUtils.CreateLocation(m_baseElement, serializationLocation);
-                        if (parElem == null)
-                            throw new YaxBadLocationException(serializationLocation);
+                        parElem = XmlUtils.CreateLocation(m_baseElement, serializationLocation) ?? throw new YaxBadLocationException(serializationLocation);
                     }
 
                     // if control is moved here, it means that the parent 

@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace ExploripCopy.Controls;
 
 public class ProcessDropEventArgs<ItemType> : EventArgs where ItemType : class
 {
-    private readonly ObservableCollection<ItemType> itemsSource;
-    private readonly ItemType dataItem;
+    private readonly IEnumerable<ItemType> itemsSource;
+    private readonly IEnumerable<ItemType> dataItem;
     private readonly int oldIndex;
     private readonly int newIndex;
     private readonly DragDropEffects allowedEffects;
 
     internal ProcessDropEventArgs(
-        ObservableCollection<ItemType> itemsSource,
-        ItemType dataItem,
+        IEnumerable<ItemType> itemsSource,
+        IEnumerable<ItemType> dataItem,
         int oldIndex,
         int newIndex,
         DragDropEffects allowedEffects)
@@ -29,7 +29,7 @@ public class ProcessDropEventArgs<ItemType> : EventArgs where ItemType : class
     /// <summary>
     /// The items source of the ListView where the drop occurred.
     /// </summary>
-    public ObservableCollection<ItemType> ItemsSource
+    public IEnumerable<ItemType> ItemsSource
     {
         get { return itemsSource; }
     }
@@ -37,7 +37,7 @@ public class ProcessDropEventArgs<ItemType> : EventArgs where ItemType : class
     /// <summary>
     /// The data object which was dropped.
     /// </summary>
-    public ItemType DataItem
+    public IEnumerable<ItemType> DataItem
     {
         get { return dataItem; }
     }

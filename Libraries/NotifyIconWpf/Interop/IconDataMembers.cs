@@ -7,7 +7,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop;
 /// were set, and thus contain valid data or provide additional information
 /// to the ToolTip as to how it should display.
 /// </summary>
-[Flags]
+[Flags()]
 public enum IconDataMembers
 {
     /// <summary>

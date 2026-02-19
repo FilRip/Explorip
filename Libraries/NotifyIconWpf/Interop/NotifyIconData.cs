@@ -146,7 +146,7 @@ public struct NotifyIconData
         data.WindowHandle = handle;
         data.TaskbarIconId = 0x0;
         data.CallbackMessageId = WindowMessageSink.CallbackMessageId;
-        data.VersionOrTimeout = (uint)NotifyIconVersion.Win95;
+        data.VersionOrTimeout = (uint)NotifyIconVersion.Vista;
 
         data.IconHandle = IntPtr.Zero;
 

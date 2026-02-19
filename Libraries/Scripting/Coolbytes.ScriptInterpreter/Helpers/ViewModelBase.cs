@@ -51,16 +51,13 @@ public class ViewModelBase : INotifyPropertyChanged
 
     internal void RaiseCollectionItemsChanged<T>(ObservableCollection<T> collection, params string[] propertiesRaise) where T : INotifyPropertyChanged
     {
-        if (collection != null)
-        {
-            collection.CollectionChanged += (sender, e) =>
+        collection?.CollectionChanged += (sender, e) =>
             {
                 foreach (string propertyName in propertiesRaise.ToList())
                 {
                     this.RaisePropertyChanged(propertyName);
                 }
             };
-        }
     }
 
     internal static KeyValuePair<string, List<string>> BuildPropertyForRaise(string property, params string[] propertiesRaise)

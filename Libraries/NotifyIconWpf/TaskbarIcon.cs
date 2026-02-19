@@ -124,7 +124,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         // using dummy sink in design mode
         messageSink = Util.IsDesignMode
             ? WindowMessageSink.CreateEmpty()
-            : new WindowMessageSink(NotifyIconVersion.Win95);
+            : new WindowMessageSink(NotifyIconVersion.Vista);
 
         // init icon data structure
         iconData = NotifyIconData.CreateDefault(messageSink.MessageWindowHandle);
@@ -144,10 +144,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         balloonCloseTimer = new Timer(CloseBalloonCallback);
 
         // register listener in order to get notified when the application closes
-        if (Application.Current != null)
-        {
-            Application.Current.Exit += OnExit;
-        }
+        Application.Current?.Exit += OnExit;
     }
 
     #endregion
@@ -903,18 +900,6 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
 
         if (!status)
         {
-            iconData.VersionOrTimeout = (uint)NotifyIconVersion.Win2000;
-            status = Util.WriteIconData(ref iconData, NotifyCommand.SetVersion);
-        }
-
-        if (!status)
-        {
-            iconData.VersionOrTimeout = (uint)NotifyIconVersion.Win95;
-            status = Util.WriteIconData(ref iconData, NotifyCommand.SetVersion);
-        }
-
-        if (!status)
-        {
             Debug.Fail("Could not set version");
         }
     }
@@ -1077,10 +1062,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
             IsDisposed = true;
 
             // de-register application event listener
-            if (Application.Current != null)
-            {
-                Application.Current.Exit -= OnExit;
-            }
+            Application.Current?.Exit -= OnExit;
 
             // stop timers
             singleClickTimer.Dispose();

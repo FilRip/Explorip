@@ -1076,14 +1076,7 @@ public sealed class TaskDialog : IDialogControlHost, IDisposable
             // If not, it had better be a custom button...
             if (buttonClicked == TaskDialogStandardButtons.None)
             {
-                customButton = GetButtonForId(id);
-
-                // ... or we have a problem.
-                if (customButton == null)
-                {
-                    throw new InvalidOperationException(LocalizedMessages.TaskDialogBadButtonId);
-                }
-
+                customButton = GetButtonForId(id) ?? throw new InvalidOperationException(LocalizedMessages.TaskDialogBadButtonId);
                 e.CustomButton = customButton.Name;
                 e.TaskDialogResult = TaskDialogResult.CustomButtonClicked;
             }

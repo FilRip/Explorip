@@ -21,6 +21,12 @@ public static class ExploripCopyConfig
     private const string WaitBeforeStartScrollConfig = "WaitBeforeStartDragScroll";
     private const string WaitBetweenTwoScrollingConfig = "WaitBetweenTwoDragScrolling";
     private const string SpeedForDragScrollingConfig = "SpeedForDragScrolling";
+    private const string MaxItemsInAdornerConfig = "MaxItemsInAdorner";
+    private const string OpacityDecreaseConfig = "OpacityDecreaseInAdorner";
+    private const string PosXConfig = "PosX";
+    private const string PosYConfig = "PosY";
+    private const string SizeXConfig = "SizeX";
+    private const string SizeYConfig = "SizeY";
 
     private static RegistryKey _registryRootExploripCopy;
 
@@ -54,6 +60,10 @@ public static class ExploripCopyConfig
                 _registryRootExploripCopy.SetValue(WaitBetweenTwoScrollingConfig, "500");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(SpeedForDragScrollingConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(SpeedForDragScrollingConfig, "50");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(MaxItemsInAdornerConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(MaxItemsInAdornerConfig, "3");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(OpacityDecreaseConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(OpacityDecreaseConfig, "0.2");
         }
     }
 
@@ -127,6 +137,26 @@ public static class ExploripCopyConfig
         }
     }
 
+    public static double OpacityDecrease
+    {
+        get { return _registryRootExploripCopy.ReadDouble(OpacityDecreaseConfig); }
+        set
+        {
+            if (OpacityDecrease != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(OpacityDecreaseConfig, value.ToString(CultureInfo.InvariantCulture));
+        }
+    }
+
+    public static int MaxItemsInAdorner
+    {
+        get { return _registryRootExploripCopy.ReadInteger(MaxItemsInAdornerConfig); }
+        set
+        {
+            if (MaxItemsInAdorner != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(MaxItemsInAdornerConfig, value.ToString());
+        }
+    }
+
     public static int WaitBeforeStartDragScrolling
     {
         get { return _registryRootExploripCopy.ReadInteger(WaitBeforeStartScrollConfig); }
@@ -154,6 +184,46 @@ public static class ExploripCopyConfig
         {
             if (SpeedForDragScrolling != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(SpeedForDragScrollingConfig, value.ToString());
+        }
+    }
+
+    public static int PosX
+    {
+        get { return _registryRootExploripCopy.ReadInteger(PosXConfig); }
+        set
+        {
+            if (PosX != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(PosXConfig, value.ToString());
+        }
+    }
+
+    public static int PosY
+    {
+        get { return _registryRootExploripCopy.ReadInteger(PosYConfig); }
+        set
+        {
+            if (PosY != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(PosYConfig, value.ToString());
+        }
+    }
+
+    public static int SizeX
+    {
+        get { return _registryRootExploripCopy.ReadInteger(SizeXConfig); }
+        set
+        {
+            if (SizeX != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(SizeXConfig, value.ToString());
+        }
+    }
+
+    public static int SizeY
+    {
+        get { return _registryRootExploripCopy.ReadInteger(SizeYConfig); }
+        set
+        {
+            if (SizeY != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(SizeYConfig, value.ToString());
         }
     }
 }

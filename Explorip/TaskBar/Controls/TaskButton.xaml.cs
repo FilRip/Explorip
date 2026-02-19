@@ -76,8 +76,7 @@ public partial class TaskButton : UserControl
 
         _appWindow = DataContext as ApplicationWindow;
 
-        if (_appWindow != null)
-            _appWindow.PropertyChanged += Window_PropertyChanged;
+        _appWindow?.PropertyChanged += Window_PropertyChanged;
 
         double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).TaskButtonSize;
         MyTaskIcon.Height = size;
@@ -120,8 +119,7 @@ public partial class TaskButton : UserControl
         if (!_isLoaded)
             return;
 
-        if (_appWindow != null)
-            _appWindow.PropertyChanged -= Window_PropertyChanged;
+        _appWindow?.PropertyChanged -= Window_PropertyChanged;
 
         _isLoaded = false;
         _mouseOver = false;

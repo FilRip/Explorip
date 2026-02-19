@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -7,22 +8,35 @@ namespace ExploripCopy.Controls;
 
 public class DragAdorner : Adorner
 {
-    private readonly Rectangle child = null;
+    private readonly Grid child = null;
     private readonly int _visualChildren;
     private Point _offset;
+    private Size _size;
 
-    public DragAdorner(UIElement adornedElement, Size size, Brush brush, int visualChildren = 1)
+    public DragAdorner(UIElement adornedElement, Size size, Brush brush, double opacity, int visualChildren = 1)
         : base(adornedElement)
     {
-        Rectangle rect = new()
+        child = new()
         {
-            Fill = brush,
             Width = size.Width,
             Height = size.Height,
-            IsHitTestVisible = false
+            IsHitTestVisible = false,
+            Margin = new Thickness(0),
         };
-        child = rect;
+        child.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(size.Height) });
+        child.Children.Add(new Rectangle() { Fill = brush, Opacity = opacity });
+
         _visualChildren = visualChildren;
+        _size = size;
+    }
+
+    public void AddElement(Brush elementToAdd, double opacity)
+    {
+        child.Height += _size.Height;
+        child.RowDefinitions.Add(new RowDefinition() { Height = child.RowDefinitions[0].Height });
+        Rectangle rect = new() { Fill = elementToAdd, Opacity = opacity };
+        child.Children.Add(rect);
+        Grid.SetRow(rect, child.RowDefinitions.Count - 1);
     }
 
     public override GeneralTransform GetDesiredTransform(GeneralTransform transform)

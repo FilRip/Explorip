@@ -7,7 +7,7 @@ namespace Securify.ShellLink.Flags;
 /// attributes that control the foreground and background text colors in the console 
 /// window.
 /// </summary>
-[Flags]
+[Flags()]
 public enum FillAttributes : ushort
 {
     /// <summary>

@@ -10,7 +10,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:fs="clr-namespace:Explorip.HookFileOperations.Models;assembly=HookFileOperations"
         xmlns:controls="clr-namespace:ExploripCopy.Controls"
-        mc:Ignorable="d"
+        mc:Ignorable="d" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
         Title="ExploripCopy" Height="450" Width="800" Background="{x:Static colors:Colors.BackgroundColorBrush}" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True" Loaded="Window_Loaded"
         Closing="Window_Closing" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseMove="Window_MouseMove" Closed="Window_Closed" WindowStyle="None" ResizeMode="CanResizeWithGrip">
@@ -168,7 +168,7 @@
 
                         <GridViewColumn Width="64">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Content="{x:Static constants:Localization.START}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                                <GridViewColumnHeader Content="{x:Static constants:Localization.START}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" IsHitTestVisible="False"/>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="{x:Type fs:OneFileOperation}">
@@ -202,7 +202,7 @@
 
                         <GridViewColumn>
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Content="{x:Static constants:Localization.FROM}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                                <GridViewColumnHeader Content="{x:Static constants:Localization.FROM}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" IsHitTestVisible="False"/>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="{x:Type fs:OneFileOperation}">
@@ -213,7 +213,7 @@
 
                         <GridViewColumn Width="70">
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Content="{x:Static constants:Localization.SIZE}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                                <GridViewColumnHeader Content="{x:Static constants:Localization.SIZE}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" IsHitTestVisible="False"/>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="{x:Type fs:OneFileOperation}">
@@ -224,7 +224,7 @@
 
                         <GridViewColumn>
                             <GridViewColumn.Header>
-                                <GridViewColumnHeader Content="{x:Static constants:Localization.TO}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                                <GridViewColumnHeader Content="{x:Static constants:Localization.TO}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" IsHitTestVisible="False"/>
                             </GridViewColumn.Header>
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate DataType="{x:Type fs:OneFileOperation}">

@@ -113,8 +113,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     {
         if (Folder != null)
         {
-            if (Folder.Files != null)
-                Folder.Files.CollectionChanged -= Files_CollectionChanged;
+            Folder.Files?.CollectionChanged -= Files_CollectionChanged;
             Folder.Dispose();
         }
         if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)) && ParentTaskbar != null)
@@ -398,8 +397,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     {
         try
         {
-            if (Folder.Files != null)
-                Folder.Files.CollectionChanged -= Files_CollectionChanged;
+            Folder.Files?.CollectionChanged -= Files_CollectionChanged;
             Folder?.Dispose();
             if (_moreItems != null)
             {

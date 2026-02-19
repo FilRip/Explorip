@@ -13,6 +13,7 @@ using ExploripCopy.Controls;
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
 
+using ExploripSharedCopy.Properties;
 using ExploripSharedCopy.WinAPI;
 
 using ManagedShell.Interop;
@@ -26,6 +27,7 @@ public partial class MainWindow : Window
 {
     private bool _forceClose;
     private readonly ListViewDragDropManager<OneFileOperation> _dragItemManager;
+    private bool _isLoaded;
 
     public static MainWindow Instance { get; private set; }
 
@@ -47,7 +49,7 @@ public partial class MainWindow : Window
 
         Icon = Constants.Icons.MainIconSource;
 
-        _dragItemManager = new ListViewDragDropManager<OneFileOperation>(LvOperations, ExploripCopyConfig.DragGhostOpacity, ExploripCopyConfig.WaitBetweenTwoDragScrolling, ExploripCopyConfig.SpeedForDragScrolling, ExploripCopyConfig.WaitBeforeStartDragScrolling);
+        _dragItemManager = new ListViewDragDropManager<OneFileOperation>(LvOperations, ExploripCopyConfig.DragGhostOpacity, ExploripCopyConfig.WaitBetweenTwoDragScrolling, ExploripCopyConfig.SpeedForDragScrolling, ExploripCopyConfig.WaitBeforeStartDragScrolling, ExploripCopyConfig.MaxItemsInAdorner, ExploripCopyConfig.OpacityDecrease);
     }
 
     public void IconInSystray_Exit()
@@ -172,6 +174,19 @@ public partial class MainWindow : Window
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
+        if (_isLoaded)
+            return;
+
+        if (ExploripCopyConfig.PosX > 0)
+            Left = ExploripCopyConfig.PosX;
+        if (ExploripCopyConfig.PosY > 0)
+            Top = ExploripCopyConfig.PosY;
+        if (ExploripCopyConfig.SizeX > 0)
+            Width = ExploripCopyConfig.SizeX;
+        if (ExploripCopyConfig.SizeY > 0)
+            Height = ExploripCopyConfig.SizeY;
+
+        _isLoaded = true;
         StateChanged -= Window_StateChanged;
         StateChanged += Window_StateChanged;
     }
@@ -192,4 +207,28 @@ public partial class MainWindow : Window
     }
 
     #endregion
+
+    private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            if (!_isLoaded || WindowState != WindowState.Normal)
+                return;
+            ExploripCopyConfig.SizeX = (int)ActualWidth;
+            ExploripCopyConfig.SizeY = (int)ActualHeight;
+            Settings.Default.Save();
+        });
+    }
+
+    private void Window_LocationChanged(object sender, EventArgs e)
+    {
+        Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            if (!_isLoaded || WindowState != WindowState.Normal)
+                return;
+            ExploripCopyConfig.PosX = (int)Left;
+            ExploripCopyConfig.PosY = (int)Top;
+            Settings.Default.Save();
+        });
+    }
 }

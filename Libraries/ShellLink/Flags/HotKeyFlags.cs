@@ -121,7 +121,7 @@ public enum VirtualKeyCodes : byte
     NumLock = 0x90,
     ScrollLock = 0x91,
 }
-[Flags]
+[Flags()]
 public enum ModifierKeys : byte
 {
     Shift = 0x01,

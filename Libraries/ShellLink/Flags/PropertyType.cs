@@ -7,7 +7,7 @@ namespace Securify.ShellLink.Flags;
 /// on the version of the property set, which is indicated by the Version field of the PropertySetStream packet.
 /// In addition, the property types not supported in simple property sets are specified as such. 
 /// </summary>
-[Flags]
+[Flags()]
 public enum PropertyType : ushort
 {
     /// <summary>

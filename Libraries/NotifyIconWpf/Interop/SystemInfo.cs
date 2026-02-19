@@ -72,7 +72,7 @@ public static class SystemInfo
     /// </summary>
     /// <param name="point"></param>
     /// <returns>Point</returns>
-    [Pure]
+    [Pure()]
     public static Point ScaleWithDpi(this Point point)
     {
         return new Point
@@ -87,7 +87,7 @@ public static class SystemInfo
     /// </summary>
     /// <param name="size"></param>
     /// <returns>Size</returns>
-    [Pure]
+    [Pure()]
     public static Size ScaleWithDpi(this Size size)
     {
         return new Size

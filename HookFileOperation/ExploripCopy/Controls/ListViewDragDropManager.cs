@@ -27,7 +27,9 @@ public class ListViewDragDropManager<T> where T : class
     private readonly int _speedScrolling;
     private readonly int _stepScrolling;
     private readonly int _waitBeforeStartScrolling;
-    private IEnumerable<T> _itemsToDrag;
+    private List<T> _itemsToDrag;
+    private readonly int _maxItemInAdorner;
+    private readonly double _stepOpacity;
 
     private ListViewDragDropManager()
     {
@@ -37,7 +39,7 @@ public class ListViewDragDropManager<T> where T : class
         _nbVisibleItem = -1;
     }
 
-    public ListViewDragDropManager(ListView listView, double dragAdornerOpacity = 0.7, int speedScrolling = 500, int stepScrolling = 50, int waitBeforeStartScrolling = 2000)
+    public ListViewDragDropManager(ListView listView, double dragAdornerOpacity = 0.7, int speedScrolling = 500, int stepScrolling = 50, int waitBeforeStartScrolling = 2000, int maxItemsInAdorner = 3, double stepOpacity = 0.2)
         : this()
     {
         _listView = listView;
@@ -58,14 +60,15 @@ public class ListViewDragDropManager<T> where T : class
         _speedScrolling = speedScrolling;
         _stepScrolling = stepScrolling;
         _waitBeforeStartScrolling = waitBeforeStartScrolling;
+        _maxItemInAdorner = maxItemsInAdorner;
+        _stepOpacity = stepOpacity;
     }
 
     private void ListView_Loaded(object sender, RoutedEventArgs e)
     {
         _listView.Loaded -= ListView_Loaded;
         ScrollViewer sv = _listView.GetScrollViewer();
-        if (sv != null)
-            sv.ScrollChanged += ScrollViewer_ScrollChanged;
+        sv?.ScrollChanged += ScrollViewer_ScrollChanged;
     }
 
     private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -87,7 +90,7 @@ public class ListViewDragDropManager<T> where T : class
 
     private void ListView_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (IsMouseOverScrollbar)
+        if (Mouse.DirectlyOver is GridViewRowPresenter || (Mouse.DirectlyOver is DependencyObject d && d.FindVisualParent<GridViewRowPresenter>() == null))
         {
             _canInitiateDrag = false;
             return;
@@ -100,13 +103,13 @@ public class ListViewDragDropManager<T> where T : class
         {
             _ptMouseDown = ExtensionsWpf.GetMousePosition(_listView);
             _indexToSelect = index;
-            _itemsToDrag = _listView.SelectedItems.OfType<T>().Reverse();
+            _itemsToDrag = [.. _listView.SelectedItems.OfType<T>().Reverse()];
+
         }
         else
         {
             _ptMouseDown = new Point(short.MinValue, short.MinValue);
             _indexToSelect = -1;
-            _itemsToDrag = [];
         }
     }
 
@@ -128,21 +131,8 @@ public class ListViewDragDropManager<T> where T : class
         _canInitiateDrag = false;
         ListViewItemDragState.SetIsBeingDragged(itemToDrag, true);
 
-        T selectedItem = _listView.SelectedItem as T;
         DragDropEffects allowedEffects = DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link;
-        if (DragDrop.DoDragDrop(_listView, selectedItem, allowedEffects) != DragDropEffects.None)
-        {
-            if (_itemsToDrag.Count() > 1)
-            {
-                for (int i = 0; i < _itemsToDrag.Count(); i++)
-                {
-                    _listView.Items.Remove(_itemsToDrag.ElementAt(i));
-                    _listView.Items.Insert(_indexToSelect, _itemsToDrag.ElementAt(i));
-                }
-            }
-            else
-                _listView.SelectedItem = selectedItem;
-        }
+        DragDrop.DoDragDrop(_listView, _itemsToDrag, allowedEffects);
 
         ListViewItemDragState.SetIsBeingDragged(itemToDrag, false);
         adornerLayer?.Remove(_dragAdorner);
@@ -267,25 +257,19 @@ public class ListViewDragDropManager<T> where T : class
 
         e.Effects = DragDropEffects.None;
 
-        if (!e.Data.GetDataPresent(typeof(T)))
+        if (_itemsToDrag.Count == 0)
             return;
 
-        if (e.Data.GetData(typeof(T)) is not T data)
-            return;
-
-        if (_listView.ItemsSource is not ObservableCollection<T> itemsSource)
-            return;
-
-        int oldIndex = itemsSource.IndexOf(data);
+        int oldIndex = _listView.Items.IndexOf(_itemsToDrag[0]);
         int newIndex = IndexUnderDragCursor;
 
         if (newIndex < 0)
         {
-            if (itemsSource.Count == 0)
+            if (_listView.Items.Count == 0)
                 newIndex = 0;
 
             else if (oldIndex < 0)
-                newIndex = itemsSource.Count;
+                newIndex = _listView.Items.Count;
             else
                 return;
         }
@@ -295,17 +279,21 @@ public class ListViewDragDropManager<T> where T : class
 
         if (ProcessDrop != null)
         {
-            ProcessDropEventArgs<T> args = new(itemsSource, data, oldIndex, newIndex, e.AllowedEffects);
+            ProcessDropEventArgs<T> args = new(_listView.Items.OfType<T>(), _itemsToDrag, oldIndex, newIndex, e.AllowedEffects);
             ProcessDrop(this, args);
             e.Effects = args.Effects;
         }
         else
         {
+            _listView.SelectedItems.Clear();
             if (oldIndex > -1)
-                itemsSource.Move(oldIndex, newIndex);
-            else
-                itemsSource.Insert(newIndex, data);
-
+            {
+                foreach (T item in _itemsToDrag)
+                {
+                    ((ObservableCollection<T>)_listView.ItemsSource).Move(_listView.Items.IndexOf(item), newIndex);
+                    _listView.SelectedItems.Add(_listView.Items[newIndex]);
+                }
+            }
             e.Effects = DragDropEffects.Move;
         }
     }
@@ -385,10 +373,21 @@ public class ListViewDragDropManager<T> where T : class
     {
         VisualBrush brush = new(itemToDrag);
 
-        _dragAdorner = new DragAdorner(_listView, itemToDrag.RenderSize, brush)
+        _dragAdorner = new DragAdorner(_listView, itemToDrag.RenderSize, brush, DragAdornerOpacity);
+
+        if (_itemsToDrag.Count > 1)
         {
-            Opacity = DragAdornerOpacity
-        };
+            int i = 1;
+            double opacity = DragAdornerOpacity;
+            foreach (T item in _itemsToDrag.Where(item => item != itemToDrag.DataContext))
+            {
+                if (i == _maxItemInAdorner)
+                    break;
+                opacity -= _stepOpacity;
+                _dragAdorner.AddElement(new VisualBrush(GetListViewItem(item)), opacity);
+                i++;
+            }
+        }
 
         AdornerLayer layer = AdornerLayer.GetAdornerLayer(_listView);
         layer.Add(_dragAdorner);
@@ -403,31 +402,6 @@ public class ListViewDragDropManager<T> where T : class
         Rect bounds = VisualTreeHelper.GetDescendantBounds(target);
         Point mousePos = ExtensionsWpf.GetMousePosition(target);
         return bounds.Contains(mousePos);
-    }
-
-    private bool IsMouseOverScrollbar
-    {
-        get
-        {
-            Point ptMouse = ExtensionsWpf.GetMousePosition(_listView);
-            HitTestResult res = VisualTreeHelper.HitTest(_listView, ptMouse);
-            if (res == null)
-                return false;
-
-            DependencyObject depObj = res.VisualHit;
-            while (depObj != null)
-            {
-                if (depObj is ScrollBar)
-                    return true;
-
-                if (depObj is Visual || depObj is System.Windows.Media.Media3D.Visual3D)
-                    depObj = VisualTreeHelper.GetParent(depObj);
-                else
-                    depObj = LogicalTreeHelper.GetParent(depObj);
-            }
-
-            return false;
-        }
     }
 
     private T ItemUnderDragCursor
