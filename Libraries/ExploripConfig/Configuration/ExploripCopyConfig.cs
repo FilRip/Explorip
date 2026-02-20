@@ -27,6 +27,12 @@ public static class ExploripCopyConfig
     private const string PosYConfig = "PosY";
     private const string SizeXConfig = "SizeX";
     private const string SizeYConfig = "SizeY";
+    private const string PlaySoundWhenFinishConfig = "PlaySoundWhenFinish";
+    private const string SoundToPlayWhenFinishConfig = "PathSoundFinish";
+    private const string PlaySoundWhenErrorConfig = "PlaySoundWhenError";
+    private const string SoundToPlayWhenErrorConfig = "PathSoundError";
+
+    private const string DefaultFalse = "False";
 
     private static RegistryKey _registryRootExploripCopy;
 
@@ -43,11 +49,11 @@ public static class ExploripCopyConfig
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(AutoStartOperationConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(AutoStartOperationConfig, "True");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(NotificationOnEachOperationConfig, "").ToString()))
-                _registryRootExploripCopy.SetValue(NotificationOnEachOperationConfig, "False");
+                _registryRootExploripCopy.SetValue(NotificationOnEachOperationConfig, DefaultFalse);
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(AutoExpandSubFolderConfig, "").ToString()))
-                _registryRootExploripCopy.SetValue(AutoExpandSubFolderConfig, "False");
+                _registryRootExploripCopy.SetValue(AutoExpandSubFolderConfig, DefaultFalse);
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(InjectWindowsExplorerConfig, "").ToString()))
-                _registryRootExploripCopy.SetValue(InjectWindowsExplorerConfig, "False");
+                _registryRootExploripCopy.SetValue(InjectWindowsExplorerConfig, DefaultFalse);
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(PriorityToLowerOperationsConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(PriorityToLowerOperationsConfig, "True");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(MaxBufferSizeConfig, "").ToString()))
@@ -64,6 +70,14 @@ public static class ExploripCopyConfig
                 _registryRootExploripCopy.SetValue(MaxItemsInAdornerConfig, "3");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(OpacityDecreaseConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(OpacityDecreaseConfig, "0.2");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(PlaySoundWhenFinishConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(PlaySoundWhenFinishConfig, DefaultFalse);
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(PlaySoundWhenErrorConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(PlaySoundWhenErrorConfig, DefaultFalse);
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(SoundToPlayWhenFinishConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(SoundToPlayWhenFinishConfig, "tada.wav");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(SoundToPlayWhenErrorConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(SoundToPlayWhenErrorConfig, "Windows Error.wav");
         }
     }
 
@@ -224,6 +238,46 @@ public static class ExploripCopyConfig
         {
             if (SizeY != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(SizeYConfig, value.ToString());
+        }
+    }
+
+    public static bool PlaySoundWhenFinish
+    {
+        get { return _registryRootExploripCopy.ReadBoolean(PlaySoundWhenFinishConfig); }
+        set
+        {
+            if (PlaySoundWhenFinish != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(PlaySoundWhenFinishConfig, value.ToString());
+        }
+    }
+
+    public static bool PlaySoundWhenError
+    {
+        get { return _registryRootExploripCopy.ReadBoolean(PlaySoundWhenErrorConfig); }
+        set
+        {
+            if (PlaySoundWhenError != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(PlaySoundWhenErrorConfig, value.ToString());
+        }
+    }
+
+    public static string SoundToPlayWhenFinish
+    {
+        get { return _registryRootExploripCopy.GetValue(SoundToPlayWhenFinishConfig, "")?.ToString(); }
+        set
+        {
+            if (SoundToPlayWhenFinish != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(SoundToPlayWhenFinishConfig, value);
+        }
+    }
+
+    public static string SoundToPlayWhenError
+    {
+        get { return _registryRootExploripCopy.GetValue(SoundToPlayWhenErrorConfig, "")?.ToString(); }
+        set
+        {
+            if (SoundToPlayWhenError != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(SoundToPlayWhenErrorConfig, value);
         }
     }
 }

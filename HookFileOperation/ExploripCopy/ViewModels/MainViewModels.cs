@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,6 +30,8 @@ using ExploripSharedCopy.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 
 using ManagedShell.Interop;
+
+using Microsoft.Xaml.Behaviors.Media;
 
 namespace ExploripCopy.ViewModels;
 
@@ -290,6 +293,11 @@ public partial class MainViewModels : ObservableObject, IDisposable
             if (ExploripCopyConfig.NotificationOnEachOperation)
                 NotifyIconViewModel.Instance.SystrayControl.ShowBalloonTip(Localization.FINISH, GlobalReport, BalloonIcon.Info);
             GlobalReport = Localization.FINISH;
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (ListWaiting.Count == 0)
+                    PlaySound(false);
+            });
         }
         else
         {
@@ -409,6 +417,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 catch (Exception ex)
                 {
                     GetLastError = ex;
+                    PlaySound();
                 }
                 finally
                 {
@@ -479,13 +488,13 @@ public partial class MainViewModels : ObservableObject, IDisposable
                 catch (Exception ex)
                 {
                     GetLastError = ex;
+                    PlaySound();
                 }
                 finally
                 {
                     fo?.Dispose();
                     FinishCurrent();
                 }
-                FinishCurrent();
             }));
             _currentThread.Start();
         }
@@ -524,6 +533,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
         }
     }
 
+    #region remove item(s) context menu
+
     [RelayCommand()]
     private void RemoveLine()
     {
@@ -557,6 +568,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
             RegisterListWaiting();
         }
     }
+
+    #endregion
 
     [RelayCommand()]
     private void IgnoreCurrent()
@@ -619,6 +632,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
         SelectedLines = [(OneFileOperation)param];
         StartNow();
     }
+
+    #region Move items
 
     [RelayCommand()]
     private void GoFirst()
@@ -712,6 +727,8 @@ public partial class MainViewModels : ObservableObject, IDisposable
         }
     }
 
+    #endregion
+
     private void RegisterListWaiting(bool withNotification = true)
     {
         ListWaiting.CollectionChanged -= ListWaiting_CollectionChanged;
@@ -752,6 +769,56 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         IsFolder = SelectedLines.Any(op => op.IsDirectory && (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Copy || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Move));
     }
+
+    #region Play sound
+
+    public static void PlaySound(bool error = true)
+    {
+        string soundToPlay = string.Empty;
+        if (error && ExploripCopyConfig.PlaySoundWhenError)
+        {
+            soundToPlay = ExploripCopyConfig.SoundToPlayWhenError;
+        }
+        else if (ExploripCopyConfig.PlaySoundWhenFinish)
+        {
+            soundToPlay = ExploripCopyConfig.SoundToPlayWhenFinish;
+        }
+
+        if (!string.IsNullOrWhiteSpace(soundToPlay))
+        {
+            if (soundToPlay.Length > 1)
+            {
+                if (soundToPlay.StartsWith("."))
+                    soundToPlay = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), soundToPlay);
+                else
+                    soundToPlay = Path.Combine(Environment.ExpandEnvironmentVariables("%windir%"), "Media", soundToPlay);
+            }
+
+            if (File.Exists(soundToPlay))
+            {
+                MediaPlayer mp = new();
+                mp.Open(new Uri(soundToPlay));
+                mp.Play();
+            }
+        }
+    }
+
+    [ObservableProperty()]
+    private bool _PlaySoundWhenFinish;
+    [ObservableProperty()]
+    private bool _PlaySoundWhenError;
+
+    partial void OnPlaySoundWhenErrorChanged(bool value)
+    {
+        ExploripCopyConfig.PlaySoundWhenError = value;
+    }
+
+    partial void OnPlaySoundWhenFinishChanged(bool value)
+    {
+        ExploripCopyConfig.PlaySoundWhenFinish = value;
+    }
+
+    #endregion
 
     #region IDisposable
 

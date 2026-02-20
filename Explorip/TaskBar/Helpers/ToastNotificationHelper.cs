@@ -21,10 +21,10 @@ public static class ToastHelper
     /// <summary>
     /// Send new toast notifications windows
     /// </summary>
-    public static bool Show(string title, string message, int processId)
+    public static bool Show(string appUserModelId, string title, string message, int processId)
     {
-        if (string.IsNullOrWhiteSpace(title))
-            title = MyAppUserModelId;
+        if (string.IsNullOrWhiteSpace(appUserModelId))
+            appUserModelId = MyAppUserModelId;
         bool handled = false;
         if (processId <= 0)
             processId = Process.GetCurrentProcess().Id;
@@ -43,15 +43,15 @@ public static class ToastHelper
                 XmlDocument template = ToastNotificationManager.GetTemplateContent(ToastTemplateType.ToastImageAndText01);
                 XmlElement imageTag = ((XmlElement)template.GetElementsByTagName("image")[0]);
                 imageTag.SetAttribute("src", uriIcon.ToString());
-                //imageTag.SetAttribute("width", "32");
-                //imageTag.SetAttribute("height", "32");
                 template.GetElementsByTagName("text")[0].AppendChild(template.CreateTextNode(message));
                 ToastNotification toast = new(template);
                 toast.Activated += Toast_Activated;
                 toast.Dismissed += Toast_Dismissed;
-                ToastNotificationManager.CreateToastNotifier(title).Show(toast);
+                ToastNotificationManager.CreateToastNotifier(appUserModelId).Show(toast);
                 handled = true;
             }
+#pragma warning disable IDE0079
+#pragma warning disable S2486
             catch (Exception)
             {
 #if DEBUG
@@ -59,6 +59,8 @@ public static class ToastHelper
                     Debugger.Break();
 #endif
             }
+#pragma warning restore S2486
+#pragma warning restore IDE0079
         });
         thread.Start();
         thread.Join();

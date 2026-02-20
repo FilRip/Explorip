@@ -45,8 +45,6 @@ public partial class NotificationButton : UserControl
         //MyDataContext.IncreaseNumberOfNotifications();
         ShellLogger.Debug($"NotificationArea Show NotificationBalloon for {e.Balloon.Title}");
 
-        string message = e.Balloon.Info;
-
         try
         {
             string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(e.Balloon.HandleWindow);
@@ -56,8 +54,8 @@ public partial class NotificationButton : UserControl
                 Process process = Process.GetProcessById(procId);
                 appUserModelId = process.ProcessName;
             }
-            ToastHelper.Show(appUserModelId, message, procId);
-            e.Handled = true;
+            
+            e.Handled = ToastHelper.Show(appUserModelId, e.Balloon.Title, e.Balloon.Info, procId);
         }
         catch (Exception ex)
         {
@@ -71,7 +69,10 @@ public partial class NotificationButton : UserControl
             return;
 
         if ((!_isLoaded || !_ignoreReload) && ((Taskbar)Window.GetWindow(this)).MainScreen && MyTaskbarApp.MyShellManager != null)
+        {
+            MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
+        }
         _isLoaded = true;
     }
 
