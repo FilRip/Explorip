@@ -433,11 +433,12 @@ public partial class TaskButton : UserControl
         if (sender is MenuItem mi && mi.Tag is Screen screen && ApplicationWindow.ListWindows.Count > 0)
         {
             Screen screenSrc = Screen.FromHandle(ApplicationWindow.ListWindows[0].Handle);
+            NativeMethods.Rect size;
             if (screenSrc.ScaleFactor == screen.ScaleFactor)
                 WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screen.WpfWorkingArea.X, (int)screen.WpfWorkingArea.Y);
             else
             {
-                NativeMethods.GetWindowRect(ApplicationWindow.ListWindows[0].Handle, out NativeMethods.Rect size);
+                NativeMethods.GetWindowRect(ApplicationWindow.ListWindows[0].Handle, out size);
                 double width = size.Width / screenSrc.ScaleFactor;
                 double height = size.Height / screenSrc.ScaleFactor;
                 if (screen.ScaleFactor > screenSrc.ScaleFactor)
@@ -445,7 +446,7 @@ public partial class TaskButton : UserControl
                     width /= screen.ScaleFactor;
                     height /= screen.ScaleFactor;
                 }
-                else
+                else if (screen.ScaleFactor < screenSrc.ScaleFactor)
                 {
                     width *= screen.ScaleFactor;
                     height *= screen.ScaleFactor;
@@ -455,6 +456,13 @@ public partial class TaskButton : UserControl
 
                 WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screen.WpfWorkingArea.X, (int)screen.WpfWorkingArea.Y, (int)width, (int)height);
             }
+            NativeMethods.GetWindowRect(ApplicationWindow.ListWindows[0].Handle, out size);
+            int posX = 0, posY = 0;
+            if (screen.WpfWorkingArea.Width > size.Width)
+                posX = size.Left + (int)(screen.WpfWorkingArea.Width - size.Width) / 2;
+            if (screen.WpfWorkingArea.Height > size.Height)
+                posY = size.Top + (int)(screen.WpfWorkingArea.Height - size.Height) / 2;
+            WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, posX, posY, size.Width, size.Height);
         }
     }
 

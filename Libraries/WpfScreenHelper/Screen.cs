@@ -163,7 +163,6 @@ public class Screen
         ResetMultiMonitorSupport();
         _listScreens = null;
         _ = AllScreens;
-        ResetLastId();
     }
 
     /// <summary>
@@ -308,9 +307,8 @@ public class Screen
     /// </returns>
     public static Screen FromHandle(IntPtr hwnd)
     {
-        return MultiMonitorSupport
-                   ? new Screen(NativeMethods.MonitorFromWindow(new HandleRef(null, hwnd), 2))
-                   : new Screen((IntPtr)PRIMARY_MONITOR);
+        Screen screen = (MultiMonitorSupport ? AllScreens.SingleOrDefault(s => s.MonitorHandle == NativeMethods.MonitorFromWindow(new HandleRef(null, hwnd), 2)) : new Screen((IntPtr)PRIMARY_MONITOR));
+        return screen ?? new Screen((IntPtr)PRIMARY_MONITOR);
     }
 
     /// <summary>
