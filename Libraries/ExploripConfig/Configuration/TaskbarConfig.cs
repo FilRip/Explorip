@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 
@@ -44,6 +45,7 @@ public class TaskbarConfig
     private const string ConfigFloatingButtonPosY = "FloatingButtonPosY";
     private const string ConfigFloatingButtonSide = "FloatingButtonSide";
     private const string ConfigTaskbarDisableThumb = "TaskbarDisableThumb";
+    private const string ConfigPathPinnedTaskbar = "PathApplicationPinned";
     #endregion
 
     private RegistryKey _registryTaskbar;
@@ -121,12 +123,25 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigStartFloating, "False");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigFloatingButtonSide, "").ToString()))
                 _registryTaskbar.SetValue(ConfigFloatingButtonSide, HorizontalAlignment.Left.ToString("G"));
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigPathPinnedTaskbar, "").ToString()))
+                _registryTaskbar.SetValue(ConfigPathPinnedTaskbar, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar"));
         }
     }
 
     public string GetUniqueId
     {
         get { return _registryTaskbar.GetValue("", "").ToString(); }
+    }
+
+    public string PathPinnedApp
+    {
+        get { return _registryTaskbar.GetValue(ConfigPathPinnedTaskbar).ToString(); }
+        set
+        {
+            if (PathPinnedApp != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigPathPinnedTaskbar, value);
+        }
+
     }
 
     public HorizontalAlignment FloatingButtonSide

@@ -49,7 +49,7 @@ public partial class FloatingButtonViewModel : ObservableObject
     {
         if (ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).FloatingButtonSide == System.Windows.HorizontalAlignment.Left)
         {
-            ParentTaskbar.Left = 0;
+            ParentTaskbar.Left = ParentTaskbar.Screen.Bounds.Left;
             FloatingImage = Constants.Icons.ExpandButtonToRight;
         }
         else

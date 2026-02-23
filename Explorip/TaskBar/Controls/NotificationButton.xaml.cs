@@ -54,7 +54,7 @@ public partial class NotificationButton : UserControl
                 Process process = Process.GetProcessById(procId);
                 appUserModelId = process.ProcessName;
             }
-            
+
             e.Handled = ToastHelper.Show(appUserModelId, e.Balloon.Title, e.Balloon.Info, procId);
         }
         catch (Exception ex)

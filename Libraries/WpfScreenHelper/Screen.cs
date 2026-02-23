@@ -326,7 +326,8 @@ public class Screen
         if (MultiMonitorSupport)
         {
             NativeMethods.PointStruct pt = new((int)point.X, (int)point.Y);
-            return new Screen(NativeMethods.MonitorFromPoint(pt, NativeMethods.MonitorDefault.MONITOR_DEFAULTTONEAREST));
+            IntPtr screenHandle = NativeMethods.MonitorFromPoint(pt, NativeMethods.MonitorDefault.MONITOR_DEFAULTTONEAREST);
+            return AllScreens.SingleOrDefault(s => s.MonitorHandle == screenHandle);
         }
 
         return new Screen((IntPtr)PRIMARY_MONITOR);

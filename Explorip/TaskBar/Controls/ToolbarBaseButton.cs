@@ -193,7 +193,7 @@ public class ToolbarBaseButton : UserControl
 
     private MenuItem CreateMenuItem(ShellFile item)
     {
-        item.AllowAsync = false;
+        item.AllowAsync = true;
         MenuItem mi = new()
         {
             Header = item.DisplayName,
@@ -207,6 +207,11 @@ public class ToolbarBaseButton : UserControl
             Tag = item,
             IsCheckable = false,
         };
+        item.IconLoadedArgument = mi;
+        item.IconLoaded = new Action<ShellItem, object>((item, menuItem) => Application.Current.Dispatcher.Invoke(() =>
+        {
+            ((MenuItem)menuItem).Icon = new Image() { Source = item.SmallIcon };
+        }));
         mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
         mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
         return mi;

@@ -166,6 +166,9 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
 
     private ImageSource _smallIcon;
 
+    public Action<ShellItem, object> IconLoaded { get; set; }
+    public object IconLoadedArgument { get; set; }
+
     public ImageSource SmallIcon
     {
         get
@@ -181,6 +184,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                         SmallIcon = GetDisplayIcon(IconSize.Small);
                         SmallIcon?.Freeze();
                         _smallIconLoading = false;
+                        IconLoaded?.Invoke(this, IconLoadedArgument);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
                 else
@@ -216,6 +220,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                         LargeIcon = GetDisplayIcon(IconSize.Large);
                         LargeIcon?.Freeze();
                         _largeIconLoading = false;
+                        IconLoaded?.Invoke(this, IconLoadedArgument);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
                 else
@@ -251,6 +256,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                         ExtraLargeIcon = GetDisplayIcon(IconSize.ExtraLarge);
                         ExtraLargeIcon?.Freeze();
                         _extraLargeIconLoading = false;
+                        IconLoaded?.Invoke(this, IconLoadedArgument);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
                 else
@@ -286,6 +292,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                         JumboIcon = GetDisplayIcon(IconSize.Jumbo);
                         JumboIcon?.Freeze();
                         _jumboIconLoading = false;
+                        IconLoaded?.Invoke(this, IconLoadedArgument);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
                 else

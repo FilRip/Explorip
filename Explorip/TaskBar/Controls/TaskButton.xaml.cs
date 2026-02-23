@@ -371,7 +371,7 @@ public partial class TaskButton : UserControl
         }
         else
             sc = Shortcut.CreateShortcut(_appWindow.WinFileName, _appWindow.Arguments);
-        string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
+        string path = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).PathPinnedApp;
         path = Path.Combine(path, filename + ".lnk");
         if (!File.Exists(path))
             sc.WriteToFile(path);

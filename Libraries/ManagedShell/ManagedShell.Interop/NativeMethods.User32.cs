@@ -1902,8 +1902,18 @@ public partial class NativeMethods
     [DllImport(User32_DllName, SetLastError = false)]
     internal static extern IntPtr GetMessageExtraInfo();
 
+    [Flags()]
+    public enum HotKeyMods : uint
+    {
+        ALT = 0x0001,
+        CONTROL = 0x0002,
+        NOREPEAT = 0x4000,
+        SHIFT = 0x0004,
+        WIN = 0x0008,
+    }
+
     [DllImport(User32_DllName)]
-    internal static extern bool RegisterHotKey(IntPtr hWnd, int id, UInt32 fsModifiers, UInt32 vlc);
+    internal static extern bool RegisterHotKey(IntPtr hWnd, int id, HotKeyMods fsModifiers, uint vk);
 
     [DllImport(User32_DllName)]
     internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);

@@ -57,6 +57,7 @@ public static class ConfigManager
     private const string ConfigMouseOverBackgroundColor = "MouseOverBackgroundColor";
     private const string ConfigReplaceStartMenu = "ReplaceStartMenu";
     private const string ConfigUseJumpList = "UseJumpList";
+    private const string ConfigFloatingShortcut = "FloatingShortcut";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -161,6 +162,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue(ConfigReplaceStartMenu, "True");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigUseJumpList, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigUseJumpList, "True");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigFloatingShortcut, "").ToString()))
+                _registryRootTaskbar.SetValue(ConfigFloatingShortcut, "{CTRL}{F11}");
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
@@ -889,6 +892,16 @@ public static class ConfigManager
         {
             if (SwitchToDesktopWhenDragEnter != value && AllowWrite)
                 _registryRootTaskbar.SetValue(ConfigSwitchToDesktopWhenDragEnter, value.ToString());
+        }
+    }
+
+    public static string FloatingShortcut
+    {
+        get { return _registryRootTaskbar.GetValue(ConfigFloatingShortcut, "").ToString(); }
+        set
+        {
+            if (FloatingShortcut != value && AllowWrite)
+                _registryRootTaskbar.SetValue(ConfigFloatingShortcut, value);
         }
     }
 

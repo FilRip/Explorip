@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,8 +29,6 @@ using ExploripSharedCopy.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 
 using ManagedShell.Interop;
-
-using Microsoft.Xaml.Behaviors.Media;
 
 namespace ExploripCopy.ViewModels;
 

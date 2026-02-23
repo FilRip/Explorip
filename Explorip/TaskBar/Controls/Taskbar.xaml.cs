@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 using Explorip.StartMenu.Window;
@@ -30,6 +30,7 @@ public partial class Taskbar : AppBarWindow
 {
     private readonly bool _mainScreen;
     private readonly int _numScreen;
+    private IntPtr _windowHandle = IntPtr.Zero;
 
     public Popup MyPopup { get; private set; }
     public int TimeBeforeAutoCloseThumb { get; private set; }
@@ -111,10 +112,6 @@ public partial class Taskbar : AppBarWindow
             executeScriptWindow.Show();
         }
 #endif
-        else if (e.Key == Key.F11)
-        {
-            MyDataContext.ExpandCollapseTaskbar(!MyDataContext.TaskbarVisible);
-        }
     }
 
     private void ClosePopup(object sender, WindowEventArgs e)
@@ -168,6 +165,18 @@ public partial class Taskbar : AppBarWindow
             else if (msg == (int)NativeMethods.WM.SYSCOMMAND)
             {
                 handled = true;
+            }
+            else if (msg == (int)NativeMethods.WM.HOTKEY && (int)wParam == 1)
+            {
+                WpfScreenHelper.Screen currentScreen = WpfScreenHelper.MouseHelper.MouseScreen;
+                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
+                {
+                    if (tb.NumScreen == currentScreen.DisplayNumber)
+                    {
+                        tb.MyDataContext.ExpandCollapseTaskbar(!tb.MyDataContext.TaskbarVisible);
+                        break;
+                    }
+                }
             }
         }
 
@@ -295,6 +304,7 @@ public partial class Taskbar : AppBarWindow
             {
                 _explorerHelper.HideExplorerTaskbar = false;
                 MySystray.MyDataContext.Unload();
+                UnregisterHotKeyFloating();
             }
         }
     }
@@ -310,6 +320,7 @@ public partial class Taskbar : AppBarWindow
         {
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
             MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
+            RegisterHotKeyFloating();
         }
         AddToolbars();
 
@@ -393,5 +404,35 @@ public partial class Taskbar : AppBarWindow
         else
             UnregisterAppBar();
         _appBarManager.SetWorkArea(Screen);
+    }
+
+    public void RegisterHotKeyFloating()
+    {
+        string hotkey = ConfigManager.FloatingShortcut;
+        if (_windowHandle == IntPtr.Zero && !string.IsNullOrWhiteSpace(hotkey))
+        {
+            hotkey = hotkey.Trim().Replace(" ", "").ToLower();
+            _windowHandle = new WindowInteropHelper(this).EnsureHandle();
+            NativeMethods.HotKeyMods mods = NativeMethods.HotKeyMods.NOREPEAT;
+            if (hotkey.Contains("{ctrl}"))
+                mods |= NativeMethods.HotKeyMods.CONTROL;
+            if (hotkey.Contains("{shift}"))
+                mods |= NativeMethods.HotKeyMods.SHIFT;
+            if (hotkey.Contains("{alt}"))
+                mods |= NativeMethods.HotKeyMods.ALT;
+            if (hotkey.Contains("{win}"))
+                mods |= NativeMethods.HotKeyMods.WIN;
+            hotkey = hotkey.Replace("{ctrl}", "").Replace("{shift}", "").Replace("{alt}", "").Replace("{win}", "").Replace("{", "").Replace("}", "");
+            if (Enum.TryParse(hotkey, true, out NativeMethods.VK vk))
+            {
+                NativeMethods.RegisterHotKey(_windowHandle, 1, mods, (uint)vk);
+            }
+        }
+    }
+
+    public void UnregisterHotKeyFloating()
+    {
+        if (_windowHandle != IntPtr.Zero && !string.IsNullOrWhiteSpace(ConfigManager.FloatingShortcut))
+            NativeMethods.UnregisterHotKey(_windowHandle, 1);
     }
 }

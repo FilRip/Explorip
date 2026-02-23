@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -270,7 +269,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
 
     private MenuItem CreateMenuItem(ShellFile item)
     {
-        item.AllowAsync = false;
+        item.AllowAsync = true;
         MenuItem mi = new()
         {
             Header = item.DisplayName,
@@ -286,13 +285,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             Tag = item,
             IsCheckable = false,
         };
-        if (mi.Icon == null)
+        item.IconLoadedArgument = mi;
+        item.IconLoaded = new Action<ShellItem, object>((item, menuItem) => Application.Current.Dispatcher.Invoke(() =>
         {
-            Stopwatch sw = Stopwatch.StartNew();
-            while (mi.Icon == null && sw.ElapsedMilliseconds < 3000)
-                mi.Icon = item.SmallIcon;
-            sw.Stop();
-        }
+            ((MenuItem)menuItem).Icon = new Image() { Source = item.SmallIcon };
+        }));
         mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
         mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
         return mi;

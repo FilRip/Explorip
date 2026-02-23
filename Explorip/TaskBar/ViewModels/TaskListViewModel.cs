@@ -350,7 +350,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         }
         catch (Exception) { /* Ignore errors */ }
 
-        string path = Path.Combine(Environment.SpecialFolder.ApplicationData.FullPath(), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar");
+        string path = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).PathPinnedApp;
         if (Directory.Exists(path))
         {
             int numPinnedApp = 0;
