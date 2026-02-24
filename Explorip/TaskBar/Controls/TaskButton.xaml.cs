@@ -430,38 +430,38 @@ public partial class TaskButton : UserControl
 
     private void MoveToScreen_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is Screen screen && ApplicationWindow.ListWindows.Count > 0)
+        if (sender is MenuItem mi && mi.Tag is Screen screenDest && ApplicationWindow.ListWindows.Count > 0)
         {
             Screen screenSrc = Screen.FromHandle(ApplicationWindow.ListWindows[0].Handle);
             NativeMethods.Rect size;
-            if (screenSrc.ScaleFactor == screen.ScaleFactor)
-                WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screen.WpfWorkingArea.X, (int)screen.WpfWorkingArea.Y);
+            if (screenSrc.ScaleFactor == screenDest.ScaleFactor)
+                WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screenDest.WpfWorkingArea.X, (int)screenDest.WpfWorkingArea.Y);
             else
             {
                 NativeMethods.GetWindowRect(ApplicationWindow.ListWindows[0].Handle, out size);
                 double width = size.Width / screenSrc.ScaleFactor;
                 double height = size.Height / screenSrc.ScaleFactor;
-                if (screen.ScaleFactor > screenSrc.ScaleFactor)
+                if (screenDest.ScaleFactor > screenSrc.ScaleFactor)
                 {
-                    width /= screen.ScaleFactor;
-                    height /= screen.ScaleFactor;
+                    width *= screenDest.ScaleFactor;
+                    height *= screenDest.ScaleFactor;
                 }
-                else if (screen.ScaleFactor < screenSrc.ScaleFactor)
+                else
                 {
-                    width *= screen.ScaleFactor;
-                    height *= screen.ScaleFactor;
+                    width /= screenDest.ScaleFactor;
+                    height /= screenDest.ScaleFactor;
                 }
-                width = Math.Min(screen.WpfWorkingArea.Width - 16, width);
-                height = Math.Min(screen.WpfWorkingArea.Height - 16, height);
+                width = Math.Min(screenDest.WpfWorkingArea.Width - 16, width);
+                height = Math.Min(screenDest.WpfWorkingArea.Height - 16, height);
 
-                WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screen.WpfWorkingArea.X, (int)screen.WpfWorkingArea.Y, (int)width, (int)height);
+                WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screenDest.WpfWorkingArea.X, (int)screenDest.WpfWorkingArea.Y, (int)width, (int)height);
             }
             NativeMethods.GetWindowRect(ApplicationWindow.ListWindows[0].Handle, out size);
             int posX = 0, posY = 0;
-            if (screen.WpfWorkingArea.Width > size.Width)
-                posX = size.Left + (int)(screen.WpfWorkingArea.Width - size.Width) / 2;
-            if (screen.WpfWorkingArea.Height > size.Height)
-                posY = size.Top + (int)(screen.WpfWorkingArea.Height - size.Height) / 2;
+            if (screenDest.WpfWorkingArea.Width > size.Width)
+                posX = (int)(screenDest.WpfWorkingArea.Left * screenDest.ScaleFactor) + (int)((screenDest.WpfWorkingArea.Width * screenDest.ScaleFactor - size.Width) / 2);
+            if (screenDest.WpfWorkingArea.Height > size.Height)
+                posY = (int)(screenDest.WpfWorkingArea.Top * screenDest.ScaleFactor) + (int)((screenDest.WpfWorkingArea.Height * screenDest.ScaleFactor - size.Height) / 2);
             WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, posX, posY, size.Width, size.Height);
         }
     }
