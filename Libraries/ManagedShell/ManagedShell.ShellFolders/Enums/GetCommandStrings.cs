@@ -4,7 +4,7 @@ namespace ManagedShell.ShellFolders.Enums;
 
 // Flags specifying the information to return when calling IContextMenu::GetCommandString
 [Flags()]
-public enum GCS : uint
+public enum GetCommandStrings : uint
 {
     VERBA = 0,
     HELPTEXTA = 1,

@@ -4277,4 +4277,10 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     internal static extern bool ReleaseCapture();
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr GetWindowDC(IntPtr hWnd);
 }

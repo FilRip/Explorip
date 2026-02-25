@@ -72,7 +72,7 @@ public class ShellNewMenuCommand : ShellMenuCommand
         if (Interop.CoCreateInstance(
             ref newMenuGuid,
             IntPtr.Zero,
-            CLSCTX.INPROC_SERVER,
+            ClassesContexts.INPROC_SERVER,
             ref guid,
             out iContextMenuPtr) == NativeMethods.S_OK)
         {

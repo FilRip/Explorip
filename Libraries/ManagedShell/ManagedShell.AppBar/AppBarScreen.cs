@@ -49,7 +49,7 @@ public class AppBarScreen
 
     public void ChangeDpi()
     {
-        Interop.NativeMethods.GetDpiForMonitor(Handle, Interop.NativeMethods.DPI_TYPE.MDT_EFFECTIVE_DPI, out uint x, out uint y);
+        Interop.NativeMethods.GetDpiForMonitor(Handle, Interop.NativeMethods.DpiType.MDT_EFFECTIVE_DPI, out uint x, out uint y);
         DpiX = x;
         DpiY = y;
     }

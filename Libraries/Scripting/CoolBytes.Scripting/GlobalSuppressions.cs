@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("S3776", "S3776")]
 [assembly: SuppressMessage("S2436", "S2436")]
+[assembly: SuppressMessage("S107", "S107")]

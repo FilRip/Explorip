@@ -484,7 +484,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         if (EnvironmentHelper.IsWindows8OrBetter && _windows.Count > 0)
         {
             int cbSize = Marshal.SizeOf(typeof(uint));
-            NativeMethods.DwmGetWindowAttribute(_windows[0].Handle, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
+            NativeMethods.DwmGetWindowAttribute(_windows[0].Handle, NativeMethods.DwmWindowAttribute.DWMWA_CLOAKED, out uint cloaked, cbSize);
 
             if (cloaked > 0)
             {

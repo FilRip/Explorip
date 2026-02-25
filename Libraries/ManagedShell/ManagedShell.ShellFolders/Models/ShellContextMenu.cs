@@ -95,9 +95,9 @@ internal class ShellContextMenu : NativeWindow
             lpDirectory = strFolder,
             lpVerbW = (IntPtr)(nCmd - CMD_FIRST),
             lpDirectoryW = strFolder,
-            fMask = CMIC.UNICODE | CMIC.PTINVOKE |
-            ((Control.ModifierKeys & Keys.Control) != 0 ? CMIC.CONTROL_DOWN : 0) |
-            ((Control.ModifierKeys & Keys.Shift) != 0 ? CMIC.SHIFT_DOWN : 0),
+            fMask = ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
+            ((Control.ModifierKeys & Keys.Control) != 0 ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
+            ((Control.ModifierKeys & Keys.Shift) != 0 ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
             ptInvoke = new NativeMethods.Point((long)pointInvoke.X, (long)pointInvoke.Y),
             nShow = NativeMethods.WindowShowStyle.ShowNormal,
         };
@@ -164,14 +164,14 @@ internal class ShellContextMenu : NativeWindow
 
             // Get the PIDL for the folder file is in
             uint pchEaten = 0;
-            SFGAO pdwAttributes = 0;
+            ShellFolderGetAttributeObjects pdwAttributes = 0;
             int nResult = oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
             if (nResult != S_OK)
                 return null;
 
             IntPtr pStrRet = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
             Marshal.WriteInt32(pStrRet, 0, 0);
-            _oDesktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING, pStrRet);
+            _oDesktopFolder.GetDisplayNameOf(pPIDL, SHGetDisplayNames.FORPARSING, pStrRet);
             StringBuilder strFolder = new(MAX_PATH);
             NativeMethods.StrRetToBuf(pStrRet, pPIDL, strFolder, MAX_PATH);
             Marshal.FreeCoTaskMem(pStrRet);
@@ -231,7 +231,7 @@ internal class ShellContextMenu : NativeWindow
         {
             // Get the file relative to folder
             uint pchEaten = 0;
-            SFGAO pdwAttributes = 0;
+            ShellFolderGetAttributeObjects pdwAttributes = 0;
             int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
             if (nResult != S_OK)
             {

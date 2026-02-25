@@ -13,7 +13,7 @@ public interface IDropSource
     [PreserveSig()]
     Int32 QueryContinueDrag(
         bool fEscapePressed,
-        MK grfKeyState);
+        ModifierKeys grfKeyState);
 
     // Gives visual feedback to an end user during a drag-and-drop operation
     [PreserveSig()]

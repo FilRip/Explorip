@@ -4,7 +4,7 @@ namespace ManagedShell.ShellFolders.Enums;
 
 // Flags used with the CMINVOKECOMMANDINFOEX structure
 [Flags()]
-public enum CMIC : uint
+public enum ContextMenuInfoCommands : uint
 {
     HOTKEY = 0x00000020,
     ICON = 0x00000010,

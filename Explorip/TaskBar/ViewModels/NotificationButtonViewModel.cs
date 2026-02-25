@@ -20,7 +20,7 @@ public partial class NotificationButtonViewModel : ObservableObject
     private void ShowNotification()
     {
         IntPtr ptrNotifCenterWindow = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.NOTIFICATION_CENTER);
-        NativeMethods.DwmGetWindowAttribute(ptrNotifCenterWindow, NativeMethods.DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, Marshal.SizeOf(typeof(bool)));
+        NativeMethods.DwmGetWindowAttribute(ptrNotifCenterWindow, NativeMethods.DwmWindowAttribute.DWMWA_CLOAKED, out uint cloaked, Marshal.SizeOf(typeof(bool)));
         ShellHelper.ShowNotificationCenter();
         if (cloaked != 0)
         {

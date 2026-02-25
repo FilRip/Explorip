@@ -78,7 +78,7 @@ public class ShellObjectWatcher : IDisposable
 
         _registrationId = ShellNativeMethods.SHChangeNotifyRegister(
             _listenerHandle,
-            ShellNativeMethods.ShellChangeNotifyEventSource.ShellLevel | ShellNativeMethods.ShellChangeNotifyEventSource.InterruptLevel | ShellNativeMethods.ShellChangeNotifyEventSource.NewDelivery,
+            ShellNativeMethods.ShellChangeNotifyEventSources.ShellLevel | ShellNativeMethods.ShellChangeNotifyEventSources.InterruptLevel | ShellNativeMethods.ShellChangeNotifyEventSources.NewDelivery,
              _manager.RegisteredTypes, //ShellObjectChangeTypes.AllEventsMask,
             _message,
             1,

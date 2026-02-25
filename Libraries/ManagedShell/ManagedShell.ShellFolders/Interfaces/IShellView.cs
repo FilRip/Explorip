@@ -11,7 +11,7 @@ namespace ManagedShell.ShellFolders.Interfaces;
 public struct FolderSettings
 {
     public FolderViewMode ViewMode;
-    public EFolder Flags;
+    public FolderWindowAttribs Flags;
 }
 
 [UnmanagedFunctionPointer(CallingConvention.Winapi, CharSet = CharSet.Unicode)]
@@ -62,7 +62,7 @@ public interface IShellView
 
     void SelectItem(
         IntPtr pidlItem,
-        SVSIF uFlags);
+        ShellViewSelectItem uFlags);
 
     [return: MarshalAs(UnmanagedType.Interface, IidParameterIndex = 1)]
     object GetItemObject(

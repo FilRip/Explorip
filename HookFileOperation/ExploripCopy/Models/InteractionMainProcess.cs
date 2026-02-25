@@ -30,7 +30,7 @@ internal class InteractionMainProcess : IInteractionMainProcess
                 if (siPtr != IntPtr.Zero)
                 {
                     IShellItem si = (IShellItem)Marshal.GetTypedObjectForIUnknown(siPtr, typeof(IShellItem));
-                    if (si.GetDisplayName(ManagedShell.ShellFolders.Enums.SIGDN.NORMALDISPLAY, out IntPtr ptrDisplayName) == NativeMethods.S_OK && ptrDisplayName != IntPtr.Zero)
+                    if (si.GetDisplayName(ManagedShell.ShellFolders.Enums.ShellItemGetDisplayName.NORMALDISPLAY, out IntPtr ptrDisplayName) == NativeMethods.S_OK && ptrDisplayName != IntPtr.Zero)
                     {
                         string filename = Marshal.PtrToStringAuto(ptrDisplayName);
                         operation.SetDisplaySource(Path.GetFileName(filename));

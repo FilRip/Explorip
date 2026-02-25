@@ -31,7 +31,7 @@ public interface IContextMenu
     [PreserveSig()]
     Int32 GetCommandString(
         uint idcmd,
-        GCS uflags,
+        GetCommandStrings uflags,
         uint reserved,
         [MarshalAs(UnmanagedType.LPArray)]
         byte[] commandstring,

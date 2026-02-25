@@ -17,9 +17,9 @@ public interface IShellItem
 
     int GetParent(out IShellItem ppsi);
 
-    int GetDisplayName(SIGDN sigdnName, out IntPtr ppszName);
+    int GetDisplayName(ShellItemGetDisplayName sigdnName, out IntPtr ppszName);
 
-    int GetAttributes(SFGAO sfgaoMask, out SFGAO psfgaoAttribs);
+    int GetAttributes(ShellFolderGetAttributeObjects sfgaoMask, out ShellFolderGetAttributeObjects psfgaoAttribs);
 
     int Compare(IShellItem psi, uint hint, out int piOrder);
-};
+}

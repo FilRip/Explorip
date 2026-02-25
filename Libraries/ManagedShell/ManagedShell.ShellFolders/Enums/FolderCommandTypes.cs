@@ -3,7 +3,7 @@
 namespace ManagedShell.ShellFolders.Enums;
 
 [Flags()]
-public enum FCT : uint
+public enum FolderCommandTypes : uint
 {
     /// <summary>
     /// Merge the toolbar items instead of replacing all of the buttons with those provided by the view. This is the recommended choice.

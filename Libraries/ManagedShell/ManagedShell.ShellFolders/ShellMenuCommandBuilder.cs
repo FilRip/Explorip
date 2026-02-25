@@ -16,7 +16,7 @@ public class ShellMenuCommandBuilder
 
     public void AddSeparator()
     {
-        Commands.Add(new ShellMenuCommand { Flags = MFT.SEPARATOR, Label = string.Empty, UID = 0 });
+        Commands.Add(new ShellMenuCommand { Flags = MenuFlagsTypes.SEPARATOR, Label = string.Empty, UID = 0 });
     }
 
     public void AddShellNewMenu()

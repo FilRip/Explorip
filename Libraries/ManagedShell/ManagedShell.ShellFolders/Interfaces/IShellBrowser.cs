@@ -209,13 +209,13 @@ public interface IShellBrowser : IOleWindow
     /// </param>
     /// <param name="wFlags">Flags specifying the folder to be browsed.</param>
     [PreserveSig()]
-    int BrowseObject(IntPtr pidl, SBSP wFlags);
+    int BrowseObject(IntPtr pidl, ShellBrowserBrowseObjects wFlags);
 
     /// <summary>Gets an IStream interface that can be used for storage of view-specific state information.</summary>
     /// <param name="grfMode">Read/write access of the IStream interface.</param>
     /// <param name="ppStrm">The address that receives the IStream interface pointer.</param>
     [PreserveSig()]
-    int GetViewStateStream(STGM grfMode, [MarshalAs(UnmanagedType.Interface)] out IStream ppStrm);
+    int GetViewStateStream(GetViewStateStreamModes grfMode, [MarshalAs(UnmanagedType.Interface)] out IStream ppStrm);
 
     /// <summary>Gets the window handle to a browser control.</summary>
     /// <param name="id">
@@ -323,5 +323,5 @@ public interface IShellBrowser : IOleWindow
     /// <param name="nButtons">The number of TBBUTTON structures in the lpButtons array.</param>
     /// <param name="uFlags">Flags specifying where the toolbar buttons should go.</param>
     [PreserveSig()]
-    int SetToolbarItems([Optional, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] TbButton[] lpButtons, uint nButtons, FCT uFlags);
+    int SetToolbarItems([Optional, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] TbButton[] lpButtons, uint nButtons, FolderCommandTypes uFlags);
 }

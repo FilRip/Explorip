@@ -31,9 +31,9 @@ public static class ShellHelper
         return shinfo.szDisplayName;
     }
 
-    public static string UsersStartMenuPath => GetSpecialFolderPath((int)CSIDL.CSIDL_STARTMENU);
+    public static string UsersStartMenuPath => GetSpecialFolderPath((int)ConstSpecialItemIDList.CSIDL_STARTMENU);
 
-    public static string AllUsersStartMenuPath => GetSpecialFolderPath((int)CSIDL.CSIDL_COMMON_STARTMENU);
+    public static string AllUsersStartMenuPath => GetSpecialFolderPath((int)ConstSpecialItemIDList.CSIDL_COMMON_STARTMENU);
 
     public static string GetSpecialFolderPath(int FOLDER)
     {

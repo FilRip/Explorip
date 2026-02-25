@@ -7,7 +7,7 @@ using Point = ManagedShell.Interop.NativeMethods.PointInt;
 namespace ManagedShell.ShellFolders.Interfaces;
 
 [Flags()]
-public enum MK
+public enum ModifierKeys
 {
     LBUTTON = 0x0001,
     RBUTTON = 0x0002,
@@ -26,14 +26,14 @@ public interface IDropTarget
     [PreserveSig()]
     int DragEnter(
         IntPtr pDataObj,
-        MK grfKeyState,
+        ModifierKeys grfKeyState,
         Point pt,
         ref DragDropEffects pdwEffect);
 
     // Provides target feedback to the user through the DoDragDrop function
     [PreserveSig()]
     int DragOver(
-        MK grfKeyState,
+        ModifierKeys grfKeyState,
         Point pt,
         ref DragDropEffects pdwEffect);
 
@@ -45,7 +45,7 @@ public interface IDropTarget
     [PreserveSig()]
     int DragDrop(
         IntPtr pDataObj,
-        MK grfKeyState,
+        ModifierKeys grfKeyState,
         Point pt,
         ref DragDropEffects pdwEffect);
 }

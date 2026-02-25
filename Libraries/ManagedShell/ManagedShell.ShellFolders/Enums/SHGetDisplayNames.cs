@@ -5,7 +5,7 @@ namespace ManagedShell.ShellFolders.Enums;
 // Defines the values used with the IShellFolder::GetDisplayNameOf and IShellFolder::SetNameOf 
 // methods to specify the type of file or folder names used by those methods
 [Flags()]
-public enum SHGDN
+public enum SHGetDisplayNames
 {
     NORMAL = 0x0000,
     INFOLDER = 0x0001,

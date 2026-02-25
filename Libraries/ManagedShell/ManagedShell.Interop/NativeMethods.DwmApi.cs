@@ -5,11 +5,7 @@ namespace ManagedShell.Interop;
 
 public partial class NativeMethods
 {
-    public const int DWM_TNP_VISIBLE = 0x8,
-        DWM_TNP_OPACITY = 0x4,
-        DWM_TNP_RECTDESTINATION = 0x1;
-
-    const string DwmApi_DllName = "dwmapi";
+    private const string DwmApi_DllName = "dwmapi";
 
     [DllImport(DwmApi_DllName)]
     internal static extern int DwmRegisterThumbnail(IntPtr dest, IntPtr src, out IntPtr thumb);
@@ -31,10 +27,13 @@ public partial class NativeMethods
     internal static extern uint DwmActivateLivePreview(uint enable, IntPtr targetHwnd, IntPtr callingHwnd, AeroPeekType type, IntPtr unknown);
 
     [DllImport(DwmApi_DllName)]
-    internal static extern int DwmGetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, out uint pvAttribute, int cbAttribute);
+    internal static extern int DwmGetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, out uint pvAttribute, int cbAttribute);
 
     [DllImport(DwmApi_DllName)]
-    internal static extern int DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE dwAttribute, ref int pvAttribute, int cbAttribute);
+    internal static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
+
+    [DllImport(DwmApi_DllName)]
+    internal static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref DwmlNcRenderingPolicy pvAttribute, int cbAttribute);
 
     [DllImport(DwmApi_DllName, PreserveSig = false)]
     internal static extern bool DwmIsCompositionEnabled();
@@ -88,7 +87,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum DWM_TNP
+    public enum DwmTnps
     {
         RECTDESTINATION = 0x00000001,
         RECTSOURCE = 0x00000002,
@@ -100,7 +99,7 @@ public partial class NativeMethods
     [StructLayout(LayoutKind.Sequential)]
     public struct DwmThumbnailProperties
     {
-        public DWM_TNP dwFlags;
+        public DwmTnps dwFlags;
         public Rect rcDestination;
         public Rect rcSource;
         public byte opacity;
@@ -108,7 +107,7 @@ public partial class NativeMethods
         public bool fSourceClientAreaOnly;
     }
 
-    public enum DWMWINDOWATTRIBUTE
+    public enum DwmWindowAttribute
     {
         DWMWA_NCRENDERING_ENABLED = 1,
         DWMWA_NCRENDERING_POLICY,
@@ -128,7 +127,7 @@ public partial class NativeMethods
         DWMWA_LAST
     }
 
-    public enum DWMNCRENDERINGPOLICY
+    public enum DwmlNcRenderingPolicy
     {
         DWMNCRP_USEWINDOWSTYLE,
         DWMNCRP_DISABLED,

@@ -13,4 +13,3 @@ public struct TpmParams
     NativeMethods.Rect rcExclude;
 }
 #pragma warning restore IDE0044, S1144
-

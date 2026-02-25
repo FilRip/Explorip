@@ -1,6 +1,6 @@
 ﻿namespace ManagedShell.ShellFolders.Enums;
 
-public enum SIGDN : uint
+public enum ShellItemGetDisplayName : uint
 {
     NORMALDISPLAY = 0,
     PARENTRELATIVEPARSING = 0x80018001,

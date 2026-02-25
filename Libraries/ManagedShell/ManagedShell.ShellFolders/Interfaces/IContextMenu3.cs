@@ -32,7 +32,7 @@ public interface IContextMenu3
     [PreserveSig()]
     Int32 GetCommandString(
         uint idcmd,
-        GCS uflags,
+        GetCommandStrings uflags,
         uint reserved,
         [MarshalAs(UnmanagedType.LPWStr)]
         StringBuilder commandstring,

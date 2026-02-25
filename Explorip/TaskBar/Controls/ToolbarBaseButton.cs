@@ -266,7 +266,7 @@ public class ToolbarBaseButton : UserControl
         builder.AddSeparator();
         builder.AddCommand(new ShellMenuCommand()
         {
-            Flags = MFT.BYCOMMAND,
+            Flags = MenuFlagsTypes.BYCOMMAND,
             Label = Constants.Localization.OPEN_FOLDER,
             UID = (uint)MenuItemId.OpenParentFolder,
         });

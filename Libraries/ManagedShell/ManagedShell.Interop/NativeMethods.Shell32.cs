@@ -737,7 +737,7 @@ public partial class NativeMethods
     internal static extern int SHGetDesktopFolder(out IntPtr ppshf);
 
     [DllImport(Shell32_DllName)]
-    internal static extern int SHGetFolderLocation(IntPtr hwndOwner, CSIDL nFolder, IntPtr hToken, uint dwReserved, out IntPtr ppidl);
+    internal static extern int SHGetFolderLocation(IntPtr hwndOwner, ConstSpecialItemIDList nFolder, IntPtr hToken, uint dwReserved, out IntPtr ppidl);
 
     [DllImport(Shell32_DllName, SetLastError = true)]
     internal static extern void ILFree(IntPtr pidl);
@@ -761,7 +761,7 @@ public partial class NativeMethods
     internal static extern IntPtr ILCreateFromPath([MarshalAs(UnmanagedType.LPWStr)] string pszPath);
 
     [DllImport(Shell32_DllName, SetLastError = true, CharSet = CharSet.Unicode)]
-    internal static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, CSIDL nFolder, ref IntPtr ppidl);
+    internal static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, ConstSpecialItemIDList nFolder, ref IntPtr ppidl);
 
     [Flags()]
     public enum EFileAttributes : uint

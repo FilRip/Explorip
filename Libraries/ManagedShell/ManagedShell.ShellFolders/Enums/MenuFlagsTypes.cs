@@ -4,7 +4,7 @@ namespace ManagedShell.ShellFolders.Enums;
 
 // Specifies the content of the new menu item
 [Flags()]
-public enum MFT : uint
+public enum MenuFlagsTypes : uint
 {
     INSERT = 0x00000000,
     GRAYED = 0x00000001,

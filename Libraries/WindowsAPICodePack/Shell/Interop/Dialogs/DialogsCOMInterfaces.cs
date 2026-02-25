@@ -397,12 +397,12 @@ internal interface IFileDialogCustomize
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void GetControlState(
         [In()] int dwIDCtl,
-        [Out()] out ShellNativeMethods.ControlState pdwState);
+        [Out()] out ShellNativeMethods.ControlStates pdwState);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void SetControlState(
         [In()] int dwIDCtl,
-        [In()] ShellNativeMethods.ControlState dwState);
+        [In()] ShellNativeMethods.ControlStates dwState);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void GetEditBoxText(
@@ -442,13 +442,13 @@ internal interface IFileDialogCustomize
     void GetControlItemState(
         [In()] int dwIDCtl,
         [In()] int dwIDItem,
-        [Out()] out ShellNativeMethods.ControlState pdwState);
+        [Out()] out ShellNativeMethods.ControlStates pdwState);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void SetControlItemState(
         [In()] int dwIDCtl,
         [In()] int dwIDItem,
-        [In()] ShellNativeMethods.ControlState dwState);
+        [In()] ShellNativeMethods.ControlStates dwState);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void GetSelectedControlItem(

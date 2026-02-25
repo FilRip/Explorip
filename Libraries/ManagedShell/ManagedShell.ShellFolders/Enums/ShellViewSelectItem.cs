@@ -1,6 +1,6 @@
 ﻿namespace ManagedShell.ShellFolders.Enums;
 
-public enum SVSIF : uint
+public enum ShellViewSelectItem : uint
 {
     /// <summary>Deselect the item.</summary>
     SVSI_DESELECT = 0x00000000,

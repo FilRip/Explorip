@@ -188,7 +188,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
 
                         NativeMethods.DwmThumbnailProperties thumbProp = new()
                         {
-                            dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.OPACITY,
+                            dwFlags = NativeMethods.DwmTnps.VISIBLE | NativeMethods.DwmTnps.RECTDESTINATION | NativeMethods.DwmTnps.OPACITY,
                             fVisible = true,
                             opacity = 255,
                             rcDestination = new NativeMethods.Rect()

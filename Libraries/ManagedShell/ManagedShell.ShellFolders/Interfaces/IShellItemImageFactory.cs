@@ -12,7 +12,7 @@ public interface IShellItemImageFactory
 {
     int GetImage(
         [In(), MarshalAs(UnmanagedType.Struct)] Size size,
-        [In()] SIIGBF flags,
+        [In()] ShellItemImageGetBitmaps flags,
         [Out()] out IntPtr phbm);
 }
 

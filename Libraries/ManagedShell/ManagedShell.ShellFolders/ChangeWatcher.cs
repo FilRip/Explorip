@@ -6,7 +6,7 @@ using ManagedShell.Common.Logging;
 
 namespace ManagedShell.ShellFolders;
 
-class ChangeWatcher : IDisposable
+internal class ChangeWatcher : IDisposable
 {
     private readonly FileSystemEventHandler _changedEventHandler;
     private readonly FileSystemEventHandler _createdEventHandler;

@@ -83,7 +83,7 @@ public partial class DesktopButtonViewModel : ObservableObject
         {
             NativeMethods.DwmThumbnailProperties preview = new()
             {
-                dwFlags = NativeMethods.DWM_TNP.VISIBLE | NativeMethods.DWM_TNP.OPACITY | NativeMethods.DWM_TNP.RECTDESTINATION | NativeMethods.DWM_TNP.RECTSOURCE,
+                dwFlags = NativeMethods.DwmTnps.VISIBLE | NativeMethods.DwmTnps.OPACITY | NativeMethods.DwmTnps.RECTDESTINATION | NativeMethods.DwmTnps.RECTSOURCE,
                 fVisible = true,
                 opacity = 255,
                 rcSource = new NativeMethods.Rect(lowerX + (int)screen.WorkingArea.X, lowerY + (int)screen.WorkingArea.Y, lowerX + (int)screen.WorkingArea.Right, lowerY + (int)screen.WorkingArea.Bottom),

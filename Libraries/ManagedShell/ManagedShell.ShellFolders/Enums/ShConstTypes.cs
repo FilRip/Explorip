@@ -5,7 +5,7 @@ namespace ManagedShell.ShellFolders.Enums;
 // Determines the type of items included in an enumeration. 
 // These values are used with the IShellFolder::EnumObjects method
 [Flags()]
-public enum SHCONTF
+public enum ShConstTypes
 {
     FOLDERS = 0x0020,
     NONFOLDERS = 0x0040,

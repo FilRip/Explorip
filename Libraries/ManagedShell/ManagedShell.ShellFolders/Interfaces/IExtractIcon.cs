@@ -5,7 +5,7 @@ using System.Text;
 namespace ManagedShell.ShellFolders.Interfaces;
 
 [Flags()]
-public enum EGetIconLocation : uint
+public enum EGetIconLocations : uint
 {
     GIL_NULL = 0,
 
@@ -42,7 +42,7 @@ public enum EGetIconLocation : uint
 }
 
 [Flags()]
-public enum EGetIconLocationResult : uint
+public enum EGetIconLocationResults : uint
 {
     /// <summary>The calling application should create a document icon using the specified icon.</summary>
     GIL_SIMULATEDOC = 0x0001,
@@ -91,7 +91,7 @@ public enum EGetIconLocationResult : uint
 public interface IExtractIcon
 {
     [PreserveSig]
-    int GetIconLocation(EGetIconLocation uFlags, [MarshalAs(UnmanagedType.LPStr, SizeParamIndex = 2)] StringBuilder szIconFile, int cchMax, out int piIndex, out EGetIconLocationResult pwFlags);
+    int GetIconLocation(EGetIconLocations uFlags, [MarshalAs(UnmanagedType.LPStr, SizeParamIndex = 2)] StringBuilder szIconFile, int cchMax, out int piIndex, out EGetIconLocationResults pwFlags);
 
     [PreserveSig]
     int Extract([MarshalAs(UnmanagedType.LPStr)] string pszFile, uint nIconIndex, IntPtr phiconLarge, IntPtr phiconSmall, uint nIconSize);

@@ -33,28 +33,29 @@ public static class ExtensionsDirectory
     public static string RealName(this Environment.SpecialFolder specialFolder)
     {
         string path = Environment.GetFolderPath(specialFolder);
+        IntPtr Pidl = IntPtr.Zero;
         try
         {
             if (specialFolder == Environment.SpecialFolder.MyComputer)
             {
-                IntPtr Pidl = IntPtr.Zero;
-                SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref Pidl);
+                SHGetSpecialFolderLocation(IntPtr.Zero, ConstSpecialItemIDList.CSIDL_DRIVES, ref Pidl);
                 ShFileInfo info = new();
                 if (SHGetFileInfo(Pidl, EFileAttributes.NULL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), ShGetFileInfos.TypeName | ShGetFileInfos.PIDL | ShGetFileInfos.DisplayName) != IntPtr.Zero)
-                {
                     return info.szDisplayName;
-                }
             }
             else
             {
                 ShFileInfo info = new();
                 if (SHGetFileInfo(path, EFileAttributes.NORMAL, ref info, (uint)System.Runtime.InteropServices.Marshal.SizeOf(info), ShGetFileInfos.DisplayName) != IntPtr.Zero)
-                {
                     return info.szDisplayName;
-                }
             }
         }
         catch (Exception) { /* Ignore errors */ }
+        finally
+        {
+            if (Pidl != IntPtr.Zero)
+                ILFree(Pidl);
+        }
         return Path.GetFileName(path);
     }
 }

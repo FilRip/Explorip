@@ -178,7 +178,7 @@ public class ShellFolder : ShellItem
 
         try
         {
-            if (ShellFolderInterface?.EnumObjects(_hwndInput, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS,
+            if (ShellFolderInterface?.EnumObjects(_hwndInput, ShConstTypes.FOLDERS | ShConstTypes.NONFOLDERS,
                 out hEnum) == NativeMethods.S_OK)
             {
                 try

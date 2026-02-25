@@ -6,7 +6,7 @@ using ManagedShell.Common.Interfaces;
 
 namespace ManagedShell.Common.SupportingClasses;
 
-class AppVisibilityEvents : IAppVisibilityEvents
+internal class AppVisibilityEvents : IAppVisibilityEvents
 {
     internal event EventHandler<AppVisibilityEventArgs> AppVisibilityChanged;
     internal event EventHandler<LauncherVisibilityEventArgs> LauncherVisibilityChanged;

@@ -87,7 +87,7 @@ public interface IFolderView
     /// <summary>Selects an item in the folder's view.</summary>
     /// <param name="iItem">The index of the item to select in the folder's view.</param>
     /// <param name="dwFlags">One of the _SVSIF constants that specify the type of selection to apply.</param>
-    void SelectItem(int iItem, SVSIF dwFlags);
+    void SelectItem(int iItem, ShellViewSelectItem dwFlags);
 
     /// <summary>Allows the selection and positioning of items visible in the folder's view.</summary>
     /// <param name="cidl">The number of items to select.</param>
@@ -97,7 +97,7 @@ public interface IFolderView
     /// name="aIntPtr"/> should be positioned.
     /// </param>
     /// <param name="dwFlags">One of the _SVSIF constants that specifies the type of selection to apply.</param>
-    void SelectAndPositionItems(uint cidl, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IntPtr[] aIntPtr, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] Point[] apt, SVSIF dwFlags);
+    void SelectAndPositionItems(uint cidl, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IntPtr[] aIntPtr, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] Point[] apt, ShellViewSelectItem dwFlags);
 }
 
 /// <summary>
@@ -181,7 +181,7 @@ public interface IFolderView2 : IFolderView
     /// <summary>Selects an item in the folder's view.</summary>
     /// <param name="iItem">The index of the item to select in the folder's view.</param>
     /// <param name="dwFlags">One of the _SVSIF constants that specify the type of selection to apply.</param>
-    new void SelectItem(int iItem, SVSIF dwFlags);
+    new void SelectItem(int iItem, ShellViewSelectItem dwFlags);
 
     /// <summary>Allows the selection and positioning of items visible in the folder's view.</summary>
     /// <param name="cidl">The number of items to select.</param>
@@ -191,7 +191,7 @@ public interface IFolderView2 : IFolderView
     /// name="aIntPtr"/> should be positioned.
     /// </param>
     /// <param name="dwFlags">One of the _SVSIF constants that specifies the type of selection to apply.</param>
-    new void SelectAndPositionItems(uint cidl, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IntPtr[] aIntPtr, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] Point[] apt, SVSIF dwFlags);
+    new void SelectAndPositionItems(uint cidl, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] IntPtr[] aIntPtr, [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 0)] Point[] apt, ShellViewSelectItem dwFlags);
 
     /// <summary>Groups the view by the given property key and direction.</summary>
     /// <param name="key">
@@ -355,7 +355,7 @@ public interface IFolderView2 : IFolderView
     /// </remarks>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-setcurrentfolderflags
     // int SetCurrentFolderFlags( DWORD dwMask, DWORD dwFlags );
-    void SetCurrentFolderFlags(EFolder dwMask, EFolder dwFlags);
+    void SetCurrentFolderFlags(FolderWindowAttribs dwMask, FolderWindowAttribs dwFlags);
 
     /// <summary>Gets the currently applied folder flags.</summary>
     /// <returns>
@@ -364,7 +364,7 @@ public interface IFolderView2 : IFolderView
     /// </returns>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-getcurrentfolderflags
     // int GetCurrentFolderFlags( DWORD *pdwFlags );
-    EFolder GetCurrentFolderFlags();
+    FolderWindowAttribs GetCurrentFolderFlags();
 
     /// <summary>Gets the count of sort columns currently applied to the view.</summary>
     /// <returns>
@@ -528,7 +528,7 @@ public interface IFolderView2 : IFolderView
     /// </returns>
     // https://docs.microsoft.com/en-us/windows/desktop/api/shobjidl_core/nf-shobjidl_core-ifolderview2-getselectionstate int
     // GetSelectionState( PCUITEMID_CHILD IntPtr, DWORD *pdwFlags );
-    SVSIF GetSelectionState(IntPtr IntPtr);
+    ShellViewSelectItem GetSelectionState(IntPtr IntPtr);
 
     /// <summary>Invokes the given verb on the current selection.</summary>
     /// <param name="pszVerb">

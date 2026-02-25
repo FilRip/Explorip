@@ -22,7 +22,7 @@ public enum ShellThumbnailRetrievalOption
     /// but only to retrieve a cached item. If no cached thumbnail is available, a cached per-instance icon is returned but  
     /// a thumbnail or icon is not extracted.
     /// </summary>
-    CacheOnly = ShellNativeMethods.SIIGBF.InCacheOnly,
+    CacheOnly = ShellNativeMethods.ShellItemImageGetImageBitmapTypes.InCacheOnly,
 
     /// <summary>
     /// The MemoryOnly behavior returns the item only if it is in memory. The disk is not accessed even if the item is cached. 
@@ -31,7 +31,7 @@ public enum ShellThumbnailRetrievalOption
     /// even if it is cached, always requires the disk to be accessed, so this method should not be 
     /// called from the user interface (UI) thread without passing ShellThumbnailCacheOptions.MemoryOnly.
     /// </summary>
-    MemoryOnly = ShellNativeMethods.SIIGBF.MemoryOnly,
+    MemoryOnly = ShellNativeMethods.ShellItemImageGetImageBitmapTypes.MemoryOnly,
 }
 
 /// <summary>
@@ -48,10 +48,10 @@ public enum ShellThumbnailFormatOption
     /// The ThumbnailOnly behavior returns only the thumbnails, never the icon. Note that not all items have thumbnails 
     /// so ShellThumbnailFormatOption.ThumbnailOnly can fail in these cases.
     /// </summary>
-    ThumbnailOnly = ShellNativeMethods.SIIGBF.ThumbnailOnly,
+    ThumbnailOnly = ShellNativeMethods.ShellItemImageGetImageBitmapTypes.ThumbnailOnly,
 
     /// <summary>
     /// The IconOnly behavior returns only the icon, never the thumbnail.
     /// </summary>
-    IconOnly = ShellNativeMethods.SIIGBF.IconOnly,
+    IconOnly = ShellNativeMethods.ShellItemImageGetImageBitmapTypes.IconOnly,
 }

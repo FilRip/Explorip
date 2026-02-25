@@ -8,7 +8,7 @@ public partial class NativeMethods
 {
     const string ShFolder_DllName = "shfolder.dll";
 
-    public enum CSIDL
+    public enum ConstSpecialItemIDList
     {
         CSIDL_DESKTOP = 0x0000,
         CSIDL_INTERNET = 0x0001,

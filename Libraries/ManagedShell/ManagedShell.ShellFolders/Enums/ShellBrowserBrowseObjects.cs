@@ -3,7 +3,7 @@
 namespace ManagedShell.ShellFolders.Enums;
 
 [Flags()]
-public enum SBSP : uint
+public enum ShellBrowserBrowseObjects : uint
 {
     /// <summary>An absolute PIDL, relative to the desktop.</summary>
     SBSP_ABSOLUTE = 0x0000,

@@ -4,7 +4,7 @@ namespace ManagedShell.ShellFolders.Enums;
 
 // Are used in activation calls to indicate the execution contexts in which an object is to be run
 [Flags()]
-public enum CLSCTX : uint
+public enum ClassesContexts : uint
 {
     INPROC_SERVER = 0x1,
     INPROC_HANDLER = 0x2,
@@ -24,6 +24,16 @@ public enum CLSCTX : uint
     DISABLE_AAA = 0x8000,
     ENABLE_AAA = 0x10000,
     FROM_DEFAULT_CONTEXT = 0x20000,
+    CLSCTX_ACTIVATE_X86_SERVER = 0x40000,
+    CLSCTX_ACTIVATE_32_BIT_SERVER = 0x40000,
+    CLSCTX_ACTIVATE_64_BIT_SERVER = 0x80000,
+    CLSCTX_ENABLE_CLOAKING = 0x100000,
+    CLSCTX_APPCONTAINER = 0x400000,
+    CLSCTX_ACTIVATE_AAA_AS_IU = 0x800000,
+    CLSCTX_RESERVED6 = 0x1000000,
+    CLSCTX_ACTIVATE_ARM32_SERVER = 0x2000000,
+    CLSCTX_ALLOW_LOWER_TRUST_REGISTRATION = 0x4000000,
+    CLSCTX_PS_DLL = 0x80000000,
     INPROC = INPROC_SERVER | INPROC_HANDLER,
     SERVER = INPROC_SERVER | LOCAL_SERVER | REMOTE_SERVER,
     ALL = SERVER | INPROC_HANDLER

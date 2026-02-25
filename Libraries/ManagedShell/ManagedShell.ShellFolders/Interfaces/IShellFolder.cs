@@ -21,7 +21,7 @@ public interface IShellFolder
         string pszDisplayName,
         ref uint pchEaten,
         out IntPtr ppidl,
-        ref SFGAO pdwAttributes);
+        ref ShellFolderGetAttributeObjects pdwAttributes);
 
     // Allows a client to determine the contents of a folder by creating an item
     // identifier enumeration object and returning its IEnumIDList interface.
@@ -29,7 +29,7 @@ public interface IShellFolder
     [PreserveSig()]
     int EnumObjects(
         IntPtr hwnd,
-        SHCONTF grfFlags,
+        ShConstTypes grfFlags,
         out IntPtr enumIDList);
 
     // Retrieves an IShellFolder object for a subfolder.
@@ -82,7 +82,7 @@ public interface IShellFolder
         uint cidl,
         [MarshalAs(UnmanagedType.LPArray)]
         IntPtr[] apidl,
-        ref SFGAO rgfInOut);
+        ref ShellFolderGetAttributeObjects rgfInOut);
 
     // Retrieves an OLE interface that can be used to carry out actions on the
     // specified file objects or folders.
@@ -102,7 +102,7 @@ public interface IShellFolder
     [PreserveSig()]
     int GetDisplayNameOf(
         IntPtr pidl,
-        SHGDN uFlags,
+        SHGetDisplayNames uFlags,
         IntPtr lpName);
 
     // Sets the display name of a file object or subfolder, changing the item
@@ -114,12 +114,12 @@ public interface IShellFolder
         IntPtr pidl,
         [MarshalAs(UnmanagedType.LPWStr)]
         string pszName,
-        SHGDN uFlags,
+        SHGetDisplayNames uFlags,
         out IntPtr ppidlOut);
 }
 
 [Flags()]
-public enum LvcFmt
+public enum ListViewColumnAlignments
 {
     LEFT = 0X0000,
     RIGHT = 0X0001,
@@ -142,7 +142,7 @@ public enum LvcFmt
 [StructLayout(LayoutKind.Sequential)]
 public struct ShellDetails
 {
-    public LvcFmt fmt;
+    public ListViewColumnAlignments fmt;
     public int cxChar;
     public StrRet str;
 }
@@ -201,7 +201,7 @@ public interface IShellFolder2 : IShellFolder
         string pszDisplayName,
         ref uint pchEaten,
         out IntPtr ppidl,
-        ref SFGAO pdwAttributes);
+        ref ShellFolderGetAttributeObjects pdwAttributes);
 
     // Allows a client to determine the contents of a folder by creating an item
     // identifier enumeration object and returning its IEnumIDList interface.
@@ -209,7 +209,7 @@ public interface IShellFolder2 : IShellFolder
     [PreserveSig()]
     new int EnumObjects(
         IntPtr hwnd,
-        SHCONTF grfFlags,
+        ShConstTypes grfFlags,
         out IntPtr enumIDList);
 
     // Retrieves an IShellFolder object for a subfolder.
@@ -262,7 +262,7 @@ public interface IShellFolder2 : IShellFolder
         uint cidl,
         [MarshalAs(UnmanagedType.LPArray)]
         IntPtr[] apidl,
-        ref SFGAO rgfInOut);
+        ref ShellFolderGetAttributeObjects rgfInOut);
 
     // Retrieves an OLE interface that can be used to carry out actions on the
     // specified file objects or folders.
@@ -282,7 +282,7 @@ public interface IShellFolder2 : IShellFolder
     [PreserveSig()]
     new int GetDisplayNameOf(
         IntPtr pidl,
-        SHGDN uFlags,
+        SHGetDisplayNames uFlags,
         IntPtr lpName);
 
     // Sets the display name of a file object or subfolder, changing the item
@@ -294,7 +294,7 @@ public interface IShellFolder2 : IShellFolder
         IntPtr pidl,
         [MarshalAs(UnmanagedType.LPWStr)]
         string pszName,
-        SHGDN uFlags,
+        SHGetDisplayNames uFlags,
         out IntPtr ppidlOut);
 
     [PreserveSig()]

@@ -110,9 +110,9 @@ public static class WindowHelper
 
     public static void ExcludeWindowFromPeek(IntPtr hWnd)
     {
-        int status = (int)DWMNCRENDERINGPOLICY.DWMNCRP_ENABLED;
+        DwmlNcRenderingPolicy status = DwmlNcRenderingPolicy.DWMNCRP_ENABLED;
         DwmSetWindowAttribute(hWnd,
-            DWMWINDOWATTRIBUTE.DWMWA_EXCLUDED_FROM_PEEK,
+            DwmWindowAttribute.DWMWA_EXCLUDED_FROM_PEEK,
             ref status,
             sizeof(int));
     }

@@ -16,17 +16,15 @@ public partial class NativeMethods
         public int Right = right;
         public int Bottom = bottom;
 
-#pragma warning disable IDE0251 // Définir comme membre 'readonly'
-        public int Width
+        public readonly int Width
         {
             get { return Right - Left; }
         }
 
-        public int Height
+        public readonly int Height
         {
             get { return Bottom - Top; }
         }
-#pragma warning restore IDE0251 // Définir comme membre 'readonly'
     }
 
     [StructLayout(LayoutKind.Sequential)]

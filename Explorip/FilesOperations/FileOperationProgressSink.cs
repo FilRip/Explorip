@@ -118,7 +118,7 @@ public class FileOperationProgressSink : IFileOperationProgressSink
         string action, IShellItem item, uint hresult)
     {
         string displayName = "";
-        if (item?.GetDisplayName(SIGDN.NORMALDISPLAY, out IntPtr ptrDisplayName) == NativeMethods.S_OK && ptrDisplayName != IntPtr.Zero)
+        if (item?.GetDisplayName(ShellItemGetDisplayName.NORMALDISPLAY, out IntPtr ptrDisplayName) == NativeMethods.S_OK && ptrDisplayName != IntPtr.Zero)
         {
             displayName = Marshal.PtrToStringAuto(ptrDisplayName);
             Marshal.FreeCoTaskMem(ptrDisplayName);

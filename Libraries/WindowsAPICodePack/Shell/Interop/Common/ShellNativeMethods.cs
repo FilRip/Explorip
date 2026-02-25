@@ -37,7 +37,7 @@ internal static class ShellNativeMethods
         DefaultNoMiniMode = 0x20000000
     }
     [Flags()]
-    internal enum ControlState
+    internal enum ControlStates
     {
         Inactive = 0x00000000,
         Enable = 0x00000001,
@@ -217,7 +217,7 @@ internal static class ShellNativeMethods
     }
 
     [Flags()]
-    internal enum SIIGBF
+    internal enum ShellItemImageGetImageBitmapTypes
     {
         ResizeToFit = 0x00,
         BiggerSizeOk = 0x01,
@@ -652,7 +652,7 @@ internal static class ShellNativeMethods
     [DllImport("shell32.dll")]
     internal static extern uint SHChangeNotifyRegister(
         IntPtr windowHandle,
-        ShellChangeNotifyEventSource sources,
+        ShellChangeNotifyEventSources sources,
         ShellObjectChangeTypes events,
         uint message,
         int entries,
@@ -674,7 +674,7 @@ internal static class ShellNativeMethods
     internal static extern bool SHChangeNotifyDeregister(uint hNotify);
 
     [Flags()]
-    internal enum ShellChangeNotifyEventSource
+    internal enum ShellChangeNotifyEventSources
     {
         InterruptLevel = 0x0001,
         ShellLevel = 0x0002,

@@ -73,7 +73,7 @@ internal static class Interop
         CharSet = CharSet.Auto)]
     public static extern bool AppendMenu(
         IntPtr hMenu,
-        MFT uFlags,
+        MenuFlagsTypes uFlags,
         uint uIDNewItem,
         [MarshalAs(UnmanagedType.LPTStr)]
         string lpNewItem);
@@ -101,7 +101,7 @@ internal static class Interop
     public static extern int CoCreateInstance(
         ref Guid rclsid,
         IntPtr pUnkOuter,
-        CLSCTX dwClsContext,
+        ClassesContexts dwClsContext,
         ref Guid riid,
         out IntPtr ppv);
 

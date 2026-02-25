@@ -2,7 +2,7 @@
 
 namespace ManagedShell.Common.Structs;
 
-struct StartupLocation
+internal struct StartupLocation
 {
     internal StartupEntryType Type;
     internal string Location;

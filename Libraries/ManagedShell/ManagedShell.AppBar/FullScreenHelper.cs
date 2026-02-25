@@ -284,7 +284,7 @@ public sealed class FullScreenHelper : IDisposable
         if (EnvironmentHelper.IsWindows8OrBetter)
         {
             int cbSize = System.Runtime.InteropServices.Marshal.SizeOf(typeof(uint));
-            DwmGetWindowAttribute(window.ListWindows[0].Handle, DWMWINDOWATTRIBUTE.DWMWA_CLOAKED, out uint cloaked, cbSize);
+            DwmGetWindowAttribute(window.ListWindows[0].Handle, DwmWindowAttribute.DWMWA_CLOAKED, out uint cloaked, cbSize);
             if (cloaked > 0)
                 return false;
         }

@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 using Explorip.Exceptions;
+
+using ManagedShell.Interop;
 
 using WpfScreenHelper;
 
@@ -103,22 +108,86 @@ public static class ScreenManager
         return Screen.AllScreens.ElementAt(id);
     }
 
-    public static Screen GetScreen(SCREEN_POSITION positionScreen)
+    public static Screen GetScreen(ScreenPosition positionScreen)
     {
         return positionScreen switch
         {
-            SCREEN_POSITION.LEFT => GetLeftScreen(),
-            SCREEN_POSITION.CENTER => GetCenterScreen(),
-            SCREEN_POSITION.RIGHT => GetRightScreen(),
+            ScreenPosition.LEFT => GetLeftScreen(),
+            ScreenPosition.CENTER => GetCenterScreen(),
+            ScreenPosition.RIGHT => GetRightScreen(),
             _ => throw new ScreenManagerException("Unknown position of requested screen"),
         };
     }
 
-    public enum SCREEN_POSITION
+    public enum ScreenPosition
     {
         LEFT = 1,
         CENTER = 2,
         RIGHT = 3
+    }
+
+    public static BitmapSource TakeScreenShot(int numScreen = -1, int x = -1, int y = -1, int width = -1, int height = -1, int dpiX = 1, int dpiY = 1, PixelFormat? pf = null)
+    {
+        if (numScreen < 0 && x < 0)
+            throw new ArgumentNullException(nameof(numScreen));
+        if (!pf.HasValue)
+            pf = PixelFormats.Bgr24;
+        if (numScreen >= 0)
+        {
+            Screen screen = Screen.AllScreens.SingleOrDefault(s => s.DisplayNumber == numScreen) ?? throw new ArgumentNullException(nameof(numScreen));
+            x = (int)screen.Bounds.X;
+            y = (int)screen.Bounds.Y;
+            if (width < 0)
+                width = (int)screen.Bounds.Width;
+            if (height < 0)
+                height = (int)screen.Bounds.Height;
+        }
+
+        using Bitmap bmp = new(width, height);
+        using Graphics g = Graphics.FromImage(bmp);
+        g.CopyFromScreen(x, y, 0, 0, bmp.Size);
+
+        System.Drawing.Imaging.BitmapData data = bmp.LockBits(new Rectangle(0, 0, width, height), System.Drawing.Imaging.ImageLockMode.ReadOnly, bmp.PixelFormat);
+
+        return BitmapSource.Create(width, height, dpiX, dpiY, pf.Value, null, data.Scan0, data.Stride * height, data.Stride);
+    }
+
+    public static ImageSource CaptureScreen()
+    {
+        return CaptureWindow(NativeMethods.GetDesktopWindow());
+    }
+
+    public static ImageSource CaptureWindow(IntPtr handle)
+    {
+        IntPtr hdcSrc = NativeMethods.GetWindowDC(handle);
+
+        NativeMethods.GetWindowRect(handle, out NativeMethods.Rect windowRect);
+
+        int width = windowRect.Right - windowRect.Left;
+        int height = windowRect.Bottom - windowRect.Top;
+
+        IntPtr hdcDest = NativeMethods.CreateCompatibleDC(hdcSrc);
+        IntPtr hBitmap = NativeMethods.CreateCompatibleBitmap(hdcSrc, width, height);
+
+        IntPtr hOld = NativeMethods.SelectObject(hdcDest, hBitmap);
+        NativeMethods.BitBlt(hdcDest, 0, 0, width, height, hdcSrc, 0, 0, NativeMethods.Rop.SRCCOPY);
+        NativeMethods.SelectObject(hdcDest, hOld);
+        NativeMethods.DeleteDC(hdcDest);
+        NativeMethods.ReleaseDC(handle, hdcSrc);
+
+        ImageSource result = Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+        NativeMethods.DeleteObject(hBitmap);
+
+        return result;
+    }
+
+    public static ImageSource RenderTargetToBitmap(Visual visualControl, int width, int height, int dpiX = 1, int dpiY = 1, PixelFormat? pf = null)
+    {
+        if (!pf.HasValue)
+            pf = PixelFormats.Pbgra32;
+        RenderTargetBitmap rtb = new(width, height, dpiX, dpiY, pf.Value);
+        rtb.Render(visualControl);
+        return rtb;
     }
 
     #region WPF
@@ -150,12 +219,12 @@ public static class ScreenManager
             window.WindowState = WindowState.Maximized;
     }
 
-    public static void MoveWindowToScreen(Window window, SCREEN_POSITION screen)
+    public static void MoveWindowToScreen(Window window, ScreenPosition screen)
     {
         MoveWindowToScreen(window, screen, false);
     }
 
-    public static void MoveWindowToScreen(Window window, SCREEN_POSITION screen, bool fullScreen)
+    public static void MoveWindowToScreen(Window window, ScreenPosition screen, bool fullScreen)
     {
         Screen s = GetScreen(screen);
         MoveWindowToScreen(window, s, fullScreen);

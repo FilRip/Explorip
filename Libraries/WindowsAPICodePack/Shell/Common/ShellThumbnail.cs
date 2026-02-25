@@ -253,31 +253,31 @@ public class ShellThumbnail
 
     #region Private Methods
 
-    private ShellNativeMethods.SIIGBF CalculateFlags()
+    private ShellNativeMethods.ShellItemImageGetImageBitmapTypes CalculateFlags()
     {
-        ShellNativeMethods.SIIGBF flags = 0x0000;
+        ShellNativeMethods.ShellItemImageGetImageBitmapTypes flags = 0x0000;
 
         if (AllowBiggerSize)
         {
-            flags |= ShellNativeMethods.SIIGBF.BiggerSizeOk;
+            flags |= ShellNativeMethods.ShellItemImageGetImageBitmapTypes.BiggerSizeOk;
         }
 
         if (RetrievalOption == ShellThumbnailRetrievalOption.CacheOnly)
         {
-            flags |= ShellNativeMethods.SIIGBF.InCacheOnly;
+            flags |= ShellNativeMethods.ShellItemImageGetImageBitmapTypes.InCacheOnly;
         }
         else if (RetrievalOption == ShellThumbnailRetrievalOption.MemoryOnly)
         {
-            flags |= ShellNativeMethods.SIIGBF.MemoryOnly;
+            flags |= ShellNativeMethods.ShellItemImageGetImageBitmapTypes.MemoryOnly;
         }
 
         if (FormatOption == ShellThumbnailFormatOption.IconOnly)
         {
-            flags |= ShellNativeMethods.SIIGBF.IconOnly;
+            flags |= ShellNativeMethods.ShellItemImageGetImageBitmapTypes.IconOnly;
         }
         else if (FormatOption == ShellThumbnailFormatOption.ThumbnailOnly)
         {
-            flags |= ShellNativeMethods.SIIGBF.ThumbnailOnly;
+            flags |= ShellNativeMethods.ShellItemImageGetImageBitmapTypes.ThumbnailOnly;
         }
 
         return flags;

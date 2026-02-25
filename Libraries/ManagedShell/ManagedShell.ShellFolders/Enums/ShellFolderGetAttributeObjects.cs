@@ -3,7 +3,7 @@
 namespace ManagedShell.ShellFolders.Enums;
 
 [Flags()]
-public enum SFGAO : uint
+public enum ShellFolderGetAttributeObjects : uint
 {
     /// <summary>The specified items can be hosted inside a web browser or Windows Explorer frame.</summary>
     BROWSABLE = 0x8000000,

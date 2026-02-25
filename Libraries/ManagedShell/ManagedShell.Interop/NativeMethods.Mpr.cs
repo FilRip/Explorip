@@ -63,7 +63,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum ResourceType
+    public enum ResourceTypes
     {
         Any = 0,
         Disk = 1,
@@ -88,7 +88,7 @@ public partial class NativeMethods
     }
 
     [Flags()]
-    public enum ResourceUsage : uint
+    public enum ResourceUsages : uint
     {
         Connectable = 0x1,
         Container = 0x2,
@@ -103,9 +103,9 @@ public partial class NativeMethods
     public struct NetResource
     {
         public ResourceScope dwScope;
-        public ResourceType dwType;
+        public ResourceTypes dwType;
         public ResourceDisplaytype dwDisplayType;
-        public ResourceUsage dwUsage;
+        public ResourceUsages dwUsage;
         [MarshalAs(UnmanagedType.LPTStr)] public string LocalName;
         [MarshalAs(UnmanagedType.LPTStr)] public string RemoteName;
         [MarshalAs(UnmanagedType.LPTStr)] public string Comment;
@@ -116,7 +116,7 @@ public partial class NativeMethods
     public struct NetreSource
     {
         public ResourceScope Scope;
-        public ResourceType ResourceType;
+        public ResourceTypes ResourceType;
         public ResourceDisplaytype DisplayType;
         public int Usage;
         public string LocalName;
@@ -145,7 +145,7 @@ public partial class NativeMethods
     internal static extern int WNetAddConnection2(NetreSource netResource, string password, string username, uint flags);
 
     [DllImport(Mpr_DllName, CharSet = CharSet.Auto)]
-    internal static extern int WNetOpenEnum(ResourceScope dwScope, ResourceType dwType, ResourceUsage dwUsage, NetResource lpNetResource, ref IntPtr lphEnum);
+    internal static extern int WNetOpenEnum(ResourceScope dwScope, ResourceTypes dwType, ResourceUsages dwUsage, NetResource lpNetResource, ref IntPtr lphEnum);
 
     [DllImport(Mpr_DllName, CharSet = CharSet.Auto)]
     internal static extern int WNetEnumResource(IntPtr hEnum, ref int lpcCount, IntPtr lpBuffer, ref uint lpBufferSize);

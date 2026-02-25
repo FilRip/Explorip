@@ -287,19 +287,19 @@ internal interface IShellLibrary
 [ComImport()]
 [Guid("bcc18b79-ba16-442f-80c4-8a59c30c463b")]
 [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IShellItemImageFactory
+internal interface IShellItemImageFactory
 {
     [PreserveSig()]
     HResult GetImage(
     [In(), MarshalAs(UnmanagedType.Struct)] CoreNativeMethods.Size size,
-    [In()] ShellNativeMethods.SIIGBF flags,
+    [In()] ShellNativeMethods.ShellItemImageGetImageBitmapTypes flags,
     [Out()] out IntPtr phbm);
 }
 
 [ComImport(),
 Guid(ShellIidGuid.IThumbnailCache),
 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IThumbnailCache
+internal interface IThumbnailCache
 {
     void GetThumbnail([In()] IShellItem pShellItem,
     [In()] uint cxyRequestedThumbSize,
@@ -317,7 +317,7 @@ interface IThumbnailCache
 [ComImport(),
 Guid(ShellIidGuid.ISharedBitmap),
 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface ISharedBitmap
+internal interface ISharedBitmap
 {
     void GetSharedBitmap([Out()] out IntPtr phbm);
     void GetSize([Out()] out CoreNativeMethods.Size pSize);
@@ -745,7 +745,7 @@ internal class SearchFolderItemFactoryCoClass
 [ComImport(),
 Guid(ShellIidGuid.IQuerySolution),
 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-interface IQuerySolution : IConditionFactory
+internal interface IQuerySolution : IConditionFactory
 {
     [PreserveSig()]
     new HResult MakeNot([In()] ICondition pcSub, [In()] bool fSimplify, [Out()] out ICondition ppcResult);

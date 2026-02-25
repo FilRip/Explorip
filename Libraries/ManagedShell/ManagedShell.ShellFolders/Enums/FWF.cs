@@ -3,7 +3,7 @@
 namespace ManagedShell.ShellFolders.Enums;
 
 [Flags()]
-public enum EFolder : uint
+public enum FolderWindowAttribs : uint
 {
     FWF_NONE = 0,
     FWF_AUTOARRANGE = 0x1,

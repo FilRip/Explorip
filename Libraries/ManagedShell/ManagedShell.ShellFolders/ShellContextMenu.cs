@@ -103,7 +103,7 @@ public abstract class ShellContextMenu : NativeWindow
 
         iContextMenu.GetCommandString(
             idcmd,
-            (executeString ? GCS.VERBA : GCS.HELPTEXTA),
+            (executeString ? GetCommandStrings.VERBA : GetCommandStrings.HELPTEXTA),
             0,
             bytes,
             256);
@@ -134,7 +134,7 @@ public abstract class ShellContextMenu : NativeWindow
 
         iContextMenu.GetCommandString(
             idcmd,
-            (executeString ? GCS.VERBW : GCS.HELPTEXTW),
+            (executeString ? GetCommandStrings.VERBW : GetCommandStrings.HELPTEXTW),
             0,
             bytes,
             256);
@@ -163,9 +163,9 @@ public abstract class ShellContextMenu : NativeWindow
             cbSize = Interop.cbInvokeCommand,
             lpVerb = (IntPtr)cmd,
             lpVerbW = (IntPtr)cmd,
-            fMask = CMIC.ASYNCOK | CMIC.FLAG_LOG_USAGE | CMIC.UNICODE | CMIC.PTINVOKE |
-            ((Control.ModifierKeys & Keys.Control) != 0 ? CMIC.CONTROL_DOWN : 0) |
-            ((Control.ModifierKeys & Keys.Shift) != 0 ? CMIC.SHIFT_DOWN : 0),
+            fMask = ContextMenuInfoCommands.ASYNCOK | ContextMenuInfoCommands.FLAG_LOG_USAGE | ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
+            ((Control.ModifierKeys & Keys.Control) != 0 ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
+            ((Control.ModifierKeys & Keys.Shift) != 0 ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
             ptInvoke = new NativeMethods.Point(ptInvoke.X, ptInvoke.Y),
             nShow = NativeMethods.WindowShowStyle.ShowNormal
         };
@@ -184,8 +184,8 @@ public abstract class ShellContextMenu : NativeWindow
     {
         if (iContextMenu != null &&
             m.Msg == (int)NativeMethods.WM.MENUSELECT &&
-            ((int)NativeMethods.HiWord(m.WParam) & (int)MFT.SEPARATOR) == 0 &&
-            ((int)NativeMethods.HiWord(m.WParam) & (int)MFT.POPUP) == 0)
+            ((int)NativeMethods.HiWord(m.WParam) & (int)MenuFlagsTypes.SEPARATOR) == 0 &&
+            ((int)NativeMethods.HiWord(m.WParam) & (int)MenuFlagsTypes.POPUP) == 0)
         {
             _ = GetCommandString(
                 iContextMenu,

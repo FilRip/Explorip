@@ -3,7 +3,7 @@
 namespace ManagedShell.ShellFolders.Enums;
 
 [Flags()]
-public enum STGM
+public enum GetViewStateStreamModes
 {
     /// <summary>
     /// Indicates that the object is read-only, meaning that modifications cannot be made. For example, if a stream object is opened with

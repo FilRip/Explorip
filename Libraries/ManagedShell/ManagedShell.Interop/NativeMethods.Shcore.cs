@@ -5,7 +5,7 @@ namespace ManagedShell.Interop;
 
 public partial class NativeMethods
 {
-    public enum DPI_TYPE
+    public enum DpiType
     {
         MDT_EFFECTIVE_DPI = 0,
         MDT_ANGULAR_DPI = 1,
@@ -13,5 +13,5 @@ public partial class NativeMethods
     }
 
     [DllImport("shcore.dll")]
-    internal static extern int GetDpiForMonitor(IntPtr hwndMoniteur, DPI_TYPE dpiType, out uint x, out uint y);
+    internal static extern int GetDpiForMonitor(IntPtr hwndMoniteur, DpiType dpiType, out uint x, out uint y);
 }

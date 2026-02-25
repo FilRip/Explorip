@@ -11,7 +11,7 @@ namespace ManagedShell.ShellFolders.Structs;
 public struct CmInvokeCommandInfoEx
 {
     public int cbSize;
-    public CMIC fMask;
+    public ContextMenuInfoCommands fMask;
     public IntPtr hwnd;
     public IntPtr lpVerb;
     [MarshalAs(UnmanagedType.LPStr)]

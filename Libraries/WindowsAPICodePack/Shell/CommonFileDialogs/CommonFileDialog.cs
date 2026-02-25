@@ -853,30 +853,30 @@ public abstract class CommonFileDialog : IDialogControlHost, IDisposable
         }
         else if (propertyName == "Visible" && control is CommonFileDialogControl dialogControl)
         {
-            customize.GetControlState(control.Id, out ShellNativeMethods.ControlState state);
+            customize.GetControlState(control.Id, out ShellNativeMethods.ControlStates state);
 
             if (dialogControl.Visible)
             {
-                state |= ShellNativeMethods.ControlState.Visible;
+                state |= ShellNativeMethods.ControlStates.Visible;
             }
             else if (!dialogControl.Visible)
             {
-                state &= ~ShellNativeMethods.ControlState.Visible;
+                state &= ~ShellNativeMethods.ControlStates.Visible;
             }
 
             customize.SetControlState(control.Id, state);
         }
         else if (propertyName == "Enabled" && (dialogControl = control as CommonFileDialogControl) != null)
         {
-            customize.GetControlState(control.Id, out ShellNativeMethods.ControlState state);
+            customize.GetControlState(control.Id, out ShellNativeMethods.ControlStates state);
 
             if (dialogControl.Enabled)
             {
-                state |= ShellNativeMethods.ControlState.Enable;
+                state |= ShellNativeMethods.ControlStates.Enable;
             }
             else if (!dialogControl.Enabled)
             {
-                state &= ~ShellNativeMethods.ControlState.Enable;
+                state &= ~ShellNativeMethods.ControlStates.Enable;
             }
 
             customize.SetControlState(control.Id, state);

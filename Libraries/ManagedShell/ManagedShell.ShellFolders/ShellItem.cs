@@ -37,7 +37,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
     {
         get
         {
-            _isFileSystem ??= Attributes.HasFlag(SFGAO.FILESYSTEM);
+            _isFileSystem ??= Attributes.HasFlag(ShellFolderGetAttributeObjects.FILESYSTEM);
 
             return (bool)_isFileSystem;
         }
@@ -49,7 +49,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
     {
         get
         {
-            _isNavigableFolder ??= Attributes.HasFlag(SFGAO.FOLDER);
+            _isNavigableFolder ??= Attributes.HasFlag(ShellFolderGetAttributeObjects.FOLDER);
 
             return (bool)_isNavigableFolder;
         }
@@ -61,7 +61,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
     {
         get
         {
-            _isFolder ??= Attributes.HasFlag(SFGAO.FOLDER) && !Attributes.HasFlag(SFGAO.STREAM);
+            _isFolder ??= Attributes.HasFlag(ShellFolderGetAttributeObjects.FOLDER) && !Attributes.HasFlag(ShellFolderGetAttributeObjects.STREAM);
 
             return (bool)_isFolder;
         }
@@ -119,7 +119,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
     {
         get
         {
-            _path ??= GetDisplayName(SIGDN.DESKTOPABSOLUTEPARSING);
+            _path ??= GetDisplayName(ShellItemGetDisplayName.DESKTOPABSOLUTEPARSING);
 
             return _path;
         }
@@ -131,7 +131,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
     {
         get
         {
-            _fileName ??= GetDisplayName(SIGDN.PARENTRELATIVEPARSING);
+            _fileName ??= GetDisplayName(ShellItemGetDisplayName.PARENTRELATIVEPARSING);
 
             return _fileName;
         }
@@ -143,15 +143,15 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
     {
         get
         {
-            _displayName ??= GetDisplayName(SIGDN.NORMALDISPLAY);
+            _displayName ??= GetDisplayName(ShellItemGetDisplayName.NORMALDISPLAY);
 
             return _displayName;
         }
     }
 
-    private SFGAO _attributes = 0;
+    private ShellFolderGetAttributeObjects _attributes = 0;
 
-    public SFGAO Attributes
+    public ShellFolderGetAttributeObjects Attributes
     {
         get
         {
@@ -494,9 +494,9 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
         return pidl;
     }
 
-    private SFGAO GetAttributes()
+    private ShellFolderGetAttributeObjects GetAttributes()
     {
-        if (_shellItem?.GetAttributes(SFGAO.FILESYSTEM | SFGAO.FOLDER | SFGAO.HIDDEN | SFGAO.STREAM, out SFGAO attrs) !=
+        if (_shellItem?.GetAttributes(ShellFolderGetAttributeObjects.FILESYSTEM | ShellFolderGetAttributeObjects.FOLDER | ShellFolderGetAttributeObjects.HIDDEN | ShellFolderGetAttributeObjects.STREAM, out ShellFolderGetAttributeObjects attrs) !=
             NativeMethods.S_OK)
         {
             attrs = 0;
@@ -505,7 +505,7 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
         return attrs;
     }
 
-    private string GetDisplayName(SIGDN purpose)
+    private string GetDisplayName(ShellItemGetDisplayName purpose)
     {
         IntPtr hString = IntPtr.Zero;
         string name = string.Empty;
@@ -545,18 +545,16 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                 int iconPoints = IconHelper.GetSize(size);
                 Size imageSize = new() { cx = (int)(iconPoints * DpiHelper.DpiScale), cy = (int)(iconPoints * DpiHelper.DpiScale) };
 
-                SIIGBF flags = 0;
+                ShellItemImageGetBitmaps flags = 0;
 
                 if (size == IconSize.Small)
                 {
                     // for 16pt icons, thumbnails are too small
-                    flags = SIIGBF.ICONONLY;
+                    flags = ShellItemImageGetBitmaps.ICONONLY;
                 }
 
                 if (imageFactory.GetImage(imageSize, flags, out IntPtr hBitmap) == NativeMethods.S_OK && hBitmap != IntPtr.Zero)
-                {
                     icon = IconImageConverter.GetImageFromHBitmap(hBitmap);
-                }
             }
             catch (Exception e)
             {

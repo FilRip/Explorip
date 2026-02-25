@@ -3,7 +3,7 @@
 namespace ManagedShell.ShellFolders.Enums;
 
 [Flags()]
-public enum TBSTATE : byte
+public enum TbStates : byte
 {
     /// <summary>The button has the TBSTYLE_CHECK style and is being clicked.</summary>
     TBSTATE_CHECKED = 0x01,
