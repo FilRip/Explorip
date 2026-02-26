@@ -36,7 +36,7 @@ public partial class ExploripDesktop : Window
     {
         InitializeComponent();
         AssociateScreen = screen;
-        DataContext = new ExploripDesktopViewModel(this);
+        base.DataContext = new ExploripDesktopViewModel(this);
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
         {
             WindowsSettings.UseImmersiveDarkMode(GetHandle(), true);
@@ -54,16 +54,16 @@ public partial class ExploripDesktop : Window
         MainGrid.ColumnDefinitions.Clear();
         MainGrid.RowDefinitions.Clear();
 
-        MyDataContext.NbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(MyDesktopConfig.ItemSizeX * AssociateScreen.ScaleFactor);
-        MyDataContext.NbRows = (int)AssociateScreen.WorkingArea.Height / (int)(MyDesktopConfig.ItemSizeY * AssociateScreen.ScaleFactor);
+        DataContext.NbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(MyDesktopConfig.ItemSizeX * AssociateScreen.ScaleFactor);
+        DataContext.NbRows = (int)AssociateScreen.WorkingArea.Height / (int)(MyDesktopConfig.ItemSizeY * AssociateScreen.ScaleFactor);
 
-        for (int i = 0; i < MyDataContext.NbColumns; i++)
+        for (int i = 0; i < DataContext.NbColumns; i++)
             MainGrid.ColumnDefinitions.Add(new ColumnDefinition()
             {
                 Width = new GridLength(MyDesktopConfig.ItemSizeX, GridUnitType.Pixel),
             });
 
-        for (int i = 0; i < MyDataContext.NbRows; i++)
+        for (int i = 0; i < DataContext.NbRows; i++)
             MainGrid.RowDefinitions.Add(new RowDefinition()
             {
                 Height = new GridLength(MyDesktopConfig.ItemSizeY, GridUnitType.Pixel),
@@ -77,11 +77,11 @@ public partial class ExploripDesktop : Window
         while (!findEmptyPlace)
         {
             nbRow++;
-            if (nbRow == MyDataContext.NbRows)
+            if (nbRow == DataContext.NbRows)
             {
                 nbRow = 0;
                 nbColumn++;
-                if (nbColumn == MyDataContext.NbColumns)
+                if (nbColumn == DataContext.NbColumns)
                     break;
             }
             findEmptyPlace = !MainGrid.Children.OfType<OneDesktopItem>().Any(c => Grid.GetRow(c) == nbRow && Grid.GetColumn(c) == nbColumn);
@@ -90,7 +90,7 @@ public partial class ExploripDesktop : Window
         {
             if (!MainGrid.Children.Contains(item))
                 MainGrid.Children.Add(item);
-            (int, int) position = MyDesktopConfig.GetItemPosition(item.MyDataContext.Name);
+            (int, int) position = MyDesktopConfig.GetItemPosition(item.DataContext.Name);
             if (position.Item1 >= 0 && position.Item2 >= 0)
             {
                 nbColumn = position.Item1;
@@ -107,9 +107,10 @@ public partial class ExploripDesktop : Window
         get { return AssociateScreen.DisplayNumber; }
     }
 
-    internal ExploripDesktopViewModel MyDataContext
+    internal new ExploripDesktopViewModel DataContext
     {
-        get { return (ExploripDesktopViewModel)DataContext; }
+        get { return (ExploripDesktopViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     internal IntPtr GetHandle()
@@ -146,7 +147,7 @@ public partial class ExploripDesktop : Window
             (msg == (int)NativeMethods.WM.DPICHANGED))
         {
             RefreshGrid();
-            foreach (OneDesktopItem item in MyDataContext.ListItems())
+            foreach (OneDesktopItem item in DataContext.ListItems())
                 AddItem(item);
         }
 
@@ -160,12 +161,12 @@ public partial class ExploripDesktop : Window
         this.SetWindowPosition((int)AssociateScreen.WorkingArea.X, (int)AssociateScreen.WorkingArea.Y, (int)AssociateScreen.WorkingArea.Width, (int)AssociateScreen.WorkingArea.Height);
         WindowHelper.HideWindowFromTasks(GetHandle());
         WindowHelper.ShowWindowDesktop(GetHandle());
-        MyDataContext.RefreshDesktopContent();
+        DataContext.RefreshDesktopContent();
     }
 
     private void Window_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
-        MyDataContext.ActionRightClickCommand.Execute(e);
+        DataContext.ActionRightClickCommand.Execute(e);
     }
 
     #region Rectangle selection
@@ -180,7 +181,7 @@ public partial class ExploripDesktop : Window
             return;
         if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             return;
-        MyDataContext.UnSelectAll();
+        DataContext.UnSelectAll();
     }
 
     private bool _selection;
@@ -195,9 +196,9 @@ public partial class ExploripDesktop : Window
         if (rect.Width == 0 && rect.Height == 0)
             return false;
         if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl))
-            MyDataContext.UnSelectAll();
-        foreach (OneDesktopItem item in MyDataContext.ListItems().Where(i => rect.IntersectsWith(i.GetAbsoluteRectangle())))
-            item.MyDataContext.IsSelected = true;
+            DataContext.UnSelectAll();
+        foreach (OneDesktopItem item in DataContext.ListItems().Where(i => rect.IntersectsWith(i.GetAbsoluteRectangle())))
+            item.DataContext.IsSelected = true;
         return true;
     }
 
@@ -218,7 +219,7 @@ public partial class ExploripDesktop : Window
             if (diffPos.X > 16 || diffPos.Y > 16)
             {
                 _isDragging = false;
-                MyDataContext.StartDrag((OneDesktopItemViewModel)((FrameworkElement)Mouse.DirectlyOver).DataContext);
+                DataContext.StartDrag((OneDesktopItemViewModel)((FrameworkElement)Mouse.DirectlyOver).DataContext);
             }
         }
     }
@@ -256,12 +257,12 @@ public partial class ExploripDesktop : Window
 
     private void Window_KeyDown(object sender, KeyEventArgs e)
     {
-        MyDataContext.ActionOnKeyCommand.Execute(e);
+        DataContext.ActionOnKeyCommand.Execute(e);
     }
 
     private void Window_Drop(object sender, DragEventArgs e)
     {
-        MyDataContext.Drop(e);
+        DataContext.Drop(e);
     }
 
     private void Window_DragOver(object sender, DragEventArgs e)
@@ -271,6 +272,6 @@ public partial class ExploripDesktop : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        MyDataContext?.Dispose();
+        DataContext?.Dispose();
     }
 }

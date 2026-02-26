@@ -22,19 +22,20 @@ public partial class ChoiceConflictFiles : Window
             WindowScreenHelper.SetCenterOnScreen(this, screen);
     }
 
-    public ChoiceOnCollisionViewModel MyDataContext
+    public new ChoiceOnCollisionViewModel DataContext
     {
-        get { return (ChoiceOnCollisionViewModel)DataContext; }
+        get { return (ChoiceOnCollisionViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     private void RadioButton_Click(object sender, RoutedEventArgs e)
     {
         if (e.Source == ReplaceAll)
-            MyDataContext.Choice = EChoiceFileOperation.ReplaceAll;
+            DataContext.Choice = EChoiceFileOperation.ReplaceAll;
         else if (e.Source == IgnoreAll)
-            MyDataContext.Choice = EChoiceFileOperation.KeepExisting;
+            DataContext.Choice = EChoiceFileOperation.KeepExisting;
         else if (e.Source == IgnoreSameDateSize)
-            MyDataContext.Choice = EChoiceFileOperation.KeepMostRecent;
+            DataContext.Choice = EChoiceFileOperation.KeepMostRecent;
     }
 
     private void ButtonOK_Click(object sender, RoutedEventArgs e)
@@ -44,7 +45,7 @@ public partial class ChoiceConflictFiles : Window
 
     private void ButtonAnnuler_Click(object sender, RoutedEventArgs e)
     {
-        MyDataContext.Choice = EChoiceFileOperation.None;
+        DataContext.Choice = EChoiceFileOperation.None;
         Close();
     }
 

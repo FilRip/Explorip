@@ -1,5 +1,7 @@
 ﻿using System.Windows.Controls;
 
+using Explorip.TaskBar.ViewModels;
+
 namespace Explorip.TaskBar.Controls;
 
 /// <summary>
@@ -10,5 +12,10 @@ public partial class SearchButton : UserControl
     public SearchButton()
     {
         InitializeComponent();
+    }
+
+    public new SearchButtonViewModel DataContext
+    {
+        get { return (SearchButtonViewModel)base.DataContext; }
     }
 }

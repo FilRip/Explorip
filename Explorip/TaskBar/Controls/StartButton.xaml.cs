@@ -18,9 +18,9 @@ public partial class StartButton : System.Windows.Controls.UserControl
         set { SetValue(StartMenuMonitorProperty, value); }
     }
 
-    public StartButtonViewModel MyDataContext
+    public new StartButtonViewModel DataContext
     {
-        get { return (StartButtonViewModel)DataContext; }
+        get { return (StartButtonViewModel)base.DataContext; }
     }
 
     public StartButton()
@@ -32,15 +32,15 @@ public partial class StartButton : System.Windows.Controls.UserControl
     {
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
-        MyDataContext.ParentControl = this;
-        MyDataContext.Init();
-        StartMenuMonitor.StartMenuVisibilityChanged += MyDataContext.AppVisibilityHelper_StartMenuVisibilityChanged;
+        DataContext.ParentControl = this;
+        DataContext.Init();
+        StartMenuMonitor.StartMenuVisibilityChanged += DataContext.AppVisibilityHelper_StartMenuVisibilityChanged;
     }
 
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)
     {
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
-        StartMenuMonitor.StartMenuVisibilityChanged -= MyDataContext.AppVisibilityHelper_StartMenuVisibilityChanged;
+        StartMenuMonitor.StartMenuVisibilityChanged -= DataContext.AppVisibilityHelper_StartMenuVisibilityChanged;
     }
 }

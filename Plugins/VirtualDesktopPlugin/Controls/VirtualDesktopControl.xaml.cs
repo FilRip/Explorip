@@ -14,8 +14,9 @@ public partial class VirtualDesktopControl : UserControl
         InitializeComponent();
     }
 
-    public VirtualDesktopControlViewModel MyDataContext
+    public new VirtualDesktopControlViewModel DataContext
     {
-        get { return (VirtualDesktopControlViewModel)DataContext; }
+        get { return (VirtualDesktopControlViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 }

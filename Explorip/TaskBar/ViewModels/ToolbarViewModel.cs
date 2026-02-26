@@ -113,6 +113,9 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         if (Folder != null)
         {
             Folder.Files?.CollectionChanged -= Files_CollectionChanged;
+            if (Folder.Files != null)
+                foreach (ShellFile sf in Folder.Files)
+                    sf.Dispose();
             Folder.Dispose();
         }
         if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)) && ParentTaskbar != null)
@@ -130,6 +133,8 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     [RelayCommand()]
     public void RefreshFolder()
     {
+        ToolbarItems = null;
+        SetupFolder(Path);
         Files_CollectionChanged(null, null);
     }
 
@@ -139,7 +144,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         {
             _taskRefresh = new Task(async () =>
             {
-                await Task.Delay(500);
+                await Task.Delay(Folder == null ? 500 : 0);
                 SetItemsSource();
             });
             _taskRefresh.Start();

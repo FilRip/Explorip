@@ -63,7 +63,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public static void RebuildListWindows()
     {
-        ((MyTaskbarApp)Application.Current).MainTaskbar.MyTaskList.MyDataContext.FirstRefresh();
+        ((MyTaskbarApp)Application.Current).MainTaskbar.MyTaskList.DataContext.FirstRefresh();
     }
 
     public static void RefreshAllCollectionView(object sender, EventArgs e)
@@ -73,7 +73,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             function = rl;
         Application.Current.Dispatcher.Invoke(() =>
         {
-            foreach (TaskListViewModel tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList.MyDataContext))
+            foreach (TaskListViewModel tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList.DataContext))
             {
                 if (function.HasFlag(ERefreshList.Rebuild))
                     tl.RebuildCollectionView();
@@ -207,7 +207,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void UpdateMaxWidth()
     {
-        if (!ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowTitleApplicationWindow || !TaskbarParent.MyDataContext.TaskbarVisible)
+        if (!ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowTitleApplicationWindow || !TaskbarParent.DataContext.TaskbarVisible)
             return;
         double currentWidth = TaskbarParent.MyTaskList.TasksList.Items.Count * (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).MaxWidthTitleApplicationWindow + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).SpaceBetweenTaskButton);
         double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20;

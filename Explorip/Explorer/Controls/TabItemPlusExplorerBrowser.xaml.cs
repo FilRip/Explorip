@@ -13,7 +13,7 @@ public partial class TabItemPlusExplorerBrowser : TabItem
         InitializeComponent();
         HeaderWithCloseButton closableTabHeader = new();
         Header = closableTabHeader;
-        MyHeader.MyDataContext.PlusButton = true;
+        MyHeader.DataContext.PlusButton = true;
         closableTabHeader.lblTitle.SizeChanged += TabTitle_SizeChanged;
         MyHeader.lblTitle.Content = "";
     }

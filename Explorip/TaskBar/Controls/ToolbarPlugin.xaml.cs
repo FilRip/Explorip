@@ -4,32 +4,32 @@ using Explorip.TaskBar.ViewModels;
 
 using ExploripPlugins;
 
-namespace Explorip.TaskBar.Controls
+namespace Explorip.TaskBar.Controls;
+
+/// <summary>
+/// Logique d'interaction pour ToolbarPlugin.xaml
+/// </summary>
+public partial class ToolbarPlugin : BaseToolbar
 {
-    /// <summary>
-    /// Logique d'interaction pour ToolbarPlugin.xaml
-    /// </summary>
-    public partial class ToolbarPlugin : BaseToolbar
+    public ToolbarPlugin()
     {
-        public ToolbarPlugin()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public ToolbarPluginViewModel MyDataContext
-        {
-            get { return (ToolbarPluginViewModel)DataContext; }
-        }
+    public new ToolbarPluginViewModel DataContext
+    {
+        get { return (ToolbarPluginViewModel)base.DataContext; }
+        set { base.DataContext = value; }
+    }
 
-        public IExploripToolbar PluginLinked { get; set; }
+    public IExploripToolbar PluginLinked { get; set; }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (!_isLoaded || !_ignoreReload)
         {
-            if (!_isLoaded || !_ignoreReload)
-            {
-                _isLoaded = true;
-                MyDataContext.Init(this);
-            }
+            _isLoaded = true;
+            DataContext.Init(this);
         }
     }
 }

@@ -38,7 +38,7 @@ internal class VirtualDesktopPlugin : IExploripToolbar
 
     public void SetGlobalColors(System.Windows.Media.SolidColorBrush background, System.Windows.Media.SolidColorBrush foreground, System.Windows.Media.SolidColorBrush accent)
     {
-        ((VirtualDesktopControl)ExploripToolbar).MyDataContext.ChangeColor(background, foreground, accent);
+        ((VirtualDesktopControl)ExploripToolbar).DataContext.ChangeColor(background, foreground, accent);
     }
 
     public void UpdateTaskbar(int numScreen, double width, double height, System.Windows.Media.Brush backgroundColor, AppBarEdge edge)

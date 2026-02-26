@@ -16,25 +16,25 @@ public partial class OneDesktopItem : UserControl
         InitializeComponent();
     }
 
-    internal OneDesktopItemViewModel MyDataContext
+    internal new OneDesktopItemViewModel DataContext
     {
-        get { return (OneDesktopItemViewModel)DataContext; }
-        set { DataContext = value; }
+        get { return (OneDesktopItemViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     private void Button_MouseDoubleClick(object sender, MouseButtonEventArgs e)
     {
-        MyDataContext.ExecuteCommand.Execute(null);
+        DataContext.ExecuteCommand.Execute(null);
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        MyDataContext.SelectItCommand.Execute(null);
+        DataContext.SelectItCommand.Execute(null);
     }
 
     private void UserControl_KeyDown(object sender, KeyEventArgs e)
     {
-        if (e.Key == Key.F2 && MyDataContext.CurrentDesktop.ListSelectedItem().Length == 1)
-            MyDataContext.RenameCommand.Execute(null);
+        if (e.Key == Key.F2 && DataContext.CurrentDesktop.ListSelectedItem().Length == 1)
+            DataContext.RenameCommand.Execute(null);
     }
 }

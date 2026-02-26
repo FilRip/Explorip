@@ -29,7 +29,7 @@ public abstract partial class BaseToolbarViewModel : ObservableObject
     [RelayCommand()]
     private void MouseDown()
     {
-        if (!ParentTaskbar.MyDataContext.ResizeOn)
+        if (!ParentTaskbar.DataContext.ResizeOn)
             return;
 
         Grid myGrid = _parentControl.FindVisualParent<Grid>();

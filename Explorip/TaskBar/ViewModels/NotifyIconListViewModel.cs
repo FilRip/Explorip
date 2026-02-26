@@ -55,7 +55,7 @@ public partial class NotifyIconListViewModel : ObservableObject
         Application.Current.Dispatcher.BeginInvoke(() =>
         {
             foreach (Controls.Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
-                tb.MySystray.MyDataContext.RefreshCollectionView();
+                tb.MySystray.DataContext.RefreshCollectionView();
         }, DispatcherPriority.Background);
     }
 

@@ -3,28 +3,27 @@ using System.Windows.Controls;
 
 using Explorip.TaskBar.ViewModels;
 
-namespace Explorip.TaskBar.Controls
+namespace Explorip.TaskBar.Controls;
+
+/// <summary>
+/// Logique d'interaction pour SearchBar.xaml
+/// </summary>
+public partial class SearchZone : UserControl
 {
-    /// <summary>
-    /// Logique d'interaction pour SearchBar.xaml
-    /// </summary>
-    public partial class SearchZone : UserControl
+    public SearchZone()
     {
-        public SearchZone()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public SearchZoneViewModel MyDataContext
-        {
-            get { return (SearchZoneViewModel)DataContext; }
-        }
+    public new SearchZoneViewModel DataContext
+    {
+        get { return (SearchZoneViewModel)base.DataContext; }
+    }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
-                return;
-            MyDataContext.SetTaskbar((Taskbar)Window.GetWindow(this));
-        }
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+            return;
+        DataContext.SetTaskbar((Taskbar)Window.GetWindow(this));
     }
 }

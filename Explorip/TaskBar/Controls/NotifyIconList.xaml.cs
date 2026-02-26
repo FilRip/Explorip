@@ -35,9 +35,9 @@ public partial class NotifyIconList : UserControl
         });
     }
 
-    public NotifyIconListViewModel MyDataContext
+    public new NotifyIconListViewModel DataContext
     {
-        get { return (NotifyIconListViewModel)DataContext; }
+        get { return (NotifyIconListViewModel)base.DataContext; }
     }
 
     private void NotifyIconList_OnLoaded(object sender, RoutedEventArgs e)
@@ -50,8 +50,8 @@ public partial class NotifyIconList : UserControl
             if ((!_isLoaded || !_ignoreReload) && MyTaskbarApp.MyShellManager.NotificationArea != null)
             {
                 _isLoaded = true;
-                MyDataContext.Init(this);
-                MyDataContext.Resume();
+                DataContext.Init(this);
+                DataContext.Resume();
             }
         }
     }
@@ -63,8 +63,8 @@ public partial class NotifyIconList : UserControl
             if (_ignoreReload)
                 return;
 
-            MyDataContext.Unload();
-            MyDataContext.Pause();
+            DataContext.Unload();
+            DataContext.Pause();
             _isLoaded = false;
         }
     }

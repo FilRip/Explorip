@@ -22,9 +22,10 @@ public partial class HeaderWithCloseButton : UserControl
 
     #region Properties
 
-    public HeaderWithCloseButtonViewModel MyDataContext
+    public new HeaderWithCloseButtonViewModel DataContext
     {
-        get { return (HeaderWithCloseButtonViewModel)DataContext; }
+        get { return (HeaderWithCloseButtonViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     public TabExplorerBrowser MyTabControl
@@ -53,7 +54,7 @@ public partial class HeaderWithCloseButton : UserControl
 
     private void ButtonClose_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (MyDataContext.PlusButton)
+        if (DataContext.PlusButton)
             ButtonNewTab.Foreground = Brushes.Lime;
         else
             ButtonClose.Foreground = Brushes.Red;
@@ -61,7 +62,7 @@ public partial class HeaderWithCloseButton : UserControl
 
     private void ButtonClose_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (MyDataContext.PlusButton)
+        if (DataContext.PlusButton)
             ButtonNewTab.Foreground = Brushes.White;
         else
             ButtonClose.Foreground = Brushes.Black;
@@ -69,7 +70,7 @@ public partial class HeaderWithCloseButton : UserControl
 
     private void ButtonClose_Click(object sender, RoutedEventArgs e)
     {
-        if (MyDataContext.PlusButton)
+        if (DataContext.PlusButton)
         {
             MyTabControl.AddNewTab((ShellObject)KnownFolders.Desktop);
             e.Handled = true;

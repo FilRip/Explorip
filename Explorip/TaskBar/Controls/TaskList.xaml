@@ -25,12 +25,12 @@
                 <ItemContainerTemplate>
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding Path=MyDataContext.ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}" MaxWidth="{Binding Path=MyDataContext.TaskButtonLength, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
-                            <ColumnDefinition Width="{Binding Path=MyDataContext.ButtonRightMargin, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ColumnDefinition Width="{Binding Path=DataContext.ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}" MaxWidth="{Binding Path=DataContext.TaskButtonLength, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ColumnDefinition Width="{Binding Path=DataContext.ButtonRightMargin, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="{Binding Path=MyDataContext.ButtonHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
-                            <RowDefinition Height="{Binding Path=MyDataContext.ButtonBottomMargin, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <RowDefinition Height="{Binding Path=DataContext.ButtonHeight, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <RowDefinition Height="{Binding Path=DataContext.ButtonBottomMargin, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
                         </Grid.RowDefinitions>
                         <local:TaskButton/>
                     </Grid>

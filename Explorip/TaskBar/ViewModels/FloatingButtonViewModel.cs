@@ -42,7 +42,7 @@ public partial class FloatingButtonViewModel : ObservableObject
     [RelayCommand()]
     private void ExpandTaskbar()
     {
-        ParentTaskbar.MyDataContext.ExpandCollapseTaskbar(true.ToString());
+        ParentTaskbar.DataContext.ExpandCollapseTaskbar(true.ToString());
     }
 
     public void SetPos()

@@ -38,9 +38,10 @@ public partial class TabItemConsoleCommand : TabItemExplorip
         MyConsoleControl.Show();
     }
 
-    public TabItemConsoleCommandViewModel MyDataContext
+    public new TabItemConsoleCommandViewModel DataContext
     {
-        get { return (TabItemConsoleCommandViewModel)DataContext; }
+        get { return (TabItemConsoleCommandViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     protected override void Dispose(bool disposing)

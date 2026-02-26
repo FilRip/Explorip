@@ -31,7 +31,7 @@ public abstract class TabItemExplorip : TabItem, IDisposable
     /// </summary>
     protected void SetTitle(string newTitle)
     {
-        MyHeader?.MyDataContext?.Title = newTitle.Replace("_", "__");
+        MyHeader?.DataContext?.Title = newTitle.Replace("_", "__");
     }
 
     #region Events for selecting/deselecting

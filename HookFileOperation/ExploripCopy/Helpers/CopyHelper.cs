@@ -134,10 +134,10 @@ internal static class CopyHelper
                             {
                                 Owner = MainWindow.Instance,
                             };
-                            window.MyDataContext.ConflictFile = Path.GetFileName(destFile.FullName);
+                            window.DataContext.ConflictFile = Path.GetFileName(destFile.FullName);
                             window.ShowDialog();
-                            ChoiceOnCollision = window.MyDataContext.Choice;
-                            reset = !window.MyDataContext.DoSameForAllFiles;
+                            ChoiceOnCollision = window.DataContext.Choice;
+                            reset = !window.DataContext.DoSameForAllFiles;
                         });
                     }
                     switch (ChoiceOnCollision)

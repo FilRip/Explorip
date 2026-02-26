@@ -65,10 +65,7 @@ public partial class LanguageButtonViewModel : ObservableObject, IDisposable
             _window.Close();
         else
         {
-            _window = new LanguageKeyboardSelection()
-            {
-                DataContext = this,
-            };
+            _window = new LanguageKeyboardSelection(this);
             _window.Show();
         }
     }

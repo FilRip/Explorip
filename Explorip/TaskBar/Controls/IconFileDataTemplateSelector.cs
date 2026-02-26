@@ -10,7 +10,7 @@ public class IconFileDataTemplateSelector : DataTemplateSelector
     public override DataTemplate SelectTemplate(object item, DependencyObject container)
     {
         FrameworkElement element = container as FrameworkElement;
-        if (container.FindVisualParent<Toolbar>().MyDataContext.CurrentShowLargeIcon)
+        if (container.FindVisualParent<Toolbar>().DataContext.CurrentShowLargeIcon)
             return (DataTemplate)element.FindResource("LargeIconTemplate");
         else
             return (DataTemplate)element.FindResource("SmallIconTemplate");

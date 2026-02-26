@@ -17,15 +17,16 @@ public partial class TabItemRegedit : TabItemExplorip
 
     public TabItemRegedit()
     {
-        DataContext = new TabItemRegeditViewModel(this);
+        base.DataContext = new TabItemRegeditViewModel(this);
         InitializeComponent();
         InitializeExplorip();
         SetTitle(Constants.Localization.REGISTRY_EDITOR);
     }
 
-    public TabItemRegeditViewModel MyDataContext
+    public new TabItemRegeditViewModel DataContext
     {
-        get { return (TabItemRegeditViewModel)DataContext; }
+        get { return (TabItemRegeditViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -30,7 +30,7 @@ public static class HookRefreshLanguageLayout
         {
             foreach (Taskbar tb in myApp.ListAllTaskbar())
                 if (ConfigManager.GetTaskbarConfig(tb.NumScreen).ShowKeyboardLayout)
-                    tb.LanguageLayoutButton.MyDataContext.RefreshCurrentLayout();
+                    tb.LanguageLayoutButton.DataContext.RefreshCurrentLayout();
         }
         return NativeMethods.CallNextHookEx(IntPtr.Zero, code, wParam, ref lParam);
     }

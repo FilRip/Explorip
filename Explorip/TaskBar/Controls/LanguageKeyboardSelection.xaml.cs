@@ -8,47 +8,47 @@ using ExploripSharedCopy.Helpers;
 
 using ExploripSharedCopy.WinAPI;
 
-namespace Explorip.TaskBar.Controls
+namespace Explorip.TaskBar.Controls;
+
+/// <summary>
+/// Logique d'interaction pour LanguageKeyboardSelection.xaml
+/// </summary>
+public partial class LanguageKeyboardSelection : Window
 {
-    /// <summary>
-    /// Logique d'interaction pour LanguageKeyboardSelection.xaml
-    /// </summary>
-    public partial class LanguageKeyboardSelection : Window
+    public LanguageKeyboardSelection(LanguageButtonViewModel button)
     {
-        public LanguageKeyboardSelection()
+        InitializeComponent();
+        base.DataContext = button;
+        if (WindowsSettings.IsWindowsApplicationInDarkMode())
         {
-            InitializeComponent();
-            if (WindowsSettings.IsWindowsApplicationInDarkMode())
-            {
-                WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
-                Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
-            }
+            WindowsSettings.UseImmersiveDarkMode(new WindowInteropHelper(this).EnsureHandle(), true);
+            Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
+    }
 
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            if (IsVisible)
-                Close();
-        }
+    private void Window_Deactivated(object sender, EventArgs e)
+    {
+        if (IsVisible)
+            Close();
+    }
 
-        public LanguageButtonViewModel MyDataContext
-        {
-            get { return (LanguageButtonViewModel)DataContext; }
-        }
+    public new LanguageButtonViewModel DataContext
+    {
+        get { return (LanguageButtonViewModel)base.DataContext; }
+    }
 
-        private void Window_Activated(object sender, EventArgs e)
-        {
-            Top = MyDataContext.ParentTaskbar.Top - Height;
-            Left = MyDataContext.ParentTaskbar.Width - Width;
-        }
+    private void Window_Activated(object sender, EventArgs e)
+    {
+        Top = DataContext.ParentTaskbar.Top - Height;
+        Left = DataContext.ParentTaskbar.Width - Width;
+    }
 
-        private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        try
         {
-            try
-            {
-                MyDataContext.SelectedItem = (LanguageViewModel)e.AddedItems[0];
-            }
-            catch (Exception) { /* Ignore errors */ }
+            DataContext.SelectedItem = (LanguageViewModel)e.AddedItems[0];
         }
+        catch (Exception) { /* Ignore errors */ }
     }
 }

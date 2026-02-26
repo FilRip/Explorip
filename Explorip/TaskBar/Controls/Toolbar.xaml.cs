@@ -18,9 +18,10 @@ public partial class Toolbar : BaseToolbar
         InitializeComponent();
     }
 
-    public ToolbarViewModel MyDataContext
+    public new ToolbarViewModel DataContext
     {
-        get { return (ToolbarViewModel)DataContext; }
+        get { return (ToolbarViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     #region Events
@@ -33,7 +34,7 @@ public partial class Toolbar : BaseToolbar
         if (icon.DataContext is not ShellFile file || string.IsNullOrWhiteSpace(file.Path))
             return;
 
-        if (MyDataContext.InvokeContextMenu(file, false))
+        if (DataContext.InvokeContextMenu(file, false))
             e.Handled = true;
     }
 
@@ -46,16 +47,16 @@ public partial class Toolbar : BaseToolbar
 
         ((ToolbarBaseButton)sender).StopDrag();
         e.Handled = true;
-        MyDataContext.InvokeContextMenu(file, true);
+        DataContext.InvokeContextMenu(file, true);
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         if (!_isLoaded || !_ignoreReload)
         {
-            ShellLogger.Debug("OnLoaded on Toolbar " + MyDataContext.Id + " on screen : " + ((Taskbar)Window.GetWindow(this)).NumScreen.ToString());
+            ShellLogger.Debug("OnLoaded on Toolbar " + DataContext.Id + " on screen : " + ((Taskbar)Window.GetWindow(this)).NumScreen.ToString());
             _isLoaded = true;
-            MyDataContext.Init(this);
+            DataContext.Init(this);
         }
     }
 
@@ -66,8 +67,8 @@ public partial class Toolbar : BaseToolbar
         if (_ignoreReload)
             return;
 
-        ShellLogger.Debug("OnUnloaded on Toolbar " + MyDataContext.Id + " on screen : " + MyDataContext.ParentTaskbar.NumScreen.ToString());
+        ShellLogger.Debug("OnUnloaded on Toolbar " + DataContext.Id + " on screen : " + DataContext.ParentTaskbar.NumScreen.ToString());
         _isLoaded = false;
-        MyDataContext.UnloadFolder();
+        DataContext.UnloadFolder();
     }
 }

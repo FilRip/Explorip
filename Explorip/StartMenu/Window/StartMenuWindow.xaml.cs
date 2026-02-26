@@ -14,154 +14,154 @@ using ManagedShell.WindowsTasks;
 
 using WpfScreenHelper;
 
-namespace Explorip.StartMenu.Window
+namespace Explorip.StartMenu.Window;
+
+/// <summary>
+/// Logique d'interaction pour StartMenuWindow.xaml
+/// </summary>
+public partial class StartMenuWindow : System.Windows.Window
 {
-    /// <summary>
-    /// Logique d'interaction pour StartMenuWindow.xaml
-    /// </summary>
-    public partial class StartMenuWindow : System.Windows.Window
+    private IntPtr _keyboardHookPtr, _windowsStartMenu;
+
+    public StartMenuWindow()
     {
-        private IntPtr _keyboardHookPtr, _windowsStartMenu;
+        InitializeComponent();
 
-        public StartMenuWindow()
-        {
-            InitializeComponent();
+        DataContext.HideWindow = Hide;
+        DataContext.ShowWindow = Show;
 
-            MyDataContext.HideWindow = Hide;
-            MyDataContext.ShowWindow = Show;
+        HideWindowsStartMenu();
+        SetMyStartMenu(this);
+        HookWinKey();
+        Application.Current.Deactivated += Current_Deactivated;
+        if (ConfigManager.StartMenu.StartMenuBackground != null)
+            MyBorder.Background = ConfigManager.StartMenu.StartMenuBackground;
+        MyBorder.CornerRadius = ConfigManager.StartMenu.StartMenuCornerRadius;
+        if (MyStartMenuApp.MyShellManager == null)
+            MyTaskbarApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
+        else
+            MyStartMenuApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
 
-            HideWindowsStartMenu();
-            SetMyStartMenu(this);
-            HookWinKey();
-            Application.Current.Deactivated += Current_Deactivated;
-            if (ConfigManager.StartMenu.StartMenuBackground != null)
-                MyBorder.Background = ConfigManager.StartMenu.StartMenuBackground;
-            MyBorder.CornerRadius = ConfigManager.StartMenu.StartMenuCornerRadius;
-            if (MyStartMenuApp.MyShellManager == null)
-                MyTaskbarApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
-            else
-                MyStartMenuApp.MyShellManager.TasksService.WindowActivated += TasksService_WindowActivated;
+        // Cancel System menu
+        HwndSource.FromHwnd(new WindowInteropHelper(this).EnsureHandle()).AddHook(WndProc);
+    }
 
-            // Cancel System menu
-            HwndSource.FromHwnd(new WindowInteropHelper(this).EnsureHandle()).AddHook(WndProc);
-        }
+    public static StartMenuWindow MyStartMenu { get; private set; }
 
-        public static StartMenuWindow MyStartMenu { get; private set; }
+    private static void SetMyStartMenu(StartMenuWindow startMenuWindow)
+    {
+        MyStartMenu = startMenuWindow;
+    }
 
-        private static void SetMyStartMenu(StartMenuWindow startMenuWindow)
-        {
-            MyStartMenu = startMenuWindow;
-        }
+    public new StartMenuViewModel DataContext
+    {
+        get { return (StartMenuViewModel)base.DataContext; }
+        set { base.DataContext = value; }
+    }
 
-        public StartMenuViewModel MyDataContext
-        {
-            get { return (StartMenuViewModel)DataContext; }
-        }
+    #region Events
 
-        #region Events
+    private void ScrollViewer_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        ((ScrollViewer)sender).VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+    }
 
-        private void ScrollViewer_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            ((ScrollViewer)sender).VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-        }
+    private void ScrollViewer_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        ((ScrollViewer)sender).VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+    }
 
-        private void ScrollViewer_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            ((ScrollViewer)sender).VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
-        }
+    #endregion
 
-        #endregion
+    #region Hook Win key press
 
-        #region Hook Win key press
-
-        private void TasksService_WindowActivated(object sender, WindowEventArgs e)
-        {
-            if (IsVisible && e.Handle != IntPtr.Zero)
-            {
-                if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
-                    return;
-                NativeMethods.GetWindowThreadProcessId(e.Handle, out uint pid);
-                if (pid != Process.GetCurrentProcess().Id)
-                    Hide();
-            }
-        }
-
-        private void HookWinKey()
-        {
-            _keyboardHookPtr = NativeMethods.SetWindowsHookEx(NativeMethods.HookType.WH_KEYBOARD_LL, MyKeyboardHook, IntPtr.Zero, 0);
-        }
-
-        private static int _lastPressedKey;
-        private static Stopwatch _waitForOpen;
-
-        private void Current_Deactivated(object sender, EventArgs e)
+    private void TasksService_WindowActivated(object sender, WindowEventArgs e)
+    {
+        if (IsVisible && e.Handle != IntPtr.Zero)
         {
             if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
                 return;
-            MyDataContext.HideAllContextMenu();
-            Hide();
+            NativeMethods.GetWindowThreadProcessId(e.Handle, out uint pid);
+            if (pid != Process.GetCurrentProcess().Id)
+                Hide();
         }
+    }
 
-        private static int MyKeyboardHook(int code, int wParam, ref NativeMethods.KeyboardHookStruct lParam)
+    private void HookWinKey()
+    {
+        _keyboardHookPtr = NativeMethods.SetWindowsHookEx(NativeMethods.HookType.WH_KEYBOARD_LL, MyKeyboardHook, IntPtr.Zero, 0);
+    }
+
+    private static int _lastPressedKey;
+    private static Stopwatch _waitForOpen;
+
+    private void Current_Deactivated(object sender, EventArgs e)
+    {
+        if (_waitForOpen != null && _waitForOpen.ElapsedMilliseconds < 200)
+            return;
+        DataContext.HideAllContextMenu();
+        Hide();
+    }
+
+    private static int MyKeyboardHook(int code, int wParam, ref NativeMethods.KeyboardHookStruct lParam)
+    {
+        if (code >= 0 && wParam == (int)NativeMethods.WM.KEYDOWN)
         {
-            if (code >= 0 && wParam == (int)NativeMethods.WM.KEYDOWN)
-            {
-                _lastPressedKey = lParam.VkCode;
-            }
-            else if (code >= 0 && wParam == (int)NativeMethods.WM.KEYUP &&
-                     _lastPressedKey == lParam.VkCode && (lParam.VkCode == (int)NativeMethods.VK.LWIN || lParam.VkCode == (int)NativeMethods.VK.RWIN))
-            {
-                if (MyStartMenu.IsVisible)
-                    MyStartMenu.Hide();
-                else
-                {
-                    _waitForOpen = Stopwatch.StartNew();
-                    MyStartMenu.Show();
-                    MyStartMenu.Activate();
-                }
-                return 0;
-            }
-            return NativeMethods.CallNextHookEx(IntPtr.Zero, code, wParam, ref lParam);
+            _lastPressedKey = lParam.VkCode;
         }
-
-        private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        else if (code >= 0 && wParam == (int)NativeMethods.WM.KEYUP &&
+                 _lastPressedKey == lParam.VkCode && (lParam.VkCode == (int)NativeMethods.VK.LWIN || lParam.VkCode == (int)NativeMethods.VK.RWIN))
         {
-            if (IsVisible)
-            {
-                Screen screen = MouseHelper.MouseScreen;
-                Left = screen.WpfWorkingArea.X;
-                Height = MyDataContext.Height;
-                Top = (int)(screen.WorkingArea.Bottom / screen.ScaleFactor) - Height;
-            }
-        }
-
-        private void HideWindowsStartMenu()
-        {
-            _windowsStartMenu = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
-            if (_windowsStartMenu != IntPtr.Zero)
-                NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.Hide);
-        }
-
-        #endregion
-
-        protected override void OnClosed(EventArgs e)
-        {
-            if (_keyboardHookPtr != IntPtr.Zero)
-                NativeMethods.UnhookWindowsHookEx(_keyboardHookPtr);
-            if (_windowsStartMenu != IntPtr.Zero)
-                NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.ShowNormal);
-            Application.Current.Deactivated -= Current_Deactivated;
-            if (MyStartMenuApp.MyShellManager == null)
-                MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
+            if (MyStartMenu.IsVisible)
+                MyStartMenu.Hide();
             else
-                MyStartMenuApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
+            {
+                _waitForOpen = Stopwatch.StartNew();
+                MyStartMenu.Show();
+                MyStartMenu.Activate();
+            }
+            return 0;
         }
+        return NativeMethods.CallNextHookEx(IntPtr.Zero, code, wParam, ref lParam);
+    }
 
-        private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (IsVisible)
         {
-            if (msg == (int)NativeMethods.WM.SYSCOMMAND)
-                handled = true;
-            return IntPtr.Zero;
+            Screen screen = MouseHelper.MouseScreen;
+            Left = screen.WpfWorkingArea.X;
+            Height = DataContext.Height;
+            Top = (int)(screen.WorkingArea.Bottom / screen.ScaleFactor) - Height;
         }
+    }
+
+    private void HideWindowsStartMenu()
+    {
+        _windowsStartMenu = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
+        if (_windowsStartMenu != IntPtr.Zero)
+            NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.Hide);
+    }
+
+    #endregion
+
+    protected override void OnClosed(EventArgs e)
+    {
+        if (_keyboardHookPtr != IntPtr.Zero)
+            NativeMethods.UnhookWindowsHookEx(_keyboardHookPtr);
+        if (_windowsStartMenu != IntPtr.Zero)
+            NativeMethods.ShowWindow(_windowsStartMenu, NativeMethods.WindowShowStyle.ShowNormal);
+        Application.Current.Deactivated -= Current_Deactivated;
+        if (MyStartMenuApp.MyShellManager == null)
+            MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
+        else
+            MyStartMenuApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
+    }
+
+    private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg == (int)NativeMethods.WM.SYSCOMMAND)
+            handled = true;
+        return IntPtr.Zero;
     }
 }

@@ -70,9 +70,10 @@ public class ToolbarBaseButton : UserControl
         Unloaded -= ToolbarBaseButton_Unloaded;
     }
 
-    public ShellFile MyDataContext
+    public new ShellFile DataContext
     {
-        get { return (ShellFile)DataContext; }
+        get { return (ShellFile)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     private void ToolbarBaseButton_MouseLeave(object sender, MouseEventArgs e)
@@ -93,7 +94,7 @@ public class ToolbarBaseButton : UserControl
             return;
         Application.Current.Dispatcher.BeginInvoke(() =>
         {
-            if (!_isFolder.HasValue && DataContext is ShellFile sf)
+            if (!_isFolder.HasValue && base.DataContext is ShellFile sf)
             {
                 _isFolder = false;
                 if (sf.IsFolder)
@@ -299,10 +300,10 @@ public class ToolbarBaseButton : UserControl
         if (e.Data is DataObject data && data.GetDataPresent(typeof(ShellFile)))
         {
             ShellFile shellFile = (ShellFile)data.GetData(typeof(ShellFile));
-            if (shellFile != DataContext)
+            if (shellFile != base.DataContext)
             {
-                (MyDataContext.Position, shellFile.Position) = (shellFile.Position, MyDataContext.Position);
-                this.FindVisualParent<Toolbar>().MyDataContext.RefreshMyCollectionView();
+                (DataContext.Position, shellFile.Position) = (shellFile.Position, DataContext.Position);
+                this.FindVisualParent<Toolbar>().DataContext.RefreshMyCollectionView();
             }
         }
     }
@@ -313,7 +314,7 @@ public class ToolbarBaseButton : UserControl
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                string toolbarPath = Path.GetDirectoryName(MyDataContext.Path);
+                string toolbarPath = Path.GetDirectoryName(DataContext.Path);
                 foreach (string file in data.GetFileDropList())
                 {
                     if (Path.GetExtension(file) == ".lnk")
@@ -334,7 +335,7 @@ public class ToolbarBaseButton : UserControl
                         sb.Append(' ');
                     sb.Append("\"" + file + "\"");
                 }
-                ShellHelper.StartProcess(MyDataContext.Path, sb.ToString());
+                ShellHelper.StartProcess(DataContext.Path, sb.ToString());
             }
         }
     }
@@ -345,9 +346,9 @@ public class ToolbarBaseButton : UserControl
         if (_startDrag)
         {
             DataObject data = new();
-            data.SetData(MyDataContext);
+            data.SetData(DataContext);
             DragGhostAdorner.StartDragGhost(this, e);
-            DragDrop.DoDragDrop(this, DataContext, DragDropEffects.Move);
+            DragDrop.DoDragDrop(this, base.DataContext, DragDropEffects.Move);
             DragGhostAdorner.StopDragGhost();
             _startDrag = true;
         }

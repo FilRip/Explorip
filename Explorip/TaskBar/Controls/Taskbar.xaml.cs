@@ -46,8 +46,10 @@ public partial class Taskbar : AppBarWindow
         _mainScreen = screen.Primary;
         _numScreen = screen.NumScreen;
 
-        DataContext = new TaskbarViewModel(this);
-        MyDataContext.TaskbarVisible = true;
+        base.DataContext = new TaskbarViewModel(this)
+        {
+            TaskbarVisible = true,
+        };
 
         StartButton.StartMenuMonitor = startMenuMonitor;
 
@@ -58,8 +60,8 @@ public partial class Taskbar : AppBarWindow
 
         SetSize();
 
-        MyDataContext.TabTipVisible = ConfigManager.GetTaskbarConfig(NumScreen).ShowTabTip;
-        MyDataContext.KeyboardLayoutVisible = ConfigManager.GetTaskbarConfig(NumScreen).ShowKeyboardLayout;
+        DataContext.TabTipVisible = ConfigManager.GetTaskbarConfig(NumScreen).ShowTabTip;
+        DataContext.KeyboardLayoutVisible = ConfigManager.GetTaskbarConfig(NumScreen).ShowKeyboardLayout;
 
         if (ConfigManager.GetTaskbarConfig(NumScreen).TaskbarBackground != null)
             Background = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarBackground;
@@ -121,9 +123,10 @@ public partial class Taskbar : AppBarWindow
 
     #region Properties
 
-    public TaskbarViewModel MyDataContext
+    public new TaskbarViewModel DataContext
     {
-        get { return (TaskbarViewModel)DataContext; }
+        get { return (TaskbarViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     public bool MainScreen
@@ -173,7 +176,7 @@ public partial class Taskbar : AppBarWindow
                 {
                     if (tb.NumScreen == currentScreen.DisplayNumber)
                     {
-                        tb.MyDataContext.ExpandCollapseTaskbar(!tb.MyDataContext.TaskbarVisible);
+                        tb.DataContext.ExpandCollapseTaskbar(!tb.DataContext.TaskbarVisible);
                         break;
                     }
                 }
@@ -241,7 +244,7 @@ public partial class Taskbar : AppBarWindow
 
     public override void SetPosition()
     {
-        if (!MyDataContext.TaskbarVisible)
+        if (!DataContext.TaskbarVisible)
             return;
 
         base.SetPosition();
@@ -303,7 +306,7 @@ public partial class Taskbar : AppBarWindow
             if (_mainScreen)
             {
                 _explorerHelper.HideExplorerTaskbar = false;
-                MySystray.MyDataContext.Unload();
+                MySystray.DataContext.Unload();
                 UnregisterHotKeyFloating();
             }
         }
@@ -315,7 +318,7 @@ public partial class Taskbar : AppBarWindow
             return;
 
         ShellLogger.Debug("OnLoaded on Taskbar " + NumScreen);
-        MyDataContext.ChangeEdge(AppBarEdge);
+        DataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
         {
             MyTaskbarApp.MyShellManager.Tasks.Initialize(new TaskCategoryProvider());
@@ -324,10 +327,10 @@ public partial class Taskbar : AppBarWindow
         }
         AddToolbars();
 
-        FloatingButton.MyDataContext.SetParentTaskbar(this);
+        FloatingButton.DataContext.SetParentTaskbar(this);
         // TODO : Start in floatinng mode, not working yet
         /*if (ConfigManager.GetTaskbarConfig(_numScreen).StartFloating)
-            MyDataContext.ExpandCollapseTaskbar(false.ToString());*/
+            DataContext.ExpandCollapseTaskbar(false.ToString());*/
     }
 
     private void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
@@ -360,16 +363,16 @@ public partial class Taskbar : AppBarWindow
         if (ResizeMode == ResizeMode.NoResize)
         {
             ResizeMode = ResizeMode.CanResizeWithGrip;
-            MyDataContext.ResizeOn = true;
+            DataContext.ResizeOn = true;
         }
         else
         {
             ResizeMode = ResizeMode.NoResize;
-            MyDataContext.ResizeOn = false;
+            DataContext.ResizeOn = false;
             DesiredHeight = Height;
             _appBarManager.SetWorkArea(Screen);
             UpdatePlugins();
-            foreach (ToolbarViewModel tb in ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.MyDataContext))
+            foreach (ToolbarViewModel tb in ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.DataContext))
             {
                 tb.RefreshMyCollectionView();
                 tb.UpdateInvisibleIcons();
@@ -386,7 +389,7 @@ public partial class Taskbar : AppBarWindow
 
     private void MenuToolbars_MouseEnter(object sender, MouseEventArgs e)
     {
-        MyDataContext.BuildToolbarsMenu();
+        DataContext.BuildToolbarsMenu();
     }
 
     private void AppBarWindow_Unloaded(object sender, RoutedEventArgs e)
@@ -399,7 +402,7 @@ public partial class Taskbar : AppBarWindow
 
     public void FloatingTaskbar()
     {
-        if (MyDataContext.TaskbarVisible)
+        if (DataContext.TaskbarVisible)
             RegisterAppBar();
         else
             UnregisterAppBar();

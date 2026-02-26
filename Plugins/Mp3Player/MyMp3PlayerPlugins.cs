@@ -37,11 +37,11 @@ public class MyMp3PlayerPlugins : IExploripToolbar
 
     public void SetGlobalColors(SolidColorBrush background, SolidColorBrush foreground, SolidColorBrush accent)
     {
-        ((MyMp3PlayerControl)ExploripToolbar).MyDataContext.SetColor(background, foreground);
+        ((MyMp3PlayerControl)ExploripToolbar).DataContext.SetColor(background, foreground);
     }
 
     public void UpdateTaskbar(int numScreen, double width, double height, Brush backgroundColor, AppBarEdge edge)
     {
-        ((MyMp3PlayerControl)ExploripToolbar).MyDataContext.ChangeTaskbarBackgroundColor(backgroundColor);
+        ((MyMp3PlayerControl)ExploripToolbar).DataContext.ChangeTaskbarBackgroundColor(backgroundColor);
     }
 }

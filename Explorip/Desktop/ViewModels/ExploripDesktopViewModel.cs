@@ -76,7 +76,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 vm.CurrentDesktop = this;
                 OneDesktopItem ctrl = new()
                 {
-                    MyDataContext = vm,
+                    DataContext = vm,
                 };
                 _parentDesktop.AddItem(ctrl);
             }
@@ -102,7 +102,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 item.GetIcon();
                 OneDesktopItem ctrl = new()
                 {
-                    MyDataContext = item,
+                    DataContext = item,
                 };
                 _parentDesktop.AddItem(ctrl);
             }
@@ -115,7 +115,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         {
             try
             {
-                OneDesktopItem item = ListItems().Find(i => i.MyDataContext.Name == e.Name);
+                OneDesktopItem item = ListItems().Find(i => i.DataContext.Name == e.Name);
                 if (item != null)
                     _parentDesktop.MainGrid.Children.Remove(item);
             }
@@ -129,7 +129,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         {
             try
             {
-                ListItems().First(item => item.MyDataContext.Name == e.OldName).MyDataContext.Name = e.Name;
+                ListItems().First(item => item.DataContext.Name == e.OldName).DataContext.Name = e.Name;
             }
             catch (Exception) { /* Ignore errors, file (old name) not found ? Must add ? */ }
         });
@@ -142,10 +142,10 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
             try
             {
                 OneDesktopItem item = new();
-                item.MyDataContext.Name = e.Name;
-                item.MyDataContext.FullPath = e.FullPath;
-                item.MyDataContext.GetIcon();
-                item.MyDataContext.CurrentDesktop = this;
+                item.DataContext.Name = e.Name;
+                item.DataContext.FullPath = e.FullPath;
+                item.DataContext.GetIcon();
+                item.DataContext.CurrentDesktop = this;
                 _parentDesktop.AddItem(item);
             }
             catch (Exception) { /* Unable to add item ??? So what to do */ }
@@ -161,7 +161,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     internal void UnSelectAll(bool select = false)
     {
         foreach (OneDesktopItem item in _parentDesktop.MainGrid.Children.OfType<OneDesktopItem>())
-            item.MyDataContext.IsSelected = select;
+            item.DataContext.IsSelected = select;
     }
 
     internal List<OneDesktopItem> ListItems()
@@ -171,7 +171,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 
     internal FileSystemInfo[] ListSelectedItem()
     {
-        return [.. ListItems().Where(i => i.MyDataContext.IsSelected && i.MyDataContext.FileSystemIO != null).Select(i => i.MyDataContext.FileSystemIO)];
+        return [.. ListItems().Where(i => i.DataContext.IsSelected && i.DataContext.FileSystemIO != null).Select(i => i.DataContext.FileSystemIO)];
     }
 
     [RelayCommand()]
@@ -195,8 +195,8 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
             FileSystemInfo[] listItems = ListSelectedItem();
             if (listItems.Length == 0)
             {
-                if (ListItems().Exists(i => i.MyDataContext.IsSelected))
-                    contextMenu.ShowContextMenu(ListItems()[0].MyDataContext.FullPath, position);
+                if (ListItems().Exists(i => i.DataContext.IsSelected))
+                    contextMenu.ShowContextMenu(ListItems()[0].DataContext.FullPath, position);
                 else
                     contextMenu.ShowContextMenu(new DirectoryInfo(DesktopPath), position);
             }
@@ -265,14 +265,14 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         if (e.Data is DataObject && e.Data.GetDataPresent("FileDrop"))
         {
             string[] itemsFromExplorer = (string[])(e.Data.GetData("FileDrop"));
-            string destination = (dest == null ? DesktopPath : dest.MyDataContext.FullPath);
+            string destination = (dest == null ? DesktopPath : dest.DataContext.FullPath);
             string repSource = Path.GetDirectoryName(itemsFromExplorer[0]);
             bool sameDrive = false;
             if (!string.IsNullOrWhiteSpace(repSource))
                 sameDrive = repSource[0] == DesktopPath[0];
             foreach (string fs in itemsFromExplorer)
             {
-                OneDesktopItem item = listItems.Find(i => i.MyDataContext.FullPath == fs);
+                OneDesktopItem item = listItems.Find(i => i.DataContext.FullPath == fs);
                 if (item != null)
                 {
                     if (item == dest)
@@ -296,15 +296,15 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                     }
                     else
                     {
-                        if (dest.MyDataContext.IsDirectory)
+                        if (dest.DataContext.IsDirectory)
                         {
                             FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
-                            fileOperation.MoveItem(item.MyDataContext.FullPath, dest.MyDataContext.FullPath, Path.GetFileName(item.MyDataContext.FullPath));
+                            fileOperation.MoveItem(item.DataContext.FullPath, dest.DataContext.FullPath, Path.GetFileName(item.DataContext.FullPath));
                             fileOperation.PerformOperations();
                             fileOperation.Dispose();
                         }
                         else
-                            dest.MyDataContext.ExecuteCommand.Execute("\"" + item.MyDataContext.FullPath + "\"");
+                            dest.DataContext.ExecuteCommand.Execute("\"" + item.DataContext.FullPath + "\"");
                     }
                     break;
                 }
@@ -319,7 +319,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                                 destination = shortcut.Target;
                             else
                             {
-                                dest.MyDataContext.ExecuteCommand.Execute("\"" + fs + "\"");
+                                dest.DataContext.ExecuteCommand.Execute("\"" + fs + "\"");
                                 continue;
                             }
                         }
@@ -376,7 +376,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 if (ListItems()?.Count > 0)
                     foreach (OneDesktopItem item in ListItems())
                     {
-                        item.MyDataContext?.Dispose();
+                        item.DataContext?.Dispose();
                         _parentDesktop.MainGrid.Children.Remove(item);
                     }
             }

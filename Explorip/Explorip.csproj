@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <ProjectGuid>{001DCDA7-F4C3-4BD6-A86C-C99B35A9798A}</ProjectGuid>
-	<ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-	<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net481</TargetFramework>
     <LangVersion>latest</LangVersion>
@@ -13,21 +13,21 @@
     <Copyright>Copyright © CoolBytes 2021-2025</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <UseWPF>true</UseWPF>
-	<UseWindowsForms>true</UseWindowsForms>
-	<Version>1.13.0.0</Version>
-	<StartupObject>Explorip.Program</StartupObject>
-	<ApplicationManifest>app.manifest</ApplicationManifest>
-	<ApplicationIcon>Resources/FileExplorerIcon.ico</ApplicationIcon>
-	<PlatformTarget>AnyCPU</PlatformTarget>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Version>1.13.0.0</Version>
+    <StartupObject>Explorip.Program</StartupObject>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Resources/FileExplorerIcon.ico</ApplicationIcon>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-	<Optimize>true</Optimize>
-    <DebugType>none</DebugType>
-	<CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <Optimize>true</Optimize>
+      <DebugType>none</DebugType>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Explorip.args.json" />
@@ -77,10 +77,10 @@
     <Resource Include="TaskBar\Resources\notification10.png" />
     <Resource Include="TaskBar\Resources\start10.png" />
     <Resource Include="TaskBar\Resources\taskman10.png" />
-	<Resource Include="TaskBar\Resources\tabtip.png" />
-	<Resource Include="TaskBar\Resources\widget11.png" />
-	<Resource Include="TaskBar\Resources\start11.png" />
-	<Resource Include="TaskBar\Resources\taskman11.png" />
+    <Resource Include="TaskBar\Resources\tabtip.png" />
+    <Resource Include="TaskBar\Resources\widget11.png" />
+    <Resource Include="TaskBar\Resources\start11.png" />
+    <Resource Include="TaskBar\Resources\taskman11.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />

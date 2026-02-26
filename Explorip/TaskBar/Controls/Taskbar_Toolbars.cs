@@ -54,7 +54,7 @@ public partial class Taskbar
             await System.Threading.Tasks.Task.Delay(1000);
             Application.Current.Dispatcher.Invoke(() =>
             {
-                ToolsBars.Children.OfType<Toolbar>().ToList().ForEach(tb => tb.MyDataContext.UpdateInvisibleIcons());
+                ToolsBars.Children.OfType<Toolbar>().ToList().ForEach(tb => tb.DataContext.UpdateInvisibleIcons());
             });
         });
     }
@@ -76,7 +76,7 @@ public partial class Taskbar
         else if (ToolsBars.Children.Count > 0)
             AddMissingGrid(ToolsBars.ColumnDefinitions.Count, ToolsBars.RowDefinitions.Count + 1, 0, 0);
         Toolbar newToolbar = new();
-        newToolbar.MyDataContext.Path = path;
+        newToolbar.DataContext.Path = path;
         if (maxWidth > 0)
             newToolbar.MaxWidth = maxWidth;
         Grid.SetRow(newToolbar, (gridPos.Item2 < 0 ? ToolsBars.RowDefinitions.Count - 1 : gridPos.Item2));
@@ -145,7 +145,7 @@ public partial class Taskbar
                 Width += width > 0 ? width : plugin.ExploripToolbar.ActualWidth;
                 DesiredWidth = width;
             }
-            ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(tp.MyDataContext.Id, true);
+            ConfigManager.GetTaskbarConfig(NumScreen).ToolbarVisible(tp.DataContext.Id, true);
         }
         _appBarManager.SetWorkArea(Screen);
         plugin.SetGlobalColors(ExploripSharedCopy.Constants.Colors.BackgroundColorBrush, ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, ExploripSharedCopy.Constants.Colors.AccentColorBrush);
@@ -182,9 +182,9 @@ public partial class Taskbar
             {
                 ConfigManager.ToolbarsPath = [.. ToolsBars.Children.OfType<BaseToolbar>().Select(tb => tb.BaseDataContext.Id)];
                 ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = DesiredHeight;
-                newTb.MyDataContext.ShowHideTitle();
-                newTb.MyDataContext.CurrentShowLargeIcon = true;
-                newTb.MyDataContext.ShowLargeIcon();
+                newTb.DataContext.ShowHideTitle();
+                newTb.DataContext.CurrentShowLargeIcon = true;
+                newTb.DataContext.ShowLargeIcon();
             }
         }
     }
@@ -196,7 +196,7 @@ public partial class Taskbar
         if (result?.VisualHit != null)
         {
             Toolbar toolbar = result.VisualHit.FindVisualParent<Toolbar>();
-            toolbar?.MyDataContext.ShowHideTitle();
+            toolbar?.DataContext.ShowHideTitle();
         }
     }
 
@@ -206,7 +206,7 @@ public partial class Taskbar
         if (result?.VisualHit != null)
         {
             Toolbar toolbar = result.VisualHit.FindVisualParent<Toolbar>();
-            toolbar?.MyDataContext.ShowLargeIcon();
+            toolbar?.DataContext.ShowLargeIcon();
         }
     }
 

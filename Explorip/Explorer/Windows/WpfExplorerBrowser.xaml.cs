@@ -110,15 +110,16 @@ public partial class WpfExplorerBrowser : Window
             _firstLeftTabWidth = ConfigManager.MyRegistryKey.OpenSubKey("LeftTab")?.ReadInteger("Width") ?? 0;
     }
 
-    public WpfExplorerBrowserViewModel MyDataContext
+    public new WpfExplorerBrowserViewModel DataContext
     {
-        get { return (WpfExplorerBrowserViewModel)DataContext; }
+        get { return (WpfExplorerBrowserViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        MyDataContext.SelectionLeft = false;
-        MyDataContext.SelectionRight = false;
+        DataContext.SelectionLeft = false;
+        DataContext.SelectionRight = false;
         StateChanged += Window_StateChanged;
         LocationChanged += Window_LocationChanged;
         SizeChanged += Window_SizeChanged;
@@ -324,7 +325,7 @@ public partial class WpfExplorerBrowser : Window
 
     private void Window_StateChanged(object sender, EventArgs e)
     {
-        MyDataContext.WindowMaximized = (WindowState == WindowState.Maximized);
+        DataContext.WindowMaximized = (WindowState == WindowState.Maximized);
         if (WindowState == WindowState.Minimized)
             return;
         ConfigManager.ExplorerWindowState = WindowState;

@@ -39,7 +39,7 @@ public class ComputerInfoToolbar : IExploripToolbar
 
     public void SetGlobalColors(SolidColorBrush background, SolidColorBrush foreground, SolidColorBrush accent)
     {
-        ((ComputerInfoControl)ExploripToolbar).MyDataContext.ChangeColor(background, foreground, accent);
+        ((ComputerInfoControl)ExploripToolbar).DataContext.ChangeColor(background, foreground, accent);
     }
 
     public void UpdateTaskbar(int numScreen, double width, double height, Brush backgroundColor, AppBarEdge edge)

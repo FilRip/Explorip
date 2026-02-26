@@ -2,26 +2,25 @@
 
 using Explorip.TaskBar.ViewModels;
 
-namespace Explorip.TaskBar.Controls
+namespace Explorip.TaskBar.Controls;
+
+/// <summary>
+/// Logique d'interaction pour LanguageButton.xaml
+/// </summary>
+public partial class LanguageButton : UserControl
 {
-    /// <summary>
-    /// Logique d'interaction pour LanguageButton.xaml
-    /// </summary>
-    public partial class LanguageButton : UserControl
+    public LanguageButton()
     {
-        public LanguageButton()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        public LanguageButtonViewModel MyDataContext
-        {
-            get { return (LanguageButtonViewModel)DataContext; }
-        }
+    public new LanguageButtonViewModel DataContext
+    {
+        get { return (LanguageButtonViewModel)base.DataContext; }
+    }
 
-        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            MyDataContext.ParentTaskbar = (Taskbar)System.Windows.Window.GetWindow(this);
-        }
+    private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        DataContext.ParentTaskbar = (Taskbar)System.Windows.Window.GetWindow(this);
     }
 }

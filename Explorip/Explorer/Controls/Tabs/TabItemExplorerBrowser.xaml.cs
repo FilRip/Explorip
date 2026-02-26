@@ -44,9 +44,10 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         CurrentPath.MouseDown += CurrentPath_MouseDown;
     }
 
-    public TabItemExplorerBrowserViewModel MyDataContext
+    public new TabItemExplorerBrowserViewModel DataContext
     {
-        get { return (TabItemExplorerBrowserViewModel)DataContext; }
+        get { return (TabItemExplorerBrowserViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     public ShellObject CurrentDirectory
@@ -69,9 +70,9 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     private void ExplorerBrowserControl_SelectionChanged(object sender, EventArgs e)
     {
         if (MyTabControl == ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).LeftTab)
-            ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).MyDataContext.SelectionLeft = ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0;
+            ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).DataContext.SelectionLeft = ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0;
         else
-            ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).MyDataContext.SelectionRight = ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0;
+            ((WpfExplorerBrowser)Window.GetWindow(MyTabControl)).DataContext.SelectionRight = ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0;
     }
 
     private void ExplorerBrowserControl_NavigationComplete(object sender, NavigationCompleteEventArgs e)
@@ -83,9 +84,9 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 if (e.NewLocation.Name.Contains(Constants.Localization.SEARCH_RESULT.Replace("{0}", "")))
                     return;
 
-                MyDataContext.ModeSearch = false;
+                DataContext.ModeSearch = false;
                 DisposeSearch();
-                MyDataContext.ModeEdit = false;
+                DataContext.ModeEdit = false;
                 SetTitle(e.NewLocation.Name);
 
                 string pathLink;
@@ -108,7 +109,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 CurrentPath.Inlines?.Clear();
                 if (splitPath)
                 {
-                    MyDataContext.EditPath = pathLink;
+                    DataContext.EditPath = pathLink;
                     StringBuilder partialPath = new();
                     foreach (string path in pathLink.Split([Path.DirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries))
                     {
@@ -131,8 +132,8 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                     CurrentPath.Inlines.Add(e.NewLocation.Name);
                 }
 
-                MyDataContext.AllowNavigatePrevious = ExplorerBrowser.NavigationLog.CanNavigateBackward;
-                MyDataContext.AllowNavigateNext = ExplorerBrowser.NavigationLog.CanNavigateForward;
+                DataContext.AllowNavigatePrevious = ExplorerBrowser.NavigationLog.CanNavigateBackward;
+                DataContext.AllowNavigateNext = ExplorerBrowser.NavigationLog.CanNavigateForward;
             }
         }
         catch (Exception)
@@ -177,20 +178,20 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     {
         if (e.Key == Key.Escape)
         {
-            if (MyDataContext.ShowSuggestions)
+            if (DataContext.ShowSuggestions)
             {
-                MyDataContext.ShowSuggestions = false;
+                DataContext.ShowSuggestions = false;
             }
             else
             {
-                MyDataContext.ModeEdit = false;
-                MyDataContext.EditPath = ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
+                DataContext.ModeEdit = false;
+                DataContext.EditPath = ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
                 ExplorerBrowser.SetFocus();
             }
         }
         else if (e.Key is Key.Enter or Key.Return)
         {
-            MyDataContext.ModeEdit = false;
+            DataContext.ModeEdit = false;
             try
             {
                 string nouvelEmplacement = Path.GetFullPath(Environment.ExpandEnvironmentVariables(EditPath.Text));
@@ -222,8 +223,8 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     private void CurrentPath_MouseDown(object sender, MouseButtonEventArgs e)
     {
-        MyDataContext.ModeEdit = true;
-        MyDataContext.ShowSuggestions = false;
+        DataContext.ModeEdit = true;
+        DataContext.ShowSuggestions = false;
         EditPath.ApplyTemplate();
         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
         {
@@ -236,7 +237,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     private void EditPath_LostFocus(object sender, RoutedEventArgs e)
     {
-        MyDataContext.ModeEdit = false;
+        DataContext.ModeEdit = false;
     }
 
     private void EditPath_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -286,10 +287,10 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     private void SearchButton_Click(object sender, RoutedEventArgs e)
     {
-        MyDataContext.ModeEdit = false;
-        MyDataContext.ModeSearch = !MyDataContext.ModeSearch;
+        DataContext.ModeEdit = false;
+        DataContext.ModeSearch = !DataContext.ModeSearch;
         SearchText.Text = "";
-        if (MyDataContext.ModeSearch)
+        if (DataContext.ModeSearch)
         {
             _searchDirectory = CurrentDirectory.ParsingName;
             SearchText.Focus();
@@ -302,7 +303,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     {
         if (e.Key == Key.Escape)
         {
-            MyDataContext.ModeSearch = false;
+            DataContext.ModeSearch = false;
             if (!string.IsNullOrWhiteSpace(_searchDirectory))
                 Navigation(_searchDirectory);
         }
@@ -329,6 +330,6 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     private void TabItemExplorip_Loaded(object sender, RoutedEventArgs e)
     {
-        MyHeader.MyDataContext.Title = _tempTitle;
+        MyHeader.DataContext.Title = _tempTitle;
     }
 }

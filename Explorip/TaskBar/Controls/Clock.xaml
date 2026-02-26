@@ -11,6 +11,7 @@
              Background="Transparent"
              Loaded="UserControl_Loaded"
              Unloaded="UserControl_Unloaded">
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="MouseDoubleClick">
             <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}" PassEventArgsToCommand="True"/>
@@ -19,9 +20,11 @@
             <i:InvokeCommandAction Command="{Binding MouseLeftButtonDownCommand}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    
     <UserControl.DataContext>
         <viewmodels:ClockViewModel/>
     </UserControl.DataContext>
+    
     <TextBlock Style="{DynamicResource Clock}"
                Text="{Binding ClockText}"
                ToolTip="{Binding ClockTip}"

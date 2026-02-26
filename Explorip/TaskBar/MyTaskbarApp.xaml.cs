@@ -138,7 +138,7 @@ public partial class MyTaskbarApp : Application
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
                     tb.Disable = false;
-                    tb.MySystray.MyDataContext.Resume();
+                    tb.MySystray.DataContext.Resume();
                     tb.RefreshAllInvisibleIcons();
                 }
                 ViewModels.TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);
@@ -156,7 +156,7 @@ public partial class MyTaskbarApp : Application
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
                     tb.Disable = true;
-                    tb.MySystray.MyDataContext.Pause();
+                    tb.MySystray.DataContext.Pause();
                 }
             });
         }

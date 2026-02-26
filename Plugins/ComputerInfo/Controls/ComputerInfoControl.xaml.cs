@@ -19,29 +19,30 @@ public partial class ComputerInfoControl : UserControl
         if ((e.Reason == SessionSwitchReason.ConsoleConnect ||
             e.Reason == SessionSwitchReason.RemoteConnect ||
             e.Reason == SessionSwitchReason.SessionLogon ||
-            e.Reason == SessionSwitchReason.SessionUnlock) && MyDataContext.IsPause)
+            e.Reason == SessionSwitchReason.SessionUnlock) && DataContext.IsPause)
         {
-            MyDataContext.Pause();
+            DataContext.Pause();
         }
         else
         {
-            MyDataContext.Dispose();
+            DataContext.Dispose();
         }
     }
 
-    public ComputerInfoViewModel MyDataContext
+    public new ComputerInfoViewModel DataContext
     {
-        get { return (ComputerInfoViewModel)DataContext; }
+        get { return (ComputerInfoViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
     {
-        if (MyDataContext.IsPause)
-            MyDataContext.Pause();
+        if (DataContext.IsPause)
+            DataContext.Pause();
     }
 
     private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
     {
-        MyDataContext.Dispose();
+        DataContext.Dispose();
     }
 }

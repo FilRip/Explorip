@@ -244,7 +244,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         win ??= new CustomColor();
         win.Show();
         win.Activate();
-        win.MyDataContext.ParentTaskbar = ParentTaskbar;
+        win.DataContext.ParentTaskbar = ParentTaskbar;
     }
 
     [RelayCommand()]
@@ -260,8 +260,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
             ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskButtonSize = 16;
             IsShowSmallIcon = true;
         }
-        ParentTaskbar.MyTaskList.MyDataContext.ChangeButtonSize();
-        ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
+        ParentTaskbar.MyTaskList.DataContext.ChangeButtonSize();
+        ParentTaskbar.MyTaskList.DataContext.ForceRefresh();
     }
 
     [RelayCommand()]
@@ -404,8 +404,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         else
         {
             TaskListViewModel.RefreshAllCollectionView(null, EventArgs.Empty);
-            ParentTaskbar.MyTaskList.MyDataContext.ChangeButtonSize();
-            ParentTaskbar.MyTaskList.MyDataContext.ForceRefresh();
+            ParentTaskbar.MyTaskList.DataContext.ChangeButtonSize();
+            ParentTaskbar.MyTaskList.DataContext.ForceRefresh();
         }
     }
 
@@ -514,8 +514,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     {
         if (sender is MenuItem mi && mi.Tag is string path)
         {
-            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
-            tb.MyDataContext.RefreshFolder();
+            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.DataContext.Id == path);
+            tb.DataContext.RefreshFolder();
         }
     }
 
@@ -560,8 +560,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         {
             mi.IsChecked = !mi.IsChecked;
             ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarShowTitle(path, mi.IsChecked);
-            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
-            tb.MyDataContext.ShowHideTitle();
+            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.DataContext.Id == path);
+            tb.DataContext.ShowHideTitle();
         }
     }
 
@@ -571,8 +571,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         {
             mi.IsChecked = !mi.IsChecked;
             ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(path, !mi.IsChecked);
-            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.MyDataContext.Id == path);
-            tb.MyDataContext.ShowLargeIcon();
+            Toolbar tb = ParentTaskbar.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.DataContext.Id == path);
+            tb.DataContext.ShowLargeIcon();
         }
     }
 
@@ -586,7 +586,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
             if (visible)
                 ParentTaskbar.Width = ParentTaskbar.Screen.Bounds.Width;
             else
-                ParentTaskbar.FloatingButton.MyDataContext.SetPos();
+                ParentTaskbar.FloatingButton.DataContext.SetPos();
         }
     }
 }

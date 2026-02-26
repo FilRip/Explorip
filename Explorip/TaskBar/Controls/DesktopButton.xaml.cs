@@ -5,30 +5,29 @@ using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
 
-namespace Explorip.TaskBar.Controls
+namespace Explorip.TaskBar.Controls;
+
+/// <summary>
+/// Logique d'interaction pour DesktopButton.xaml
+/// </summary>
+public partial class DesktopButton : UserControl
 {
-    /// <summary>
-    /// Logique d'interaction pour DesktopButton.xaml
-    /// </summary>
-    public partial class DesktopButton : UserControl
+    public DesktopButton()
     {
-        public DesktopButton()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        try
         {
-            try
-            {
-                MyDesktopButton.Width = ConfigManager.GetTaskbarConfig(((Taskbar)System.Windows.Window.GetWindow(this)).NumScreen).DesktopButtonWidth;
-            }
-            catch (Exception) { /* Ignore errors */ }
+            MyDesktopButton.Width = ConfigManager.GetTaskbarConfig(((Taskbar)System.Windows.Window.GetWindow(this)).NumScreen).DesktopButtonWidth;
         }
+        catch (Exception) { /* Ignore errors */ }
+    }
 
-        public DesktopButtonViewModel MyDataContext
-        {
-            get { return (DesktopButtonViewModel)DataContext; }
-        }
+    public new DesktopButtonViewModel DataContext
+    {
+        get { return (DesktopButtonViewModel)base.DataContext; }
     }
 }

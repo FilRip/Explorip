@@ -25,16 +25,16 @@ public partial class FloatingButton : UserControl
         InitializeComponent();
     }
 
-    public FloatingButtonViewModel MyDataContext
+    public new FloatingButtonViewModel DataContext
     {
-        get { return (FloatingButtonViewModel)DataContext; }
+        get { return (FloatingButtonViewModel)base.DataContext; }
     }
 
     public void SaveNewPos()
     {
         Application.Current.Dispatcher.BeginInvoke(() =>
         {
-            MyDataContext.NewYPos = MyDataContext.ParentTaskbar.Top;
+            DataContext.NewYPos = DataContext.ParentTaskbar.Top;
         }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
@@ -61,7 +61,7 @@ public partial class FloatingButton : UserControl
         {
             System.Drawing.Point pos = new();
             NativeMethods.GetCursorPos(ref pos);
-            Application.Current.Dispatcher.Invoke(() => { MyDataContext.ParentTaskbar.Top = (pos.Y / MyDataContext.ParentTaskbar.Screen.DpiScale) - offset.Y; });
+            Application.Current.Dispatcher.Invoke(() => { DataContext.ParentTaskbar.Top = (pos.Y / DataContext.ParentTaskbar.Screen.DpiScale) - offset.Y; });
             Thread.Sleep(10);
         }
         SaveNewPos();

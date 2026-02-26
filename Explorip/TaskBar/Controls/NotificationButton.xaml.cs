@@ -35,14 +35,15 @@ public partial class NotificationButton : UserControl
         });
     }
 
-    public NotificationButtonViewModel MyDataContext
+    public new NotificationButtonViewModel DataContext
     {
-        get { return (NotificationButtonViewModel)DataContext; }
+        get { return (NotificationButtonViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     private void NotificationArea_NotificationBalloonShown(object sender, ManagedShell.WindowsTray.NotificationBalloonEventArgs e)
     {
-        //MyDataContext.IncreaseNumberOfNotifications();
+        //DataContext.IncreaseNumberOfNotifications();
         ShellLogger.Debug($"NotificationArea Show NotificationBalloon for {e.Balloon.Title}");
 
         try

@@ -52,7 +52,7 @@ public partial class WindowHost : UserControl, IDisposable
         Application.Current.Dispatcher.Invoke(async () =>
         {
             TabItemWindowEmbedded myTab = this.FindControlParent<TabItemWindowEmbedded>();
-            while (!myTab.IsDisposed && !myTab.MyDataContext.IsDisposed && myTab.MyDataContext.Enabled)
+            while (!myTab.IsDisposed && !myTab.DataContext.IsDisposed && myTab.DataContext.Enabled)
             {
                 try
                 {

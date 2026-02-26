@@ -13,7 +13,6 @@ using ExploripCopy.Controls;
 using ExploripCopy.Helpers;
 using ExploripCopy.ViewModels;
 
-using ExploripSharedCopy.Properties;
 using ExploripSharedCopy.WinAPI;
 
 using ManagedShell.Interop;
@@ -216,7 +215,6 @@ public partial class MainWindow : Window
                 return;
             ExploripCopyConfig.SizeX = (int)ActualWidth;
             ExploripCopyConfig.SizeY = (int)ActualHeight;
-            Settings.Default.Save();
         });
     }
 
@@ -228,7 +226,6 @@ public partial class MainWindow : Window
                 return;
             ExploripCopyConfig.PosX = (int)Left;
             ExploripCopyConfig.PosY = (int)Top;
-            Settings.Default.Save();
         });
     }
 }

@@ -52,10 +52,10 @@ internal static class MoveSameDriveHelper
                     {
                         Owner = MainWindow.Instance,
                     };
-                    window.MyDataContext.ConflictFile = Path.GetFileName(destination);
+                    window.DataContext.ConflictFile = Path.GetFileName(destination);
                     window.ShowDialog();
-                    CopyHelper.ChoiceOnCollision = window.MyDataContext.Choice;
-                    reset = !window.MyDataContext.DoSameForAllFiles;
+                    CopyHelper.ChoiceOnCollision = window.DataContext.Choice;
+                    reset = !window.DataContext.DoSameForAllFiles;
                 });
             }
             switch (CopyHelper.ChoiceOnCollision)

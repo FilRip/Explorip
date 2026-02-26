@@ -16,23 +16,23 @@ public partial class Clock : UserControl
     public Clock()
     {
         InitializeComponent();
-        MyDataContext.SetDispatcher(Dispatcher);
+        DataContext.SetDispatcher(Dispatcher);
     }
 
-    private ClockViewModel MyDataContext
+    private new ClockViewModel DataContext
     {
-        get { return (ClockViewModel)DataContext; }
+        get { return (ClockViewModel)base.DataContext; }
     }
 
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().NumScreen).ShowClock)
-            MyDataContext.ShowClock();
+            DataContext.ShowClock();
     }
 
     private void UserControl_Unloaded(object sender, RoutedEventArgs e)
     {
         if (ConfigManager.GetTaskbarConfig(this.FindControlParent<Taskbar>().NumScreen).ShowClock)
-            MyDataContext.HideClock();
+            DataContext.HideClock();
     }
 }

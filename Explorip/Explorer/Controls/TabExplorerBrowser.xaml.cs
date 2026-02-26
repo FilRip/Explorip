@@ -106,12 +106,12 @@ public partial class TabExplorerBrowser : TabControl
             AddNewTab(tieb.CurrentDirectory);
         }
         else if (e.Key == Key.Right && e.KeyboardDevice.Modifiers == ModifierKeys.Control &&
-            MyWindow.MyDataContext.SelectionLeft)
+            MyWindow.DataContext.SelectionLeft)
         {
             MyWindow.CopyLeft.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }
         else if (e.Key == Key.Left && e.KeyboardDevice.Modifiers == ModifierKeys.Control &&
-            MyWindow.MyDataContext.SelectionRight)
+            MyWindow.DataContext.SelectionRight)
         {
             MyWindow.CopyRight.RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
         }

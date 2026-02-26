@@ -33,9 +33,10 @@ public partial class TaskList : UserControl
         });
     }
 
-    public TaskListViewModel MyDataContext
+    public new TaskListViewModel DataContext
     {
-        get { return (TaskListViewModel)DataContext; }
+        get { return (TaskListViewModel)base.DataContext; }
+        set { base.DataContext = value; }
     }
 
     private void TaskList_OnLoaded(object sender, RoutedEventArgs e)
@@ -47,12 +48,12 @@ public partial class TaskList : UserControl
         {
             _isLoaded = true;
             Taskbar tb = (Taskbar)Window.GetWindow(this);
-            MyDataContext.TaskbarParent = tb;
-            MyDataContext.ChangeEdge(tb.AppBarEdge);
+            DataContext.TaskbarParent = tb;
+            DataContext.ChangeEdge(tb.AppBarEdge);
             _isMainScreen = tb.MainScreen;
             ShellLogger.Debug("OnLoaded of TaskList Screen " + tb.NumScreen);
             if (_isMainScreen)
-                MyDataContext.FirstRefresh();
+                DataContext.FirstRefresh();
         }
     }
 
@@ -66,7 +67,7 @@ public partial class TaskList : UserControl
 
         ShellLogger.Debug("OnUnloaded of TaskList Screen " + ((Taskbar)Window.GetWindow(this)).NumScreen);
 
-        MyDataContext.RemoveTaskServiceEvent();
+        DataContext.RemoveTaskServiceEvent();
         if (_isMainScreen)
             TaskListViewModel.DisposeAllApplicationWindow();
         _isLoaded = false;

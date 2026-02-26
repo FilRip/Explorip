@@ -56,7 +56,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 return;
             }
             IntPtr newPeek;
-            newPeek = ParentTask.ApplicationWindow.ListWindows[_currentWindow].Handle;
+            newPeek = ParentTask.DataContext.ListWindows[_currentWindow].Handle;
             if (newPeek != _lastPeeked)
             {
                 UnPeek();
@@ -75,7 +75,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
 
     public void CloseWindow(int numWindow)
     {
-        IntPtr windowHandle = ParentTask.ApplicationWindow.ListWindows[numWindow].Handle;
+        IntPtr windowHandle = ParentTask.DataContext.ListWindows[numWindow].Handle;
         if (windowHandle == IntPtr.Zero)
             return;
         UnPeek();
@@ -109,10 +109,10 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 return;
         }
         IntPtr window;
-        window = ParentTask.ApplicationWindow.ListWindows[_currentWindow].Handle;
+        window = ParentTask.DataContext.ListWindows[_currentWindow].Handle;
         UnPeek();
         if (window != IntPtr.Zero)
-            ParentTask.ApplicationWindow.BringToFront(window);
+            ParentTask.DataContext.BringToFront(window);
         ParentControl.Close();
     }
 
@@ -135,7 +135,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 }
                 _timerBeforePeek.Change(Timeout.Infinite, Timeout.Infinite);
                 IntPtr window;
-                window = ParentTask.ApplicationWindow.ListWindows[_currentWindow].Handle;
+                window = ParentTask.DataContext.ListWindows[_currentWindow].Handle;
                 ShowContextMenu = true;
                 UnPeek();
                 System.Drawing.Point posMouse = new();
@@ -148,7 +148,7 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
                 {
                     NativeMethods.PostMessage(window, NativeMethods.WM.SYSCOMMAND, (IntPtr)command, IntPtr.Zero);
                     if (command == 61456)
-                        ParentTask.ApplicationWindow.Move();
+                        ParentTask.DataContext.Move();
                 }
             });
         }
@@ -175,13 +175,13 @@ public partial class TaskThumbButtonViewModel : ObservableObject, IDisposable
         try
         {
             WindowHelper.ExcludeWindowFromPeek(WindowHandle);
-            if (ParentTask.ApplicationWindow.ListWindows.Count > 0)
+            if (ParentTask.DataContext?.ListWindows?.Count > 0)
             {
                 double currentLeft = 0;
-                for (int i = 0; i < ParentTask.ApplicationWindow.ListWindows.Count; i++)
+                for (int i = 0; i < ParentTask.DataContext.ListWindows.Count; i++)
                 {
                     currentLeft += SpaceBetweenThumbnail;
-                    int result = NativeMethods.DwmRegisterThumbnail(WindowHandle, ParentTask.ApplicationWindow.ListWindows[i].Handle, out IntPtr thumbPtr);
+                    int result = NativeMethods.DwmRegisterThumbnail(WindowHandle, ParentTask.DataContext.ListWindows[i].Handle, out IntPtr thumbPtr);
                     if (result == (int)NativeMethods.HResult.SUCCESS)
                     {
                         Point buttonPosition = ListThumbnailButtons[i].TransformToAncestor(ParentControl).Transform(new Point(0, 0));

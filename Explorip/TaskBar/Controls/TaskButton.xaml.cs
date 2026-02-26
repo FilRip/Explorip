@@ -43,7 +43,6 @@ public partial class TaskButton : UserControl
 {
     #region Fields
 
-    private ApplicationWindow _appWindow;
     private ApplicationWindow.WindowState PressedWindowState = ApplicationWindow.WindowState.Inactive;
     private TaskThumbButton _thumb;
     private bool _isLoaded;
@@ -62,10 +61,10 @@ public partial class TaskButton : UserControl
 
     private void ScrollIntoView()
     {
-        if (_appWindow == null)
+        if (DataContext == null)
             return;
 
-        if (_appWindow.State == ApplicationWindow.WindowState.Active)
+        if (DataContext.State == ApplicationWindow.WindowState.Active)
             BringIntoView();
     }
 
@@ -74,9 +73,7 @@ public partial class TaskButton : UserControl
         if (_isLoaded)
             return;
 
-        _appWindow = DataContext as ApplicationWindow;
-
-        _appWindow?.PropertyChanged += Window_PropertyChanged;
+        DataContext?.PropertyChanged += Window_PropertyChanged;
 
         double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).TaskButtonSize;
         MyTaskIcon.Height = size;
@@ -110,7 +107,7 @@ public partial class TaskButton : UserControl
 
     private void Window_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(_appWindow.State))
+        if (e.PropertyName == nameof(DataContext.State))
             ScrollIntoView();
     }
 
@@ -119,7 +116,7 @@ public partial class TaskButton : UserControl
         if (!_isLoaded)
             return;
 
-        _appWindow?.PropertyChanged -= Window_PropertyChanged;
+        DataContext?.PropertyChanged -= Window_PropertyChanged;
 
         _isLoaded = false;
         _mouseOver = false;
@@ -138,15 +135,15 @@ public partial class TaskButton : UserControl
                 _timerBeforeShowThumbnail?.Change(ConfigManager.TaskbarDelayBeforeShowThumbnail, Timeout.Infinite);
         }
         catch (Exception) { /* Ignore errors */ }
-        if (_appWindow.ListWindows.Count == 1)
+        if (DataContext?.ListWindows?.Count == 1)
         {
             if (PressedWindowState == ApplicationWindow.WindowState.Active)
-                _appWindow.Minimize();
-            else if (_appWindow.State != ApplicationWindow.WindowState.Unknown)
-                _appWindow.BringToFront();
+                DataContext.Minimize();
+            else if (DataContext.State != ApplicationWindow.WindowState.Unknown)
+                DataContext.BringToFront();
         }
-        else if (_appWindow.ListWindows.Count == 0)
-            _appWindow.StartNewInstance();
+        else if (DataContext?.ListWindows?.Count == 0)
+            DataContext?.StartNewInstance();
         else
             try
             {
@@ -159,7 +156,7 @@ public partial class TaskButton : UserControl
     {
         if (e.ChangedButton == MouseButton.Left)
         {
-            PressedWindowState = _appWindow.State;
+            PressedWindowState = DataContext?.State ?? ApplicationWindow.WindowState.Unknown;
             DragMouseDown(e);
         }
     }
@@ -168,9 +165,9 @@ public partial class TaskButton : UserControl
     {
         if (e.ChangedButton == MouseButton.Middle || (e.ChangedButton == MouseButton.Left && (Keyboard.GetKeyStates(Key.LeftCtrl).HasFlag(KeyStates.Down) || Keyboard.GetKeyStates(Key.RightCtrl).HasFlag(KeyStates.Down))))
         {
-            if (_appWindow == null)
+            if (DataContext == null)
                 return;
-            _appWindow.StartNewInstance();
+            DataContext.StartNewInstance();
         }
         DragMouseUp();
     }
@@ -179,9 +176,10 @@ public partial class TaskButton : UserControl
 
     #region Properties
 
-    public ApplicationWindow ApplicationWindow
+    public new ApplicationWindow DataContext
     {
-        get { return _appWindow; }
+        get { return base.DataContext as ApplicationWindow; }
+        set { base.DataContext = value; }
     }
 
     public Taskbar TaskbarParent
@@ -208,22 +206,22 @@ public partial class TaskButton : UserControl
 
     private void AppButton_OnDragEnter(object sender, DragEventArgs e)
     {
-        if (e.Data is DataObject data)
+        if (e.Data is DataObject data && DataContext != null)
         {
             if (data.GetDataPresent(typeof(ApplicationWindow)))
             {
                 ApplicationWindow appWin = (ApplicationWindow)data.GetData(typeof(ApplicationWindow));
-                if (appWin != _appWindow)
+                if (appWin != DataContext)
                 {
-                    (_appWindow.Position, appWin.Position) = (appWin.Position, _appWindow.Position);
-                    this.FindVisualParent<TaskList>().MyDataContext.RefreshMyCollectionView();
+                    (DataContext.Position, appWin.Position) = (appWin.Position, DataContext.Position);
+                    this.FindVisualParent<TaskList>().DataContext.RefreshMyCollectionView();
                 }
             }
             else if (data.GetFileDropList()?.Count > 0)
             {
-                if (_appWindow.ListWindows.Count == 1)
-                    _appWindow.BringToFront();
-                else if (_appWindow.ListWindows.Count > 1)
+                if (DataContext.ListWindows.Count == 1)
+                    DataContext.BringToFront();
+                else if (DataContext.ListWindows.Count > 1)
                 {
                     _mouseOver = true;
                     ShowThumbnail(null);
@@ -235,20 +233,20 @@ public partial class TaskButton : UserControl
     private async Task StartDrag(MouseEventArgs e)
     {
         await Task.Delay(WindowsConstants.DelayIgnoreDrag);
-        if (_startDrag)
+        if (_startDrag && DataContext != null)
         {
             DataObject data = new();
-            data.SetData(_appWindow);
+            data.SetData(DataContext);
             CloseThumbnail();
             DragGhostAdorner.StartDragGhost(this, e);
-            DragDrop.DoDragDrop(this, _appWindow, DragDropEffects.Move);
+            DragDrop.DoDragDrop(this, DataContext, DragDropEffects.Move);
             DragGhostAdorner.StopDragGhost();
         }
     }
 
     private void AppButton_Drop(object sender, DragEventArgs e)
     {
-        if (e.Data is DataObject data && data.GetFileDropList()?.Count > 0)
+        if (e.Data is DataObject data && data.GetFileDropList()?.Count > 0 && DataContext != null)
         {
             StringBuilder arguments = new();
             foreach (string file in data.GetFileDropList())
@@ -257,7 +255,7 @@ public partial class TaskButton : UserControl
                     arguments.Append(' ');
                 arguments.Append("\"" + file + "\"");
             }
-            _appWindow.StartNewInstance(arguments.ToString());
+            DataContext.StartNewInstance(arguments.ToString());
         }
         DragMouseUp();
     }
@@ -276,7 +274,7 @@ public partial class TaskButton : UserControl
     private void AppButton_MouseEnter(object sender, MouseEventArgs e)
     {
         _mouseOver = true;
-        if (_appWindow.ListWindows.Count == 0)
+        if (DataContext == null || DataContext.ListWindows.Count == 0)
             return;
 
         if (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskbarDisableThumb)
@@ -305,7 +303,7 @@ public partial class TaskButton : UserControl
     private void AppButton_MouseLeave(object sender, MouseEventArgs e)
     {
         _mouseOver = false;
-        if (_appWindow.ListWindows.Count == 0)
+        if (DataContext == null || DataContext.ListWindows.Count == 0)
         {
             CloseThumbnail();
             return;
@@ -318,7 +316,7 @@ public partial class TaskButton : UserControl
                 if (TaskbarParent != null)
                 {
                     await Task.Delay(TaskbarParent.TimeBeforeAutoCloseThumb);
-                    if (_thumb != null && !_thumb.MyDataContext.MouseIn)
+                    if (_thumb != null && !_thumb.DataContext.MouseIn)
                         CloseThumbnail();
                 }
             });
@@ -348,47 +346,51 @@ public partial class TaskButton : UserControl
 
     private void UnpinMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        _appWindow.IsPinnedApp = false;
-        _appWindow.OnPropertyChanged(nameof(_appWindow.IsPinnedApp));
-        if (!string.IsNullOrWhiteSpace(_appWindow.PinnedShortcut) && File.Exists(_appWindow.PinnedShortcut))
-            File.Delete(_appWindow.PinnedShortcut);
+        if (DataContext == null)
+            return;
+        DataContext.IsPinnedApp = false;
+        DataContext.OnPropertyChanged(nameof(DataContext.IsPinnedApp));
+        if (!string.IsNullOrWhiteSpace(DataContext.PinnedShortcut) && File.Exists(DataContext.PinnedShortcut))
+            File.Delete(DataContext.PinnedShortcut);
         TaskList taskList = this.FindVisualParent<TaskList>();
-        if (!_appWindow.Launched)
-            _appWindow.Dispose();
-        taskList.MyDataContext.RefreshMyCollectionView();
+        if (!DataContext.Launched)
+            DataContext.Dispose();
+        taskList.DataContext.RefreshMyCollectionView();
     }
 
     private void PinMenuItem_Click(object sender, RoutedEventArgs e)
     {
+        if (DataContext == null)
+            return;
         Shortcut sc;
-        string filename = Path.GetFileNameWithoutExtension(_appWindow.WinFileName);
-        if (_appWindow.IsUWP)
+        string filename = Path.GetFileNameWithoutExtension(DataContext.WinFileName);
+        if (DataContext.IsUWP)
         {
-            sc = Shortcut.CreateShortcut(Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe"), $"shell:AppsFolder\\{_appWindow.AppUserModelID}");
-            filename = _appWindow.Title;
+            sc = Shortcut.CreateShortcut(Path.Combine(Environment.SpecialFolder.Windows.FullPath(), "explorer.exe"), $"shell:AppsFolder\\{DataContext.AppUserModelID}");
+            filename = DataContext.Title;
             foreach (char c in Path.GetInvalidFileNameChars())
                 filename = filename.Replace(c, ' ');
         }
         else
-            sc = Shortcut.CreateShortcut(_appWindow.WinFileName, _appWindow.Arguments);
+            sc = Shortcut.CreateShortcut(DataContext.WinFileName, DataContext.Arguments);
         string path = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).PathPinnedApp;
         path = Path.Combine(path, filename + ".lnk");
         if (!File.Exists(path))
             sc.WriteToFile(path);
-        _appWindow.IsPinnedApp = true;
-        _appWindow.PinnedShortcut = path;
-        _appWindow.OnPropertyChanged(nameof(_appWindow.IsPinnedApp));
+        DataContext.IsPinnedApp = true;
+        DataContext.PinnedShortcut = path;
+        DataContext.OnPropertyChanged(nameof(DataContext.IsPinnedApp));
     }
 
     private void StartNewInstanceMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        _appWindow.StartNewInstance();
+        DataContext?.StartNewInstance();
     }
 
     private void CloseMenuItem_Click(object sender, RoutedEventArgs e)
     {
-        if (_appWindow.ListWindows?.Count > 0)
-            foreach (IntPtr handle in _appWindow.ListWindows.Select(w => w.Handle))
+        if (DataContext?.ListWindows?.Count > 0)
+            foreach (IntPtr handle in DataContext.ListWindows.Select(w => w.Handle))
                 NativeMethods.SendMessage(handle, NativeMethods.WM.CLOSE, 0, 0);
     }
 
@@ -421,7 +423,7 @@ public partial class TaskButton : UserControl
                 Header = vd.Name,
                 Tag = vd,
             };
-            if (ApplicationWindow.ListWindows.Count > 0 && vd.Id == ApplicationWindow.ListWindows[0].VirtualDesktopId)
+            if (DataContext?.ListWindows?.Count > 0 && vd.Id == DataContext.ListWindows[0].VirtualDesktopId)
                 mi.IsEnabled = false;
             mi.Click += MoveToVirtualDesktop_Click;
             MoveToVirtualDesktop.Items.Add(mi);
@@ -430,15 +432,15 @@ public partial class TaskButton : UserControl
 
     private void MoveToScreen_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is Screen screenDest && ApplicationWindow.ListWindows.Count > 0)
+        if (sender is MenuItem mi && mi.Tag is Screen screenDest && DataContext?.ListWindows?.Count > 0)
         {
-            Screen screenSrc = Screen.FromHandle(ApplicationWindow.ListWindows[0].Handle);
+            Screen screenSrc = Screen.FromHandle(DataContext.ListWindows[0].Handle);
             NativeMethods.Rect size;
             if (screenSrc.ScaleFactor == screenDest.ScaleFactor)
-                WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screenDest.WpfWorkingArea.X, (int)screenDest.WpfWorkingArea.Y);
+                WindowScreenHelper.SetWindowPosition(DataContext.ListWindows[0].Handle, (int)screenDest.WpfWorkingArea.X, (int)screenDest.WpfWorkingArea.Y);
             else
             {
-                NativeMethods.GetWindowRect(ApplicationWindow.ListWindows[0].Handle, out size);
+                NativeMethods.GetWindowRect(DataContext.ListWindows[0].Handle, out size);
                 double width = size.Width / screenSrc.ScaleFactor;
                 double height = size.Height / screenSrc.ScaleFactor;
                 if (screenDest.ScaleFactor > screenSrc.ScaleFactor)
@@ -454,31 +456,31 @@ public partial class TaskButton : UserControl
                 width = Math.Min(screenDest.WpfWorkingArea.Width - 16, width);
                 height = Math.Min(screenDest.WpfWorkingArea.Height - 16, height);
 
-                WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, (int)screenDest.WpfWorkingArea.X, (int)screenDest.WpfWorkingArea.Y, (int)width, (int)height);
+                WindowScreenHelper.SetWindowPosition(DataContext.ListWindows[0].Handle, (int)screenDest.WpfWorkingArea.X, (int)screenDest.WpfWorkingArea.Y, (int)width, (int)height);
             }
-            NativeMethods.GetWindowRect(ApplicationWindow.ListWindows[0].Handle, out size);
+            NativeMethods.GetWindowRect(DataContext.ListWindows[0].Handle, out size);
             int posX = 0, posY = 0;
             if (screenDest.WpfWorkingArea.Width > size.Width)
                 posX = (int)(screenDest.WpfWorkingArea.Left * screenDest.ScaleFactor) + (int)((screenDest.WpfWorkingArea.Width * screenDest.ScaleFactor - size.Width) / 2);
             if (screenDest.WpfWorkingArea.Height > size.Height)
                 posY = (int)(screenDest.WpfWorkingArea.Top * screenDest.ScaleFactor) + (int)((screenDest.WpfWorkingArea.Height * screenDest.ScaleFactor - size.Height) / 2);
-            WindowScreenHelper.SetWindowPosition(ApplicationWindow.ListWindows[0].Handle, posX, posY, size.Width, size.Height);
+            WindowScreenHelper.SetWindowPosition(DataContext.ListWindows[0].Handle, posX, posY, size.Width, size.Height);
         }
     }
 
     private void MoveToVirtualDesktop_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is MenuItem mi && mi.Tag is VirtualDesktop.Models.VirtualDesktop vd && ApplicationWindow.ListWindows.Count > 0)
+        if (sender is MenuItem mi && mi.Tag is VirtualDesktop.Models.VirtualDesktop vd && DataContext?.ListWindows?.Count > 0)
         {
-            VirtualDesktopManager.MoveToDesktop(ApplicationWindow.ListWindows[0].Handle, vd);
-            ApplicationWindow.ListWindows[0].VirtualDesktopId = vd.Id;
-            TaskbarParent.MyTaskList.MyDataContext.ForceRefresh();
+            VirtualDesktopManager.MoveToDesktop(DataContext.ListWindows[0].Handle, vd);
+            DataContext.ListWindows[0].VirtualDesktopId = vd.Id;
+            TaskbarParent.MyTaskList.DataContext.ForceRefresh();
         }
     }
 
     private void MoveWithMouse_Click(object sender, RoutedEventArgs e)
     {
-        ApplicationWindow.Move();
+        DataContext?.Move();
     }
 
     #endregion
@@ -489,13 +491,13 @@ public partial class TaskButton : UserControl
     {
         try
         {
-            if (e.NewValue is bool visible && visible && ConfigManager.UseJumpList && ApplicationWindow?.ListWindows != null)
+            if (e.NewValue is bool visible && visible && ConfigManager.UseJumpList && DataContext?.ListWindows != null)
             {
                 _mouseOver = false;
                 _thumb?.Close();
                 JumpListContextMenu.Items.Clear();
-                AutomaticDestination autoDest = ExtensionsJumpList.GetAutomaticJumpList(ApplicationWindow.ListWindows[0].Handle);
-                CustomDestination customDest = ExtensionsJumpList.GetCustomJumpList(ApplicationWindow.ListWindows[0].Handle);
+                AutomaticDestination autoDest = ExtensionsJumpList.GetAutomaticJumpList(DataContext.ListWindows[0].Handle);
+                CustomDestination customDest = ExtensionsJumpList.GetCustomJumpList(DataContext.ListWindows[0].Handle);
                 if (autoDest?.DestListEntries?.Count > 0)
                 {
                     MenuItem category = new()
@@ -573,7 +575,7 @@ public partial class TaskButton : UserControl
             @is.Source = IconManager.Convert(IconManager.Extract(iconPath, lnk.IconIndex, false));
         else if (iconPath.ToLower().StartsWith("ms-appx:/"))
         {
-            string appUserModelId = ApplicationWindow.AppUserModelID;
+            string appUserModelId = DataContext.AppUserModelID;
             if (appUserModelId.EndsWith("!App"))
                 appUserModelId = appUserModelId.Substring(0, appUserModelId.Length - 4);
             string uwpPath = UwpPackageManager.PathOfUwp(appUserModelId);
@@ -615,7 +617,7 @@ public partial class TaskButton : UserControl
         }
         if (name?.StartsWith("ms-resource://") == true)
         {
-            string appUserModelId = ApplicationWindow.AppUserModelID;
+            string appUserModelId = DataContext?.AppUserModelID ?? string.Empty;
             if (appUserModelId.EndsWith("!App"))
                 appUserModelId = appUserModelId.Substring(0, appUserModelId.Length - 4);
             name = UwpPackageManager.StringOfUwp(appUserModelId, name);
