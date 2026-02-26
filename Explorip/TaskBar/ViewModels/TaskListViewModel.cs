@@ -284,7 +284,9 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 InsertPinnedApp();
 
                 // Give default order
-                int lastPosition = MyTaskbarApp.MyShellManager.TasksService.Windows.Where(w => w.IsPinnedApp).Max(w => w.Position);
+                int lastPosition = 0;
+                if (MyTaskbarApp.MyShellManager.TasksService.Windows.Count > 0)
+                    lastPosition = MyTaskbarApp.MyShellManager.TasksService.Windows.Where(w => w.IsPinnedApp).Max(w => w.Position);
                 foreach (ApplicationWindow appWin in MyTaskbarApp.MyShellManager.TasksService.Windows.Where(w => !w.IsPinnedApp))
                     appWin.Position = ++lastPosition;
 

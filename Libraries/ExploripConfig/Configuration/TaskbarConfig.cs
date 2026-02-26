@@ -124,7 +124,7 @@ public class TaskbarConfig
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigFloatingButtonSide, "").ToString()))
                 _registryTaskbar.SetValue(ConfigFloatingButtonSide, HorizontalAlignment.Left.ToString("G"));
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigPathPinnedTaskbar, "").ToString()))
-                _registryTaskbar.SetValue(ConfigPathPinnedTaskbar, Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar"));
+                _registryTaskbar.SetValue(ConfigPathPinnedTaskbar, Path.Combine("%APPDATA%", "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar"));
         }
     }
 
@@ -135,7 +135,7 @@ public class TaskbarConfig
 
     public string PathPinnedApp
     {
-        get { return _registryTaskbar.GetValue(ConfigPathPinnedTaskbar).ToString(); }
+        get { return Environment.ExpandEnvironmentVariables(_registryTaskbar.GetValue(ConfigPathPinnedTaskbar, "").ToString()); }
         set
         {
             if (PathPinnedApp != value && AllowWrite)
