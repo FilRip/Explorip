@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Controls;
-
-using CoolBytes.ScriptInterpreter.WPF.ViewModels;
+﻿using CoolBytes.ScriptInterpreter.WPF.ViewModels;
 
 namespace CoolBytes.ScriptInterpreter.WPF;
 
@@ -12,22 +9,18 @@ public partial class WpfObject
         InitializeComponent();
     }
 
+    public new WpfObjectViewModel DataContext
+    {
+        get { return (WpfObjectViewModel)base.DataContext; }
+    }
+
     public void LoadXml(string contenuXml)
     {
-        ((WpfObjectViewModel)DataContext).LoadXml(contenuXml);
+        DataContext.LoadXml(contenuXml);
     }
 
     public void LoadFile(string nomFichier)
     {
-        ((WpfObjectViewModel)DataContext).LoadFile(nomFichier);
-    }
-
-    private void TvObjet_SelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
-    {
-        try
-        {
-            ((WpfObjectViewModel)DataContext).SelectionTree = (TreeViewItem)e.NewValue;
-        }
-        catch (Exception) { /* Ignore errors */ }
+        DataContext.LoadFile(nomFichier);
     }
 }

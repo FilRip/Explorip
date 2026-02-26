@@ -4,79 +4,53 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Xml;
 
-using CoolBytes.ScriptInterpreter.Helpers;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Win32;
 
 namespace CoolBytes.ScriptInterpreter.WPF.ViewModels;
 
-public class WpfObjectViewModel : ViewModelBase
+public partial class WpfObjectViewModel : ObservableObject
 {
-    private bool _expandAll;
+    #region Fields
+
     private XmlDocument _documentXml;
 
-    public ICommand MenuOpenAllClick { get; private set; }
-    public ICommand MenuCloseAllClick { get; private set; }
-    public ICommand MenuSaveStateClick { get; private set; }
-    public ICommand MenuCopyValueClick { get; private set; }
-
     private int _counter;
-    private readonly ProgressBar _progressBar;
 
-    public WpfObjectViewModel()
-    {
-        MenuOpenAllClick = new RelayCommand(item => MenuOpenAll());
-        MenuCloseAllClick = new RelayCommand(item => MenuCloseAll());
-        MenuSaveStateClick = new RelayCommand(item => MenuSaveState());
-        MenuCopyValueClick = new RelayCommand(item => MenuCopyValue());
-    }
+    #endregion
 
-    internal WpfObjectViewModel(ProgressBar progressBar) : this()
-    {
-        _progressBar = progressBar;
-    }
+    #region Binding properties
 
-    public bool ExpandAll
-    {
-        get { return _expandAll; }
-        set
-        {
-            _expandAll = value;
-            RaisePropertyChanged();
-        }
-    }
+    [ObservableProperty()]
+    private bool _expandAll;
+
+    [ObservableProperty()]
+    private int _maxValueProgressBar, _currentValueProgressBar;
+
+    #endregion
 
     private void ExpandTree()
     {
         foreach (TreeViewItem tvi in TreeContent)
         {
-            tvi.IsExpanded = _expandAll;
+            tvi.IsExpanded = ExpandAll;
             if (tvi.HasItems)
                 ExpandSubTree(tvi);
         }
-    }
-    private void ExpandSubTree(TreeViewItem tvi)
-    {
-        foreach (TreeViewItem subtree in tvi.Items)
+
+        void ExpandSubTree(TreeViewItem tvi)
         {
-            subtree.IsExpanded = _expandAll;
-            if (subtree.HasItems)
-                ExpandSubTree(subtree);
+            foreach (TreeViewItem subtree in tvi.Items)
+            {
+                subtree.IsExpanded = ExpandAll;
+                if (subtree.HasItems)
+                    ExpandSubTree(subtree);
+            }
         }
-    }
-
-    private void MenuOpenAll()
-    {
-        ExpandAll = true;
-        ExpandTree();
-    }
-
-    private void MenuCloseAll()
-    {
-        ExpandAll = false;
     }
 
     public void LoadFile(string filename)
@@ -97,27 +71,19 @@ public class WpfObjectViewModel : ViewModelBase
 
     private void TreatDocument()
     {
-        if (_progressBar != null)
-            SetMaximumProgressBar(_documentXml.SelectNodes("descendant::*").Count);
+        MaxValueProgressBar = _documentXml.SelectNodes("descendant::*").Count;
         TreeContent =
         [
             new() { Header = _documentXml.DocumentElement.Name }
         ];
         AddNode(TreeContent[0], _documentXml.DocumentElement);
-        RaisePropertyChanged(nameof(TreeContent));
+        OnPropertyChanged(nameof(TreeContent));
     }
 
     private void IncrementCounter()
     {
-        if (_progressBar == null)
-            return;
         _counter++;
-        _progressBar.Dispatcher.Invoke(new Action(() => _progressBar.Value = Math.Min(_counter, _progressBar.Maximum)));
-    }
-
-    private void SetMaximumProgressBar(int newMax)
-    {
-        _progressBar?.Dispatcher.Invoke(new Action(() => _progressBar.Maximum = newMax));
+        CurrentValueProgressBar = Math.Min(_counter, MaxValueProgressBar);
     }
 
     private void AddNode(TreeViewItem currentTreeViewNode, XmlNode currentWmlNode)
@@ -151,6 +117,9 @@ public class WpfObjectViewModel : ViewModelBase
         catch { /* Ignore errors */ }
     }
 
+    #region ICommand
+
+    [RelayCommand()]
     private void MenuSaveState()
     {
         SaveFileDialog dialog = new();
@@ -162,10 +131,37 @@ public class WpfObjectViewModel : ViewModelBase
         }
     }
 
-    public TreeViewItem SelectionTree { get; set; }
-
+    [RelayCommand()]
     private void MenuCopyValue()
     {
         Clipboard.SetText(SelectionTree.Header.ToString());
     }
+
+    [RelayCommand()]
+    private void MenuOpenAll()
+    {
+        ExpandAll = true;
+        ExpandTree();
+    }
+
+    [RelayCommand()]
+    private void MenuCloseAll()
+    {
+        ExpandAll = false;
+    }
+
+    #endregion
+
+    #region TreeView interaction
+
+    public TreeViewItem SelectionTree { get; set; }
+
+    [RelayCommand()]
+    private void ChangeSelection(RoutedPropertyChangedEventArgs<object> e)
+    {
+        if (e?.NewValue is TreeViewItem item)
+            SelectionTree = item;
+    }
+
+    #endregion
 }

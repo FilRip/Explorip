@@ -5,13 +5,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:viewmodels="clr-namespace:CoolBytes.ScriptInterpreter.WPF.ViewModels"
         xmlns:lex="http://wpflocalizeextension.codeplex.com"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d" 
         d:DesignHeight="150" d:DesignWidth="150">
+    
     <Window.DataContext>
         <viewmodels:WpfObjectViewModel/>
     </Window.DataContext>
+    
     <Grid>
-        <TreeView Name="tvObjet" ItemsSource="{Binding TreeContent}" SelectedItemChanged="TvObjet_SelectedItemChanged">
+        <TreeView Name="tvObjet" ItemsSource="{Binding TreeContent}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction Command="{Binding ChangeSelectionCommand}" PassEventArgsToCommand="True"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="{Binding ExpandAll, Mode=TwoWay}"/>
@@ -19,12 +27,12 @@
             </TreeView.ItemContainerStyle>
             <TreeView.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="{lex:Loc MENUITEM_COPY_VALUE}" Command="{Binding MenuCopyValueClick}"/>
+                    <MenuItem Header="{lex:Loc MENUITEM_COPY_VALUE}" Command="{Binding MenuCopyValueCommand}"/>
                     <Separator/>
-                    <MenuItem Header="{lex:Loc MENUITEM_EXPAND_ALL}" Command="{Binding MenuOpenAllClick}"/>
-                    <MenuItem Header="{lex:Loc MENUITEM_COLLAPSE_ALL}" Command="{Binding MenuCloseAllClick}"/>
+                    <MenuItem Header="{lex:Loc MENUITEM_EXPAND_ALL}" Command="{Binding MenuOpenAllCommand}"/>
+                    <MenuItem Header="{lex:Loc MENUITEM_COLLAPSE_ALL}" Command="{Binding MenuCloseAllCommand}"/>
                     <Separator/>
-                    <MenuItem Header="{lex:Loc MENUITEM_SAVE_STATE}" Command="{Binding MenuSaveStateClick}"/>
+                    <MenuItem Header="{lex:Loc MENUITEM_SAVE_STATE}" Command="{Binding MenuSaveStateCommand}"/>
                 </ContextMenu>
             </TreeView.ContextMenu>
         </TreeView>

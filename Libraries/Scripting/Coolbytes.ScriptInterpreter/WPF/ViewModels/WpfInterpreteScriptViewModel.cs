@@ -11,6 +11,9 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 using CoolBytes.Helpers;
 using CoolBytes.Scripting.Enums;
 using CoolBytes.Scripting.Models;
@@ -24,59 +27,26 @@ using Microsoft.Win32;
 
 namespace CoolBytes.ScriptInterpreter.WPF.ViewModels;
 
-internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IIntellisense
+public partial class WpfInterpreteScriptViewModel : ObservableObject, IScriptReturn, IIntellisense
 {
-    private string _usings;
-    private bool _intellisense;
-    private bool _withInherits;
+    #region Fields
+
     private int _maxRecursion;
-    private bool _openWindow;
-    private string _txtResult;
-    private Brush _fieldColor;
-    private Brush _propertyColor;
-    private Brush _methodColor;
-    private Brush _nameSpaceColor;
-    private Brush _commentaryColor;
-    private bool _listFields;
-    private bool _listProperties;
-    private List<string> _listLanguages;
-    private string _selectedLanguage;
-    private bool _visibleIntellisense;
-    private bool _visibleUsings;
     private int _selectionIntellisense;
-    private bool _chkSerializationDataContract;
-    private string _selectionDataContract;
-    private List<string> _listDataContract;
     private bool _executeOnProcess;
-    private bool _otherThread;
 
-    public ICommand BtnExecuteScript { get; set; }
-    public ICommand BtnAddUsing { get; set; }
-    public ICommand BtnLoadScript { get; set; }
-    public ICommand BtnSaveScript { get; set; }
-    public ICommand ClickField { get; set; }
-    public ICommand ClickProperty { get; set; }
-    public ICommand ClickMethod { get; set; }
-    public ICommand ClickNameSpace { get; set; }
-    public ICommand ClickCommentary { get; set; }
-    public ICommand BtnLoadObject { get; set; }
-    public ICommand CutText { get; set; }
-    public ICommand CopyText { get; set; }
-    public ICommand PasteText { get; set; }
-    public ICommand SelectAll { get; set; }
-
-    private List<OneElementType> _listIntellisense;
-
-    private readonly WpfInterpreteScript _parentWindow;
+    private WpfInterpreteScript _parentWindow;
     private object _startClass;
 
-    internal WpfInterpreteScriptViewModel(WpfInterpreteScript form)
+    #endregion
+
+    public void Init(WpfInterpreteScript form)
     {
         Usings = Properties.Resources.DEFAULTS_USING;
         ActiveIntellisense = true;
         WithInherits = true;
         NumMaxRecursion = "4";
-        ChkOpenWindow = true;
+        OpenInNewWindow = true;
         TxtResult = "";
         FieldColorInternal = new SolidColorBrush(Color.FromArgb(System.Drawing.Color.Gray.A, System.Drawing.Color.Gray.R, System.Drawing.Color.Gray.G, System.Drawing.Color.Gray.B));
         PropertyColor = new SolidColorBrush(Color.FromArgb(System.Drawing.Color.Blue.A, System.Drawing.Color.Blue.R, System.Drawing.Color.Blue.G, System.Drawing.Color.Blue.B));
@@ -89,26 +59,10 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         PopUpUsings = false;
         SerializationDataContract = false;
 
-        BtnExecuteScript = new RelayCommand(sub => ExecuteScript());
-        BtnAddUsing = new RelayCommand(sub => AddUsing());
-        BtnLoadScript = new RelayCommand(sub => LoadScript());
-        BtnSaveScript = new RelayCommand(sub => SaveScript());
-        ClickField = new RelayCommand(sub => Click_HyperLink(nameof(FieldColorInternal)));
-        ClickProperty = new RelayCommand(sub => Click_HyperLink(nameof(PropertyColor)));
-        ClickMethod = new RelayCommand(sub => Click_HyperLink(nameof(MethodColor)));
-        ClickNameSpace = new RelayCommand(sub => Click_HyperLink(nameof(NamespaceColorInternal)));
-        ClickCommentary = new RelayCommand(sub => Click_HyperLink(nameof(CommentColorInternal)));
-        BtnLoadObject = new RelayCommand(sub => LoadObject());
-
-        CutText = new RelayCommand(sub => MenuCutText());
-        CopyText = new RelayCommand(sub => MenuCopyText());
-        PasteText = new RelayCommand(sub => MenuPasteText());
-        SelectAll = new RelayCommand(sub => MenuSelectAll());
-
-        _listLanguages = [];
+        ListLanguages = [];
         foreach (object item in Enum.GetValues(typeof(SupportedLanguage)))
-            _listLanguages.Add(ExtensionsEnum.GetEnumDescription(item));
-        RaisePropertyChanged(nameof(ListLanguages));
+            ListLanguages.Add(ExtensionsEnum.GetEnumDescription(item));
+        OnPropertyChanged(nameof(ListLanguages));
         LanguageSelected = ListLanguages[0];
         ReloadAssembly();
         ListReferences = [];
@@ -163,15 +117,12 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
 
     internal string AssemblyDirectory { get; set; }
 
-    public bool ListVisible
+    [ObservableProperty()]
+    private bool _listVisible;
+
+    partial void OnListVisibleChanged(bool value)
     {
-        get { return _visibleIntellisense; }
-        set
-        {
-            _visibleIntellisense = value;
-            Application.Current.Dispatcher.Invoke(() => ResetPosIntellisense());
-            RaisePropertyChanged();
-        }
+        Application.Current.Dispatcher.Invoke(() => ResetPosIntellisense());
     }
 
     public bool NotCheckedSerialisationDataContract
@@ -181,66 +132,38 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
 
     public bool AutoAddAllUsings { get; set; }
 
-    public bool SerializationDataContract
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(NotCheckedSerialisationDataContract))]
+    private bool _serializationDataContract;
+
+    partial void OnSerializationDataContractChanged(bool value)
     {
-        get { return _chkSerializationDataContract; }
-        set
+        if (value)
         {
-            _chkSerializationDataContract = value;
-            RaisePropertyChanged();
-            RaisePropertyChanged(nameof(NotCheckedSerialisationDataContract));
-            if (value)
-            {
-                _listDataContract = [];
-                foreach (Type type in ExtensionsAssembly.ListAllTypes().Where(item => !item.Assembly.GlobalAssemblyCache && !item.IsSpecialName && item.IsInterface && item.GetCustomAttribute<ServiceContractAttribute>() != null).ToList())
-                    _listDataContract.Add(type.Name);
-                RaisePropertyChanged(nameof(ListDataContract));
-            }
+            _listDataContract = [];
+            foreach (Type type in ExtensionsAssembly.ListAllTypes().Where(item => !item.Assembly.GlobalAssemblyCache && !item.IsSpecialName && item.IsInterface && item.GetCustomAttribute<ServiceContractAttribute>() != null).ToList())
+                ListDataContract.Add(type.Name);
+            OnPropertyChanged(nameof(ListDataContract));
         }
     }
 
-    public string DataContractName
+    [ObservableProperty()]
+    private string _dataContractName;
+
+    [ObservableProperty()]
+    private List<string> _listDataContract;
+
+    partial void OnListDataContractChanged(List<string> value)
     {
-        get { return _selectionDataContract; }
-        set
-        {
-            _selectionDataContract = value;
-            RaisePropertyChanged();
-        }
+        DataContractName = "";
     }
 
-    public List<string> ListDataContract
-    {
-        get { return _listDataContract; }
-        set
-        {
-            _listDataContract = value;
-            RaisePropertyChanged();
-            DataContractName = "";
-        }
-    }
-
-    public List<OneElementType> ListFilteredIntellisense
-    {
-        get { return _listIntellisense; }
-        set
-        {
-            _listIntellisense = value;
-            RaisePropertyChanged();
-        }
-    }
+    [ObservableProperty()]
+    private List<OneElementType> _listFilteredIntellisense;
 
     public List<OneElementType> ListIntellisense { get; set; }
 
-    public bool WithInherits
-    {
-        get { return _withInherits; }
-        set
-        {
-            _withInherits = value;
-            RaisePropertyChanged();
-        }
-    }
+    [ObservableProperty()]
+    private bool _withInherits;
 
     public string NumMaxRecursion
     {
@@ -250,7 +173,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
             int.TryParse(value, out _maxRecursion);
             if (_maxRecursion <= 0)
                 _maxRecursion = 1;
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -259,65 +182,17 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         get { return _maxRecursion; }
     }
 
-    public List<string> ListLanguages
-    {
-        get { return _listLanguages; }
-        set
-        {
-            _listLanguages = value;
-            RaisePropertyChanged();
-        }
-    }
+    [ObservableProperty()]
+    private List<string> _listLanguages;
 
-    public event Delegates.DelegateChangeLanguage ChangeLangage;
+    [ObservableProperty()]
+    private string _languageSelected;
 
-    public string LanguageSelected
-    {
-        get { return _selectedLanguage; }
-        set
-        {
-            _selectedLanguage = value;
-            RaisePropertyChanged();
-            SupportedLanguage language;
-            foreach (SupportedLanguage item in Enum.GetValues(typeof(SupportedLanguage)))
-                if (ExtensionsEnum.GetEnumDescription(item) == value)
-                {
-                    language = item;
-                    ChangeLangage?.Invoke(this, new ChangeLanguageEventArgs(language));
-                    break;
-                }
-        }
-    }
+    [ObservableProperty()]
+    private string _txtResult;
 
-    public bool ChkOpenWindow
-    {
-        get { return _openWindow; }
-        set
-        {
-            _openWindow = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public string TxtResult
-    {
-        get { return _txtResult; }
-        set
-        {
-            _txtResult = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public bool ActiveIntellisense
-    {
-        get { return _intellisense; }
-        set
-        {
-            _intellisense = value;
-            RaisePropertyChanged();
-        }
-    }
+    [ObservableProperty()]
+    private bool _activeIntellisense;
 
     public int PositionList
     {
@@ -336,7 +211,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
             {
                 _selectionIntellisense = 0;
             }
-            RaisePropertyChanged();
+            OnPropertyChanged();
         }
     }
 
@@ -345,115 +220,70 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         return _parentWindow.ScriptText.Text();
     }
 
-    public string Usings
+    [ObservableProperty()]
+    private string _usings;
+
+    [ObservableProperty()]
+    private bool _popUpUsings;
+
+    [ObservableProperty()]
+    private Brush _fieldColorInternal;
+
+    [ObservableProperty()]
+    private Brush _propertyColor;
+
+    [ObservableProperty()]
+    private Brush _methodColor;
+
+    [ObservableProperty()]
+    private Brush _namespaceColorInternal;
+
+    [ObservableProperty()]
+    private Brush _commentColorInternal;
+
+    [ObservableProperty()]
+    private bool _withFields;
+
+    [ObservableProperty()]
+    private bool _otherThread;
+
+    [ObservableProperty()]
+    private bool _withProperties;
+
+    [ObservableProperty()]
+    private bool _openInNewWindow;
+
+    #endregion
+
+    #region Events
+
+    public event Delegates.DelegateChangeLanguage ChangeLangage;
+
+    partial void OnLanguageSelectedChanged(string value)
     {
-        get { return _usings; }
-        set
-        {
-            _usings = value;
-            RaisePropertyChanged();
-        }
+        SupportedLanguage language;
+        foreach (SupportedLanguage item in Enum.GetValues(typeof(SupportedLanguage)))
+            if (ExtensionsEnum.GetEnumDescription(item) == value)
+            {
+                language = item;
+                ChangeLangage?.Invoke(this, new ChangeLanguageEventArgs(language));
+                break;
+            }
     }
 
-    public bool PopUpUsings
-    {
-        get { return _visibleUsings; }
-        set
-        {
-            _visibleUsings = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public Brush FieldColorInternal
-    {
-        get { return _fieldColor; }
-        set
-        {
-            _fieldColor = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public Brush PropertyColor
-    {
-        get { return _propertyColor; }
-        set
-        {
-            _propertyColor = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public Brush MethodColor
-    {
-        get { return _methodColor; }
-        set
-        {
-            _methodColor = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public Brush NamespaceColorInternal
-    {
-        get { return _nameSpaceColor; }
-        set
-        {
-            _nameSpaceColor = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public Brush CommentColorInternal
-    {
-        get { return _commentaryColor; }
-        set
-        {
-            _commentaryColor = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public bool WithFields
-    {
-        get { return _listFields; }
-        set
-        {
-            _listFields = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public bool OtherThread
-    {
-        get { return _otherThread; }
-        set
-        {
-            _otherThread = value;
-            RaisePropertyChanged();
-        }
-    }
-
-    public bool WithProperties
-    {
-        get { return _listProperties; }
-        set
-        {
-            _listProperties = value;
-            RaisePropertyChanged();
-        }
-    }
+    public event Delegates.DelegateExecuteScript ScriptExecuting;
 
     #endregion
 
     #region ICommand
 
+    [RelayCommand()]
     private void AddUsing()
     {
         PopUpUsings = !PopUpUsings;
     }
 
+    [RelayCommand()]
     private void Click_HyperLink(string propertyName)
     {
         PropertyInfo pi = GetType().GetProperty(propertyName);
@@ -464,24 +294,156 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
             pi.SetValue(this, new SolidColorBrush(Color.FromArgb(dialog.Color.A, dialog.Color.R, dialog.Color.G, dialog.Color.B)));
     }
 
+    [RelayCommand()]
     private void MenuCutText()
     {
         _parentWindow.ScriptText.Cut();
     }
 
+    [RelayCommand()]
     private void MenuCopyText()
     {
         _parentWindow.ScriptText.Copy();
     }
 
+    [RelayCommand()]
     private void MenuPasteText()
     {
         _parentWindow.ScriptText.Paste();
     }
 
-    public void MenuSelectAll()
+    [RelayCommand()]
+    private void MenuSelectAll()
     {
         _parentWindow.ScriptText.SelectAll();
+    }
+
+    [RelayCommand()]
+    private void TextInput(TextCompositionEventArgs e)
+    {
+        try
+        {
+            KeyboardInput(e.Text[0]);
+        }
+        catch (Exception) { /* Ignore les erreurs de l'interpreteur d'aide à la saisie du script */ }
+    }
+
+    [RelayCommand()]
+    private void Script_KeyUp(KeyEventArgs e)
+    {
+        if (e.Key == Key.F5)
+        {
+            ExecuteScript();
+            return;
+        }
+
+        if (!ListVisible)
+            return;
+
+        // Positionne la popup
+        ResetPosIntellisense();
+
+        if (e.Key == Key.Escape ||
+            e.Key == Key.Space ||
+            e.Key == Key.Enter ||
+            e.Key == Key.Return ||
+            e.Key == Key.Tab)
+        {
+            if (e.Key == Key.Enter ||
+                e.Key == Key.Return ||
+                e.Key == Key.Tab)
+            {
+                e.Handled = true;
+                MouseDoubleClick();
+            }
+            ListVisible = false;
+        }
+    }
+
+    public void KeyboardInputIntellisense(System.Windows.Forms.KeyEventArgs e = null, KeyEventArgs eWPF = null)
+    {
+        if (InterpreteCode.KeyboardInputIntellisense(this, eWPF.Key))
+        {
+            eWPF.Handled = true;
+        }
+    }
+
+    [RelayCommand()]
+    private void Script_KeyDown(KeyEventArgs e)
+    {
+        try
+        {
+            if (e.Key == Key.Delete || e.Key == Key.Back)
+            {
+                KeyboardInput('\b');
+                return;
+            }
+            else if (e.Key == Key.Tab)
+            {
+                int oldPosCurseur = PosCursor;
+                _parentWindow.ScriptText.CaretPosition.InsertTextInRun(new string(' ', 4));
+                PosCursor = oldPosCurseur + 4;
+                e.Handled = true;
+            }
+            else
+                KeyboardInputIntellisense(null, e);
+
+            _parentWindow.PopUpIntellisense.ScrollIntoView(_parentWindow.PopUpIntellisense.SelectedItem);
+            if ((e.Key == Key.V && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) ||
+                (e.Key == Key.Insert && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)))
+            {
+                string plainText = Clipboard.GetText();
+                Clipboard.Clear();
+                Clipboard.SetText(plainText);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (InternalDebug)
+                MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace);
+        }
+    }
+
+    [RelayCommand()]
+    private void MouseDoubleClick()
+    {
+        try
+        {
+            if (_selectionIntellisense >= 0 && _selectionIntellisense <= ListFilteredIntellisense.Count - 1)
+            {
+                int pos = PosCursor;
+                int decal = 0;
+                while (TxtScript()[pos - 1] == '\n' || TxtScript()[pos - 1] == '\r')
+                {
+                    pos--;
+                    decal++;
+                }
+                int toDel = SelectionLength;
+                if (toDel == 0)
+                {
+                    while (TxtScript().Trim()[pos - 1] != '.')
+                    {
+                        pos--;
+                        toDel++;
+                    }
+                    if (toDel > 0)
+                    {
+                        PosCursor = pos + decal;
+                        SelectionLength = toDel;
+                    }
+                }
+                if (toDel > 0)
+                    _parentWindow.ScriptText.Selection.Text = "";
+                string nom = ListFilteredIntellisense[_selectionIntellisense].Name;
+                _parentWindow.ScriptText.CaretPosition = _parentWindow.ScriptText.CaretPosition.GetPositionAtOffset(0, LogicalDirection.Forward);
+                _parentWindow.ScriptText.CaretPosition.InsertTextInRun(nom);
+                ListVisible = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug(ex);
+        }
     }
 
     #endregion
@@ -523,122 +485,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         InterpreteCode.KeyboardInput(this, key);
     }
 
-    public void TextInput(TextCompositionEventArgs e)
-    {
-        try
-        {
-            KeyboardInput(e.Text[0]);
-        }
-        catch (Exception) { /* Ignore les erreurs de l'interpreteur d'aide à la saisie du script */ }
-    }
-
-    internal void Script_KeyUp(object sender, KeyEventArgs e)
-    {
-        if (e.Key == Key.F5)
-        {
-            BtnExecuteScript.Execute(null);
-            return;
-        }
-
-        if (!ListVisible)
-            return;
-
-        // Positionne la popup
-        ResetPosIntellisense();
-
-        if (e.Key == Key.Escape ||
-            e.Key == Key.Space ||
-            e.Key == Key.Enter ||
-            e.Key == Key.Return ||
-            e.Key == Key.Tab)
-        {
-            if (e.Key == Key.Enter ||
-                e.Key == Key.Return ||
-                e.Key == Key.Tab)
-            {
-                e.Handled = true;
-                MouseDoubleClick();
-            }
-            ListVisible = false;
-        }
-    }
-
-    public void KeyboardInputIntellisense(System.Windows.Forms.KeyEventArgs e = null, KeyEventArgs eWPF = null)
-    {
-        if (InterpreteCode.KeyboardInputIntellisense(this, eWPF.Key))
-        {
-            eWPF.Handled = true;
-        }
-    }
-
-    internal void Script_KeyDown(object sender, KeyEventArgs e)
-    {
-        try
-        {
-            if (e.Key == Key.Delete || e.Key == Key.Back)
-            {
-                KeyboardInput('\b');
-                return;
-            }
-            else if (e.Key == Key.Tab)
-            {
-                int oldPosCurseur = PosCursor;
-                _parentWindow.ScriptText.CaretPosition.InsertTextInRun(new string(' ', 4));
-                PosCursor = oldPosCurseur + 4;
-                e.Handled = true;
-            }
-            else
-                KeyboardInputIntellisense(null, e);
-        }
-        catch (Exception ex)
-        {
-            if (InternalDebug)
-                MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace);
-        }
-    }
-
     #endregion
-
-    public void MouseDoubleClick()
-    {
-        try
-        {
-            if (_selectionIntellisense >= 0 && _selectionIntellisense <= _listIntellisense.Count - 1)
-            {
-                int pos = PosCursor;
-                int decal = 0;
-                while (TxtScript()[pos - 1] == '\n' || TxtScript()[pos - 1] == '\r')
-                {
-                    pos--;
-                    decal++;
-                }
-                int toDel = SelectionLength;
-                if (toDel == 0)
-                {
-                    while (TxtScript().Trim()[pos - 1] != '.')
-                    {
-                        pos--;
-                        toDel++;
-                    }
-                    if (toDel > 0)
-                    {
-                        PosCursor = pos + decal;
-                        SelectionLength = toDel;
-                    }
-                }
-                if (toDel > 0)
-                    _parentWindow.ScriptText.Selection.Text = "";
-                string nom = _listIntellisense[_selectionIntellisense].Name;
-                _parentWindow.ScriptText.CaretPosition = _parentWindow.ScriptText.CaretPosition.GetPositionAtOffset(0, LogicalDirection.Forward);
-                _parentWindow.ScriptText.CaretPosition.InsertTextInRun(nom);
-                ListVisible = false;
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug(ex);
-        }
-    }
 
     public bool IgnoreCase
     {
@@ -651,10 +498,9 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
             MessageBox.Show(ex.Message + Environment.NewLine + ex.StackTrace);
     }
 
-    public event Delegates.DelegateExecuteScript ScriptExecuting;
-
     #region Manage script
 
+    [RelayCommand()]
     private void ExecuteScript()
     {
         try
@@ -663,10 +509,10 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
             ScriptingResult ret = null;
 
             SupportedLanguage currentLanguage;
-            if (string.IsNullOrWhiteSpace(_selectedLanguage))
+            if (string.IsNullOrWhiteSpace(LanguageSelected))
                 currentLanguage = SupportedLanguage.VBNET;
             else
-                currentLanguage = ExtensionsEnum.GetValueFromDescription<SupportedLanguage>(_selectedLanguage);
+                currentLanguage = ExtensionsEnum.GetValueFromDescription<SupportedLanguage>(LanguageSelected);
 
             if (currentLanguage == SupportedLanguage.CSHARP && TxtScript().Trim().IndexOf(Environment.NewLine) < 0 && TxtScript().Trim()[TxtScript().Trim().Length - 1] != ';')
             {
@@ -686,7 +532,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
                 return;
 
             string script = SelectionLength > 0 ? SelectedText : TxtScript();
-            if (_otherThread)
+            if (OtherThread)
             {
                 if (currentLanguage == SupportedLanguage.CSHARP)
                     script = "System.Threading.Tasks.Task.Run(() => {" + Environment.NewLine + script + Environment.NewLine + "});";
@@ -694,7 +540,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
                     script = "System.Threading.Tasks.Task.Run(Sub()" + Environment.NewLine + script + Environment.NewLine + "End Sub)";
             }
 
-            ret = Scripting.Helpers.ExecuteScript.ExecuteScripts(script, _usings?.Split(Environment.NewLine.ToCharArray()).ToList(), currentLanguage, ListAssembly, ListReferences, AutoAddAllUsings, AssemblyDirectory, ListAssemblyInMemory?.ToArray());
+            ret = Scripting.Helpers.ExecuteScript.ExecuteScripts(script, Usings?.Split(Environment.NewLine.ToCharArray()).ToList(), currentLanguage, ListAssembly, ListReferences, AutoAddAllUsings, AssemblyDirectory, ListAssemblyInMemory?.ToArray());
 
             if (ret != null)
             {
@@ -711,7 +557,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
                 {
                     TxtResult = Properties.Resources.SCRIPT_OK_RETURN;
                     TxtResult += ret.Result == null ? Properties.Resources.SCRIPT_RETURN_VOID : ret.Result.ToString();
-                    if (ret.Result != null && !ret.Result.GetType().IsPrimitive && ret.Result is not string && ret.Result is not Enum && ret.Result is not DateTime && ret.Result is not TimeSpan && ChkOpenWindow)
+                    if (ret.Result != null && !ret.Result.GetType().IsPrimitive && ret.Result is not string && ret.Result is not Enum && ret.Result is not DateTime && ret.Result is not TimeSpan && OpenInNewWindow)
                     {
                         Filename = null;
                         ObjectToSerialize = ret.Result;
@@ -728,6 +574,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         }
     }
 
+    [RelayCommand()]
     private void LoadScript()
     {
         OpenFileDialog dialog = new();
@@ -748,6 +595,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         }
     }
 
+    [RelayCommand()]
     private void SaveScript()
     {
         SaveFileDialog dialog = new();
@@ -763,6 +611,7 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         }
     }
 
+    [RelayCommand()]
     private void LoadObject()
     {
         OpenFileDialog dialog = new();
@@ -783,12 +632,6 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
     public void OpenWindow()
     {
         Serialization.ShowResult(this);
-    }
-
-    public bool OpenInNewWindow
-    {
-        get { return ChkOpenWindow; }
-        set { ChkOpenWindow = value; }
     }
 
     #endregion
@@ -855,6 +698,8 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         }
     }
 
+    #region Settings
+
     public System.Drawing.Color CommentaryColor
     {
         get
@@ -903,6 +748,16 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         }
     }
 
+    public System.Drawing.Color SelectionColor
+    {
+        get
+        {
+            return _parentWindow.ScriptText.InvokeIfRequired(() => { return ((SolidColorBrush)_parentWindow.ScriptText.Selection.GetPropertyValue(TextElement.ForegroundProperty)).ToSystemColor(); });
+        }
+    }
+
+    #endregion
+
     public int PosFirstCharCurrentLine
     {
         get
@@ -916,14 +771,6 @@ internal class WpfInterpreteScriptViewModel : ViewModelBase, IScriptReturn, IInt
         get
         {
             return _parentWindow.ScriptText.InvokeIfRequired(() => { return _parentWindow.ScriptText.Document.ContentStart.GetOffsetToPosition(_parentWindow.ScriptText.CaretPosition.GetLineStartPosition(1) ?? _parentWindow.ScriptText.Document.ContentEnd); });
-        }
-    }
-
-    public System.Drawing.Color SelectionColor
-    {
-        get
-        {
-            return _parentWindow.ScriptText.InvokeIfRequired(() => { return ((SolidColorBrush)_parentWindow.ScriptText.Selection.GetPropertyValue(TextElement.ForegroundProperty)).ToSystemColor(); });
         }
     }
 

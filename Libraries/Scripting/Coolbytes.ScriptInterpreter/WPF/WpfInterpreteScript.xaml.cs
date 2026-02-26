@@ -4,8 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Navigation;
 
 using CoolBytes.Helpers;
 using CoolBytes.Scripting.Enums;
@@ -16,14 +14,35 @@ namespace CoolBytes.ScriptInterpreter.WPF;
 
 public partial class WpfInterpreteScript
 {
+    private bool _isLoaded;
+
     public WpfInterpreteScript()
     {
-        DataContext = new WpfInterpreteScriptViewModel(this);
-        ((WpfInterpreteScriptViewModel)DataContext).ScriptExecuting += WpfInterpreteScript_ExecuterScript;
-        ((WpfInterpreteScriptViewModel)DataContext).ChangeLangage += WpfInterpreteScript_ChangeLangage;
         InitializeComponent();
-        ScriptText.Document.Blocks.Clear();
     }
+
+    public new WpfInterpreteScriptViewModel DataContext
+    {
+        get { return (WpfInterpreteScriptViewModel)base.DataContext; }
+    }
+
+    private void MyControlInterpreteScript_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (!_isLoaded)
+        {
+            _isLoaded = true;
+            DataContext.Init(this);
+            DataContext.ScriptExecuting += WpfInterpreteScript_ExecuterScript;
+            DataContext.ChangeLangage += WpfInterpreteScript_ChangeLangage;
+            ScriptText.Document.Blocks.Clear();
+        }
+    }
+
+    #region Events
+
+    public event Delegates.DelegateChangeLanguage ChangeLanguage;
+
+    public event Delegates.DelegateExecuteScript ExecuteScript;
 
     private void WpfInterpreteScript_ChangeLangage(object sender, ChangeLanguageEventArgs e)
     {
@@ -35,20 +54,24 @@ public partial class WpfInterpreteScript
         ExecuteScript?.Invoke(this, e);
     }
 
+    #endregion
+
+    #region Linked properties
+
     public bool SearchInReflection
     {
-        get { return ((WpfInterpreteScriptViewModel)DataContext).SearchInReflection; }
-        set { ((WpfInterpreteScriptViewModel)DataContext).SearchInReflection = value; }
+        get { return DataContext.SearchInReflection; }
+        set { DataContext.SearchInReflection = value; }
     }
 
     public void SetStartClass(object classeDemarrage)
     {
-        ((WpfInterpreteScriptViewModel)DataContext).StartClass(classeDemarrage);
+        DataContext.StartClass(classeDemarrage);
     }
 
     public void ReloadAssembly()
     {
-        ((WpfInterpreteScriptViewModel)DataContext).ReloadAssembly();
+        DataContext.ReloadAssembly();
     }
 
     public void AddUsings(string[] usings)
@@ -57,9 +80,9 @@ public partial class WpfInterpreteScript
         {
             StringBuilder sb = new();
             sb.AppendLine();
-            foreach (string monUsing in usings.Where(monUsing => !string.IsNullOrWhiteSpace(monUsing) && !((WpfInterpreteScriptViewModel)DataContext).Usings.Contains(monUsing, StringComparison.OrdinalIgnoreCase)))
+            foreach (string monUsing in usings.Where(monUsing => !string.IsNullOrWhiteSpace(monUsing) && !DataContext.Usings.Contains(monUsing, StringComparison.OrdinalIgnoreCase)))
                 sb.AppendLine(monUsing);
-            ((WpfInterpreteScriptViewModel)DataContext).Usings += sb.ToString();
+            DataContext.Usings += sb.ToString();
         }
     }
 
@@ -67,113 +90,57 @@ public partial class WpfInterpreteScript
     {
         try
         {
-            string[] listeUsings = ((WpfInterpreteScriptViewModel)DataContext).Usings.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-            ((WpfInterpreteScriptViewModel)DataContext).Usings = listeUsings.RemoveAll(ligne => ligne.Trim().ToLower() == usingASupprimer.Trim().ToLower()).ToListOfString(Environment.NewLine);
+            string[] listeUsings = DataContext.Usings.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+            DataContext.Usings = listeUsings.RemoveAll(ligne => ligne.Trim().ToLower() == usingASupprimer.Trim().ToLower()).ToListOfString(Environment.NewLine);
         }
         catch (Exception) { /* Ignore les erreurs eventuelles */ }
     }
 
     public bool AutoAddAllUsings
     {
-        get { return ((WpfInterpreteScriptViewModel)DataContext).AutoAddAllUsings; }
-        set { ((WpfInterpreteScriptViewModel)DataContext).AutoAddAllUsings = value; }
+        get { return DataContext.AutoAddAllUsings; }
+        set { DataContext.AutoAddAllUsings = value; }
     }
 
     public List<Assembly> ListAssembly
     {
-        get { return ((WpfInterpreteScriptViewModel)DataContext).ListAssembly; }
-        set { ((WpfInterpreteScriptViewModel)DataContext).ListAssembly = value; }
+        get { return DataContext.ListAssembly; }
+        set { DataContext.ListAssembly = value; }
     }
 
     public List<Assembly> ListAssemblyInMemory
     {
-        get { return ((WpfInterpreteScriptViewModel)DataContext).ListAssemblyInMemory; }
-        set { ((WpfInterpreteScriptViewModel)DataContext).ListAssemblyInMemory = value; }
+        get { return DataContext.ListAssemblyInMemory; }
+        set { DataContext.ListAssemblyInMemory = value; }
     }
 
     public List<string> ListReferences
     {
-        get { return ((WpfInterpreteScriptViewModel)DataContext).ListReferences; }
-        set { ((WpfInterpreteScriptViewModel)DataContext).ListReferences = value; }
+        get { return DataContext.ListReferences; }
+        set { DataContext.ListReferences = value; }
     }
 
     public string AssemblyDirectory
     {
-        get { return ((WpfInterpreteScriptViewModel)DataContext).AssemblyDirectory; }
-        set { ((WpfInterpreteScriptViewModel)DataContext).AssemblyDirectory = value; }
+        get { return DataContext.AssemblyDirectory; }
+        set { DataContext.AssemblyDirectory = value; }
     }
 
     public void SetDefaultLanguage(SupportedLanguage langage)
     {
-        ((WpfInterpreteScriptViewModel)DataContext).LanguageSelected = langage.ToString("G");
-    }
-
-    private void SaisieScript_KeyUp(object sender, KeyEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).Script_KeyUp(sender, e);
-    }
-
-    private void SaisieScript_KeyDown(object sender, KeyEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).Script_KeyDown(sender, e);
-        PopUpIntellisense.ScrollIntoView(PopUpIntellisense.SelectedItem);
-        if ((e.Key == Key.V && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) ||
-            (e.Key == Key.Insert && Keyboard.Modifiers.HasFlag(ModifierKeys.Shift)))
-        {
-            string plainText = Clipboard.GetText();
-            Clipboard.Clear();
-            Clipboard.SetText(plainText);
-        }
-    }
-
-    private void Hyperlink_RequestNavigateChamps(object sender, RequestNavigateEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).ClickField.Execute(null);
-    }
-
-    private void Hyperlink_RequestNavigatePropriete(object sender, RequestNavigateEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).ClickProperty.Execute(null);
-
-    }
-
-    private void Hyperlink_RequestNavigateMethode(object sender, RequestNavigateEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).ClickMethod.Execute(null);
-    }
-
-    private void Hyperlink_RequestNavigateNameSpace(object sender, RequestNavigateEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).ClickNameSpace.Execute(null);
-    }
-
-    private void Hyperlink_RequestNavigateCommentaire(object sender, RequestNavigateEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).ClickCommentary.Execute(null);
-    }
-
-    private void ItemsControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).MouseDoubleClick();
+        DataContext.LanguageSelected = langage.ToString("G");
     }
 
     public bool InternalDebug
     {
-        get { return ((WpfInterpreteScriptViewModel)DataContext).InternalDebug; }
-        set { ((WpfInterpreteScriptViewModel)DataContext).InternalDebug = value; }
+        get { return DataContext.InternalDebug; }
+        set { DataContext.InternalDebug = value; }
     }
 
     public void ExecuteOnProcess(bool surProcess)
     {
-        ((WpfInterpreteScriptViewModel)DataContext).ExecuteOnProcess(surProcess);
+        DataContext.ExecuteOnProcess(surProcess);
     }
 
-    private void SaisieScript_TextInput(object sender, TextCompositionEventArgs e)
-    {
-        ((WpfInterpreteScriptViewModel)DataContext).TextInput(e);
-    }
-
-    public event Delegates.DelegateChangeLanguage ChangeLanguage;
-
-    public event Delegates.DelegateExecuteScript ExecuteScript;
+    #endregion
 }

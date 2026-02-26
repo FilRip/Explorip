@@ -6,16 +6,23 @@
              xmlns:converter="clr-namespace:CoolBytes.ScriptInterpreter.WPF.Converters"
              xmlns:viewmodels="clr-namespace:CoolBytes.ScriptInterpreter.WPF.ViewModels"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
-             d:DataContext="{d:DesignInstance Type=viewmodels:WpfInterpreteScriptViewModel}"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
+             Loaded="MyControlInterpreteScript_Loaded"
              lex:LocalizeDictionary.DesignCulture="en"
              lex:LocalizeDictionary.IncludeInvariantCulture="False"
              lex:ResxLocalizationProvider.DefaultAssembly="CoolBytes.ScriptInterpreter"
              lex:ResxLocalizationProvider.DefaultDictionary="Resources"
-             Name="monControlInterpreteScript">
+             Name="MyControlInterpreteScript">
+
+    <UserControl.DataContext>
+        <viewmodels:WpfInterpreteScriptViewModel/>
+    </UserControl.DataContext>
+    
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
+    
     <GroupBox x:Name="gbScript" Header=" Script " HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -28,26 +35,37 @@
                 <RowDefinition Height="23"/>
                 <RowDefinition Height="120"/>
             </Grid.RowDefinitions>
-            <RichTextBox Grid.Row="0" Name="ScriptText" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" KeyUp="SaisieScript_KeyUp" PreviewKeyDown="SaisieScript_KeyDown" PreviewTextInput="SaisieScript_TextInput" FontFamily="Consolas" AcceptsReturn="True" AcceptsTab="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Block.LineHeight="1">
+            <RichTextBox Grid.Row="0" Name="ScriptText" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0" FontFamily="Consolas" AcceptsReturn="True" AcceptsTab="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Block.LineHeight="1">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="KeyUp">
+                        <i:InvokeCommandAction Command="{Binding Script_KeyUpCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewKeyDown">
+                        <i:InvokeCommandAction Command="{Binding Script_KeyDownCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewTextInput">
+                        <i:InvokeCommandAction Command="{Binding TextInputCommand}" PassEventArgsToCommand="True"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <RichTextBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="{lex:Loc MENUITEM_SELECT_ALL}" Command="{Binding SelectAll}" InputGestureText="Ctrl+A">
+                        <MenuItem Header="{lex:Loc MENUITEM_SELECT_ALL}" Command="{Binding MenuSelectAllCommand}" InputGestureText="Ctrl+A">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="A" Modifiers="Ctrl"/>
                             </MenuItem.InputBindings>
                         </MenuItem>
                         <Separator/>
-                        <MenuItem Header="{lex:Loc MENUITEM_CUT}" Command="{Binding CutText}" InputGestureText="Ctrl+X">
+                        <MenuItem Header="{lex:Loc MENUITEM_CUT}" Command="{Binding MenuCutTextCommand}" InputGestureText="Ctrl+X">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="X" Modifiers="Ctrl"/>
                             </MenuItem.InputBindings>
                         </MenuItem>
-                        <MenuItem Header="{lex:Loc MENUITEM_COPY}" Command="{Binding CopyText}" InputGestureText="Ctrl+C">
+                        <MenuItem Header="{lex:Loc MENUITEM_COPY}" Command="{Binding MenuCopyTextCommand}" InputGestureText="Ctrl+C">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Ctrl"/>
                             </MenuItem.InputBindings>
                         </MenuItem>
-                        <MenuItem Header="{lex:Loc MENUITEM_PASTE}" Command="{Binding PasteText}" InputGestureText="Ctrl+V">
+                        <MenuItem Header="{lex:Loc MENUITEM_PASTE}" Command="{Binding MenuPasteTextCommand}" InputGestureText="Ctrl+V">
                             <MenuItem.InputBindings>
                                 <KeyBinding Key="V" Modifiers="Ctrl"/>
                             </MenuItem.InputBindings>
@@ -60,10 +78,15 @@
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>
-            <ListBox Name="PopUpIntellisense" ItemsSource="{Binding ListFilteredIntellisense, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding ListVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="100" SelectedIndex="{Binding PositionList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Stretch" MouseDoubleClick="ItemsControl_MouseDoubleClick">
+            <ListBox Name="PopUpIntellisense" ItemsSource="{Binding ListFilteredIntellisense, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding ListVisible, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToVisibilityConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Height="100" SelectedIndex="{Binding PositionList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Stretch">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding MouseDoubleClickCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" Foreground="{Binding TypeElement, Converter={converter:TypeElementToColor}, ConverterParameter={x:Reference monControlInterpreteScript}}"/>
+                        <TextBlock Text="{Binding}" Foreground="{Binding TypeElement, Converter={converter:TypeElementToColor}, ConverterParameter={x:Reference MyControlInterpreteScript}}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -84,31 +107,31 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <ListBox Grid.Column="0" Grid.Row="0" ItemsSource="{Binding ListLanguages}" SelectedItem="{Binding LanguageSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Name="btnExecuteScript" Grid.Row="1" Grid.Column="0" Width="92" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Content="{lex:Loc BTN_EXECUTE}" Command="{Binding BtnExecuteScript}" Margin="0 5 0 0"/>
-                <Button Name="btnLoadScript" Grid.Row="2" Grid.Column="0" Width="92" HorizontalContentAlignment="Center" Content="{lex:Loc BTN_LOADSCRIPT}" HorizontalAlignment="Center" VerticalAlignment="Top" Command="{Binding BtnLoadScript}" Margin="0 5 0 0"/>
-                <Button Name="btnSaveScript" Grid.Row="3" Grid.Column="0" Width="92" HorizontalContentAlignment="Center" Content="{lex:Loc BTN_SAVESCRIPT}" HorizontalAlignment="Center" VerticalAlignment="Top" Command="{Binding BtnSaveScript}" Margin="0 5 0 0"/>
+                <Button Name="btnExecuteScript" Grid.Row="1" Grid.Column="0" Width="92" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Content="{lex:Loc BTN_EXECUTE}" Command="{Binding ExecuteScriptCommand}" Margin="0 5 0 0"/>
+                <Button Name="btnLoadScript" Grid.Row="2" Grid.Column="0" Width="92" HorizontalContentAlignment="Center" Content="{lex:Loc BTN_LOADSCRIPT}" HorizontalAlignment="Center" VerticalAlignment="Top" Command="{Binding LoadScriptCommand}" Margin="0 5 0 0"/>
+                <Button Name="btnSaveScript" Grid.Row="3" Grid.Column="0" Width="92" HorizontalContentAlignment="Center" Content="{lex:Loc BTN_SAVESCRIPT}" HorizontalAlignment="Center" VerticalAlignment="Top" Command="{Binding SaveScriptCommand}" Margin="0 5 0 0"/>
                 <Label Grid.Row="4" Grid.Column="0">
-                    <Hyperlink Foreground="{Binding FieldColorInternal, Mode=TwoWay}" RequestNavigate="Hyperlink_RequestNavigateChamps" NavigateUri="null">
+                    <Hyperlink Foreground="{Binding FieldColorInternal, Mode=TwoWay}" NavigateUri="null" Command="{Binding Click_HyperLinkCommand}" CommandParameter="FieldColorInternal">
                         <TextBlock Text="{lex:Loc LINK_FIELD}"/>
                     </Hyperlink>
                 </Label>
                 <Label Grid.Row="5" Grid.Column="0">
-                    <Hyperlink Foreground="{Binding PropertyColor, Mode=TwoWay}" RequestNavigate="Hyperlink_RequestNavigatePropriete" NavigateUri="null">
+                    <Hyperlink Foreground="{Binding PropertyColor, Mode=TwoWay}" NavigateUri="null" Command="{Binding Click_HyperLinkCommand}" CommandParameter="PropertyColor">
                         <TextBlock Text="{lex:Loc LINK_PROPERTY}"/>
                     </Hyperlink>
                 </Label>
                 <Label Grid.Row="6" Grid.Column="0">
-                    <Hyperlink Foreground="{Binding MethodColor, Mode=TwoWay}" RequestNavigate="Hyperlink_RequestNavigateMethode" NavigateUri="null">
+                    <Hyperlink Foreground="{Binding MethodColor, Mode=TwoWay}" NavigateUri="null" Command="{Binding Click_HyperLinkCommand}" CommandParameter="MethodColor">
                         <TextBlock Text="{lex:Loc LINK_METHOD}"/>
                     </Hyperlink>
                 </Label>
                 <Label Grid.Row="7" Grid.Column="0">
-                    <Hyperlink Foreground="{Binding NamespaceColorInternal, Mode=TwoWay}" RequestNavigate="Hyperlink_RequestNavigateNameSpace" NavigateUri="null">
+                    <Hyperlink Foreground="{Binding NamespaceColorInternal, Mode=TwoWay}" NavigateUri="null" Command="{Binding Click_HyperLinkCommand}" CommandParameter="NamespaceColorInternal">
                         <TextBlock Text="{lex:Loc LINK_NAMESPACE}"/>
                     </Hyperlink>
                 </Label>
                 <Label Grid.Row="8" Grid.Column="0">
-                    <Hyperlink Foreground="{Binding CommentColorInternal, Mode=TwoWay}" RequestNavigate="Hyperlink_RequestNavigateCommentaire" NavigateUri="null">
+                    <Hyperlink Foreground="{Binding CommentColorInternal, Mode=TwoWay}" NavigateUri="null" Command="{Binding Click_HyperLinkCommand}" CommandParameter="CommentColorInternal">
                         <TextBlock Text="{lex:Loc LINK_COMMENTARY}"/>
                     </Hyperlink>
                 </Label>
@@ -121,7 +144,7 @@
                 </Grid.ColumnDefinitions>
                 <CheckBox Grid.Column="0" Content="{lex:Loc CHK_INTELLISENSE}" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding ActiveIntellisense, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 <CheckBox Grid.Column="1" Content="{lex:Loc CHK_OTHERTHREAD}" HorizontalAlignment="Left" VerticalAlignment="Center" IsChecked="{Binding OtherThread, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <Button Grid.Column="2" Content="{lex:Loc BTN_MODITY_LIST_USINGS}" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding BtnAddUsing}"/>
+                <Button Grid.Column="2" Content="{lex:Loc BTN_MODITY_LIST_USINGS}" HorizontalAlignment="Right" VerticalAlignment="Center" Command="{Binding AddUsingCommand}"/>
             </Grid>
             <Grid Grid.Row="2" Grid.Column="0">
                 <Grid.ColumnDefinitions>
@@ -150,7 +173,7 @@
                     <Label Content="{lex:Loc LBL_DATACONTRACT_NAME}" Grid.Column="1" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Right" Visibility="{Binding SerializationDataContract, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <ComboBox Grid.Column="2" Grid.Row="0" VerticalAlignment="Bottom" ItemsSource="{Binding ListDataContract}" Visibility="{Binding SerializationDataContract, Converter={StaticResource BooleanToVisibilityConverter}}" SelectedItem="{Binding DataContractName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
-                <Button Grid.Column="0" Grid.Row="2" Content="{lex:Loc BTN_LOAD_STATE}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" HorizontalAlignment="Left" Command="{Binding BtnLoadObject}"/>
+                <Button Grid.Column="0" Grid.Row="2" Content="{lex:Loc BTN_LOAD_STATE}" VerticalContentAlignment="Center" VerticalAlignment="Bottom" HorizontalAlignment="Left" Command="{Binding LoadObjectCommand}"/>
             </Grid>
             <Grid Grid.Column="1" Grid.Row="3">
                 <Grid.RowDefinitions>
@@ -162,7 +185,7 @@
                 <CheckBox Grid.Row="0" Content="{lex:Loc CHK_WITH_INHERITS}" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding WithInherits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding NotCheckedSerialisationDataContract}"/>
                 <Label Grid.Row="1" Content="{lex:Loc LBL_MAX_RECURSIVE}" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
                 <TextBox Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Top" Text="{Binding NumMaxRecursion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding NotCheckedSerialisationDataContract}"/>
-                <CheckBox Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding ChkOpenWindow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <CheckBox Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding OpenInNewWindow, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <TextBlock Text="{lex:Loc CHK_OPEN_WINDOW}" TextWrapping="Wrap"/>
                 </CheckBox>
             </Grid>
