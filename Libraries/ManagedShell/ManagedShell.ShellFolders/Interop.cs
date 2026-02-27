@@ -101,7 +101,7 @@ internal static class Interop
     public static extern int CoCreateInstance(
         ref Guid rclsid,
         IntPtr pUnkOuter,
-        ClassesContexts dwClsContext,
+        NativeMethods.ClassesContexts dwClsContext,
         ref Guid riid,
         out IntPtr ppv);
 
