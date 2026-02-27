@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\HookTaskbarList\HookTaskbarList\HookTaskbarList.csproj" />
     <ProjectReference Include="..\ManagedShell.Common\ManagedShell.Common.csproj" />
     <ProjectReference Include="..\ManagedShell.Interop\ManagedShell.Interop.csproj" />
     <ProjectReference Include="..\ManagedShell.UWPInterop\ManagedShell.UWPInterop.csproj" />

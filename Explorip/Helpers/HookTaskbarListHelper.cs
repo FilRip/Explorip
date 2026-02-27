@@ -1,156 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.Remoting;
+using System.Runtime.InteropServices;
 
-using EasyHook;
-
-using Explorip.TaskBar;
-
-using HookTaskbarList.Interfaces;
-
-using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
-using ManagedShell.WindowsTasks;
+
+using Microsoft.Win32;
 
 namespace Explorip.Helpers;
 
-internal class HookTaskbarListHelper : IDisposable
+internal static class HookTaskbarListHelper
 {
-    private static readonly object _lockThreadSafe = new();
-    private readonly List<uint> _listProcessInjected = [];
-
-    private TaskbarListServer _server;
-    private string _channelName;
-    private bool disposedValue;
-    private static HookTaskbarListHelper _instance;
-    private int _numProcessManaged;
+    private static uint regPtr = 0;
+    private static TaskbarList.TaskbarList _instance;
 
     public static void InstallHook()
     {
-        if (_instance == null)
-        {
-            _instance ??= new HookTaskbarListHelper();
-            _instance.Init();
-        }
+        if (!Program.ModeShell)
+            return;
+        RegistryKey original = Registry.ClassesRoot.OpenSubKey("CLSID\\{" + typeof(TaskbarList.TaskbarList).GUID.ToString() + "}", false);
+        RegistryKey userKey = Registry.CurrentUser.CreateSubKey("Software\\Classes\\CLSID\\{" + typeof(TaskbarList.TaskbarList).GUID.ToString() + "}", true);
+        userKey.SetValue("", original.GetValue(""));
+        original.Close();
+        userKey.CreateSubKey("LocalServer32").SetValue("", Environment.GetCommandLineArgs()[0]);
+        userKey.Close();
+
+        Guid regGuid = typeof(TaskbarList.TaskbarList).GUID;
+        _instance = new TaskbarList.TaskbarList();
+        NativeMethods.CoRegisterClassObject(ref regGuid, _instance, NativeMethods.ClassesContexts.LOCAL_SERVER, NativeMethods.RegistryClasses.REGCLS_MULTIPLEUSE, out regPtr);
     }
 
     public static void UninstallHook()
     {
-        _instance?.Dispose();
-        _instance = null;
-    }
-
-    internal void Init()
-    {
-        try
+        if (regPtr > 0)
         {
-            _channelName = null;
-            RemoteHooking.IpcCreateServer<TaskbarListServer>(ref _channelName, WellKnownObjectMode.Singleton);
-            _server = RemoteHooking.IpcConnectClient<TaskbarListServer>(_channelName);
-            _server.AddButtonsEvent += Server_AddButtonsEvent;
-            MyTaskbarApp.MyShellManager.TasksService.TaskbarListChanged += TasksService_TaskbarListChanged;
-
-            StartManagerProcess();
-            // TODO : Inject in ICustomDestinationList too, later
-        }
-        catch (Exception ex)
-        {
-            ShellLogger.Error("Unable to initialize HookTaskbarListHelper: " + ex.ToString());
+            NativeMethods.CoRevokeClassObject(regPtr);
+            Registry.CurrentUser.DeleteSubKey("Software\\Classes\\CLSID\\{" + typeof(TaskbarList.TaskbarList).GUID.ToString() + "}", false);
         }
     }
 
-    private void TasksService_TaskbarListChanged(object sender, WindowEventArgs e)
+    internal static TaskbarList.TaskbarList TaskbarListImplementation
     {
-        if (e.Handle != IntPtr.Zero)
-        {
-            NativeMethods.GetWindowThreadProcessId(e.Handle, out uint processId);
-            if (processId == 0)
-                ShellLogger.Debug("WindowEventArgs.ProcessId is 0");
-            else
-            {
-                StartManagerProcess();
-                InjectToProcess(processId);
-            }
-        }
-        else
-        {
-            ShellLogger.Debug("WindowEventArgs.Hndle is null");
-        }
+        get { return _instance; }
     }
 
-    private void StartManagerProcess()
+    internal static void RegisterAsShellForCurrentUser()
     {
-        if (_numProcessManaged == 0 || Process.GetProcessById(_numProcessManaged) == null)
-        {
-            string path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
-            _numProcessManaged = Process.Start(Path.Combine(path, "HookTaskbarListManager.exe"), Process.GetCurrentProcess().Id.ToString() + " " + _channelName).Id;
-        }
+        Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true).SetValue("Shell", Environment.GetCommandLineArgs()[0]);
     }
 
-#pragma warning disable IDE0079
-#pragma warning disable S2325 // Methods and properties that don't access instance data should be static
-    private void Server_AddButtonsEvent(object sender, AddButtonsEventArgs e)
+    internal static void UnregisterAsShellForCurrentUser()
     {
-        ShellLogger.Debug($"Process {e.ProcessId} has sent {e.NbButtons} Thumbnail Buttons for window {e.Handle}");
-        ApplicationWindow appWin = MyTaskbarApp.MyShellManager.TasksService.Windows.SingleOrDefault(w => w.ListWindows?.Count > 0 && w.ListWindows.Any(w => w.Handle == e.Handle));
-        appWin?.SetThumbButtons(e.Buttons);
+        Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true).DeleteValue("Shell");
     }
-#pragma warning restore S2325 // Methods and properties that don't access instance data should be static
-#pragma warning restore IDE0079
-
-    internal void InjectToProcess(uint processId)
-    {
-        lock (_lockThreadSafe)
-        {
-            if (_listProcessInjected.Contains(processId))
-                return;
-            _listProcessInjected.Add(processId);
-            _server.InjectInProcess(processId);
-        }
-    }
-
-    #region IDisposable Support
-
-    public bool IsDisposed
-    {
-        get { return disposedValue; }
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                _server.AddButtonsEvent -= Server_AddButtonsEvent;
-                MyTaskbarApp.MyShellManager.TasksService.TaskbarListChanged -= TasksService_TaskbarListChanged;
-                _listProcessInjected.Clear();
-                try
-                {
-                    if (_numProcessManaged != 0 && Process.GetProcessById(_numProcessManaged) != null)
-                    {
-                        Process.GetProcessById(_numProcessManaged).Kill();
-                    }
-                }
-                catch (Exception)
-                {
-                    Debug.WriteLine("Unable to kill HookTaskbarListManager process");
-                }
-            }
-
-            disposedValue = true;
-        }
-    }
-
-    /// <inheritdoc/>/>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    #endregion
 }

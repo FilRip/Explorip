@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+using static ManagedShell.Interop.NativeMethods;
+
 namespace ManagedShell.Interop;
 
 public partial class NativeMethods
@@ -254,4 +256,106 @@ public partial class NativeMethods
             }
         }
     }
+
+    [Flags()]
+    public enum RegistryClasses
+    {
+        /// <summary>
+        /// After an application is connected to a class object with CoGetClassObject, the class object is removed from public view so
+        /// that no other applications can connect to it. This value is commonly used for single document interface (SDI) applications.
+        /// Specifying this value does not affect the responsibility of the object application to call CoRevokeClassObject; it must
+        /// always call CoRevokeClassObject when it is finished with an object class.
+        /// </summary>
+        REGCLS_SINGLEUSE = 0,
+
+        /// <summary>
+        /// Multiple applications can connect to the class object through calls to CoGetClassObject. If both the REGCLS_MULTIPLEUSE and
+        /// CLSCTX_LOCAL_SERVER are set in a call to CoRegisterClassObject, the class object is also automatically registered as an
+        /// in-process server, whether CLSCTX_INPROC_SERVER is explicitly set.
+        /// </summary>
+        REGCLS_MULTIPLEUSE = 1,
+
+        /// <summary>
+        /// Useful for registering separate CLSCTX_LOCAL_SERVER and CLSCTX_INPROC_SERVER class factories through calls to
+        /// CoGetClassObject. If REGCLS_MULTI_SEPARATE is set, each execution context must be set separately; CoRegisterClassObject does
+        /// not automatically register an out-of-process server (for which CLSCTX_LOCAL_SERVER is set) as an in-process server. This
+        /// allows the EXE to create multiple instances of the object for in-process needs, such as self embeddings, without disturbing
+        /// its CLSCTX_LOCAL_SERVER registration. If an EXE registers a REGCLS_MULTI_SEPARATE class factory and a CLSCTX_INPROC_SERVER
+        /// class factory, instance creation calls that specify CLSCTX_INPROC_SERVER in the CLSCTX parameter executed by the EXE would
+        /// be satisfied locally without approaching the SCM. This mechanism is useful when the EXE uses functions such as OleCreate and
+        /// OleLoad to create embeddings, but at the same does not wish to launch a new instance of itself for the self-embedding case.
+        /// The distinction is important for embeddings because the default handler aggregates the proxy manager by default and the
+        /// application should override this default behavior by calling OleCreateEmbeddingHelper for the self-embedding case. If your
+        /// application need not distinguish between the local and inproc case, you need not register your class factory using
+        /// REGCLS_MULTI_SEPARATE. In fact, the application incurs an extra network round trip to the SCM when it registers its
+        /// MULTIPLEUSE class factory as MULTI_SEPARATE and does not register another class factory as INPROC_SERVER.
+        /// </summary>
+        REGCLS_MULTI_SEPARATE = 2,
+
+        /// <summary>
+        /// Suspends registration and activation requests for the specified CLSID until there is a call to CoResumeClassObjects. This is
+        /// used typically to register the CLSIDs for servers that can register multiple class objects to reduce the overall
+        /// registration time, and thus the server application startup time, by making a single call to the SCM, no matter how many
+        /// CLSIDs are registered for the server.
+        /// </summary>
+        REGCLS_SUSPENDED = 4,
+
+        /// <summary>
+        /// The class object is a surrogate process used to run DLL servers. The class factory registered by the surrogate process is
+        /// not the actual class factory implemented by the DLL server, but a generic class factory implemented by the surrogate. This
+        /// generic class factory delegates instance creation and marshaling to the class factory of the DLL server running in the
+        /// surrogate. For further information on DLL surrogates, see the DllSurrogate registry value.
+        /// </summary>
+        REGCLS_SURROGATE = 8,
+
+        /// <summary>
+        /// The class object aggregates the free-threaded marshaler and will be made visible to all inproc apartments. Can be used
+        /// together with other flags. For example, REGCLS_AGILE | REGCLS_MULTIPLEUSE to register a class object that can be used
+        /// multiple times from different apartments. Without other flags, behavior will retain REGCLS_SINGLEUSE semantics in that only
+        /// one instance can be generated.
+        /// </summary>
+        REGCLS_AGILE = 0x10,
+    }
+
+    [Flags()]
+    public enum ClassesContexts : uint
+    {
+        INPROC_SERVER = 0x1,
+        INPROC_HANDLER = 0x2,
+        LOCAL_SERVER = 0x4,
+        INPROC_SERVER16 = 0x8,
+        REMOTE_SERVER = 0x10,
+        INPROC_HANDLER16 = 0x20,
+        RESERVED1 = 0x40,
+        RESERVED2 = 0x80,
+        RESERVED3 = 0x100,
+        RESERVED4 = 0x200,
+        NO_CODE_DOWNLOAD = 0x400,
+        RESERVED5 = 0x800,
+        NO_CUSTOM_MARSHAL = 0x1000,
+        ENABLE_CODE_DOWNLOAD = 0x2000,
+        NO_FAILURE_LOG = 0x4000,
+        DISABLE_AAA = 0x8000,
+        ENABLE_AAA = 0x10000,
+        FROM_DEFAULT_CONTEXT = 0x20000,
+        CLSCTX_ACTIVATE_X86_SERVER = 0x40000,
+        CLSCTX_ACTIVATE_32_BIT_SERVER = 0x40000,
+        CLSCTX_ACTIVATE_64_BIT_SERVER = 0x80000,
+        CLSCTX_ENABLE_CLOAKING = 0x100000,
+        CLSCTX_APPCONTAINER = 0x400000,
+        CLSCTX_ACTIVATE_AAA_AS_IU = 0x800000,
+        CLSCTX_RESERVED6 = 0x1000000,
+        CLSCTX_ACTIVATE_ARM32_SERVER = 0x2000000,
+        CLSCTX_ALLOW_LOWER_TRUST_REGISTRATION = 0x4000000,
+        CLSCTX_PS_DLL = 0x80000000,
+        INPROC = INPROC_SERVER | INPROC_HANDLER,
+        SERVER = INPROC_SERVER | LOCAL_SERVER | REMOTE_SERVER,
+        ALL = SERVER | INPROC_HANDLER
+    }
+
+    [DllImport(Ole32_DllName)]
+    internal static extern int CoRegisterClassObject(ref Guid rclsid, [MarshalAs(UnmanagedType.Interface)] object pUnk, ClassesContexts dwClsContext, RegistryClasses flags, out uint lpdwRegister);
+
+    [DllImport(Ole32_DllName, SetLastError = false)]
+    internal static extern int CoRevokeClassObject(uint dwRegister);
 }

@@ -51,8 +51,6 @@
     <ProjectReference Include="..\HookFileOperation\ExploripSharedCopy\ExploripSharedCopy.csproj" />
     <ProjectReference Include="..\HookFileOperation\HookFileOperationsManager\HookFileOperationsManager.csproj" />
     <ProjectReference Include="..\HookFileOperation\HookFileOperations\HookFileOperations.csproj" />
-    <ProjectReference Include="..\HookTaskbarList\HookTaskbarListManager\HookTaskbarListManager.csproj" />
-    <ProjectReference Include="..\HookTaskbarList\HookTaskbarList\HookTaskbarList.csproj" />
     <ProjectReference Include="..\Libraries\CoolBytes.InteropWinRT\CoolBytes.InteropWinRT.csproj" />
     <ProjectReference Include="..\Libraries\CoolBytes.JumpList\CoolBytes.JumpList.csproj" />
     <ProjectReference Include="..\Libraries\ExploripConfig\ExploripConfig.csproj" />

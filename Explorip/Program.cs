@@ -99,7 +99,6 @@ public static class Program
                     {
                         IpcServerManager.InitChannel(new IpcServer());
                         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-                        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                     }
                     if (ConfigManager.HookCopy)
                         HookCopyOperationsHelper.InstallHook();

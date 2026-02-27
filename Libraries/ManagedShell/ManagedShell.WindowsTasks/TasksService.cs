@@ -55,7 +55,6 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
     public event EventHandler<WindowEventArgs> DesktopActivated;
     public event EventHandler<FullScreenEventArgs> FullScreenChanged;
     public event EventHandler<WindowEventArgs> MonitorChanged;
-    public event EventHandler<WindowEventArgs> TaskbarListChanged;
     public event EventHandler<WindowEventArgs> WindowDestroy;
     public event EventHandler<WindowEventArgs> WindowCreate;
 
@@ -508,57 +507,43 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
                     // ActivateTab
                     // Also sends WM_SHELLHOOK message
                     ShellLogger.Debug("TasksService: ITaskbarList: ActivateTab HWND:" + msg.LParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETMAXTEXTROWS:
                     // MarkFullscreenWindow
                     ShellLogger.Debug("TasksService: ITaskbarList: MarkFullscreenWindow HWND:" + msg.LParam + " Entering? " + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETBUTTONINFOW:
                     // SetProgressValue
                     ShellLogger.Debug("TasksService: ITaskbarList: SetProgressValue HWND:" + msg.WParam + " Progress: " + msg.LParam);
-#pragma warning disable IDE0079
-#pragma warning disable S1121
                     win?.ProgressValue = (int)msg.LParam;
-#pragma warning restore S1121
-#pragma warning restore IDE0079
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETBUTTONINFOA:
                     // SetProgressState
                     ShellLogger.Debug("TasksService: ITaskbarList: SetProgressState HWND:" + msg.WParam + " Flags: " + msg.LParam);
-#pragma warning disable IDE0079
-#pragma warning disable S1121
                     win?.ProgressState = (ToolbarProgressBarState)msg.LParam;
-#pragma warning restore S1121
-#pragma warning restore IDE0079
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_INSERTBUTTONW:
                     // RegisterTab
                     ShellLogger.Debug("TasksService: ITaskbarList: RegisterTab MDI HWND:" + msg.LParam + " Tab HWND: " + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_ADDBUTTONSW:
                     // UnregisterTab
                     ShellLogger.Debug("TasksService: ITaskbarList: UnregisterTab Tab HWND: " + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETHOTITEM:
                     // SetTabOrder
                     ShellLogger.Debug("TasksService: ITaskbarList: SetTabOrder HWND:" + msg.WParam + " Before HWND: " + msg.LParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETHOTITEM:
                     // SetTabActive
                     ShellLogger.Debug("TasksService: ITaskbarList: SetTabActive HWND:" + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETBUTTONTEXTW:
@@ -569,38 +554,32 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
                 case (int)WM.TB_SAVERESTOREW:
                     // ThumbBarAddButtons
                     ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarAddButtons HWND:" + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_ADDSTRINGW:
                     // ThumbBarUpdateButtons
                     ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarUpdateButtons HWND:" + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_MAPACCELERATORA:
                     // ThumbBarSetImageList
                     ShellLogger.Debug("TasksService: ITaskbarList: ThumbBarSetImageList HWND:" + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETINSERTMARK:
                     // SetOverlayIcon - Icon
                     ShellLogger.Debug("TasksService: ITaskbarList: SetOverlayIcon - Icon HWND:" + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     win?.SetOverlayIcon(msg.LParam);
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_SETINSERTMARK:
                     // SetThumbnailTooltip
                     ShellLogger.Debug("TasksService: ITaskbarList: SetThumbnailTooltip HWND:" + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_INSERTMARKHITTEST:
                     // SetThumbnailClip
                     ShellLogger.Debug("TasksService: ITaskbarList: SetThumbnailClip HWND:" + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
                 case (int)WM.TB_GETEXTENDEDSTYLE:
@@ -612,7 +591,6 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
                 case (int)WM.TB_SETPADDING:
                     // SetTabProperties
                     ShellLogger.Debug("TasksService: ITaskbarList: SetTabProperties HWND:" + msg.WParam);
-                    TaskbarListChanged?.Invoke(this, new WindowEventArgs() { Handle = msg.WParam, Window = win });
                     msg.Result = IntPtr.Zero;
                     return;
             }

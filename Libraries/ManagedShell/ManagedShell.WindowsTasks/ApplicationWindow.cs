@@ -10,8 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-using HookTaskbarList.TaskbarList.Interfaces;
-
 using ManagedShell.Common.Enums;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
@@ -46,7 +44,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
     private readonly object _lockUpdate;
     private int _position;
     private readonly Guid _id;
-    private ThumbButton[] _thumbButtons;
 
     public ApplicationWindow(TasksService tasksService, IntPtr handle)
     {
@@ -898,16 +895,5 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 return (int)pe32.th32ParentProcessID;
         } while (NativeMethods.Process32Next(hSnapshot, ref pe32));
         return -1;
-    }
-
-    public void SetThumbButtons(ThumbButton[] buttons)
-    {
-        _thumbButtons = buttons;
-        OnPropertyChanged(nameof(ThumbButtons));
-    }
-
-    public ThumbButton[] ThumbButtons
-    {
-        get { return _thumbButtons; }
     }
 }
