@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -102,19 +103,19 @@ public partial class WpfInterpreteScript
         set { DataContext.AutoAddAllUsings = value; }
     }
 
-    public List<Assembly> ListAssembly
+    public ObservableCollection<Assembly> ListAssembly
     {
         get { return DataContext.ListAssembly; }
         set { DataContext.ListAssembly = value; }
     }
 
-    public List<Assembly> ListAssemblyInMemory
+    public ObservableCollection<Assembly> ListAssemblyInMemory
     {
         get { return DataContext.ListAssemblyInMemory; }
         set { DataContext.ListAssemblyInMemory = value; }
     }
 
-    public List<string> ListReferences
+    public ObservableCollection<string> ListReferences
     {
         get { return DataContext.ListReferences; }
         set { DataContext.ListReferences = value; }

@@ -15,6 +15,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Explorip.TaskBar.Controls;
+using Explorip.TaskBar.Helpers;
 
 using ExploripConfig.Configuration;
 
@@ -110,23 +111,16 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
 
     private void SetupFolder(string path)
     {
-        if (Folder != null)
-        {
-            Folder.Files?.CollectionChanged -= Files_CollectionChanged;
-            if (Folder.Files != null)
-                foreach (ShellFile sf in Folder.Files)
-                    sf.Dispose();
-            Folder.Dispose();
-        }
+        Folder?.Files?.CollectionChanged -= Files_CollectionChanged;
         if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)) && ParentTaskbar != null)
         {
-            Folder = new ShellFolder(Environment.ExpandEnvironmentVariables(path), IntPtr.Zero, true);
+            Folder = ToolbarsManager.GetToolbar(path);
             Title = Folder.DisplayName;
             if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
                 ShowLargeIcon();
             ShowTitle = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarShowTitle(Path);
             DefaultSavedPosition();
-            Folder.Files.CollectionChanged += Files_CollectionChanged;
+            SetItemsSource();
         }
     }
 
@@ -134,8 +128,12 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     public void RefreshFolder()
     {
         ToolbarItems = null;
-        SetupFolder(Path);
-        Files_CollectionChanged(null, null);
+        ToolbarsManager.DeleteToolbar(Path);
+        foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
+        {
+            Toolbar bt = tb.ListToolbars.Children.OfType<Toolbar>().FirstOrDefault(t => t.DataContext.Id == Path);
+            bt?.DataContext.SetupFolder(Path);
+        }
     }
 
     private void Files_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -144,8 +142,8 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         {
             _taskRefresh = new Task(async () =>
             {
-                await Task.Delay(Folder == null ? 500 : 0);
-                SetItemsSource();
+                await Task.Delay(Folder == null ? 5000 : 10);
+                UpdateInvisibleIcons();
             });
             _taskRefresh.Start();
         }
@@ -184,8 +182,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
                         si.Position = ++lastPosition;
                     ToolbarItems = CollectionViewSource.GetDefaultView(Folder.Files);
                     ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.Position), ListSortDirection.Ascending));
-                    UpdateInvisibleIcons();
+                    ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.DisplayName), ListSortDirection.Ascending));
                     RefreshMyCollectionView();
+                    UpdateInvisibleIcons();
+                    Folder.Files.CollectionChanged -= Files_CollectionChanged;
+                    Folder.Files.CollectionChanged += Files_CollectionChanged;
                 }
             }
         });
@@ -193,7 +194,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
 
     public void RefreshMyCollectionView()
     {
-        ToolbarItems?.Refresh();
+        Application.Current.Dispatcher.Invoke(() => ToolbarItems?.Refresh());
     }
 
     protected override void UpdateAfterMove()
@@ -400,7 +401,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         try
         {
             Folder.Files?.CollectionChanged -= Files_CollectionChanged;
-            Folder?.Dispose();
+            int nbStillPresent = 0;
+            foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
+                nbStillPresent += tb.ListToolbars.Children.OfType<Toolbar>().Count(t => t.DataContext.Id == Path);
+            if (nbStillPresent <= 1)
+                ToolbarsManager.DeleteToolbar(Path);
             if (_moreItems != null)
             {
                 ((ItemsControl)((Border)_moreItems.Child).Child).Items.Clear();

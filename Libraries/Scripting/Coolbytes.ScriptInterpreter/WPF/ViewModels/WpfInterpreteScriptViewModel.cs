@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -84,7 +85,7 @@ public partial class WpfInterpreteScriptViewModel : ObservableObject, IScriptRet
 
     internal void ReloadAssembly()
     {
-        ListAssembly = Scripting.Helpers.ExecuteScript.ListDefaultAssembly();
+        ListAssembly = [.. Scripting.Helpers.ExecuteScript.ListDefaultAssembly()];
     }
 
     internal void StartClass(object classeDemarrage)
@@ -109,11 +110,11 @@ public partial class WpfInterpreteScriptViewModel : ObservableObject, IScriptRet
 
     #region Binding
 
-    internal List<Assembly> ListAssemblyInMemory { get; set; }
+    internal ObservableCollection<Assembly> ListAssemblyInMemory { get; set; }
 
-    internal List<Assembly> ListAssembly { get; set; }
+    internal ObservableCollection<Assembly> ListAssembly { get; set; }
 
-    internal List<string> ListReferences { get; set; }
+    internal ObservableCollection<string> ListReferences { get; set; }
 
     internal string AssemblyDirectory { get; set; }
 
@@ -183,7 +184,7 @@ public partial class WpfInterpreteScriptViewModel : ObservableObject, IScriptRet
     }
 
     [ObservableProperty()]
-    private List<string> _listLanguages;
+    private ObservableCollection<string> _listLanguages;
 
     [ObservableProperty()]
     private string _languageSelected;
@@ -540,7 +541,7 @@ public partial class WpfInterpreteScriptViewModel : ObservableObject, IScriptRet
                     script = "System.Threading.Tasks.Task.Run(Sub()" + Environment.NewLine + script + Environment.NewLine + "End Sub)";
             }
 
-            ret = Scripting.Helpers.ExecuteScript.ExecuteScripts(script, Usings?.Split(Environment.NewLine.ToCharArray()).ToList(), currentLanguage, ListAssembly, ListReferences, AutoAddAllUsings, AssemblyDirectory, ListAssemblyInMemory?.ToArray());
+            ret = Scripting.Helpers.ExecuteScript.ExecuteScripts(script, Usings?.Split(Environment.NewLine.ToCharArray()).ToList(), currentLanguage, [.. ListAssembly], [.. ListReferences], AutoAddAllUsings, AssemblyDirectory, ListAssemblyInMemory?.ToArray());
 
             if (ret != null)
             {
