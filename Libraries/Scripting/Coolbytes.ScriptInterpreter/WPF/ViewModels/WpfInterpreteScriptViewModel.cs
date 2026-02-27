@@ -88,9 +88,9 @@ public partial class WpfInterpreteScriptViewModel : ObservableObject, IScriptRet
         ListAssembly = [.. Scripting.Helpers.ExecuteScript.ListDefaultAssembly()];
     }
 
-    internal void StartClass(object classeDemarrage)
+    internal void StartClass(object initialTypeInstance)
     {
-        _startClass = classeDemarrage;
+        _startClass = initialTypeInstance;
     }
 
     public string StartClassType

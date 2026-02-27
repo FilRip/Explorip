@@ -65,9 +65,9 @@ public partial class WpfInterpreteScript
         set { DataContext.SearchInReflection = value; }
     }
 
-    public void SetStartClass(object classeDemarrage)
+    public void SetStartClass(object initialTypeInstance)
     {
-        DataContext.StartClass(classeDemarrage);
+        DataContext.StartClass(initialTypeInstance);
     }
 
     public void ReloadAssembly()

@@ -111,6 +111,7 @@ public partial class Taskbar : AppBarWindow
         else if (e.Key == Key.F12)
         {
             CoolBytes.ScriptInterpreter.WPF.ExecuteScriptWindow executeScriptWindow = new();
+            executeScriptWindow.InterpreteScriptComponent.SetStartClass((MyTaskbarApp)Application.Current);
             executeScriptWindow.Show();
         }
 #endif

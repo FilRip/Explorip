@@ -9,7 +9,7 @@ public partial class ExecuteScriptWindow : Window
         InitializeComponent();
     }
 
-    public WpfInterpreteScript ComposantInterpreteScript
+    public WpfInterpreteScript InterpreteScriptComponent
     {
         get { return InterpreteScript; }
     }
