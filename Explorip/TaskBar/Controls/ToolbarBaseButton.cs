@@ -310,7 +310,7 @@ public class ToolbarBaseButton : UserControl
 
     protected void OnDrop(object sender, DragEventArgs e)
     {
-        if (e.Data is DataObject data && data.GetFileDropList()?.Count > 0)
+        if (e.Data is DataObject data && data.GetFileDropList()?.Count > 0 && _startDrag)
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
@@ -350,7 +350,7 @@ public class ToolbarBaseButton : UserControl
             DragGhostAdorner.StartDragGhost(this, e);
             DragDrop.DoDragDrop(this, base.DataContext, DragDropEffects.Move);
             DragGhostAdorner.StopDragGhost();
-            _startDrag = true;
+            _startDrag = false;
         }
     }
 

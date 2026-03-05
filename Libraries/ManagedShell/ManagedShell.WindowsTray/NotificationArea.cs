@@ -279,6 +279,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                     {
                         TrayIcons.Remove(trayIcon);
                         ShellLogger.Debug($"NotificationArea: Removed: {trayIcon.Title}");
+                        trayIcon.Dispose();
                         return true;
                     }
 

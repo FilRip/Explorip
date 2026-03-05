@@ -63,6 +63,6 @@ internal class VirtualDesktopManagerInternal(ComInterfaceAssembly assembly, ComW
         //not available in server 2022
     }
 
-    private VirtualDesktop InvokeMethodAndWrap(object?[]? parameters = null, [CallerMemberName] string methodName = "")
+    private VirtualDesktop InvokeMethodAndWrap(object?[]? parameters = null, [CallerMemberName()] string methodName = "")
         => new(this.ComInterfaceAssembly, this.InvokeMethod<object>(parameters, methodName) ?? throw new VirtualDesktopException("Failed to get IVirtualDesktop instance."));
 }

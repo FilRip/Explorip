@@ -14,6 +14,9 @@ public partial class NativeMethods
     [DllImport(ShlwApi_DllName, SetLastError = true)]
     internal static extern bool SHUnlockShared(IntPtr pvData);
 
+    [DllImport(ShlwApi_DllName, SetLastError = true)]
+    internal static extern bool SHFreeShared(IntPtr pvData, uint dwProcessId);
+
     [DllImport(ShlwApi_DllName, EntryPoint = "StrRetToBuf", ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
     internal static extern int StrRetToBuf(IntPtr pstr, IntPtr pidl, StringBuilder pszBuf, int cchBuf);
 

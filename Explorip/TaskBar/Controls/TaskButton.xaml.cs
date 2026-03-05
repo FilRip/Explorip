@@ -24,6 +24,7 @@ using ExploripConfig.Configuration;
 
 using ExploripSharedCopy.Helpers;
 
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders;
 using ManagedShell.WindowsTasks;
@@ -73,6 +74,9 @@ public partial class TaskButton : UserControl
         if (_isLoaded)
             return;
 
+        ShellLogger.Debug("TaskButton Loaded on " + DataContext?.Title);
+
+        DataContext?.PropertyChanged -= Window_PropertyChanged;
         DataContext?.PropertyChanged += Window_PropertyChanged;
 
         double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).TaskButtonSize;
@@ -115,6 +119,8 @@ public partial class TaskButton : UserControl
     {
         if (!_isLoaded)
             return;
+
+        ShellLogger.Debug("TaskButton Unloaded on " + DataContext?.Title);
 
         DataContext?.PropertyChanged -= Window_PropertyChanged;
 

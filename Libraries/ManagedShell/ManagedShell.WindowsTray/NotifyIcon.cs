@@ -16,16 +16,9 @@ namespace ManagedShell.WindowsTray;
 /// <summary>
 /// NotifyIcon class representing a notification area icon.
 /// </summary>
-public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
+public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged, IDisposable
 {
     private readonly NotificationArea _notificationArea;
-
-    /// <summary>
-    /// Initializes a new instance of the TrayIcon class with no hwnd.
-    /// </summary>
-    public NotifyIcon(NotificationArea notificationArea) : this(notificationArea, IntPtr.Zero)
-    {
-    }
 
     /// <summary>
     /// Initializes a new instance of the TrayIcon class with the specified hWnd.
@@ -133,6 +126,7 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     }
 
     private int _pinOrder;
+    private bool disposedValue;
 
     /// <summary>
     /// Gets or sets the order index of the item in the pinned icons
@@ -372,6 +366,39 @@ public sealed class NotifyIcon : IEquatable<NotifyIcon>, INotifyPropertyChanged
     {
         ShellLogger.Debug($"Update property {PropertyName} for TrayIcon {Title}");
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+    }
+
+    #endregion
+
+    #region IDisposable Support
+
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                if (PropertyChanged?.GetInvocationList().Length > 0)
+                    foreach (Delegate d in PropertyChanged.GetInvocationList())
+                        PropertyChanged -= (PropertyChangedEventHandler)d;
+                if (NotificationBalloonShown?.GetInvocationList().Length > 0)
+                    foreach (Delegate d in NotificationBalloonShown.GetInvocationList())
+                        NotificationBalloonShown -= (EventHandler<NotificationBalloonEventArgs>)d;
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     #endregion

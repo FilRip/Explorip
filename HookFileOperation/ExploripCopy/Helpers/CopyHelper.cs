@@ -189,7 +189,11 @@ internal static class CopyHelper
                 if (Pause)
                     Thread.Sleep(10);
                 else if (Stop)
+                {
+                    source.Close();
+                    destination.Close();
                     throw new ExploripCopyException(Constants.Localization.STOP);
+                }
                 else
                 {
                     if (buffer.Length > remaining && remaining < bufferSize)

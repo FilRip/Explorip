@@ -46,10 +46,10 @@ public abstract class ComWrapperBase<TInterface>
     protected static object?[] Args(params object?[] args)
         => args;
 
-    protected void InvokeMethod(object?[]? parameters = null, [CallerMemberName] string methodName = "")
+    protected void InvokeMethod(object?[]? parameters = null, [CallerMemberName()] string methodName = "")
         => this.InvokeMethod<object>(parameters, methodName);
 
-    protected T? InvokeMethod<T>(object?[]? parameters = null, [CallerMemberName] string methodName = "")
+    protected T? InvokeMethod<T>(object?[]? parameters = null, [CallerMemberName()] string methodName = "")
     {
         if (this._methods.TryGetValue(methodName, out MethodInfo? methodInfo)
             || (methodInfo = this.ComInterfaceType.GetMethod(methodName)) != null)

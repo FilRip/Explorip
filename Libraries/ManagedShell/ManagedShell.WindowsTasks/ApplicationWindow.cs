@@ -88,6 +88,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                     NativeMethods.DestroyIcon(_hIcon);
                 if (_propStore != null)
                     Marshal.ReleaseComObject(_propStore);
+                if (PropertyChanged?.GetInvocationList() != null)
+                    foreach (Delegate d in PropertyChanged.GetInvocationList())
+                        PropertyChanged -= (PropertyChangedEventHandler)d;
             }
             _isDisposed = true;
         }
@@ -586,7 +589,9 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                         if (sizeSetting != size)
                             size = IconSize.Large;
 
-                        hIco = IconHelper.GetIconByFilename(WinFileName, size, out _);
+                        hIco = IconHelper.GetIconByFilename(WinFileName, size, out IntPtr hIconOverlay);
+                        if (hIconOverlay != IntPtr.Zero)
+                            NativeMethods.DestroyIcon(hIconOverlay);
                     }
 
                     if (hIco != IntPtr.Zero)
@@ -651,7 +656,7 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
                 string str = Marshal.PtrToStringAuto(hShared);
                 NativeMethods.SHUnlockShared(hShared);
-
+                NativeMethods.SHFreeShared(hShared, procId);
                 OverlayIconDescription = str;
             }
         }
