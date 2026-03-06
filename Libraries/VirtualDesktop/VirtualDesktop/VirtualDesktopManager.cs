@@ -158,7 +158,7 @@ public static class VirtualDesktopManager
     {
         InitializeIfNeeded();
 
-        if (hWnd == IntPtr.Zero || IsPinnedWindow(hWnd))
+        if (hWnd == IntPtr.Zero || !NativeMethods.IsWindow(hWnd) || IsPinnedWindow(hWnd))
             return null;
 
         return SafeInvoke(() =>

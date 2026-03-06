@@ -8,6 +8,7 @@ using System.Windows.Input;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
+using ManagedShell.WindowsTasks;
 using ManagedShell.WindowsTray;
 
 using Microsoft.WindowsAPICodePack.Shell.Constants;
@@ -42,10 +43,10 @@ public partial class NotifyIcon : UserControl
 
             ShellLogger.Debug($"Create Systray Icon for {DataContext.Title}");
 
-            if (Window.GetWindow(this) is Taskbar tb && tb.MainScreen)
+            if (Window.GetWindow(this) is Taskbar tb && tb.MainScreen && DataContext != null)
             {
-                DataContext.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
-                DataContext.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
+                WeakEventManager<ManagedShell.WindowsTray.NotifyIcon, NotificationBalloonEventArgs>.RemoveHandler(DataContext, nameof(DataContext.NotificationBalloonShown), TrayIcon_NotificationBalloonShown);
+                WeakEventManager<ManagedShell.WindowsTray.NotifyIcon, NotificationBalloonEventArgs>.AddHandler(DataContext, nameof(DataContext.NotificationBalloonShown), TrayIcon_NotificationBalloonShown);
             }
 
             // If a notification was received before we started listening, it will be here. Show the first one that is not expired.
@@ -66,7 +67,7 @@ public partial class NotifyIcon : UserControl
 
         if (DataContext != null && Window.GetWindow(this) is Taskbar tb && tb.MainScreen)
         {
-            DataContext.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
+            WeakEventManager<ManagedShell.WindowsTray.NotifyIcon, NotificationBalloonEventArgs>.RemoveHandler(DataContext, nameof(DataContext.NotificationBalloonShown), TrayIcon_NotificationBalloonShown);
         }
         _isLoaded = false;
     }

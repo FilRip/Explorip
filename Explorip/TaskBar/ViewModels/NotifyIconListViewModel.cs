@@ -69,7 +69,7 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     private bool FilterSystrayIcon(object icon)
     {
-        return (icon is NotifyIcon ni && !ni.IsHidden && (ShowAllIcons || ni.IsPinned));
+        return (icon is NotifyIcon ni && !ni.IsHidden && (ShowAllIcons || ni.IsPinned) && !ni.IsDisposed);
     }
 
     partial void OnShowAllIconsChanged(bool value)

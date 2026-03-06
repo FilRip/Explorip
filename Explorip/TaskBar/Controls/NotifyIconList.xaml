@@ -5,26 +5,50 @@
              xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              Loaded="NotifyIconList_OnLoaded" Visibility="Visible" Unloaded="UserControl_Unloaded">
+    
     <UserControl.DataContext>
         <viewmodels:NotifyIconListViewModel/>
     </UserControl.DataContext>
+    
     <StackPanel Orientation="{Binding StackPanelOrientation}">
+        
         <ToggleButton Name="NotifyIconToggleButton"
                       IsChecked="{Binding ShowAllIcons}"
                       Style="{DynamicResource TrayToggleButton}"/>
-        <ItemsControl x:Name="NotifyIcons" ItemsSource="{Binding ListSystrayIcons}"
-                      Focusable="False" Visibility="Visible"
-                      HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ItemsControl.ItemsPanel>
+        
+        <ListView x:Name="NotifyIcons" ItemsSource="{Binding ListSystrayIcons}"
+                  SelectionMode="Single" BorderThickness="0" Background="Transparent"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                  HorizontalAlignment="Center" VerticalAlignment="Center">
+            
+            <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Rows="2"/>
                 </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <ItemContainerTemplate>
+            </ListView.ItemsPanel>
+            
+            <ListView.ItemTemplate>
+                <DataTemplate>
                     <local:NotifyIcon/>
-                </ItemContainerTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        
     </StackPanel>
+    
 </UserControl>

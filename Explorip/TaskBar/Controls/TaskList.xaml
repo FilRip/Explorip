@@ -5,24 +5,29 @@
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              Loaded="TaskList_OnLoaded" Unloaded="UserControl_Unloaded"
              Background="Transparent" Visibility="Visible">
+    
     <UserControl.DataContext>
         <viewmodels:TaskListViewModel/>
     </UserControl.DataContext>
+    
     <ScrollViewer Style="{DynamicResource TaskListScrollViewer}"
                   Focusable="False"
                   VerticalScrollBarVisibility="Auto">
-        <ItemsControl x:Name="TasksList"
-                      Focusable="False"
-                      ItemsSource="{Binding TaskListCollection}"
-                      Visibility="Visible"
-                      HorizontalAlignment="Stretch">
-            <ItemsControl.ItemsPanel>
+        
+        <ListView x:Name="TasksList" SelectionMode="Single"
+                 ItemsSource="{Binding TaskListCollection}"
+                 BorderThickness="0" Background="Transparent"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 HorizontalAlignment="Stretch">
+            
+            <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="{Binding DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TaskList}}"/>
                 </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <ItemContainerTemplate>
+            </ListView.ItemsPanel>
+            
+            <ListView.ItemTemplate>
+                <DataTemplate>
                     <Grid Margin="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="{Binding Path=DataContext.ButtonWidth, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}" MaxWidth="{Binding Path=DataContext.TaskButtonLength, RelativeSource={RelativeSource FindAncestor, AncestorType=local:TaskList}, UpdateSourceTrigger=PropertyChanged}"/>
@@ -34,8 +39,23 @@
                         </Grid.RowDefinitions>
                         <local:TaskButton/>
                     </Grid>
-                </ItemContainerTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
     </ScrollViewer>
 </UserControl>

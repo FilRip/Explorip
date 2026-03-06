@@ -25,4 +25,8 @@ internal static class NativeMethods
 
     [DllImport(ComBaseDll)]
     public static extern int WindowsDeleteString(IntPtr hstring);
+
+    [DllImport(User32Dll)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool IsWindow(IntPtr hWnd);
 }

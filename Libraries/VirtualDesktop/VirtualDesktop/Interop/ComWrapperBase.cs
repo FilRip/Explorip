@@ -66,5 +66,7 @@ public abstract class ComWrapperBase<TInterface>
         {
             throw ex.InnerException;
         }
+        catch (Exception) { /* Ignore errors */ }
+        return default;
     }
 }

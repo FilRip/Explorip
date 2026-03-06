@@ -146,7 +146,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add && VirtualDesktopManager.IsInitialized)
         {
-            foreach (ApplicationWindow appWin in e.NewItems)
+            foreach (ApplicationWindow appWin in e.NewItems.OfType<ApplicationWindow>().Where(ap => ap.ShowInTaskbar && !ap.IsDisposed))
                 foreach (ApplicationWindowsProperty appWinProp in appWin.ListWindows.Where(w => w.VirtualDesktopId == Guid.Empty))
                     appWinProp.VirtualDesktopId = ReturnVirtualDesktopId(appWinProp.Handle);
         }
@@ -157,7 +157,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         try
         {
-            if (handle == IntPtr.Zero || VirtualDesktopManager.IsPinnedWindow(handle) || !NativeMethods.IsWindow(handle))
+            if (handle == IntPtr.Zero || !NativeMethods.IsWindow(handle) || VirtualDesktopManager.IsPinnedWindow(handle))
                 return _currentVirtualDesktopId;
         }
         catch (Exception) { /* Ignore errors */ }

@@ -76,8 +76,11 @@ public partial class TaskButton : UserControl
 
         ShellLogger.Debug("TaskButton Loaded on " + DataContext?.Title);
 
-        DataContext?.PropertyChanged -= Window_PropertyChanged;
-        DataContext?.PropertyChanged += Window_PropertyChanged;
+        if (DataContext != null)
+        {
+            WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.RemoveHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
+            WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.AddHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
+        }
 
         double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).TaskButtonSize;
         MyTaskIcon.Height = size;
@@ -122,7 +125,11 @@ public partial class TaskButton : UserControl
 
         ShellLogger.Debug("TaskButton Unloaded on " + DataContext?.Title);
 
-        DataContext?.PropertyChanged -= Window_PropertyChanged;
+        if (DataContext != null)
+            WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.RemoveHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
+
+        if (!ConfigManager.UseJumpList)
+            JumpListContextMenu.Items.Clear();
 
         _isLoaded = false;
         _mouseOver = false;
