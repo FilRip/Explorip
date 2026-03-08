@@ -114,7 +114,7 @@ public partial class TaskButton : UserControl
 
     private void Window_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(DataContext.State))
+        if (e.PropertyName == nameof(DataContext.State) && DataContext?.State == ApplicationWindow.WindowState.Active)
             ScrollIntoView();
     }
 

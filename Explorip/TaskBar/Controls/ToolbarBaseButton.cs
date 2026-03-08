@@ -220,12 +220,14 @@ public class ToolbarBaseButton : UserControl
 
     private void Mi_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
+        StopDrag();
         if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, true, new ShellFolder(Path.GetDirectoryName(sf.Path), IntPtr.Zero)))
             e.Handled = true;
     }
 
     private void Mi_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
+        StopDrag();
         if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, false, new ShellFolder(Path.GetDirectoryName(sf.Path), IntPtr.Zero)))
             e.Handled = true;
     }
@@ -287,6 +289,7 @@ public class ToolbarBaseButton : UserControl
 
     public void StopDrag()
     {
+        DragGhostAdorner.StopDragGhost();
         _startDrag = false;
     }
 
@@ -349,8 +352,7 @@ public class ToolbarBaseButton : UserControl
             data.SetData(DataContext);
             DragGhostAdorner.StartDragGhost(this, e);
             DragDrop.DoDragDrop(this, base.DataContext, DragDropEffects.Move);
-            DragGhostAdorner.StopDragGhost();
-            _startDrag = false;
+            StopDrag();
         }
     }
 
