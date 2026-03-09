@@ -8,7 +8,6 @@ using System.Windows.Input;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
-using ManagedShell.WindowsTasks;
 using ManagedShell.WindowsTray;
 
 using Microsoft.WindowsAPICodePack.Shell.Constants;

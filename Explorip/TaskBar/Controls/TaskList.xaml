@@ -15,10 +15,10 @@
                   VerticalScrollBarVisibility="Auto">
 
         <ListView x:Name="TasksList" SelectionMode="Single" SelectedItem="{x:Null}" SelectedIndex="-1" FocusVisualStyle="{x:Null}"
-                 ItemsSource="{Binding TaskListCollection}" Padding="0"
-                 BorderThickness="0" Background="Transparent"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 HorizontalAlignment="Stretch">
+                  ItemsSource="{Binding TaskListCollection}"
+                  Padding="0" BorderThickness="0" Background="Transparent"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  HorizontalAlignment="Stretch">
             
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>

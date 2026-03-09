@@ -43,6 +43,13 @@ internal partial class NotifyIconViewModel : ObservableObject
     }
 
     [RelayCommand()]
+    private void ShowWindowSingle()
+    {
+        if (ExploripCopyConfig.SingleClickToShow)
+            MainWindow.Instance.ShowWindow();
+    }
+
+    [RelayCommand()]
     private void ShowNotification()
     {
         ActiveShowNotification = !ActiveShowNotification;

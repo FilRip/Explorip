@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -170,6 +171,11 @@ public class ShellFolder : ShellItem
         }
     }
 
+    public delegate void DelegateFinishLoadFiles(ShellFolder sf);
+    public event DelegateFinishLoadFiles FinishLoadAsync;
+
+    public bool AlreadyLoaded { get; private set; }
+
     private void Enumerate()
     {
         IntPtr hEnum = IntPtr.Zero;
@@ -206,6 +212,8 @@ public class ShellFolder : ShellItem
                 {
                     Marshal.Release(hEnum);
                 }
+                AlreadyLoaded = true;
+                FinishLoadAsync?.Invoke(this);
             }
             else
             {
@@ -410,6 +418,9 @@ public class ShellFolder : ShellItem
 
                         Files.Clear();
                     }
+                    if (FinishLoadAsync?.GetInvocationList() != null)
+                        foreach (DelegateFinishLoadFiles d in FinishLoadAsync?.GetInvocationList().OfType<DelegateFinishLoadFiles>())
+                            FinishLoadAsync -= d;
                 }
                 catch (Exception e)
                 {

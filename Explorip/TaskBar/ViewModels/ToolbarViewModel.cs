@@ -20,8 +20,8 @@ using Explorip.TaskBar.Helpers;
 using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Common.Logging;
 using ManagedShell.ShellFolders;
-using ManagedShell.ShellFolders.Enums;
 
 using Securify.ShellLink;
 
@@ -58,21 +58,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
 
     public override string Id => Path;
 
-    private enum MenuItemId : uint
-    {
-        OpenParentFolder = CommonContextMenuItem.Paste + 1,
-    }
-
     #region Events
 
     partial void OnPathChanged(string value)
     {
         SetupFolder(value);
-    }
-
-    partial void OnFolderChanged(ShellFolder value)
-    {
-        SetItemsSource();
     }
 
     #endregion
@@ -83,7 +73,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     private string _path;
     [ObservableProperty()]
     private ShellFolder _folder;
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(IconSize))]
     private bool _currentShowLargeIcon;
     [ObservableProperty()]
     private Visibility _moreItemsVisibility = Visibility.Collapsed;
@@ -114,13 +104,12 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         Folder?.Files?.CollectionChanged -= Files_CollectionChanged;
         if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)) && ParentTaskbar != null)
         {
-            Folder = ToolbarsManager.GetToolbar(path);
+            Folder = ToolbarsManager.GetToolbar(path, finishLoadAsync: SetItemsSource);
             Title = Folder.DisplayName;
             if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
                 ShowLargeIcon();
             ShowTitle = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarShowTitle(Path);
             DefaultSavedPosition();
-            SetItemsSource();
         }
     }
 
@@ -140,21 +129,19 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     {
         if (_taskRefresh == null || _taskRefresh.Status != TaskStatus.Running)
         {
-            _taskRefresh = new Task(async () =>
-            {
-                await Task.Delay(Folder == null ? 5000 : 10);
-                UpdateInvisibleIcons();
-            });
+            _taskRefresh = new Task(UpdateInvisibleIcons);
             _taskRefresh.Start();
         }
     }
 
-    private void SetItemsSource()
+    private void SetItemsSource(ShellFolder sf)
     {
-        Application.Current.Dispatcher.Invoke(() =>
+        sf.FinishLoadAsync -= SetItemsSource;
+        Application.Current.Dispatcher.BeginInvoke(() =>
         {
             lock (_lockRefresh)
             {
+                ShellLogger.Debug($"Call SetItemsSource for {sf.DisplayName} of taskbar {ParentTaskbar.NumScreen}");
                 if (Folder != null)
                 {
                     int lastPosition = -1;
@@ -189,7 +176,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
                     Folder.Files.CollectionChanged += Files_CollectionChanged;
                 }
             }
-        });
+        }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
     public void RefreshMyCollectionView()
@@ -291,14 +278,52 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             Tag = item,
             IsCheckable = false,
         };
-        item.IconLoadedArgument = mi;
-        item.IconLoaded = new Action<ShellItem, object>((item, menuItem) => Application.Current.Dispatcher.Invoke(() =>
-        {
-            ((MenuItem)menuItem).Icon = new Image() { Source = item.SmallIcon };
-        }));
+        item.IconLoaded += Item_IconLoaded;
         mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
         mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
         return mi;
+    }
+
+    private void Item_IconLoaded(ShellItem si, ManagedShell.Common.Enums.IconSize size)
+    {
+        si.IconLoaded -= Item_IconLoaded;
+        Application.Current.Dispatcher.BeginInvoke(() =>
+        {
+            MenuItem mi = ReturnRecursive(si, ((ItemsControl)((Border)_moreItems.Child).Child).Items.OfType<MenuItem>());
+            if (mi != null)
+                switch (size)
+                {
+                    case ManagedShell.Common.Enums.IconSize.Large:
+                        mi.Icon = new Image() { Source = si.LargeIcon };
+                        return;
+                    case ManagedShell.Common.Enums.IconSize.Small:
+                        mi.Icon = new Image() { Source = si.SmallIcon };
+                        return;
+                    case ManagedShell.Common.Enums.IconSize.ExtraLarge:
+                        mi.Icon = new Image() { Source = si.ExtraLargeIcon };
+                        return;
+                    case ManagedShell.Common.Enums.IconSize.Jumbo:
+                        mi.Icon = new Image() { Source = si.JumboIcon };
+                        return;
+                }
+        }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private MenuItem ReturnRecursive(ShellItem si, IEnumerable<MenuItem> list)
+    {
+        MenuItem found = list.SingleOrDefault(mi => mi.Tag == si);
+        if (found != null)
+            return found;
+        foreach (ItemCollection mi in list.Select(mi => mi.Items))
+        {
+            if (mi.Count > 0)
+            {
+                found = ReturnRecursive(si, mi.OfType<MenuItem>());
+                if (found != null)
+                    return found;
+            }
+        }
+        return null;
     }
 
     private void ExpandFolder(MenuItem mi, ShellFolder folder, int nbRecursive = 1)
@@ -327,65 +352,16 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         }
     }
 
-    private void Mi_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+    private static void Mi_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, true, new ShellFolder(System.IO.Path.GetDirectoryName(sf.Path), IntPtr.Zero)))
+        if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenuHelper.InvokeContextMenu(sf, true))
             e.Handled = true;
     }
 
-    private void Mi_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    private static void Mi_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenu(sf, false, new ShellFolder(System.IO.Path.GetDirectoryName(sf.Path), IntPtr.Zero)))
+        if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenuHelper.InvokeContextMenu(sf, false))
             e.Handled = true;
-    }
-
-    public bool InvokeContextMenu(ShellFile file, bool isInteractive, ShellFolder parentFolder = null)
-    {
-        try
-        {
-            if (file == null)
-            {
-                return false;
-            }
-
-            _ = new ShellItemContextMenu([file], (parentFolder ?? Folder), IntPtr.Zero, HandleFileAction, isInteractive, false, new ShellMenuCommandBuilder(), GetFileCommandBuilder(file));
-            return true;
-        }
-        finally
-        {
-            parentFolder?.Dispose();
-        }
-    }
-
-    private bool HandleFileAction(string action, ShellItem[] items, bool allFolders)
-    {
-        if (action == ((uint)MenuItemId.OpenParentFolder).ToString())
-        {
-            ShellHelper.StartProcess(Folder.Path);
-            return true;
-        }
-
-        return false;
-    }
-
-    private ShellMenuCommandBuilder GetFileCommandBuilder(ShellFile file)
-    {
-        if (file == null)
-        {
-            return new ShellMenuCommandBuilder();
-        }
-
-        ShellMenuCommandBuilder builder = new();
-
-        builder.AddSeparator();
-        builder.AddCommand(new ShellMenuCommand()
-        {
-            Flags = MenuFlagsTypes.BYCOMMAND,
-            Label = Constants.Localization.OPEN_FOLDER,
-            UID = (uint)MenuItemId.OpenParentFolder,
-        });
-
-        return builder;
     }
 
     [RelayCommand()]
@@ -427,9 +403,6 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     public void ShowLargeIcon()
     {
         CurrentShowLargeIcon = !CurrentShowLargeIcon;
-        DataTemplateSelector dts = MyToolbar.ToolbarItems.ItemTemplateSelector;
-        MyToolbar.ToolbarItems.ItemTemplateSelector = null;
-        MyToolbar.ToolbarItems.ItemTemplateSelector = dts;
         Taskbar parentTaskbar = ParentTaskbar;
         if (parentTaskbar != null)
         {
@@ -441,6 +414,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             parentTaskbar.ChangeDesiredSize(newHeight, parentTaskbar.Width);
         }
         ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(Path, !CurrentShowLargeIcon);
+    }
+
+    public double IconSize
+    {
+        get { return CurrentShowLargeIcon ? 32 : 16; }
     }
 
     [RelayCommand()]

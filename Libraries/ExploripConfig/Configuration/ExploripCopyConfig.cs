@@ -31,6 +31,7 @@ public static class ExploripCopyConfig
     private const string SoundToPlayWhenFinishConfig = "PathSoundFinish";
     private const string PlaySoundWhenErrorConfig = "PlaySoundWhenError";
     private const string SoundToPlayWhenErrorConfig = "PathSoundError";
+    private const string SingleClickToShowConfig = "SingleClickToShow";
 
     private const string DefaultFalse = "False";
 
@@ -78,6 +79,8 @@ public static class ExploripCopyConfig
                 _registryRootExploripCopy.SetValue(SoundToPlayWhenFinishConfig, "tada.wav");
             if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(SoundToPlayWhenErrorConfig, "").ToString()))
                 _registryRootExploripCopy.SetValue(SoundToPlayWhenErrorConfig, "Windows Error.wav");
+            if (string.IsNullOrWhiteSpace(_registryRootExploripCopy.GetValue(SingleClickToShowConfig, "").ToString()))
+                _registryRootExploripCopy.SetValue(SingleClickToShowConfig, DefaultFalse);
         }
     }
 
@@ -278,6 +281,16 @@ public static class ExploripCopyConfig
         {
             if (SoundToPlayWhenError != value && AllowWrite)
                 _registryRootExploripCopy.SetValue(SoundToPlayWhenErrorConfig, value);
+        }
+    }
+
+    public static bool SingleClickToShow
+    {
+        get { return _registryRootExploripCopy.ReadBoolean(SingleClickToShowConfig); }
+        set
+        {
+            if (SingleClickToShow != value && AllowWrite)
+                _registryRootExploripCopy.SetValue(SingleClickToShowConfig, value.ToString());
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-using static ManagedShell.Interop.NativeMethods;
-
 namespace ManagedShell.Interop;
 
 public partial class NativeMethods

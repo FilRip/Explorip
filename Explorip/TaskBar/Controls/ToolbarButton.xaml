@@ -1,18 +1,30 @@
-﻿<local:ToolbarBaseButton x:Class="Explorip.TaskBar.Controls.ToolbarButton"
-                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                         xmlns:constants="clr-namespace:Explorip.Constants"
-                         xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
-                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                         xmlns:shellfolders="clr-namespace:ManagedShell.ShellFolders;assembly=ManagedShell.ShellFolders"
-                         xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
-                         mc:Ignorable="d" AllowDrop="True"
-                         d:DataContext="{d:DesignInstance Type=shellfolders:ShellFile}"
-                         Background="Transparent">
-    <Button ToolTip="{Binding DisplayName}"
-            Style="{DynamicResource ToolbarButton}">
-        <Image Source="{Binding SmallIcon, Mode=OneWay}"
-               Style="{DynamicResource ToolbarIcon}" />
+﻿<UserControl x:Class="Explorip.TaskBar.Controls.ToolbarButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:constants="clr-namespace:Explorip.Constants"
+             xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:shellfolders="clr-namespace:ManagedShell.ShellFolders;assembly=ManagedShell.ShellFolders"
+             xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
+             xmlns:converters="clr-namespace:Explorip.TaskBar.Converters"
+             mc:Ignorable="d" AllowDrop="True"
+             d:DataContext="{d:DesignInstance Type=shellfolders:ShellFile}"
+             Background="Transparent">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="boolToInvisible"/>
+    </UserControl.Resources>
+
+    <Button ToolTip="{Binding DisplayName}" Style="{DynamicResource ToolbarButton}"
+            PreviewMouseLeftButtonUp="ToolbarIcon_OnPreviewMouseLeftButtonUp" PreviewMouseRightButtonUp="ToolbarIcon_OnPreviewMouseRightButtonUp">
+        <Grid Margin="0 0 1 0" Background="Transparent">
+            <Image Source="{Binding SmallIcon, Mode=OneWay}" Width="16" Height="16"
+                                   Visibility="{Binding DataContext.CurrentShowLargeIcon, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:Toolbar}, Converter={StaticResource boolToInvisible}}"/>
+            <Image Source="{Binding LargeIcon, Mode=OneWay}" Width="32" Height="32"
+                                   Visibility="{Binding DataContext.CurrentShowLargeIcon, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:Toolbar}, Converter={StaticResource boolToVisible}}"/>
+        </Grid>
     </Button>
-</local:ToolbarBaseButton>
+
+</UserControl>
