@@ -3,6 +3,10 @@
   "Id": "001dcda7-f4c3-4bd6-a86c-c99b35a9798a",
   "Items": [
     {
+      "Id": "d066028f-a64f-4960-8bf7-1c58d876d04b",
+      "Command": "tracemem"
+    },
+    {
       "Id": "3858ca9e-53bc-464b-89ce-88efbeea8f79",
       "Command": "StartMenu"
     },

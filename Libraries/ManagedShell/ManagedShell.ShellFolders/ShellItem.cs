@@ -627,6 +627,10 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                 if (IconLoaded?.GetInvocationList() != null)
                     foreach (DelegateIconLoaded d in IconLoaded.GetInvocationList().OfType<DelegateIconLoaded>())
                         IconLoaded -= d;
+
+                if (PropertyChanged?.GetInvocationList() != null)
+                    foreach (PropertyChangedEventHandler d in PropertyChanged.GetInvocationList().OfType<PropertyChangedEventHandler>())
+                        PropertyChanged -= d;
             }
             _isDisposed = true;
         }

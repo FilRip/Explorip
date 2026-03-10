@@ -201,15 +201,11 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     public void Pause()
     {
-        // For unknown reason, for now, when session is locked, on some computers/windows (not all)
-        // There is a memoryleak of systray icons. So we disable it when session locked, and restore/refresh it when session is back
         UnregisterEvents();
-        ListSystrayIcons = null;
     }
 
     public void Resume()
     {
         RegisterEvents();
-        RebuildCollectionView();
     }
 }

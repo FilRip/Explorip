@@ -118,9 +118,15 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                 {
                     RemoveTaskServiceEvent();
                     if (VirtualDesktopManager.IsInitialized)
+                    {
+                        VirtualDesktopEvents.CurrentChanged -= VirtualDesktop_CurrentChanged;
                         VirtualDesktopEvents.CurrentChanged += VirtualDesktop_CurrentChanged;
+                    }
+                    MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged -= Windows_CollectionChanged;
                     MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged += Windows_CollectionChanged;
+                    MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= RefreshView;
                     MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += RefreshView;
+                    MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
                     MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
                 }
                 ChangeButtonSize();

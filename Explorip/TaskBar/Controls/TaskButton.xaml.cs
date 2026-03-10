@@ -102,6 +102,10 @@ public partial class TaskButton : UserControl
         if (ConfigManager.TaskbarProgressBarHeight > 0 && ConfigManager.TaskbarProgressBarHeight < size + 20)
             ProgressBarWindow.Height = ConfigManager.TaskbarProgressBarHeight;
         ProgressBarWindow.Foreground = ConfigManager.TaskButtonProgressBarColor;
+        double cornerRadius = ConfigManager.TaskButtonCornerRadius.TopLeft;
+        ProgressBarGeometry.RadiusX = cornerRadius;
+        ProgressBarGeometry.RadiusY = cornerRadius;
+        ProgressBarGeometry.Rect = new Rect(0, cornerRadius + (cornerRadius / 2), ActualWidth, ProgressBarWindow.Height - cornerRadius + (cornerRadius / 2));
 
         if (!ConfigManager.UseJumpList)
         {
@@ -128,12 +132,33 @@ public partial class TaskButton : UserControl
         if (DataContext != null)
             WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.RemoveHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
 
-        if (!ConfigManager.UseJumpList)
+        if (!ConfigManager.UseJumpList && JumpListContextMenu.Items.Count > 0)
+        {
+            RemoveAllMenuItemsRecursive(JumpListContextMenu.Items.OfType<MenuItem>(), JumpListContextMenu, JumpList_Click);
             JumpListContextMenu.Items.Clear();
+        }
+        RemoveAllMenuItemsRecursive(MoveToScreen.Items.OfType<MenuItem>(), MoveToScreen, MoveToScreen_Click);
+        RemoveAllMenuItemsRecursive(MoveToVirtualDesktop.Items.OfType<MenuItem>(), MoveToVirtualDesktop, MoveToVirtualDesktop_Click);
 
         _isLoaded = false;
         _mouseOver = false;
         CloseThumbnail();
+    }
+
+    private void RemoveAllMenuItemsRecursive(IEnumerable<MenuItem> menuItems, MenuItem parent, RoutedEventHandler click)
+    {
+        if (menuItems.Any())
+        {
+            for (int i = menuItems.Count() - 1; i >= 0; i--)
+            {
+                MenuItem mi = menuItems.ElementAt(i);
+                if (mi.Items.Count > 0)
+                    RemoveAllMenuItemsRecursive(mi.Items.OfType<MenuItem>(), mi, click);
+                mi.Click -= click;
+                parent.Items.RemoveAt(i);
+            }
+            parent.Items.Clear();
+        }
     }
 
     #endregion

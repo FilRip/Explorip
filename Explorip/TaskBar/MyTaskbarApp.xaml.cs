@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -44,6 +45,7 @@ public partial class MyTaskbarApp : Application
     private List<Taskbar> _taskbarList;
     private StartMenuMonitor _startMenuMonitor;
     private Thread _threadAutoLock;
+    private Thread _threadTraceMem;
     private static bool DisableAutoLock;
 
     public static ShellManager MyShellManager { get; private set; }
@@ -59,6 +61,7 @@ public partial class MyTaskbarApp : Application
             return;
         SetExiting();
         _threadAutoLock?.Abort();
+        _threadTraceMem?.Abort();
         Models.HookRefreshLanguageLayout.UnHook();
         Current.Dispatcher.Invoke(() =>
         {
@@ -141,6 +144,7 @@ public partial class MyTaskbarApp : Application
                     tb.MySystray.DataContext.Resume();
                     tb.RefreshAllInvisibleIcons();
                 }
+                ViewModels.NotifyIconListViewModel.RefreshAllCollectionView();
                 ViewModels.TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);
             });
         }
@@ -301,6 +305,12 @@ public partial class MyTaskbarApp : Application
             _threadAutoLock.Start();
         }
 
+        if (ExtensionsCommandLineArguments.ArgumentExists("tracemem"))
+        {
+            _threadTraceMem = new Thread(new ThreadStart(TraceMem));
+            _threadTraceMem.Start();
+        }
+
         if (ConfigManager.HookTaskbarList)
             Explorip.Helpers.HookTaskbarListHelper.InstallHook();
     }
@@ -391,8 +401,31 @@ public partial class MyTaskbarApp : Application
                     }
                 }
             }
+            catch (ThreadAbortException)
+            {
+                break;
+            }
             catch (Exception) { /* Ignore errors */ }
             Thread.Sleep(1000);
+        }
+    }
+
+    private static void TraceMem()
+    {
+        while (!_exiting)
+        {
+            try
+            {
+                long mem;
+                mem = (long)Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1024 / 1024);
+                ShellLogger.Debug($"MemoryUsed:{mem}Mo");
+                Thread.Sleep(5000);
+            }
+            catch (ThreadAbortException)
+            {
+                break;
+            }
+            catch (Exception) { /* Ignore errors */ }
         }
     }
 
