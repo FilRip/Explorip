@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using Explorip.TaskBar.Helpers;
 using Explorip.TaskBar.ViewModels;
 
+using ExploripConfig.Configuration;
+
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 
@@ -69,7 +71,7 @@ public partial class NotificationButton : UserControl
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
             return;
 
-        if ((!_isLoaded || !_ignoreReload) && ((Taskbar)Window.GetWindow(this)).MainScreen && MyTaskbarApp.MyShellManager != null)
+        if ((!_isLoaded || !_ignoreReload) && ((Taskbar)Window.GetWindow(this)).MainScreen && MyTaskbarApp.MyShellManager != null && ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).ShowSystray)
         {
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
@@ -82,7 +84,7 @@ public partial class NotificationButton : UserControl
         if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this) || _ignoreReload)
             return;
 
-        if (Window.GetWindow(this) is Taskbar parentTaskbar && parentTaskbar.MainScreen && MyTaskbarApp.MyShellManager != null)
+        if (Window.GetWindow(this) is Taskbar parentTaskbar && parentTaskbar.MainScreen && MyTaskbarApp.MyShellManager != null && ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).ShowSystray)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
         _isLoaded = false;
     }

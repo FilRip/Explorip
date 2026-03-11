@@ -357,6 +357,9 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                 iconDataDelegate = null;
                 trayHostSizeDelegate = null;
             }
+            if (NotificationBalloonShown?.GetInvocationList() != null)
+                foreach (EventHandler<NotificationBalloonEventArgs> d in NotificationBalloonShown?.GetInvocationList().OfType<EventHandler<NotificationBalloonEventArgs>>())
+                    NotificationBalloonShown -= d;
             _isDisposed = true;
         }
     }

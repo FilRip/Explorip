@@ -22,7 +22,7 @@ using ManagedShell.WindowsTray;
 
 namespace Explorip.TaskBar.ViewModels;
 
-public partial class NotifyIconListViewModel : ObservableObject
+public partial class NotifyIconListViewModel : ObservableObject, IDisposable
 {
     private AppBarEdge _currentEdge;
 
@@ -32,6 +32,7 @@ public partial class NotifyIconListViewModel : ObservableObject
     private bool _showAllIcons;
     private bool _alreadyInit;
     private Controls.NotifyIconList _parentControl;
+    private bool disposedValue;
 
     public void ChangeEdge(AppBarEdge newEdge)
     {
@@ -46,6 +47,9 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     public void RefreshCollectionView()
     {
+        if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSystray)
+            return;
+        ShellLogger.Debug("Refresh systray of taskbar " + ParentTaskbar.NumScreen.ToString());
         ListSystrayIcons?.Refresh();
     }
 
@@ -61,6 +65,8 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     public void RebuildCollectionView()
     {
+        if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSystray)
+            return;
         ShellLogger.Debug("Rebuild All Collection of SysTray");
         ListSystrayIcons = new ListCollectionView(MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons);
         ListSystrayIcons.SortDescriptions.Add(new SortDescription(nameof(NotifyIcon.PinOrder), ListSortDirection.Ascending));
@@ -104,6 +110,9 @@ public partial class NotifyIconListViewModel : ObservableObject
         _alreadyInit = true;
         ChangeEdge(ParentTaskbar.AppBarEdge);
 
+        if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSystray)
+            return;
+
         if (ParentTaskbar.MainScreen)
         {
             string[] pinnedPath = ConfigManager.AllPinnedSystray();
@@ -131,7 +140,8 @@ public partial class NotifyIconListViewModel : ObservableObject
         // This is used to promote unpinned icons to show when the tray is collapsed.
 
         if (MyTaskbarApp.MyShellManager.NotificationArea == null ||
-            MyTaskbarApp.MyShellManager.NotificationArea.Disable)
+            MyTaskbarApp.MyShellManager.NotificationArea.Disable ||
+            !ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSystray)
         {
             return;
         }
@@ -157,8 +167,11 @@ public partial class NotifyIconListViewModel : ObservableObject
         }
     }
 
-    private static void SystrayIcons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void SystrayIcons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSystray)
+            return;
+
         ShellLogger.Debug("SystrayIcons CollectionChanged");
 
         if (e.Action == NotifyCollectionChangedAction.Add)
@@ -182,8 +195,9 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     private void UnregisterEvents()
     {
-        if (ParentTaskbar.MainScreen && MyTaskbarApp.MyShellManager.NotificationArea != null)
+        if (ParentTaskbar.MainScreen && MyTaskbarApp.MyShellManager.NotificationArea != null && ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSystray)
         {
+            ShellLogger.Debug("Unregister to system list of systray");
             MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged -= SystrayIcons_CollectionChanged;
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
         }
@@ -191,9 +205,10 @@ public partial class NotifyIconListViewModel : ObservableObject
 
     private void RegisterEvents()
     {
-        if (ParentTaskbar.MainScreen && MyTaskbarApp.MyShellManager.NotificationArea != null)
+        if (ParentTaskbar.MainScreen && MyTaskbarApp.MyShellManager.NotificationArea != null && ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ShowSystray)
         {
             UnregisterEvents();
+            ShellLogger.Debug("Register to system list of systray");
             MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged += SystrayIcons_CollectionChanged;
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
         }
@@ -208,4 +223,33 @@ public partial class NotifyIconListViewModel : ObservableObject
     {
         RegisterEvents();
     }
+
+    #region IDisposable
+
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                UnregisterEvents();
+                ListSystrayIcons = null;
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }

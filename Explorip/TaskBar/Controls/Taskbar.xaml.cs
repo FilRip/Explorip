@@ -31,6 +31,7 @@ public partial class Taskbar : AppBarWindow
     private readonly bool _mainScreen;
     private readonly int _numScreen;
     private IntPtr _windowHandle = IntPtr.Zero;
+    private bool _isLoaded;
 
     public Popup MyPopup { get; private set; }
     public int TimeBeforeAutoCloseThumb { get; private set; }
@@ -49,6 +50,7 @@ public partial class Taskbar : AppBarWindow
         base.DataContext = new TaskbarViewModel(this)
         {
             TaskbarVisible = true,
+            ShowSystray = ConfigManager.GetTaskbarConfig(_numScreen).ShowSystray
         };
 
         StartButton.StartMenuMonitor = startMenuMonitor;
@@ -307,7 +309,8 @@ public partial class Taskbar : AppBarWindow
             if (_mainScreen)
             {
                 _explorerHelper.HideExplorerTaskbar = false;
-                MySystray.DataContext.Unload();
+                MySystray.DataContext.Dispose();
+                MyTaskList.DataContext.Dispose();
                 UnregisterHotKeyFloating();
             }
         }
@@ -315,9 +318,10 @@ public partial class Taskbar : AppBarWindow
 
     private void AppBarWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this))
+        if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this) || _isLoaded)
             return;
 
+        _isLoaded = true;
         ShellLogger.Debug("OnLoaded on Taskbar " + NumScreen);
         DataContext.ChangeEdge(AppBarEdge);
         if (_mainScreen)
@@ -395,10 +399,13 @@ public partial class Taskbar : AppBarWindow
 
     private void AppBarWindow_Unloaded(object sender, RoutedEventArgs e)
     {
+        if (!_isLoaded)
+            return;
         ToolsBars.Children.Clear();
         ShellLogger.Debug("OnUnloaded Taskbar " + NumScreen);
         if (_mainScreen)
             MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
+        _isLoaded = false;
     }
 
     public void FloatingTaskbar()
@@ -438,5 +445,16 @@ public partial class Taskbar : AppBarWindow
     {
         if (_windowHandle != IntPtr.Zero && !string.IsNullOrWhiteSpace(ConfigManager.FloatingShortcut))
             NativeMethods.UnregisterHotKey(_windowHandle, 1);
+    }
+
+    private void AppBarWindow_Closed(object sender, EventArgs e)
+    {
+        MyTaskList.DataContext.Dispose();
+        DataContext.Dispose();
+    }
+
+    private void TextBlock_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        TaskbarViewModel.GcCollect();
     }
 }

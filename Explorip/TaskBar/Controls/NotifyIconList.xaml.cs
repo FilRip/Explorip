@@ -64,7 +64,6 @@ public partial class NotifyIconList : UserControl
                 return;
 
             DataContext.Unload();
-            DataContext.Pause();
             _isLoaded = false;
         }
     }

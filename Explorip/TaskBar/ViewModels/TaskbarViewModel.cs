@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,7 +23,7 @@ using ManagedShell.ShellFolders;
 
 namespace Explorip.TaskBar.ViewModels;
 
-public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject()
+public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(), IDisposable
 {
     private AppBarEdge _currentEdge;
 
@@ -41,6 +43,8 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         SetSmallIcon();
         SetGroupApplicationWindows();
         SetShowTitleWindow();
+
+        CreateMemoryUsedThread();
     }
 
     public Orientation PanelOrientation
@@ -107,7 +111,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private bool _resizeOn, _tabTipVisible, _keyboardLayoutVisible, _searchZoneVisible, _searchButtonVisible, _taskManVisible, _widgetsVisible, _desktopPreviewVisible, _showApplicationWindowTitle, _isGroupedApplicationWindow, _isShowSmallIcon, _copilotVisible, _taskbarVisible;
 
     [ObservableProperty()]
-    private bool _isTaskListToLeft, _isTaskListToRight, _isTaskListToCenter, _isTaskListToTop, _isTaskListToBottom, _isTaskListToVCenter;
+    private bool _isTaskListToLeft, _isTaskListToRight, _isTaskListToCenter, _isTaskListToTop, _isTaskListToBottom, _isTaskListToVCenter, _showSystray;
 
     private void SetTaskListAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical)
     {
@@ -589,4 +593,76 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
                 ParentTaskbar.FloatingButton.DataContext.SetPos();
         }
     }
+
+    #region Display Memory Used
+
+    private Thread _threadMemoryUsed;
+    [ObservableProperty()]
+    private string _memoryUsed;
+    private bool disposedValue;
+    [ObservableProperty()]
+    private bool _showMemoryUsed;
+
+    private void CreateMemoryUsedThread()
+    {
+        ShowMemoryUsed = ConfigManager.ShowMemoryUsed;
+        if (!ConfigManager.ShowMemoryUsed)
+            return;
+        _threadMemoryUsed?.Abort();
+        _threadMemoryUsed = new Thread(new ThreadStart(ShowMemoryUsedThread));
+        _threadMemoryUsed.Start();
+    }
+
+    private void ShowMemoryUsedThread()
+    {
+        Thread.Sleep(5000);
+        while (true)
+        {
+            try
+            {
+                long mem = (long)Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1024 / 1024);
+                MemoryUsed = mem.ToString() + " Mo";
+            }
+            catch (ThreadAbortException)
+            {
+                break;
+            }
+            catch (Exception) { /* Ignore errors */ }
+            Thread.Sleep(1000);
+        }
+    }
+
+    public static void GcCollect()
+    {
+#pragma warning disable IDE0079
+#pragma warning disable S1215
+        GC.Collect();
+#pragma warning restore S1215
+#pragma warning restore IDE0079
+    }
+
+    #endregion
+
+    #region IDisposable
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                _threadMemoryUsed?.Abort();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }

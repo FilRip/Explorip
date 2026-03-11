@@ -17,7 +17,7 @@
                      PreviewMouseDown="Taskbar_MouseDown"
                      UseLayoutRounding="True"
                      Background="Transparent"
-                     Topmost="True"
+                     Topmost="True" Closed="AppBarWindow_Closed"
                      Style="{DynamicResource TaskbarWindow}">
     <Window.Resources>
         <ResourceDictionary>
@@ -102,6 +102,7 @@
                                            HorizontalContentAlignment="{Binding DataContext.HorizontalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
                                            VerticalContentAlignment="{Binding DataContext.VerticalTaskListAlignment, Mode=OneWay, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
                                            x:Name="MyTaskList" Visibility="Visible"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Opacity="0.5" Panel.ZIndex="-1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Text="{Binding MemoryUsed, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseUp="TextBlock_MouseUp" Visibility="{Binding ShowMemoryUsed, Converter={StaticResource boolToVisible}}"/>
                     </Grid>
                 </StackPanel>
                 <GroupBox Style="{DynamicResource Tray}" Grid.Column="6">
@@ -109,7 +110,7 @@
                         <Binding Path="DataContext.TrailingDockOrientation" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
                     </DockPanel.Dock>
                     <StackPanel Orientation="{Binding DataContext.PanelOrientation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
-                        <controls:NotifyIconList VerticalAlignment="Center" x:Name="MySystray" Visibility="Visible"/>
+                        <controls:NotifyIconList VerticalAlignment="Center" x:Name="MySystray" Visibility="{Binding DataContext.ShowSystray, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
                         <controls:Clock VerticalAlignment="Center"/>
                     </StackPanel>
                 </GroupBox>

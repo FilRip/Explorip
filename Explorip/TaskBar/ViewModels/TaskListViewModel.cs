@@ -53,7 +53,6 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
     {
         _lockChangeDesktop = new object();
         SetCurrentVirtualDesktop();
-        RebuildCollectionView();
     }
 
     private static void SetCurrentVirtualDesktop()
@@ -87,12 +86,16 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void RefreshMyCollectionView()
     {
+        if (!ConfigManager.GetTaskbarConfig(_taskbarParent.NumScreen).ShowTaskList)
+            return;
         ShellLogger.Debug($"Refresh TaskList of screen {TaskbarParent.NumScreen}");
-        TaskListCollection.Refresh();
+        TaskListCollection?.Refresh();
     }
 
     public void RebuildCollectionView()
     {
+        if (!ConfigManager.GetTaskbarConfig(_taskbarParent.NumScreen).ShowTaskList && TaskListCollection != null)
+            return;
         ShellLogger.Debug($"Rebuild TaskList of screen {TaskbarParent?.NumScreen}");
         TaskListCollection = System.Windows.Data.CollectionViewSource.GetDefaultView(MyTaskbarApp.MyShellManager.TasksService.Windows);
         TaskListCollection.SortDescriptions.Add(new SortDescription(nameof(ApplicationWindow.Position), ListSortDirection.Ascending));
@@ -114,31 +117,36 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             if (value != null)
             {
                 _taskbarParent = value;
-                if (_taskbarParent.MainScreen)
-                {
-                    RemoveTaskServiceEvent();
-                    if (VirtualDesktopManager.IsInitialized)
-                    {
-                        VirtualDesktopEvents.CurrentChanged -= VirtualDesktop_CurrentChanged;
-                        VirtualDesktopEvents.CurrentChanged += VirtualDesktop_CurrentChanged;
-                    }
-                    MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged -= Windows_CollectionChanged;
-                    MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged += Windows_CollectionChanged;
-                    MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= RefreshView;
-                    MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += RefreshView;
-                    MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
-                    MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
-                }
+                RegisterTaskServiceEvent();
                 ChangeButtonSize();
             }
         }
     }
 
-    private static void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
+    public void RegisterTaskServiceEvent()
+    {
+        if (_taskbarParent.MainScreen && ConfigManager.GetTaskbarConfig(_taskbarParent.NumScreen).ShowTaskList)
+        {
+            RemoveTaskServiceEvent();
+            if (VirtualDesktopManager.IsInitialized)
+            {
+                VirtualDesktopEvents.CurrentChanged -= VirtualDesktop_CurrentChanged;
+                VirtualDesktopEvents.CurrentChanged += VirtualDesktop_CurrentChanged;
+            }
+            MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged -= Windows_CollectionChanged;
+            MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged += Windows_CollectionChanged;
+            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= RefreshView;
+            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += RefreshView;
+            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
+            MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
+        }
+    }
+
+    private void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
     {
         if (e.IsExiting && e.Handle != IntPtr.Zero &&
             e.ProcessId == Process.GetProcessesByName("explorer")?[0].Id &&
-            e.Title == Constants.Localization.ACTIVES_APPLICATIONS)
+            e.Title == Constants.Localization.ACTIVES_APPLICATIONS && ConfigManager.GetTaskbarConfig(_taskbarParent.NumScreen).ShowTaskList)
         {
             // In case it's task manager who have been leaved, some windows may be changed virtual desktop, we must refresh all
             foreach (ApplicationWindow appWin in MyTaskbarApp.MyShellManager.TasksService.Windows)
@@ -211,7 +219,8 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void UpdateMaxWidth()
     {
-        if (!ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowTitleApplicationWindow || !TaskbarParent.DataContext.TaskbarVisible)
+        if (!ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowTitleApplicationWindow || !TaskbarParent.DataContext.TaskbarVisible
+            || !ConfigManager.GetTaskbarConfig(_taskbarParent.NumScreen).ShowTaskList)
             return;
         double currentWidth = TaskbarParent.MyTaskList.TasksList.Items.Count * (ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20 + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).MaxWidthTitleApplicationWindow + ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).SpaceBetweenTaskButton);
         double minWidth = ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).TaskButtonSize + 20;
@@ -231,7 +240,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     public void RemoveTaskServiceEvent()
     {
-        if (TaskbarParent.MainScreen)
+        if (TaskbarParent.MainScreen && ConfigManager.GetTaskbarConfig(_taskbarParent.NumScreen).ShowTaskList)
         {
             if (VirtualDesktopManager.IsInitialized)
                 VirtualDesktopEvents.CurrentChanged -= VirtualDesktop_CurrentChanged;
@@ -263,6 +272,13 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     private void VirtualDesktop_CurrentChanged(object sender, VirtualDesktopChangedEventArgs e)
     {
+        if (!ConfigManager.GetTaskbarConfig(_taskbarParent.NumScreen).ShowTaskList)
+        {
+            DisposeAllApplicationWindow();
+            InsertPinnedApp();
+            RebuildCollectionView();
+            return;
+        }
         ShellLogger.Debug("Rebuild TaskList" + (e != null ? " from new virtual desktop : " + e.NewDesktop.Name : ""));
         if (e?.NewDesktop != null)
             SetCurrentVirtualDesktop();

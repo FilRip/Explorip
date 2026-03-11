@@ -141,6 +141,7 @@ public partial class MyTaskbarApp : Application
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
                     tb.Disable = false;
+                    tb.MyTaskList.DataContext.RegisterTaskServiceEvent();
                     tb.MySystray.DataContext.Resume();
                     tb.RefreshAllInvisibleIcons();
                 }
@@ -160,6 +161,7 @@ public partial class MyTaskbarApp : Application
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
                     tb.Disable = true;
+                    tb.MyTaskList.DataContext.RemoveTaskServiceEvent();
                     tb.MySystray.DataContext.Pause();
                 }
             });
@@ -296,7 +298,7 @@ public partial class MyTaskbarApp : Application
         OpenTaskbar();
         if (ConfigManager.UseJumpList)
             CoolBytes.JumpList.ExtensionsJumpList.Init();
-        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        //SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 
         if (ConfigManager.AutoLockOnMonitorPowerOff)
@@ -412,14 +414,19 @@ public partial class MyTaskbarApp : Application
 
     private static void TraceMem()
     {
+        long previous = 0;
         while (!_exiting)
         {
             try
             {
                 long mem;
                 mem = (long)Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1024 / 1024);
-                ShellLogger.Debug($"MemoryUsed:{mem}Mo");
-                Thread.Sleep(5000);
+                if (mem - previous >= 2)
+                {
+                    ShellLogger.Debug($"MemoryUsed:{mem}Mo");
+                    previous = mem;
+                }
+                Thread.Sleep(1000);
             }
             catch (ThreadAbortException)
             {

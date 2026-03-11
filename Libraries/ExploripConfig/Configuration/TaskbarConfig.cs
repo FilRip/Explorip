@@ -46,6 +46,8 @@ public class TaskbarConfig
     private const string ConfigFloatingButtonSide = "FloatingButtonSide";
     private const string ConfigTaskbarDisableThumb = "TaskbarDisableThumb";
     private const string ConfigPathPinnedTaskbar = "PathApplicationPinned";
+    private const string ConfigShowTaskList = "ShowTaskList";
+    private const string ConfigShowSystray = "ShowSystray";
     #endregion
 
     private RegistryKey _registryTaskbar;
@@ -125,6 +127,10 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigFloatingButtonSide, HorizontalAlignment.Left.ToString("G"));
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigPathPinnedTaskbar, "").ToString()))
                 _registryTaskbar.SetValue(ConfigPathPinnedTaskbar, Path.Combine("%APPDATA%", "Microsoft", "Internet Explorer", "Quick Launch", "User Pinned", "TaskBar"));
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowTaskList, "").ToString()))
+                _registryTaskbar.SetValue(ConfigShowTaskList, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowSystray, "").ToString()))
+                _registryTaskbar.SetValue(ConfigShowSystray, "True");
         }
     }
 
@@ -539,6 +545,26 @@ public class TaskbarConfig
         {
             if (MaxWidthTitleApplicationWindow != value && AllowWrite)
                 _registryTaskbar.SetValue(ConfigMaxWidthTitleApplicationWindow, value.ToString(CultureInfo.InvariantCulture));
+        }
+    }
+
+    public bool ShowTaskList
+    {
+        get { return _registryTaskbar.ReadBoolean(ConfigShowTaskList); }
+        set
+        {
+            if (ShowTaskList != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigShowTaskList, value.ToString());
+        }
+    }
+
+    public bool ShowSystray
+    {
+        get { return _registryTaskbar.ReadBoolean(ConfigShowSystray); }
+        set
+        {
+            if (ShowSystray != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigShowSystray, value.ToString());
         }
     }
 

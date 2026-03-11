@@ -28,7 +28,6 @@ public static class ConfigManager
     private const string ConfigHookCopy = "HookCopy";
     private const string ConfigUseOwnCopier = "UseOwnCopier";
     private const string ConfigStartTwoExplorer = "StartTwoExplorer";
-    private const string ConfigShowNotificationCopyOperation = "ShowNotificationCopyOperation";
     private const string ConfigExplorerPosX = "ExplorerPosX";
     private const string ConfigExplorerPosY = "ExplorerPosY";
     private const string ConfigExplorerSizeX = "ExplorerSizeX";
@@ -58,6 +57,8 @@ public static class ConfigManager
     private const string ConfigReplaceStartMenu = "ReplaceStartMenu";
     private const string ConfigUseJumpList = "UseJumpList";
     private const string ConfigFloatingShortcut = "FloatingShortcut";
+    private const string ConfigShowMemoryUsed = "ShowMemoryUsed";
+    private const string FalseValue = "False";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -82,7 +83,7 @@ public static class ConfigManager
         {
             // If empty config in registry, set default settings
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigOverrideDefaultColor, "").ToString()))
-                _registryKeyExplorer.SetValue(ConfigOverrideDefaultColor, "False");
+                _registryKeyExplorer.SetValue(ConfigOverrideDefaultColor, FalseValue);
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigDefaultBackgroundColor, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigDefaultBackgroundColor, $"255,{ExploripSharedCopy.Constants.Colors.BackgroundColor.R},{ExploripSharedCopy.Constants.Colors.BackgroundColor.G},{ExploripSharedCopy.Constants.Colors.BackgroundColor.B}");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigDefaultForegroundColor, "").ToString()))
@@ -99,8 +100,6 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigUseOwnCopier, "True");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigStartTwoExplorer, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigStartTwoExplorer, "True");
-            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigShowNotificationCopyOperation, "").ToString()))
-                _registryKeyExplorer.SetValue(ConfigShowNotificationCopyOperation, "True");
             string ws = _registryKeyExplorer.GetValue("ExplorerWindowState", "").ToString();
             if (string.IsNullOrWhiteSpace(ws) || !Enum.TryParse<WindowState>(ws, out _))
                 ExplorerWindowState = WindowState.Normal;
@@ -141,11 +140,11 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigSpaceBetweenThumbnail, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigSpaceBetweenThumbnail, "10");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigLockOnMonitorPowerOff, "").ToString()))
-                _registryRootTaskbar.SetValue(ConfigLockOnMonitorPowerOff, "False");
+                _registryRootTaskbar.SetValue(ConfigLockOnMonitorPowerOff, FalseValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeCloseThumbnail, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigDelayBeforeCloseThumbnail, "1000");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigHookTaskbarList, "").ToString()))
-                _registryRootTaskbar.SetValue(ConfigHookTaskbarList, "False");
+                _registryRootTaskbar.SetValue(ConfigHookTaskbarList, FalseValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigShowIconOnThumbnailWindow, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigShowIconOnThumbnailWindow, "True");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDragGhostBorderSize, "").ToString()))
@@ -164,6 +163,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue(ConfigUseJumpList, "True");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigFloatingShortcut, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigFloatingShortcut, "{CTRL}{F11}");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigShowMemoryUsed, "").ToString()))
+                _registryRootTaskbar.SetValue(ConfigShowMemoryUsed, FalseValue);
 
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
@@ -174,6 +175,8 @@ public static class ConfigManager
             _startMenuConfig.Init(startMenuRegistry, allowWrite);
         }
     }
+
+    #region Commons
 
     public static bool OverrideDefaultColor
     {
@@ -239,40 +242,29 @@ public static class ConfigManager
         }
     }
 
-    public static TaskbarConfig GetTaskbarConfig(string id)
+    public static string Theme
     {
-        TaskbarConfig tbc = _listTaskbar.SingleOrDefault(tbc => tbc.GetUniqueId == id);
-        if (tbc != null)
-            return tbc;
-        foreach (string subkey in _registryRootTaskbar.GetSubKeyNames().Where(s => s.ToLower().StartsWith("display")))
+        get { return _registryKeyExplorer.GetValue(ConfigTheme, "").ToString(); }
+        set
         {
-            string uniqueId = _registryRootTaskbar.OpenSubKey(subkey).GetValue("")?.ToString();
-            if (uniqueId == id)
-            {
-                tbc = new();
-                tbc.Init(int.Parse(subkey.Substring(7)), _registryRootTaskbar, AllowWrite, id);
-                _listTaskbar.Add(tbc);
-                return tbc;
-            }
+            if (Theme != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigTheme, value);
         }
-        tbc = new();
-        tbc.Init(Screen.AllScreens.Single(s => s.Id == id).DisplayNumber, _registryRootTaskbar, AllowWrite, id);
-        _listTaskbar.Add(tbc);
-        return tbc;
     }
 
-    public static TaskbarConfig GetTaskbarConfig(int numScreen)
+    public static string Language
     {
-        TaskbarConfig tbc;
-        Screen screen = Screen.AllScreens.SingleOrDefault(s => s.DisplayNumber == numScreen);
-        if (screen != null)
+        get { return _registryKeyExplorer.GetValue(ConfigLanguage, "").ToString(); }
+        set
         {
-            tbc = _listTaskbar.SingleOrDefault(tbc => tbc.GetUniqueId == screen.Id);
-            if (tbc != null)
-                return tbc;
+            if (Language != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigLanguage, value);
         }
-        return GetTaskbarConfig(Screen.AllScreens.Single(s => s.DisplayNumber == numScreen).Id);
     }
+
+    #endregion
+
+    #region Desktop replacement
 
     public static DesktopConfig GetDesktopConfig(string id)
     {
@@ -320,55 +312,9 @@ public static class ConfigManager
         return -1;
     }
 
-    public static bool AutoLockOnMonitorPowerOff
-    {
-        get { return _registryRootTaskbar.ReadBoolean(ConfigLockOnMonitorPowerOff); }
-        set
-        {
-            if (AutoLockOnMonitorPowerOff != value && AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigLockOnMonitorPowerOff, value.ToString());
-        }
-    }
+    #endregion
 
-    public static bool ShowDesktopPreviewAllMonitors
-    {
-        get { return _registryRootTaskbar.ReadBoolean("ShowDesktopPreviewAllMonitors"); }
-        set
-        {
-            if (ShowDesktopPreviewAllMonitors != value && AllowWrite)
-                _registryRootTaskbar.SetValue("ShowDesktopPreviewAllMonitors", value.ToString());
-        }
-    }
-
-    public static string Theme
-    {
-        get { return _registryKeyExplorer.GetValue(ConfigTheme, "").ToString(); }
-        set
-        {
-            if (Theme != value && AllowWrite)
-                _registryKeyExplorer.SetValue(ConfigTheme, value);
-        }
-    }
-
-    public static string Language
-    {
-        get { return _registryKeyExplorer.GetValue(ConfigLanguage, "").ToString(); }
-        set
-        {
-            if (Language != value && AllowWrite)
-                _registryKeyExplorer.SetValue(ConfigLanguage, value);
-        }
-    }
-
-    public static bool ShowNotificationCopyOperation
-    {
-        get { return _registryKeyExplorer.ReadBoolean(ConfigShowNotificationCopyOperation); }
-        set
-        {
-            if (ShowNotificationCopyOperation != value && AllowWrite)
-                _registryKeyExplorer.SetValue(ConfigShowNotificationCopyOperation, value.ToString());
-        }
-    }
+    #region File Explorer
 
     public static bool HookCopy
     {
@@ -449,6 +395,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigExplorerSizeY, value.ToString());
         }
     }
+
+    #endregion
 
     #region Toolbars
 
@@ -618,6 +566,61 @@ public static class ConfigManager
     #endregion
 
     #region Taskbar
+
+    public static TaskbarConfig GetTaskbarConfig(string id)
+    {
+        TaskbarConfig tbc = _listTaskbar.SingleOrDefault(tbc => tbc.GetUniqueId == id);
+        if (tbc != null)
+            return tbc;
+        foreach (string subkey in _registryRootTaskbar.GetSubKeyNames().Where(s => s.ToLower().StartsWith("display")))
+        {
+            string uniqueId = _registryRootTaskbar.OpenSubKey(subkey).GetValue("")?.ToString();
+            if (uniqueId == id)
+            {
+                tbc = new();
+                tbc.Init(int.Parse(subkey.Substring(7)), _registryRootTaskbar, AllowWrite, id);
+                _listTaskbar.Add(tbc);
+                return tbc;
+            }
+        }
+        tbc = new();
+        tbc.Init(Screen.AllScreens.Single(s => s.Id == id).DisplayNumber, _registryRootTaskbar, AllowWrite, id);
+        _listTaskbar.Add(tbc);
+        return tbc;
+    }
+
+    public static TaskbarConfig GetTaskbarConfig(int numScreen)
+    {
+        TaskbarConfig tbc;
+        Screen screen = Screen.AllScreens.SingleOrDefault(s => s.DisplayNumber == numScreen);
+        if (screen != null)
+        {
+            tbc = _listTaskbar.SingleOrDefault(tbc => tbc.GetUniqueId == screen.Id);
+            if (tbc != null)
+                return tbc;
+        }
+        return GetTaskbarConfig(Screen.AllScreens.Single(s => s.DisplayNumber == numScreen).Id);
+    }
+
+    public static bool AutoLockOnMonitorPowerOff
+    {
+        get { return _registryRootTaskbar.ReadBoolean(ConfigLockOnMonitorPowerOff); }
+        set
+        {
+            if (AutoLockOnMonitorPowerOff != value && AllowWrite)
+                _registryRootTaskbar.SetValue(ConfigLockOnMonitorPowerOff, value.ToString());
+        }
+    }
+
+    public static bool ShowDesktopPreviewAllMonitors
+    {
+        get { return _registryRootTaskbar.ReadBoolean("ShowDesktopPreviewAllMonitors"); }
+        set
+        {
+            if (ShowDesktopPreviewAllMonitors != value && AllowWrite)
+                _registryRootTaskbar.SetValue("ShowDesktopPreviewAllMonitors", value.ToString());
+        }
+    }
 
     public static bool UseJumpList
     {
@@ -902,6 +905,16 @@ public static class ConfigManager
         {
             if (FloatingShortcut != value && AllowWrite)
                 _registryRootTaskbar.SetValue(ConfigFloatingShortcut, value);
+        }
+    }
+
+    public static bool ShowMemoryUsed
+    {
+        get { return _registryRootTaskbar.ReadBoolean(ConfigShowMemoryUsed); }
+        set
+        {
+            if (ShowMemoryUsed != value && AllowWrite)
+                _registryRootTaskbar.SetValue(ConfigShowMemoryUsed, value.ToString());
         }
     }
 
