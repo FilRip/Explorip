@@ -354,6 +354,9 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     private void InsertPinnedApp()
     {
+        if (!ConfigManager.GetTaskbarConfig(TaskbarParent.NumScreen).ShowPinnedApp)
+            return;
+
         Dictionary<string, int> orders = [];
         try
         {

@@ -88,9 +88,10 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                     NativeMethods.DestroyIcon(_hIcon);
                 if (_propStore != null)
                     Marshal.ReleaseComObject(_propStore);
+
                 if (PropertyChanged?.GetInvocationList() != null)
-                    foreach (Delegate d in PropertyChanged.GetInvocationList())
-                        PropertyChanged -= (PropertyChangedEventHandler)d;
+                    foreach (PropertyChangedEventHandler d in PropertyChanged.GetInvocationList().OfType<PropertyChangedEventHandler>())
+                        PropertyChanged -= d;
             }
             _isDisposed = true;
         }

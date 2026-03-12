@@ -676,4 +676,9 @@ public partial class TaskButton : UserControl
     }
 
     #endregion
+
+    private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+
+    }
 }

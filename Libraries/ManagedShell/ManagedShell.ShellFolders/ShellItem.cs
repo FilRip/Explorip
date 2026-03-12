@@ -167,9 +167,6 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
 
     private ImageSource _smallIcon;
 
-    public delegate void DelegateIconLoaded(ShellItem si, IconSize size);
-    public event DelegateIconLoaded IconLoaded;
-
     public ImageSource SmallIcon
     {
         get
@@ -185,7 +182,6 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                         SmallIcon = GetDisplayIcon(IconSize.Small);
                         SmallIcon?.Freeze();
                         _smallIconLoading = false;
-                        IconLoaded?.Invoke(this, IconSize.Small);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
                 else
@@ -221,7 +217,6 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                         LargeIcon = GetDisplayIcon(IconSize.Large);
                         LargeIcon?.Freeze();
                         _largeIconLoading = false;
-                        IconLoaded?.Invoke(this, IconSize.Large);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
                 else
@@ -257,7 +252,6 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                         ExtraLargeIcon = GetDisplayIcon(IconSize.ExtraLarge);
                         ExtraLargeIcon?.Freeze();
                         _extraLargeIconLoading = false;
-                        IconLoaded?.Invoke(this, IconSize.ExtraLarge);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
                 else
@@ -293,7 +287,6 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                         JumboIcon = GetDisplayIcon(IconSize.Jumbo);
                         JumboIcon?.Freeze();
                         _jumboIconLoading = false;
-                        IconLoaded?.Invoke(this, IconSize.Jumbo);
                     }, CancellationToken.None, TaskCreationOptions.None, IconHelper.IconScheduler);
                 }
                 else
@@ -623,10 +616,6 @@ public class ShellItem : INotifyPropertyChanged, IDisposable
                     Marshal.FreeCoTaskMem(_relativePidl);
                     _relativePidl = IntPtr.Zero;
                 }
-
-                if (IconLoaded?.GetInvocationList() != null)
-                    foreach (DelegateIconLoaded d in IconLoaded.GetInvocationList().OfType<DelegateIconLoaded>())
-                        IconLoaded -= d;
 
                 if (PropertyChanged?.GetInvocationList() != null)
                     foreach (PropertyChangedEventHandler d in PropertyChanged.GetInvocationList().OfType<PropertyChangedEventHandler>())

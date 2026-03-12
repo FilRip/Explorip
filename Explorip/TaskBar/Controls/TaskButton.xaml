@@ -11,7 +11,7 @@
              xmlns:local="clr-namespace:Explorip.TaskBar.Controls"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=windowstask:ApplicationWindow}"
-             Loaded="TaskButton_OnLoaded" BorderThickness="0"
+             Loaded="TaskButton_OnLoaded" BorderThickness="0" DataContextChanged="UserControl_DataContextChanged"
              Unloaded="TaskButton_OnUnloaded" Background="Transparent" MouseEnter="AppButton_MouseEnter" MouseLeave="AppButton_MouseLeave" PreviewMouseUp="AppButton_OnPreviewMouseUp" GiveFeedback="UserControl_GiveFeedback">
 
     <UserControl.Resources>

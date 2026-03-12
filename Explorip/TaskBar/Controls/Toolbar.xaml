@@ -72,7 +72,7 @@
             
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <local:ToolbarButton/>
+                    <local:ToolbarButton DataContext="{Binding}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
 

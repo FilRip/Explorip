@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 
 using Explorip.Constants;
@@ -205,74 +204,30 @@ public partial class ToolbarButton : UserControl
         {
             Header = item.DisplayName,
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
-            Icon = new Image()
-            {
-                Source = item.SmallIcon,
-            },
+            Icon = new Image(),
             BorderThickness = new Thickness(1),
             Margin = new Thickness(0),
-            Tag = item,
             IsCheckable = false,
+            DataContext = item,
         };
-        item.IconLoaded += Item_IconLoaded;
+        Binding bindIcon = new(nameof(item.SmallIcon));
+        ((Image)mi.Icon).SetBinding(Image.SourceProperty, bindIcon);
         mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
         mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
         return mi;
     }
 
-    private void Item_IconLoaded(ShellItem si, ManagedShell.Common.Enums.IconSize size)
-    {
-        si.IconLoaded -= Item_IconLoaded;
-        Application.Current.Dispatcher.BeginInvoke(() =>
-        {
-            MenuItem mi = ReturnRecursive(si, ((ItemsControl)((Border)((Taskbar)Window.GetWindow(this)).MyPopup.Child).Child).Items.OfType<MenuItem>());
-            if (mi != null)
-                switch (size)
-                {
-                    case ManagedShell.Common.Enums.IconSize.Large:
-                        mi.Icon = new Image() { Source = si.LargeIcon };
-                        return;
-                    case ManagedShell.Common.Enums.IconSize.Small:
-                        mi.Icon = new Image() { Source = si.SmallIcon };
-                        return;
-                    case ManagedShell.Common.Enums.IconSize.ExtraLarge:
-                        mi.Icon = new Image() { Source = si.ExtraLargeIcon };
-                        return;
-                    case ManagedShell.Common.Enums.IconSize.Jumbo:
-                        mi.Icon = new Image() { Source = si.JumboIcon };
-                        return;
-                }
-        }, System.Windows.Threading.DispatcherPriority.Background);
-    }
-
-    private MenuItem ReturnRecursive(ShellItem si, IEnumerable<MenuItem> list)
-    {
-        MenuItem found = list.SingleOrDefault(mi => mi.Tag == si);
-        if (found != null)
-            return found;
-        foreach (ItemCollection mi in list.Select(mi => mi.Items))
-        {
-            if (mi.Count > 0)
-            {
-                found = ReturnRecursive(si, mi.OfType<MenuItem>());
-                if (found != null)
-                    return found;
-            }
-        }
-        return null;
-    }
-
     private void Mi_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
         StopDrag();
-        if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenuHelper.InvokeContextMenu(sf, true))
+        if (e.Source is MenuItem mi && mi.DataContext is ShellFile sf && InvokeContextMenuHelper.InvokeContextMenu(sf, true))
             e.Handled = true;
     }
 
     private void Mi_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
         StopDrag();
-        if (e.Source is MenuItem mi && mi.Tag is ShellFile sf && InvokeContextMenuHelper.InvokeContextMenu(sf, false))
+        if (e.Source is MenuItem mi && mi.DataContext is ShellFile sf && InvokeContextMenuHelper.InvokeContextMenu(sf, false))
             e.Handled = true;
     }
 

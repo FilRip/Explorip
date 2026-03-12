@@ -284,6 +284,8 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
             if (disposeWindow && !win.IsPinnedApp)
             {
                 Windows.Remove(win);
+                if (win.ShowInTaskbar)
+                    WindowDestroy?.Invoke(this, new WindowEventArgs() { Handle = hWnd, Window = win });
                 win.Dispose();
             }
             else
@@ -300,6 +302,8 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
                         nextPinned.PinnedShortcut = win.PinnedShortcut;
                         nextPinned.Position = win.Position;
                         Windows.Remove(win);
+                        if (win.ShowInTaskbar)
+                            WindowDestroy?.Invoke(this, new WindowEventArgs() { Handle = hWnd, Window = win });
                         win.Dispose();
                         return;
                     }

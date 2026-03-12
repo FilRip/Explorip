@@ -47,6 +47,7 @@ public partial class MyTaskbarApp : Application
     private Thread _threadAutoLock;
     private Thread _threadTraceMem;
     private static bool DisableAutoLock;
+    public static bool SessionLocked { get; set; }
 
     public static ShellManager MyShellManager { get; private set; }
 
@@ -131,12 +132,12 @@ public partial class MyTaskbarApp : Application
             e.Reason == SessionSwitchReason.SessionLogon ||
             e.Reason == SessionSwitchReason.SessionUnlock)
         {
-            ShellLogger.Debug("Enable background work");
+            /*ShellLogger.Debug("Enable background work");
             MyShellManager.ExplorerHelper.Disable = false;
             MyShellManager.NotificationArea.Disable = false;
-            MyShellManager.FullScreenHelper.Disable = false;
+            MyShellManager.FullScreenHelper.Disable = false;*/
             DisableAutoLock = false;
-            Current.Dispatcher.Invoke(() =>
+            /*Current.Dispatcher.Invoke(() =>
             {
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
@@ -147,16 +148,17 @@ public partial class MyTaskbarApp : Application
                 }
                 ViewModels.NotifyIconListViewModel.RefreshAllCollectionView();
                 ViewModels.TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);
-            });
+            });*/
+            SessionLocked = false;
         }
         else
         {
-            ShellLogger.Debug("Disable background work");
+            /*ShellLogger.Debug("Disable background work");
             MyShellManager.ExplorerHelper.Disable = true;
             MyShellManager.NotificationArea.Disable = true;
-            MyShellManager.FullScreenHelper.Disable = true;
+            MyShellManager.FullScreenHelper.Disable = true;*/
             DisableAutoLock = true;
-            Current.Dispatcher.Invoke(() =>
+            /*Current.Dispatcher.Invoke(() =>
             {
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
@@ -164,7 +166,8 @@ public partial class MyTaskbarApp : Application
                     tb.MyTaskList.DataContext.RemoveTaskServiceEvent();
                     tb.MySystray.DataContext.Pause();
                 }
-            });
+            });*/
+            SessionLocked = true;
         }
     }
 
@@ -373,7 +376,7 @@ public partial class MyTaskbarApp : Application
         {
             try
             {
-                if (!DisableAutoLock)
+                if (!DisableAutoLock && !SessionLocked)
                 {
                     bool laptopScreenOn = false;
 
@@ -396,7 +399,7 @@ public partial class MyTaskbarApp : Application
                     }
 
                     // If all monitors are power off, then lock session
-                    if (allMonitorOff >= Screen.AllScreens.Count() && !_exiting)
+                    if (allMonitorOff >= Screen.AllScreens.Count() && !_exiting && !SessionLocked)
                     {
                         ShellLogger.Debug("Auto lock");
                         ShellHelper.Lock();
@@ -424,6 +427,11 @@ public partial class MyTaskbarApp : Application
                 if (mem - previous >= 2)
                 {
                     ShellLogger.Debug($"MemoryUsed:{mem}Mo");
+#pragma warning disable IDE0079
+#pragma warning disable S1215
+                    GC.Collect();
+#pragma warning restore S1215
+#pragma warning restore IDE0079
                     previous = mem;
                 }
                 Thread.Sleep(1000);

@@ -48,6 +48,7 @@ public class TaskbarConfig
     private const string ConfigPathPinnedTaskbar = "PathApplicationPinned";
     private const string ConfigShowTaskList = "ShowTaskList";
     private const string ConfigShowSystray = "ShowSystray";
+    private const string ConfigShowPinnedApp = "ShowPinnedApp";
     #endregion
 
     private RegistryKey _registryTaskbar;
@@ -131,6 +132,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigShowTaskList, "True");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowSystray, "").ToString()))
                 _registryTaskbar.SetValue(ConfigShowSystray, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowPinnedApp, "").ToString()))
+                _registryTaskbar.SetValue(ConfigShowPinnedApp, "True");
         }
     }
 
@@ -565,6 +568,16 @@ public class TaskbarConfig
         {
             if (ShowSystray != value && AllowWrite)
                 _registryTaskbar.SetValue(ConfigShowSystray, value.ToString());
+        }
+    }
+
+    public bool ShowPinnedApp
+    {
+        get { return _registryTaskbar.ReadBoolean(ConfigShowPinnedApp); }
+        set
+        {
+            if (ShowPinnedApp != value && AllowWrite)
+                _registryTaskbar.SetValue(ConfigShowPinnedApp, value.ToString());
         }
     }
 

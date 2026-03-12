@@ -105,6 +105,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
         if (Directory.Exists(Environment.ExpandEnvironmentVariables(path)) && ParentTaskbar != null)
         {
             Folder = ToolbarsManager.GetToolbar(path, finishLoadAsync: SetItemsSource);
+            CreateCollectionView();
             Title = Folder.DisplayName;
             if (!ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarSmallSizeIcon(Path) && !CurrentShowLargeIcon)
                 ShowLargeIcon();
@@ -129,7 +130,11 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
     {
         if (_taskRefresh == null || _taskRefresh.Status != TaskStatus.Running)
         {
-            _taskRefresh = new Task(UpdateInvisibleIcons);
+            _taskRefresh = new Task(async () =>
+            {
+                await Task.Delay(Folder == null ? 5000 : 10);
+                UpdateInvisibleIcons();
+            });
             _taskRefresh.Start();
         }
     }
@@ -167,16 +172,20 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
                     }
                     foreach (ShellItem si in Folder.Files.Where(sf => sf.Position == 0))
                         si.Position = ++lastPosition;
-                    ToolbarItems = CollectionViewSource.GetDefaultView(Folder.Files);
-                    ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.Position), ListSortDirection.Ascending));
-                    ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.DisplayName), ListSortDirection.Ascending));
                     RefreshMyCollectionView();
                     UpdateInvisibleIcons();
-                    Folder.Files.CollectionChanged -= Files_CollectionChanged;
-                    Folder.Files.CollectionChanged += Files_CollectionChanged;
                 }
             }
         }, System.Windows.Threading.DispatcherPriority.Background);
+    }
+
+    private void CreateCollectionView()
+    {
+        ToolbarItems = CollectionViewSource.GetDefaultView(Folder.Files);
+        ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.Position), ListSortDirection.Ascending));
+        ToolbarItems.SortDescriptions.Add(new SortDescription(nameof(ShellItem.DisplayName), ListSortDirection.Ascending));
+        Folder.Files.CollectionChanged -= Files_CollectionChanged;
+        Folder.Files.CollectionChanged += Files_CollectionChanged;
     }
 
     public void RefreshMyCollectionView()
@@ -268,45 +277,19 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
             Header = item.DisplayName,
             Foreground = ExploripSharedCopy.Constants.Colors.ForegroundColorBrush,
             Background = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskbarBackground,
-            Icon = new Image()
-            {
-                Source = item.SmallIcon,
-            },
+            Icon = new Image(),
             BorderThickness = new Thickness(1),
             BorderBrush = ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).TaskbarBackground,
             Margin = new Thickness(0),
             Tag = item,
             IsCheckable = false,
+            DataContext = item,
         };
-        item.IconLoaded += Item_IconLoaded;
+        Binding bindIcon = new(nameof(item.SmallIcon));
+        ((Image)mi.Icon).SetBinding(Image.SourceProperty, bindIcon);
         mi.PreviewMouseLeftButtonUp += Mi_PreviewMouseLeftButtonUp;
         mi.PreviewMouseRightButtonUp += Mi_PreviewMouseRightButtonUp;
         return mi;
-    }
-
-    private void Item_IconLoaded(ShellItem si, ManagedShell.Common.Enums.IconSize size)
-    {
-        si.IconLoaded -= Item_IconLoaded;
-        Application.Current.Dispatcher.BeginInvoke(() =>
-        {
-            MenuItem mi = ReturnRecursive(si, ((ItemsControl)((Border)_moreItems.Child).Child).Items.OfType<MenuItem>());
-            if (mi != null)
-                switch (size)
-                {
-                    case ManagedShell.Common.Enums.IconSize.Large:
-                        mi.Icon = new Image() { Source = si.LargeIcon };
-                        return;
-                    case ManagedShell.Common.Enums.IconSize.Small:
-                        mi.Icon = new Image() { Source = si.SmallIcon };
-                        return;
-                    case ManagedShell.Common.Enums.IconSize.ExtraLarge:
-                        mi.Icon = new Image() { Source = si.ExtraLargeIcon };
-                        return;
-                    case ManagedShell.Common.Enums.IconSize.Jumbo:
-                        mi.Icon = new Image() { Source = si.JumboIcon };
-                        return;
-                }
-        }, System.Windows.Threading.DispatcherPriority.Background);
     }
 
     private MenuItem ReturnRecursive(ShellItem si, IEnumerable<MenuItem> list)
