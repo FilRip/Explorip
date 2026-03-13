@@ -455,6 +455,9 @@ public partial class Taskbar : AppBarWindow
 
     private void TextBlock_MouseUp(object sender, MouseButtonEventArgs e)
     {
-        TaskbarViewModel.GcCollect();
+        if (e.ChangedButton == MouseButton.Left)
+            TaskbarViewModel.GcCollect();
+        else
+            TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);
     }
 }

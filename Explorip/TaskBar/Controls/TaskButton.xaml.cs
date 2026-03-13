@@ -71,18 +71,10 @@ public partial class TaskButton : UserControl
 
     private void TaskButton_OnLoaded(object sender, RoutedEventArgs e)
     {
-        if (_isLoaded)
+        if (_isLoaded || Window.GetWindow(this) == null)
             return;
 
         ShellLogger.Debug("TaskButton Loaded on " + DataContext?.Title);
-
-        if (DataContext != null)
-        {
-            WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.RemoveHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
-            WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.AddHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
-            DataContext.Disposing -= DataContext_Disposing;
-            DataContext.Disposing += DataContext_Disposing;
-        }
 
         double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).TaskButtonSize;
         MyTaskIcon.Height = size;
@@ -131,12 +123,6 @@ public partial class TaskButton : UserControl
 
         ShellLogger.Debug("TaskButton Unloaded on " + DataContext?.Title);
 
-        if (DataContext != null)
-        {
-            WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.RemoveHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
-            DataContext.Disposing -= DataContext_Disposing;
-        }
-
         if (!ConfigManager.UseJumpList && JumpListContextMenu.Items.Count > 0)
         {
             RemoveAllMenuItemsRecursive(JumpListContextMenu.Items.OfType<MenuItem>(), JumpListContextMenu, JumpList_Click);
@@ -148,11 +134,6 @@ public partial class TaskButton : UserControl
         _isLoaded = false;
         _mouseOver = false;
         CloseThumbnail();
-    }
-
-    private void DataContext_Disposing(object sender, EventArgs e)
-    {
-        TaskButton_OnUnloaded(sender, null);
     }
 
     private void RemoveAllMenuItemsRecursive(IEnumerable<MenuItem> menuItems, MenuItem parent, RoutedEventHandler click)
@@ -686,23 +667,4 @@ public partial class TaskButton : UserControl
     }
 
     #endregion
-
-    protected override void OnVisualParentChanged(DependencyObject oldParent)
-    {
-        base.OnVisualParentChanged(oldParent);
-
-        if (oldParent != null && this.VisualParent == null)
-        {
-            TaskButton_OnUnloaded(null, null);
-        }
-    }
-
-    private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-        if (e.OldValue is ApplicationWindow)
-            TaskButton_OnUnloaded(null, null);
-
-        if (e.NewValue is ApplicationWindow && Window.GetWindow(this) != null)
-            TaskButton_OnLoaded(null, null);
-    }
 }

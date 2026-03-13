@@ -64,7 +64,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
 
     #region IDisposable
 
-    public event EventHandler Disposing;
     private bool _isDisposed;
     public bool IsDisposed
     {
@@ -81,7 +80,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
         {
             if (disposing)
             {
-                Disposing?.Invoke(this, EventArgs.Empty);
                 _tasksService.RemoveWindow(this, IntPtr.Zero);
                 _windows.Clear();
                 _icon = null;
@@ -94,9 +92,6 @@ public sealed class ApplicationWindow : IEquatable<ApplicationWindow>, INotifyPr
                 if (PropertyChanged?.GetInvocationList() != null)
                     foreach (PropertyChangedEventHandler d in PropertyChanged.GetInvocationList().OfType<PropertyChangedEventHandler>())
                         PropertyChanged -= d;
-                if (Disposing?.GetInvocationList() != null)
-                    foreach (EventHandler d in Disposing.GetInvocationList().OfType<EventHandler>())
-                        Disposing -= d;
             }
             _isDisposed = true;
         }
