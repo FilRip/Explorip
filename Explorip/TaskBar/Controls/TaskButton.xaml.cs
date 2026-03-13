@@ -80,6 +80,8 @@ public partial class TaskButton : UserControl
         {
             WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.RemoveHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
             WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.AddHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
+            DataContext.Disposing -= DataContext_Disposing;
+            DataContext.Disposing += DataContext_Disposing;
         }
 
         double size = ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).TaskButtonSize;
@@ -130,7 +132,10 @@ public partial class TaskButton : UserControl
         ShellLogger.Debug("TaskButton Unloaded on " + DataContext?.Title);
 
         if (DataContext != null)
+        {
             WeakEventManager<ApplicationWindow, PropertyChangedEventArgs>.RemoveHandler(DataContext, nameof(DataContext.PropertyChanged), Window_PropertyChanged);
+            DataContext.Disposing -= DataContext_Disposing;
+        }
 
         if (!ConfigManager.UseJumpList && JumpListContextMenu.Items.Count > 0)
         {
@@ -143,6 +148,11 @@ public partial class TaskButton : UserControl
         _isLoaded = false;
         _mouseOver = false;
         CloseThumbnail();
+    }
+
+    private void DataContext_Disposing(object sender, EventArgs e)
+    {
+        TaskButton_OnUnloaded(sender, null);
     }
 
     private void RemoveAllMenuItemsRecursive(IEnumerable<MenuItem> menuItems, MenuItem parent, RoutedEventHandler click)
@@ -677,8 +687,22 @@ public partial class TaskButton : UserControl
 
     #endregion
 
+    protected override void OnVisualParentChanged(DependencyObject oldParent)
+    {
+        base.OnVisualParentChanged(oldParent);
+
+        if (oldParent != null && this.VisualParent == null)
+        {
+            TaskButton_OnUnloaded(null, null);
+        }
+    }
+
     private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
+        if (e.OldValue is ApplicationWindow)
+            TaskButton_OnUnloaded(null, null);
 
+        if (e.NewValue is ApplicationWindow && Window.GetWindow(this) != null)
+            TaskButton_OnLoaded(null, null);
     }
 }

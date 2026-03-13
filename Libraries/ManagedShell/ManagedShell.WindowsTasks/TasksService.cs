@@ -228,10 +228,10 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
         {
             bool raiseEvent = window.ShowInTaskbar;
             ShellLogger.Debug($"TasksService: Removing window {window.Title} from collection due to no response");
+            window.Dispose();
             Windows.Remove(window);
             if (raiseEvent)
                 WindowDestroy?.Invoke(this, new WindowEventArgs() { Window = window });
-            window.Dispose();
         }
     }
 
@@ -283,10 +283,10 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
                 win.State = ApplicationWindow.WindowState.Active;
             if (disposeWindow && !win.IsPinnedApp)
             {
+                win.Dispose();
                 Windows.Remove(win);
                 if (win.ShowInTaskbar)
                     WindowDestroy?.Invoke(this, new WindowEventArgs() { Handle = hWnd, Window = win });
-                win.Dispose();
             }
             else
             {
@@ -301,10 +301,10 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
                         nextPinned.IsPinnedApp = true;
                         nextPinned.PinnedShortcut = win.PinnedShortcut;
                         nextPinned.Position = win.Position;
+                        win.Dispose();
                         Windows.Remove(win);
                         if (win.ShowInTaskbar)
                             WindowDestroy?.Invoke(this, new WindowEventArgs() { Handle = hWnd, Window = win });
-                        win.Dispose();
                         return;
                     }
                 }
