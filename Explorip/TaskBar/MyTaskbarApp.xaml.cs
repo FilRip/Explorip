@@ -132,42 +132,15 @@ public partial class MyTaskbarApp : Application
             e.Reason == SessionSwitchReason.SessionLogon ||
             e.Reason == SessionSwitchReason.SessionUnlock)
         {
-            /*ShellLogger.Debug("Enable background work");
-            MyShellManager.ExplorerHelper.Disable = false;
-            MyShellManager.NotificationArea.Disable = false;
-            MyShellManager.FullScreenHelper.Disable = false;*/
             DisableAutoLock = false;
-            /*Current.Dispatcher.Invoke(() =>
-            {
-                foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
-                {
-                    tb.Disable = false;
-                    tb.MyTaskList.DataContext.RegisterTaskServiceEvent();
-                    tb.MySystray.DataContext.Resume();
-                    tb.RefreshAllInvisibleIcons();
-                }
-                ViewModels.NotifyIconListViewModel.RefreshAllCollectionView();
-                ViewModels.TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);
-            });*/
             SessionLocked = false;
+            ShellLogger.Debug("Session unlocked");
         }
         else
         {
-            /*ShellLogger.Debug("Disable background work");
-            MyShellManager.ExplorerHelper.Disable = true;
-            MyShellManager.NotificationArea.Disable = true;
-            MyShellManager.FullScreenHelper.Disable = true;*/
             DisableAutoLock = true;
-            /*Current.Dispatcher.Invoke(() =>
-            {
-                foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
-                {
-                    tb.Disable = true;
-                    tb.MyTaskList.DataContext.RemoveTaskServiceEvent();
-                    tb.MySystray.DataContext.Pause();
-                }
-            });*/
             SessionLocked = true;
+            ShellLogger.Debug("Session locked");
         }
     }
 
@@ -415,6 +388,8 @@ public partial class MyTaskbarApp : Application
         }
     }
 
+    #endregion
+
     private static void TraceMem()
     {
         long previous = 0;
@@ -424,12 +399,13 @@ public partial class MyTaskbarApp : Application
             {
                 long mem;
                 mem = (long)Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1024 / 1024);
-                if (mem - previous >= 2)
+                if (Math.Abs(mem - previous) > 1)
                 {
                     ShellLogger.Debug($"MemoryUsed:{mem}Mo");
 #pragma warning disable IDE0079
 #pragma warning disable S1215
-                    GC.Collect();
+                    if (mem > previous)
+                        GC.Collect();
 #pragma warning restore S1215
 #pragma warning restore IDE0079
                     previous = mem;
@@ -443,6 +419,4 @@ public partial class MyTaskbarApp : Application
             catch (Exception) { /* Ignore errors */ }
         }
     }
-
-    #endregion
 }
