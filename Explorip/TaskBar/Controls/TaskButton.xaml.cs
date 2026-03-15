@@ -92,14 +92,18 @@ public partial class TaskButton : UserControl
             TitleColumn.Width = new GridLength(0, GridUnitType.Pixel);
             TxtTitle.Margin = new Thickness(0);
         }
-        ProgressBarWindow.Height = size + 20;
-        if (ConfigManager.TaskbarProgressBarHeight > 0 && ConfigManager.TaskbarProgressBarHeight < size + 20)
-            ProgressBarWindow.Height = ConfigManager.TaskbarProgressBarHeight;
+
         ProgressBarWindow.Foreground = ConfigManager.TaskButtonProgressBarColor;
-        double cornerRadius = ConfigManager.TaskButtonCornerRadius.TopLeft;
-        ProgressBarGeometry.RadiusX = cornerRadius;
-        ProgressBarGeometry.RadiusY = cornerRadius;
-        ProgressBarGeometry.Rect = new Rect(0, cornerRadius + (cornerRadius / 2), ActualWidth, ProgressBarWindow.Height - cornerRadius + (cornerRadius / 2));
+        ProgressBarWindow.Height = size + 20;
+        if (ConfigManager.TaskbarProgressBarHeight > 0)
+        {
+            if (ConfigManager.TaskbarProgressBarHeight < size + 20)
+                ProgressBarWindow.Height = ConfigManager.TaskbarProgressBarHeight;
+            double cornerRadius = ConfigManager.TaskButtonCornerRadius.TopLeft;
+            ProgressBarGeometry.RadiusX = cornerRadius;
+            ProgressBarGeometry.RadiusY = cornerRadius;
+            ProgressBarGeometry.Rect = new Rect(0, cornerRadius + (cornerRadius / 2), ActualWidth, ProgressBarWindow.Height - cornerRadius + (cornerRadius / 2));
+        }
 
         if (!ConfigManager.UseJumpList)
         {
