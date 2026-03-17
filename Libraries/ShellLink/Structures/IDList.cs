@@ -120,7 +120,7 @@ public class IDList(List<ItemID> idList) : Structure
     {
         get
         {
-            if (Win32.SHGetNameFromIDList(Bytes, SIGDN.SIGDN_NORMALDISPLAY, out IntPtr pszName) == 0)
+            if (Win32.SHGetNameFromIDList(Bytes, ShellItemGetDisplayName.SIGDN_NORMALDISPLAY, out IntPtr pszName) == 0)
             {
                 try
                 {

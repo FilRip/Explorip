@@ -525,7 +525,7 @@ public static class KnownFolderId
     {
         if (Win32.SHGetKnownFolderIDList(FOLDERID, 0, IntPtr.Zero, out IntPtr pidl) == 0 && pidl != IntPtr.Zero)
         {
-            if (Win32.SHGetNameFromIDList(pidl, SIGDN.SIGDN_NORMALDISPLAY, out IntPtr pszName) == 0)
+            if (Win32.SHGetNameFromIDList(pidl, ShellItemGetDisplayName.SIGDN_NORMALDISPLAY, out IntPtr pszName) == 0)
             {
                 try
                 {

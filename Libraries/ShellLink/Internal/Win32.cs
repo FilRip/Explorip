@@ -35,7 +35,7 @@ internal static class Win32
     /// of a pointer to the retrieved display name.</param>
     /// <returns></returns>
     [DllImport("shell32.dll", SetLastError = true)]
-    internal static extern uint SHGetNameFromIDList(byte[] pidl, SIGDN sigdnName, out IntPtr ppszName);
+    internal static extern uint SHGetNameFromIDList(byte[] pidl, ShellItemGetDisplayName sigdnName, out IntPtr ppszName);
 
     /// <summary>
     /// Retrieves the display name of an item identified by its IDList.
@@ -47,7 +47,7 @@ internal static class Win32
     /// of a pointer to the retrieved display name.</param>
     /// <returns></returns>
     [DllImport("shell32.dll", SetLastError = true)]
-    internal static extern uint SHGetNameFromIDList(IntPtr pidl, SIGDN sigdnName, out IntPtr ppszName);
+    internal static extern uint SHGetNameFromIDList(IntPtr pidl, ShellItemGetDisplayName sigdnName, out IntPtr ppszName);
 
     /// <summary>
     /// Retrieves the path of a known folder as an ITEMIDLIST structure.
@@ -114,7 +114,7 @@ internal static class Win32
     internal static extern IntPtr SHSimpleIDListFromPath([MarshalAs(UnmanagedType.LPWStr)] string pszPath);
 }
 
-public enum SIGDN : uint
+public enum ShellItemGetDisplayName : uint
 {
     /// <summary>
     /// 0x00000000. Returns the display name relative to the parent folder. In UI this name is generally 

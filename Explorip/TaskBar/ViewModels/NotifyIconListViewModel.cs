@@ -135,7 +135,7 @@ public partial class NotifyIconListViewModel : ObservableObject, IDisposable
         RefreshCollectionView();
     }
 
-    private void NotificationArea_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)
+    /*private void NotificationArea_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)
     {
         // This is used to promote unpinned icons to show when the tray is collapsed.
 
@@ -165,7 +165,7 @@ public partial class NotifyIconListViewModel : ObservableObject, IDisposable
             };
             unpromoteTimer.Start();
         }
-    }
+    }*/
 
     private void SystrayIcons_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
@@ -199,7 +199,7 @@ public partial class NotifyIconListViewModel : ObservableObject, IDisposable
         {
             ShellLogger.Debug("Unregister to system list of systray");
             MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged -= SystrayIcons_CollectionChanged;
-            MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
+            //MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
         }
     }
 
@@ -210,7 +210,7 @@ public partial class NotifyIconListViewModel : ObservableObject, IDisposable
             UnregisterEvents();
             ShellLogger.Debug("Register to system list of systray");
             MyTaskbarApp.MyShellManager.NotificationArea.TrayIcons.CollectionChanged += SystrayIcons_CollectionChanged;
-            MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
+            //MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
         }
     }
 

@@ -177,6 +177,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                 {
                     UID = nicData.ID,
                 };
+                trayIcon.NotificationBalloonShown += TrayIcon_NotificationBalloonShown;
                 exists = false;
             }
 
@@ -277,6 +278,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
                 {
                     if (trayIcon != null)
                     {
+                        trayIcon.NotificationBalloonShown -= TrayIcon_NotificationBalloonShown;
                         TrayIcons.Remove(trayIcon);
                         ShellLogger.Debug($"NotificationArea: Removed: {trayIcon.Title}");
                         trayIcon.Dispose();
@@ -304,6 +306,12 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
         }
         return true;
     }
+
+    private void TrayIcon_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)
+    {
+        NotificationBalloonShown?.Invoke(sender, e); 
+    }
+
     #endregion
 
     private void HandleBalloonData(SafeNotifyIconData nicData, NotifyIcon notifyIcon)

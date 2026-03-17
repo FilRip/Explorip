@@ -274,7 +274,7 @@ public partial class MyTaskbarApp : Application
         OpenTaskbar();
         if (ConfigManager.UseJumpList)
             CoolBytes.JumpList.ExtensionsJumpList.Init();
-        //SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         SystemEvents.DisplaySettingsChanged += SystemEvents_DisplaySettingsChanged;
 
         if (ConfigManager.AutoLockOnMonitorPowerOff)

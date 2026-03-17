@@ -43,17 +43,14 @@ public partial class NotifyIcon : UserControl
 
             if (Window.GetWindow(this) is Taskbar tb && tb.MainScreen && DataContext != null)
             {
-                WeakEventManager<ManagedShell.WindowsTray.NotifyIcon, NotificationBalloonEventArgs>.RemoveHandler(DataContext, nameof(DataContext.NotificationBalloonShown), TrayIcon_NotificationBalloonShown);
-                WeakEventManager<ManagedShell.WindowsTray.NotifyIcon, NotificationBalloonEventArgs>.AddHandler(DataContext, nameof(DataContext.NotificationBalloonShown), TrayIcon_NotificationBalloonShown);
-            }
+                // If a notification was received before we started listening, it will be here. Show the first one that is not expired.
+                NotificationBalloon firstUnexpiredNotification = DataContext.MissedNotifications.FirstOrDefault(balloon => balloon.Received.AddMilliseconds(balloon.Timeout) > DateTime.Now);
 
-            // If a notification was received before we started listening, it will be here. Show the first one that is not expired.
-            NotificationBalloon firstUnexpiredNotification = DataContext.MissedNotifications.FirstOrDefault(balloon => balloon.Received.AddMilliseconds(balloon.Timeout) > DateTime.Now);
-
-            if (firstUnexpiredNotification != null)
-            {
-                BalloonControl.Show(firstUnexpiredNotification, NotifyIconBorder);
-                DataContext.MissedNotifications.Remove(firstUnexpiredNotification);
+                if (firstUnexpiredNotification != null)
+                {
+                    BalloonControl.Show(firstUnexpiredNotification, NotifyIconBorder);
+                    DataContext.MissedNotifications.Remove(firstUnexpiredNotification);
+                }
             }
         }
     }
@@ -61,10 +58,6 @@ public partial class NotifyIcon : UserControl
     private void NotifyIcon_OnUnloaded(object sender, RoutedEventArgs e)
     {
         ShellLogger.Debug($"Unload Systray Icon for {DataContext?.Title}");
-        if (DataContext != null && Window.GetWindow(this) is Taskbar tb && tb.MainScreen)
-        {
-            WeakEventManager<ManagedShell.WindowsTray.NotifyIcon, NotificationBalloonEventArgs>.RemoveHandler(DataContext, nameof(DataContext.NotificationBalloonShown), TrayIcon_NotificationBalloonShown);
-        }
         _isLoaded = false;
     }
 

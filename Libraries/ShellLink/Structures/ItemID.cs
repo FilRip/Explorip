@@ -53,7 +53,7 @@ public class ItemID(byte[] itemID) : Structure
     {
         get
         {
-            if (Win32.SHGetNameFromIDList(GetBytes(), SIGDN.SIGDN_PARENTRELATIVE, out IntPtr pszName) == 0)
+            if (Win32.SHGetNameFromIDList(GetBytes(), ShellItemGetDisplayName.SIGDN_PARENTRELATIVE, out IntPtr pszName) == 0)
             {
                 try
                 {
