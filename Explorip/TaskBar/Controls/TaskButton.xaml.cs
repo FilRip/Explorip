@@ -95,15 +95,18 @@ public partial class TaskButton : UserControl
 
         ProgressBarWindow.Foreground = ConfigManager.TaskButtonProgressBarColor;
         ProgressBarWindow.Height = size + 20;
+        double cornerRadius = ConfigManager.TaskButtonCornerRadius.TopLeft;
         if (ConfigManager.TaskbarProgressBarHeight > 0)
         {
+            cornerRadius = 0;
             if (ConfigManager.TaskbarProgressBarHeight < size + 20)
                 ProgressBarWindow.Height = ConfigManager.TaskbarProgressBarHeight;
-            double cornerRadius = ConfigManager.TaskButtonCornerRadius.TopLeft;
-            ProgressBarGeometry.RadiusX = cornerRadius;
-            ProgressBarGeometry.RadiusY = cornerRadius;
-            ProgressBarGeometry.Rect = new Rect(0, cornerRadius + (cornerRadius / 2), ActualWidth, ProgressBarWindow.Height - cornerRadius + (cornerRadius / 2));
+            ProgressBarGeometry.Rect = new Rect(0, 0, ActualWidth, ProgressBarWindow.Height);
         }
+        else
+            ProgressBarGeometry.Rect = new Rect(0, cornerRadius + (cornerRadius / 2), ActualWidth, ProgressBarWindow.Height - cornerRadius + (cornerRadius / 2));
+        ProgressBarGeometry.RadiusX = cornerRadius;
+        ProgressBarGeometry.RadiusY = cornerRadius;
 
         if (!ConfigManager.UseJumpList)
         {
