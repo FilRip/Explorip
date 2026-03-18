@@ -64,12 +64,11 @@ public sealed class ComTaskScheduler : TaskScheduler, IDisposable
     ///     Initializes a new instance of the <see cref="ComTaskScheduler"/>, optionally setting an <see cref="System.Threading.ApartmentState"/>.
     /// </summary>
     /// <param name="apartmentState">
-    ///     The <see cref="ApartmentState"/> to use. Defaults to <see cref="System.Threading.ApartmentState.STA"/>
+    ///     The <see cref="ApartmentState"/> to use. Defaults to <see cref="ApartmentState.STA"/>
     /// </param>
     public ComTaskScheduler(ApartmentState apartmentState = ApartmentState.STA)
         : this(null, apartmentState)
     {
-
     }
 
     /// <summary>
@@ -79,24 +78,24 @@ public sealed class ComTaskScheduler : TaskScheduler, IDisposable
     ///     An <see cref="Action"/> to perform in the context of the <see cref="Thread"/> this <see cref="ComTaskScheduler"/> uses to execute its work after it has been started.
     /// </param>
     /// <param name="apartmentState">
-    ///     The <see cref="ApartmentState"/> to use. Defaults to <see cref="System.Threading.ApartmentState.STA"/>
+    ///     The <see cref="ApartmentState"/> to use. Defaults to <see cref="ApartmentState.STA"/>
     /// </param>
     public ComTaskScheduler(Action initAction, ApartmentState apartmentState = ApartmentState.STA)
     {
         if (apartmentState != ApartmentState.MTA && apartmentState != ApartmentState.STA)
             throw new ArgumentException("apartementState");
 
-        this.ApartmentState = apartmentState;
-        this._cancellationToken = new CancellationTokenSource();
-        this._tasks = [];
-        this._initAction = initAction ?? (() => { });
+        ApartmentState = apartmentState;
+        _cancellationToken = new CancellationTokenSource();
+        _tasks = [];
+        _initAction = initAction ?? (() => { });
 
-        this._thread = new Thread(this.ThreadStart)
+        _thread = new Thread(ThreadStart)
         {
-            IsBackground = true
+            IsBackground = true,
         };
-        this._thread.TrySetApartmentState(apartmentState);
-        this._thread.Start();
+        _thread.TrySetApartmentState(apartmentState);
+        _thread.Start();
     }
 
 
@@ -111,13 +110,13 @@ public sealed class ComTaskScheduler : TaskScheduler, IDisposable
     /// </exception>
     public void Wait()
     {
-        if (this._cancellationToken.IsCancellationRequested)
+        if (_cancellationToken.IsCancellationRequested)
             throw new TaskSchedulerException("Cannot wait after disposal.");
 
-        this._tasks.CompleteAdding();
-        this._thread.Join();
+        _tasks.CompleteAdding();
+        _thread.Join();
 
-        this._cancellationToken.Cancel();
+        _cancellationToken.Cancel();
     }
 
     /// <summary>
@@ -128,61 +127,61 @@ public sealed class ComTaskScheduler : TaskScheduler, IDisposable
     /// </remarks>
     public void Dispose()
     {
-        if (this._cancellationToken.IsCancellationRequested)
+        if (_cancellationToken.IsCancellationRequested)
             return;
 
-        this._tasks.CompleteAdding();
-        this._cancellationToken.Cancel();
+        _tasks.CompleteAdding();
+        _cancellationToken.Cancel();
         _cancellationToken.Dispose();
     }
 
     protected override void QueueTask(Task task)
     {
-        this.VerifyNotDisposed();
+        VerifyNotDisposed();
 
-        this._tasks.Add(task, this._cancellationToken.Token);
+        _tasks.Add(task, _cancellationToken.Token);
     }
 
     protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
     {
-        this.VerifyNotDisposed();
+        VerifyNotDisposed();
 
-        if (this._thread != Thread.CurrentThread)
+        if (_thread != Thread.CurrentThread)
             return false;
-        if (this._cancellationToken.Token.IsCancellationRequested)
+        if (_cancellationToken.Token.IsCancellationRequested)
             return false;
 
-        this.TryExecuteTask(task);
+        TryExecuteTask(task);
         return true;
     }
 
     protected override IEnumerable<Task> GetScheduledTasks()
     {
-        this.VerifyNotDisposed();
+        VerifyNotDisposed();
 
-        return [.. this._tasks];
+        return [.. _tasks];
     }
 
     private void ThreadStart()
     {
         try
         {
-            CancellationToken token = this._cancellationToken.Token;
+            CancellationToken token = _cancellationToken.Token;
 
-            this._initAction();
+            _initAction();
 
-            foreach (Task task in this._tasks.GetConsumingEnumerable(token))
-                this.TryExecuteTask(task);
+            foreach (Task task in _tasks.GetConsumingEnumerable(token))
+                TryExecuteTask(task);
         }
         finally
         {
-            this._tasks.Dispose();
+            _tasks.Dispose();
         }
     }
 
     private void VerifyNotDisposed()
     {
-        if (this._cancellationToken.IsCancellationRequested)
+        if (_cancellationToken.IsCancellationRequested)
             throw new ObjectDisposedException(typeof(ComTaskScheduler).Name);
     }
 }

@@ -23,8 +23,8 @@ public partial class ClockViewModel : ObservableObject
     [ObservableProperty()]
     private Visibility _clockVisibility;
 
-    private readonly DispatcherTimer clock = new(DispatcherPriority.Background);
-    private readonly DispatcherTimer singleClick = new(DispatcherPriority.Input);
+    private readonly DispatcherTimer _clock = new(DispatcherPriority.Background);
+    private readonly DispatcherTimer _singleClick = new(DispatcherPriority.Input);
     private Dispatcher _dispatcher;
     private readonly string[] _dateFormat;
 
@@ -41,8 +41,8 @@ public partial class ClockViewModel : ObservableObject
 
     public void HideClock()
     {
-        clock.Stop();
-        singleClick.Stop();
+        _clock.Stop();
+        _singleClick.Stop();
         Microsoft.Win32.SystemEvents.TimeChanged -= TimeChanged;
     }
 
@@ -56,12 +56,12 @@ public partial class ClockViewModel : ObservableObject
     {
         SetTime();
 
-        clock.Interval = TimeSpan.FromMilliseconds(1000);
-        clock.Tick += Clock_Tick;
-        clock.Start();
+        _clock.Interval = TimeSpan.FromMilliseconds(1000);
+        _clock.Tick += Clock_Tick;
+        _clock.Start();
 
-        singleClick.Interval = TimeSpan.FromMilliseconds(SystemInformations.DoubleClickTime);
-        singleClick.Tick += SingleClick_Tick;
+        _singleClick.Interval = TimeSpan.FromMilliseconds(SystemInformations.DoubleClickTime);
+        _singleClick.Tick += SingleClick_Tick;
 
         ClockVisibility = Visibility.Visible;
     }
@@ -71,19 +71,20 @@ public partial class ClockViewModel : ObservableObject
     private void StopClock()
 #pragma warning restore S1144, IDE0051 // Unused private types or members should be removed
     {
-        clock.Stop();
+        _clock.Stop();
 
         ClockVisibility = Visibility.Collapsed;
     }
 
     private void Clock_Tick(object sender, EventArgs args)
     {
-        SetTime();
+        if (!MyTaskbarApp.SessionLocked)
+            SetTime();
     }
 
     public void SingleClickStop()
     {
-        singleClick.Stop();
+        _singleClick.Stop();
     }
 
     private void SingleClick_Tick(object sender, EventArgs args)
@@ -91,7 +92,7 @@ public partial class ClockViewModel : ObservableObject
         // Windows 11 single-click action
         // A double-click will cancel the timer so that this doesn't run
 
-        singleClick.Stop();
+        _singleClick.Stop();
         ShellHelper.ShowNotificationCenter();
     }
 

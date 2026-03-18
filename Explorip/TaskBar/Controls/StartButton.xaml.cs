@@ -34,6 +34,7 @@ public partial class StartButton : System.Windows.Controls.UserControl
             return;
         DataContext.ParentControl = this;
         DataContext.Init();
+        StartMenuMonitor.StartMenuVisibilityChanged -= DataContext.AppVisibilityHelper_StartMenuVisibilityChanged;
         StartMenuMonitor.StartMenuVisibilityChanged += DataContext.AppVisibilityHelper_StartMenuVisibilityChanged;
     }
 

@@ -41,9 +41,9 @@
                 <ColumnDefinition Width="auto" x:Name="TitleColumn"/>
             </Grid.ColumnDefinitions>
             <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIconBack" Margin="34,0,0,0"
-                       Style="{DynamicResource TaskIcon}" HorizontalAlignment="Right" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}"/>
+                       Style="{StaticResource TaskIcon}" HorizontalAlignment="Right" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource BoolToVisibility}}"/>
             <Image Source="{Binding Icon, Mode=OneWay}" Name="MyTaskIcon"
-                       Style="{DynamicResource TaskIcon}" HorizontalAlignment="{Binding MultipleInstanceLaunched, Converter={StaticResource multipleInstanceAlignmentConverter}}"/>
+                       Style="{StaticResource TaskIcon}" HorizontalAlignment="{Binding MultipleInstanceLaunched, Converter={StaticResource multipleInstanceAlignmentConverter}}"/>
             <TextBlock x:Name="TxtTitle" MaxWidth="{Binding DataContext.MaxTitleLength, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType=local:TaskList, Mode=FindAncestor}}" Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0,0,10,0"/>
 
             <ProgressBar Grid.Row="0" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom" Panel.ZIndex="-1" VerticalAlignment="Bottom" Margin="0" Visibility="{Binding IsInProgress, Converter={StaticResource BoolToVisibility}}" Maximum="100" Value="{Binding PercentProgressValue, Mode=OneWay}" Foreground="Green" Background="Transparent" BorderThickness="0" Name="ProgressBarWindow">

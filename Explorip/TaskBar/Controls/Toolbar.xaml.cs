@@ -44,5 +44,6 @@ public partial class Toolbar : BaseToolbar
         ShellLogger.Debug("OnUnloaded on Toolbar " + DataContext.Id + " on screen : " + DataContext.ParentTaskbar.NumScreen.ToString());
         _isLoaded = false;
         DataContext.UnloadFolder();
+        UnregisterBaseEvents();
     }
 }

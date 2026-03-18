@@ -20,10 +20,8 @@
                      Topmost="True" Closed="AppBarWindow_Closed"
                      Style="{DynamicResource TaskbarWindow}">
     <Window.Resources>
-        <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="boolToVisible"/>
-            <converters:InverseBooleanToVisibilityConverter x:Key="inverseBootToVisible"/>
-        </ResourceDictionary>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="inverseBootToVisible"/>
     </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome ResizeBorderThickness="0,3,0,0"

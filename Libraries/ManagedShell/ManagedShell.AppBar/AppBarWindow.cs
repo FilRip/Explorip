@@ -110,6 +110,8 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
     protected virtual void OnSourceInitialized(object sender, EventArgs e)
     {
+        ShellLogger.Debug("AppBarWindow OnSourceInitialized");
+
         // set up helper and get handle
         windowInteropHelper = new WindowInteropHelper(this);
         Handle = windowInteropHelper.EnsureHandle();
@@ -280,6 +282,9 @@ public class AppBarWindow : Window, INotifyPropertyChanged
     {
         // delay changing things when we are shell. it seems that explorer AppBars do this too.
         // if we don't, the system moves things to bad places
+        if (Disable)
+            return;
+
         DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(0.1) };
         timer.Start();
         timer.Tick += (sender1, args) =>
@@ -406,7 +411,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
     public virtual void AfterAppBarPos(bool isSameCoords, NativeMethods.Rect rect)
     {
-        if (!isSameCoords)
+        if (!isSameCoords && !Disable)
         {
             DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(0.1) };
             timer.Start();

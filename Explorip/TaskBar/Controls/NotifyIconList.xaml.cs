@@ -22,7 +22,6 @@ public partial class NotifyIconList : UserControl
     {
         InitializeComponent();
         _lockLoaded = new object();
-        this.IsVisibleChanged += NotifyIconList_IsVisibleChanged;
     }
 
     private void NotifyIconList_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -52,6 +51,8 @@ public partial class NotifyIconList : UserControl
                 _isLoaded = true;
                 DataContext.Init(this);
                 DataContext.Resume();
+                this.IsVisibleChanged -= NotifyIconList_IsVisibleChanged;
+                this.IsVisibleChanged += NotifyIconList_IsVisibleChanged;
             }
         }
     }
@@ -63,6 +64,7 @@ public partial class NotifyIconList : UserControl
             if (_ignoreReload)
                 return;
 
+            this.IsVisibleChanged -= NotifyIconList_IsVisibleChanged;
             DataContext.Unload();
             _isLoaded = false;
         }

@@ -24,7 +24,6 @@ public partial class NotificationButton : UserControl
     public NotificationButton()
     {
         InitializeComponent();
-        this.IsVisibleChanged += NotificationButton_IsVisibleChanged;
     }
 
     private void NotificationButton_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -76,6 +75,8 @@ public partial class NotificationButton : UserControl
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown += NotificationArea_NotificationBalloonShown;
         }
+        this.IsVisibleChanged -= NotificationButton_IsVisibleChanged;
+        this.IsVisibleChanged += NotificationButton_IsVisibleChanged;
         _isLoaded = true;
     }
 
@@ -86,6 +87,7 @@ public partial class NotificationButton : UserControl
 
         if (Window.GetWindow(this) is Taskbar parentTaskbar && parentTaskbar.MainScreen && MyTaskbarApp.MyShellManager != null && ConfigManager.GetTaskbarConfig(((Taskbar)Window.GetWindow(this)).NumScreen).ShowSystray)
             MyTaskbarApp.MyShellManager.NotificationArea.NotificationBalloonShown -= NotificationArea_NotificationBalloonShown;
+        this.IsVisibleChanged -= NotificationButton_IsVisibleChanged;
         _isLoaded = false;
     }
 }

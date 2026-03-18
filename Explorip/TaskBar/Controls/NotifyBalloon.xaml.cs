@@ -83,17 +83,20 @@ public partial class NotifyBalloon : UserControl
 
     private void CloseBalloon()
     {
+        _closeTimer?.Tick -= CloseTimer_Tick;
         _closeTimer?.Stop();
         BalloonPopup.IsOpen = false;
     }
 
     private void StartTimer(int timeout)
     {
+        ShellLogger.Debug("StartTimer NotifyBalloon");
+
         _closeTimer?.Stop();
 
-        _closeTimer = new DispatcherTimer
+        _closeTimer = new DispatcherTimer()
         {
-            Interval = System.TimeSpan.FromMilliseconds(timeout)
+            Interval = System.TimeSpan.FromMilliseconds(timeout),
         };
 
         _closeTimer.Tick += CloseTimer_Tick;

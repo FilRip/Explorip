@@ -135,7 +135,8 @@ public partial class ToolbarButton : UserControl
                         myPopup.IsOpen = false;
                 }
                 myPopup.PlacementTarget = this;
-                _shellFolder ??= new ShellFolder(_folderPath, IntPtr.Zero, false);
+                _shellFolder?.Dispose();
+                _shellFolder = new ShellFolder(_folderPath, IntPtr.Zero, false);
                 foreach (ShellFile file in _shellFolder.Files)
                     AddMenuItem(file);
                 myPopup.IsOpen = true;

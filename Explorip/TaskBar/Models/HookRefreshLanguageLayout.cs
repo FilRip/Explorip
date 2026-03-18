@@ -25,7 +25,7 @@ public static class HookRefreshLanguageLayout
 
     private static int MyKeyboardHook(int code, int wParam, ref NativeMethods.KeyboardHookStruct lParam)
     {
-        if (code >= 0 && wParam == (int)NativeMethods.WM.KEYUP &&
+        if (!MyTaskbarApp.SessionLocked && code >= 0 && wParam == (int)NativeMethods.WM.KEYUP &&
             (lParam.VkCode == (int)NativeMethods.VK.LWIN || lParam.VkCode == (int)NativeMethods.VK.RWIN) && Application.Current is MyTaskbarApp myApp)
         {
             foreach (Taskbar tb in myApp.ListAllTaskbar())

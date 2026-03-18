@@ -19,12 +19,12 @@ public class TrayService : IDisposable
     private SystrayDelegate trayDelegate;
     private WndProcDelegate wndProcDelegate;
 
-    private IntPtr HwndTray;
-    private IntPtr HwndNotify;
-    private IntPtr HwndFwd;
-    private readonly IntPtr hInstance = Marshal.GetHINSTANCE(typeof(TrayService).Module);
+    private IntPtr _hWndTray;
+    private IntPtr _hWdNotify;
+    private IntPtr _hWndFwd;
+    private readonly IntPtr _hInstance = Marshal.GetHINSTANCE(typeof(TrayService).Module);
 
-    private readonly DispatcherTimer trayMonitor = new(DispatcherPriority.Background);
+    private readonly DispatcherTimer _trayMonitor = new(DispatcherPriority.Background);
 
     public TrayService()
     {
@@ -52,8 +52,8 @@ public class TrayService : IDisposable
 
     internal IntPtr Initialize()
     {
-        if (HwndTray != IntPtr.Zero)
-            return HwndTray;
+        if (_hWndTray != IntPtr.Zero)
+            return _hWndTray;
 
         DestroyWindows();
 
@@ -62,7 +62,7 @@ public class TrayService : IDisposable
         RegisterTrayWnd();
         RegisterNotifyWnd();
 
-        return HwndTray;
+        return _hWndTray;
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class TrayService : IDisposable
     /// </summary>
     internal void Run()
     {
-        if (HwndTray != IntPtr.Zero)
+        if (_hWndTray != IntPtr.Zero)
         {
             Resume();
             SendTaskbarCreated();
@@ -80,10 +80,10 @@ public class TrayService : IDisposable
     internal void Suspend()
     {
         // if we go beneath another tray, it will receive messages
-        if (HwndTray != IntPtr.Zero)
+        if (_hWndTray != IntPtr.Zero)
         {
-            trayMonitor.Stop();
-            SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
+            _trayMonitor.Stop();
+            SetWindowPos(_hWndTray, (IntPtr)WindowZOrder.HWND_BOTTOM, 0, 0, 0, 0,
                 EShowWindowPos.SWP_NOMOVE | EShowWindowPos.SWP_NOACTIVATE |
                 EShowWindowPos.SWP_NOSIZE);
         }
@@ -92,11 +92,11 @@ public class TrayService : IDisposable
     internal void Resume()
     {
         // if we are above another tray, we will receive messages
-        if (HwndTray != IntPtr.Zero)
+        if (_hWndTray != IntPtr.Zero)
         {
             SetWindowsTrayBottomMost();
             MakeTrayTopmost();
-            trayMonitor.Start();
+            _trayMonitor.Start();
         }
     }
 
@@ -104,11 +104,11 @@ public class TrayService : IDisposable
     {
         ShellLogger.Debug("SetTrayHostSizeData");
 
-        if (HwndTray != IntPtr.Zero)
-            SetWindowPos(HwndTray, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, EShowWindowPos.SWP_NOACTIVATE | EShowWindowPos.SWP_NOZORDER);
+        if (_hWndTray != IntPtr.Zero)
+            SetWindowPos(_hWndTray, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, EShowWindowPos.SWP_NOACTIVATE | EShowWindowPos.SWP_NOZORDER);
 
-        if (HwndNotify != IntPtr.Zero)
-            SetWindowPos(HwndNotify, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, EShowWindowPos.SWP_NOACTIVATE | EShowWindowPos.SWP_NOZORDER);
+        if (_hWdNotify != IntPtr.Zero)
+            SetWindowPos(_hWdNotify, IntPtr.Zero, data.rc.Left, data.rc.Top, data.rc.Width, data.rc.Height, EShowWindowPos.SWP_NOACTIVATE | EShowWindowPos.SWP_NOZORDER);
     }
 
     private static void SendTaskbarCreated()
@@ -125,17 +125,17 @@ public class TrayService : IDisposable
 
     private void DestroyWindows()
     {
-        if (HwndNotify != IntPtr.Zero)
+        if (_hWdNotify != IntPtr.Zero)
         {
-            DestroyWindow(HwndNotify);
-            UnregisterClass(NotifyWndClass, hInstance);
+            DestroyWindow(_hWdNotify);
+            UnregisterClass(NotifyWndClass, _hInstance);
             ShellLogger.Debug($"TrayService: Unregistered {NotifyWndClass}");
         }
 
-        if (HwndTray != IntPtr.Zero)
+        if (_hWndTray != IntPtr.Zero)
         {
-            DestroyWindow(HwndTray);
-            UnregisterClass(WindowHelper.TrayWndClass, hInstance);
+            DestroyWindow(_hWndTray);
+            UnregisterClass(WindowHelper.TrayWndClass, _hInstance);
             ShellLogger.Debug($"TrayService: Unregistered {WindowHelper.TrayWndClass}");
         }
     }
@@ -162,7 +162,7 @@ public class TrayService : IDisposable
         {
             if (disposing)
             {
-                trayMonitor.Stop();
+                _trayMonitor.Stop();
                 DestroyWindows();
 
                 if (!EnvironmentHelper.IsAppRunningAsShell)
@@ -248,8 +248,8 @@ public class TrayService : IDisposable
 
                     if ((wndPos.flags & EShowWindowPos.SWP_SHOWWINDOW) != 0)
                     {
-                        SetWindowLong(HwndTray, EGetWindowLong.GWL_STYLE,
-                            GetWindowLong(HwndTray, EGetWindowLong.GWL_STYLE) &
+                        SetWindowLong(_hWndTray, EGetWindowLong.GWL_STYLE,
+                            GetWindowLong(_hWndTray, EGetWindowLong.GWL_STYLE) &
                             ~(int)WindowStyles.WS_VISIBLE);
 
                         ShellLogger.Debug($"TrayService: {WindowHelper.TrayWndClass} became visible; hiding");
@@ -300,11 +300,11 @@ public class TrayService : IDisposable
 
     private IntPtr ForwardMsg(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
     {
-        if (HwndFwd == IntPtr.Zero || !IsWindow(HwndFwd))
-            HwndFwd = WindowHelper.FindWindowsTray(HwndTray);
+        if (_hWndFwd == IntPtr.Zero || !IsWindow(_hWndFwd))
+            _hWndFwd = WindowHelper.FindWindowsTray(_hWndTray);
 
-        if (HwndFwd != IntPtr.Zero)
-            return SendMessage(HwndFwd, msg, wParam, lParam);
+        if (_hWndFwd != IntPtr.Zero)
+            return SendMessage(_hWndFwd, msg, wParam, lParam);
 
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
@@ -316,7 +316,7 @@ public class TrayService : IDisposable
         WndClass newClass = new()
         {
             lpszClassName = name,
-            hInstance = hInstance,
+            hInstance = _hInstance,
             style = 0x8,
             lpfnWndProc = wndProcDelegate,
         };
@@ -332,14 +332,14 @@ public class TrayService : IDisposable
             ShellLogger.Info($"TrayService: Error registering {WindowHelper.TrayWndClass} class ({Marshal.GetLastWin32Error()})");
         }
 
-        HwndTray = CreateWindowEx(
+        _hWndTray = CreateWindowEx(
             ExtendedWindowStyles.WS_EX_TOPMOST |
             ExtendedWindowStyles.WS_EX_TOOLWINDOW, trayClassReg, "",
             WindowStyles.WS_POPUP | WindowStyles.WS_CLIPCHILDREN |
             WindowStyles.WS_CLIPSIBLINGS, 0, 0, GetSystemMetrics(0),
-            (int)(23 * DpiHelper.DpiScale), IntPtr.Zero, IntPtr.Zero, hInstance, IntPtr.Zero);
+            (int)(23 * DpiHelper.DpiScale), IntPtr.Zero, IntPtr.Zero, _hInstance, IntPtr.Zero);
 
-        if (HwndTray == IntPtr.Zero)
+        if (_hWndTray == IntPtr.Zero)
             ShellLogger.Info($"TrayService: Error creating {WindowHelper.TrayWndClass} window ({Marshal.GetLastWin32Error()})");
         else
             ShellLogger.Debug($"TrayService: Created {WindowHelper.TrayWndClass}");
@@ -351,12 +351,12 @@ public class TrayService : IDisposable
         if (trayNotifyClassReg == 0)
             ShellLogger.Info($"TrayService: Error registering {NotifyWndClass} class ({Marshal.GetLastWin32Error()})");
 
-        HwndNotify = CreateWindowEx(0, trayNotifyClassReg, null,
+        _hWdNotify = CreateWindowEx(0, trayNotifyClassReg, null,
             WindowStyles.WS_CHILD | WindowStyles.WS_CLIPCHILDREN |
             WindowStyles.WS_CLIPSIBLINGS, 0, 0, GetSystemMetrics(0),
-            (int)(23 * DpiHelper.DpiScale), HwndTray, IntPtr.Zero, hInstance, IntPtr.Zero);
+            (int)(23 * DpiHelper.DpiScale), _hWndTray, IntPtr.Zero, _hInstance, IntPtr.Zero);
 
-        if (HwndNotify == IntPtr.Zero)
+        if (_hWdNotify == IntPtr.Zero)
             ShellLogger.Info($"TrayService: Error creating {NotifyWndClass} window ({Marshal.GetLastWin32Error()})");
         else
             ShellLogger.Debug($"TrayService: Created {NotifyWndClass}");
@@ -364,18 +364,18 @@ public class TrayService : IDisposable
 
     private void SetupTrayMonitor()
     {
-        trayMonitor.Interval = new TimeSpan(0, 0, 0, 0, 100);
-        trayMonitor.Tick += TrayMonitor_Tick;
+        _trayMonitor.Interval = new TimeSpan(0, 0, 0, 0, 100);
+        _trayMonitor.Tick += TrayMonitor_Tick;
     }
 
     private void TrayMonitor_Tick(object sender, EventArgs e)
     {
-        if (HwndTray == IntPtr.Zero || Disable)
+        if (_hWndTray == IntPtr.Zero || Disable)
             return;
 
         IntPtr taskbarHwnd = FindWindow(WindowHelper.TrayWndClass, "");
 
-        if (taskbarHwnd == HwndTray)
+        if (taskbarHwnd == _hWndTray)
             return;
 
         ShellLogger.Debug("TrayService: Raising Shell_TrayWnd");
@@ -384,7 +384,7 @@ public class TrayService : IDisposable
 
     private void SetWindowsTrayBottomMost()
     {
-        IntPtr taskbarHwnd = WindowHelper.FindWindowsTray(HwndTray);
+        IntPtr taskbarHwnd = WindowHelper.FindWindowsTray(_hWndTray);
 
         if (taskbarHwnd != IntPtr.Zero)
         {
@@ -400,11 +400,11 @@ public class TrayService : IDisposable
 
     private void MakeTrayTopmost()
     {
-        if (HwndTray != IntPtr.Zero)
+        if (_hWndTray != IntPtr.Zero)
         {
             try
             {
-                SetWindowPos(HwndTray, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0,
+                SetWindowPos(_hWndTray, (IntPtr)WindowZOrder.HWND_TOPMOST, 0, 0, 0, 0,
                     EShowWindowPos.SWP_NOMOVE | EShowWindowPos.SWP_NOACTIVATE |
                     EShowWindowPos.SWP_NOSIZE);
             }

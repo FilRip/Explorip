@@ -37,7 +37,7 @@ namespace Explorip.TaskBar;
 /// </summary>
 public partial class MyTaskbarApp : Application
 {
-    public DictionaryManager DictionaryManager { get; set; }
+    //public DictionaryManager DictionaryManager { get; set; }
 
 #if DEBUG
     private ManagedShellLogger _logger;
@@ -46,7 +46,7 @@ public partial class MyTaskbarApp : Application
     private StartMenuMonitor _startMenuMonitor;
     private Thread _threadAutoLock;
     private Thread _threadTraceMem;
-    private static bool DisableAutoLock;
+
     public static bool SessionLocked { get; set; }
 
     public static ShellManager MyShellManager { get; private set; }
@@ -132,15 +132,41 @@ public partial class MyTaskbarApp : Application
             e.Reason == SessionSwitchReason.SessionLogon ||
             e.Reason == SessionSwitchReason.SessionUnlock)
         {
-            DisableAutoLock = false;
+            ShellLogger.Debug("Enable background work");
             SessionLocked = false;
+            MyShellManager.ExplorerHelper.Disable = false;
+            MyShellManager.NotificationArea.Disable = false;
+            MyShellManager.FullScreenHelper.Disable = false;
             ShellLogger.Debug("Session unlocked");
+            Current.Dispatcher.Invoke(() =>
+            {
+                foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
+                {
+                    tb.Disable = false;
+                    /*tb.MyTaskList.DataContext.RegisterTaskServiceEvent();
+                    tb.MySystray.DataContext.Resume();
+                    tb.RefreshAllInvisibleIcons();*/
+                }
+                /*ViewModels.NotifyIconListViewModel.RefreshAllCollectionView();
+                ViewModels.TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);*/
+            });
         }
         else
         {
-            DisableAutoLock = true;
             SessionLocked = true;
+            MyShellManager.ExplorerHelper.Disable = true;
+            MyShellManager.NotificationArea.Disable = true;
+            MyShellManager.FullScreenHelper.Disable = true;
             ShellLogger.Debug("Session locked");
+            Current.Dispatcher.Invoke(() =>
+            {
+                foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
+                {
+                    tb.Disable = true;
+                    /*tb.MyTaskList.DataContext.RemoveTaskServiceEvent();
+                    tb.MySystray.DataContext.Pause();*/
+                }
+            });
         }
     }
 
@@ -249,7 +275,7 @@ public partial class MyTaskbarApp : Application
         MyShellManager.TrayService.DefaultThemeColor = ConfigManager.DefaultSystemIconColor;
 
         _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
-        DictionaryManager = new DictionaryManager();
+        //DictionaryManager = new DictionaryManager();
 
         PluginsManager.LoadPlugins();
 
@@ -270,7 +296,7 @@ public partial class MyTaskbarApp : Application
         }
 
         // Startup
-        DictionaryManager.SetThemeFromSettings();
+        //DictionaryManager.SetThemeFromSettings();
         OpenTaskbar();
         if (ConfigManager.UseJumpList)
             CoolBytes.JumpList.ExtensionsJumpList.Init();
@@ -322,7 +348,7 @@ public partial class MyTaskbarApp : Application
         MyShellManager.ExplorerHelper.HideExplorerTaskbar = false;
         Current.Dispatcher.Invoke(() =>
         {
-            DictionaryManager.Dispose();
+            //DictionaryManager.Dispose();
             MyShellManager.Dispose();
             _startMenuMonitor.Dispose();
         });
@@ -349,7 +375,7 @@ public partial class MyTaskbarApp : Application
         {
             try
             {
-                if (!DisableAutoLock && !SessionLocked)
+                if (!SessionLocked)
                 {
                     bool laptopScreenOn = false;
 

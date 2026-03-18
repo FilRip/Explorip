@@ -159,7 +159,7 @@ public partial class Taskbar : AppBarWindow
 
         if (!handled)
         {
-            if ((msg == (int)NativeMethods.WM.SYSCOLORCHANGE ||
+            /*if ((msg == (int)NativeMethods.WM.SYSCOLORCHANGE ||
                 msg == (int)NativeMethods.WM.SETTINGCHANGE) &&
                 ConfigManager.Theme == DictionaryManager.THEME_DEFAULT)
             {
@@ -168,7 +168,7 @@ public partial class Taskbar : AppBarWindow
                 // If the color scheme changes, re-apply the current theme to get updated colors.
                 ((MyTaskbarApp)Application.Current).DictionaryManager.SetThemeFromSettings();
             }
-            else if (msg == (int)NativeMethods.WM.SYSCOMMAND)
+            else*/ if (msg == (int)NativeMethods.WM.SYSCOMMAND)
             {
                 handled = true;
             }
@@ -340,6 +340,7 @@ public partial class Taskbar : AppBarWindow
 
     private void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
     {
+        ShellLogger.Debug("TasksService, FullScreen mode : " + e.IsEntering.ToString());
         MyTaskbarApp.MyShellManager.NotificationArea.Disable = e.IsEntering;
     }
 

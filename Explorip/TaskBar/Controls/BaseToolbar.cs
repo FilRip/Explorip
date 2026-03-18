@@ -13,7 +13,7 @@ public class BaseToolbar : UserControl
 
     public BaseToolbar()
     {
-        IsVisibleChanged += BaseToolbar_IsVisibleChanged;
+        RegisterBaseEvents();
     }
 
     private void BaseToolbar_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -24,6 +24,17 @@ public class BaseToolbar : UserControl
             await Task.Delay(1000);
             _ignoreReload = false;
         });
+    }
+
+    protected void RegisterBaseEvents()
+    {
+        IsVisibleChanged -= BaseToolbar_IsVisibleChanged;
+        IsVisibleChanged += BaseToolbar_IsVisibleChanged;
+    }
+
+    protected void UnregisterBaseEvents()
+    {
+        IsVisibleChanged -= BaseToolbar_IsVisibleChanged;
     }
 
     public virtual BaseToolbarViewModel BaseDataContext

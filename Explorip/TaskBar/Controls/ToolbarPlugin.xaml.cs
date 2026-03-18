@@ -30,6 +30,12 @@ public partial class ToolbarPlugin : BaseToolbar
         {
             _isLoaded = true;
             DataContext.Init(this);
+            RegisterBaseEvents();
         }
+    }
+
+    private void BaseToolbar_Unloaded(object sender, RoutedEventArgs e)
+    {
+        UnregisterBaseEvents();
     }
 }

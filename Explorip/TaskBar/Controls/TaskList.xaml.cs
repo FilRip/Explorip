@@ -20,7 +20,6 @@ public partial class TaskList : UserControl
     public TaskList()
     {
         InitializeComponent();
-        IsVisibleChanged += TaskList_IsVisibleChanged;
     }
 
     private void TaskList_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -47,6 +46,8 @@ public partial class TaskList : UserControl
         if ((!_isLoaded || !_ignoreReload) && MyTaskbarApp.MyShellManager.Tasks != null)
         {
             _isLoaded = true;
+            IsVisibleChanged -= TaskList_IsVisibleChanged;
+            IsVisibleChanged += TaskList_IsVisibleChanged;
             Taskbar tb = (Taskbar)Window.GetWindow(this);
             DataContext.TaskbarParent = tb;
             DataContext.ChangeEdge(tb.AppBarEdge);
@@ -67,6 +68,7 @@ public partial class TaskList : UserControl
 
         ShellLogger.Debug("OnUnloaded of TaskList Screen " + ((Taskbar)Window.GetWindow(this)).NumScreen);
 
+        IsVisibleChanged -= TaskList_IsVisibleChanged;
         DataContext.RemoveTaskServiceEvent();
         if (_isMainScreen)
             TaskListViewModel.DisposeAllApplicationWindow();

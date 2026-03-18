@@ -7,9 +7,7 @@
              Loaded="UserControl_Loaded"
              Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="boolToVisible"/>
-        </ResourceDictionary>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
     </UserControl.Resources>
     <UserControl.DataContext>
         <viewmodels:NotificationButtonViewModel/>

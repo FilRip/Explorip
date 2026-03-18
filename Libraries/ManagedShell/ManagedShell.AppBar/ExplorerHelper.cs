@@ -15,7 +15,7 @@ public class ExplorerHelper
     private static TaskbarState? startupTaskbarState;
     private readonly NotificationArea _notificationArea;
 
-    private readonly DispatcherTimer taskbarMonitor = new(DispatcherPriority.Background);
+    private readonly DispatcherTimer _taskbarMonitor = new(DispatcherPriority.Background);
 
     private bool _hideExplorerTaskbar;
 
@@ -128,7 +128,7 @@ public class ExplorerHelper
             if (HideExplorerTaskbar)
             {
                 DoHideTaskbar();
-                taskbarMonitor.Start();
+                _taskbarMonitor.Start();
             }
         }
     }
@@ -145,14 +145,14 @@ public class ExplorerHelper
         {
             SetTaskbarState(startupTaskbarState ?? TaskbarState.OnTop);
             SetTaskbarVisibility(EShowWindowPos.SWP_SHOWWINDOW);
-            taskbarMonitor.Stop();
+            _taskbarMonitor.Stop();
         }
     }
 
     private void SetupTaskbarMonitor()
     {
-        taskbarMonitor.Interval = new TimeSpan(0, 0, 0, 0, 100);
-        taskbarMonitor.Tick += TaskbarMonitor_Tick;
+        _taskbarMonitor.Interval = new TimeSpan(0, 0, 0, 0, 100);
+        _taskbarMonitor.Tick += TaskbarMonitor_Tick;
     }
 
     public bool Disable { get; set; }

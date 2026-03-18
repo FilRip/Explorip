@@ -5,7 +5,7 @@
              xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
              xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             Background="Transparent" Margin="{Binding Margin}" Loaded="UserControl_Loaded">
+             Background="Transparent" Margin="{Binding Margin}" Loaded="UserControl_Loaded" Unloaded="BaseToolbar_Unloaded">
     
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="MouseDown">
@@ -24,9 +24,7 @@
     </local:BaseToolbar.DataContext>
     
     <local:BaseToolbar.Resources>
-        <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="boolToVisible"/>
-        </ResourceDictionary>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
     </local:BaseToolbar.Resources>
     
     <Grid Name="MainGrid" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center">

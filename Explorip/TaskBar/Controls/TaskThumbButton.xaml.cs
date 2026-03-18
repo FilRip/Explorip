@@ -13,6 +13,7 @@ using Explorip.TaskBar.ViewModels;
 
 using ExploripConfig.Configuration;
 
+using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
 using WpfScreenHelper;
@@ -199,6 +200,7 @@ public partial class TaskThumbButton : Window
 
     private void Window_Unloaded(object sender, RoutedEventArgs e)
     {
+        ShellLogger.Debug("Unload thumbnail of Window app " + DataContext?.ParentTask?.DataContext?.Title);
         foreach (Button closeButton in _listCloseButton)
             closeButton.Click -= CloseWindowButton_Click;
         foreach (Button thumbnailButton in _listThumbnailButton)

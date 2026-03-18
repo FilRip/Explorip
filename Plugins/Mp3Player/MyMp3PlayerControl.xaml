@@ -12,10 +12,8 @@
     </UserControl.DataContext>
     
     <UserControl.Resources>
-        <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="boolToVisible"/>
-            <local:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisible"/>
-        </ResourceDictionary>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+        <local:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisible"/>
     </UserControl.Resources>
     
     <Grid>

@@ -20,8 +20,8 @@ namespace Explorip.TaskBar.ViewModels;
 public partial class StartButtonViewModel : ObservableObject
 {
     private readonly bool _replaceStartMenu;
-    private bool allowOpenStart;
-    private DispatcherTimer pendingOpenTimer;
+    private bool _allowOpenStart;
+    private DispatcherTimer _pendingOpenTimer;
 
     public StartButton ParentControl { get; set; }
 
@@ -32,17 +32,17 @@ public partial class StartButtonViewModel : ObservableObject
 
     public void Init()
     {
-        pendingOpenTimer = new DispatcherTimer(DispatcherPriority.Background)
+        _pendingOpenTimer = new DispatcherTimer(DispatcherPriority.Background)
         {
             Interval = new TimeSpan(0, 0, 0, 1)
         };
-        pendingOpenTimer.Tick += (sender, args) =>
+        _pendingOpenTimer.Tick += (sender, args) =>
         {
             try
             {
                 // if the start menu didn't open, flip the button back to unchecked
                 ParentControl.Start.IsChecked = false;
-                pendingOpenTimer.Stop();
+                _pendingOpenTimer.Stop();
             }
             catch (Exception) { /* Ignore errors */ }
         };
@@ -54,7 +54,7 @@ public partial class StartButtonViewModel : ObservableObject
         {
             ParentControl.Start.IsChecked = opened;
         });
-        pendingOpenTimer.Stop();
+        _pendingOpenTimer.Stop();
     }
 
     [RelayCommand()]
@@ -72,9 +72,9 @@ public partial class StartButtonViewModel : ObservableObject
         }
         else
         {
-            if (allowOpenStart)
+            if (_allowOpenStart)
             {
-                pendingOpenTimer.Start();
+                _pendingOpenTimer.Start();
                 try
                 {
                     IntPtr ptrStartMenuWindow = NativeMethods.FindWindow("Windows.UI.Core.CoreWindow", Constants.Localization.START);
@@ -97,7 +97,7 @@ public partial class StartButtonViewModel : ObservableObject
     [RelayCommand()]
     private void PreviewMouseLeftButtonDown()
     {
-        allowOpenStart = (ParentControl.Start.IsChecked == false);
+        _allowOpenStart = (ParentControl.Start.IsChecked == false);
     }
 
     [RelayCommand()]

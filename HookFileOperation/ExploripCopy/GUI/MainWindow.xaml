@@ -16,11 +16,9 @@
         Closing="Window_Closing" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseMove="Window_MouseMove" Closed="Window_Closed" WindowStyle="None" ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
-        <ResourceDictionary>
-            <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibility"/>
-            <converters:FullSizeToCompactConverter x:Key="fullSizeToCompact"/>
-            <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
-        </ResourceDictionary>
+        <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibility"/>
+        <converters:FullSizeToCompactConverter x:Key="fullSizeToCompact"/>
+        <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
     </Window.Resources>
     
     <WindowChrome.WindowChrome>
