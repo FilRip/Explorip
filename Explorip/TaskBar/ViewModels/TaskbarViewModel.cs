@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Plugins;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Helpers;
 
@@ -620,8 +619,12 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         {
             try
             {
-                long mem = (long)Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1024 / 1024);
-                MemoryUsed = mem.ToString() + " Mo";
+                if (!MyTaskbarApp.SessionLocked)
+                {
+                    long memUsed = (long)Math.Round((double)Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024);
+                    long memReserved = (long)Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1024 / 1024);
+                    MemoryUsed = memUsed.ToString() + " Mo / " + memReserved.ToString() + " Mo";
+                }
             }
             catch (ThreadAbortException)
             {

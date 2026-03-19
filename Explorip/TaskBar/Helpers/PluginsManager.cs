@@ -7,7 +7,7 @@ using System.Reflection;
 
 using ExploripPlugins;
 
-namespace Explorip.Plugins;
+namespace Explorip.TaskBar.Helpers;
 
 public static class PluginsManager
 {

@@ -13,6 +13,8 @@ namespace VirtualDesktopPlugin.ViewModels;
 
 public partial class VirtualDesktopControlViewModel : ObservableObject
 {
+    private bool _enabled;
+
     [ObservableProperty()]
     private Brush _background, _foreground, _accentColor;
     [ObservableProperty()]
@@ -39,11 +41,23 @@ public partial class VirtualDesktopControlViewModel : ObservableObject
         VirtualDesktopEvents.Destroyed += VirtualDesktopEvents_Destroyed;
         VirtualDesktopEvents.Renamed += VirtualDesktopEvents_Renamed;
         VirtualDesktopEvents.Moved += VirtualDesktopEvents_Moved;
+        _enabled = true;
+    }
+
+    public void DisableDisplay()
+    {
+        _enabled = false;
+    }
+
+    public void EnableDisplay()
+    {
+        _enabled = true;
     }
 
     private void VirtualDesktopEvents_CurrentChanged(object sender, VirtualDesktop.Models.VirtualDesktopChangedEventArgs e)
     {
-        SelectedDesktop = e.NewDesktop;
+        if (_enabled)
+            SelectedDesktop = e.NewDesktop;
     }
 
     public void ChangeColor(SolidColorBrush background, SolidColorBrush foreground, SolidColorBrush accent)
@@ -104,6 +118,9 @@ public partial class VirtualDesktopControlViewModel : ObservableObject
 
     private void RemakeListDesktop()
     {
+        if (!_enabled)
+            return;
+
         ListDesktop = [.. VirtualDesktopManager.GetDesktops()];
         OnPropertyChanged(nameof(ListDesktopName));
     }

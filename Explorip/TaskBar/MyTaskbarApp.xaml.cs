@@ -7,9 +7,9 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 
-using Explorip.Plugins;
 using Explorip.StartMenu.Window;
 using Explorip.TaskBar.Controls;
+using Explorip.TaskBar.Helpers;
 using Explorip.TaskBar.Utilities;
 
 using ExploripConfig.Configuration;
@@ -132,7 +132,6 @@ public partial class MyTaskbarApp : Application
             e.Reason == SessionSwitchReason.SessionLogon ||
             e.Reason == SessionSwitchReason.SessionUnlock)
         {
-            ShellLogger.Debug("Enable background work");
             SessionLocked = false;
             MyShellManager.ExplorerHelper.Disable = false;
             MyShellManager.NotificationArea.Disable = false;
@@ -143,6 +142,9 @@ public partial class MyTaskbarApp : Application
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
                     tb.Disable = false;
+                    if (tb.MainScreen)
+                        foreach (ToolbarPlugin item in tb.ListPluginToolbars)
+                            item.PluginLinked.EnableDisplay();
                     /*tb.MyTaskList.DataContext.RegisterTaskServiceEvent();
                     tb.MySystray.DataContext.Resume();
                     tb.RefreshAllInvisibleIcons();*/
@@ -163,6 +165,9 @@ public partial class MyTaskbarApp : Application
                 foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
                 {
                     tb.Disable = true;
+                    if (tb.MainScreen)
+                        foreach (ToolbarPlugin item in tb.ListPluginToolbars)
+                            item.PluginLinked.DisableDisplay();
                     /*tb.MyTaskList.DataContext.RemoveTaskServiceEvent();
                     tb.MySystray.DataContext.Pause();*/
                 }
@@ -423,18 +428,18 @@ public partial class MyTaskbarApp : Application
         {
             try
             {
-                long mem;
-                mem = (long)Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1024 / 1024);
-                if (Math.Abs(mem - previous) > 1)
+                long memUsed = (long)Math.Round((double)Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024);
+                long memReserved = (long)Math.Round((double)Process.GetCurrentProcess().PrivateMemorySize64 / 1024 / 1024);
+                if (Math.Abs(memUsed - previous) > 1)
                 {
-                    ShellLogger.Debug($"MemoryUsed:{mem}Mo");
+                    ShellLogger.Debug($"Memory Used:{memUsed} Mo, Reserved:{memReserved} Mo");
 #pragma warning disable IDE0079
 #pragma warning disable S1215
-                    if (mem > previous)
+                    if (memUsed > previous)
                         GC.Collect();
 #pragma warning restore S1215
 #pragma warning restore IDE0079
-                    previous = mem;
+                    previous = memUsed;
                 }
                 Thread.Sleep(1000);
             }

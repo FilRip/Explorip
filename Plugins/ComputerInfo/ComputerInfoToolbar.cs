@@ -46,4 +46,14 @@ public class ComputerInfoToolbar : IExploripToolbar
     {
         // Do nothing for this time
     }
+
+    public void DisableDisplay()
+    {
+        _control.DataContext.DisableDisplay();
+    }
+
+    public void EnableDisplay()
+    {
+        _control.DataContext.EnableDisplay();
+    }
 }

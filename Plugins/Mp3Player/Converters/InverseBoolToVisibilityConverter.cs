@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Mp3Player;
+namespace Mp3Player.Converters;
 
 public class InverseBoolToVisibilityConverter : MarkupExtension, IValueConverter
 {

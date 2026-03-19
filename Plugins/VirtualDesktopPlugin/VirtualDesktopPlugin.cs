@@ -11,7 +11,7 @@ namespace VirtualDesktopPlugin;
 
 internal class VirtualDesktopPlugin : IExploripToolbar
 {
-    private UserControl _instance;
+    private VirtualDesktopControl _instance;
 
     public string Author => "FilRip";
 
@@ -35,6 +35,16 @@ internal class VirtualDesktopPlugin : IExploripToolbar
     public double MinHeight => 0;
 
     public double MinWidth => 0;
+
+    public void DisableDisplay()
+    {
+        _instance.DataContext.DisableDisplay();
+    }
+
+    public void EnableDisplay()
+    {
+        _instance.DataContext.EnableDisplay();
+    }
 
     public void SetGlobalColors(System.Windows.Media.SolidColorBrush background, System.Windows.Media.SolidColorBrush foreground, System.Windows.Media.SolidColorBrush accent)
     {

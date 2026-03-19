@@ -6,6 +6,8 @@ using ExploripPlugins;
 
 using ManagedShell.AppBar;
 
+using Mp3Player.Controls;
+
 namespace Mp3Player;
 
 public class MyMp3PlayerPlugins : IExploripToolbar
@@ -35,13 +37,23 @@ public class MyMp3PlayerPlugins : IExploripToolbar
 
     public Guid GuidKey { get => new("{921DE993-35F2-4B88-9832-F7F837929CDC}"); }
 
+    public void DisableDisplay()
+    {
+        _userControl.DataContext.DisableDisplay();
+    }
+
+    public void EnableDisplay()
+    {
+        _userControl.DataContext.EnableDisplay();
+    }
+
     public void SetGlobalColors(SolidColorBrush background, SolidColorBrush foreground, SolidColorBrush accent)
     {
-        ((MyMp3PlayerControl)ExploripToolbar).DataContext.SetColor(background, foreground);
+        _userControl.DataContext.SetColor(background, foreground);
     }
 
     public void UpdateTaskbar(int numScreen, double width, double height, Brush backgroundColor, AppBarEdge edge)
     {
-        ((MyMp3PlayerControl)ExploripToolbar).DataContext.ChangeTaskbarBackgroundColor(backgroundColor);
+        _userControl.DataContext.ChangeTaskbarBackgroundColor(backgroundColor);
     }
 }

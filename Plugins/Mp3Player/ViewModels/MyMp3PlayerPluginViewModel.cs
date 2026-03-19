@@ -9,13 +9,16 @@ using CommunityToolkit.Mvvm.Input;
 
 using Microsoft.Win32;
 
-namespace Mp3Player;
+using Mp3Player.Controls;
+
+namespace Mp3Player.ViewModels;
 
 public partial class MyMp3PlayerPluginViewModel : ObservableObject
 {
     private readonly MediaPlayer _mediaPlayer;
     private int _indexCurrentlyPlaying;
     private readonly MyMp3PlayerPlayListWindow _playListWindow;
+    private bool _enabled;
 
     public MyMp3PlayerPluginViewModel()
     {
@@ -27,6 +30,7 @@ public partial class MyMp3PlayerPluginViewModel : ObservableObject
             DataContext = this,
         };
         _indexCurrentlyPlaying = -1;
+        _enabled = true;
     }
 
     [ObservableProperty()]
@@ -37,6 +41,8 @@ public partial class MyMp3PlayerPluginViewModel : ObservableObject
     private Brush _background;
     [ObservableProperty()]
     private SolidColorBrush _foreground;
+    [ObservableProperty()]
+    private bool _forceEnabled;
 
     [RelayCommand()]
     private void Play()
@@ -112,6 +118,9 @@ public partial class MyMp3PlayerPluginViewModel : ObservableObject
 
     private void MediaPlayer_MediaEnded(object sender, EventArgs e)
     {
+        if (!_enabled && !ForceEnabled)
+            return;
+
         if (_indexCurrentlyPlaying < ListFiles.Count - 1)
             _indexCurrentlyPlaying++;
         else
@@ -122,8 +131,11 @@ public partial class MyMp3PlayerPluginViewModel : ObservableObject
     private void PlayCurrent()
     {
         _mediaPlayer.Stop();
-        _mediaPlayer.Open(new Uri(ListFiles[_indexCurrentlyPlaying].FullName, UriKind.Absolute));
-        _mediaPlayer.Play();
+        if (_enabled || ForceEnabled)
+        {
+            _mediaPlayer.Open(new Uri(ListFiles[_indexCurrentlyPlaying].FullName, UriKind.Absolute));
+            _mediaPlayer.Play();
+        }
     }
 
     [RelayCommand()]
@@ -142,5 +154,15 @@ public partial class MyMp3PlayerPluginViewModel : ObservableObject
     public void ChangeTaskbarBackgroundColor(Brush newBackground)
     {
         Background = newBackground;
+    }
+
+    public void DisableDisplay()
+    {
+        _enabled = false;
+    }
+
+    public void EnableDisplay()
+    {
+        _enabled = true;
     }
 }

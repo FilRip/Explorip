@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Mp3Player;
+namespace Mp3Player.Controls;
 
 /// <summary>
 /// Logique d'interaction pour MyMp3PlayerPlayListWindow.xaml

@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 using Explorip.Helpers;
-using Explorip.Plugins;
+using Explorip.TaskBar.Helpers;
 
 using ExploripConfig.Configuration;
 
@@ -32,6 +32,7 @@ public partial class Taskbar
                     AddToolbar(path, false);
                 else if (Guid.TryParse(path, out Guid guidPlugin))
                 {
+                    // TODO : Create plugins instance for each taskbar
                     IExploripToolbar plugin = PluginsManager.GetPlugin(guidPlugin);
                     if (plugin != null)
                         AddToolbar(plugin, false);
@@ -45,6 +46,16 @@ public partial class Taskbar
     public Grid ListToolbars
     {
         get { return ToolsBars; }
+    }
+
+    public IEnumerable<Toolbar> ListPathToolbars
+    {
+        get { return ToolsBars.Children.OfType<Toolbar>(); }
+    }
+
+    public IEnumerable<ToolbarPlugin> ListPluginToolbars
+    {
+        get { return ToolsBars.Children.OfType<ToolbarPlugin>(); }
     }
 
     public void RefreshAllInvisibleIcons()

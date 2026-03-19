@@ -26,4 +26,8 @@ public interface IExploripToolbar
     double MinWidth { get; }
 
     void SetGlobalColors(SolidColorBrush background, SolidColorBrush foreground, SolidColorBrush accent);
+
+    void DisableDisplay();
+
+    void EnableDisplay();
 }

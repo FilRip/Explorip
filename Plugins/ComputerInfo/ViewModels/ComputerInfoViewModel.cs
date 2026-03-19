@@ -13,6 +13,7 @@ namespace ComputerInfo.ViewModels;
 public partial class ComputerInfoViewModel : ObservableObject, IDisposable
 {
     private Timer _timer;
+    private bool _enabled;
 
     [ObservableProperty()]
     private int _period;
@@ -37,6 +38,17 @@ public partial class ComputerInfoViewModel : ObservableObject, IDisposable
         _precisionCpu = 2;
         InitTimer();
         _currentOrientation = Orientation.Horizontal;
+        _enabled = true;
+    }
+
+    public void DisableDisplay()
+    {
+        _enabled = false;
+    }
+
+    public void EnableDisplay()
+    {
+        _enabled = true;
     }
 
     private void InitTimer()
@@ -46,6 +58,9 @@ public partial class ComputerInfoViewModel : ObservableObject, IDisposable
 
     private void RefreshInfo(object userState)
     {
+        if (!_enabled)
+            return;
+
         CpuUsage = Math.Round(Math.Min(100, ComputerInfoCpu.PercentCpuUsed), PrecisionCpu);
         FreeRam = Math.Round((double)ComputerInfoMemory.TotalFree / 1024, 2);
         if (CpuUsage < 33)

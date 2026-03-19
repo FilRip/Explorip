@@ -1,6 +1,8 @@
 ﻿using System.Windows.Controls;
 
-namespace Mp3Player;
+using Mp3Player.ViewModels;
+
+namespace Mp3Player.Controls;
 
 /// <summary>
 /// Logique d'interaction pour MyMp3PlayerControl.xaml
