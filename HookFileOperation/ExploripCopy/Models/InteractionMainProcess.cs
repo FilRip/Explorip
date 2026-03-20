@@ -39,8 +39,8 @@ internal class InteractionMainProcess : IInteractionMainProcess
                     Marshal.ReleaseComObject(si);
                 }
             }
-            MainViewModels.Instance.AddOperations(listOperations);
             listOperations[listOperations.Count - 1].ResetChoice = true;
+            MainViewModels.Instance.AddOperations(listOperations);
         }
     }
 }

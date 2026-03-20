@@ -168,7 +168,8 @@ public partial class Taskbar : AppBarWindow
                 // If the color scheme changes, re-apply the current theme to get updated colors.
                 ((MyTaskbarApp)Application.Current).DictionaryManager.SetThemeFromSettings();
             }
-            else*/ if (msg == (int)NativeMethods.WM.SYSCOMMAND)
+            else*/
+            if (msg == (int)NativeMethods.WM.SYSCOMMAND)
             {
                 handled = true;
             }

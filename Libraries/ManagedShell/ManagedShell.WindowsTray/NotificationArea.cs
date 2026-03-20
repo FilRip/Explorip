@@ -309,7 +309,7 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
 
     private void TrayIcon_NotificationBalloonShown(object sender, NotificationBalloonEventArgs e)
     {
-        NotificationBalloonShown?.Invoke(sender, e); 
+        NotificationBalloonShown?.Invoke(sender, e);
     }
 
     #endregion

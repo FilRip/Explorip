@@ -145,12 +145,7 @@ public partial class MyTaskbarApp : Application
                     if (tb.MainScreen)
                         foreach (ToolbarPlugin item in tb.ListPluginToolbars)
                             item.PluginLinked.EnableDisplay();
-                    /*tb.MyTaskList.DataContext.RegisterTaskServiceEvent();
-                    tb.MySystray.DataContext.Resume();
-                    tb.RefreshAllInvisibleIcons();*/
                 }
-                /*ViewModels.NotifyIconListViewModel.RefreshAllCollectionView();
-                ViewModels.TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);*/
             });
         }
         else
@@ -168,8 +163,6 @@ public partial class MyTaskbarApp : Application
                     if (tb.MainScreen)
                         foreach (ToolbarPlugin item in tb.ListPluginToolbars)
                             item.PluginLinked.DisableDisplay();
-                    /*tb.MyTaskList.DataContext.RemoveTaskServiceEvent();
-                    tb.MySystray.DataContext.Pause();*/
                 }
             });
         }
