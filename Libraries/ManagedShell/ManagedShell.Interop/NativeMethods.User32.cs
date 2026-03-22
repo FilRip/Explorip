@@ -1960,7 +1960,7 @@ public partial class NativeMethods
         XBUTTON2 = 0x0002,
     }
 
-#pragma warning disable IDE0044, S1144
+#pragma warning disable IDE0044
     [StructLayout(LayoutKind.Sequential)]
     public struct MouseInput
     {
@@ -1971,7 +1971,7 @@ public partial class NativeMethods
         uint time;
         IntPtr dwExtraInfo;
     }
-#pragma warning restore IDE0044, S1144
+#pragma warning restore IDE0044
 
     [StructLayout(LayoutKind.Sequential)]
     public struct KeyBDInput
@@ -1983,7 +1983,7 @@ public partial class NativeMethods
         public IntPtr dwExtraInfo;
     }
 
-#pragma warning disable IDE0044, S1144
+#pragma warning disable IDE0044
     [StructLayout(LayoutKind.Sequential)]
     public struct HardwareInput
     {
@@ -1991,7 +1991,7 @@ public partial class NativeMethods
         ushort wParamL;
         ushort wParamH;
     }
-#pragma warning restore IDE0044, S1144
+#pragma warning restore IDE0044
 
     [StructLayout(LayoutKind.Explicit)]
     public struct MouseKeybdHardwareInputUnion
@@ -4319,4 +4319,51 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     internal static extern IntPtr GetWindowDC(IntPtr hWnd);
+
+    public enum EOpenInputDesktop : uint
+    {
+        None = 0,
+        DF_ALLOWOTHERACCOUNTHOOK = 0x0001,
+    }
+
+    public enum OidDesiredAccess : uint
+    {
+        None = 0,
+        DELETE = 0x00010000,
+        READ_CONTROL = 0x00020000,
+        WRITE_DAC = 0x00040000,
+        WRITE_OWNER = 0x00080000,
+        SYNCHRONIZE = 0x00100000,
+        STANDARD_RIGHTS_REQUIRED = 0x000F0000,
+        STANDARD_RIGHTS_READ = 0x00020000,
+        STANDARD_RIGHTS_WRITE = 0x00020000,
+        STANDARD_RIGHTS_EXECUTE = 0x00020000,
+        STANDARD_RIGHTS_ALL = 0x001F0000,
+        SPECIFIC_RIGHTS_ALL = 0x0000FFFF,
+        ACCESS_SYSTEM_SECURITY = 0x01000000,
+        MAXIMUM_ALLOWED = 0x02000000,
+        GENERIC_READ = 0x80000000,
+        GENERIC_WRITE = 0x40000000,
+        GENERIC_EXECUTE = 0x20000000,
+        GENERIC_ALL = 0x10000000
+    }
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr OpenInputDesktop(EOpenInputDesktop dwFlags, bool fInherit, OidDesiredAccess dwDesiredAccess);
+
+    [DllImport(User32_DllName)]
+    internal static extern bool CloseDesktop(IntPtr hDesktop);
+
+    public enum UserObjectInformation
+    {
+        UOI_FLAGS = 1,
+        UOI_HEAPSIZE = 5,
+        UOI_IO = 6,
+        UOI_NAME = 2,
+        UOI_TYPE = 3,
+        UOI_USER_SID = 4,
+    }
+
+    [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
+    internal static extern bool GetUserObjectInformation(IntPtr hObj, UserObjectInformation nIndex, StringBuilder pvInfo, int nLength, out int lpnLengthNeeded);
 }

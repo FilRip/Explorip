@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 
+using Explorip.Helpers;
 using Explorip.StartMenu.Window;
 using Explorip.TaskBar.Controls;
 using Explorip.TaskBar.Helpers;
@@ -46,6 +47,8 @@ public partial class MyTaskbarApp : Application
     private StartMenuMonitor _startMenuMonitor;
     private Thread _threadAutoLock;
     private Thread _threadTraceMem;
+    private Thread _threadCheckDesktopVisible;
+    private bool _backgroundWorkerDisabled;
 
     public static bool SessionLocked { get; set; }
 
@@ -125,7 +128,7 @@ public partial class MyTaskbarApp : Application
         });
     }
 
-    private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+    private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
     {
         if (e.Reason == SessionSwitchReason.ConsoleConnect ||
             e.Reason == SessionSwitchReason.RemoteConnect ||
@@ -133,39 +136,64 @@ public partial class MyTaskbarApp : Application
             e.Reason == SessionSwitchReason.SessionUnlock)
         {
             SessionLocked = false;
-            MyShellManager.ExplorerHelper.Disable = false;
-            MyShellManager.NotificationArea.Disable = false;
-            MyShellManager.FullScreenHelper.Disable = false;
+            if (_backgroundWorkerDisabled)
+                EnableBackgroundWorker();
             ShellLogger.Debug("Session unlocked");
-            Current.Dispatcher.Invoke(() =>
-            {
-                foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
-                {
-                    tb.Disable = false;
-                    if (tb.MainScreen)
-                        foreach (ToolbarPlugin item in tb.ListPluginToolbars)
-                            item.PluginLinked.EnableDisplay();
-                }
-            });
         }
         else
         {
             SessionLocked = true;
-            MyShellManager.ExplorerHelper.Disable = true;
-            MyShellManager.NotificationArea.Disable = true;
-            MyShellManager.FullScreenHelper.Disable = true;
+            if (!_backgroundWorkerDisabled)
+                DisableBackgroundWorker();
             ShellLogger.Debug("Session locked");
-            Current.Dispatcher.Invoke(() =>
-            {
-                foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
-                {
-                    tb.Disable = true;
-                    if (tb.MainScreen)
-                        foreach (ToolbarPlugin item in tb.ListPluginToolbars)
-                            item.PluginLinked.DisableDisplay();
-                }
-            });
         }
+    }
+
+    private void DisableBackgroundWorker()
+    {
+        _backgroundWorkerDisabled = true;
+        ShellLogger.Debug("Disable background worker");
+        MyShellManager.ExplorerHelper.Disable = true;
+        MyShellManager.NotificationArea.Disable = true;
+        MyShellManager.FullScreenHelper.Disable = true;
+        Current.Dispatcher.Invoke(() =>
+        {
+            foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
+            {
+                tb.Disable = true;
+                if (tb.MainScreen)
+                    foreach (ToolbarPlugin item in tb.ListPluginToolbars)
+                        item.PluginLinked.DisableDisplay();
+            }
+        });
+    }
+
+    private void EnableBackgroundWorker()
+    {
+        _backgroundWorkerDisabled = false;
+        ShellLogger.Debug("Enable background worker");
+        MyShellManager.ExplorerHelper.Disable = false;
+        MyShellManager.NotificationArea.Disable = false;
+        MyShellManager.FullScreenHelper.Disable = false;
+        Current.Dispatcher.Invoke(() =>
+        {
+            foreach (Taskbar tb in ((MyTaskbarApp)Current).ListAllTaskbar())
+            {
+                tb.Disable = false;
+                if (tb.MainScreen)
+                    foreach (ToolbarPlugin item in tb.ListPluginToolbars)
+                        item.PluginLinked.EnableDisplay();
+            }
+        });
+        System.Threading.Tasks.Task.Factory.StartNew(async () =>
+        {
+            await System.Threading.Tasks.Task.Delay(2000);
+#pragma warning disable IDE0079
+#pragma warning disable S1215 // Necessary to flush Dispatcher UI blocked event, result in a memory leak. In fact, it will be auto collect, but after 30-40min only (Gen2)
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: false);
+#pragma warning restore S1215
+#pragma warning restore IDE0079
+        });
     }
 
     #endregion
@@ -315,6 +343,9 @@ public partial class MyTaskbarApp : Application
 
         if (ConfigManager.HookTaskbarList)
             Explorip.Helpers.HookTaskbarListHelper.InstallHook();
+
+        _threadCheckDesktopVisible = new Thread(new ThreadStart(CheckDesktopVisible));
+        _threadCheckDesktopVisible.Start();
     }
 
     #endregion
@@ -441,6 +472,28 @@ public partial class MyTaskbarApp : Application
                 break;
             }
             catch (Exception) { /* Ignore errors */ }
+        }
+    }
+
+    private void CheckDesktopVisible()
+    {
+        while (!_exiting)
+        {
+            try
+            {
+                if (!SessionLocked)
+                {
+                    if (ScreenManager.IsDesktopVisible())
+                    {
+                        if (_backgroundWorkerDisabled)
+                            EnableBackgroundWorker();
+                    }
+                    else if (!_backgroundWorkerDisabled)
+                        DisableBackgroundWorker();
+                }
+            }
+            catch (Exception) { /* Ignore errors */ }
+            Thread.Sleep(1000);
         }
     }
 }

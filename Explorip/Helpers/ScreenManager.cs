@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -262,4 +263,26 @@ public static class ScreenManager
     }
 
     #endregion
+
+    public static bool IsDesktopVisible()
+    {
+        IntPtr hDesktop = IntPtr.Zero;
+
+        try
+        {
+            hDesktop = NativeMethods.OpenInputDesktop(0, false, NativeMethods.OidDesiredAccess.None);
+            if (hDesktop != IntPtr.Zero)
+            {
+                StringBuilder name = new(256);
+                if (NativeMethods.GetUserObjectInformation(hDesktop, NativeMethods.UserObjectInformation.UOI_NAME, name, name.Capacity, out int needed) && needed <= 256)
+                    return name.ToString() == "Default";
+            }
+        }
+        finally
+        {
+            if (hDesktop != IntPtr.Zero)
+                NativeMethods.CloseDesktop(hDesktop);
+        }
+        return false;
+    }
 }
