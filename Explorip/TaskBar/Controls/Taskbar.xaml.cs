@@ -460,6 +460,6 @@ public partial class Taskbar : AppBarWindow
         if (e.ChangedButton == MouseButton.Left)
             TaskbarViewModel.GcCollect();
         else
-            TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh, EventArgs.Empty);
+            TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.Refresh);
     }
 }

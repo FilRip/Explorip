@@ -406,7 +406,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         }
         else
         {
-            TaskListViewModel.RefreshAllCollectionView(null, EventArgs.Empty);
+            TaskListViewModel.RefreshAllCollectionView(Constants.ERefreshList.None);
             ParentTaskbar.MyTaskList.DataContext.ChangeButtonSize();
             ParentTaskbar.MyTaskList.DataContext.ForceRefresh();
         }

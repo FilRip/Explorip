@@ -65,18 +65,15 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         ((MyTaskbarApp)Application.Current).MainTaskbar.MyTaskList.DataContext.FirstRefresh();
     }
 
-    public static void RefreshAllCollectionView(object sender, EventArgs e)
+    public static void RefreshAllCollectionView(ERefreshList task)
     {
-        ERefreshList function = ERefreshList.None;
-        if (sender is ERefreshList rl)
-            function = rl;
         Application.Current.Dispatcher.Invoke(() =>
         {
             foreach (TaskListViewModel tl in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Select(t => t.MyTaskList.DataContext))
             {
-                if (function.HasFlag(ERefreshList.Rebuild))
+                if (task.HasFlag(ERefreshList.Rebuild))
                     tl.RebuildCollectionView();
-                if (function.HasFlag(ERefreshList.Refresh))
+                if (task.HasFlag(ERefreshList.Refresh))
                     tl.RefreshMyCollectionView();
                 if (ConfigManager.ReduceTitleWidthWhenTaskbarFull)
                     tl.UpdateMaxWidth();
@@ -135,11 +132,17 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             }
             MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged -= Windows_CollectionChanged;
             MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged += Windows_CollectionChanged;
-            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= RefreshView;
-            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += RefreshView;
+            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= TasksService_WindowUncloaked;
+            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked += TasksService_WindowUncloaked;
             MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
             MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged += TasksService_FullScreenChanged;
         }
+    }
+
+    private static void TasksService_WindowUncloaked(object sender, WindowEventArgs e)
+    {
+        e.Window.ListWindows.SingleOrDefault(awp => awp.Handle == e.Handle)?.VirtualDesktopId = ReturnVirtualDesktopId(e.Handle);
+        RefreshView(sender, e);
     }
 
     private void TasksService_FullScreenChanged(object sender, FullScreenEventArgs e)
@@ -197,7 +200,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
 
     private static void RefreshView(object sender, WindowEventArgs e)
     {
-        RefreshAllCollectionView(ERefreshList.Refresh, EventArgs.Empty);
+        RefreshAllCollectionView(ERefreshList.Refresh);
     }
 
     public void ChangeButtonSize()
@@ -245,7 +248,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
             if (VirtualDesktopManager.IsInitialized)
                 VirtualDesktopEvents.CurrentChanged -= VirtualDesktop_CurrentChanged;
             MyTaskbarApp.MyShellManager.TasksService.Windows.CollectionChanged -= Windows_CollectionChanged;
-            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= RefreshView;
+            MyTaskbarApp.MyShellManager.TasksService.WindowUncloaked -= TasksService_WindowUncloaked;
             MyTaskbarApp.MyShellManager.TasksService.FullScreenChanged -= TasksService_FullScreenChanged;
         }
     }
@@ -347,7 +350,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
                     win.Dispose();
 
                 // Redraw task list
-                RefreshAllCollectionView(ERefreshList.Rebuild, EventArgs.Empty);
+                RefreshAllCollectionView(ERefreshList.Rebuild);
             }
         });
     }
