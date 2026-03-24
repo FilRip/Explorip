@@ -3,7 +3,8 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib"
                     xmlns:constants="clr-namespace:Explorip.Constants"
                     xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
-                    xmlns:config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig">
+                    xmlns:config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig"
+                    xmlns:helper="clr-namespace:Explorip.TaskBar.Helpers">
 
     <SolidColorBrush x:Key="ButtonHighlight" Color="Gray" />
     <SolidColorBrush x:Key="ButtonLight" Color="Blue" />
@@ -178,10 +179,30 @@
                         <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="helper:WindowFlashingHelper.IsFlashing" Value="False"/>
+                            </MultiTrigger.Conditions>
                             <Setter TargetName="ButtonBorder"
                                     Property="Background"
                                     Value="{x:Static config:ConfigManager.MouseOverBackgroundColor}" />
+                        </MultiTrigger>
+
+                        <Trigger Property="helper:WindowFlashingHelper.IsFlashing" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard x:Name="FlashingAnimation">
+                                    <Storyboard RepeatBehavior="Forever" Duration="0:0:2">
+                                        <ColorAnimationUsingKeyFrames Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="Background.Color">
+                                            <DiscreteColorKeyFrame KeyTime="0:0:0" Value="Red"/>
+                                            <DiscreteColorKeyFrame KeyTime="0:0:1" Value="Transparent"/>
+                                        </ColorAnimationUsingKeyFrames> 
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="FlashingAnimation"/>
+                            </Trigger.ExitActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -212,10 +233,7 @@
     <Style TargetType="Button"
            x:Key="TaskButtonFlashing"
            BasedOn="{StaticResource TaskButton}">
-        <Setter Property="Background"
-                Value="{DynamicResource ButtonFlashingFace}" />
-        <Setter Property="Foreground"
-                Value="{DynamicResource ButtonFlashingForeground}" />
+        <Setter Property="helper:WindowFlashingHelper.IsFlashing" Value="True"/>
     </Style>
 
     <Style x:Key="TaskListScrollButton"
