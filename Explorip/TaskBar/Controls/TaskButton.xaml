@@ -82,6 +82,11 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator Style="{DynamicResource MySeparatorStyle}"/>
+                <MenuItem Header="{x:Static constants:Localization.KILL_PROCESS}" Visibility="Collapsed" Name="KillMenuItem" Click="KillMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Image Source="{x:Static constants:Icons.Shutdown}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
                 <MenuItem Header="{x:Static constants:Localization.CLOSE}" Visibility="{Binding MultipleInstanceLaunched, Converter={StaticResource InverseBoolToVisibility}}" Name="CloseMenuItem" Click="CloseMenuItem_Click">
                     <MenuItem.Icon>
                         <Image Source="{x:Static constants:Icons.Close}"/>

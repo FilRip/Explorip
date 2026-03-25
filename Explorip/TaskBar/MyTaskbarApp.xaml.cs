@@ -81,7 +81,7 @@ public partial class MyTaskbarApp : Application
         MyShellManager.AppBarManager.SignalGracefulShutdown();
         ExitApp();
         if (ConfigManager.HookTaskbarList)
-            Explorip.Helpers.HookTaskbarListHelper.UninstallHook();
+            HookTaskbarListHelper.UninstallHook();
         if (ConfigManager.UseJumpList)
             CoolBytes.JumpList.ExtensionsJumpList.Stop();
         Current?.Dispatcher?.Invoke(() => Current?.Shutdown());

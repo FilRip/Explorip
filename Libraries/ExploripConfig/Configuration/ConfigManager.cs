@@ -116,7 +116,7 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigDelayBeforeShowThumbnail, "1000");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigGroupedApplicationWindow, "").ToString()))
-                _registryRootTaskbar.SetValue(ConfigGroupedApplicationWindow, "True");
+                _registryRootTaskbar.SetValue(ConfigGroupedApplicationWindow, FalseValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigMaxRecursiveSubFolderInToolbar, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigMaxRecursiveSubFolderInToolbar, "5");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigProgressBarHeight, "").ToString()))

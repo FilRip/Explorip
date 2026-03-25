@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -527,71 +528,85 @@ public partial class TaskButton : UserControl
     {
         try
         {
-            if (e.NewValue is bool visible && visible && ConfigManager.UseJumpList && DataContext?.ListWindows != null)
+            if (e.NewValue is bool visible && visible)
             {
-                _mouseOver = false;
-                _thumb?.Close();
-                JumpListContextMenu.Items.Clear();
-                AutomaticDestination autoDest = ExtensionsJumpList.GetAutomaticJumpList(DataContext.ListWindows[0].Handle);
-                CustomDestination customDest = ExtensionsJumpList.GetCustomJumpList(DataContext.ListWindows[0].Handle);
-                if (autoDest?.DestListEntries?.Count > 0)
+                KillMenuItem.Visibility = (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift) ? Visibility.Visible : Visibility.Collapsed);
+                if (ConfigManager.UseJumpList)
                 {
-                    MenuItem category = new()
+                    _mouseOver = false;
+                    _thumb?.Close();
+                    JumpListContextMenu.Items.Clear();
+                    AutomaticDestination autoDest;
+                    CustomDestination customDest;
+                    if (DataContext.ListWindows.Count > 0)
                     {
-                        Header = Constants.Localization.PINNED_JUMPLIST,
-                        Style = (Style)FindResource("MenuItemWithSubMenuStyle"),
-                    };
-                    List<MenuItem> otherItems = [];
-                    foreach (AutoDestList adl in autoDest?.DestListEntries)
-                    {
-                        MenuItem mi = MakeMenuItemEntry(adl.Lnk);
-                        mi.Click += JumpList_Click;
-                        if (adl.Pinned)
-                            category.Items.Add(mi);
-                        else
-                            otherItems.Add(mi);
-                    }
-                    if (category.Items.Count > 0)
-                    {
-                        JumpListContextMenu.Items.Add(category);
-                        if (otherItems.Count > 0)
-                        {
-                            category = new MenuItem()
-                            {
-                                Header = Constants.Localization.TASK_JUMPLIST,
-                                Style = (Style)FindResource("MenuItemWithSubMenuStyle"),
-                            };
-                            otherItems.ForEach(mi => category.Items.Add(mi));
-                            JumpListContextMenu.Items.Add(category);
-                        }
+                        autoDest = ExtensionsJumpList.GetAutomaticJumpList(DataContext.ListWindows[0].Handle);
+                        customDest = ExtensionsJumpList.GetCustomJumpList(DataContext.ListWindows[0].Handle);
                     }
                     else
-                        JumpListContextMenu.Items.Add(otherItems);
-                }
-                if (customDest?.Entries?.Count > 0)
-                {
-                    foreach (Entry entry in customDest.Entries)
                     {
-                        if (entry.LnkFiles?.Count > 0)
+                        autoDest = ExtensionsJumpList.GetAutomaticJumpList(DataContext.WinFileName, DataContext.AppUserModelID);
+                        customDest = ExtensionsJumpList.GetCustomJumpList(DataContext.WinFileName, DataContext.AppUserModelID);
+                    }
+                    if (autoDest?.DestListEntries?.Count > 0)
+                    {
+                        MenuItem category = new()
                         {
-                            MenuItem category = new()
-                            {
-                                Header = string.IsNullOrWhiteSpace(entry.Name) ? Constants.Localization.TASK_JUMPLIST : entry.Name,
-                                Style = (Style)FindResource("MenuItemWithSubMenuStyle"),
-                            };
-                            JumpListContextMenu.Items.Add(category);
-                            foreach (Shortcut lnk in entry.LnkFiles)
-                            {
-                                MenuItem mi = MakeMenuItemEntry(lnk);
-                                mi.Click += JumpList_Click;
+                            Header = Constants.Localization.PINNED_JUMPLIST,
+                            Style = (Style)FindResource("MenuItemWithSubMenuStyle"),
+                        };
+                        List<MenuItem> otherItems = [];
+                        foreach (AutoDestList adl in autoDest?.DestListEntries)
+                        {
+                            MenuItem mi = MakeMenuItemEntry(adl.Lnk);
+                            mi.Click += JumpList_Click;
+                            if (adl.Pinned)
                                 category.Items.Add(mi);
+                            else
+                                otherItems.Add(mi);
+                        }
+                        if (category.Items.Count > 0)
+                        {
+                            JumpListContextMenu.Items.Add(category);
+                            if (otherItems.Count > 0)
+                            {
+                                category = new MenuItem()
+                                {
+                                    Header = Constants.Localization.TASK_JUMPLIST,
+                                    Style = (Style)FindResource("MenuItemWithSubMenuStyle"),
+                                };
+                                otherItems.ForEach(mi => category.Items.Add(mi));
+                                JumpListContextMenu.Items.Add(category);
+                            }
+                        }
+                        else
+                            JumpListContextMenu.Items.Add(otherItems);
+                    }
+                    if (customDest?.Entries?.Count > 0)
+                    {
+                        foreach (Entry entry in customDest.Entries)
+                        {
+                            if (entry.LnkFiles?.Count > 0)
+                            {
+                                MenuItem category = new()
+                                {
+                                    Header = string.IsNullOrWhiteSpace(entry.Name) ? Constants.Localization.TASK_JUMPLIST : entry.Name,
+                                    Style = (Style)FindResource("MenuItemWithSubMenuStyle"),
+                                };
+                                JumpListContextMenu.Items.Add(category);
+                                foreach (Shortcut lnk in entry.LnkFiles)
+                                {
+                                    MenuItem mi = MakeMenuItemEntry(lnk);
+                                    mi.Click += JumpList_Click;
+                                    category.Items.Add(mi);
+                                }
                             }
                         }
                     }
-                }
 
-                JumpListContextMenu.Visibility = JumpListContextMenu.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-                SeparatorJumpListContextMenu.Visibility = JumpListContextMenu.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+                    JumpListContextMenu.Visibility = JumpListContextMenu.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+                    SeparatorJumpListContextMenu.Visibility = JumpListContextMenu.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+                }
             }
         }
         catch (Exception)
@@ -674,4 +689,19 @@ public partial class TaskButton : UserControl
     }
 
     #endregion
+
+    private void KillMenuItem_Click(object sender, RoutedEventArgs e)
+    {
+        if (DataContext?.ListWindows?.Count > 0)
+            foreach (IntPtr handle in DataContext.ListWindows.Select(w => w.Handle))
+            {
+                NativeMethods.GetWindowThreadProcessId(handle, out uint processId);
+                if (processId > 0)
+                {
+                    Process process = Process.GetProcessById((int)processId);
+                    if (process != null && MessageBox.Show(Constants.Localization.ASK_KILL_PROCESS.Replace("%s", process.ProcessName), Constants.Localization.KILL_PROCESS, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        process.Kill();
+                }
+            }
+    }
 }

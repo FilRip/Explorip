@@ -200,14 +200,19 @@ public static class ExtensionsJumpList
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
             string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(hWnd);
-            // Special case : explorer
-            if (path.ToLower() == Environment.ExpandEnvironmentVariables("%windir%\\explorer.exe").ToLower())
-                return _listAutoDest.FirstOrDefault(ad => Path.GetFileNameWithoutExtension(ad.SourceFile).ToLower() == "f01b4d95cf55d32a");
-            // End special case
-            return _listAutoDest.FirstOrDefault(ad => ad.DestListEntries?.Count > 0 && (ad.DestListEntries[0].Lnk?.Target == path || (!string.IsNullOrWhiteSpace(appUserModelId) && Path.GetFileName(ad.DestListEntries[0].Lnk?.Target) == appUserModelId)));
+            return GetAutomaticJumpList(path, appUserModelId);
         }
         catch (Exception) { /* Ignore errors */ }
         return null;
+    }
+
+    public static AutomaticDestination? GetAutomaticJumpList(string path, string? appUserModelId = null)
+    {
+        // Special case : explorer
+        if (path.ToLower() == Environment.ExpandEnvironmentVariables("%windir%\\explorer.exe").ToLower())
+            return _listAutoDest.FirstOrDefault(ad => Path.GetFileNameWithoutExtension(ad.SourceFile).ToLower() == "f01b4d95cf55d32a");
+        // End special case
+        return _listAutoDest.FirstOrDefault(ad => ad.DestListEntries?.Count > 0 && (ad.DestListEntries[0].Lnk?.Target == path || (!string.IsNullOrWhiteSpace(appUserModelId) && Path.GetFileName(ad.DestListEntries[0].Lnk?.Target) == appUserModelId)));
     }
 
     public static CustomDestination? GetCustomJumpList(IntPtr hWnd)
@@ -216,9 +221,14 @@ public static class ExtensionsJumpList
         {
             string path = ShellHelper.GetPathForHandle(hWnd);
             string appUserModelId = ShellHelper.GetAppUserModelIdForHandle(hWnd);
-            return _listCustomDest.FirstOrDefault(cd => cd.Entries?.Count > 0 && cd.Entries[0].LnkFiles?.Count > 0 && (cd.Entries[0].LnkFiles[0].Target == path || (!string.IsNullOrWhiteSpace(appUserModelId) && Path.GetFileName(cd.Entries[0].LnkFiles[0].Target) == appUserModelId)));
+            return GetCustomJumpList(path, appUserModelId);
         }
         catch (Exception) { /* Ignore errors */ }
         return null;
+    }
+
+    public static CustomDestination? GetCustomJumpList(string path, string? appUserModelId = null)
+    {
+        return _listCustomDest.FirstOrDefault(cd => cd.Entries?.Count > 0 && cd.Entries[0].LnkFiles?.Count > 0 && (cd.Entries[0].LnkFiles[0].Target == path || (!string.IsNullOrWhiteSpace(appUserModelId) && Path.GetFileName(cd.Entries[0].LnkFiles[0].Target) == appUserModelId)));
     }
 }

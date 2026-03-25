@@ -156,6 +156,7 @@ public partial class StartMenuWindow : System.Windows.Window
             MyTaskbarApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
         else
             MyStartMenuApp.MyShellManager.TasksService.WindowActivated -= TasksService_WindowActivated;
+        DataContext.Dispose();
     }
 
     private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

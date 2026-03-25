@@ -12,6 +12,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Helpers;
 using Explorip.StartMenu.Controls;
+using Explorip.StartMenu.Window;
 using Explorip.TaskBar;
 
 using ExploripConfig.Configuration;
@@ -25,11 +26,15 @@ using Securify.ShellLink;
 
 namespace Explorip.StartMenu.ViewModels;
 
-public partial class StartMenuViewModel : ObservableObject
+public partial class StartMenuViewModel : ObservableObject, IDisposable
 {
     private readonly double _iconSizeWidth, _iconSizeHeight, _iconSizeWidth2, _iconSizeHeight2;
     private readonly ContextMenu _cmUser, _cmStop, _cmStartMenu;
     private CustomColor _winColor;
+    private FileSystemWatcher _startMenuCommonWatcher;
+    private FileSystemWatcher _startMenuUserWatcher;
+    private FileSystemWatcher _pinnedAppWatcher;
+    private FileSystemWatcher _pinnedApp2Watcher;
 
     [ObservableProperty()]
     private ObservableCollection<StartMenuItemViewModel> _startMenuItems;
@@ -45,6 +50,8 @@ public partial class StartMenuViewModel : ObservableObject
     private double _height;
     [ObservableProperty()]
     private CornerRadius _pinnedAppCornerRadius;
+
+    private bool disposedValue;
 
     public Action ShowWindow { get; set; }
     public Action HideWindow { get; set; }
@@ -63,6 +70,10 @@ public partial class StartMenuViewModel : ObservableObject
         CreateMenuItem(_cmStartMenu, Constants.Localization.SHOW_STARTMENUITEM_STARTWINDOW, ChangeShowStartPrograms, true);
         CreateMenuItem(_cmStartMenu, Constants.Localization.REFRESH, RefreshAll);
         CreateMenuItem(_cmStartMenu, Constants.Localization.CUSTOM_COLOR, ShowCustomColor);
+        if (MyStartMenuApp.MyShellManager != null)
+        {
+            CreateMenuItem(_cmStartMenu, Constants.Localization.QUIT + " StartMenu", Leave);
+        }
 
         _cmUser = new()
         {
@@ -97,6 +108,10 @@ public partial class StartMenuViewModel : ObservableObject
         _height = ConfigManager.StartMenu.StartMenuHeight;
         _pinnedAppCornerRadius = ConfigManager.StartMenu.StartMenuPinnedAppCornerRadius;
 
+        _startMenuItems = [];
+        _pinnedShortcut = [];
+        _pinnedShortcut2 = [];
+
         RefreshAll();
     }
 
@@ -118,6 +133,25 @@ public partial class StartMenuViewModel : ObservableObject
         if (icon != null)
             mi.Icon = new Image() { Source = icon };
         cm.Items.Add(mi);
+    }
+
+    #region Shutdown/Restart
+
+    public static void Shutdown()
+    {
+        ShellHelper.StartProcess("shutdown", "/s /t 0", hidden: true);
+        ((MyTaskbarApp)Application.Current).ExitGracefully();
+    }
+
+    public static void Restart()
+    {
+        ShellHelper.StartProcess("shutdown", "/r /t 0", hidden: true);
+        ((MyTaskbarApp)Application.Current).ExitGracefully();
+    }
+
+    public static void Hybernate()
+    {
+        ShellHelper.StartProcess("shutdown", "/h", hidden: true);
     }
 
     public static bool IsHybernateEnabled
@@ -146,6 +180,9 @@ public partial class StartMenuViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// An application need to reboot
+    /// </summary>
     private static bool IsPendingReboot()
     {
         using RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing");
@@ -156,6 +193,9 @@ public partial class StartMenuViewModel : ObservableObject
         return false;
     }
 
+    /// <summary>
+    /// A Windows Update need to reboot
+    /// </summary>
     private static bool IsWUPendingReboot()
     {
         using RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired");
@@ -164,6 +204,11 @@ public partial class StartMenuViewModel : ObservableObject
         return false;
     }
 
+    /// <summary>
+    /// An application need to reboot to load it's new file (need a restart to free loaded files and rename them by the new ones)<br/>
+    /// For examples : some ShellHook of Explorer. The application still working, but not with latest installed version<br/>
+    /// An application that said "Installation finished. Need to reboot to apply modifications". It's optional for now, but necessary to use latest version
+    /// </summary>
 #pragma warning disable IDE0079
 #pragma warning disable S1144 // Unused private types or members should be removed
     private static bool IsPendingFileRenameOperations()
@@ -178,6 +223,8 @@ public partial class StartMenuViewModel : ObservableObject
 #pragma warning restore S1144 // Unused private types or members should be removed
 #pragma warning restore IDE0079
 
+    #endregion
+
     public void RefreshAll()
     {
         RefreshPrograms();
@@ -185,9 +232,21 @@ public partial class StartMenuViewModel : ObservableObject
         RefreshPinnedShortcut2();
     }
 
+    #region Start Menu Program
+
     public void RefreshPrograms()
     {
-        StartMenuItems = [];
+        if (_startMenuCommonWatcher != null)
+        {
+            UnregisterStartMenuWatcher(_startMenuCommonWatcher);
+            _startMenuCommonWatcher.Dispose();
+        }
+        if (_startMenuUserWatcher != null)
+        {
+            UnregisterStartMenuWatcher(_startMenuCommonWatcher);
+            _startMenuUserWatcher.Dispose();
+        }
+        StartMenuItems.Clear();
         string commonSMFolder = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenu.StartMenuCommonProgramsPath);
         if (string.IsNullOrWhiteSpace(commonSMFolder))
             commonSMFolder = Path.Combine(Environment.SpecialFolder.CommonStartMenu.FullPath(), "Programs");
@@ -199,6 +258,40 @@ public partial class StartMenuViewModel : ObservableObject
         List<StartMenuItemViewModel> MySM = GetRootSM(new ShellFolder(mySMFolder, IntPtr.Zero));
         StartMenuItems.AddRange(MySM);
         StartMenuItems = [.. StartMenuItems.OrderBy(i => i.Name)];
+        _startMenuCommonWatcher = new(commonSMFolder)
+        {
+            IncludeSubdirectories = true,
+        };
+        _startMenuCommonWatcher.Renamed += StartMenuWatcher_Renamed;
+        _startMenuCommonWatcher.Deleted += StartMenuWatcher_Changed;
+        _startMenuCommonWatcher.Created += StartMenuWatcher_Changed;
+        _startMenuCommonWatcher.Changed += StartMenuWatcher_Changed;
+        _startMenuUserWatcher = new(mySMFolder)
+        {
+            IncludeSubdirectories = true,
+        };
+        _startMenuUserWatcher.Renamed += StartMenuWatcher_Renamed;
+        _startMenuUserWatcher.Deleted += StartMenuWatcher_Changed;
+        _startMenuUserWatcher.Created += StartMenuWatcher_Changed;
+        _startMenuUserWatcher.Changed += StartMenuWatcher_Changed;
+    }
+
+    private void UnregisterStartMenuWatcher(FileSystemWatcher fsw)
+    {
+        fsw.Renamed -= StartMenuWatcher_Renamed;
+        fsw.Deleted -= StartMenuWatcher_Changed;
+        fsw.Created -= StartMenuWatcher_Changed;
+        fsw.Changed -= StartMenuWatcher_Changed;
+    }
+
+    private void StartMenuWatcher_Changed(object sender, FileSystemEventArgs e)
+    {
+        RefreshPrograms();
+    }
+
+    private void StartMenuWatcher_Renamed(object sender, RenamedEventArgs e)
+    {
+        RefreshPrograms();
     }
 
     private List<StartMenuItemViewModel> GetRootSM(ShellFolder folder)
@@ -227,27 +320,99 @@ public partial class StartMenuViewModel : ObservableObject
         return ret;
     }
 
+    #endregion
+
+    #region Pinned App
+
     public void RefreshPinnedShortcut()
     {
-        PinnedShortcut = [];
+        if (_pinnedAppWatcher != null)
+        {
+            UnregisterPinnedAppWatcher(_pinnedAppWatcher);
+            _pinnedAppWatcher.Dispose();
+        }
+        PinnedShortcut.Clear();
         string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenu.StartMenuPinnedShortcutPath);
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
         ShellFolder sf = new(path, IntPtr.Zero);
         foreach (ShellFile file in sf.Files)
             PinnedShortcut.Add(new PinnedShortutViewModel(file, this));
+        _pinnedAppWatcher = new(path)
+        {
+            IncludeSubdirectories = true,
+        };
+        _pinnedAppWatcher.Renamed += PinnedAppWatcher_Renamed;
+        _pinnedAppWatcher.Deleted += PinnedAppWatcher_Changed;
+        _pinnedAppWatcher.Created += PinnedAppWatcher_Changed;
+        _pinnedAppWatcher.Changed += PinnedAppWatcher_Changed;
     }
+
+    private void UnregisterPinnedAppWatcher(FileSystemWatcher fsw)
+    {
+        fsw.Renamed -= PinnedAppWatcher_Renamed;
+        fsw.Deleted -= PinnedAppWatcher_Changed;
+        fsw.Created -= PinnedAppWatcher_Changed;
+        fsw.Changed -= PinnedAppWatcher_Changed;
+    }
+
+    private void PinnedAppWatcher_Changed(object sender, FileSystemEventArgs e)
+    {
+        RefreshPinnedShortcut();
+    }
+
+    private void PinnedAppWatcher_Renamed(object sender, RenamedEventArgs e)
+    {
+        RefreshPinnedShortcut();
+    }
+
+    #region PinnedApp2
 
     public void RefreshPinnedShortcut2()
     {
-        PinnedShortcut2 = [];
+        if (_pinnedApp2Watcher != null)
+        {
+            UnregisterPinnedApp2Watcher(_pinnedApp2Watcher);
+            _pinnedApp2Watcher.Dispose();
+        }
+        PinnedShortcut2.Clear();
         string path = Environment.ExpandEnvironmentVariables(ConfigManager.StartMenu.StartMenuPinnedShortcutPath2);
         if (!Directory.Exists(path))
             Directory.CreateDirectory(path);
         ShellFolder sf = new(path, IntPtr.Zero);
         foreach (ShellFile file in sf.Files)
             PinnedShortcut.Add(new PinnedShortutViewModel(file, this, true));
+        _pinnedApp2Watcher = new(path)
+        {
+            IncludeSubdirectories = true,
+        };
+        _pinnedApp2Watcher.Renamed += PinnedAppWatcher_Renamed;
+        _pinnedApp2Watcher.Deleted += PinnedAppWatcher_Changed;
+        _pinnedApp2Watcher.Created += PinnedAppWatcher_Changed;
+        _pinnedApp2Watcher.Changed += PinnedAppWatcher_Changed;
     }
+
+    private void UnregisterPinnedApp2Watcher(FileSystemWatcher fsw)
+    {
+        fsw.Renamed -= PinnedApp2Watcher_Renamed;
+        fsw.Deleted -= PinnedApp2Watcher_Changed;
+        fsw.Created -= PinnedApp2Watcher_Changed;
+        fsw.Changed -= PinnedApp2Watcher_Changed;
+    }
+
+    private void PinnedApp2Watcher_Changed(object sender, FileSystemEventArgs e)
+    {
+        RefreshPinnedShortcut2();
+    }
+
+    private void PinnedApp2Watcher_Renamed(object sender, RenamedEventArgs e)
+    {
+        RefreshPinnedShortcut2();
+    }
+
+    #endregion
+
+    #endregion
 
     public void HideAllContextMenu()
     {
@@ -296,23 +461,6 @@ public partial class StartMenuViewModel : ObservableObject
         ConfigManager.StartMenu.StartMenuShowApplicationsPrograms = ShowApplicationsPrograms;
     }
 
-    public static void Shutdown()
-    {
-        ShellHelper.StartProcess("shutdown", "/s /t 0", hidden: true);
-        ((MyTaskbarApp)Application.Current).ExitGracefully();
-    }
-
-    public static void Restart()
-    {
-        ShellHelper.StartProcess("shutdown", "/r /t 0", hidden: true);
-        ((MyTaskbarApp)Application.Current).ExitGracefully();
-    }
-
-    public static void Hybernate()
-    {
-        ShellHelper.StartProcess("shutdown", "/h", hidden: true);
-    }
-
     private void ShowCustomColor()
     {
         _winColor ??= new CustomColor();
@@ -343,6 +491,8 @@ public partial class StartMenuViewModel : ObservableObject
         _cmUser.IsOpen = true;
     }
 
+    #region Drag'n Drop
+
     [RelayCommand()]
     private void Drop(DragEventArgs e)
     {
@@ -350,7 +500,7 @@ public partial class StartMenuViewModel : ObservableObject
         {
             if (lv.Name == "FirstPanel")
                 DropToPanel(e, ConfigManager.StartMenu.StartMenuPinnedShortcutPath, RefreshPinnedShortcut);
-            else
+            else if (lv.Name == "SecondPanel")
                 DropToPanel(e, ConfigManager.StartMenu.StartMenuPinnedShortcutPath2, RefreshPinnedShortcut2);
         }
     }
@@ -379,4 +529,43 @@ public partial class StartMenuViewModel : ObservableObject
             refresh();
         }
     }
+
+    #endregion
+
+    private static void Leave()
+    {
+        Application.Current.Dispatcher.Invoke(StartMenuWindow.MyStartMenu.Close);
+    }
+
+    #region IDisposable
+
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                _startMenuCommonWatcher?.Dispose();
+                _startMenuUserWatcher?.Dispose();
+                StartMenuItems.Clear();
+                PinnedShortcut.Clear();
+                PinnedShortcut2.Clear();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }

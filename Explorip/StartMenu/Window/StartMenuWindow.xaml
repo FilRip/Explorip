@@ -10,6 +10,7 @@
         xmlns:localization="clr-namespace:Explorip.Constants"
         xmlns:converters="clr-namespace:Explorip.StartMenu.Converters"
         mc:Ignorable="d"
+        Title="Explorip StartMenu"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         ResizeMode="NoResize" SizeToContent="Width"
         Height="{Binding Height}" MinWidth="475"

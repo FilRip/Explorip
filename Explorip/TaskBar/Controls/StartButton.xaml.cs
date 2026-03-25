@@ -10,7 +10,7 @@ namespace Explorip.TaskBar.Controls;
 /// </summary>
 public partial class StartButton : System.Windows.Controls.UserControl
 {
-    public readonly static DependencyProperty StartMenuMonitorProperty = DependencyProperty.Register("StartMenuMonitor", typeof(StartMenuMonitor), typeof(StartButton));
+    public readonly static DependencyProperty StartMenuMonitorProperty = DependencyProperty.Register(nameof(StartMenuMonitor), typeof(StartMenuMonitor), typeof(StartButton));
 
     public StartMenuMonitor StartMenuMonitor
     {

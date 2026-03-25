@@ -199,6 +199,8 @@ public static class Localization
     public static string APPLICATION_SHORTCUTS { get; private set; }
     public static string TASK_JUMPLIST { get; private set; }
     public static string PINNED_JUMPLIST { get; private set; }
+    public static string KILL_PROCESS { get; private set; }
+    public static string ASK_KILL_PROCESS { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -388,6 +390,8 @@ public static class Localization
         APPLICATION_SHORTCUTS = Load(Shell32Dll, 50704, "Shortcuts application");
         TASK_JUMPLIST = Load("starttiledata.dll", 2003, "Task");
         PINNED_JUMPLIST = Load("starttiledata.dll", 2000, "Pinned");
+        KILL_PROCESS = Load("taskmgr.exe", 32423, "Kill the process");
+        ASK_KILL_PROCESS = Load("taskmgr.exe", 32421, "Do you want to terminate %s ?");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
