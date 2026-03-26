@@ -38,8 +38,6 @@ namespace Explorip.TaskBar;
 /// </summary>
 public partial class MyTaskbarApp : Application
 {
-    //public DictionaryManager DictionaryManager { get; set; }
-
 #if DEBUG
     private ManagedShellLogger _logger;
 #endif
@@ -301,7 +299,6 @@ public partial class MyTaskbarApp : Application
         MyShellManager.TrayService.DefaultThemeColor = ConfigManager.DefaultSystemIconColor;
 
         _startMenuMonitor = new StartMenuMonitor(new AppVisibilityHelper(true));
-        //DictionaryManager = new DictionaryManager();
 
         PluginsManager.LoadPlugins();
 
@@ -322,7 +319,6 @@ public partial class MyTaskbarApp : Application
         }
 
         // Startup
-        //DictionaryManager.SetThemeFromSettings();
         OpenTaskbar();
         if (ConfigManager.UseJumpList)
             CoolBytes.JumpList.ExtensionsJumpList.Init();
@@ -377,7 +373,6 @@ public partial class MyTaskbarApp : Application
         MyShellManager.ExplorerHelper.HideExplorerTaskbar = false;
         Current.Dispatcher.Invoke(() =>
         {
-            //DictionaryManager.Dispose();
             MyShellManager.Dispose();
             _startMenuMonitor.Dispose();
         });
