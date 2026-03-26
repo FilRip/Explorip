@@ -243,7 +243,7 @@ public partial class StartMenuViewModel : ObservableObject, IDisposable
         }
         if (_startMenuUserWatcher != null)
         {
-            UnregisterStartMenuWatcher(_startMenuCommonWatcher);
+            UnregisterStartMenuWatcher(_startMenuUserWatcher);
             _startMenuUserWatcher.Dispose();
         }
         StartMenuItems.Clear();
