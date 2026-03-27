@@ -49,6 +49,7 @@ public class TaskbarConfig
     private const string ConfigShowTaskList = "ShowTaskList";
     private const string ConfigShowSystray = "ShowSystray";
     private const string ConfigShowPinnedApp = "ShowPinnedApp";
+    private const string ConfigShowTitleApplication = "ShowTitleApplicationWindow";
     #endregion
 
     private RegistryKey _registryTaskbar;
@@ -134,6 +135,8 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigShowSystray, "True");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowPinnedApp, "").ToString()))
                 _registryTaskbar.SetValue(ConfigShowPinnedApp, "True");
+            if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigShowTitleApplication, "").ToString()))
+                _registryTaskbar.SetValue(ConfigShowTitleApplication, "True");
         }
     }
 
@@ -533,11 +536,11 @@ public class TaskbarConfig
 
     public bool ShowTitleApplicationWindow
     {
-        get { return _registryTaskbar.ReadBoolean("ShowTitleApplicationWindow"); }
+        get { return _registryTaskbar.ReadBoolean(ConfigShowTitleApplication); }
         set
         {
             if (ShowTitleApplicationWindow != value && AllowWrite)
-                _registryTaskbar.SetValue("ShowTitleApplicationWindow", value.ToString());
+                _registryTaskbar.SetValue(ConfigShowTitleApplication, value.ToString());
         }
     }
 
