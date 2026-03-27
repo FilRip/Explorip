@@ -19,7 +19,6 @@ public partial class NativeMethods
         BYPOSITION = 0x00000400,
     }
 
-#pragma warning disable IDE0079
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     [Flags()]
     public enum MenuItemTypes : uint
@@ -41,10 +40,8 @@ public partial class NativeMethods
         POPUP = 0x00000010,
     }
 #pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
-#pragma warning restore IDE0079
 
     // Specifies the state of the new menu item
-#pragma warning disable IDE0079
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     [Flags()]
     public enum MenuItemStates : uint
@@ -59,7 +56,6 @@ public partial class NativeMethods
         DEFAULT = 0x00001000
     }
 #pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
-#pragma warning restore IDE0079
 
     // Specifies the content of the new menu item
     [Flags()]
@@ -423,7 +419,6 @@ public partial class NativeMethods
     [DllImport(User32_DllName)]
     internal static extern IntPtr SendMessage(IntPtr hWnd, WM Msg, uint wParam, uint lParam);
 
-#pragma warning disable IDE0060, IDE0079
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowInfo
     {
@@ -438,13 +433,14 @@ public partial class NativeMethods
         public ushort atomWindowType;
         public ushort wCreatorVersion;
 
+#pragma warning disable IDE0060
         public WindowInfo(bool? filler)
             : this()   // Allows automatic initialization of "cbSize" with "new WINDOWINFO(null/true/false)".
         {
             cbSize = (uint)(Marshal.SizeOf(typeof(WindowInfo)));
         }
+#pragma warning restore IDE0060
     }
-#pragma warning restore IDE0060, IDE0079
 
     [DllImport(User32_DllName)]
     internal static extern IntPtr GetClassLong(IntPtr handle, int longClass);

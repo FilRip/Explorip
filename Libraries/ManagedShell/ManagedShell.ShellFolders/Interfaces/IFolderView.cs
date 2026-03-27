@@ -9,7 +9,6 @@ using static ManagedShell.Interop.NativeMethods;
 namespace ManagedShell.ShellFolders.Interfaces;
 
 #nullable enable
-#pragma warning disable IDE0079
 #pragma warning disable S125 // Sections of code should not be commented out
 [ComImport(), Guid("cde725b0-ccc9-4519-917e-325d72fab4ce"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 public interface IFolderView
@@ -613,4 +612,3 @@ public interface IFolderView2 : IFolderView
     void DoRename();
 }
 #pragma warning restore S125 // Sections of code should not be commented out
-#pragma warning restore IDE0079

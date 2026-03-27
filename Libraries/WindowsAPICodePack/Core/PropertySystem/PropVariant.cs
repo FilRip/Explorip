@@ -494,11 +494,9 @@ public sealed class PropVariant : IDisposable
         if (value == null)
             throw new ArgumentNullException("value");
 
-#pragma warning disable IDE0079
 #pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
         _valueType = (ushort)(VarEnum.VT_DECIMAL | VarEnum.VT_VECTOR);
 #pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
-#pragma warning restore IDE0079
         _int32 = value.Length;
 
         // allocate required memory for array with 128bit elements
@@ -528,11 +526,9 @@ public sealed class PropVariant : IDisposable
         if (value == null)
             throw new ArgumentNullException("value");
 
-#pragma warning disable IDE0079
 #pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
         _valueType = (ushort)(VarEnum.VT_R4 | VarEnum.VT_VECTOR);
 #pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
-#pragma warning restore IDE0079
         _int32 = value.Length;
 
         _ptr2 = Marshal.AllocCoTaskMem(value.Length * sizeof(float));
@@ -667,7 +663,6 @@ public sealed class PropVariant : IDisposable
                 VarEnum.VT_UNKNOWN => Marshal.GetObjectForIUnknown(_ptr),
                 VarEnum.VT_DISPATCH => Marshal.GetObjectForIUnknown(_ptr),
                 VarEnum.VT_DECIMAL => _decimal,
-#pragma warning disable IDE0079
 #pragma warning disable S3265 // Non-flags enums should not be used in bitwise operations
                 VarEnum.VT_ARRAY | VarEnum.VT_UNKNOWN => CrackSingleDimSafeArray(_ptr),
                 (VarEnum.VT_VECTOR | VarEnum.VT_LPWSTR) => GetVector<string>(),
@@ -683,7 +678,6 @@ public sealed class PropVariant : IDisposable
                 (VarEnum.VT_VECTOR | VarEnum.VT_FILETIME) => GetVector<DateTime>(),
                 (VarEnum.VT_VECTOR | VarEnum.VT_DECIMAL) => GetVector<decimal>(),
 #pragma warning restore S3265 // Non-flags enums should not be used in bitwise operations
-#pragma warning restore IDE0079
                 _ => null,// if the value cannot be marshaled
             };
         }

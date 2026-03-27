@@ -10,8 +10,6 @@ namespace CoolBytes.JumpList.ExtensionBlocks;
 
 public class PropertySheet
 {
-#pragma warning disable IDE0079
-#pragma warning disable IDE0059
 #pragma warning disable S1854
     public PropertySheet(byte[] contents)
     {
@@ -498,6 +496,4 @@ public class PropertySheet
 
     public EPropertySheetType PropertySheetType { get; private set; }
 #pragma warning restore S1854
-#pragma warning restore IDE0059
-#pragma warning restore IDE0079
 }

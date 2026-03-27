@@ -186,11 +186,9 @@ public partial class MyTaskbarApp : Application
         System.Threading.Tasks.Task.Factory.StartNew(async () =>
         {
             await System.Threading.Tasks.Task.Delay(2000);
-#pragma warning disable IDE0079
 #pragma warning disable S1215 // Necessary to flush Dispatcher UI blocked event, result in a memory leak. In fact, it will be auto collect, but after 30-40min only (Gen2)
-            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: false);
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, false);
 #pragma warning restore S1215
-#pragma warning restore IDE0079
         });
     }
 
@@ -410,11 +408,9 @@ public partial class MyTaskbarApp : Application
                     Microsoft.Win32.SafeHandles.SafeFileHandle handle = NativeMethods.CreateFile("\\\\.\\LCD", 0, FileShare.None, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);
                     if (!handle.IsInvalid)
                     {
-#pragma warning disable IDE0079
 #pragma warning disable S3869 // "SafeHandle.DangerousGetHandle" should not be called
                         NativeMethods.GetDevicePowerState(handle.DangerousGetHandle(), out laptopScreenOn);
 #pragma warning restore S3869 // "SafeHandle.DangerousGetHandle" should not be called
-#pragma warning restore IDE0079
                         handle.Dispose();
                         // As see at initialization of allMonitorOff, just before, the screen integrate in laptop always count as power off/sleep. So if not, we decrease number of monitor power off/sleep
                         if (laptopScreenOn)
@@ -452,12 +448,10 @@ public partial class MyTaskbarApp : Application
                 if (Math.Abs(memUsed - previous) > 1)
                 {
                     ShellLogger.Debug($"Memory Used:{memUsed} Mo, Reserved:{memReserved} Mo");
-#pragma warning disable IDE0079
 #pragma warning disable S1215
                     if (memUsed > previous)
-                        GC.Collect();
+                        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, false);
 #pragma warning restore S1215
-#pragma warning restore IDE0079
                     previous = memUsed;
                 }
                 Thread.Sleep(1000);

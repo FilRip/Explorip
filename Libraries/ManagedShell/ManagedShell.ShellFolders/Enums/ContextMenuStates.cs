@@ -3,7 +3,6 @@
 namespace ManagedShell.ShellFolders.Enums;
 
 // Specifies how the shortcut menu can be changed when calling IContextMenu::QueryContextMenu
-#pragma warning disable IDE0079
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
 [Flags()]
 public enum ContextMenuStates : uint
@@ -21,4 +20,3 @@ public enum ContextMenuStates : uint
     RESERVED = 0xffff0000
 }
 #pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
-#pragma warning restore IDE0079

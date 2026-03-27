@@ -15,11 +15,9 @@ namespace Microsoft.WindowsAPICodePack.Shell.Common;
 /// <summary>
 /// The base class for all Shell objects in Shell Namespace.
 /// </summary>
-#pragma warning disable IDE0079
 #pragma warning disable S4035 // Classes implementing "IEquatable<T>" should be sealed
 public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
 #pragma warning restore S4035 // Classes implementing "IEquatable<T>" should be sealed
-#pragma warning restore IDE0079
 {
     #region Public Static Methods
 
@@ -63,14 +61,12 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
     {
     }
 
-#pragma warning disable IDE0079
 #pragma warning disable S3442 // "abstract" classes should not have "public" constructors
     internal ShellObject(IShellItem2 shellItem)
     {
         nativeShellItem = shellItem;
     }
 #pragma warning restore S3442 // "abstract" classes should not have "public" constructors
-#pragma warning restore IDE0079
 
     #endregion
 
@@ -112,11 +108,9 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
 
                 if (nativeShellItem == null || !CoreErrorHelper.Succeeded(retCode))
                 {
-#pragma warning disable IDE0079
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
                     throw new ShellException(LocalizedMessages.ShellObjectCreationFailed, Marshal.GetExceptionForHR(retCode));
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
-#pragma warning restore IDE0079
                 }
             }
             return nativeShellItem;
@@ -363,11 +357,9 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
                 }
                 else
                 {
-#pragma warning disable IDE0079
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
                     throw new ShellException(hr);
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
-#pragma warning restore IDE0079
                 }
             }
 
@@ -441,7 +433,6 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
     /// Returns the hash code of the object.
     /// </summary>
     /// <returns></returns>
-#pragma warning disable IDE0079
 #pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
     public override int GetHashCode()
     {
@@ -464,7 +455,6 @@ public abstract class ShellObject : IDisposable, IEquatable<ShellObject>
         return hashValue.Value;
     }
 #pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
-#pragma warning restore IDE0079
 
     private static readonly MD5CryptoServiceProvider hashProvider = new();
     private int? hashValue;

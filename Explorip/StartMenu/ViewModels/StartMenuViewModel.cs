@@ -209,7 +209,6 @@ public partial class StartMenuViewModel : ObservableObject, IDisposable
     /// For examples : some ShellHook of Explorer. The application still working, but not with latest installed version<br/>
     /// An application that said "Installation finished. Need to reboot to apply modifications". It's optional for now, but necessary to use latest version
     /// </summary>
-#pragma warning disable IDE0079
 #pragma warning disable S1144 // Unused private types or members should be removed
     private static bool IsPendingFileRenameOperations()
     {
@@ -221,7 +220,6 @@ public partial class StartMenuViewModel : ObservableObject, IDisposable
         return false;
     }
 #pragma warning restore S1144 // Unused private types or members should be removed
-#pragma warning restore IDE0079
 
     #endregion
 

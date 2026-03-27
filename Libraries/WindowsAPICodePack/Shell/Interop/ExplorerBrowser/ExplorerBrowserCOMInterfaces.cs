@@ -564,7 +564,6 @@ internal interface IExplorerBrowserEvents
 
 #region Unused - Keeping for debugging bug #885228
 
-#pragma warning disable IDE0079
 #pragma warning disable S125 // Sections of code should not be commented out
 //[ComImport(),
 // Guid(ExplorerBrowserIIDGuid.ICommDlgBrowser),
@@ -633,7 +632,6 @@ internal interface IExplorerBrowserEvents
 //}
 
 #pragma warning restore S125 // Sections of code should not be commented out
-#pragma warning restore IDE0079
 
 #endregion
 

@@ -60,11 +60,9 @@ internal class ComInterfaceAssemblyBuilder(VirtualDesktopCompilerConfiguration c
                         if (name.Version >= _requireVersion)
                         {
                             Debug.WriteLine($"Assembly found: {file.FullName}");
-#pragma warning disable IDE0079
 #pragma warning disable S3885
                             return Assembly.LoadFile(file.FullName);
 #pragma warning restore S3885
-#pragma warning restore IDE0079
                         }
                         else
                         {
@@ -183,12 +181,10 @@ internal class ComInterfaceAssemblyBuilder(VirtualDesktopCompilerConfiguration c
                 if (_configuration.BuildDebugConfiguration)
                     pdbPath = Path.Combine(dir.FullName, Path.GetFileNameWithoutExtension(name) + ".pdb");
                 EmitResult result = compilation.Emit(path, pdbPath);
-#pragma warning disable IDE0079
 #pragma warning disable S3885
                 if (result.Success)
                     return Assembly.LoadFrom(path);
 #pragma warning restore S3885
-#pragma warning restore IDE0079
 
                 File.Delete(path);
                 errorMessage = string.Join(Environment.NewLine, result.Diagnostics.Select(x => $"  {x.GetMessage()}"));
@@ -210,11 +206,9 @@ internal class ComInterfaceAssemblyBuilder(VirtualDesktopCompilerConfiguration c
         }
         finally
         {
-#pragma warning disable IDE0079
 #pragma warning disable S1215
             GC.Collect();
 #pragma warning restore S1215
-#pragma warning restore IDE0079
         }
     }
 }

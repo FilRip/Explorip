@@ -94,7 +94,6 @@ public partial class NativeMethods
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern IntPtr OpenProcess(ProcessAccess processAccess, bool bInheritHandle, int processId);
 
-#pragma warning disable IDE0079
 #pragma warning disable S4070
     [Flags()]
     public enum ProcessAccess : uint
@@ -117,7 +116,6 @@ public partial class NativeMethods
         AllAccess = 0x0000FFFF,
     }
 #pragma warning restore S4070
-#pragma warning restore IDE0079
 
     [DllImport(Kernel32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
     internal static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, [Out(), MarshalAs(UnmanagedType.LPTStr)] StringBuilder lpExeName, ref int lpdwSize);

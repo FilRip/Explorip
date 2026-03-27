@@ -30,11 +30,9 @@ public class TasksService(IconSize iconSize) : IDisposable, INotifyPropertyChang
     private static int WM_TASKBARCREATEDMESSAGE = -1;
     private static int TASKBARBUTTONCREATEDMESSAGE = -1;
     private static IntPtr uncloakEventHook = IntPtr.Zero;
-#pragma warning disable IDE0079
 #pragma warning disable S1450 // Private fields only used as local variables in methods should become local variables
     private WinEventProc uncloakEventProc;
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
-#pragma warning restore IDE0079
 
     internal ITaskCategoryProvider TaskCategoryProvider;
     private TaskCategoryChangeDelegate CategoryChangeDelegate;

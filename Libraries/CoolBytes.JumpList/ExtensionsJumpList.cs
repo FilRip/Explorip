@@ -110,11 +110,7 @@ public static class ExtensionsJumpList
 
     private static void WatchAuto_Renamed(object sender, RenamedEventArgs e)
     {
-#pragma warning disable IDE0079
-#pragma warning disable S1121
         _listAutoDest.SingleOrDefault(auto => auto.SourceFile == e.OldFullPath)?.SourceFile = e.FullPath;
-#pragma warning restore S1121
-#pragma warning restore IDE0079
     }
 
     private static void WatchAuto_Deleted(object sender, FileSystemEventArgs e)
@@ -149,11 +145,7 @@ public static class ExtensionsJumpList
 
     private static void WatchCustom_Renamed(object sender, RenamedEventArgs e)
     {
-#pragma warning disable IDE0079
-#pragma warning disable S1121
         _listCustomDest.SingleOrDefault(custom => custom.SourceFile == e.OldFullPath)?.SourceFile = e.FullPath;
-#pragma warning restore S1121
-#pragma warning restore IDE0079
     }
 
     private static void WatchCustom_Deleted(object sender, FileSystemEventArgs e)

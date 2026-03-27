@@ -54,12 +54,10 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
     public event EventHandler<NotificationBalloonEventArgs> NotificationBalloonShown;
 
     private SystrayDelegate trayDelegate;
-#pragma warning disable IDE0079
 #pragma warning disable S1450 // False positive from Sonar
     private IconDataDelegate iconDataDelegate;
     private TrayHostSizeDelegate trayHostSizeDelegate;
 #pragma warning restore S1450 // Private fields only used as local variables in methods should become local variables
-#pragma warning restore IDE0079
     private readonly object _lockObject = new();
     private ShellServiceObject shellServiceObject;
     private TrayHostSizeData trayHostSizeData = new()
@@ -116,8 +114,6 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
         _trayService?.Resume();
     }
 
-#pragma warning disable IDE0079
-#pragma warning disable S1121
     public bool Disable
     {
         get { return _trayService?.Disable ?? false; }
@@ -126,8 +122,6 @@ public class NotificationArea(TrayService trayService, ExplorerTrayService explo
             _trayService?.Disable = value;
         }
     }
-#pragma warning restore S1121
-#pragma warning restore IDE0079
 
     #region Callbacks
     private TrayHostSizeData TrayHostSizeCallback()

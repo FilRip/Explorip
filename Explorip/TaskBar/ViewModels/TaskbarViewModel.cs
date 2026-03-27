@@ -637,11 +637,9 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
 
     public static void GcCollect()
     {
-#pragma warning disable IDE0079
 #pragma warning disable S1215
-        GC.Collect();
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, false);
 #pragma warning restore S1215
-#pragma warning restore IDE0079
     }
 
     #endregion

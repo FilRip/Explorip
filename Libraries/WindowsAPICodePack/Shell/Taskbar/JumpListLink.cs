@@ -144,11 +144,9 @@ public class JumpListLink : JumpListTask, IJumpListItem, IDisposable
                 HResult result = nativePropertyStore.SetValue(ref PKEY_Title, propVariant);
                 if (!CoreErrorHelper.Succeeded(result))
                 {
-#pragma warning disable IDE0079
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
                     throw new ShellException(result);
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
-#pragma warning restore IDE0079
                 }
 
                 nativePropertyStore.Commit();

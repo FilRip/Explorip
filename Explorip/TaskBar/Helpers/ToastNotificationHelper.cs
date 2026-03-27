@@ -50,17 +50,14 @@ public static class ToastHelper
                 ToastNotificationManager.CreateToastNotifier(appUserModelId).Show(toast);
                 handled = true;
             }
-#pragma warning disable IDE0079
-#pragma warning disable S2486
-            catch (Exception)
+            catch (Exception ex)
             {
 #if DEBUG
+                ShellLogger.Error(ex.Message, ex);
                 if (Debugger.IsAttached)
                     Debugger.Break();
 #endif
             }
-#pragma warning restore S2486
-#pragma warning restore IDE0079
         });
         thread.Start();
         thread.Join();

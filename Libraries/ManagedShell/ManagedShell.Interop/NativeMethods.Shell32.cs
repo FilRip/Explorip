@@ -303,7 +303,6 @@ public partial class NativeMethods
         VISTA_MASK = REALTIME | SHOWTIP,
     }
 
-#pragma warning disable IDE0079
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     /// <summary>
     /// Notify icon info balloon flags
@@ -327,7 +326,6 @@ public partial class NativeMethods
         ICON_MASK = 0x0000000F,
     }
 #pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
-#pragma warning restore IDE0079
 
     [Flags()]
     public enum ENotifyIconStatus
@@ -480,7 +478,6 @@ public partial class NativeMethods
         string lpszDialogTextBody,
         RunFileDialogs uflags);
 
-#pragma warning disable IDE0079
 #pragma warning disable S1104 // Fields should not have public accessibility
     public struct ImageListDrawParams
     {
@@ -503,7 +500,6 @@ public partial class NativeMethods
         public int crEffect;
     }
 #pragma warning restore S1104 // Fields should not have public accessibility
-#pragma warning restore IDE0079
 
     [StructLayout(LayoutKind.Sequential)]
     public struct ImageInfo
@@ -515,7 +511,6 @@ public partial class NativeMethods
         public Rect rcImage;
     }
 
-#pragma warning disable IDE0079
 #pragma warning disable S4070 // Non-flags enums should not be marked with "FlagsAttribute"
     [Flags()]
     public enum ImageListDraws
@@ -537,7 +532,6 @@ public partial class NativeMethods
         BLEND = BLEND50,
     }
 #pragma warning restore S4070 // Non-flags enums should not be marked with "FlagsAttribute"
-#pragma warning restore IDE0079
 
     [ComImport()]
     [Guid("46EB5926-582E-4017-9FDF-E8998DAA0950")]

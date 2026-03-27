@@ -111,7 +111,6 @@ public class ShellSearchFolder : ShellSearchCollection
         }
     }
 
-#pragma warning disable IDE0079
 #pragma warning disable S2372 // Exceptions should not be thrown from property getters
     internal override IShellItem NativeShellItem
     {
@@ -131,7 +130,6 @@ public class ShellSearchFolder : ShellSearchCollection
         }
     }
 #pragma warning restore S2372 // Exceptions should not be thrown from property getters
-#pragma warning restore IDE0079
 
     /// <summary>
     /// Creates a list of stack keys, as specified. If this method is not called, 

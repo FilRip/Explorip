@@ -22,7 +22,7 @@ public class MainHookClass : IEntryPoint
     private LocalHook _performOperationsHook = null, _newItemHook = null;
     //private LocalHook _setOperationFlagsHook = null;
 
-#pragma warning disable IDE0060, IDE0079 // Supprimer le paramètre inutilisé
+#pragma warning disable IDE0060 // Supprimer le paramètre inutilisé
     public MainHookClass(RemoteHooking.IContext context, string channelName)
     {
         if (!string.IsNullOrWhiteSpace(channelName))
@@ -31,7 +31,7 @@ public class MainHookClass : IEntryPoint
             _server.Ping();
         }
     }
-#pragma warning restore IDE0060, IDE0079 // Supprimer le paramètre inutilisé
+#pragma warning restore IDE0060 // Supprimer le paramètre inutilisé
 
 #pragma warning disable IDE0060 // Supprimer le paramètre inutilisé
     public void Run(RemoteHooking.IContext context, string channelName)

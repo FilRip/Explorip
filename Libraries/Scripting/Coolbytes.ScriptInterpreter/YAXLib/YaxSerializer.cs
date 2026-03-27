@@ -56,11 +56,9 @@ public class YaxSerializer
     /// <summary>
     /// Specifies whether an exception is occurred during the deserialization of the current member
     /// </summary>
-#pragma warning disable IDE0079
 #pragma warning disable S1450 // False positive
     private bool m_exceptionOccurredDuringMemberDeserialization;
 #pragma warning restore S1450
-#pragma warning restore IDE0079
 
     /// <summary>
     /// The serialization option enumeration which can be set during initialization.

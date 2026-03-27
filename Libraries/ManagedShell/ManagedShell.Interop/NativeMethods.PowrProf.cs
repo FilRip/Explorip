@@ -6,7 +6,6 @@ public partial class NativeMethods
 {
     const string PowrProf_DllName = "powrprof.dll";
 
-#pragma warning disable IDE0079
 #pragma warning disable S1104 // Fields should not have public accessibility
     public struct BatteryReportingScale
     {
@@ -14,7 +13,6 @@ public partial class NativeMethods
         public uint Capacity;
     }
 #pragma warning restore S1104 // Fields should not have public accessibility
-#pragma warning restore IDE0079
 
     public enum SystemPowerState
     {
@@ -28,7 +26,6 @@ public partial class NativeMethods
         PowerSystemMaximum = 7
     }
 
-#pragma warning disable IDE0079
 #pragma warning disable S1104 // Fields should not have public accessibility
     public struct SystemPowerCapabilities
     {
@@ -92,7 +89,6 @@ public partial class NativeMethods
         public SystemPowerState DefaultLowLatencyWake;
     }
 #pragma warning restore S1104 // Fields should not have public accessibility
-#pragma warning restore IDE0079
 
     // There is a method for this in System.Windows.Forms, however it calls the same p/invoke and I would prefer not to reference that lib
     [DllImport(PowrProf_DllName)]
