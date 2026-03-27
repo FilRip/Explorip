@@ -31,6 +31,7 @@ public class DecisionInfoSection : Section
         /*ushort totalDataLength = */
         binaryReader.ReadUInt16();
 
+#pragma warning disable IDE0028
         List<DecisionInfo> decisionInfos = new(numDecisions);
         for (int i = 0; i < numDecisions; i++)
         {
@@ -122,6 +123,7 @@ public class DecisionInfoSection : Section
         }
 
         Decisions = decisions;
+#pragma warning restore IDE0028
 
         return true;
     }

@@ -41,6 +41,7 @@ public class ReverseMapSection : Section
         uint unicodeDataLength = binaryReader.ReadUInt32();
         binaryReader.ReadUInt32(); // meaning unknown
 
+#pragma warning disable IDE0028
         List<ScopeAndItemInfo> scopeAndItemInfos = new((int)(numScopes + numItems));
 
         for (int i = 0; i < numScopes + numItems; i++)
@@ -146,6 +147,7 @@ public class ReverseMapSection : Section
 
             scopes[i].Children = children;
         }
+#pragma warning restore IDE0028
 
         Scopes = scopes;
         Items = items;
