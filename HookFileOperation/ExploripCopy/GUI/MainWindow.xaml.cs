@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -49,6 +50,8 @@ public partial class MainWindow : Window
         Icon = Constants.Icons.MainIconSource;
 
         _dragItemManager = new ListViewDragDropManager<OneFileOperation>(LvOperations, ExploripCopyConfig.DragGhostOpacity, ExploripCopyConfig.WaitBetweenTwoDragScrolling, ExploripCopyConfig.SpeedForDragScrolling, ExploripCopyConfig.WaitBeforeStartDragScrolling, ExploripCopyConfig.MaxItemsInAdorner, ExploripCopyConfig.OpacityDecrease);
+
+        ContextMenu.DataContext = NotifyIconViewModel.Instance;
     }
 
     public void IconInSystray_Exit()

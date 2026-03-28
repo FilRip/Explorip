@@ -500,7 +500,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     private void ThreadFileOpWaiting()
     {
         bool resetChoice = false;
-        while (true)
+        while (!disposedValue)
         {
             try
             {
@@ -840,7 +840,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        Dispose(disposing: true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 

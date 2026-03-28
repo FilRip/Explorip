@@ -12,6 +12,7 @@
         xmlns:controls="clr-namespace:ExploripCopy.Controls"
         mc:Ignorable="d" SizeChanged="Window_SizeChanged" LocationChanged="Window_LocationChanged"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModels}"
+        ContextMenu="{DynamicResource SysTrayMenu}"
         Title="ExploripCopy" Height="450" Width="800" Background="{x:Static colors:Colors.BackgroundColorBrush}" BorderBrush="Transparent" BorderThickness="6" UseLayoutRounding="True" Loaded="Window_Loaded"
         Closing="Window_Closing" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" MouseMove="Window_MouseMove" Closed="Window_Closed" WindowStyle="None" ResizeMode="CanResizeWithGrip">
 
@@ -20,7 +21,7 @@
         <converters:FullSizeToCompactConverter x:Key="fullSizeToCompact"/>
         <BooleanToVisibilityConverter x:Key="boolToVisibility"/>
     </Window.Resources>
-    
+
     <WindowChrome.WindowChrome>
         <WindowChrome
             GlassFrameThickness="0"

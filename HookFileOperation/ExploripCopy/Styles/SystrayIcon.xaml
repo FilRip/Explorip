@@ -12,7 +12,7 @@
         <Separator BorderThickness="0" Margin="0" Padding="0"/>
         <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding ExitApplicationCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0"/>
     </ContextMenu>
-    
+
     <tb:TaskbarIcon x:Key="NotifyIcon"
                     IconSource="{Binding SystrayIcon, UpdateSourceTrigger=PropertyChanged}"
                     ToolTipText="ExploripCopy"
