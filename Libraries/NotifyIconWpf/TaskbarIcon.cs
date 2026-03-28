@@ -36,7 +36,6 @@ using Hardcodet.Wpf.TaskbarNotification.Interop;
 
 using Point = Hardcodet.Wpf.TaskbarNotification.Interop.Point;
 
-
 namespace Hardcodet.Wpf.TaskbarNotification;
 
 /// <summary>
@@ -189,7 +188,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
             return;
         }
 
-        if (balloon == null) throw new ArgumentNullException(nameof(balloon));
+        if (balloon == null)
+            throw new ArgumentNullException(nameof(balloon));
         if (timeout.HasValue && timeout < 500)
         {
             string msg = "Invalid timeout of {0} milliseconds. Timeout must be at least 500 ms";
@@ -272,7 +272,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// </summary>
     public void ResetBalloonCloseTimer()
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+            return;
 
         lock (lockObject)
         {
@@ -288,7 +289,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// </summary>
     public void CloseBalloon()
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+            return;
 
         Dispatcher dispatcher = this.GetDispatcher();
         if (!dispatcher.CheckAccess())
@@ -342,7 +344,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// </summary>
     private void CloseBalloonCallback(object state)
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+            return;
 
         // switch to UI thread
         Action action = CloseBalloon;
@@ -362,7 +365,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// <param name="me">Event flag.</param>
     private void OnMouseEvent(MouseEvent me)
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+            return;
 
         switch (me)
         {
@@ -419,10 +423,13 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
                 singleClickTimer.Change(DoubleClickWaitTime, Timeout.Infinite);
                 isLeftClickCommandInvoked = true;
             }
-            else
+            else if (me == MouseEvent.IconRightMouseUp)
             {
                 // show popup immediately
-                ShowTrayPopup();
+                if (RightClickCommand == null)
+                    ShowTrayPopup();
+                else
+                    RightClickCommand.ExecuteIfEnabled(RightClickCommandParameter, RightClickCommandTarget ?? this);
             }
         }
 
@@ -441,10 +448,13 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
                 singleClickTimer.Change(DoubleClickWaitTime, Timeout.Infinite);
                 isLeftClickCommandInvoked = true;
             }
-            else
+            else if (me == MouseEvent.IconRightMouseUp)
             {
                 // show context menu immediately
-                ShowContextMenu(cursorPosition);
+                if (RightClickCommand == null)
+                    ShowContextMenu(cursorPosition);
+                else
+                    RightClickCommand.ExecuteIfEnabled(RightClickCommandParameter, RightClickCommandTarget ?? this);
             }
         }
 
@@ -473,7 +483,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     private void OnToolTipChange(bool visible)
     {
         // if we don't have a tooltip, there's nothing to do here...
-        if (TrayToolTipResolved == null) return;
+        if (TrayToolTipResolved == null)
+            return;
 
         if (visible)
         {
@@ -484,12 +495,14 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
             }
 
             RoutedEventArgs args = RaisePreviewTrayToolTipOpenEvent();
-            if (args.Handled) return;
+            if (args.Handled)
+                return;
 
             TrayToolTipResolved.IsOpen = true;
 
             // raise attached event first
-            if (TrayToolTip != null) RaiseToolTipOpenedEvent(TrayToolTip);
+            if (TrayToolTip != null)
+                RaiseToolTipOpenedEvent(TrayToolTip);
 
             // bubble routed event
             RaiseTrayToolTipOpenEvent();
@@ -497,10 +510,12 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         else
         {
             RoutedEventArgs args = RaisePreviewTrayToolTipCloseEvent();
-            if (args.Handled) return;
+            if (args.Handled)
+                return;
 
             // raise attached event first
-            if (TrayToolTip != null) RaiseToolTipCloseEvent(TrayToolTip);
+            if (TrayToolTip != null)
+                RaiseToolTipCloseEvent(TrayToolTip);
 
             TrayToolTipResolved.IsOpen = false;
 
@@ -546,9 +561,9 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         else if (tt == null && !string.IsNullOrEmpty(ToolTipText))
         {
             // create a simple tooltip for the ToolTipText string
-            tt = new ToolTip
+            tt = new ToolTip()
             {
-                Content = ToolTipText
+                Content = ToolTipText,
             };
         }
 
@@ -640,12 +655,15 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// </summary>
     public void CloseTrayPopup()
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+            return;
 
         RoutedEventArgs args = RaisePreviewTrayPopupOpenEvent();
-        if (args.Handled) return;
+        if (args.Handled)
+            return;
 
-        if (TrayPopup == null) return;
+        if (TrayPopup == null)
+            return;
 
         TrayPopupResolved.IsOpen = false;
     }
@@ -655,14 +673,17 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// </summary>
     public void ShowTrayPopup()
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+            return;
 
         // raise preview event no matter whether popup is currently set
         // or not (enables client to set it on demand)
         RoutedEventArgs args = RaisePreviewTrayPopupOpenEvent();
-        if (args.Handled) return;
+        if (args.Handled)
+            return;
 
-        if (TrayPopup == null) return;
+        if (TrayPopup == null)
+            return;
 
         // place the popup
         PlacePopup(PopupPlacement);
@@ -675,11 +696,13 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         {
             // try to get a handle on the popup itself (via its child)
             HwndSource source = (HwndSource)PresentationSource.FromVisual(TrayPopupResolved.Child);
-            if (source != null) handle = source.Handle;
+            if (source != null)
+                handle = source.Handle;
         }
 
         // if we don't have a handle for the popup, fall back to the message sink
-        if (handle == IntPtr.Zero) handle = messageSink.MessageWindowHandle;
+        if (handle == IntPtr.Zero)
+            handle = messageSink.MessageWindowHandle;
 
         // activate either popup or message sink to track deactivation.
         // otherwise, the popup does not close if the user clicks somewhere else
@@ -687,7 +710,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
 
         // raise attached event - item should never be null unless developers
         // changed the CustomPopup directly...
-        if (TrayPopup != null) RaisePopupOpenedEvent(TrayPopup);
+        if (TrayPopup != null)
+            RaisePopupOpenedEvent(TrayPopup);
 
         // bubble routed event
         RaiseTrayPopupOpenEvent();
@@ -726,17 +750,17 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// </summary>
     private void ShowContextMenu(Point cursorPosition)
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+            return;
 
         // raise preview event no matter whether context menu is currently set
         // or not (enables client to set it on demand)
         RoutedEventArgs args = RaisePreviewTrayContextMenuOpenEvent();
-        if (args.Handled) return;
+        if (args.Handled)
+            return;
 
         if (ContextMenu == null)
-        {
             return;
-        }
 
         // use absolute positioning. We need to set the coordinates, or a delayed opening
         // (e.g. when left-clicked) opens the context menu at the wrong place if the mouse
@@ -756,7 +780,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         }
 
         // if we don't have a handle for the popup, fall back to the message sink
-        if (handle == IntPtr.Zero) handle = messageSink.MessageWindowHandle;
+        if (handle == IntPtr.Zero)
+            handle = messageSink.MessageWindowHandle;
 
         // activate the context menu or the message window to track deactivation - otherwise, the context menu
         // does not close if the user clicks somewhere else. With the message window
@@ -872,7 +897,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// </summary>
     private void DoSingleClickAction(object state)
     {
-        if (IsDisposed) return;
+        if (IsDisposed)
+            return;
 
         // run action
         Action action = singleClickTimerAction;
@@ -928,9 +954,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
         lock (lockObject)
         {
             if (IsTaskbarIconCreated)
-            {
                 return;
-            }
 
             const IconDataMembers members = IconDataMembers.Message
                                             | IconDataMembers.Icon
@@ -965,9 +989,7 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
             // make sure we didn't schedule a creation
 
             if (!IsTaskbarIconCreated)
-            {
                 return;
-            }
 
             Util.WriteIconData(ref iconData, NotifyCommand.Delete, IconDataMembers.Message);
             IsTaskbarIconCreated = false;
@@ -991,7 +1013,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     /// </summary>
     private void EnsureNotDisposed()
     {
-        if (IsDisposed) throw new ObjectDisposedException(Name ?? GetType().FullName);
+        if (IsDisposed)
+            throw new ObjectDisposedException(Name ?? GetType().FullName);
     }
 
 
@@ -1055,7 +1078,8 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
     protected virtual void Dispose(bool disposing)
     {
         // don't do anything if the component is already disposed
-        if (IsDisposed || !disposing) return;
+        if (IsDisposed || !disposing)
+            return;
 
         lock (lockObject)
         {

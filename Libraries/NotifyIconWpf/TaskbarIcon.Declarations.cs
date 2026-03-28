@@ -908,6 +908,88 @@ partial class TaskbarIcon
 
     #endregion
 
+    #region RightClickCommand dependency property
+
+    /// <summary>
+    /// Associates a command that is being executed if the tray icon is being
+    /// double clicked.
+    /// </summary>
+    public static readonly DependencyProperty RightClickCommandProperty =
+        DependencyProperty.Register(nameof(RightClickCommand),
+            typeof(ICommand),
+            typeof(TaskbarIcon),
+            new FrameworkPropertyMetadata(null));
+
+    /// <summary>
+    /// A property wrapper for the <see cref="RightClickCommandProperty"/>
+    /// dependency property:<br/>
+    /// Associates a command that is being executed if the tray icon is being
+    /// Right-clicked.
+    /// </summary>
+    [Category(CategoryName)]
+    [Description("A command that is being executed if the tray icon is being Right-clicked.")]
+    public ICommand RightClickCommand
+    {
+        get { return (ICommand)GetValue(RightClickCommandProperty); }
+        set { SetValue(RightClickCommandProperty, value); }
+    }
+
+    #endregion
+
+    #region RightClickCommandParameter dependency property
+
+    /// <summary>
+    /// Command parameter for the <see cref="RightClickCommand"/>.
+    /// </summary>
+    public static readonly DependencyProperty RightClickCommandParameterProperty =
+        DependencyProperty.Register(nameof(RightClickCommandParameter),
+            typeof(object),
+            typeof(TaskbarIcon),
+            new FrameworkPropertyMetadata(null));
+
+    /// <summary>
+    /// A property wrapper for the <see cref="RightClickCommandParameterProperty"/>
+    /// dependency property:<br/>
+    /// Command parameter for the <see cref="RightClickCommand"/>.
+    /// </summary>
+    [Category(CategoryName)]
+    [Description("The target of the command that is fired if the notify icon is clicked with the Right mouse button."
+        )]
+    public object RightClickCommandParameter
+    {
+        get { return GetValue(RightClickCommandParameterProperty); }
+        set { SetValue(RightClickCommandParameterProperty, value); }
+    }
+
+    #endregion
+
+    #region RightClickCommandTarget dependency property
+
+    /// <summary>
+    /// The target of the command that is fired if the notify icon is clicked.
+    /// </summary>
+    public static readonly DependencyProperty RightClickCommandTargetProperty =
+        DependencyProperty.Register(nameof(RightClickCommandTarget),
+            typeof(IInputElement),
+            typeof(TaskbarIcon),
+            new FrameworkPropertyMetadata(null));
+
+    /// <summary>
+    /// A property wrapper for the <see cref="RightClickCommandTargetProperty"/>
+    /// dependency property:<br/>
+    /// The target of the command that is fired if the notify icon is clicked.
+    /// </summary>
+    [Category(CategoryName)]
+    [Description("The target of the command that is fired if the notify icon is clicked with the Right mouse button."
+        )]
+    public IInputElement RightClickCommandTarget
+    {
+        get { return (IInputElement)GetValue(RightClickCommandTargetProperty); }
+        set { SetValue(RightClickCommandTargetProperty, value); }
+    }
+
+    #endregion
+
     #region NoLeftClickDelay dependency property
 
     /// <summary>
@@ -1421,7 +1503,8 @@ partial class TaskbarIcon
     /// <param name="target">UIElement or ContentElement on which to raise the event</param>
     internal static RoutedEventArgs RaiseTrayContextMenuOpenEvent(DependencyObject target)
     {
-        if (target == null) return null;
+        if (target == null)
+            return null;
 
         RoutedEventArgs args = new(TrayContextMenuOpenEvent);
         RoutedEventHelper.RaiseEvent(target, args);
@@ -1458,7 +1541,8 @@ partial class TaskbarIcon
     /// <param name="target">UIElement or ContentElement on which to raise the event</param>
     internal static RoutedEventArgs RaisePreviewTrayContextMenuOpenEvent(DependencyObject target)
     {
-        if (target == null) return null;
+        if (target == null)
+            return null;
 
         RoutedEventArgs args = new(PreviewTrayContextMenuOpenEvent);
         RoutedEventHelper.RaiseEvent(target, args);

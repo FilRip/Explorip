@@ -829,12 +829,11 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         if (!disposedValue)
         {
+            disposedValue = true;
             if (disposing)
             {
-                _mainThread?.Abort();
+                _mainThread?.Join();
             }
-
-            disposedValue = true;
         }
     }
 

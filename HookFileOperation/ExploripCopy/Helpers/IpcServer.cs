@@ -13,6 +13,7 @@ internal static class IpcServer
     private static IpcChannel _channel;
     private static IpcNewInstance _ni;
     private static Thread _keepAlive;
+    private static bool _isRunning = true;
 
     internal static void CreateIpcServer()
     {
@@ -30,7 +31,7 @@ internal static class IpcServer
 
     private static void KeepAliveThread()
     {
-        while (true)
+        while (_isRunning)
         {
             try
             {
@@ -48,7 +49,8 @@ internal static class IpcServer
     {
         try
         {
-            _keepAlive?.Abort();
+            _isRunning = false;
+            _keepAlive?.Join();
             _ni.SetMainProcess(null);
             ChannelServices.UnregisterChannel(_channel);
         }
