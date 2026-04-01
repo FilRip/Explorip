@@ -19,6 +19,8 @@ namespace Explorip.Configuration;
 
 internal static class RegistrySettings
 {
+    private const string ShellRegistryKey = "Shell";
+
     private static bool? _showVersion;
     private static string _currentVersion;
     private static string _currentBuild;
@@ -85,82 +87,103 @@ internal static class RegistrySettings
     {
         string shell = null;
         RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", false);
-        if (key != null && key.GetValueNames().Contains("Shell"))
-            shell = key.GetValue("Shell").ToString();
+        if (key != null && key.GetValueNames().Contains(ShellRegistryKey))
+            shell = key.GetValue(ShellRegistryKey).ToString();
         if (string.IsNullOrWhiteSpace(shell))
         {
             key = Registry.LocalMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", false);
-            if (key != null && key.GetValueNames().Contains("Shell"))
-                shell = key.GetValue("Shell").ToString();
+            if (key != null && key.GetValueNames().Contains(ShellRegistryKey))
+                shell = key.GetValue(ShellRegistryKey).ToString();
         }
         return shell;
     }
 
-    public static List<OneDesktopItemViewModel> ListDesktopSystemIcons(IconSize iconSize = IconSize.ExtraLarge)
+    public static List<OneDesktopItemViewModel> ListDesktopSystemIcons(IconSize iconSize = IconSize.ExtraLarge, bool withCommon = true)
+    {
+        List<OneDesktopItemViewModel> result;
+        List<string> overridesKey = [];
+        result = IconsFromRegistry(@"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel", iconSize, ref overridesKey);
+        result.AddRange(IconsFromRegistry(@"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu", iconSize, ref overridesKey));
+        if (withCommon)
+        {
+            result.AddRange(IconsFromRegistry(@"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel", iconSize, ref overridesKey, Registry.LocalMachine));
+            result.AddRange(IconsFromRegistry(@"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu", iconSize, ref overridesKey, Registry.LocalMachine));
+        }
+        return result;
+    }
+
+    private static List<OneDesktopItemViewModel> IconsFromRegistry(string registryKey, IconSize iconSize, ref List<string> overridesKey, RegistryKey root = null)
     {
         List<OneDesktopItemViewModel> result = [];
-        RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel", false);
-        foreach (string name in key.GetValueNames().Where(name => key.GetValue(name).ToString() != "1"))
+        root ??= Registry.CurrentUser;
+        RegistryKey key = root.OpenSubKey(registryKey, false);
+        foreach (string name in key.GetValueNames())
         {
-            string label = "";
-            ImageSource icon = null, iconOverlay = null;
-            RegistryKey clSidKey = Registry.ClassesRoot.OpenSubKey(@$"CLSID\{name}", false);
-            if (clSidKey != null)
+            if (overridesKey.Contains(name))
+                continue;
+            else
+                overridesKey.Add(name);
+            if ((int)key.GetValue(name, 0) == 0)
             {
-                label = clSidKey.GetValue("").ToString();
-                try
+                string label = "";
+                ImageSource icon = null, iconOverlay = null;
+                RegistryKey clSidKey = Registry.ClassesRoot.OpenSubKey(@$"CLSID\{name.Replace(".default", "")}", false);
+                if (clSidKey != null)
                 {
-                    if (clSidKey.GetValueNames().Contains("LocalizedString"))
+                    label = clSidKey.GetValue("").ToString();
+                    try
                     {
-                        string fullIconString = clSidKey.GetValue("LocalizedString").ToString();
-                        if (!string.IsNullOrWhiteSpace(fullIconString))
+                        if (clSidKey.GetValueNames().Contains("LocalizedString"))
                         {
-                            uint stringIndex = 0;
-                            string res;
-                            if (fullIconString.IndexOf(',') >= 0)
+                            string fullIconString = clSidKey.GetValue("LocalizedString").ToString();
+                            if (!string.IsNullOrWhiteSpace(fullIconString))
                             {
-                                res = fullIconString.Substring(0, fullIconString.LastIndexOf(','));
-                                stringIndex = uint.Parse(fullIconString.Substring(fullIconString.LastIndexOf(',') + 1).Replace("-", ""));
+                                uint stringIndex = 0;
+                                string res;
+                                if (fullIconString.IndexOf(',') >= 0)
+                                {
+                                    res = fullIconString.Substring(0, fullIconString.LastIndexOf(','));
+                                    stringIndex = uint.Parse(fullIconString.Substring(fullIconString.LastIndexOf(',') + 1).Replace("-", ""));
+                                }
+                                else
+                                    res = fullIconString;
+                                if (res.StartsWith("@"))
+                                    res = res.Substring(1);
+                                label = Localization.Load(Path.GetFullPath(res), stringIndex, clSidKey.GetValue("").ToString());
                             }
-                            else
-                                res = fullIconString;
-                            if (res.StartsWith("@"))
-                                res = res.Substring(1);
-                            label = Localization.Load(Path.GetFullPath(res), stringIndex, clSidKey.GetValue("").ToString());
                         }
                     }
-                }
-                catch (Exception) { /* Can't get localized string, ignore errors */ }
-                try
-                {
-                    IntPtr pidl;
-                    pidl = NativeMethods.ILCreateFromPath($"shell:::{name}");
-                    if (pidl != IntPtr.Zero)
+                    catch (Exception) { /* Can't get localized string, ignore errors */ }
+                    try
                     {
-                        IntPtr hIcon;
-                        hIcon = IconHelper.GetIconByPidl(pidl, iconSize, out IntPtr hOverlay);
-                        NativeMethods.ILFree(pidl);
-                        if (hIcon != IntPtr.Zero)
+                        IntPtr pidl;
+                        pidl = NativeMethods.ILCreateFromPath($"shell:::{name.Replace(".default", "")}");
+                        if (pidl != IntPtr.Zero)
                         {
-                            icon = IconManager.Convert(Icon.FromHandle(hIcon));
-                            if (hOverlay != IntPtr.Zero)
-                                iconOverlay = IconManager.Convert(Icon.FromHandle(hOverlay));
+                            IntPtr hIcon;
+                            hIcon = IconHelper.GetIconByPidl(pidl, iconSize, out IntPtr hOverlay);
+                            NativeMethods.ILFree(pidl);
+                            if (hIcon != IntPtr.Zero)
+                            {
+                                icon = IconManager.Convert(Icon.FromHandle(hIcon));
+                                if (hOverlay != IntPtr.Zero)
+                                    iconOverlay = IconManager.Convert(Icon.FromHandle(hOverlay));
+                            }
                         }
                     }
+                    catch { /* Can't get icon, ignore errors */ }
                 }
-                catch { /* Can't get icon, ignore errors */ }
+                OneDesktopItemViewModel item = new()
+                {
+                    Name = label,
+                    Icon = icon,
+                    FullPath = $"shell:::{name.Replace(".default", "")}",
+                    SpecialFolder = true,
+                    OverlayIcon = iconOverlay,
+                };
+                result.Add(item);
             }
-            OneDesktopItemViewModel item = new()
-            {
-                Name = label,
-                Icon = icon,
-                FullPath = $"shell:::{name}",
-                SpecialFolder = true,
-                OverlayIcon = iconOverlay,
-            };
-            result.Add(item);
         }
-
         return result;
     }
 
@@ -169,10 +192,10 @@ internal static class RegistrySettings
         RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion\Winlogon", false);
         if (remove)
         {
-            if (key.GetValueNames().Contains("Shell"))
-                key.DeleteValue("Shell");
+            if (key.GetValueNames().Contains(ShellRegistryKey))
+                key.DeleteValue(ShellRegistryKey);
         }
         else
-            key.SetValue("Shell", System.Reflection.Assembly.GetEntryAssembly().Location);
+            key.SetValue(ShellRegistryKey, System.Reflection.Assembly.GetEntryAssembly().Location);
     }
 }

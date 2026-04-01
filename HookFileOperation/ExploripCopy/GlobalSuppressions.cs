@@ -7,3 +7,4 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Info Code Smell", "S1135:Track uses of \"TODO\" tags")]
 [assembly: SuppressMessage("S3776", "S3776")]
+[assembly: SuppressMessage("MVVMTK0042", "MVVMTK0042")]

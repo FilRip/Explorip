@@ -10,6 +10,8 @@ using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Helpers;
 
+using ExploripConfig.Configuration;
+
 using ExploripSharedCopy.Controls;
 
 using ManagedShell.Common.Helpers;
@@ -23,7 +25,8 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
     internal string FullPath { get; set; }
     internal bool SpecialFolder { get; set; }
     internal bool IsDirectory { get; set; }
-    internal ExploripDesktopViewModel CurrentDesktop { get; set; }
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(ItemSizeX), nameof(ItemSizeY))]
+    private ExploripDesktopViewModel _currentDesktop;
     private FileSystemInfo _fileSystemInfo;
     private DateTime _lastClicked = DateTime.UtcNow.AddSeconds(-2);
 
@@ -73,12 +76,12 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
 
     public GridLength ItemSizeX
     {
-        get { return new GridLength(CurrentDesktop.ParentDesktop.MyDesktopConfig.ItemSizeX, GridUnitType.Pixel); }
+        get { return new GridLength((CurrentDesktop == null ? IconSize : ConfigManager.GetDesktopConfig(CurrentDesktop.ParentDesktop.ScreenId).ItemSizeX), GridUnitType.Pixel); }
     }
 
     public GridLength ItemSizeY
     {
-        get { return new GridLength(CurrentDesktop.ParentDesktop.MyDesktopConfig.ItemSizeY, GridUnitType.Pixel); }
+        get { return new GridLength((CurrentDesktop == null ? IconSize : ConfigManager.GetDesktopConfig(CurrentDesktop.ParentDesktop.ScreenId).ItemSizeY), GridUnitType.Pixel); }
     }
 
     [RelayCommand()]

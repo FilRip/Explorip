@@ -28,7 +28,7 @@ public partial class MyDesktopApp : Application
         Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
         ManagedShell.Common.Helpers.ShellHelper.ToggleDesktopIcons(false);
         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-        ExploripDesktop desktop = new();
+        ExploripDesktop desktop = new(Screen.AllScreens.First(s => s.Primary));
         desktop.InitDesktopWindow();
         _listDesktop.Add(desktop);
         if (ArgumentExists("desktops"))

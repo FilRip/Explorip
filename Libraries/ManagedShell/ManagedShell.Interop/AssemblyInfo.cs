@@ -11,3 +11,4 @@
 [assembly: InternalsVisibleTo("HookFileOperations")]
 [assembly: InternalsVisibleTo("ExploripCopy")]
 [assembly: InternalsVisibleTo("ExploripComponents")]
+[assembly: InternalsVisibleTo("CoolBytes.MemoryManagement")]

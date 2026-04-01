@@ -28,23 +28,23 @@ namespace Explorip.Desktop.Windows;
 public partial class ExploripDesktop : Window
 {
     private IntPtr _handle;
-    public DesktopConfig MyDesktopConfig { get; private set; }
-
-    public ExploripDesktop() : this(Screen.PrimaryScreen) { }
+    private readonly int _screenId;
 
     public ExploripDesktop(Screen screen)
     {
         InitializeComponent();
         AssociateScreen = screen;
-        base.DataContext = new ExploripDesktopViewModel(this);
+        _screenId = ConfigManager.GetDesktopConfig(screen.DisplayNumber).NumScreen;
+
+        base.DataContext = new ExploripDesktopViewModel(this, ConfigManager.GetDesktopConfig(ScreenId).Path);
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
         {
             WindowsSettings.UseImmersiveDarkMode(GetHandle(), true);
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
-        MyDesktopConfig = ConfigManager.GetDesktopConfig(ScreenId);
-        if (!MyDesktopConfig.HideBackground)
-            Background = MyDesktopConfig.DesktopBackground;
+
+        if (!ConfigManager.GetDesktopConfig(ScreenId).HideBackground)
+            Background = ConfigManager.GetDesktopConfig(ScreenId).DesktopBackground;
 
         HwndSource.FromHwnd(new WindowInteropHelper(this).EnsureHandle()).AddHook(WndProc);
     }
@@ -54,19 +54,19 @@ public partial class ExploripDesktop : Window
         MainGrid.ColumnDefinitions.Clear();
         MainGrid.RowDefinitions.Clear();
 
-        DataContext.NbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(MyDesktopConfig.ItemSizeX * AssociateScreen.ScaleFactor);
-        DataContext.NbRows = (int)AssociateScreen.WorkingArea.Height / (int)(MyDesktopConfig.ItemSizeY * AssociateScreen.ScaleFactor);
+        DataContext.NbColumns = (int)AssociateScreen.WorkingArea.Width / (int)(ConfigManager.GetDesktopConfig(ScreenId).ItemSizeX * AssociateScreen.ScaleFactor);
+        DataContext.NbRows = (int)AssociateScreen.WorkingArea.Height / (int)(ConfigManager.GetDesktopConfig(ScreenId).ItemSizeY * AssociateScreen.ScaleFactor);
 
         for (int i = 0; i < DataContext.NbColumns; i++)
             MainGrid.ColumnDefinitions.Add(new ColumnDefinition()
             {
-                Width = new GridLength(MyDesktopConfig.ItemSizeX, GridUnitType.Pixel),
+                Width = new GridLength(ConfigManager.GetDesktopConfig(ScreenId).ItemSizeX, GridUnitType.Pixel),
             });
 
         for (int i = 0; i < DataContext.NbRows; i++)
             MainGrid.RowDefinitions.Add(new RowDefinition()
             {
-                Height = new GridLength(MyDesktopConfig.ItemSizeY, GridUnitType.Pixel),
+                Height = new GridLength(ConfigManager.GetDesktopConfig(ScreenId).ItemSizeY, GridUnitType.Pixel),
             });
     }
 
@@ -90,7 +90,7 @@ public partial class ExploripDesktop : Window
         {
             if (!MainGrid.Children.Contains(item))
                 MainGrid.Children.Add(item);
-            (int, int) position = MyDesktopConfig.GetItemPosition(item.DataContext.Name);
+            (int, int) position = ConfigManager.GetDesktopConfig(ScreenId).GetItemPosition(item.DataContext.Name);
             if (position.Item1 >= 0 && position.Item2 >= 0)
             {
                 nbColumn = position.Item1;
@@ -102,12 +102,13 @@ public partial class ExploripDesktop : Window
     }
 
     internal Screen AssociateScreen { get; set; }
-    private int ScreenId
+
+    public int ScreenId
     {
-        get { return AssociateScreen.DisplayNumber; }
+        get { return _screenId; }
     }
 
-    internal new ExploripDesktopViewModel DataContext
+    public new ExploripDesktopViewModel DataContext
     {
         get { return (ExploripDesktopViewModel)base.DataContext; }
         set { base.DataContext = value; }

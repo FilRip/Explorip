@@ -136,7 +136,10 @@ public partial class NativeMethods
         Physical = 0x400000,
         TopDown = 0x100000,
         WriteWatch = 0x200000,
-        LargePages = 0x20000000
+        LargePages = 0x20000000,
+        ResetUndo = 0x1000000,
+        CoalescePlaceHolder = 0x00000001,
+        MemPreservePlaceHolder = 0x00000002,
     }
 
     [Flags()]
@@ -688,4 +691,30 @@ public partial class NativeMethods
     [DllImport(Kernel32_DllName, SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     internal static extern bool GetPhysicallyInstalledSystemMemory(out long TotalMemoryInKilobytes);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern IntPtr VirtualAlloc(
+        IntPtr lpAddress,
+        UIntPtr dwSize,
+        AllocationTypes flAllocationType,
+        MemoryProtections flProtect);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern bool VirtualFree(
+        IntPtr lpAddress,
+        UIntPtr dwSize,
+        AllocationTypes dwFreeType);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern bool VirtualLock(
+        IntPtr lpAddress,
+        UIntPtr dwSize);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern bool VirtualUnlock(
+        IntPtr lpAddress,
+        UIntPtr dwSize);
+
+    [DllImport(Kernel32_DllName, SetLastError = true)]
+    internal static extern uint GetLargePageMinimum();
 }

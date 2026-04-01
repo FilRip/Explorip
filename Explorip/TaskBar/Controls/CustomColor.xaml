@@ -10,10 +10,12 @@
         xmlns:viewmodels="clr-namespace:Explorip.TaskBar.ViewModels"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
         Title="{x:Static constants:Localization.CUSTOM_COLOR}" Height="300" Width="400" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}">
+    
     <Window.DataContext>
         <viewmodels:CustomColorViewModel/>
     </Window.DataContext>
-    <Grid>
+    
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="32"/>

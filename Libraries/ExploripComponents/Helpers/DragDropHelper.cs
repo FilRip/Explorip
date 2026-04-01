@@ -70,7 +70,7 @@ public class DragDropHelper
             else
             {
                 uint pchEaten = 0;
-                SFGAO pdwAttributes = 0;
+                ShellFolderGetAttributeObjects pdwAttributes = 0;
                 ShellContextMenu.GetDesktopFolder().ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fullPath, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 Guid guid = typeof(IShellFolder).GUID;
                 ShellContextMenu.GetDesktopFolder().BindToObject(pPIDL, IntPtr.Zero, ref guid, out IntPtr pUnknownParentFolder);
@@ -140,13 +140,13 @@ public class DragDropHelper
         if (string.IsNullOrWhiteSpace(path))
         {
             IntPtr pidlMyComputer = IntPtr.Zero;
-            SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref pidlMyComputer);
+            SHGetSpecialFolderLocation(IntPtr.Zero, ConstSpecialItemIDList.CSIDL_DRIVES, ref pidlMyComputer);
             sfd.BindToObject(pidlMyComputer, IntPtr.Zero, guid, out IntPtr ptrMyComputer);
             IShellFolder myComputerFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrMyComputer, typeof(IShellFolder));
             return myComputerFolder;
         }
         uint pchEaten = 0;
-        SFGAO pdwAttributes = 0;
+        ShellFolderGetAttributeObjects pdwAttributes = 0;
         sfd.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, path, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
         sfd.BindToObject(pPIDL, IntPtr.Zero, ref guid, out IntPtr pUnknownParentFolder);
         return (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnknownParentFolder, typeof(IShellFolder));
@@ -159,13 +159,13 @@ public class DragDropHelper
             if (!ItemDrag(listFs, fullPath))
                 return;
 
-            MK keys = MK.RBUTTON;
+            ModifierKeys keys = ModifierKeys.RBUTTON;
             if (e.HasFlag(DragDropKeyStates.ControlKey))
-                keys |= MK.CONTROL;
+                keys |= ModifierKeys.CONTROL;
             if (e.HasFlag(DragDropKeyStates.AltKey))
-                keys |= MK.ALT;
+                keys |= ModifierKeys.ALT;
             if (e.HasFlag(DragDropKeyStates.ShiftKey))
-                keys |= MK.SHIFT;
+                keys |= ModifierKeys.SHIFT;
 
             if (ListFs.Count == 0)
                 return;

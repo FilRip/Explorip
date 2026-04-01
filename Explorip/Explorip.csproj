@@ -81,7 +81,9 @@
     <Resource Include="TaskBar\Resources\taskman11.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="DiscUtils" Version="0.16.13" />
+    <PackageReference Include="ExFat.DiscUtils" Version="0.9.16" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="5.0.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
   </ItemGroup>

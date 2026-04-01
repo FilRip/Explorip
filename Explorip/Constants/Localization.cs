@@ -201,6 +201,9 @@ public static class Localization
     public static string PINNED_JUMPLIST { get; private set; }
     public static string KILL_PROCESS { get; private set; }
     public static string ASK_KILL_PROCESS { get; private set; }
+    public static string LOAD_IMAGE_FLOPPY { get; private set; }
+    public static string LOAD_IMAGE_ISO { get; private set; }
+    public static string LOAD_IMAGE_DISK { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -392,6 +395,9 @@ public static class Localization
         PINNED_JUMPLIST = Load("starttiledata.dll", 2000, "Pinned");
         KILL_PROCESS = Load("taskmgr.exe", 32423, "Kill the process");
         ASK_KILL_PROCESS = Load("taskmgr.exe", 32421, "Do you want to terminate %s ?");
+        LOAD_IMAGE_FLOPPY = Load("VMMS.exe", 16160, "Floppy image");
+        LOAD_IMAGE_DISK = Load("VMMS.exe", 16163, "Disk image");
+        LOAD_IMAGE_ISO = Load("VMMS.exe", 16163, "ISO image");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

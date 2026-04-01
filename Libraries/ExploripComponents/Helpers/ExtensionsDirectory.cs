@@ -92,12 +92,12 @@ public static class ExtensionsDirectory
         IShellFolder sfDesktop = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrDesktop, typeof(IShellFolder));
         IShellFolder sfRecycledBin;
         uint pch = 0;
-        SFGAO sfGao = SFGAO.FOLDER;
+        ShellFolderGetAttributeObjects sfGao = ShellFolderGetAttributeObjects.FOLDER;
         sfDesktop.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, rbRoot, ref pch, out IntPtr pidl, ref sfGao);
         Guid isf = typeof(IShellFolder).GUID;
         sfDesktop.BindToObject(pidl, IntPtr.Zero, ref isf, out IntPtr ptrRecycledBin);
         sfRecycledBin = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrRecycledBin, typeof(IShellFolder));
-        sfRecycledBin.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.INCLUDEHIDDEN, out IntPtr enumIDList);
+        sfRecycledBin.EnumObjects(IntPtr.Zero, ShConstTypes.FOLDERS | ShConstTypes.INCLUDEHIDDEN, out IntPtr enumIDList);
         IEnumIDList itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(enumIDList, typeof(IEnumIDList));
         while (itemsEnum.Next(1, out IntPtr pidlItem, out uint fetch) == 0 && fetch == 1)
         {
@@ -105,7 +105,7 @@ public static class ExtensionsDirectory
             SHGetFileInfo(pidlItem, EFileAttributes.DIRECTORY, ref fi, (uint)Marshal.SizeOf(fi), ShGetFileInfos.PIDL | ShGetFileInfos.DisplayName);
             if (fi.szDisplayName == localizedRecycleName)
             {
-                ret = sfRecycledBin.GetDisplayNameOf(pidlItem, SHGDN.FORPARSING);
+                ret = sfRecycledBin.GetDisplayNameOf(pidlItem, SHGetDisplayNames.FORPARSING);
                 break;
             }
         }
@@ -173,7 +173,7 @@ public static class ExtensionsDirectory
         return 0;
     }
 
-    public static string GetDisplayNameOf(this IShellFolder sf, IntPtr pidl, SHGDN flags)
+    public static string GetDisplayNameOf(this IShellFolder sf, IntPtr pidl, SHGetDisplayNames flags)
     {
         IntPtr ptrName = IntPtr.Zero;
         string ret = "";

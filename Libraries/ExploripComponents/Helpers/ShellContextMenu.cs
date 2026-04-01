@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -29,6 +30,8 @@ namespace ExploripComponents.Helpers;
 /// <summary>Default constructor</summary>
 public class ShellContextMenu(WpfExplorerViewModel viewModel)
 {
+    private const int MAX_PATH = 260;
+
     #region Fields
 
     private IntPtr _pMenu = IntPtr.Zero, _contextMenuPtr = IntPtr.Zero, _contextMenu2Ptr = IntPtr.Zero, _contextMenu3Ptr = IntPtr.Zero;
@@ -221,9 +224,9 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             lpVerb = new IntPtr(nCmd),
             lpDirectoryW = _strParentFolder,
             lpDirectory = _strParentFolder,
-            fMask = CMIC.UNICODE | CMIC.PTINVOKE |
-                (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? CMIC.CONTROL_DOWN : 0) |
-                (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? CMIC.SHIFT_DOWN : 0),
+            fMask = ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
+                (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
+                (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
             ptInvoke = new Point((long)pointInvoke.X, (long)pointInvoke.Y),
             nShow = WindowShowStyle.ShowNormal,
             hwnd = _viewModel.CurrentControl.Handle,
@@ -261,14 +264,19 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                     return;
 
                 uint pchEaten = 0;
-                SFGAO pdwAttributes = 0;
+                ShellFolderGetAttributeObjects pdwAttributes = 0;
 
                 // Get the PIDL for the folder file is in
                 int nResult = desktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 if (nResult != (int)HResult.SUCCESS)
                     return;
 
-                string strFolder = desktopFolder.GetDisplayNameOf(pPIDL, SHGDN.FORPARSING);
+                IntPtr pStrRet = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
+                Marshal.WriteInt32(pStrRet, 0, 0);
+                desktopFolder.GetDisplayNameOf(pPIDL, SHGetDisplayNames.FORPARSING, pStrRet);
+                StringBuilder strFolder = new(MAX_PATH);
+                StrRetToBuf(pStrRet, pPIDL, strFolder, MAX_PATH);
+                Marshal.FreeCoTaskMem(pStrRet);
                 _strParentFolder = strFolder.ToString();
 
                 // Get the IShellFolder for folder
@@ -307,11 +315,11 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         tempPidl = IntPtr.Zero;
 
         if (RecycledBin)
-            SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_BITBUCKET, ref tempPidl);
+            SHGetSpecialFolderLocation(IntPtr.Zero, ConstSpecialItemIDList.CSIDL_BITBUCKET, ref tempPidl);
         else if (NetworkNeighbohood)
-            SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_NETWORK, ref tempPidl);
+            SHGetSpecialFolderLocation(IntPtr.Zero, ConstSpecialItemIDList.CSIDL_NETWORK, ref tempPidl);
         else
-            SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref tempPidl);
+            SHGetSpecialFolderLocation(IntPtr.Zero, ConstSpecialItemIDList.CSIDL_DRIVES, ref tempPidl);
 
         SHGetFileInfo(tempPidl, 0, ref info, (uint)Marshal.SizeOf(info), ShGetFileInfos.PIDL | ShGetFileInfos.DisplayName | ShGetFileInfos.TypeName);
 
@@ -321,7 +329,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
         {
             _parentFolder = GetDesktopFolder();
 
-            if (_parentFolder.EnumObjects(winHandle, SHCONTF.FOLDERS | SHCONTF.INCLUDEHIDDEN, out folderEnumPtr) == (int)HResult.SUCCESS)
+            if (_parentFolder.EnumObjects(winHandle, ShConstTypes.FOLDERS | ShConstTypes.INCLUDEHIDDEN, out folderEnumPtr) == (int)HResult.SUCCESS)
             {
                 folderEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(folderEnumPtr, typeof(IEnumIDList));
                 while (folderEnum.Next(1, out IntPtr pidlSubItem, out uint celtFetched) == (int)HResult.SUCCESS && celtFetched == 1)
@@ -336,7 +344,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
                         string txt = "";
                         txt = _parentFolder.GetDisplayNameOf(
                                         pidlSubItem,
-                                        SHGDN.INFOLDER);
+                                        SHGetDisplayNames.INFOLDER);
                         if (txt == specialName)
                         {
                             _parentFolder = (IShellFolder)Marshal.GetObjectForIUnknown(shellFolderPtr);
@@ -388,7 +396,7 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
             {
                 // Get the file relative to folder
                 uint pchEaten = 0;
-                SFGAO pdwAttributes = 0;
+                ShellFolderGetAttributeObjects pdwAttributes = 0;
                 int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, RecycledBin ? fi.FullName : fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
                 if (nResult != (int)HResult.SUCCESS)
                 {
@@ -421,14 +429,14 @@ public class ShellContextMenu(WpfExplorerViewModel viewModel)
 
         // Get the file relative to folder
         uint pchEaten = 0;
-        SFGAO pdwAttributes = 0;
+        ShellFolderGetAttributeObjects pdwAttributes = 0;
         int nResult = _parentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, dirInfo.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
         if (nResult != (int)HResult.SUCCESS && Root)
         {
             if (RecycledBin)
-                nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_BITBUCKET, ref pPIDL);
+                nResult = SHGetSpecialFolderLocation(IntPtr.Zero, ConstSpecialItemIDList.CSIDL_BITBUCKET, ref pPIDL);
             else
-                nResult = SHGetSpecialFolderLocation(IntPtr.Zero, CSIDL.CSIDL_DRIVES, ref pPIDL);
+                nResult = SHGetSpecialFolderLocation(IntPtr.Zero, ConstSpecialItemIDList.CSIDL_DRIVES, ref pPIDL);
         }
         if (pPIDL != IntPtr.Zero && nResult == (int)HResult.SUCCESS)
         {

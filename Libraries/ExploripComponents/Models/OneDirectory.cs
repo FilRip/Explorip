@@ -142,19 +142,19 @@ public partial class OneDirectory : OneFileSystem
                             NativeMethods.SHGetDesktopFolder(out IntPtr pidl);
                             IShellFolder desktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidl, typeof(IShellFolder));
                             Marshal.Release(pidl);
-                            NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_NETWORK, ref pidl);
+                            NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.ConstSpecialItemIDList.CSIDL_NETWORK, ref pidl);
                             desktopFolder.BindToObject(pidl, IntPtr.Zero, ref guidSf, out IntPtr ptrsh);
                             Marshal.ReleaseComObject(desktopFolder);
                             networkShellFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(ptrsh, typeof(IShellFolder));
                             Marshal.Release(ptrsh);
                             if (networkShellFolder != null)
                             {
-                                networkShellFolder.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS | SHCONTF.INCLUDEHIDDEN | SHCONTF.NETPRINTERSRCH, out IntPtr data);
+                                networkShellFolder.EnumObjects(IntPtr.Zero, ShConstTypes.FOLDERS | ShConstTypes.NONFOLDERS | ShConstTypes.INCLUDEHIDDEN | ShConstTypes.NETPRINTERSRCH, out IntPtr data);
                                 IEnumIDList itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(data, typeof(IEnumIDList));
                                 while (itemsEnum.Next(1, out IntPtr subItemPtr, out uint fetch) == 0 && fetch == 1)
                                 {
                                     IntPtr absolutePidl = NativeMethods.ILCombine(pidl, subItemPtr);
-                                    string name = networkShellFolder.GetDisplayNameOf(subItemPtr, SHGDN.NORMAL);
+                                    string name = networkShellFolder.GetDisplayNameOf(subItemPtr, SHGetDisplayNames.NORMAL);
                                     if (!string.IsNullOrWhiteSpace(name))
                                         Application.Current.Dispatcher.Invoke(() => _networkItems.Add(new OneFile(name, this, absolutePidl, subItemPtr)));
 
@@ -190,11 +190,11 @@ public partial class OneDirectory : OneFileSystem
                     string recycledBinFullPath = GetRootParent().MainViewModel!.FullPathRecycledBin!;
                     NativeMethods.SHGetDesktopFolder(out pidlDesktop);
                     sfDesktop = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pidlDesktop, typeof(IShellFolder));
-                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_BITBUCKET, ref pidlRecycledBin);
+                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.ConstSpecialItemIDList.CSIDL_BITBUCKET, ref pidlRecycledBin);
                     Guid guidSF = typeof(IShellFolder2).GUID;
                     sfDesktop.BindToObject(pidlRecycledBin, IntPtr.Zero, ref guidSF, out IntPtr ptrRecycledBin);
                     sfRecycledBin = (IShellFolder2)Marshal.GetTypedObjectForIUnknown(ptrRecycledBin, typeof(IShellFolder2));
-                    sfRecycledBin.EnumObjects(IntPtr.Zero, SHCONTF.FOLDERS | SHCONTF.NONFOLDERS | SHCONTF.INCLUDEHIDDEN, out enumIDList);
+                    sfRecycledBin.EnumObjects(IntPtr.Zero, ShConstTypes.FOLDERS | ShConstTypes.NONFOLDERS | ShConstTypes.INCLUDEHIDDEN, out enumIDList);
                     itemsEnum = (IEnumIDList)Marshal.GetTypedObjectForIUnknown(enumIDList, typeof(IEnumIDList));
                     while (itemsEnum.Next(1, out IntPtr pidlItem, out uint fetch) == 0 && fetch == 1)
                     {
@@ -563,7 +563,7 @@ public partial class OneDirectory : OneFileSystem
                 else if (_specialFolder == Environment.SpecialFolder.MyComputer)
                 {
                     IntPtr pidl = IntPtr.Zero;
-                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
+                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.ConstSpecialItemIDList.CSIDL_DRIVES, ref pidl);
                     if (pidl != IntPtr.Zero)
                     {
                         IntPtr hIcon = IconHelper.GetIconByPidl(pidl, (vm.ViewDetails ? IconSize.Small : vm.CurrentIconSize), out IntPtr hOverlay);
@@ -626,7 +626,7 @@ public partial class OneDirectory : OneFileSystem
                 else if (_specialFolder == Environment.SpecialFolder.MyComputer)
                 {
                     IntPtr pidl = IntPtr.Zero;
-                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.CSIDL.CSIDL_DRIVES, ref pidl);
+                    NativeMethods.SHGetSpecialFolderLocation(IntPtr.Zero, NativeMethods.ConstSpecialItemIDList.CSIDL_DRIVES, ref pidl);
                     if (pidl != IntPtr.Zero)
                     {
                         IntPtr hIcon = IconHelper.GetIconByPidl(pidl, IconSize.Small, out IntPtr hOverlay);

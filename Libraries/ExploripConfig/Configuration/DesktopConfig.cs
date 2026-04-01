@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Diagnostics;
+using System.Windows.Media;
 
 using ExploripConfig.Helpers;
 
@@ -13,6 +14,9 @@ public class DesktopConfig
     private const string ConfigItemSizeY = "ItemSizeY";
     private const string ConfigHideBackground = "HideBackground";
     private const string ConfigBackgroundColor = "BackgroundColor";
+    private const string ConfigPath = "Path";
+    private const string ConfigShowCommonDesktop = "ShowCommonDesktop";
+    private const string ConfigShowCommonIcon = "ShowCommonIcons";
     #endregion
 
     private RegistryKey _registryDesktop;
@@ -28,9 +32,9 @@ public class DesktopConfig
         UniqueId = uniqueId;
 
         _registryDesktop = rootDesktop.CreateSubKey($"DISPLAY{numScreen}", true);
-
         if (allowWrite && _registryDesktop != null)
         {
+            _registryDesktop.CreateSubKey("IconsPosition");
             if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue("", "").ToString()))
                 _registryDesktop.SetValue("", uniqueId);
             if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigItemSizeX, "").ToString()))
@@ -99,17 +103,52 @@ public class DesktopConfig
 
     public (int, int) GetItemPosition(string itemName)
     {
-        string pos = _registryDesktop.GetValue(itemName, "")?.ToString();
-        if (!string.IsNullOrWhiteSpace(pos))
+        if (!string.IsNullOrWhiteSpace(itemName))
         {
-            string[] splitter = pos.Split(',');
-            return (int.Parse(splitter[0]), int.Parse(splitter[1]));
+            string pos = _registryDesktop.OpenSubKey("IconsPosition", true).GetValue(itemName, "")?.ToString();
+            if (!string.IsNullOrWhiteSpace(pos))
+            {
+                if (pos.IndexOf(',') < 0)
+                    Debugger.Break();
+                string[] splitter = pos.Split(',');
+                return (int.Parse(splitter[0]), int.Parse(splitter[1]));
+            }
         }
         return (-1, -1);
     }
 
     public void SetItemPosition(string itemName, (int, int) position)
     {
-        _registryDesktop.SetValue(itemName, $"{position.Item1},{position.Item2}");
+        _registryDesktop.OpenSubKey("IconsPosition", true).SetValue(itemName, $"{position.Item1},{position.Item2}");
+    }
+
+    public string Path
+    {
+        get { return _registryDesktop.GetValue(ConfigPath, "").ToString(); }
+        set
+        {
+            if (Path != value && AllowWrite)
+                _registryDesktop.SetValue(ConfigPath, value);
+        }
+    }
+
+    public bool ShowCommonDesktop
+    {
+        get { return _registryDesktop.ReadBoolean(ConfigShowCommonDesktop, true); }
+        set
+        {
+            if (ShowCommonDesktop != value && AllowWrite)
+                _registryDesktop.SetValue(ConfigShowCommonDesktop, value.ToString());
+        }
+    }
+
+    public bool ShowCommonIcons
+    {
+        get { return _registryDesktop.ReadBoolean(ConfigShowCommonIcon, true); }
+        set
+        {
+            if (ShowCommonIcons != value && AllowWrite)
+                _registryDesktop.SetValue(ConfigShowCommonIcon, value.ToString());
+        }
     }
 }

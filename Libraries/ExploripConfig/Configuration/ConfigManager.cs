@@ -273,7 +273,7 @@ public static class ConfigManager
             return dtc;
         foreach (string subkey in _registryRootDesktop.GetSubKeyNames().Where(s => s.ToLower().StartsWith("display")))
         {
-            string uniqueId = _registryRootDesktop.OpenSubKey(subkey).GetValue("", "").ToString();
+            string uniqueId = _registryRootDesktop.OpenSubKey(subkey).GetValue("")?.ToString();
             if (uniqueId == id)
             {
                 dtc = new();
@@ -301,7 +301,7 @@ public static class ConfigManager
         return GetDesktopConfig(Screen.AllScreens.Single(s => s.DisplayNumber == numScreen).Id);
     }
 
-    public static int GetDesktopScreen(string itemName)
+    public static int GetDesktopScreenOfIcon(string itemName)
     {
         foreach (DesktopConfig dc in _listDesktop)
         {

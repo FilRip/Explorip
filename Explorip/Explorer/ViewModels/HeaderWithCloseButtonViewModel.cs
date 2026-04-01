@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.Explorer.Controls;
 using Explorip.Explorer.Windows;
 
+using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
@@ -13,6 +14,8 @@ namespace Explorip.Explorer.ViewModels;
 
 public partial class HeaderWithCloseButtonViewModel(HeaderWithCloseButton control) : ObservableObject()
 {
+    private const string StrConHost = "conhost.exe";
+
     #region Fields
 
     private readonly HeaderWithCloseButton _control = control;
@@ -79,28 +82,28 @@ public partial class HeaderWithCloseButtonViewModel(HeaderWithCloseButton contro
     [RelayCommand()]
     private void NewConsoleTab()
     {
-        _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "conhost.exe", Arguments = "cmd.exe" }));
+        _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = StrConHost, Arguments = "cmd.exe" }));
         _control.MyTabControl.SelectedIndex = _control.MyTabControl.Items.Count - 2;
     }
 
     [RelayCommand()]
     private void NewPowerShellTab()
     {
-        _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "conhost.exe", Arguments = "powershell.exe" }));
+        _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = StrConHost, Arguments = "powershell.exe" }));
         _control.MyTabControl.SelectedIndex = _control.MyTabControl.Items.Count - 2;
     }
 
     [RelayCommand()]
     private void NewAdminConsoleTab()
     {
-        _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "conhost.exe", Arguments = "cmd.exe", Verb = "runas", UseShellExecute = true }));
+        _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = StrConHost, Arguments = "cmd.exe", Verb = "runas", UseShellExecute = true }));
         _control.MyTabControl.SelectedIndex = _control.MyTabControl.Items.Count - 2;
     }
 
     [RelayCommand()]
     private void NewAdminPowerShellTab()
     {
-        _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = "conhost.exe", Arguments = "powershell.exe", Verb = "runas", UseShellExecute = true }));
+        _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemConsoleCommand(new ProcessStartInfo() { FileName = StrConHost, Arguments = "powershell.exe", Verb = "runas", UseShellExecute = true }));
         _control.MyTabControl.SelectedIndex = _control.MyTabControl.Items.Count - 2;
     }
 
@@ -108,6 +111,26 @@ public partial class HeaderWithCloseButtonViewModel(HeaderWithCloseButton contro
     private void NewEmbeddedWindowTab()
     {
         _control.MyTabControl.AddNewTab(new TabItemWindowEmbedded());
+    }
+
+    [RelayCommand()]
+    private void NewImageFloppyTab(string param)
+    {
+        OpenFileDialog dialog = new();
+        if (param == "floppy")
+        {
+            dialog.Filter = "*.vfd";
+        }
+        else if (param == "hd")
+        {
+            dialog.Filter = "*.vhd;*.vhdx;*.vmdk;*.vdi;*.xfs";
+        }
+        else if (param == "iso")
+        {
+            dialog.Filter = "*.iso";
+        }
+        if (dialog.ShowDialog() == true)
+            _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemFileSystemManagement(dialog.FileName));
     }
 
     #endregion

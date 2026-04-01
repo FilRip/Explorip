@@ -83,6 +83,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.JumpList", "Libra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.InteropWinRT", "Libraries\CoolBytes.InteropWinRT\CoolBytes.InteropWinRT.csproj", "{3051CDCD-1C06-4BF8-BD7E-2844A6FB0055}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.MemoryManagement", "CoolBytes.MemoryManagement\CoolBytes.MemoryManagement.csproj", "{17C11672-8B88-4044-816A-B88FA94765D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploripComponents", "Libraries\ExploripComponents\ExploripComponents.csproj", "{631D3FFD-1AE2-7F12-E68D-4A3953C72430}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -217,6 +221,14 @@ Global
 		{3051CDCD-1C06-4BF8-BD7E-2844A6FB0055}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3051CDCD-1C06-4BF8-BD7E-2844A6FB0055}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3051CDCD-1C06-4BF8-BD7E-2844A6FB0055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17C11672-8B88-4044-816A-B88FA94765D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17C11672-8B88-4044-816A-B88FA94765D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17C11672-8B88-4044-816A-B88FA94765D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17C11672-8B88-4044-816A-B88FA94765D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{631D3FFD-1AE2-7F12-E68D-4A3953C72430}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{631D3FFD-1AE2-7F12-E68D-4A3953C72430}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{631D3FFD-1AE2-7F12-E68D-4A3953C72430}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{631D3FFD-1AE2-7F12-E68D-4A3953C72430}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -259,6 +271,8 @@ Global
 		{009A2477-B033-49AB-B3CA-A37130C08551} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{CC51B14A-0D1A-4033-8134-86662BD543A4} = {47504A38-602C-43A1-989B-925F53E447E1}
 		{3051CDCD-1C06-4BF8-BD7E-2844A6FB0055} = {02E20678-9AD3-4370-904E-02D800F25B35}
+		{17C11672-8B88-4044-816A-B88FA94765D6} = {02E20678-9AD3-4370-904E-02D800F25B35}
+		{631D3FFD-1AE2-7F12-E68D-4A3953C72430} = {02E20678-9AD3-4370-904E-02D800F25B35}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}

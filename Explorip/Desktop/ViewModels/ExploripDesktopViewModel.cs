@@ -23,7 +23,7 @@ using Securify.ShellLink;
 
 namespace Explorip.Desktop.ViewModels;
 
-internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
+public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 {
     private readonly ExploripDesktop _parentDesktop;
     private readonly FileSystemWatcher _watcher;
@@ -60,17 +60,17 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         _parentDesktop.MainGrid.Children.Clear();
         RefreshSystemIcons();
         RefreshDesktopContent(DesktopPath);
-        RefreshDesktopContent(Environment.SpecialFolder.CommonDesktopDirectory.FullPath());
+        if (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowCommonDesktop)
+            RefreshDesktopContent(Environment.SpecialFolder.CommonDesktopDirectory.FullPath());
     }
 
     private void RefreshSystemIcons()
     {
-        foreach (OneDesktopItemViewModel vm in Configuration.RegistrySettings.ListDesktopSystemIcons())
+        foreach (OneDesktopItemViewModel vm in Configuration.RegistrySettings.ListDesktopSystemIcons(withCommon: ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowCommonIcons))
         {
-            int numScreenSave = ConfigManager.GetDesktopScreen(vm.Name);
-            if (numScreenSave < 0 || numScreenSave == _parentDesktop.AssociateScreen.DisplayNumber || !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreenSave))
+            int numScreenSave = ConfigManager.GetDesktopScreenOfIcon(vm.Name);
+            if (numScreenSave < 0 || numScreenSave == _parentDesktop.ScreenId || !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreenSave))
             {
-
                 if (vm.Icon == null)
                     vm.GetIcon();
                 vm.CurrentDesktop = this;
@@ -89,8 +89,8 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         OneDesktopItemViewModel item;
         foreach (ShellObject filename in desktop.Where(filename => filename.Name.Trim().ToLower() != "desktop.ini"))
         {
-            int numScreenSave = ConfigManager.GetDesktopScreen(filename.Name);
-            if (numScreenSave < 0 || numScreenSave == _parentDesktop.AssociateScreen.DisplayNumber || !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreenSave))
+            int numScreen = ConfigManager.GetDesktopScreenOfIcon(filename.Name);
+            if (numScreen < 0 || numScreen == _parentDesktop.ScreenId || !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreen))
             {
                 item = new()
                 {
@@ -196,9 +196,9 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
             if (listItems.Length == 0)
             {
                 if (ListItems().Exists(i => i.DataContext.IsSelected))
-                    contextMenu.ShowContextMenu(ListItems()[0].DataContext.FullPath, position);
+                    contextMenu.ShowContextMenu(ListItems().First(i => i.DataContext.IsSelected).DataContext.FullPath, position);
                 else
-                    contextMenu.ShowContextMenu(new DirectoryInfo(DesktopPath), position);
+                    contextMenu.ShowContextMenu("shell:::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", position);
             }
             else
                 contextMenu.ShowContextMenu(listItems, position);
@@ -210,16 +210,17 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     {
         if (args is KeyEventArgs e)
         {
+            int x = _currentCellX, y = _currentCellY;
             if (e.Key == Key.PageDown && Keyboard.IsKeyDown(Key.RightCtrl))
                 Quit();
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            else if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
                 if (e.Key == Key.A)
                     UnSelectAll(true);
-                return;
             }
-            int x = _currentCellX, y = _currentCellY;
-            if (e.Key == Key.Up && y > 0)
+            else if (e.Key == Key.F5)
+                RefreshDesktopContent();
+            else if (e.Key == Key.Up && y > 0)
                 y--;
             else if (e.Key == Key.Down && y < NbRows - 1)
                 y++;
@@ -258,8 +259,8 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     internal void Drop(DragEventArgs e)
     {
         double dpi = _parentDesktop.AssociateScreen.ScaleFactor;
-        int x = (int)(e.GetPosition(_parentDesktop).X / (_parentDesktop.MyDesktopConfig.ItemSizeX * dpi));
-        int y = (int)(e.GetPosition(_parentDesktop).Y / (_parentDesktop.MyDesktopConfig.ItemSizeY * dpi));
+        int x = (int)(e.GetPosition(_parentDesktop).X / (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ItemSizeX * dpi));
+        int y = (int)(e.GetPosition(_parentDesktop).Y / (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ItemSizeY * dpi));
         List<OneDesktopItem> listItems = ListItems();
         OneDesktopItem dest = listItems.Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
         if (e.Data is DataObject && e.Data.GetDataPresent("FileDrop"))
@@ -291,7 +292,7 @@ internal partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                         {
                             Grid.SetColumn(item, x);
                             Grid.SetRow(item, y);
-                            _parentDesktop.MyDesktopConfig.SetItemPosition(item.Name, (x, y));
+                            ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SetItemPosition(item.DataContext.Name, (x, y));
                         }
                     }
                     else

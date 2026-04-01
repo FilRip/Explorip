@@ -34,6 +34,10 @@
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static constants:Localization.REGISTRY_EDITOR}" Name="NewRegistryEditorTab" Command="{Binding NewRegistryEditorTabCommand}"/>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
+            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_FLOPPY}" Name="NewImageFloppyTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="floppy"/>
+            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_DISK}" Name="NewImageDiskTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="hd"/>
+            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_ISO}" Name="NewImageIsoTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="iso"/>
+            <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="Embedded Window" Name="NewEmbeddedWindowTab" Command="{Binding NewEmbeddedWindowTabCommand}"/>
         </ContextMenu>
     </UserControl.ContextMenu>

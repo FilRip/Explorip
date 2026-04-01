@@ -200,7 +200,7 @@ public abstract partial class OneFileSystem(string fullPath, string displayText,
                         if (ptrSi != IntPtr.Zero)
                         {
                             IShellItemImageFactory factory = (IShellItemImageFactory)Marshal.GetObjectForIUnknown(ptrSi);
-                            factory.GetImage(new ManagedShell.ShellFolders.Interfaces.Size((int)vm.IconSizePx.Value, (int)vm.IconSizePx.Value), ManagedShell.ShellFolders.Enums.SIIGBF.THUMBNAILONLY, out IntPtr hIcon);
+                            factory.GetImage(new ManagedShell.ShellFolders.Interfaces.Size((int)vm.IconSizePx.Value, (int)vm.IconSizePx.Value), ManagedShell.ShellFolders.Enums.ShellItemImageGetBitmaps.THUMBNAILONLY, out IntPtr hIcon);
                             if (hIcon != IntPtr.Zero)
                             {
                                 _thumbnail = IconImageConverter.GetImageFromHBitmap(hIcon);
