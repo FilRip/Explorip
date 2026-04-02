@@ -19,6 +19,7 @@ internal class ShellContextMenu : NativeWindow
     private IContextMenu3 _oContextMenu3;
     private IShellFolder _oDesktopFolder;
     private IShellFolder _oParentFolder;
+    private IShellView _backgroundShellView;
     private IntPtr[] _arrPIDLs;
     private string _strParentFolder;
 
@@ -132,6 +133,11 @@ internal class ShellContextMenu : NativeWindow
             Marshal.ReleaseComObject(_oParentFolder);
             _oParentFolder = null;
         }
+        if (_backgroundShellView != null)
+        {
+            Marshal.ReleaseComObject(_backgroundShellView);
+            _backgroundShellView = null;
+        }
         if (_arrPIDLs != null)
         {
             FreePIDLs(_arrPIDLs);
@@ -193,12 +199,31 @@ internal class ShellContextMenu : NativeWindow
 
     private IntPtr GetPIDL(string shell)
     {
-        uint pch = 0;
-        GetDesktopFolder().ParseDisplayName(IntPtr.Zero, IntPtr.Zero, shell, ref pch, out IntPtr pidl, 0);
-        _oParentFolder = GetDesktopFolder();
-        Guid guidCM = typeof(IContextMenu).GUID;
-        _oParentFolder.GetUIObjectOf(IntPtr.Zero, 1, [pidl], ref guidCM, IntPtr.Zero, out IntPtr cm);
-        _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(cm, typeof(IContextMenu));
+        IntPtr pidl = IntPtr.Zero;
+        if (shell.Contains("B4BFCC3A-DB2C-424C-B029-7FE99A87C641", StringComparison.OrdinalIgnoreCase))
+        {
+            _oParentFolder = GetDesktopFolder();
+            _oParentFolder.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
+            _backgroundShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
+            object opContextMenu = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
+
+            if (opContextMenu != null)
+            {
+                _oContextMenu = (IContextMenu)opContextMenu;
+                _oContextMenu2 = (IContextMenu2)opContextMenu;
+                _oContextMenu3 = (IContextMenu3)opContextMenu;
+            }
+
+        }
+        else
+        {
+            uint pch = 0;
+            GetDesktopFolder().ParseDisplayName(IntPtr.Zero, IntPtr.Zero, shell, ref pch, out pidl, 0);
+            _oParentFolder = GetDesktopFolder();
+            Guid guidCM = typeof(IContextMenu).GUID;
+            _oParentFolder.GetUIObjectOf(IntPtr.Zero, 1, [pidl], ref guidCM, IntPtr.Zero, out IntPtr cm);
+            _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(cm, typeof(IContextMenu));
+        }
         return pidl;
     }
 
@@ -270,11 +295,11 @@ internal class ShellContextMenu : NativeWindow
         ShowContextMenu(pointScreen, true);
     }
 
-    internal void ShowContextMenu(string shell, Point pointScreen)
+    internal void ShowContextMenu(string shell, Point pointScreen, bool background = false)
     {
         ReleaseAll();
         _arrPIDLs = [GetPIDL(shell)];
-        ShowContextMenu(pointScreen);
+        ShowContextMenu(pointScreen, background);
     }
 
     private void ShowContextMenu(Point pointScreen, bool background = false)

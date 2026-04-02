@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Windows.Media;
 
 using ExploripConfig.Helpers;
@@ -17,6 +18,12 @@ public class DesktopConfig
     private const string ConfigPath = "Path";
     private const string ConfigShowCommonDesktop = "ShowCommonDesktop";
     private const string ConfigShowCommonIcon = "ShowCommonIcons";
+    private const string ConfigShowAllIcons = "ShowAllIcons";
+    private const string ConfigBorderRadius = "BorderCornerRadius";
+    private const string ConfigBorderColor = "BorderColor";
+    private const string ConfigBorderSize = "BorderSize";
+    private const string ConfigSelectedItemBackgroundColor = "SelectedItemBackgroundColor";
+    private const string ConfigMouseOverBackgroundColor = "MouseOverItemBackgroundColor";
     #endregion
 
     private RegistryKey _registryDesktop;
@@ -45,6 +52,10 @@ public class DesktopConfig
                 _registryDesktop.SetValue(ConfigHideBackground, "True");
             if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigBackgroundColor, "").ToString()))
                 _registryDesktop.SetValue(ConfigBackgroundColor, "255,0,0,0");
+            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigMouseOverBackgroundColor, "").ToString()))
+                _registryDesktop.SetValue(ConfigMouseOverBackgroundColor, "128,63,63,63");
+            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigSelectedItemBackgroundColor, "").ToString()))
+                _registryDesktop.SetValue(ConfigSelectedItemBackgroundColor, "255,63,63,63");
         }
     }
 
@@ -149,6 +160,71 @@ public class DesktopConfig
         {
             if (ShowCommonIcons != value && AllowWrite)
                 _registryDesktop.SetValue(ConfigShowCommonIcon, value.ToString());
+        }
+    }
+
+    public bool ShowAllIcons
+    {
+        get { return _registryDesktop.ReadBoolean(ConfigShowAllIcons, false); }
+        set
+        {
+            if (ShowAllIcons != value && AllowWrite)
+                _registryDesktop.SetValue(ConfigShowAllIcons, value.ToString());
+        }
+    }
+
+    internal bool ShowAllIconsPresent
+    {
+        get { return !string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigShowAllIcons, "")?.ToString()); }
+    }
+
+    public double BorderRadius
+    {
+        get { return _registryDesktop.ReadDouble(ConfigBorderRadius); }
+        set
+        {
+            if (BorderRadius != value && AllowWrite)
+                _registryDesktop.SetValue(ConfigBorderRadius, value.ToString(CultureInfo.InvariantCulture));
+        }
+    }
+
+    public double BorderSize
+    {
+        get { return _registryDesktop.ReadDouble(ConfigBorderSize); }
+        set
+        {
+            if (BorderRadius != value && AllowWrite)
+                _registryDesktop.SetValue(ConfigBorderRadius, value.ToString(CultureInfo.InvariantCulture));
+        }
+    }
+
+    public Color BorderColor
+    {
+        get { return _registryDesktop.ReadColor(ConfigBorderColor, Color.FromArgb(0, 0, 0, 0)); }
+        set
+        {
+            if (AllowWrite)
+                _registryDesktop.SetValue(ConfigBorderColor, $"{value.A},{value.R},{value.G},{value.B}");
+        }
+    }
+
+    public Color SelectedItemBackgroundColor
+    {
+        get { return _registryDesktop.ReadColor(ConfigSelectedItemBackgroundColor, Color.FromArgb(0, 0, 0, 0)); }
+        set
+        {
+            if (AllowWrite)
+                _registryDesktop.SetValue(ConfigSelectedItemBackgroundColor, $"{value.A},{value.R},{value.G},{value.B}");
+        }
+    }
+
+    public Color MouseOverBackgroundColor
+    {
+        get { return _registryDesktop.ReadColor(ConfigMouseOverBackgroundColor, Color.FromArgb(0, 0, 0, 0)); }
+        set
+        {
+            if (AllowWrite)
+                _registryDesktop.SetValue(ConfigMouseOverBackgroundColor, $"{value.A},{value.R},{value.G},{value.B}");
         }
     }
 }

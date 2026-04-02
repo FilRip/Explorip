@@ -64,9 +64,9 @@ public static class ExtensionsRegistry
         try
         {
             object value = registryKey.GetValue(keyName);
-            if (value is string)
+            if (value is string str && str.IndexOf(',') >=0)
             {
-                string[] splitter = value.ToString().Split(',');
+                string[] splitter = str.Split(',');
                 if (splitter.Length == 4)
                     return Color.FromArgb(byte.Parse(splitter[0]), byte.Parse(splitter[1]), byte.Parse(splitter[2]), byte.Parse(splitter[3]));
                 else if (splitter.Length == 3)

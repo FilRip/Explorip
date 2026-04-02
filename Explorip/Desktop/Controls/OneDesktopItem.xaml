@@ -6,51 +6,37 @@
              xmlns:viewmodels="clr-namespace:Explorip.Desktop.ViewModels"
              xmlns:constants="clr-namespace:Explorip.Constants"
              xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" Focusable="True"
              d:DesignHeight="96" d:DesignWidth="96"
              KeyDown="UserControl_KeyDown">
+    
     <UserControl.DataContext>
         <viewmodels:OneDesktopItemViewModel/>
     </UserControl.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="{Binding ItemSizeX}"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding ItemSizeY}"/>
-        </Grid.ColumnDefinitions>
-        <Button MouseDoubleClick="Button_MouseDoubleClick" Click="Button_Click">
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="{x:Type Button}">
-                                <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Focusable="False">
-                                    <ContentPresenter/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
-                                    </Trigger>
-                                    <Trigger Property="IsFocused" Value="True">
-                                        <Setter Property="BorderBrush" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
-                                    </Trigger>
-                                    <Trigger Property="IsFocused" Value="False">
-                                        <Setter Property="BorderBrush" Value="Transparent"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Button.Style>
-            <StackPanel Background="{Binding BackgroundBrush}">
-                <Grid>
-                    <Image Source="{Binding Icon}" Height="{Binding IconSize}" Width="{Binding IconSize}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0"/>
-                    <Image Source="{Binding OverlayIcon}" Height="{Binding IconSize}" Width="{Binding IconSize}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0"/>
-                </Grid>
-                <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="{Binding BackgroundBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" TextWrapping="Wrap" VerticalAlignment="Bottom" TextAlignment="Center"/>
-            </StackPanel>
-        </Button>
-    </Grid>
+    
+    <Button MouseDoubleClick="Button_MouseDoubleClick" Click="Button_Click" Width="{Binding ItemSizeX}" Height="{Binding ItemSizeY}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave">
+        <Button.Style>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border BorderThickness="{Binding CurrentDesktop.BorderSize}" BorderBrush="{Binding CurrentDesktop.BorderColor}" Focusable="False" CornerRadius="{Binding CurrentDesktop.BorderRadius}"
+                                    Background="{Binding BackgroundBrush}">
+                                <ContentPresenter/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Button.Style>
+        <StackPanel Orientation="Vertical">
+            <Grid>
+                <Image Source="{Binding Icon}" Height="{Binding IconSize}" Width="{Binding IconSize}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0"/>
+                <Image Source="{Binding OverlayIcon}" Height="{Binding IconSize}" Width="{Binding IconSize}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0"/>
+            </Grid>
+            <TextBlock Text="{Binding Name}" Margin="0 5 0 0" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" TextWrapping="Wrap" TextAlignment="Center"/>
+        </StackPanel>
+    </Button>
+    
 </UserControl>

@@ -220,7 +220,7 @@ public partial class ExploripDesktop : Window
             if (diffPos.X > 16 || diffPos.Y > 16)
             {
                 _isDragging = false;
-                DataContext.StartDrag((OneDesktopItemViewModel)((FrameworkElement)Mouse.DirectlyOver).DataContext);
+                DataContext.StartDrag(((FrameworkElement)Mouse.DirectlyOver).FindControlParent<OneDesktopItem>(), e);
             }
         }
     }
@@ -274,5 +274,10 @@ public partial class ExploripDesktop : Window
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
         DataContext?.Dispose();
+    }
+
+    private void Window_GiveFeedback(object sender, GiveFeedbackEventArgs e)
+    {
+        ExploripDesktopViewModel.GiveFeedback(e);
     }
 }

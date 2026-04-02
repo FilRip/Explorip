@@ -37,4 +37,14 @@ public partial class OneDesktopItem : UserControl
         if (e.Key == Key.F2 && DataContext.CurrentDesktop.ListSelectedItem().Length == 1)
             DataContext.RenameCommand.Execute(null);
     }
+
+    private void Button_MouseEnter(object sender, MouseEventArgs e)
+    {
+        DataContext.IsMouseOver = true;
+    }
+
+    private void Button_MouseLeave(object sender, MouseEventArgs e)
+    {
+        DataContext.IsMouseOver = false;
+    }
 }

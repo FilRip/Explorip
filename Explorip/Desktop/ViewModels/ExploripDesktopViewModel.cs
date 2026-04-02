@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -31,6 +32,16 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     [ObservableProperty()]
     private int _nbColumns, _nbRows;
     private bool disposedValue;
+    [ObservableProperty()]
+    private Thickness _borderSize;
+    [ObservableProperty()]
+    private SolidColorBrush _borderColor;
+    [ObservableProperty()]
+    private CornerRadius _borderRadius;
+    [ObservableProperty()]
+    private SolidColorBrush _mouseOverColor;
+    [ObservableProperty()]
+    private SolidColorBrush _selectedColor;
 
     internal string DesktopPath { get; set; }
 
@@ -53,6 +64,13 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         _watcher.Created += Watcher_Created;
         _watcher.Deleted += Watcher_Deleted;
         _watcher.Renamed += Watcher_Renamed;
+
+        BorderSize = new Thickness(ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).BorderSize);
+        BorderColor = new SolidColorBrush(ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).BorderColor);
+        BorderRadius = new CornerRadius(ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).BorderRadius);
+
+        MouseOverColor = new SolidColorBrush(ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).MouseOverBackgroundColor);
+        SelectedColor = new SolidColorBrush(ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SelectedItemBackgroundColor);
     }
 
     internal void RefreshDesktopContent()
@@ -64,33 +82,16 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
             RefreshDesktopContent(Environment.SpecialFolder.CommonDesktopDirectory.FullPath());
     }
 
-    private void RefreshSystemIcons()
-    {
-        foreach (OneDesktopItemViewModel vm in Configuration.RegistrySettings.ListDesktopSystemIcons(withCommon: ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowCommonIcons))
-        {
-            int numScreenSave = ConfigManager.GetDesktopScreenOfIcon(vm.Name);
-            if (numScreenSave < 0 || numScreenSave == _parentDesktop.ScreenId || !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreenSave))
-            {
-                if (vm.Icon == null)
-                    vm.GetIcon();
-                vm.CurrentDesktop = this;
-                OneDesktopItem ctrl = new()
-                {
-                    DataContext = vm,
-                };
-                _parentDesktop.AddItem(ctrl);
-            }
-        }
-    }
-
     private void RefreshDesktopContent(string desktopPath)
     {
         ShellFolder desktop = (ShellFolder)ShellObject.FromParsingName(desktopPath);
         OneDesktopItemViewModel item;
         foreach (ShellObject filename in desktop.Where(filename => filename.Name.Trim().ToLower() != "desktop.ini"))
         {
-            int numScreen = ConfigManager.GetDesktopScreenOfIcon(filename.Name);
-            if (numScreen < 0 || numScreen == _parentDesktop.ScreenId || !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreen))
+            int numScreen = ConfigManager.GetDesktopScreenForIcon(filename.Name);
+            if ((numScreen < 0 && ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowAllIcons) ||
+                numScreen == _parentDesktop.ScreenId ||
+                (numScreen >=0 && !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreen)))
             {
                 item = new()
                 {
@@ -103,6 +104,27 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 OneDesktopItem ctrl = new()
                 {
                     DataContext = item,
+                };
+                _parentDesktop.AddItem(ctrl);
+            }
+        }
+    }
+
+    private void RefreshSystemIcons()
+    {
+        foreach (OneDesktopItemViewModel vm in Configuration.RegistrySettings.ListDesktopSystemIcons(withCommon: ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowCommonIcons))
+        {
+            int numScreen = ConfigManager.GetDesktopScreenForIcon(vm.Name);
+            if ((numScreen < 0 && ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowAllIcons) ||
+                numScreen == _parentDesktop.ScreenId ||
+                (numScreen >= 0 && !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreen)))
+            {
+                if (vm.Icon == null)
+                    vm.GetIcon();
+                vm.CurrentDesktop = this;
+                OneDesktopItem ctrl = new()
+                {
+                    DataContext = vm,
                 };
                 _parentDesktop.AddItem(ctrl);
             }
@@ -198,7 +220,7 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 if (ListItems().Exists(i => i.DataContext.IsSelected))
                     contextMenu.ShowContextMenu(ListItems().First(i => i.DataContext.IsSelected).DataContext.FullPath, position);
                 else
-                    contextMenu.ShowContextMenu("shell:::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", position);
+                    contextMenu.ShowContextMenu("shell:::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", position, true);
             }
             else
                 contextMenu.ShowContextMenu(listItems, position);
@@ -244,20 +266,22 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 
     #region Drag'n drop
 
-    internal void StartDrag(OneDesktopItemViewModel item)
+    internal void StartDrag(OneDesktopItem item, MouseEventArgs e)
     {
         DataObject data = new();
         List<string> listDrag = [];
         foreach (FileSystemInfo fs in ListSelectedItem())
             listDrag.Add(fs.FullName);
         if (listDrag.Count == 0)
-            listDrag.Add(item.FullPath);
+            listDrag.Add(item.DataContext.FullPath);
         data.SetData("FileDrop", listDrag.ToArray());
+        DragGhostAdorner.StartDragGhost(item, e);
         DragDrop.DoDragDrop(_parentDesktop, data, DragDropEffects.Copy | DragDropEffects.Move | DragDropEffects.Link);
     }
 
     internal void Drop(DragEventArgs e)
     {
+        DragGhostAdorner.StopDragGhost();
         double dpi = _parentDesktop.AssociateScreen.ScaleFactor;
         int x = (int)(e.GetPosition(_parentDesktop).X / (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ItemSizeX * dpi));
         int y = (int)(e.GetPosition(_parentDesktop).Y / (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ItemSizeY * dpi));
@@ -339,6 +363,13 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 }
             }
         }
+    }
+
+    internal static void GiveFeedback(GiveFeedbackEventArgs e)
+    {
+        DragGhostAdorner.UpdateDragGhost();
+        e.UseDefaultCursors = false;
+        e.Handled = true;
     }
 
     #endregion

@@ -37,6 +37,8 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
     private ImageSource _icon;
     [ObservableProperty()]
     private ImageSource _overlayIcon;
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(BackgroundBrush))]
+    private bool _isMouseOver;
 
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(BackgroundBrush))]
     private bool _isSelected;
@@ -45,7 +47,9 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
     {
         get
         {
-            return (IsSelected ? ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject : ExploripSharedCopy.Constants.Colors.TransparentColorBrush);
+#pragma warning disable S3358
+            return (IsSelected ? CurrentDesktop.SelectedColor : IsMouseOver ? CurrentDesktop.MouseOverColor : ExploripSharedCopy.Constants.Colors.TransparentColorBrush);
+#pragma warning restore S3358
         }
     }
 
@@ -74,14 +78,14 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
         }
     }
 
-    public GridLength ItemSizeX
+    public double ItemSizeX
     {
-        get { return new GridLength((CurrentDesktop == null ? IconSize : ConfigManager.GetDesktopConfig(CurrentDesktop.ParentDesktop.ScreenId).ItemSizeX), GridUnitType.Pixel); }
+        get { return CurrentDesktop == null ? IconSize : ConfigManager.GetDesktopConfig(CurrentDesktop.ParentDesktop.ScreenId).ItemSizeX; }
     }
 
-    public GridLength ItemSizeY
+    public double ItemSizeY
     {
-        get { return new GridLength((CurrentDesktop == null ? IconSize : ConfigManager.GetDesktopConfig(CurrentDesktop.ParentDesktop.ScreenId).ItemSizeY), GridUnitType.Pixel); }
+        get { return CurrentDesktop == null ? IconSize : ConfigManager.GetDesktopConfig(CurrentDesktop.ParentDesktop.ScreenId).ItemSizeY; }
     }
 
     [RelayCommand()]

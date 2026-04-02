@@ -166,11 +166,16 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigShowMemoryUsed, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigShowMemoryUsed, FalseValue);
 
+            bool checkFirstRun = true;
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
             {
                 GetTaskbarConfig(numScreen);
-                GetDesktopConfig(numScreen);
+                DesktopConfig dc = GetDesktopConfig(numScreen);
+                if (dc.ShowAllIconsPresent)
+                    checkFirstRun = false;
             }
+            if (checkFirstRun)
+                GetDesktopConfig(Screen.AllScreens.First(s => s.Primary).DisplayNumber).ShowAllIcons = true;
 
             _startMenuConfig.Init(startMenuRegistry, allowWrite);
         }
@@ -301,7 +306,7 @@ public static class ConfigManager
         return GetDesktopConfig(Screen.AllScreens.Single(s => s.DisplayNumber == numScreen).Id);
     }
 
-    public static int GetDesktopScreenOfIcon(string itemName)
+    public static int GetDesktopScreenForIcon(string itemName)
     {
         foreach (DesktopConfig dc in _listDesktop)
         {
