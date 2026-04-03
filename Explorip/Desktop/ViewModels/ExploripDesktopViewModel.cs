@@ -73,8 +73,13 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         SelectedColor = new SolidColorBrush(ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SelectedItemBackgroundColor);
     }
 
+    #region Refresh list icons
+
     internal void RefreshDesktopContent()
     {
+        if (_parentDesktop.MainGrid.Children.Count > 0)
+            foreach (OneDesktopItem item in _parentDesktop.MainGrid.Children.OfType<OneDesktopItem>())
+                item.DataContext.Dispose();
         _parentDesktop.MainGrid.Children.Clear();
         RefreshSystemIcons();
         RefreshDesktopContent(DesktopPath);
@@ -91,7 +96,7 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
             int numScreen = ConfigManager.GetDesktopScreenForIcon(filename.Name);
             if ((numScreen < 0 && ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowAllIcons) ||
                 numScreen == _parentDesktop.ScreenId ||
-                (numScreen >=0 && !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreen)))
+                (numScreen >= 0 && !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreen)))
             {
                 item = new()
                 {
@@ -128,6 +133,8 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 };
                 _parentDesktop.AddItem(ctrl);
             }
+            else
+                vm.Dispose();
         }
     }
 
@@ -137,9 +144,12 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         {
             try
             {
-                OneDesktopItem item = ListItems().Find(i => i.DataContext.Name == e.Name);
+                OneDesktopItem item = ListItems().Find(i => i.DataContext.Filename == e.Name);
                 if (item != null)
+                {
                     _parentDesktop.MainGrid.Children.Remove(item);
+                    item.DataContext.Dispose();
+                }
             }
             catch (Exception) { /* Ignore errors, file not found/already removed from list */ }
         });
@@ -151,7 +161,7 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         {
             try
             {
-                ListItems().First(item => item.DataContext.Name == e.OldName).DataContext.Name = e.Name;
+                ListItems().First(item => item.DataContext.Filename == e.OldName).DataContext.Filename = e.Name;
             }
             catch (Exception) { /* Ignore errors, file (old name) not found ? Must add ? */ }
         });
@@ -174,6 +184,8 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         });
     }
 
+    #endregion
+
     [RelayCommand()]
     private void Quit()
     {
@@ -191,14 +203,25 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         return [.. _parentDesktop.MainGrid.Children.OfType<OneDesktopItem>()];
     }
 
+    internal void RemoveItem(OneDesktopItem item)
+    {
+        _parentDesktop.MainGrid.Children.Remove(item);
+    }
+
     internal FileSystemInfo[] ListSelectedItem()
     {
         return [.. ListItems().Where(i => i.DataContext.IsSelected && i.DataContext.FileSystemIO != null).Select(i => i.DataContext.FileSystemIO)];
     }
 
+    internal OneDesktopItem[] ListSelectedControl()
+    {
+        return [.. ListItems().Where(i => i.DataContext.IsSelected && i.DataContext.FileSystemIO != null)];
+    }
+
     [RelayCommand()]
     private void ActionRightClick(object args)
     {
+        DragGhostAdorner.StopDragGhost();
         if (args is MouseButtonEventArgs)
         {
             if (Mouse.DirectlyOver is FrameworkElement element && element.DataContext is OneDesktopItemViewModel item)
@@ -220,7 +243,12 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 if (ListItems().Exists(i => i.DataContext.IsSelected))
                     contextMenu.ShowContextMenu(ListItems().First(i => i.DataContext.IsSelected).DataContext.FullPath, position);
                 else
-                    contextMenu.ShowContextMenu("shell:::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", position, true);
+                {
+                    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                        contextMenu.ShowContextMenu(new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)), position);
+                    else
+                        contextMenu.ShowContextMenu("shell:::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}", position, true);
+                }
             }
             else
                 contextMenu.ShowContextMenu(listItems, position);
@@ -240,6 +268,16 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 if (e.Key == Key.A)
                     UnSelectAll(true);
             }
+            else if (e.Key == Key.Return || e.Key == Key.Enter)
+            {
+                foreach (OneDesktopItem item in ListSelectedControl())
+                    item.DataContext.ExecuteCommand.Execute(null);
+            }
+            else if (e.Key == Key.Delete)
+            {
+                foreach (OneDesktopItem item in ListSelectedControl())
+                    item.DataContext.Delete();
+            }
             else if (e.Key == Key.F5)
                 RefreshDesktopContent();
             else if (e.Key == Key.Up && y > 0)
@@ -253,12 +291,20 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
             if (x != _currentCellX || y != _currentCellY)
             {
                 OneDesktopItem item = ListItems().Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
+                item ??= _parentDesktop.DataContext.ListItems()?.FirstOrDefault();
                 if (item != null)
                 {
+                    UnSelectAll(false);
+                    item.DataContext.IsSelected = true;
                     _currentCellX = x;
                     _currentCellY = y;
                     item.Focus();
                     Keyboard.Focus(item);
+                }
+                else
+                {
+                    _currentCellX = x;
+                    _currentCellY = y;
                 }
             }
         }
@@ -281,7 +327,6 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 
     internal void Drop(DragEventArgs e)
     {
-        DragGhostAdorner.StopDragGhost();
         double dpi = _parentDesktop.AssociateScreen.ScaleFactor;
         int x = (int)(e.GetPosition(_parentDesktop).X / (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ItemSizeX * dpi));
         int y = (int)(e.GetPosition(_parentDesktop).Y / (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ItemSizeY * dpi));
@@ -300,12 +345,13 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 OneDesktopItem item = listItems.Find(i => i.DataContext.FullPath == fs);
                 if (item != null)
                 {
-                    if (item == dest)
+                    if (item == dest) // Item drop on the same place
                         break;
-                    if (dest == null)
+                    if (dest == null) // Dropped on a empty space of desktop
                     {
                         if (e.KeyStates == DragDropKeyStates.ControlKey)
                         {
+                            // If we move in same desktop with Ctrl pressed, then we make a copy of this item
                             FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
                             fileOperation.ChangeOperationFlags(FilesOperations.Interfaces.EFileOperation.FOF_RENAMEONCOLLISION);
                             fileOperation.CopyItem(fs, destination, Path.GetFileName(fs));
@@ -314,6 +360,7 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                         }
                         else
                         {
+                            // If we move item in the same desktop, just change the place
                             Grid.SetColumn(item, x);
                             Grid.SetRow(item, y);
                             ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SetItemPosition(item.DataContext.Name, (x, y));
@@ -321,6 +368,7 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                     }
                     else
                     {
+                        // If we drop to a place where it's occupied by a folder in the desktop, then we move item in this folder
                         if (dest.DataContext.IsDirectory)
                         {
                             FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
@@ -328,38 +376,60 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                             fileOperation.PerformOperations();
                             fileOperation.Dispose();
                         }
-                        else
+                        else // If we drop to a place where it's occupied by an item that it's not a folder, then we launch it with the item as parameter (like, for example ; drop txt item file in a shortcut of notepad)
                             dest.DataContext.ExecuteCommand.Execute("\"" + item.DataContext.FullPath + "\"");
                     }
                     break;
                 }
                 else
                 {
-                    if (dest != null && Path.GetExtension(destination).ToLower() == ".lnk")
+                    foreach (ExploripDesktop ed in MyDesktopApp.ListDesktop)
                     {
-                        Shortcut shortcut = Shortcut.ReadFromFile(destination);
-                        if (!string.IsNullOrWhiteSpace(shortcut.Target))
+                        // If we move between desktop of different monitors
+                        item = ed.DataContext.ListItems().Find(i => i.DataContext.FullPath == fs);
+                        if (item != null)
                         {
-                            if (Directory.Exists(shortcut.Target))
-                                destination = shortcut.Target;
-                            else
-                            {
-                                dest.DataContext.ExecuteCommand.Execute("\"" + fs + "\"");
-                                continue;
-                            }
+                            ConfigManager.GetDesktopConfig(ed.ScreenId).SetItemPosition(item.DataContext.Name, (-1, -1));
+                            ed.DataContext.RemoveItem(item);
+                            listItems.Add(item);
+                            ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SetItemPosition(item.DataContext.Name, (x, y));
+                            break;
                         }
                     }
-                    FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
-                    if (e.Effects.HasFlag(DragDropEffects.Copy) && (e.KeyStates == DragDropKeyStates.ControlKey || !sameDrive))
-                        fileOperation.CopyItem(fs, destination, Path.GetFileName(fs));
-                    else if (e.Effects.HasFlag(DragDropEffects.Move) && (e.KeyStates == DragDropKeyStates.ShiftKey || sameDrive))
-                        fileOperation.MoveItem(fs, destination, Path.GetFileName(fs));
-                    else
+                    // The dropped item come from another directory than the desktops (of all monitors) (like picked from explorer then dropped to desktop). Then it's for add items in desktop
+                    if (item == null)
                     {
-                        // TODO : Operation seems impossible
+                        if (dest != null && Path.GetExtension(destination).ToLower() == ".lnk")
+                        {
+                            Shortcut shortcut = Shortcut.ReadFromFile(destination);
+                            if (!string.IsNullOrWhiteSpace(shortcut.Target))
+                            {
+                                // If we drop to a place where it's occupied by a folder in the desktop, then we move/copy item in this folder
+                                // But this time, item to drop does not come from desktop, but another place (like explorer)
+                                if (Directory.Exists(shortcut.Target))
+                                    destination = shortcut.Target;
+                                else
+                                {
+                                    // If we drop to a place where it's occupied by an item that it's not a folder, then we launch it with the item as parameter (like, for example ; drop txt item file in a shortcut of notepad)
+                                    // But this time, item to drop does not come from desktop, but another place (like explorer)
+                                    dest.DataContext.ExecuteCommand.Execute("\"" + fs + "\"");
+                                    continue;
+                                }
+                            }
+                        }
+                        // Execute file operation (move/copy) from another place (like explorer) to a desktop
+                        FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
+                        if (e.Effects.HasFlag(DragDropEffects.Copy) && (e.KeyStates == DragDropKeyStates.ControlKey || !sameDrive))
+                            fileOperation.CopyItem(fs, destination, Path.GetFileName(fs));
+                        else if (e.Effects.HasFlag(DragDropEffects.Move) && (e.KeyStates == DragDropKeyStates.ShiftKey || sameDrive))
+                            fileOperation.MoveItem(fs, destination, Path.GetFileName(fs));
+                        else
+                        {
+                            // TODO : Operation seems impossible
+                        }
+                        fileOperation.PerformOperations();
+                        fileOperation.Dispose();
                     }
-                    fileOperation.PerformOperations();
-                    fileOperation.Dispose();
                 }
             }
         }
@@ -372,8 +442,6 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
         e.Handled = true;
     }
 
-    #endregion
-
     internal static void DragOver(DragEventArgs e)
     {
         if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
@@ -384,6 +452,8 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
             e.Effects = e.AllowedEffects.HasFlag(DragDropEffects.Move) ? DragDropEffects.Move : DragDropEffects.Copy;
         e.Handled = true;
     }
+
+    #endregion
 
     #region IDisposable
 
@@ -406,11 +476,11 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                     _watcher.Dispose();
                 }
                 if (ListItems()?.Count > 0)
+                {
                     foreach (OneDesktopItem item in ListItems())
-                    {
                         item.DataContext?.Dispose();
-                        _parentDesktop.MainGrid.Children.Remove(item);
-                    }
+                    _parentDesktop.MainGrid.Children.Clear();
+                }
             }
 
             disposedValue = true;

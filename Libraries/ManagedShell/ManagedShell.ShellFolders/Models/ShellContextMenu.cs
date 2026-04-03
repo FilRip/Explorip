@@ -9,6 +9,7 @@ using System.Windows.Input;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
 using ManagedShell.ShellFolders.Interfaces;
+using ManagedShell.ShellFolders.Structs;
 
 namespace ManagedShell.ShellFolders.Models;
 
@@ -24,10 +25,19 @@ internal class ShellContextMenu : NativeWindow
     private string _strParentFolder;
 
     private const int MAX_PATH = 260;
-    private const uint CMD_FIRST = 1;
-    private const uint CMD_LAST = 30000;
 
-    private const int S_OK = 0;
+    public class InvokeCommandEventArgs : EventArgs
+    {
+        public uint NumCommand { get; set; }
+
+        public string TextCommand { get; set; }
+
+        public bool Handled { get; set; }
+
+        public string Folder { get; set; }
+    }
+
+    public event EventHandler<InvokeCommandEventArgs> InvokeCommandCallback;
 
     internal ShellContextMenu()
     {
@@ -44,6 +54,8 @@ internal class ShellContextMenu : NativeWindow
         ReleaseAll();
     }
 
+    public bool AutoExpandSubMenu { get; set; }
+
     private bool GetContextMenuInterfaces(IShellFolder oParentFolder, IntPtr[] arrPIDLs, out IntPtr ctxMenuPtr)
     {
         Guid cmGuid = typeof(IContextMenu).GUID;
@@ -55,7 +67,7 @@ internal class ShellContextMenu : NativeWindow
             IntPtr.Zero,
             out ctxMenuPtr);
 
-        if (nResult == S_OK)
+        if (nResult == (int)NativeMethods.HResult.SUCCESS)
         {
             _oContextMenu = (IContextMenu)Marshal.GetTypedObjectForIUnknown(ctxMenuPtr, typeof(IContextMenu));
             return true;
@@ -73,13 +85,13 @@ internal class ShellContextMenu : NativeWindow
         if ((_oContextMenu2 != null &&
             (m.Msg == (int)NativeMethods.WM.INITMENUPOPUP ||
              m.Msg == (int)NativeMethods.WM.MEASUREITEM ||
-             m.Msg == (int)NativeMethods.WM.DRAWITEM)) && (_oContextMenu2.HandleMenuMsg((uint)m.Msg, m.WParam, m.LParam) == S_OK))
+             m.Msg == (int)NativeMethods.WM.DRAWITEM)) && (_oContextMenu2.HandleMenuMsg((uint)m.Msg, m.WParam, m.LParam) == (int)NativeMethods.HResult.SUCCESS))
         {
             return;
         }
 
         if ((_oContextMenu3 != null &&
-            m.Msg == (int)NativeMethods.WM.MENUCHAR) && (_oContextMenu3.HandleMenuMsg2((uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == S_OK))
+            m.Msg == (int)NativeMethods.WM.MENUCHAR) && (_oContextMenu3.HandleMenuMsg2((uint)m.Msg, m.WParam, m.LParam, IntPtr.Zero) == (int)NativeMethods.HResult.SUCCESS))
         {
             return;
         }
@@ -89,18 +101,33 @@ internal class ShellContextMenu : NativeWindow
 
     private void InvokeCommand(IContextMenu oContextMenu, uint nCmd, string strFolder, Point pointInvoke)
     {
-        Structs.CmInvokeCommandInfoEx invoke = new()
+        if (InvokeCommandCallback != null)
         {
-            cbSize = Marshal.SizeOf(typeof(Structs.CmInvokeCommandInfoEx)),
-            lpVerb = (IntPtr)(nCmd - CMD_FIRST),
+            byte[] name = new byte[MAX_PATH];
+            oContextMenu.GetCommandString(nCmd, GetCommandStrings.VERBW, 0, name, MAX_PATH);
+            InvokeCommandEventArgs args = new()
+            {
+                NumCommand = nCmd,
+                Folder = strFolder,
+                TextCommand = Encoding.UTF8.GetString(name).Split((char)0)[0],
+            };
+            InvokeCommandCallback.Invoke(this, args);
+            if (args.Handled)
+                return;
+        }
+        CmInvokeCommandInfoEx invoke = new()
+        {
+            cbSize = Marshal.SizeOf(typeof(CmInvokeCommandInfoEx)),
+            lpVerb = new IntPtr(nCmd),
+            lpVerbW = new IntPtr(nCmd),
             lpDirectory = strFolder,
-            lpVerbW = (IntPtr)(nCmd - CMD_FIRST),
             lpDirectoryW = strFolder,
             fMask = ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
             ((Control.ModifierKeys & Keys.Control) != 0 ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
             ((Control.ModifierKeys & Keys.Shift) != 0 ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
             ptInvoke = new NativeMethods.Point((long)pointInvoke.X, (long)pointInvoke.Y),
             nShow = NativeMethods.WindowShowStyle.ShowNormal,
+            hwnd = this.Handle,
         };
 
         oContextMenu.InvokeCommand(ref invoke);
@@ -151,7 +178,7 @@ internal class ShellContextMenu : NativeWindow
         {
             // Get desktop IShellFolder
             int nResult = NativeMethods.SHGetDesktopFolder(out IntPtr pUnkownDesktopFolder);
-            if (nResult != S_OK)
+            if (nResult != (int)NativeMethods.HResult.SUCCESS)
                 throw new Exceptions.ShellContextMenuException("Failed to get the desktop shell folder");
 
             _oDesktopFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnkownDesktopFolder, typeof(IShellFolder));
@@ -172,7 +199,7 @@ internal class ShellContextMenu : NativeWindow
             uint pchEaten = 0;
             ShellFolderGetAttributeObjects pdwAttributes = 0;
             int nResult = oDesktopFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, folderName, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
-            if (nResult != S_OK)
+            if (nResult != (int)NativeMethods.HResult.SUCCESS)
                 return null;
 
             IntPtr pStrRet = Marshal.AllocCoTaskMem(MAX_PATH * 2 + 4);
@@ -188,7 +215,7 @@ internal class ShellContextMenu : NativeWindow
             nResult = oDesktopFolder.BindToObject(pPIDL, IntPtr.Zero, ref sfGuid, out IntPtr pUnknownParentFolder);
             // Free the PIDL first
             Marshal.FreeCoTaskMem(pPIDL);
-            if (nResult != S_OK)
+            if (nResult != (int)NativeMethods.HResult.SUCCESS)
                 return null;
 
             _oParentFolder = (IShellFolder)Marshal.GetTypedObjectForIUnknown(pUnknownParentFolder, typeof(IShellFolder));
@@ -202,18 +229,11 @@ internal class ShellContextMenu : NativeWindow
         IntPtr pidl = IntPtr.Zero;
         if (shell.Contains("B4BFCC3A-DB2C-424C-B029-7FE99A87C641", StringComparison.OrdinalIgnoreCase))
         {
+            _strParentFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             _oParentFolder = GetDesktopFolder();
             _oParentFolder.CreateViewObject(IntPtr.Zero, typeof(IShellView).GUID, out IntPtr opShellView);
             _backgroundShellView = (IShellView)Marshal.GetObjectForIUnknown(opShellView);
-            object opContextMenu = _backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
-
-            if (opContextMenu != null)
-            {
-                _oContextMenu = (IContextMenu)opContextMenu;
-                _oContextMenu2 = (IContextMenu2)opContextMenu;
-                _oContextMenu3 = (IContextMenu3)opContextMenu;
-            }
-
+            _oContextMenu = (IContextMenu)_backgroundShellView.GetItemObject(ShellViewGetItemObject.Background, typeof(IContextMenu).GUID);
         }
         else
         {
@@ -258,7 +278,7 @@ internal class ShellContextMenu : NativeWindow
             uint pchEaten = 0;
             ShellFolderGetAttributeObjects pdwAttributes = 0;
             int nResult = oParentFolder.ParseDisplayName(IntPtr.Zero, IntPtr.Zero, fi.Name, ref pchEaten, out IntPtr pPIDL, ref pdwAttributes);
-            if (nResult != S_OK)
+            if (nResult != (int)NativeMethods.HResult.SUCCESS)
             {
                 FreePIDLs(arrPIDLs);
                 return null;
@@ -325,14 +345,19 @@ internal class ShellContextMenu : NativeWindow
 
             pMenu = NativeMethods.CreatePopupMenu();
 
+            ContextMenuStates flags = ContextMenuStates.NORMAL | ContextMenuStates.EXPLORE;
+            if (!background)
+            {
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                    flags |= ContextMenuStates.EXTENDEDVERBS;
+                flags |= ContextMenuStates.CANRENAME;
+            }
             _oContextMenu.QueryContextMenu(
                 pMenu,
                 0,
-                CMD_FIRST,
-                CMD_LAST,
-                ContextMenuStates.EXPLORE |
-                ContextMenuStates.NORMAL |
-                ((Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)) ? ContextMenuStates.EXTENDEDVERBS : 0));
+                0,
+                (uint)short.MaxValue,
+                flags);
 
             if (iContextMenuPtr != IntPtr.Zero)
             {
@@ -350,19 +375,22 @@ internal class ShellContextMenu : NativeWindow
                 _oContextMenu3 = (IContextMenu3)_oContextMenu;
             }
 
+            if (AutoExpandSubMenu)
+                ExpandSubMenu(pMenu);
+
             uint nSelected = NativeMethods.TrackPopupMenuEx(
                 pMenu,
-                NativeMethods.TrackPopUpMenuActions.RETURNCMD,
+                NativeMethods.TrackPopUpMenuActions.RETURNCMD | NativeMethods.TrackPopUpMenuActions.RIGHTBUTTON,
                 (int)pointScreen.X,
                 (int)pointScreen.Y,
                 this.Handle,
                 IntPtr.Zero);
 
-            NativeMethods.DestroyMenu(pMenu);
-            pMenu = IntPtr.Zero;
-
             if (nSelected != 0)
                 InvokeCommand(_oContextMenu, nSelected, _strParentFolder, pointScreen);
+
+            NativeMethods.DestroyMenu(pMenu);
+            pMenu = IntPtr.Zero;
         }
         finally
         {
@@ -379,6 +407,26 @@ internal class ShellContextMenu : NativeWindow
                 Marshal.Release(iContextMenuPtr3);
 
             ReleaseAll();
+        }
+    }
+
+    private void ExpandSubMenu(IntPtr pMenu)
+    {
+        if (pMenu == IntPtr.Zero || _oContextMenu2 == null)
+            return;
+        int nbMenu = NativeMethods.GetMenuItemCount(pMenu);
+        if (nbMenu > 0)
+        {
+            int IdMenu;
+            for (int i = 0; i < nbMenu; i++)
+            {
+                IdMenu = NativeMethods.GetMenuItemID(pMenu, i);
+                if (IdMenu < 0)
+                {
+                    IntPtr IdSubMenu = NativeMethods.GetSubMenu(pMenu, i);
+                    _oContextMenu2.HandleMenuMsg((int)NativeMethods.WM.INITMENUPOPUP, IdSubMenu, (IntPtr)i);
+                }
+            }
         }
     }
 }

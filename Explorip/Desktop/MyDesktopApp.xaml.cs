@@ -5,6 +5,8 @@ using System.Windows;
 
 using Explorip.Desktop.Windows;
 
+using Microsoft.Win32;
+
 using WpfScreenHelper;
 
 using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
@@ -16,13 +18,14 @@ namespace Explorip.Desktop;
 /// </summary>
 public partial class MyDesktopApp : Application
 {
-    private readonly List<ExploripDesktop> _listDesktop = [];
+    private static readonly List<ExploripDesktop> _listDesktop = [];
 
     public MyDesktopApp()
     {
         InitializeComponent();
     }
 
+#pragma warning disable S2325
     private void Application_Startup(object sender, StartupEventArgs e)
     {
         Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
@@ -40,6 +43,12 @@ public partial class MyDesktopApp : Application
                 _listDesktop.Add(ed);
             }
         }
+    }
+#pragma warning restore S2325
+
+    public static List<ExploripDesktop> ListDesktop
+    {
+        get { return _listDesktop; }
     }
 
     private static void CurrentDomain_ProcessExit(object sender, EventArgs e)

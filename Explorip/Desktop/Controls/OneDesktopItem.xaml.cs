@@ -29,7 +29,10 @@ public partial class OneDesktopItem : UserControl
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-        DataContext.SelectItCommand.Execute(null);
+        if (InputManager.Current.MostRecentInputDevice is KeyboardDevice && (Keyboard.IsKeyDown(Key.Enter) || Keyboard.IsKeyDown(Key.Return)))
+            DataContext.ExecuteCommand.Execute(null);
+        else
+            DataContext.SelectItCommand.Execute(null);
     }
 
     private void UserControl_KeyDown(object sender, KeyEventArgs e)

@@ -785,4 +785,19 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
     internal static extern bool Shell_NotifyIcon(NotifyIconMessage dwMessage, ref NotifyIconData lpData);
+
+    [StructLayout(LayoutKind.Sequential, Pack = 0)]
+    public struct ShQueryRbInfo
+    {
+        public ShQueryRbInfo()
+        {
+            cbSize = Marshal.SizeOf<ShQueryRbInfo>();
+        }
+        public int cbSize;
+        public long i64Size;
+        public long i64NumItems;
+    }
+
+    [DllImport(Shell32_DllName)]
+    internal static extern int SHQueryRecycleBin(string pszRootPath, ref ShQueryRbInfo pSHQueryRBInfo);
 }

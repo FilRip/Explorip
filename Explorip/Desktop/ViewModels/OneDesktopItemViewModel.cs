@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -15,6 +16,7 @@ using ExploripConfig.Configuration;
 using ExploripSharedCopy.Controls;
 
 using ManagedShell.Common.Helpers;
+using ManagedShell.Interop;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;
 
@@ -23,23 +25,27 @@ namespace Explorip.Desktop.ViewModels;
 internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
 {
     internal string FullPath { get; set; }
-    internal bool SpecialFolder { get; set; }
     internal bool IsDirectory { get; set; }
-    [ObservableProperty(), NotifyPropertyChangedFor(nameof(ItemSizeX), nameof(ItemSizeY))]
-    private ExploripDesktopViewModel _currentDesktop;
+
     private FileSystemInfo _fileSystemInfo;
     private DateTime _lastClicked = DateTime.UtcNow.AddSeconds(-2);
+    private Timer _checkRecycledBin;
+    private bool? _recycledBinEmpty;
+    private static readonly object _lockCheckRecycleBin = new();
+
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(ItemSizeX), nameof(ItemSizeY), nameof(BackgroundBrush))]
+    private ExploripDesktopViewModel _currentDesktop;
 
     [ObservableProperty()]
+    private bool _specialFolder;
+    [ObservableProperty()]
     private string _name;
-
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(IconSize))]
     private ImageSource _icon;
     [ObservableProperty()]
     private ImageSource _overlayIcon;
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(BackgroundBrush))]
     private bool _isMouseOver;
-
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(BackgroundBrush))]
     private bool _isSelected;
 
@@ -66,6 +72,15 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
         set
         {
             _shellObject = value;
+        }
+    }
+
+    public string Filename
+    {
+        get { return Path.GetFileName(FullPath); }
+        set
+        {
+            FullPath = Path.Combine(Path.GetDirectoryName(FullPath), value);
         }
     }
 
@@ -141,7 +156,7 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
             }
             catch (Exception ex)
             {
-                MessageBox.Show(Constants.Localization.ERROR, string.Format(Constants.Localization.ERROR_DURING_RENAME, Name, ex.Message), MessageBoxButton.OK);
+                MessageBox.Show(string.Format(Constants.Localization.ERROR_DURING_RENAME, Name, ex.Message), Constants.Localization.ERROR, MessageBoxButton.OK);
             }
         }
     }
@@ -163,27 +178,83 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
     {
         try
         {
-            FileInfo fi = new(FullPath);
-            if (fi.Attributes.HasFlag(FileAttributes.Directory))
-                IsDirectory = true;
-
-            IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.ExtraLarge, out IntPtr hOverlay);
-            if (hIcon != IntPtr.Zero)
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                Icon = IconImageConverter.GetImageFromHIcon(hIcon);
-                if (hOverlay != IntPtr.Zero)
-                    OverlayIcon = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
-            }
-            if (Icon == null)
-            {
-                System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
-                if (icon == null)
-                    Icon = IconImageConverter.GetDefaultIcon();
+                if (FullPath.Contains("::"))
+                {
+                    IntPtr pidl;
+                    pidl = NativeMethods.ILCreateFromPath(FullPath);
+                    if (pidl != IntPtr.Zero)
+                    {
+                        IntPtr hIcon;
+                        hIcon = IconHelper.GetIconByPidl(pidl, ManagedShell.Common.Enums.IconSize.ExtraLarge, out IntPtr hOverlay);
+                        NativeMethods.ILFree(pidl);
+                        if (hIcon != IntPtr.Zero)
+                        {
+                            Icon = IconManager.Convert(System.Drawing.Icon.FromHandle(hIcon));
+                            if (hOverlay != IntPtr.Zero)
+                                OverlayIcon = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
+                        }
+                    }
+                }
                 else
-                    Icon = IconManager.Convert(icon);
-            }
+                {
+                    FileInfo fi = new(FullPath);
+                    if (fi.Attributes.HasFlag(FileAttributes.Directory))
+                        IsDirectory = true;
+
+                    IntPtr hIcon = IconHelper.GetIconByFilename(FullPath, ManagedShell.Common.Enums.IconSize.ExtraLarge, out IntPtr hOverlay);
+                    if (hIcon != IntPtr.Zero)
+                    {
+                        Icon = IconImageConverter.GetImageFromHIcon(hIcon);
+                        if (hOverlay != IntPtr.Zero)
+                            OverlayIcon = IconManager.Convert(System.Drawing.Icon.FromHandle(hOverlay));
+                    }
+                    if (Icon == null)
+                    {
+                        System.Drawing.Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(FullPath);
+                        if (icon == null)
+                            Icon = IconImageConverter.GetDefaultIcon();
+                        else
+                            Icon = IconManager.Convert(icon);
+                    }
+                }
+            }, System.Windows.Threading.DispatcherPriority.Background);
         }
         catch (Exception) { /* Ignore errors, can't get icon */ }
+    }
+
+    internal void Delete()
+    {
+        FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
+        fileOperation.ChangeOperationFlags(FilesOperations.Interfaces.EFileOperation.FOF_RENAMEONCOLLISION);
+        fileOperation.DeleteItem(FullPath);
+        fileOperation.PerformOperations();
+        fileOperation.Dispose();
+    }
+
+    partial void OnSpecialFolderChanged(bool value)
+    {
+        if (value && FullPath.Contains("645FF040-5081-101B-9F08-00AA002F954E", StringComparison.OrdinalIgnoreCase))
+        {
+            _checkRecycledBin?.Dispose();
+            _checkRecycledBin = new Timer(CheckRecycledBin, null, 1000, 500);
+        }
+    }
+
+    private void CheckRecycledBin(object userState)
+    {
+        lock (_lockCheckRecycleBin)
+        {
+            NativeMethods.ShQueryRbInfo info = new();
+            NativeMethods.SHQueryRecycleBin(null, ref info);
+            bool recycledBinEmpty = info.i64NumItems == 0;
+            if (!_recycledBinEmpty.HasValue || _recycledBinEmpty.Value != recycledBinEmpty)
+            {
+                _recycledBinEmpty = recycledBinEmpty;
+                GetIcon();
+            }
+        }
     }
 
     public override string ToString()
@@ -205,6 +276,7 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
             if (disposing)
             {
                 _shellObject?.Dispose();
+                _checkRecycledBin?.Dispose();
             }
 
             disposedValue = true;
@@ -213,7 +285,7 @@ internal partial class OneDesktopItemViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        Dispose(disposing: true);
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
