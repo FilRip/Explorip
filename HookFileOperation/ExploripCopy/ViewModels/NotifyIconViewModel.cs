@@ -33,6 +33,7 @@ internal partial class NotifyIconViewModel : ObservableObject
     [RelayCommand()]
     private void ExitApplication()
     {
+        _notifyIcon.CloseTrayPopup();
         MainWindow.Instance.IconInSystray_Exit();
     }
 
@@ -40,6 +41,7 @@ internal partial class NotifyIconViewModel : ObservableObject
     private void ShowWindow()
     {
         MainWindow.Instance.ShowWindow();
+        _notifyIcon.CloseTrayPopup();
     }
 
     [RelayCommand()]

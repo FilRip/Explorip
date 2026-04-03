@@ -433,7 +433,6 @@ public partial class TaskbarIcon : FrameworkElement, IDisposable
             }
         }
 
-
         // show context menu, if requested
         if (me.IsMatch(MenuActivation))
         {

@@ -49,8 +49,6 @@ public partial class MainWindow : Window
         Icon = Constants.Icons.MainIconSource;
 
         _dragItemManager = new ListViewDragDropManager<OneFileOperation>(LvOperations, ExploripCopyConfig.DragGhostOpacity, ExploripCopyConfig.WaitBetweenTwoDragScrolling, ExploripCopyConfig.SpeedForDragScrolling, ExploripCopyConfig.WaitBeforeStartDragScrolling, ExploripCopyConfig.MaxItemsInAdorner, ExploripCopyConfig.OpacityDecrease);
-
-        ContextMenu.DataContext = NotifyIconViewModel.Instance;
     }
 
     public void IconInSystray_Exit()

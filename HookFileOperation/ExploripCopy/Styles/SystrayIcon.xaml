@@ -4,21 +4,26 @@
                     xmlns:viewmodels="clr-namespace:ExploripCopy.ViewModels"
                     xmlns:constants="clr-namespace:ExploripCopy.Constants"
                     xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy">
-    
-    <ContextMenu x:Shared="false" x:Key="SysTrayMenu" BorderThickness="0">
-        <MenuItem Header="{x:Static constants:Localization.SHOW_MAIN_WINDOW}" Command="{Binding ShowWindowCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0"/>
-        <MenuItem Header="{x:Static constants:Localization.SHOW_NOTIFICATION}" Style="{DynamicResource NewMenuItemStyle}" IsChecked="{Binding ActiveShowNotification}" Command="{Binding ShowNotificationCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}"/>
-        <MenuItem Header="{x:Static constants:Localization.AUTO_EXPAND_DIRECTORY}" Style="{DynamicResource NewMenuItemStyle}" IsChecked="{Binding ActiveExpandDirectories}" Command="{Binding AutoExpandDirectoriesCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}"/>
-        <Separator BorderThickness="0" Margin="0" Padding="0"/>
-        <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding ExitApplicationCommand}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Margin="0" Padding="0" BorderThickness="0"/>
-    </ContextMenu>
+
+    <Popup x:Key="ExploripCopyContextMenu" StaysOpen="False" AllowsTransparency="True">
+        <Border BorderThickness="1" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}" Margin="5" Background="{x:Static colors:Colors.BackgroundColorBrush}" CornerRadius="5">
+            <StackPanel Orientation="Vertical" Background="Transparent">
+                <MenuItem Header="{x:Static constants:Localization.SHOW_MAIN_WINDOW}" Command="{Binding ShowWindowCommand}" CommandParameter="" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                <MenuItem Header="{x:Static constants:Localization.SHOW_NOTIFICATION}" Style="{DynamicResource NewMenuItemStyle}" IsChecked="{Binding ActiveShowNotification}" Command="{Binding ShowNotificationCommand}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                <MenuItem Header="{x:Static constants:Localization.AUTO_EXPAND_DIRECTORY}" Style="{DynamicResource NewMenuItemStyle}" IsChecked="{Binding ActiveExpandDirectories}" Command="{Binding AutoExpandDirectoriesCommand}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                <Separator BorderThickness="0"/>
+                <MenuItem Header="{x:Static constants:Localization.QUIT}" Command="{Binding ExitApplicationCommand}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+            </StackPanel>
+        </Border>
+    </Popup>
 
     <tb:TaskbarIcon x:Key="NotifyIcon"
                     IconSource="{Binding SystrayIcon, UpdateSourceTrigger=PropertyChanged}"
                     ToolTipText="ExploripCopy"
                     LeftClickCommand="{Binding ShowWindowSingleCommand}"
                     DoubleClickCommand="{Binding ShowWindowCommand}"
-                    ContextMenu="{StaticResource SysTrayMenu}">
+                    PopupActivation="RightClick"
+                    TrayPopup="{StaticResource ExploripCopyContextMenu}">
         <tb:TaskbarIcon.DataContext>
             <viewmodels:NotifyIconViewModel/>
         </tb:TaskbarIcon.DataContext>
