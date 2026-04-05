@@ -59,6 +59,7 @@ public static class ConfigManager
     private const string ConfigFloatingShortcut = "FloatingShortcut";
     private const string ConfigShowMemoryUsed = "ShowMemoryUsed";
     private const string FalseValue = "False";
+    private const string SubKeyFilteredDesktop = "FilteredIcons";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -174,8 +175,14 @@ public static class ConfigManager
                 if (dc.ShowAllIconsPresent)
                     checkFirstRun = false;
             }
-            if (checkFirstRun)
+            if (checkFirstRun && AllowWrite)
                 GetDesktopConfig(Screen.AllScreens.First(s => s.Primary).DisplayNumber).ShowAllIcons = true;
+            if (!_registryRootDesktop.GetSubKeyNames().Contains(SubKeyFilteredDesktop) && AllowWrite)
+            {
+                RegistryKey subKey = _registryRootDesktop.CreateSubKey(SubKeyFilteredDesktop, true);
+                subKey.SetValue("0", "desktop.ini"); // Ignore this common hidden file (desktop folder config)
+                subKey.SetValue("1", "shell:::{871C5380-42A0-1069-A2EA-08002B30309D}"); // Strange old Internet Explorer icon (that doesn't work)
+            }
 
             _startMenuConfig.Init(startMenuRegistry, allowWrite);
         }
@@ -315,6 +322,22 @@ public static class ConfigManager
                 return dc.NumScreen;
         }
         return -1;
+    }
+
+    public static List<string> GetFilteredAppsOfDesktop
+    {
+        get
+        {
+            List<string> result = [];
+            if (_registryRootDesktop.GetSubKeyNames().Contains(SubKeyFilteredDesktop))
+            {
+                RegistryKey subKey = _registryRootDesktop.OpenSubKey(SubKeyFilteredDesktop);
+                if (subKey != null)
+                    foreach (string name in subKey.GetValueNames().Where(n => !string.IsNullOrWhiteSpace(n)))
+                        result.Add(subKey.GetValue(name).ToString());
+            }
+            return result;
+        }
     }
 
     #endregion

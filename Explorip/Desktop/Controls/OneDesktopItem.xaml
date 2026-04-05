@@ -15,7 +15,7 @@
         <viewmodels:OneDesktopItemViewModel/>
     </UserControl.DataContext>
     
-    <Button MouseDoubleClick="Button_MouseDoubleClick" Click="Button_Click" Width="{Binding ItemSizeX}" Height="{Binding ItemSizeY}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave">
+    <Button MouseDoubleClick="Button_MouseDoubleClick" Click="Button_Click" Width="{Binding ItemSizeX}" Height="{Binding ItemSizeY}" MouseEnter="Button_MouseEnter" MouseLeave="Button_MouseLeave" DragEnter="Button_DragEnter" DragLeave="Button_DragLeave">
         <Button.Style>
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Template">

@@ -29,9 +29,10 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     private readonly ExploripDesktop _parentDesktop;
     private readonly FileSystemWatcher _watcher;
     private int _currentCellX, _currentCellY;
+    private bool disposedValue;
+
     [ObservableProperty()]
     private int _nbColumns, _nbRows;
-    private bool disposedValue;
     [ObservableProperty()]
     private Thickness _borderSize;
     [ObservableProperty()]
@@ -91,7 +92,8 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     {
         ShellFolder desktop = (ShellFolder)ShellObject.FromParsingName(desktopPath);
         OneDesktopItemViewModel item;
-        foreach (ShellObject filename in desktop.Where(filename => filename.Name.Trim().ToLower() != "desktop.ini"))
+        List<string> filteredIcons = ConfigManager.GetFilteredAppsOfDesktop;
+        foreach (ShellObject filename in desktop.Where(so => !filteredIcons.Contains(so.Name, StringComparer.CurrentCultureIgnoreCase)))
         {
             int numScreen = ConfigManager.GetDesktopScreenForIcon(filename.Name);
             if ((numScreen < 0 && ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowAllIcons) ||
@@ -117,12 +119,13 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 
     private void RefreshSystemIcons()
     {
+        List<string> filteredIcons = ConfigManager.GetFilteredAppsOfDesktop;
         foreach (OneDesktopItemViewModel vm in Configuration.RegistrySettings.ListDesktopSystemIcons(withCommon: ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowCommonIcons))
         {
             int numScreen = ConfigManager.GetDesktopScreenForIcon(vm.Name);
-            if ((numScreen < 0 && ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowAllIcons) ||
+            if (!filteredIcons.Contains(vm.FullPath) && ((numScreen < 0 && ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowAllIcons) ||
                 numScreen == _parentDesktop.ScreenId ||
-                (numScreen >= 0 && !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreen)))
+                (numScreen >= 0 && !WpfScreenHelper.Screen.AllScreens.Any(s => s.DisplayNumber == numScreen))))
             {
                 if (vm.Icon == null)
                     vm.GetIcon();
@@ -327,11 +330,10 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 
     internal void Drop(DragEventArgs e)
     {
-        double dpi = _parentDesktop.AssociateScreen.ScaleFactor;
-        int x = (int)(e.GetPosition(_parentDesktop).X / (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ItemSizeX * dpi));
-        int y = (int)(e.GetPosition(_parentDesktop).Y / (ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ItemSizeY * dpi));
+        DragGhostAdorner.StopDragGhost();
+        (int, int) posInGrid = GetPositionInGrid(_parentDesktop.MainGrid, e.GetPosition(_parentDesktop));
         List<OneDesktopItem> listItems = ListItems();
-        OneDesktopItem dest = listItems.Find(i => Grid.GetColumn(i) == x && Grid.GetRow(i) == y);
+        OneDesktopItem dest = listItems.Find(i => Grid.GetColumn(i) == posInGrid.Item1 && Grid.GetRow(i) == posInGrid.Item2);
         if (e.Data is DataObject && e.Data.GetDataPresent("FileDrop"))
         {
             string[] itemsFromExplorer = (string[])(e.Data.GetData("FileDrop"));
@@ -361,9 +363,9 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                         else
                         {
                             // If we move item in the same desktop, just change the place
-                            Grid.SetColumn(item, x);
-                            Grid.SetRow(item, y);
-                            ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SetItemPosition(item.DataContext.Name, (x, y));
+                            Grid.SetColumn(item, posInGrid.Item1);
+                            Grid.SetRow(item, posInGrid.Item2);
+                            ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SetItemPosition(item.DataContext.Name, (posInGrid.Item1, posInGrid.Item2));
                         }
                     }
                     else
@@ -392,7 +394,7 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                             ConfigManager.GetDesktopConfig(ed.ScreenId).SetItemPosition(item.DataContext.Name, (-1, -1));
                             ed.DataContext.RemoveItem(item);
                             listItems.Add(item);
-                            ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SetItemPosition(item.DataContext.Name, (x, y));
+                            ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SetItemPosition(item.DataContext.Name, (posInGrid.Item1, posInGrid.Item2));
                             break;
                         }
                     }
@@ -433,6 +435,36 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
                 }
             }
         }
+    }
+
+    private static (int, int) GetPositionInGrid(Grid grid, Point mousePos)
+    {
+        (int, int) pos = (0, 0);
+        int numCol = 0;
+#pragma warning disable S3267
+        foreach (ColumnDefinition col in grid.ColumnDefinitions)
+        {
+            if (mousePos.X <= col.ActualWidth)
+            {
+                pos.Item1 = numCol;
+                break;
+            }
+            mousePos.X -= col.ActualWidth;
+            numCol++;
+        }
+        int numRow = 0;
+        foreach (RowDefinition row in grid.RowDefinitions)
+        {
+            if (mousePos.Y <= row.ActualHeight)
+            {
+                pos.Item2 = numRow;
+                break;
+            }
+            mousePos.Y -= row.ActualHeight;
+            numRow++;
+        }
+#pragma warning restore S3267
+        return pos;
     }
 
     internal static void GiveFeedback(GiveFeedbackEventArgs e)

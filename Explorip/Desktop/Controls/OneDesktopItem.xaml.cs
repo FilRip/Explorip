@@ -50,4 +50,14 @@ public partial class OneDesktopItem : UserControl
     {
         DataContext.IsMouseOver = false;
     }
+
+    private void Button_DragEnter(object sender, DragEventArgs e)
+    {
+        DataContext.IsMouseOver = true;
+    }
+
+    private void Button_DragLeave(object sender, DragEventArgs e)
+    {
+        DataContext.IsMouseOver = false;
+    }
 }

@@ -13,7 +13,7 @@ public static class ExtensionsAssembly
         return ListReferences(Assembly.GetEntryAssembly(), true, true);
     }
 
-    public static List<string> ListReferences(Assembly asm, bool recursifSurExe, bool includeGAC)
+    public static List<string> ListReferences(Assembly asm, bool recursiveOnExe, bool includeGAC)
     {
         List<string> ret = [];
         Assembly ass;
@@ -30,8 +30,8 @@ public static class ExtensionsAssembly
                 else
                     ret.Add(ass.Location);
 
-                if (recursifSurExe && Path.GetExtension(ass.Location) == "exe")
-                    ret.AddRange(ListReferences(ass, recursifSurExe, includeGAC));
+                if (recursiveOnExe && Path.GetExtension(ass.Location) == "exe")
+                    ret.AddRange(ListReferences(ass, recursiveOnExe, includeGAC));
             }
         }
         return [.. ret.Distinct()];
@@ -141,7 +141,7 @@ public static class ExtensionsAssembly
         return ListAllNamespace(AppDomain.CurrentDomain);
     }
 
-    public static List<string> ListAllNamespace(AppDomain domain, bool inclureReflectionOnly = false)
+    public static List<string> ListAllNamespace(AppDomain domain, bool includeReflectionOnly = false)
     {
         if (domain == null)
             throw new ArgumentNullException(nameof(domain));
@@ -149,7 +149,7 @@ public static class ExtensionsAssembly
         foreach (Assembly asm in domain.GetAssemblies())
             ret = [.. ret.Concat(ListNamespace(asm)).Distinct()];
 
-        if (inclureReflectionOnly)
+        if (includeReflectionOnly)
             foreach (Assembly asm in domain.ReflectionOnlyGetAssemblies())
                 ret = [.. ret.Concat(ListNamespace(asm)).Distinct()];
 
@@ -161,7 +161,7 @@ public static class ExtensionsAssembly
         return AppDomain.CurrentDomain.ListAllTypes();
     }
 
-    public static List<Type> ListAllTypes(this AppDomain domain, bool inclureReflectionOnly = false)
+    public static List<Type> ListAllTypes(this AppDomain domain, bool includeReflectionOnly = false)
     {
         if (domain == null)
             throw new ArgumentNullException(nameof(domain));
@@ -170,7 +170,7 @@ public static class ExtensionsAssembly
         foreach (Assembly asm in domain.GetAssemblies())
             ret = [.. ret, .. asm.GetTypes()];
 
-        if (inclureReflectionOnly)
+        if (includeReflectionOnly)
             foreach (Assembly asm in domain.ReflectionOnlyGetAssemblies())
                 ret = [.. ret, .. asm.GetTypes()];
 
@@ -192,7 +192,7 @@ public static class ExtensionsAssembly
         return domain.SearchType(typeName, false);
     }
 
-    public static Type SearchType(this AppDomain domain, string typeName, bool ignoreCase, bool inclureReflectionOnly = false)
+    public static Type SearchType(this AppDomain domain, string typeName, bool ignoreCase, bool includeReflectionOnly = false)
     {
         if (domain == null)
             throw new ArgumentNullException(nameof(domain));
@@ -205,7 +205,7 @@ public static class ExtensionsAssembly
                 return ret;
         }
 
-        if (inclureReflectionOnly)
+        if (includeReflectionOnly)
             foreach (Assembly asm in domain.ReflectionOnlyGetAssemblies())
             {
                 ret = asm.GetType(typeName, false, ignoreCase);
@@ -231,7 +231,7 @@ public static class ExtensionsAssembly
         return domain.SearchTypeWithoutNamespace(typeName, false);
     }
 
-    public static Type SearchTypeWithoutNamespace(this AppDomain domain, string typeName, bool ignoreCase, bool inclureReflectionOnly = false)
+    public static Type SearchTypeWithoutNamespace(this AppDomain domain, string typeName, bool ignoreCase, bool includeReflectionOnly = false)
     {
         if (domain == null)
             throw new ArgumentNullException(nameof(domain));
@@ -244,7 +244,7 @@ public static class ExtensionsAssembly
                 return ret;
         }
 
-        if (inclureReflectionOnly)
+        if (includeReflectionOnly)
             foreach (Assembly asm in domain.ReflectionOnlyGetAssemblies())
             {
                 ret = Array.Find(asm.GetTypes(), item => string.Compare(item.Name, typeName, ignoreCase) == 0);
