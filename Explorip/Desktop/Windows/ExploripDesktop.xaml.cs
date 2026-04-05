@@ -43,7 +43,7 @@ public partial class ExploripDesktop : Window
             Uxtheme.SetPreferredAppMode(Uxtheme.PreferredAppMode.APPMODE_ALLOWDARK);
         }
 
-        if (!ConfigManager.GetDesktopConfig(ScreenId).HideBackground)
+        if (ConfigManager.GetDesktopConfig(ScreenId).HideBackground)
             Background = ConfigManager.GetDesktopConfig(ScreenId).DesktopBackground;
 
         HwndSource.FromHwnd(new WindowInteropHelper(this).EnsureHandle()).AddHook(WndProc);
