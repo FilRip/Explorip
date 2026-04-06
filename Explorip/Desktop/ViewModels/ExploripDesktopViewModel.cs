@@ -43,6 +43,8 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
     private SolidColorBrush _mouseOverColor;
     [ObservableProperty()]
     private SolidColorBrush _selectedColor;
+    [ObservableProperty()]
+    private bool _showWindowsVersion;
 
     internal string DesktopPath { get; set; }
 
@@ -72,6 +74,8 @@ public partial class ExploripDesktopViewModel : ObservableObject, IDisposable
 
         MouseOverColor = new SolidColorBrush(ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).MouseOverBackgroundColor);
         SelectedColor = new SolidColorBrush(ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).SelectedItemBackgroundColor);
+
+        ShowWindowsVersion = ConfigManager.GetDesktopConfig(_parentDesktop.ScreenId).ShowWindowsBuild;
     }
 
     #region Refresh list icons

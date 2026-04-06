@@ -24,6 +24,7 @@ public class DesktopConfig
     private const string ConfigBorderSize = "BorderSize";
     private const string ConfigSelectedItemBackgroundColor = "SelectedItemBackgroundColor";
     private const string ConfigMouseOverBackgroundColor = "MouseOverItemBackgroundColor";
+    private const string ConfigShowWindowsBuild = "ShowWindowsBuild";
     #endregion
 
     private RegistryKey _registryDesktop;
@@ -49,13 +50,15 @@ public class DesktopConfig
             if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigItemSizeY, "").ToString()))
                 _registryDesktop.SetValue(ConfigItemSizeY, "96");
             if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigHideBackground, "").ToString()))
-                _registryDesktop.SetValue(ConfigHideBackground, "True");
+                _registryDesktop.SetValue(ConfigHideBackground, "False");
             if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigBackgroundColor, "").ToString()))
                 _registryDesktop.SetValue(ConfigBackgroundColor, "255,0,0,0");
             if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigMouseOverBackgroundColor, "").ToString()))
                 _registryDesktop.SetValue(ConfigMouseOverBackgroundColor, "128,63,63,63");
             if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigSelectedItemBackgroundColor, "").ToString()))
                 _registryDesktop.SetValue(ConfigSelectedItemBackgroundColor, "255,63,63,63");
+            if (string.IsNullOrWhiteSpace(_registryDesktop.GetValue(ConfigShowWindowsBuild, "").ToString()))
+                _registryDesktop.SetValue(ConfigShowWindowsBuild, "False");
         }
     }
 
@@ -225,6 +228,16 @@ public class DesktopConfig
         {
             if (AllowWrite)
                 _registryDesktop.SetValue(ConfigMouseOverBackgroundColor, $"{value.A},{value.R},{value.G},{value.B}");
+        }
+    }
+
+    public bool ShowWindowsBuild
+    {
+        get { return _registryDesktop.ReadBoolean(ConfigShowWindowsBuild); }
+        set
+        {
+            if (ShowWindowsBuild != value && AllowWrite)
+                _registryDesktop.SetValue(ConfigShowWindowsBuild, value.ToString());
         }
     }
 }

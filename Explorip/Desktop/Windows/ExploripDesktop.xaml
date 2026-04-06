@@ -35,6 +35,7 @@
     </WindowChrome.WindowChrome>
     
     <Grid Name="MainGrid">
+        
     </Grid>
     
 </Window>
