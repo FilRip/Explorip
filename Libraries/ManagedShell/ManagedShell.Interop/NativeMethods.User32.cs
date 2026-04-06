@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
+using static ManagedShell.Interop.NativeMethods;
+
 namespace ManagedShell.Interop;
 
 public partial class NativeMethods
@@ -4362,4 +4364,116 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName, SetLastError = true, CharSet = CharSet.Auto)]
     internal static extern bool GetUserObjectInformation(IntPtr hObj, UserObjectInformation nIndex, StringBuilder pvInfo, int nLength, out int lpnLengthNeeded);
+
+    [Flags()]
+    public enum QueryDisplayConfigs : uint
+    {
+        AllPaths = 0x00000001,
+        ActivePaths = 0x00000002,
+        DatabaseCurrent = 0x00000004,
+    }
+
+    [Flags()]
+    public enum DisplayConfigTopologyIds : uint
+    {
+        DISPLAYCONFIG_TOPOLOGY_INTERNAL = 0x00000001,
+        DISPLAYCONFIG_TOPOLOGY_CLONE = 0x00000002,
+        DISPLAYCONFIG_TOPOLOGY_EXTEND = 0x00000004,
+        DISPLAYCONFIG_TOPOLOGY_EXTERNAL = 0x00000008
+    }
+
+    public enum DisplayConfigModeInfoType : uint
+    {
+        SOURCE = 1,
+        TARGET = 2
+    }
+
+    public enum DisplayConfigPixelFormat : uint
+    {
+        PIXELFORMAT_32BPP = 0x00000005
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayConfigPathSourceInfo
+    {
+        public Luid adapterId;
+        public uint id;
+        public uint modeInfoIdx;
+        public uint statusFlags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayConfigPathTargetInfo
+    {
+        public Luid adapterId;
+        public uint id;
+        public uint modeInfoIdx;
+        public uint outputTechnology;
+        public uint rotation;
+        public uint scaling;
+        public DisplayConfigRational refreshRate;
+        public uint scanLineOrdering;
+        public bool targetAvailable;
+        public uint statusFlags;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayConfigModeInfo
+    {
+        public DisplayConfigModeInfoType infoType;
+        public uint id;
+        public Luid adapterId;
+        public DisplayConfigTargetInfo targetMode;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayConfigTargetInfo
+    {
+        public DisplayConfigVideoSignalInfo targetVideoSignalInfo;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayConfigVideoSignalInfo
+    {
+        public ulong pixelRate;
+        public DisplayConfigRational hSyncFreq;
+        public DisplayConfigRational vSyncFreq;
+        public DisplayConfig2DRegion activeSize;
+        public DisplayConfig2DRegion totalSize;
+        public uint videoStandard;
+        public uint scanLineOrdering;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayConfigRational
+    {
+        public uint Numerator;
+        public uint Denominator;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayConfig2DRegion
+    {
+        public uint cx;
+        public uint cy;
+    }
+
+    [DllImport(User32_DllName)]
+    internal static extern int GetDisplayConfigBufferSizes(QueryDisplayConfigs flags, out uint numPathArrayElements, out uint numModeInfoArrayElements);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DisplayConfigPathInfo
+    {
+        public DisplayConfigPathSourceInfo sourceInfo;
+        public DisplayConfigPathTargetInfo targetInfo;
+        public uint flags;
+    }
+
+    [DllImport(User32_DllName)]
+    internal static extern int QueryDisplayConfig(uint flags,
+        ref uint numPathArrayElements,
+        [Out()] DisplayConfigPathInfo[] pathInfoArray,
+        ref uint numModeInfoArrayElements,
+        [Out()] DisplayConfigModeInfo[] modeInfoArray,
+        out DisplayConfigTopologyIds currentTopologyId);
 }

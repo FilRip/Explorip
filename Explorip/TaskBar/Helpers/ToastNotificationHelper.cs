@@ -21,6 +21,7 @@ public static class ToastHelper
     /// <summary>
     /// Send new toast notifications windows
     /// </summary>
+#pragma warning disable IDE0060
     public static bool Show(string appUserModelId, string title, string message, int processId)
     {
         if (string.IsNullOrWhiteSpace(appUserModelId))
@@ -50,19 +51,13 @@ public static class ToastHelper
                 ToastNotificationManager.CreateToastNotifier(appUserModelId).Show(toast);
                 handled = true;
             }
-            catch (Exception ex)
-            {
-#if DEBUG
-                ShellLogger.Error(ex.Message, ex);
-                if (Debugger.IsAttached)
-                    Debugger.Break();
-#endif
-            }
+            catch (Exception) { /* Ignore errors */}
         });
         thread.Start();
         thread.Join();
         return handled;
     }
+#pragma warning restore IDE0060
 
     private static void Toast_Dismissed(ToastNotification sender, ToastDismissedEventArgs args)
     {
