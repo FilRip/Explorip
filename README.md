@@ -13,6 +13,10 @@ And an example with Explorip (and a custom toolbar called QuickLaunch in Win10)
 
 <img src="DemoImg\Win11Explorip.png">
 
+Or
+
+<img src="DemoImg\Demo2.png">
+
 
 
 Explorer
