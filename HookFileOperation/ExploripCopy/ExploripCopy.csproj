@@ -1,69 +1,77 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-  <PropertyGroup>
-    <ProjectGuid>{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}</ProjectGuid>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net481</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <AssemblyTitle>ExploripCopy</AssemblyTitle>
-    <Company>CoolBytes</Company>
-    <Product>ExploripCopy</Product>
-    <Copyright>Copyright © CoolBytes 2021-2025</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <UseWPF>true</UseWPF>
-    <Version>1.5.0.0</Version>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-    <StartupObject>ExploripCopy.Program</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="ExploripCopy.args.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Runtime.Remoting" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\CoolBytes.Helpers\CoolBytes.Helpers.csproj" />
-    <ProjectReference Include="..\..\Libraries\ExploripConfig\ExploripConfig.csproj" />
-    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
-    <ProjectReference Include="..\..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj" />
-    <ProjectReference Include="..\ExploripSharedCopy\ExploripSharedCopy.csproj" />
-    <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj" />
-    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
-    <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj" />
-    <ProjectReference Include="..\..\Libraries\NotifyIconWpf\NotifyIconWpf.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\SystrayIconG.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\SystrayIconR.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
+    <PropertyGroup>
+        <ProjectGuid>{3EEDE2B5-F238-42D0-9666-ED4FE1453E23}</ProjectGuid>
+        <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net481</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AssemblyTitle>ExploripCopy</AssemblyTitle>
+        <Company>CoolBytes</Company>
+        <Product>ExploripCopy</Product>
+        <Copyright>Copyright © CoolBytes 2021-2025</Copyright>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <UseWPF>true</UseWPF>
+        <Version>1.5.0.0</Version>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <StartupObject>ExploripCopy.Program</StartupObject>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug|AnyCPU' ">
+        <OutputPath>$(SolutionDir)build\Debug</OutputPath>
+        <DebugType>full</DebugType>
+        <Optimize>none</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release|AnyCPU' ">
+        <OutputPath>$(SolutionDir)build\Release</OutputPath>
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Remove="ExploripCopy.args.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="System.Runtime.Remoting" />
+        <Reference Include="System.Xaml" />
+        <Reference Include="WindowsBase" />
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.142" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Libraries\CoolBytes.Helpers\CoolBytes.Helpers.csproj" />
+        <ProjectReference Include="..\..\Libraries\ExploripConfig\ExploripConfig.csproj" />
+        <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.ShellFolders\ManagedShell.ShellFolders.csproj" />
+        <ProjectReference Include="..\..\Libraries\WpfScreenHelper\WpfScreenHelper.csproj" />
+        <ProjectReference Include="..\ExploripSharedCopy\ExploripSharedCopy.csproj" />
+        <ProjectReference Include="..\HookFileOperations\HookFileOperations.csproj" />
+        <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
+        <ProjectReference Include="..\..\Libraries\ManagedShell\ManagedShell.Interop\ManagedShell.Interop.csproj" />
+        <ProjectReference Include="..\..\Libraries\NotifyIconWpf\NotifyIconWpf.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\SystrayIconG.ico" />
+    </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\SystrayIconR.ico" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\Resources.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resources.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Properties\Resources.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
 </Project>

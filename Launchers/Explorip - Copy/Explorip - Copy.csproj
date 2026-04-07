@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net4.8.1</TargetFramework>
+        <RootNamespace>ExploripCopy</RootNamespace>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UseWPF>true</UseWPF>
+        <LangVersion>latest</LangVersion>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <ApplicationIcon>Explorip.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>$(SolutionDir)build</OutputPath>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>$(SolutionDir)build</OutputPath>
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="Explorip.ico" />
+    </ItemGroup>
+
+</Project>

@@ -1,18 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Libraries\VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj" />
+        <ProjectReference Include="..\ExploripPlugins\ExploripPlugins.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\VirtualDesktop\VirtualDesktop\VirtualDesktop.csproj" />
-    <ProjectReference Include="..\ExploripPlugins\ExploripPlugins.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-  </ItemGroup>
-
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="copy /Y $(OutDir)VirtualDesktopPlugin.dll $(SolutionDir)build\$(Configuration)\Plugins&#xD;&#xA;copy /Y $(OutDir)VirtualDesktopPlugin.pdb $(SolutionDir)build\$(Configuration)\Plugins" />
+    </Target>
 </Project>

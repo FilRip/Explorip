@@ -397,7 +397,7 @@ public static class Localization
         ASK_KILL_PROCESS = Load("taskmgr.exe", 32421, "Do you want to terminate %s ?");
         LOAD_IMAGE_FLOPPY = Load("VMMS.exe", 16160, "Floppy image");
         LOAD_IMAGE_DISK = Load("VMMS.exe", 16163, "Disk image");
-        LOAD_IMAGE_ISO = Load("VMMS.exe", 16163, "ISO image");
+        LOAD_IMAGE_ISO = Load("VMMS.exe", 16166, "ISO image");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

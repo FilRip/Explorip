@@ -1,15 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
-    <OutputType>Library</OutputType>
-	<LangVersion>latest</LangVersion>
-	<UseWPF>true</UseWPF>
-	<Version>1.0.0.0</Version>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ExploripPlugins\ExploripPlugins.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <OutputType>Library</OutputType>
+        <LangVersion>latest</LangVersion>
+        <UseWPF>true</UseWPF>
+        <Version>1.0.0.0</Version>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ExploripPlugins\ExploripPlugins.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="copy /Y $(OutDir)ComputerInfo.dll $(SolutionDir)build\$(Configuration)\Plugins&#xD;&#xA;copy /Y $(OutDir)ComputerInfo.pdb $(SolutionDir)build\$(Configuration)\Plugins" />
+    </Target>
 </Project>

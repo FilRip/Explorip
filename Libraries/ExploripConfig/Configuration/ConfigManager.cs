@@ -60,6 +60,7 @@ public static class ConfigManager
     private const string ConfigShowMemoryUsed = "ShowMemoryUsed";
     private const string FalseValue = "False";
     private const string SubKeyFilteredDesktop = "FilteredIcons";
+    private const string ConfigExplorerHeaderFontSize = "HeaderFontSize";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -112,6 +113,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigExplorerSizeX, (Screen.PrimaryScreen.WpfWorkingArea.Width - 100).ToString());
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerSizeY, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerSizeY, (Screen.PrimaryScreen.WpfWorkingArea.Height - 100).ToString());
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerHeaderFontSize, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerHeaderFontSize, "12");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -421,6 +424,16 @@ public static class ConfigManager
         {
             if (ExplorerSizeY != value && AllowWrite)
                 _registryKeyExplorer.SetValue(ConfigExplorerSizeY, value.ToString());
+        }
+    }
+
+    public static double ExplorerHeaderFontSize
+    {
+        get { return _registryKeyExplorer.ReadDouble(ConfigExplorerHeaderFontSize); }
+        set
+        {
+            if (ExplorerHeaderFontSize != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerHeaderFontSize, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 

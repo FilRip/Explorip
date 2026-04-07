@@ -5,6 +5,8 @@ using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
+using ExploripConfig.Configuration;
+
 namespace Explorip.Explorer.ViewModels;
 
 public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
@@ -12,6 +14,7 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
     public TabItemExplorerBrowserViewModel() : base()
     {
         _lastFolder = "";
+        _headerFontSize = ConfigManager.ExplorerHeaderFontSize;
     }
 
     [ObservableProperty()]
@@ -19,6 +22,10 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
 
     [ObservableProperty()]
     private bool _modeEdit;
+
+    [ObservableProperty()]
+    private double _headerFontSize;
+
     partial void OnModeEditChanged(bool value)
     {
         _lastFolder = "";

@@ -88,7 +88,7 @@ public partial class WpfExplorerBrowser : Window
             if (RightTab.Items.Count == 1 && ConfigManager.StartTwoExplorer)
                 RightTab.AddNewTab((ShellObject)Microsoft.WindowsAPICodePack.Shell.KnownFolders.KnownFolders.Desktop);
         }
-        if (!ConfigManager.StartTwoExplorer && !newInstance)
+        if (!ConfigManager.StartTwoExplorer && !newInstance || RightTab.Items.Count == 1)
             HideRightTab(newInstance);
 
         Icon = Imaging.CreateBitmapSourceFromHIcon(Properties.Resources.FileExplorerIcon.Handle, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());

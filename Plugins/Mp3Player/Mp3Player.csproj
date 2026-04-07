@@ -1,17 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
-    <OutputType>Library</OutputType>
-	  <UseWPF>true</UseWPF>
-	<LangVersion>latest</LangVersion>
-	<Version>1.0.0.0</Version>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ExploripPlugins\ExploripPlugins.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <OutputType>Library</OutputType>
+        <UseWPF>true</UseWPF>
+        <LangVersion>latest</LangVersion>
+        <Version>1.0.0.0</Version>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ExploripPlugins\ExploripPlugins.csproj" />
+    </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="copy /Y $(OutDir)Mp3Player.dll $(SolutionDir)build\$(Configuration)\Plugins&#xD;&#xA;copy /Y $(OutDir)Mp3Player.pdb $(SolutionDir)build\$(Configuration)\Plugins" />
+    </Target>
 </Project>

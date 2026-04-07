@@ -11,6 +11,7 @@ public static class MyDebug
         args = args.Remove("useowncopier");
         args = args.Remove("newinstance");
         args = args.Remove("disablewriteconfig");
+        args = args.Remove("tracemem");
         return args;
     }
 }
