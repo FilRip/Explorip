@@ -141,9 +141,6 @@ public partial class TabExplorerBrowser : TabControl
     private void TabControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {
         if (e.WidthChanged && Name == "LeftTab" && ConfigManager.AllowWrite)
-        {
-            RegistryKey registryKey = ConfigManager.MyRegistryKey.CreateSubKey("LeftTab");
-            registryKey.SetValue("Width", e.NewSize.Width.ToString());
-        }
+            ConfigManager.ExplorerLeftTabWidth = e.NewSize.Width;
     }
 }

@@ -20,6 +20,7 @@ public static class ConfigManager
     #region Constants
     private const string HKeyRoot = "Software\\CoolBytes\\Explorip";
     internal const string ToolBarNameInRegistry = "Toolbar";
+    private const string ConfigLeftTab = "LeftTab";
     private const string ConfigOverrideDefaultColor = "OverrideDefaultColor";
     private const string ConfigDefaultBackgroundColor = "DefaultBackgroundColor";
     private const string ConfigDefaultForegroundColor = "DefaultForegroundColor";
@@ -61,6 +62,7 @@ public static class ConfigManager
     private const string FalseValue = "False";
     private const string SubKeyFilteredDesktop = "FilteredIcons";
     private const string ConfigExplorerHeaderFontSize = "HeaderFontSize";
+    private const string ConfigExplorerLeftTabWidth = "Width";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -437,6 +439,16 @@ public static class ConfigManager
         }
     }
 
+    public static double ExplorerLeftTabWidth
+    {
+        get { return _registryKeyExplorer.OpenSubKey(ConfigLeftTab).ReadDouble(ConfigExplorerLeftTabWidth); }
+        set
+        {
+            if (ExplorerLeftTabWidth != value && AllowWrite)
+                _registryKeyExplorer.OpenSubKey(ConfigLeftTab, true).SetValue(ConfigExplorerLeftTabWidth, value.ToString(CultureInfo.InvariantCulture));
+        }
+    }
+
     #endregion
 
     #region Toolbars
@@ -492,34 +504,15 @@ public static class ConfigManager
 
     #endregion
 
-    #region Properties Root Registry Key
-
-    public static RegistryKey MyRegistryKey
-    {
-        get { return _registryKeyExplorer; }
-    }
-
-    public static RegistryKey DesktopRegistryKey
-    {
-        get { return _registryRootDesktop; }
-    }
-
-    public static RegistryKey TaskbarRegistryKey
-    {
-        get { return _registryRootTaskbar; }
-    }
-
-    #endregion
-
     #region File Explorer tabs
 
     public static string[] LeftTabs
     {
-        get { return GetAllTabs("LeftTab"); }
+        get { return GetAllTabs(ConfigLeftTab); }
         set
         {
             if (AllowWrite)
-                SaveAllTabs("LeftTab", value);
+                SaveAllTabs(ConfigLeftTab, value);
         }
     }
 
