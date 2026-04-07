@@ -4376,21 +4376,16 @@ public partial class NativeMethods
     [Flags()]
     public enum DisplayConfigTopologyIds : uint
     {
-        DISPLAYCONFIG_TOPOLOGY_INTERNAL = 0x00000001,
-        DISPLAYCONFIG_TOPOLOGY_CLONE = 0x00000002,
-        DISPLAYCONFIG_TOPOLOGY_EXTEND = 0x00000004,
-        DISPLAYCONFIG_TOPOLOGY_EXTERNAL = 0x00000008
+        Internal = 0x00000001,
+        Clone = 0x00000002,
+        Extended = 0x00000004,
+        External = 0x00000008
     }
 
     public enum DisplayConfigModeInfoType : uint
     {
         SOURCE = 1,
         TARGET = 2
-    }
-
-    public enum DisplayConfigPixelFormat : uint
-    {
-        PIXELFORMAT_32BPP = 0x00000005
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -4470,7 +4465,7 @@ public partial class NativeMethods
     }
 
     [DllImport(User32_DllName)]
-    internal static extern int QueryDisplayConfig(uint flags,
+    internal static extern int QueryDisplayConfig(QueryDisplayConfigs flags,
         ref uint numPathArrayElements,
         [Out()] DisplayConfigPathInfo[] pathInfoArray,
         ref uint numModeInfoArrayElements,
