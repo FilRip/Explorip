@@ -28,8 +28,6 @@ public static class Program
     [STAThread()]
     public static void Main(string[] args)
     {
-        _ = WpfScreenHelper.Screen.AllScreens;
-        return;
 #if !DEBUG
         AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 #endif
