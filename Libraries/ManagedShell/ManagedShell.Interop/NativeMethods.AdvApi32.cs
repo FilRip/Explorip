@@ -31,7 +31,7 @@ public partial class NativeMethods
         public uint Attributes;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Luid
     {
         public uint LowPart;

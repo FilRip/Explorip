@@ -75,4 +75,15 @@ public static class SystemInformation
     /// </summary>
     /// <returns>A <see cref="T:System.Windows.Rect" /> that represents the size, in units, of the working area of the screen.</returns>
     public static Rect WpfWorkingArea => Screen.PrimaryScreen.WpfWorkingArea;
+
+    [Flags()]
+    public enum DisplayConfigTopologyIds : uint
+    {
+        Internal = 0x00000001,
+        Clone = 0x00000002,
+        Extended = 0x00000004,
+        External = 0x00000008,
+    }
+
+    public static DisplayConfigTopologyIds CurrentDesktopSettings { get; internal set; }
 }

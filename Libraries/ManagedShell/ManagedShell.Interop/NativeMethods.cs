@@ -27,6 +27,44 @@ public partial class NativeMethods
         }
     }
 
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct RectInt4Bytes(int left, int top, int right, int bottom)
+    {
+        public int Left = left;
+        public int Top = top;
+        public int Right = right;
+        public int Bottom = bottom;
+
+        public readonly int Width
+        {
+            get { return Right - Left; }
+        }
+
+        public readonly int Height
+        {
+            get { return Bottom - Top; }
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RectL(int left, int top, int right, int bottom)
+    {
+        public long Left = left;
+        public long Top = top;
+        public long Right = right;
+        public long Bottom = bottom;
+
+        public readonly long Width
+        {
+            get { return Right - Left; }
+        }
+
+        public readonly long Height
+        {
+            get { return Bottom - Top; }
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public struct ShortRect(short left, short top, short right, short bottom)
     {
@@ -49,6 +87,13 @@ public partial class NativeMethods
 
     [StructLayout(LayoutKind.Sequential)]
     public struct PointInt(int x, int y)
+    {
+        public int x = x;
+        public int y = y;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    public struct PointInt4Bytes(int x, int y)
     {
         public int x = x;
         public int y = y;
