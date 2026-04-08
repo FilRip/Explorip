@@ -6,6 +6,8 @@
         xmlns:controls="clr-namespace:Explorip.Explorer.Controls"
         xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
         xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
+        xmlns:constants="clr-namespace:Explorip.Constants"
+        xmlns:config="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
         mc:Ignorable="d"
         Title="Explorateur de fichiers" Background="Transparent" BorderBrush="Transparent" BorderThickness="6"
         UseLayoutRounding="True" Focusable="True" MouseDown="Window_MouseDown" MouseMove="Window_MouseMove" MouseUp="Window_MouseUp"
@@ -40,36 +42,36 @@
         </Grid.ColumnDefinitions>
         <controls:TabExplorerBrowser Grid.Column="0" AllowCloseLastTab="False" x:Name="LeftTab"/>
 
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Black" Width="5" IsTabStop="False"/>
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Transparent" Width="5" IsTabStop="False" Foreground="{x:Static config:Colors.ForegroundColorBrush}"/>
 
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="20"/>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="5"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="5"/>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="1" Content="&gt;" Name="CopyLeft" Click="CopyLeft_Click" Margin="5 0 5 0" ToolTip="Copier vers la droite" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionLeft}"/>
-                <Button Grid.Row="3" Content="&lt;" Name="CopyRight" Click="CopyRight_Click" Margin="5 0 5 0" ToolTip="Copier vers la gauche" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionRight}"/>
-                <Button Grid.Row="5" Content="&gt;&gt;" Name="MoveLeft" Click="MoveLeft_Click" Margin="5 0 5 0" ToolTip="Déplacer vers la droite" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionLeft}"/>
-                <Button Grid.Row="7" Content="&lt;&lt;" Name="MoveRight" Click="MoveRight_Click" Margin="5 0 5 0" ToolTip="Déplacer vers la gauche" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionRight}"/>
-                <Button Grid.Row="10" Content="&lt;X" Name="DeleteLeft" Click="DeleteLeft_Click" Margin="5 0 5 0" ToolTip="Supprimer la sélection de gauche" Style="{DynamicResource ButtonRedWithDarkBackground}" IsEnabled="{Binding SelectionLeft}"/>
-                <Button Grid.Row="12" Content="X&gt;" Name="DeleteRight" Click="DeleteRight_Click" Margin="5 0 5 0" ToolTip="Supprimer la sélection de droite" Style="{DynamicResource ButtonRedWithDarkBackground}" IsEnabled="{Binding SelectionRight}"/>
+                <Button Grid.Row="1" Content="&gt;" Name="CopyLeft" Click="CopyLeft_Click" Margin="5 0 5 0" ToolTip="{x:Static constants:Localization.COPY_SELECTION}" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionLeft}" FontSize="{Binding MiddleFileOperationFontSize}"/>
+                <Button Grid.Row="3" Content="&lt;" Name="CopyRight" Click="CopyRight_Click" Margin="5 0 5 0" ToolTip="{x:Static constants:Localization.COPY_SELECTION}" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionRight}" FontSize="{Binding MiddleFileOperationFontSize}"/>
+                <Button Grid.Row="5" Content="&gt;&gt;" Name="MoveLeft" Click="MoveLeft_Click" Margin="5 0 5 0" ToolTip="{x:Static constants:Localization.MOVE_SELECTION}" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionLeft}" FontSize="{Binding MiddleFileOperationFontSize}"/>
+                <Button Grid.Row="7" Content="&lt;&lt;" Name="MoveRight" Click="MoveRight_Click" Margin="5 0 5 0" ToolTip="{x:Static constants:Localization.MOVE_SELECTION}" Style="{DynamicResource ButtonWithDarkBackground}" IsEnabled="{Binding SelectionRight}" FontSize="{Binding MiddleFileOperationFontSize}"/>
+                <Button Grid.Row="10" Content="&lt;X" Name="DeleteLeft" Click="DeleteLeft_Click" Margin="5 0 5 0" ToolTip="{x:Static constants:Localization.DELETE_SELECTION}" Style="{DynamicResource ButtonRedWithDarkBackground}" IsEnabled="{Binding SelectionLeft}" FontSize="{Binding MiddleFileOperationFontSize}"/>
+                <Button Grid.Row="12" Content="X&gt;" Name="DeleteRight" Click="DeleteRight_Click" Margin="5 0 5 0" ToolTip="{x:Static constants:Localization.DELETE_SELECTION}" Style="{DynamicResource ButtonRedWithDarkBackground}" IsEnabled="{Binding SelectionRight}" FontSize="{Binding MiddleFileOperationFontSize}"/>
             </Grid>
         </Grid>
         

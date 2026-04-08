@@ -1,11 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
+using ExploripConfig.Configuration;
+
 namespace Explorip.Explorer.ViewModels;
 
 public partial class WpfExplorerBrowserViewModel : ObservableObject
 {
     public WpfExplorerBrowserViewModel() : base()
     {
+        _middleFileOperationFontSize = ConfigManager.ExplorerMiddleFileOperationFontSize;
     }
 
     [ObservableProperty()]
@@ -16,4 +19,7 @@ public partial class WpfExplorerBrowserViewModel : ObservableObject
 
     [ObservableProperty()]
     private bool _selectionRight;
+
+    [ObservableProperty()]
+    private double _middleFileOperationFontSize;
 }

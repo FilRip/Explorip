@@ -25,6 +25,7 @@ public static class Localization
     private const string DeskMonDll = "deskmon.dll";
     private const string ComDlg32 = "comdlg32.dll";
     private const string TwinUiPcShellDll = "twinui.pcshell.dll";
+    private const string SrhDll = "srh.dll";
 
     public static string PASTE { get; private set; }
     public static string PASTE_SHORTCUT { get; private set; }
@@ -204,6 +205,9 @@ public static class Localization
     public static string LOAD_IMAGE_FLOPPY { get; private set; }
     public static string LOAD_IMAGE_ISO { get; private set; }
     public static string LOAD_IMAGE_DISK { get; private set; }
+    public static string MOVE_SELECTION { get; private set; }
+    public static string COPY_SELECTION { get; private set; }
+    public static string DELETE_SELECTION { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -398,6 +402,9 @@ public static class Localization
         LOAD_IMAGE_FLOPPY = Load("VMMS.exe", 16160, "Floppy image");
         LOAD_IMAGE_DISK = Load("VMMS.exe", 16163, "Disk image");
         LOAD_IMAGE_ISO = Load("VMMS.exe", 16166, "ISO image");
+        MOVE_SELECTION = Load(SrhDll, 3715, "Cut selection");
+        COPY_SELECTION = Load(SrhDll, 3716, "Copy selection");
+        DELETE_SELECTION = Load(SrhDll, 3718, "Delete selection");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
