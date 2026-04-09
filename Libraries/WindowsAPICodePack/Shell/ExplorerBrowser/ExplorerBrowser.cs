@@ -317,7 +317,7 @@ public sealed class ExplorerBrowser :
                 Bottom = ClientRectangle.Bottom
             };
 
-            explorerBrowserControl.Initialize(Handle, ref rect, null);
+            explorerBrowserControl.Initialize(Handle, ref rect, new FolderSettings());
 
             // Force an initial show frames so that IExplorerPaneVisibility works the first time it is set.
             // This also enables the control panel to be browsed to. If it is not set, then navigating to 

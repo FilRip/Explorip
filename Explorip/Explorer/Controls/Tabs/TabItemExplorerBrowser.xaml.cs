@@ -16,6 +16,7 @@ using ExploripConfig.Configuration;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
+using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
 namespace Explorip.Explorer.Controls;
@@ -31,6 +32,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     private ShellSearchFolder _searchShell;
     private string _searchDirectory;
     private string _tempTitle;
+    private FolderSettings _fs;
 
     public TabItemExplorerBrowser() : base()
     {
@@ -86,9 +88,14 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 if (e.NewLocation.Name.Contains(Constants.Localization.SEARCH_RESULT.Replace("{0}", "")))
                     return;
 
-                if (ConfigManager.ExplorerViewMode != ExplorerBrowserViewMode.Auto)
+                if (ConfigManager.ExplorerViewMode != FolderViewMode.None)
                 {
-                    ExplorerBrowser.ExplorerBrowserControl.GetFolderView2().SetCurrentViewMode((uint)ConfigManager.ExplorerViewMode);
+                    if (_fs.ViewMode != ConfigManager.ExplorerViewMode)
+                        _fs = new FolderSettings() { ViewMode = ConfigManager.ExplorerViewMode };
+                    IFolderView2 fv = ExplorerBrowser.ExplorerBrowserControl.GetFolderView2();
+                    fv.GetCurrentFolderFlags(out uint ff);
+                    _fs.Options = (FolderOptions)ff;
+                    ExplorerBrowser.ExplorerBrowserControl.ExplorerBrowserInterface.SetFolderSettings(ref _fs);
                 }
 
                 DataContext.ModeSearch = false;

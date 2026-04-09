@@ -20,7 +20,7 @@ internal enum ShellViewGetItemObject
 }
 
 [Flags()]
-internal enum FolderOptions
+internal enum FolderOptions : uint
 {
     AutoArrange = 0x00000001,
     AbbreviatedNames = 0x00000002,
@@ -53,12 +53,13 @@ internal enum FolderOptions
     NoBrowserViewState = 0x10000000,
     SubsetGroups = 0x20000000,
     UseSearchFolders = 0x40000000,
-    //AllowRightToLeftReading = unchecked((int)0x80000000)
+    AllowRightToLeftReading = unchecked(0x80000000)
 }
 
-internal enum FolderViewMode
+public enum FolderViewMode : uint
 {
-    Auto = -1,
+    Auto = unchecked((uint)-1),
+    None = 0,
     First = 1,
     Icon = 1,
     SmallIcon = 2,
@@ -83,7 +84,7 @@ internal enum ExplorerPaneStates
 }
 
 [StructLayout(LayoutKind.Sequential, Pack = 4)]
-internal class FolderSettings
+internal struct FolderSettings
 {
     public FolderViewMode ViewMode;
     public FolderOptions Options;
@@ -124,6 +125,39 @@ internal enum CommDlgBrowser2View
     NoSelectVerb = 0x00000008,
     NoIncludeItem = 0x00000010,
     IsFolderPicker = 0x00000020,
+}
+
+[Flags()]
+internal enum Sbsps : uint
+{
+    ABSOLUTE = 0x0000,
+    ACTIVATE_NOFOCUS = 0x00080000,
+    ALLOW_AUTONAVIGATE = 0x00010000,
+    CALLERUNTRUSTED = 0x00800000,
+    CREATENOHISTORY = 0x00100000,
+    DEFBROWSER = 0x0000,
+    DEFMODE = 0x0000,
+    EXPLOREMODE = 0x0020,
+    FEEDNAVIGATION = 0x20000000,
+    HELPMODE = 0x0040,
+    INITIATEDBYHLINKFRAME = 0x80000000,
+    KEEPSAMETEMPLATE = 0x00020000,
+    KEEPWORDWHEELTEXT = 0x00040000,
+    NAVIGATEBACK = 0x4000,
+    NAVIGATEFORWARD = 0x8000,
+    NEWBROWSER = 0x0002,
+    NOAUTOSELECT = 0x04000000,
+    NOTRANSFERHIST = 0x0080,
+    OPENMODE = 0x0010,
+    PARENT = 0x2000,
+    PLAYNOSOUND = 0x00200000,
+    REDIRECT = 0x40000000,
+    RELATIVE = 0x1000,
+    SAMEBROWSER = 0x0001,
+    TRUSTEDFORACTIVEX = 0x10000000,
+    TRUSTFIRSTDOWNLOAD = 0x01000000,
+    UNTRUSTEDFORDOWNLOAD = 0x02000000,
+    WRITENOHISTORY = 0x08000000,
 }
 
 // Disable warning if a method declaration hides another inherited from a parent COM interface
@@ -174,7 +208,7 @@ internal class ExplorerBrowserClass : IExplorerBrowser
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    public virtual extern HResult BrowseToObject([MarshalAs(UnmanagedType.IUnknown)] object punk, uint uFlags);
+    public virtual extern HResult BrowseToObject([MarshalAs(UnmanagedType.IUnknown)] object punk, Sbsps uFlags);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     public virtual extern void FillFromObject([MarshalAs(UnmanagedType.IUnknown)] object punk, int dwFlags);
@@ -312,7 +346,7 @@ internal interface IExplorerBrowser
     /// <returns></returns>
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    HResult BrowseToObject([MarshalAs(UnmanagedType.IUnknown)] object punk, uint uFlags);
+    HResult BrowseToObject([MarshalAs(UnmanagedType.IUnknown)] object punk, Sbsps uFlags);
 
     /// <summary>
     /// Creates a results folder and fills it with items.

@@ -9,6 +9,7 @@ using ExploripConfig.Helpers;
 
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
+using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 
 using WpfScreenHelper;
 
@@ -130,6 +131,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigShowPathInWindowTitle, FalseValue);
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigShowNameInWindowTitle, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigShowNameInWindowTitle, TrueValue);
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerViewMode, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerViewMode, "None");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -482,9 +485,9 @@ public static class ConfigManager
         }
     }
 
-    public static ExplorerBrowserViewMode ExplorerViewMode
+    public static FolderViewMode ExplorerViewMode
     {
-        get { return _registryKeyExplorer.ReadEnum<ExplorerBrowserViewMode>(ConfigExplorerViewMode, ExplorerBrowserViewMode.Auto); }
+        get { return _registryKeyExplorer.ReadEnum<FolderViewMode>(ConfigExplorerViewMode, FolderViewMode.None); }
         set
         {
             if (ExplorerViewMode != value && AllowWrite)
