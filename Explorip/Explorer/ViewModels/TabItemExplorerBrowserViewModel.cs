@@ -7,6 +7,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 using ExploripConfig.Configuration;
 
+using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
+
 namespace Explorip.Explorer.ViewModels;
 
 public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
@@ -15,6 +17,7 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
     {
         _lastFolder = "";
         _headerFontSize = ConfigManager.ExplorerHeaderFontSize;
+        _showCommandPane = ConfigManager.ExplorerShowCommandPane ? PaneVisibilityState.Show : PaneVisibilityState.Hide;
     }
 
     [ObservableProperty()]
@@ -25,6 +28,9 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
 
     [ObservableProperty()]
     private double _headerFontSize;
+
+    [ObservableProperty()]
+    private PaneVisibilityState _showCommandPane;
 
     partial void OnModeEditChanged(bool value)
     {

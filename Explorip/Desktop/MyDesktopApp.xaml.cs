@@ -5,8 +5,6 @@ using System.Windows;
 
 using Explorip.Desktop.Windows;
 
-using Microsoft.Win32;
-
 using WpfScreenHelper;
 
 using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;

@@ -21,6 +21,7 @@ public static class Program
 {
     private static Application _WpfHost;
     internal static bool ModeShell { get; private set; }
+    internal static bool SecondInstance { get; private set; }
 
     /// <summary>
     /// The main entry point for the application.
@@ -100,6 +101,8 @@ public static class Program
                         IpcServerManager.InitChannel(new IpcServer());
                         AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
                     }
+                    else
+                        SecondInstance = true;
                     if (ConfigManager.HookCopy)
                         HookCopyOperationsHelper.InstallHook();
                     _WpfHost = new Explorer.MyExplorerApp();

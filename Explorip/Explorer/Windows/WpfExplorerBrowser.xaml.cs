@@ -33,10 +33,11 @@ namespace Explorip.Explorer.Windows;
 public partial class WpfExplorerBrowser : Window
 {
     private readonly IntPtr _windowHandle;
-    private readonly bool _mainSession;
     private readonly DispatcherTimer _dispatcherTimer;
     private bool _snapVisible;
     private readonly double _firstLeftTabWidth;
+
+    public bool MainSession { get; private set; }
 
     public WpfExplorerBrowser() : this(Environment.GetCommandLineArgs().RemoveAt(0)) { }
 
@@ -44,7 +45,7 @@ public partial class WpfExplorerBrowser : Window
     {
         InitializeComponent();
 
-        _mainSession = mainSession;
+        MainSession = mainSession;
         _windowHandle = new WindowInteropHelper(this).EnsureHandle();
         if (EnvironmentHelper.IsWindows11OrBetter)
         {
@@ -72,7 +73,7 @@ public partial class WpfExplorerBrowser : Window
             }
         }
 
-        if (_mainSession && string.IsNullOrWhiteSpace(dir))
+        if (MainSession && string.IsNullOrWhiteSpace(dir))
         {
             foreach (string path in ConfigManager.LeftTabs.Where(p => Directory.Exists(p)))
                 LeftTab.AddNewTab(ShellObject.FromParsingName(path), Path.GetFileName(path));
@@ -101,7 +102,7 @@ public partial class WpfExplorerBrowser : Window
 
         Left = ConfigManager.ExplorerPosX;
         Top = ConfigManager.ExplorerPosY;
-        if (_mainSession)
+        if (MainSession)
             WindowState = ConfigManager.ExplorerWindowState;
         if (WindowState == WindowState.Minimized && newInstance)
             WindowState = WindowState.Normal;
@@ -362,7 +363,7 @@ public partial class WpfExplorerBrowser : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (_mainSession)
+        if (MainSession && !Program.SecondInstance)
         {
             ConfigManager.LeftTabs = [.. LeftTab.Items.OfType<TabItemExplorerBrowser>().Where(tab => tab.CurrentDirectory?.ParsingName != null).Select(tab => tab.CurrentDirectory.ParsingName)];
             if (RightTab.Visibility == Visibility.Visible)

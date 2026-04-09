@@ -7,7 +7,6 @@ using Explorip.Explorer.Windows;
 
 using ExploripConfig.Configuration;
 
-using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Shell.Common;
 
 namespace Explorip.Explorer.Controls;

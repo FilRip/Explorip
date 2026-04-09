@@ -8,6 +8,7 @@ using System.Windows.Media;
 using ExploripConfig.Helpers;
 
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 
 using WpfScreenHelper;
 
@@ -60,10 +61,15 @@ public static class ConfigManager
     private const string ConfigFloatingShortcut = "FloatingShortcut";
     private const string ConfigShowMemoryUsed = "ShowMemoryUsed";
     private const string FalseValue = "False";
+    private const string TrueValue = "True";
     private const string SubKeyFilteredDesktop = "FilteredIcons";
     private const string ConfigExplorerHeaderFontSize = "HeaderFontSize";
     private const string ConfigExplorerLeftTabWidth = "Width";
     private const string ConfigExplorerMiddleFileOperationFontSize = "MiddleOperationFontSize";
+    private const string ConfigExplorerShowCommandPane = "ShowCommandPane";
+    private const string ConfigExplorerViewMode = "ViewMode";
+    private const string ConfigShowPathInWindowTitle = "ShowPathInWindowTitle";
+    private const string ConfigShowNameInWindowTitle = "ShowNameInWindowTitle";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -100,11 +106,11 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigLanguage, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigLanguage, "System");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigHookCopy, "").ToString()))
-                _registryKeyExplorer.SetValue(ConfigHookCopy, "True");
+                _registryKeyExplorer.SetValue(ConfigHookCopy, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigUseOwnCopier, "").ToString()))
-                _registryKeyExplorer.SetValue(ConfigUseOwnCopier, "True");
+                _registryKeyExplorer.SetValue(ConfigUseOwnCopier, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigStartTwoExplorer, "").ToString()))
-                _registryKeyExplorer.SetValue(ConfigStartTwoExplorer, "True");
+                _registryKeyExplorer.SetValue(ConfigStartTwoExplorer, TrueValue);
             string ws = _registryKeyExplorer.GetValue("ExplorerWindowState", "").ToString();
             if (string.IsNullOrWhiteSpace(ws) || !Enum.TryParse<WindowState>(ws, out _))
                 ExplorerWindowState = WindowState.Normal;
@@ -120,6 +126,10 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigExplorerHeaderFontSize, "12");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerMiddleFileOperationFontSize, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerMiddleFileOperationFontSize, "12");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigShowPathInWindowTitle, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigShowPathInWindowTitle, FalseValue);
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigShowNameInWindowTitle, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigShowNameInWindowTitle, TrueValue);
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -131,7 +141,7 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigProgressBarHeight, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigProgressBarHeight, "5");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigReduceTitleWidthWhenTaskbarFull, "").ToString()))
-                _registryRootTaskbar.SetValue(ConfigReduceTitleWidthWhenTaskbarFull, "True");
+                _registryRootTaskbar.SetValue(ConfigReduceTitleWidthWhenTaskbarFull, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigMarginTitleApplicationWindow, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigMarginTitleApplicationWindow, "5");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigTaskButtonSelectedColor, "").ToString()))
@@ -155,7 +165,7 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigHookTaskbarList, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigHookTaskbarList, FalseValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigShowIconOnThumbnailWindow, "").ToString()))
-                _registryRootTaskbar.SetValue(ConfigShowIconOnThumbnailWindow, "True");
+                _registryRootTaskbar.SetValue(ConfigShowIconOnThumbnailWindow, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDragGhostBorderSize, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigDragGhostBorderSize, "1");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDragGhostBorderColor, "").ToString()))
@@ -163,13 +173,13 @@ public static class ConfigManager
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDragGhostOpacity, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigDragGhostOpacity, "0.75");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigSwitchToDesktopWhenDragEnter, "").ToString()))
-                _registryRootTaskbar.SetValue(ConfigSwitchToDesktopWhenDragEnter, "True");
+                _registryRootTaskbar.SetValue(ConfigSwitchToDesktopWhenDragEnter, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigMouseOverBackgroundColor, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigMouseOverBackgroundColor, $"255,{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.R},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.G},{ExploripSharedCopy.Constants.Colors.SelectedBackgroundShellObject.Color.B}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigReplaceStartMenu, "").ToString()))
-                _registryRootTaskbar.SetValue(ConfigReplaceStartMenu, "True");
+                _registryRootTaskbar.SetValue(ConfigReplaceStartMenu, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigUseJumpList, "").ToString()))
-                _registryRootTaskbar.SetValue(ConfigUseJumpList, "True");
+                _registryRootTaskbar.SetValue(ConfigUseJumpList, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigFloatingShortcut, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigFloatingShortcut, "{CTRL}{F11}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigShowMemoryUsed, "").ToString()))
@@ -459,6 +469,46 @@ public static class ConfigManager
         {
             if (ExplorerMiddleFileOperationFontSize != value && AllowWrite)
                 _registryKeyExplorer.SetValue(ConfigExplorerMiddleFileOperationFontSize, value.ToString(CultureInfo.InvariantCulture));
+        }
+    }
+
+    public static bool ExplorerShowCommandPane
+    {
+        get { return _registryKeyExplorer.ReadBoolean(ConfigExplorerShowCommandPane); }
+        set
+        {
+            if (ExplorerShowCommandPane != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerShowCommandPane, value.ToString());
+        }
+    }
+
+    public static ExplorerBrowserViewMode ExplorerViewMode
+    {
+        get { return _registryKeyExplorer.ReadEnum<ExplorerBrowserViewMode>(ConfigExplorerViewMode, ExplorerBrowserViewMode.Auto); }
+        set
+        {
+            if (ExplorerViewMode != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerViewMode, value.ToString("G"));
+        }
+    }
+
+    public static bool ExplorerShowPathInWindowTitle
+    {
+        get { return _registryKeyExplorer.ReadBoolean(ConfigShowPathInWindowTitle); }
+        set
+        {
+            if (ExplorerShowPathInWindowTitle != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigShowPathInWindowTitle, value.ToString());
+        }
+    }
+
+    public static bool ExplorerShowNameInWindowTitle
+    {
+        get { return _registryKeyExplorer.ReadBoolean(ConfigShowNameInWindowTitle); }
+        set
+        {
+            if (ExplorerShowNameInWindowTitle != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigShowNameInWindowTitle, value.ToString());
         }
     }
 

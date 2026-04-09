@@ -12,6 +12,8 @@ using System.Windows.Media;
 using Explorip.Explorer.ViewModels;
 using Explorip.Explorer.Windows;
 
+using ExploripConfig.Configuration;
+
 using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
@@ -104,6 +106,21 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 {
                     pathLink = e.NewLocation.Name;
                     splitPath = false;
+                }
+
+                if (Window.GetWindow(this) is WpfExplorerBrowser win && (!win.MainSession || Program.SecondInstance) &&
+                    (ConfigManager.ExplorerShowNameInWindowTitle || ConfigManager.ExplorerShowPathInWindowTitle))
+                {
+                    win.Title = "";
+                    if (ConfigManager.ExplorerShowNameInWindowTitle)
+                        win.Title = e.NewLocation.Name;
+                    if (ConfigManager.ExplorerShowPathInWindowTitle)
+                    {
+                        if (!string.IsNullOrWhiteSpace(win.Title))
+                            win.Title += " (" + pathLink + ")";
+                        else
+                            win.Title = pathLink;
+                    }
                 }
 
                 CurrentPath.Inlines?.Clear();

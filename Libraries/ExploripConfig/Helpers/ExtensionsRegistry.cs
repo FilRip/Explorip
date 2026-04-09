@@ -30,11 +30,11 @@ public static class ExtensionsRegistry
         return defaultValue;
     }
 
-    public static T ReadEnum<T>(this RegistryKey registryKey, string keyName) where T : struct, Enum
+    public static T ReadEnum<T>(this RegistryKey registryKey, string keyName, T? defaultValue = null) where T : struct, Enum
     {
-        if (Enum.TryParse(registryKey.GetValue(keyName, default(T)).ToString(), out T result))
+        if (Enum.TryParse(registryKey.GetValue(keyName, defaultValue).ToString(), out T result))
             return result;
-        return default;
+        return defaultValue ?? default;
     }
 
     public static Point ReadPoint(this RegistryKey registryKey, string keyName)
