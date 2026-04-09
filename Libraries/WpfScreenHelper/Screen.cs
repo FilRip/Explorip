@@ -173,10 +173,15 @@ public class Screen
 
         foreach (NativeMethods.DisplayConfigPathInfo path in paths)
         {
-            NativeMethods.DisplayConfigModeInfo modeSource = modes.FirstOrDefault(m => m.InfoType == NativeMethods.DisplayConfigModeInfoType.Source &&
-                                                                                       m.Id == path.sourceInfo.id);
+            NativeMethods.DisplayConfigModeInfo modeSource = modes.SingleOrDefault(m => m.InfoType == NativeMethods.DisplayConfigModeInfoType.Source &&
+                                                                                        m.Id == path.sourceInfo.id && m.AdapterId == path.sourceInfo.adapterId);
             if (modeSource.InfoType == NativeMethods.DisplayConfigModeInfoType.Source)
             {
+                Screen screen = _listScreens.SingleOrDefault(s => (int)Math.Round(s.Bounds.X, 0) == modeSource.AdditionalModeInfo.SourceMode.Position.x &&
+                                                                  (int)Math.Round(s.Bounds.Y, 0) == modeSource.AdditionalModeInfo.SourceMode.Position.y);
+                screen?.IsActive = path.flags.HasFlag(NativeMethods.Dcpi.Active);
+                screen?.CloneGroupId = path.sourceInfo.modeInfoIdx.CloneGroupId.CloneGroupId;
+                // TODO : Set IsAClone & Set ITheCloneMaster
             }
         }
         SystemInformation.CurrentDesktopSettings = topo;
@@ -321,7 +326,10 @@ public class Screen
                 WorkingArea.Width / ScaleFactor,
                 WorkingArea.Height / ScaleFactor);
 
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; internal set; }
+    //public bool IsAClone { get; private set; }
+    //public bool IsTheCloneMaster { get; private set; }
+    public int CloneGroupId { get; internal set; }
 
     /// <summary>
     /// Retrieves a Screen for the display that contains the largest portion of the specified control.

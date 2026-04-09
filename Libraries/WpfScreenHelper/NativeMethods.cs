@@ -336,6 +336,31 @@ internal static class NativeMethods
     {
         public uint LowPart;
         public int HighPart;
+
+        public override readonly bool Equals(object? obj)
+        {
+            return obj is Luid luid &&
+                   LowPart == luid.LowPart &&
+                   HighPart == luid.HighPart;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode;
+            hashCode = LowPart.GetHashCode();
+            hashCode += HighPart.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(Luid left, Luid right)
+        {
+            return left.LowPart == right.LowPart && left.HighPart == right.HighPart;
+        }
+
+        public static bool operator !=(Luid left, Luid right)
+        {
+            return !(left == right);
+        }
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]

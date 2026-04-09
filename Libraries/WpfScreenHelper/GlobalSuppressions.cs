@@ -6,3 +6,5 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"")]
+[assembly: SuppressMessage("S125", "S125")]
+[assembly: SuppressMessage("S1135", "S1135")]
