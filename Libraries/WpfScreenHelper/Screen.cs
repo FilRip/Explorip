@@ -171,21 +171,13 @@ public class Screen
             ref modeCount, modes,
             out SystemInformation.DisplayConfigTopologyIds topo);
 
-        foreach (Screen screen in _listScreens)
+        foreach (NativeMethods.DisplayConfigPathInfo path in paths)
         {
-#pragma warning disable S1244
             NativeMethods.DisplayConfigModeInfo modeSource = modes.FirstOrDefault(m => m.InfoType == NativeMethods.DisplayConfigModeInfoType.Source &&
-                                                                                       m.AdditionalModeInfo.SourceMode.Position.x == screen.Bounds.Left &&
-                                                                                       m.AdditionalModeInfo.SourceMode.Position.y == screen.Bounds.Top);
+                                                                                       m.Id == path.sourceInfo.id);
             if (modeSource.InfoType == NativeMethods.DisplayConfigModeInfoType.Source)
             {
-                NativeMethods.DisplayConfigModeInfo modeTarget = modes.FirstOrDefault(m => m.Id == modeSource.Id && m.InfoType == NativeMethods.DisplayConfigModeInfoType.Target);
-                if (modeTarget.InfoType == NativeMethods.DisplayConfigModeInfoType.Target)
-                {
-                    //screen.IsActive = modeSource.AdditionalModeInfo.SourceMode.
-                }
             }
-#pragma warning restore S1244
         }
         SystemInformation.CurrentDesktopSettings = topo;
     }
