@@ -86,6 +86,11 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 if (e.NewLocation.Name.Contains(Constants.Localization.SEARCH_RESULT.Replace("{0}", "")))
                     return;
 
+                if (ConfigManager.ExplorerViewMode != ExplorerBrowserViewMode.Auto)
+                {
+                    ExplorerBrowser.ExplorerBrowserControl.GetFolderView2().SetCurrentViewMode((uint)ConfigManager.ExplorerViewMode);
+                }
+
                 DataContext.ModeSearch = false;
                 DisposeSearch();
                 DataContext.ModeEdit = false;
