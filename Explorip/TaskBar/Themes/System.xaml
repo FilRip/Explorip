@@ -194,7 +194,7 @@
                                 <BeginStoryboard x:Name="FlashingAnimation">
                                     <Storyboard RepeatBehavior="Forever" Duration="0:0:2">
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="ButtonBorder" Storyboard.TargetProperty="Background.Color">
-                                            <DiscreteColorKeyFrame KeyTime="0:0:0" Value="Red"/>
+                                            <DiscreteColorKeyFrame KeyTime="0:0:0" Value="{x:Static config:ConfigManager.TaskbarFlashingColor}"/>
                                             <DiscreteColorKeyFrame KeyTime="0:0:1" Value="Transparent"/>
                                         </ColorAnimationUsingKeyFrames> 
                                     </Storyboard>

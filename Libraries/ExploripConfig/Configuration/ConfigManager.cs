@@ -71,6 +71,7 @@ public static class ConfigManager
     private const string ConfigShowPathInWindowTitle = "ShowPathInWindowTitle";
     private const string ConfigShowNameInWindowTitle = "ShowNameInWindowTitle";
     private const string ConfigExplorerPathColor = "PathColor";
+    private const string ConfigTaskbarFlashingColor = "FlashingColor";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -189,6 +190,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue(ConfigFloatingShortcut, "{CTRL}{F11}");
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigShowMemoryUsed, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigShowMemoryUsed, FalseValue);
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigTaskbarFlashingColor, "").ToString()))
+                _registryRootTaskbar.SetValue(ConfigTaskbarFlashingColor, $"255,{Colors.Red.R},{Colors.Red.G},{Colors.Red.B}");
 
             bool checkFirstRun = true;
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
@@ -522,7 +525,8 @@ public static class ConfigManager
         get { return _registryKeyExplorer.ReadColor(ConfigExplorerPathColor, Colors.Yellow); }
         set
         {
-            _registryKeyExplorer.SetValue(ConfigExplorerPathColor, $"{value.A},{value.R},{value.G},{value.B}");
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerPathColor, $"{value.A},{value.R},{value.G},{value.B}");
         }
     }
 
@@ -1026,6 +1030,16 @@ public static class ConfigManager
         {
             if (ShowMemoryUsed != value && AllowWrite)
                 _registryRootTaskbar.SetValue(ConfigShowMemoryUsed, value.ToString());
+        }
+    }
+
+    public static SolidColorBrush TaskbarFlashingColor
+    {
+        get { return new SolidColorBrush(_registryRootTaskbar.ReadColor(ConfigTaskbarFlashingColor, Colors.Red)); }
+        set
+        {
+            if (AllowWrite)
+                _registryRootTaskbar.SetValue(ConfigTaskbarFlashingColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 

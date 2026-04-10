@@ -3,7 +3,7 @@
 public enum AppBarEdge
 {
     Left = 0,
-    Top,
-    Right,
-    Bottom,
+    Top = 1,
+    Right = 2,
+    Bottom = 3,
 }

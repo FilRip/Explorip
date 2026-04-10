@@ -449,11 +449,11 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
             if (AppBarEdge == AppBarEdge.Left)
             {
-                Left = Screen.Bounds.Left / DpiScale + edgeOffset;
+                Left = (Screen.Bounds.Left / DpiScale) + edgeOffset;
             }
             else
             {
-                Left = Screen.Bounds.Right / DpiScale - Width - edgeOffset;
+                Left = (Screen.Bounds.Right / DpiScale) - (Width / DpiScale) - edgeOffset;
             }
         }
         else
@@ -468,7 +468,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             }
             else
             {
-                Top = Screen.Bounds.Bottom / DpiScale - Height - edgeOffset;
+                Top = (Screen.Bounds.Bottom / DpiScale) - (Height / DpiScale) - edgeOffset;
             }
         }
 
