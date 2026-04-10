@@ -1033,13 +1033,13 @@ public static class ConfigManager
         }
     }
 
-    public static SolidColorBrush TaskbarFlashingColor
+    public static Color TaskbarFlashingColor
     {
-        get { return new SolidColorBrush(_registryRootTaskbar.ReadColor(ConfigTaskbarFlashingColor, Colors.Red)); }
+        get { return _registryRootTaskbar.ReadColor(ConfigTaskbarFlashingColor, Colors.Red); }
         set
         {
             if (AllowWrite)
-                _registryRootTaskbar.SetValue(ConfigTaskbarFlashingColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+                _registryRootTaskbar.SetValue(ConfigTaskbarFlashingColor, $"{value.A},{value.R},{value.G},{value.B}");
         }
     }
 
