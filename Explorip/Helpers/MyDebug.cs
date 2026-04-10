@@ -12,6 +12,7 @@ public static class MyDebug
         args = args.Remove("newinstance");
         args = args.Remove("disablewriteconfig");
         args = args.Remove("tracemem");
+        args = args.Remove("donotcheckforupdate");
         return args;
     }
 }

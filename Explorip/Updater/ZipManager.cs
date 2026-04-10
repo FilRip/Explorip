@@ -23,22 +23,22 @@ internal static class ZipManager
     {
         if (inputStream == null)
         {
-            throw new ArgumentNullException("inputStream");
+            throw new ArgumentNullException(nameof(inputStream));
         }
 
         if (theEntry == null)
         {
-            throw new ArgumentNullException("theEntry");
+            throw new ArgumentNullException(nameof(theEntry));
         }
 
         if (!theEntry.IsFile)
         {
-            throw new ArgumentException("Not a file", "theEntry");
+            throw new ArgumentException("Not a file", nameof(theEntry));
         }
 
         if (targetDir == null)
         {
-            throw new ArgumentNullException("targetDir");
+            throw new ArgumentNullException(nameof(targetDir));
         }
 
         // try and sort out the correct place to save this entry

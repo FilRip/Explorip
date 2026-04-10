@@ -49,9 +49,9 @@ public static class Program
                 Process.Start("autoupdate.cmd", Updater.AutoUpdater.UpdateFolder);
                 return;
             }
-            Updater.AutoUpdater.SearchNewVersion(false);
+            if (!ArgumentExists("donotcheckforupdate") && !File.Exists(Path.Combine(ArgumentPathExe(), "neverupdate")))
+                Updater.AutoUpdater.SearchNewVersion(false);
 #endif
-
             ExploripSharedCopy.Constants.Colors.LoadTheme();
             ExploripSharedCopy.Constants.Localization.LoadTranslation();
             Constants.Icons.Init();

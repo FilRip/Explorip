@@ -12,3 +12,4 @@ cd ..
 rmdir /S /Q %1
 echo.
 echo If no error(s) displayed, you can relaunch/start Explorip
+pause

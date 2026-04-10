@@ -11,6 +11,8 @@ using System.Windows;
 
 using Explorip.Exceptions;
 
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
+
 namespace Explorip.Updater;
 
 internal static class AutoUpdater
@@ -18,7 +20,7 @@ internal static class AutoUpdater
     private const string ApplicationName = "Explorip";
     internal const string UpdateFolder = "AutoUpdate";
     private const string UpdateExtension = ".update";
-    private static readonly string AutoUpdateDirectory = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), UpdateFolder);
+    private static readonly string AutoUpdateDirectory = Path.Combine(ArgumentPathExe(), UpdateFolder);
 
     internal static Version LatestVersion(bool beta)
     {
@@ -50,7 +52,7 @@ internal static class AutoUpdater
         ExtendWebClient client = null;
         try
         {
-            string destFile = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), $"{ApplicationName}.zip");
+            string destFile = Path.Combine(ArgumentPathExe(), $"{ApplicationName}.zip");
             if (File.Exists(destFile))
                 File.Delete(destFile);
             client = new ExtendWebClient();
@@ -62,11 +64,14 @@ internal static class AutoUpdater
             File.Delete(destFile);
             if (!UpdateFile(AutoUpdateDirectory))
                 throw new ExploripException("Can't install new version");
-            RemoveAllAutoUpdateDir(AutoUpdateDirectory);
+            Directory.Delete(AutoUpdateDirectory, true);
             if (MessageBox.Show(Constants.Localization.ASK_INSTALL_NEW_VERSION.Replace("%1", ApplicationName), ApplicationName, MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 Restart();
         }
-        catch { /* Ignore errors */ }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, Constants.Localization.ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         finally
         {
             client?.Dispose();
@@ -91,34 +96,27 @@ internal static class AutoUpdater
     private static void CleanUpUpdate()
     {
         if (Directory.Exists(AutoUpdateDirectory))
-            RemoveAllAutoUpdateDir(AutoUpdateDirectory);
-        RemoveAllOlderFile(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]));
-    }
-
-    private static void RemoveAllAutoUpdateDir(string dir)
-    {
-        foreach (string file in Directory.GetFiles(dir))
-        {
-            File.Delete(file);
-        }
-
-        foreach (string subDir in Directory.GetDirectories(dir))
-        {
-            RemoveAllAutoUpdateDir(subDir);
-            Directory.Delete(subDir);
-        }
+            Directory.Delete(AutoUpdateDirectory, true);
+        RemoveAllOlderFile(ArgumentPathExe());
     }
 
     private static void RemoveAllOlderFile(string dir)
     {
-        foreach (string file in Directory.GetFiles(dir, $"*{UpdateExtension}"))
+        try
         {
-            File.Delete(file);
-        }
+            foreach (string file in Directory.GetFiles(dir, $"*{UpdateExtension}"))
+            {
+                File.Delete(file);
+            }
 
-        foreach (string subDir in Directory.GetDirectories(dir))
+            foreach (string subDir in Directory.GetDirectories(dir))
+            {
+                RemoveAllOlderFile(subDir);
+            }
+        }
+        catch (Exception ex)
         {
-            RemoveAllOlderFile(subDir);
+            MessageBox.Show($"Unable to delete older file : \r\n{ex.Message}", Constants.Localization.ERROR, MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -128,7 +126,7 @@ internal static class AutoUpdater
         {
             foreach (string file in Directory.GetFiles(directory))
             {
-                string destFile = file.Replace($"{UpdateFolder}\\", "");
+                string destFile = file.Replace($"{Path.DirectorySeparatorChar}{UpdateFolder}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}");
                 if (File.Exists(destFile + UpdateExtension))
                     File.Delete(destFile + UpdateExtension);
                 if (File.Exists(destFile))
@@ -137,7 +135,7 @@ internal static class AutoUpdater
             }
             foreach (string dir in Directory.GetDirectories(directory))
             {
-                string destDir = dir.Replace($"{UpdateFolder}\\", "");
+                string destDir = dir.Replace($"{Path.DirectorySeparatorChar}{UpdateFolder}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}");
                 if (!Directory.Exists(destDir))
                     Directory.CreateDirectory(destDir);
                 if (!UpdateFile(dir))
@@ -155,15 +153,7 @@ internal static class AutoUpdater
     {
         Task.Run(() =>
         {
-            StringBuilder args = new();
-            if (Environment.GetCommandLineArgs().Length > 1)
-                for (int i = 1; i < Environment.GetCommandLineArgs().Length; i++)
-                {
-                    if (args.Length > 0)
-                        args.Append(" ");
-                    args.Append(Environment.GetCommandLineArgs()[i]);
-                }
-            Process.Start(Environment.GetCommandLineArgs()[0], args.ToString());
+            Process.Start(ArgumentFullPathExe(), Arguments());
             Environment.Exit(0);
         });
     }
