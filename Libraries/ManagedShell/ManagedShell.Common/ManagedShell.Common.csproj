@@ -1,22 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <UseWindowsForms>true</UseWindowsForms>
+        <UseWPF>true</UseWPF>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Data.OleDb" Version="9.0.3" />
-  </ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Resource Include="Resources\nullIcon.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Resources\nullIcon.png" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ManagedShell.Interop\ManagedShell.Interop.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Data.OleDb" Version="9.0.3" />
+        <ProjectReference Include="..\ManagedShell.Interop\ManagedShell.Interop.csproj" />
+    </ItemGroup>
 
 </Project>

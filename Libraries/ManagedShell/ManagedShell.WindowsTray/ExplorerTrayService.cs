@@ -283,7 +283,7 @@ public class ExplorerTrayService
     {
         public int iBitmap;
         public int idCommand;
-#pragma warning disable IDE0044
+#pragma warning disable IDE0044, IDE0251
         [StructLayout(LayoutKind.Explicit)]
         private struct TbButtonU
         {
@@ -291,11 +291,11 @@ public class ExplorerTrayService
             [FieldOffset(1)] public byte fsStyle;
             [FieldOffset(0)] private IntPtr bReserved;
         }
-#pragma warning restore IDE0044
         private TbButtonU union;
         public byte FsState { get { return union.fsState; } set { union.fsState = value; } }
         public byte FsStyle { get { return union.fsStyle; } set { union.fsStyle = value; } }
         public UIntPtr dwData;
         public IntPtr iString;
+#pragma warning restore IDE0044, IDE0251
     }
 }

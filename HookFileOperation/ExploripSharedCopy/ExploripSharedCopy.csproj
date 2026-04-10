@@ -1,30 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-  <PropertyGroup>
-    <ProjectGuid>{2C8D880A-68E2-49D9-82CD-3A2FE01E1F75}</ProjectGuid>
-    <TargetFramework>net481</TargetFramework>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <LangVersion>latest</LangVersion>
-    <AssemblyTitle>ExploripSharedCopy</AssemblyTitle>
-    <Company>CoolBytes</Company>
-    <Product>ExploripSharedCopy</Product>
-    <Copyright>Copyright © 2024 CoolBytes</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Libraries\ShellLink\Securify.ShellLink.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
+    <PropertyGroup>
+        <ProjectGuid>{2C8D880A-68E2-49D9-82CD-3A2FE01E1F75}</ProjectGuid>
+        <TargetFramework>net481</TargetFramework>
+        <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+        <LangVersion>latest</LangVersion>
+        <AssemblyTitle>ExploripSharedCopy</AssemblyTitle>
+        <Company>CoolBytes</Company>
+        <Product>ExploripSharedCopy</Product>
+        <Copyright>Copyright © 2024 CoolBytes</Copyright>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\..\Libraries\ShellLink\Securify.ShellLink.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Xaml" />
+        <Reference Include="WindowsBase" />
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
+    </ItemGroup>
 </Project>

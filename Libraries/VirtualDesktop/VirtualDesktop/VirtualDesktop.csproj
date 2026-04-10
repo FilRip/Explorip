@@ -1,57 +1,68 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
-	<LangVersion>latest</LangVersion>
-	<UseWPF>true</UseWPF>
-	<Nullable>enable</Nullable>
-	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <UseWPF>true</UseWPF>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IApplicationView.cs" />
-    <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IApplicationViewCollection.cs" />
-    <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktop.cs" />
-    <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktopManagerInternal.cs" />
-    <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktopNotification.cs" />
-    <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktopNotificationService.cs" />
-    <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktopPinnedApps.cs" />
-    <EmbeddedResource Include="Interop\Build20348_0000\.interfaces\IVirtualDesktop.cs" />
-    <EmbeddedResource Include="Interop\Build20348_0000\.interfaces\IVirtualDesktopManagerInternal.cs" />
-    <EmbeddedResource Include="Interop\Build20348_0000\.interfaces\IVirtualDesktopNotification.cs" />
-    <EmbeddedResource Include="Interop\Build20348_0000\.interfaces\IVirtualDesktopNotificationService.cs" />
-    <EmbeddedResource Include="Interop\Build22000_0000\.interfaces\IVirtualDesktop.cs" />
-    <EmbeddedResource Include="Interop\Build22000_0000\.interfaces\IVirtualDesktopManagerInternal.cs" />
-    <EmbeddedResource Include="Interop\Build22000_0000\.interfaces\IVirtualDesktopNotification.cs" />
-    <EmbeddedResource Include="Interop\Build22000_0000\.interfaces\IVirtualDesktopNotificationService.cs" />
-    <EmbeddedResource Include="Interop\Build22621_2215\.interfaces\IVirtualDesktop.cs" />
-    <EmbeddedResource Include="Interop\Build22621_2215\.interfaces\IVirtualDesktopManagerInternal.cs" />
-    <EmbeddedResource Include="Interop\Build22621_2215\.interfaces\IVirtualDesktopNotification.cs" />
-    <EmbeddedResource Include="Interop\Build22621_2215\.interfaces\IVirtualDesktopNotificationService.cs" />
-    <EmbeddedResource Include="Interop\Build26100_0000\.interfaces\IVirtualDesktop.cs" />
-    <EmbeddedResource Include="Interop\Build26100_0000\.interfaces\IVirtualDesktopManagerInternal.cs" />
-    <EmbeddedResource Include="Interop\Build26100_0000\.interfaces\IVirtualDesktopNotification.cs" />
-    <EmbeddedResource Include="Interop\Build26100_0000\.interfaces\IVirtualDesktopNotificationService.cs" />
-  </ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\AssemblyInfo.cs" />
+        <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IApplicationView.cs" />
+        <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IApplicationViewCollection.cs" />
+        <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktop.cs" />
+        <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktopManagerInternal.cs" />
+        <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktopNotification.cs" />
+        <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktopNotificationService.cs" />
+        <EmbeddedResource Include="Interop\Build10240_0000\.interfaces\IVirtualDesktopPinnedApps.cs" />
+        <EmbeddedResource Include="Interop\Build20348_0000\.interfaces\IVirtualDesktop.cs" />
+        <EmbeddedResource Include="Interop\Build20348_0000\.interfaces\IVirtualDesktopManagerInternal.cs" />
+        <EmbeddedResource Include="Interop\Build20348_0000\.interfaces\IVirtualDesktopNotification.cs" />
+        <EmbeddedResource Include="Interop\Build20348_0000\.interfaces\IVirtualDesktopNotificationService.cs" />
+        <EmbeddedResource Include="Interop\Build22000_0000\.interfaces\IVirtualDesktop.cs" />
+        <EmbeddedResource Include="Interop\Build22000_0000\.interfaces\IVirtualDesktopManagerInternal.cs" />
+        <EmbeddedResource Include="Interop\Build22000_0000\.interfaces\IVirtualDesktopNotification.cs" />
+        <EmbeddedResource Include="Interop\Build22000_0000\.interfaces\IVirtualDesktopNotificationService.cs" />
+        <EmbeddedResource Include="Interop\Build22621_2215\.interfaces\IVirtualDesktop.cs" />
+        <EmbeddedResource Include="Interop\Build22621_2215\.interfaces\IVirtualDesktopManagerInternal.cs" />
+        <EmbeddedResource Include="Interop\Build22621_2215\.interfaces\IVirtualDesktopNotification.cs" />
+        <EmbeddedResource Include="Interop\Build22621_2215\.interfaces\IVirtualDesktopNotificationService.cs" />
+        <EmbeddedResource Include="Interop\Build26100_0000\.interfaces\IVirtualDesktop.cs" />
+        <EmbeddedResource Include="Interop\Build26100_0000\.interfaces\IVirtualDesktopManagerInternal.cs" />
+        <EmbeddedResource Include="Interop\Build26100_0000\.interfaces\IVirtualDesktopNotification.cs" />
+        <EmbeddedResource Include="Interop\Build26100_0000\.interfaces\IVirtualDesktopNotificationService.cs" />
+    </ItemGroup>
 
-  <ItemGroup>
-	<Compile Update="Properties\Settings.Designer.cs">
-	  <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	  <AutoGen>True</AutoGen>
-	  <DependentUpon>Settings.settings</DependentUpon>
-	 </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
+    </ItemGroup>
 
-  <ItemGroup>
-	<None Update="Properties\Settings.settings">
-	  <Generator>SettingsSingleFileGenerator</Generator>
-	  <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-	</None>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
 
 </Project>

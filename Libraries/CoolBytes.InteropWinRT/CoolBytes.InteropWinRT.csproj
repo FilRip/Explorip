@@ -1,24 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
-    <OutputType>Library</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <langversion>latest</langversion>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Windows.ApplicationModel">
-      <HintPath>$(windir)\System32\WinMetadata\Windows.ApplicationModel.winmd</HintPath>
-      <IsWinMDFile>true</IsWinMDFile>
-    </Reference>
-    <Reference Include="Windows.Management">
-      <HintPath>$(windir)\System32\WinMetadata\Windows.Management.winmd</HintPath>
-      <IsWinMDFile>true</IsWinMDFile>
-    </Reference>
-    <Reference Include="Windows.Storage">
-      <HintPath>$(windir)\System32\WinMetadata\Windows.Storage.winmd</HintPath>
-      <IsWinMDFile>true</IsWinMDFile>
-    </Reference>
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <OutputType>Library</OutputType>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <langversion>latest</langversion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="Windows.ApplicationModel">
+            <HintPath>$(windir)\System32\WinMetadata\Windows.ApplicationModel.winmd</HintPath>
+            <IsWinMDFile>true</IsWinMDFile>
+        </Reference>
+        <Reference Include="Windows.Management">
+            <HintPath>$(windir)\System32\WinMetadata\Windows.Management.winmd</HintPath>
+            <IsWinMDFile>true</IsWinMDFile>
+        </Reference>
+        <Reference Include="Windows.Storage">
+            <HintPath>$(windir)\System32\WinMetadata\Windows.Storage.winmd</HintPath>
+            <IsWinMDFile>true</IsWinMDFile>
+        </Reference>
+    </ItemGroup>
 </Project>

@@ -1,49 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <ProjectGuid>{2E1FB0DF-F9BB-4909-9F32-2D9D022A8E57}</ProjectGuid>
-    <RootNamespace>Microsoft.WindowsAPICodePack</RootNamespace>
-    <AssemblyName>Microsoft.WindowsAPICodePack</AssemblyName>
-    <TargetFramework>net481</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <AssemblyTitle>Microsoft.WindowsAPICodePack</AssemblyTitle>
-    <Company>Microsoft</Company>
-    <Product>Microsoft Windows API Code Pack for .NET Framework</Product>
-    <NeutralLanguage>en</NeutralLanguage>
-    <Description>WindowsAPICodePack Core</Description>
-    <Copyright>Copyright © Microsoft 2010</Copyright>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <NoWarn>IDE0251</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Resources\LocalizedMessages.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LocalizedMessages.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\LocalizedMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>LocalizedMessages.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="CustomDictionary.xml">
-      <SubType>Designer</SubType>
-    </CodeAnalysisDictionary>
-  </ItemGroup>
+    <PropertyGroup>
+        <ProductVersion>9.0.21022</ProductVersion>
+        <ProjectGuid>{2E1FB0DF-F9BB-4909-9F32-2D9D022A8E57}</ProjectGuid>
+        <RootNamespace>Microsoft.WindowsAPICodePack</RootNamespace>
+        <AssemblyName>Microsoft.WindowsAPICodePack</AssemblyName>
+        <TargetFramework>net481</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <AssemblyTitle>Microsoft.WindowsAPICodePack</AssemblyTitle>
+        <Company>Microsoft</Company>
+        <Product>Microsoft Windows API Code Pack for .NET Framework</Product>
+        <NeutralLanguage>en</NeutralLanguage>
+        <Description>WindowsAPICodePack Core</Description>
+        <Copyright>Copyright © Microsoft 2010</Copyright>
+        <AssemblyVersion>1.1.0.0</AssemblyVersion>
+        <FileVersion>1.1.0.0</FileVersion>
+        <OutputPath>bin\$(Configuration)\</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <Reference Include="System.Windows.Forms" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Resources\LocalizedMessages.Designer.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>LocalizedMessages.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Resources\LocalizedMessages.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>LocalizedMessages.Designer.cs</LastGenOutput>
+            <SubType>Designer</SubType>
+        </EmbeddedResource>
+    </ItemGroup>
+    <ItemGroup>
+        <CodeAnalysisDictionary Include="CustomDictionary.xml">
+            <SubType>Designer</SubType>
+        </CodeAnalysisDictionary>
+    </ItemGroup>
 </Project>

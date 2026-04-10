@@ -99,6 +99,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorip - StartMenu", "Lau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorip - Taskbar", "Launchers\Explorip - Taskbar\Explorip - Taskbar.csproj", "{2774880F-524D-7E3B-8A33-69022D8F4BCD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorip - Updater", "Launchers\Explorip - Updater\Explorip - Updater.csproj", "{29F2DC4F-0F15-79E4-BC7D-0B004578980D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -261,6 +263,10 @@ Global
 		{2774880F-524D-7E3B-8A33-69022D8F4BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2774880F-524D-7E3B-8A33-69022D8F4BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2774880F-524D-7E3B-8A33-69022D8F4BCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29F2DC4F-0F15-79E4-BC7D-0B004578980D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29F2DC4F-0F15-79E4-BC7D-0B004578980D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29F2DC4F-0F15-79E4-BC7D-0B004578980D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29F2DC4F-0F15-79E4-BC7D-0B004578980D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -310,6 +316,7 @@ Global
 		{1A6C6208-6D5D-704F-0AF2-7A0D42ED23C7} = {CD2C7A31-DAD4-4535-A8C2-76B63CE6CCF3}
 		{4A5F09B8-3066-96CA-BEDF-EC18BAC87B35} = {CD2C7A31-DAD4-4535-A8C2-76B63CE6CCF3}
 		{2774880F-524D-7E3B-8A33-69022D8F4BCD} = {CD2C7A31-DAD4-4535-A8C2-76B63CE6CCF3}
+		{29F2DC4F-0F15-79E4-BC7D-0B004578980D} = {CD2C7A31-DAD4-4535-A8C2-76B63CE6CCF3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D97A02AF-611A-4C19-8399-7F5F6B027468}

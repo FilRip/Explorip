@@ -17,6 +17,6 @@ public partial class App : Application
 #else
         subDir = "release";
 #endif
-        Process.Start(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), subDir, "explorip.exe"), "taskbars");
+        Process.Start(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), subDir, "explorip.exe"), "startmenu");
     }
 }

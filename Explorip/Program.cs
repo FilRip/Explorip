@@ -34,8 +34,14 @@ public static class Program
 #endif
         try
         {
+            if (ArgumentExists("/?") || (ArgumentExists("-?")) || (ArgumentExists("-h")) || (ArgumentExists("--h")) || (ArgumentExists("-help")) || (ArgumentExists("--help")))
+            {
+                ConsoleHelper.WriteToConsole();
+                Environment.Exit(0);
+            }
+
             ModeShell = true;
-            Mutex mutexProcess;
+            Mutex mutexProcess = null;
 
             Process[] process = Process.GetProcessesByName("explorer");
             if (process != null && process.Length > 0)
@@ -43,15 +49,17 @@ public static class Program
 
             Constants.Localization.LoadTranslation();
 
-#if !DEBUG
-            if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), Updater.AutoUpdater.UpdateFolder)))
+            if (!Debugger.IsAttached || ArgumentExists("update"))
             {
-                Process.Start("autoupdate.cmd", Updater.AutoUpdater.UpdateFolder);
-                return;
+                if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), Updater.AutoUpdater.UpdateFolder)))
+                {
+                    Process.Start("autoupdate.cmd", Updater.AutoUpdater.UpdateFolder);
+                    return;
+                }
+                if ((!ArgumentExists("donotcheckforupdate") && !File.Exists(Path.Combine(ArgumentPathExe(), "neverupdate"))) || ArgumentExists("update"))
+                    Updater.AutoUpdater.SearchNewVersion(false);
             }
-            if (!ArgumentExists("donotcheckforupdate") && !File.Exists(Path.Combine(ArgumentPathExe(), "neverupdate")))
-                Updater.AutoUpdater.SearchNewVersion(false);
-#endif
+
             ExploripSharedCopy.Constants.Colors.LoadTheme();
             ExploripSharedCopy.Constants.Localization.LoadTranslation();
             Constants.Icons.Init();
@@ -67,10 +75,8 @@ public static class Program
             {
                 _WpfHost = new StartMenu.MyStartMenuApp();
                 _WpfHost.Run();
-                return;
             }
-
-            if (ArgumentExists("desktop") || ArgumentExists("desktops"))
+            else if (ArgumentExists("desktop") || ArgumentExists("desktops"))
             {
                 mutexProcess = new Mutex(true, "ExploripDesktop", out bool processNotLaunched);
                 if (processNotLaunched)
@@ -116,7 +122,7 @@ public static class Program
                         IpcServerManager.SendNewWindow([Environment.SpecialFolder.System.FullPath().Substring(0, 3)]);
                 }
             }
-            mutexProcess.Dispose();
+            mutexProcess?.Dispose();
         }
         catch (Exception ex)
         {

@@ -1,18 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net481</TargetFramework>
-    <OutputType>Library</OutputType>
-	<LangVersion>latest</LangVersion>
-	<Nullable>enable</Nullable>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="OleCf" Version="1.5.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
-    <ProjectReference Include="..\ShellLink\Securify.ShellLink.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <OutputType>Library</OutputType>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>none</DebugType>
+        <Optimize>true</Optimize>
+        <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="OleCf" Version="1.5.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ManagedShell\ManagedShell.Common\ManagedShell.Common.csproj" />
+        <ProjectReference Include="..\ShellLink\Securify.ShellLink.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="Microsoft.CSharp" />
+    </ItemGroup>
 </Project>

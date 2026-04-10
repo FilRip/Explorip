@@ -2,7 +2,7 @@
 using System.IO;
 using System.Windows;
 
-namespace ExploripTaskbar;
+namespace ExploripUpdater;
 
 /// <summary>
 /// Interaction logic for App.xaml
@@ -17,6 +17,6 @@ public partial class App : Application
 #else
         subDir = "release";
 #endif
-        Process.Start(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), subDir, "explorip.exe"), "taskbars");
+        Process.Start(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), subDir, "explorip.exe"));
     }
 }
