@@ -208,6 +208,7 @@ public static class Localization
     public static string MOVE_SELECTION { get; private set; }
     public static string COPY_SELECTION { get; private set; }
     public static string DELETE_SELECTION { get; private set; }
+    public static string YOURE_UPTODATE { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -405,6 +406,7 @@ public static class Localization
         MOVE_SELECTION = Load(SrhDll, 3715, "Cut selection");
         COPY_SELECTION = Load(SrhDll, 3716, "Copy selection");
         DELETE_SELECTION = Load(SrhDll, 3718, "Delete selection");
+        YOURE_UPTODATE = Load("Musupdatehandlers1.dll", 3, "You're up to date");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
