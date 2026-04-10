@@ -126,7 +126,6 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             DpiHelper.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
         }
 
-        DpiScale = PresentationSource.FromVisual(this).CompositionTarget.TransformToDevice.M11;
         DpiScale = Screen.DpiScale;
 
         SetPosition();
@@ -414,14 +413,13 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         if (!isSameCoords && !Disable)
         {
             DispatcherTimer timer = new() { Interval = TimeSpan.FromSeconds(0.1) };
-            timer.Start();
             timer.Tick += (sender1, args) =>
             {
                 // set position again, since WPF may have overridden the original change from AppBarHelper
                 SetAppBarPosition(rect);
-
                 timer.Stop();
             };
+            timer.Start();
         }
     }
 

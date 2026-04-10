@@ -366,7 +366,10 @@ public partial class Taskbar : AppBarWindow
         {
             ResizeMode = ResizeMode.NoResize;
             DataContext.ResizeOn = false;
-            DesiredHeight = Height;
+            if (AppBarEdge == AppBarEdge.Top || AppBarEdge == AppBarEdge.Bottom)
+                DesiredHeight = Height;
+            else
+                DesiredWidth = Width;
             _appBarManager.SetWorkArea(Screen);
             UpdatePlugins();
             foreach (ToolbarViewModel tb in ToolsBars.Children.OfType<Toolbar>().Select(tb => tb.DataContext))

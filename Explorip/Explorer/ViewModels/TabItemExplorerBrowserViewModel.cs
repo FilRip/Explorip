@@ -18,6 +18,7 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
         _lastFolder = "";
         _headerFontSize = ConfigManager.ExplorerHeaderFontSize;
         _showCommandPane = ConfigManager.ExplorerShowCommandPane ? PaneVisibilityState.Show : PaneVisibilityState.Hide;
+        _pathColorBrush = new SolidColorBrush(ConfigManager.ExplorerPathColor);
     }
 
     [ObservableProperty()]
@@ -31,6 +32,9 @@ public partial class TabItemExplorerBrowserViewModel : TabItemExploripViewModel
 
     [ObservableProperty()]
     private PaneVisibilityState _showCommandPane;
+
+    [ObservableProperty()]
+    private SolidColorBrush _pathColorBrush;
 
     partial void OnModeEditChanged(bool value)
     {

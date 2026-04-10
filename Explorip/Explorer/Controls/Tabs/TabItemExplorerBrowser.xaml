@@ -93,14 +93,14 @@
                 </Button.Style>
             </Button>
 
-            <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={StaticResource inverseBoolToVisibility}}" Foreground="Yellow" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="{Binding HeaderFontSize}"/>
+            <TextBlock Margin="5 0 0 0" Grid.Column="2" x:Name="CurrentPath" Visibility="{Binding ModeEdit, Converter={StaticResource inverseBoolToVisibility}}" Foreground="{Binding PathColorBrush}" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Center" FontSize="{Binding HeaderFontSize}"/>
             <ComboBox Margin="5 0 0 0" Grid.Column="2" x:Name="EditPath" Visibility="{Binding ModeEdit, Converter={StaticResource boolToVisibility}}" ItemsSource="{Binding ComboBoxEditPath}" Text="{Binding EditPath}" IsEditable="True" KeyDown="EditPath_KeyDown" LostFocus="EditPath_LostFocus" Focusable="True" IsTabStop="False"
                       FontSize="{Binding HeaderFontSize}"
-                      Foreground="Yellow"
+                      Foreground="{Binding PathColorBrush}"
                       Style="{StaticResource MyComboBox}"
                       PreviewMouseDown="EditPath_PreviewMouseDown"
                       IsDropDownOpen="{Binding ShowSuggestions}"/>
-            <TextBox Name="SearchText" Grid.Column="2" BorderThickness="2" Foreground="White" Background="Black" Visibility="{Binding ModeSearch, Converter={StaticResource boolToVisibility}}" Text="{Binding SearchTo}" Focusable="True" IsTabStop="False" KeyDown="SearchText_KeyDown" FontSize="{Binding HeaderFontSize}"/>
+            <TextBox Name="SearchText" Grid.Column="2" BorderThickness="2" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Visibility="{Binding ModeSearch, Converter={StaticResource boolToVisibility}}" Text="{Binding SearchTo}" Focusable="True" IsTabStop="False" KeyDown="SearchText_KeyDown" FontSize="{Binding HeaderFontSize}"/>
 
             <Button Name="SearchButton" Grid.Column="3" Content="&#xE721;" FontFamily="Segoe MDL2 Assets" Foreground="{x:Static colors:Colors.AccentColorBrush}" Click="SearchButton_Click" BorderBrush="{Binding DisabledButtonColor}" BorderThickness="2" IsTabStop="False" Focusable="False" FontSize="{Binding HeaderFontSize}">
                 <Button.Style>

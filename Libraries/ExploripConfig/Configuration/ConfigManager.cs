@@ -8,7 +8,6 @@ using System.Windows.Media;
 using ExploripConfig.Helpers;
 
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 
 using WpfScreenHelper;
@@ -71,6 +70,7 @@ public static class ConfigManager
     private const string ConfigExplorerViewMode = "ViewMode";
     private const string ConfigShowPathInWindowTitle = "ShowPathInWindowTitle";
     private const string ConfigShowNameInWindowTitle = "ShowNameInWindowTitle";
+    private const string ConfigExplorerPathColor = "PathColor";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -133,6 +133,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigShowNameInWindowTitle, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerViewMode, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerViewMode, "None");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerPathColor, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerPathColor, $"255,{Colors.Yellow.R},{Colors.Yellow.G},{Colors.Yellow.B}");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -512,6 +514,15 @@ public static class ConfigManager
         {
             if (ExplorerShowNameInWindowTitle != value && AllowWrite)
                 _registryKeyExplorer.SetValue(ConfigShowNameInWindowTitle, value.ToString());
+        }
+    }
+
+    public static Color ExplorerPathColor
+    {
+        get { return _registryKeyExplorer.ReadColor(ConfigExplorerPathColor, Colors.Yellow); }
+        set
+        {
+            _registryKeyExplorer.SetValue(ConfigExplorerPathColor, $"{value.A},{value.R},{value.G},{value.B}");
         }
     }
 

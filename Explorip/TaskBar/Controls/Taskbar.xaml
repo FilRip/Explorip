@@ -157,8 +157,8 @@
                 </MenuItem>
             </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
-            <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Command="{Binding TaskbarAllScreenCommand}"/>
-            <MenuItem Header="{x:Static localization:Localization.UNLOCK_TASKBAR}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click"/>
+            <MenuItem Header="{x:Static localization:Localization.SHOW_TASKBAR_ON_ALL_SCREENS}" Name="TaskbarAllScreenMenuItem" Command="{Binding TaskbarAllScreenCommand}" IsChecked="{Binding ShowTaskbarOnAllScreen, Mode=OneWay}"/>
+            <MenuItem Header="{x:Static localization:Localization.UNLOCK_TASKBAR}" Name="UnlockTaskbar" Click="UnlockTaskbar_Click" IsChecked="{Binding ResizeOn, Mode=OneTime}"/>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
             <MenuItem Header="{x:Static localization:Localization.TASKBAR}" Style="{DynamicResource MenuItemWithSubMenuStyle}">
                 <MenuItem Header="{x:Static localization:Localization.TASKBAR_SHOW_SEARCH}" Name="MenuShowSearch" Command="{Binding ShowSearchButtonCommand}" IsChecked="{Binding SearchButtonVisible}"/>

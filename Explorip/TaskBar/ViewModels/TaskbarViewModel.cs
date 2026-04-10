@@ -206,6 +206,13 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
         get { return ToolbarColumnPosition == 1; }
     }
 
+#pragma warning disable S2325
+    public bool ShowTaskbarOnAllScreen
+    {
+        get { return ((MyTaskbarApp)Application.Current).ListAllTaskbar().Count > 1; }
+    }
+#pragma warning restore S2325
+
     private void SetBarColumn(int toolbarColumn, int tasklistColumn)
     {
         ConfigManager.GetTaskbarConfig(ParentTaskbar.NumScreen).ToolbarColumn = toolbarColumn;
@@ -369,6 +376,7 @@ public partial class TaskbarViewModel(Taskbar parentControl) : ObservableObject(
     private void TaskbarAllScreen()
     {
         ((MyTaskbarApp)Program.MyCurrentApp).ShowTaskbarOnAllOthersScreen();
+        OnPropertyChanged(nameof(ShowTaskbarOnAllScreen));
     }
 
     [RelayCommand()]
