@@ -63,7 +63,7 @@ Replace StartMenu of Windows by the one integrate in Explorip. Model take from W
 
 Plugins
 -------
-You can make plugins. Plugins will be available like toolbar, to add custom control to taskbar. There is an example in this repository of a "MP3 Player" plugins with playlist
+You can make plugins. Plugins will be available like toolbar, to add custom control to taskbar. There is some examples in this repository. A "MP3 Player" plugins with playlist, a control to see CPU usage and memory free in real time and a plguins to manage virtual desktop
 
 
 
