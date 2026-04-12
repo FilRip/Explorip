@@ -4,6 +4,9 @@ Windows Shell/Explorer Replacement. All languages supported.
 
 Look at Settings in Wiki : <a href="https://github.com/FilRip/Explorip/wiki/Settings">https://github.com/FilRip/Explorip/wiki/Settings</a> for a short description (will be more fill later)
 
+License under CC BY-NC-SA
+You can use, you can contribute, you can't sell or use part of code to a commercial product
+
 ------------
 Example with a classic Windows 11
 
