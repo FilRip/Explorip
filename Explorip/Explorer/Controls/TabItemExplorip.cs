@@ -3,12 +3,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using ExploripPlugins.Models;
+
 using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
 
+using static ExploripPlugins.Models.ITabExplorip;
+
 namespace Explorip.Explorer.Controls;
 
-public abstract class TabItemExplorip : TabItem, IDisposable
+public abstract class TabItemExplorip : TabItem, IDisposable, ITabExplorip
 {
     protected void InitializeExplorip()
     {
@@ -26,20 +30,20 @@ public abstract class TabItemExplorip : TabItem, IDisposable
         MyHeader.ButtonClose.Margin = new Thickness(MyHeader.lblTitle.ActualWidth + 5, 3, 0, 0);
     }
 
-    /// <summary>
-    /// Property - Set the Title of the Tab
-    /// </summary>
-    protected void SetTitle(string newTitle)
+    public void SetTitle(string newTitle)
     {
         MyHeader?.DataContext?.Title = newTitle.Replace("_", "__");
     }
 
+    public void SetWindowTitle(string newTitle)
+    {
+        Window.GetWindow(this)?.Title = newTitle;
+    }
+
     #region Events for selecting/deselecting
 
-    public delegate void DelegateOnSelecting();
     public event DelegateOnSelecting OnSelecting;
 
-    public delegate void DelegateOnDeSelecting();
     public event DelegateOnSelecting OnDeSelecting;
 
     public void RaiseOnSelecting()
@@ -116,11 +120,8 @@ public abstract class TabItemExplorip : TabItem, IDisposable
                 else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorip browser2)
                     tabItemTarget = browser2;
 
-#pragma warning disable IDE0074, IDE0270 // Utiliser une assignation composée
                 TabItemExplorip tabItemSource = (TabItemExplorerBrowser)e.Data.GetData(typeof(TabItemExplorerBrowser));
-                if (tabItemSource == null)
-                    tabItemSource = (TabItemConsoleCommand)e.Data.GetData(typeof(TabItemConsoleCommand));
-#pragma warning restore IDE0074, IDE0270 // Utiliser une assignation composée
+                tabItemSource ??= (TabItemConsoleCommand)e.Data.GetData(typeof(TabItemConsoleCommand));
 
                 if (tabItemTarget != null &&
                     tabItemSource != null &&
@@ -154,6 +155,11 @@ public abstract class TabItemExplorip : TabItem, IDisposable
         }
     }
 
+    public void TabDrop(object sender, DragEventArgs e)
+    {
+        TabItem_Drop(sender, e);
+    }
+
     private static void TabItem_Drop(object sender, DragEventArgs e)
     {
         TabItemExplorip tabItemTarget = null;
@@ -162,11 +168,8 @@ public abstract class TabItemExplorip : TabItem, IDisposable
         else if (e.Source is HeaderWithCloseButton entete && entete.Parent is TabItemExplorip browser2)
             tabItemTarget = browser2;
 
-#pragma warning disable IDE0074, IDE0270 // Utiliser une assignation composée
         TabItemExplorip tabItemSource = (TabItemExplorerBrowser)e.Data.GetData(typeof(TabItemExplorerBrowser));
-        if (tabItemSource == null)
-            tabItemSource = (TabItemConsoleCommand)e.Data.GetData(typeof(TabItemConsoleCommand));
-#pragma warning restore IDE0074, IDE0270 // Utiliser une assignation composée
+        tabItemSource ??= (TabItemConsoleCommand)e.Data.GetData(typeof(TabItemConsoleCommand));
 
         if (tabItemTarget != null &&
             tabItemSource != null &&
@@ -198,6 +201,10 @@ public abstract class TabItemExplorip : TabItem, IDisposable
 
     #region IDisposable
 
+    public virtual void Free()
+    {
+    }
+
     private bool disposedValue;
     public bool IsDisposed
     {
@@ -216,6 +223,7 @@ public abstract class TabItemExplorip : TabItem, IDisposable
                 PreviewMouseMove -= TabItem_PreviewMouseMove;
                 MyHeader.lblTitle.SizeChanged -= TabTitle_SizeChanged;
                 Header = null;
+                Free();
             }
             disposedValue = true;
         }
