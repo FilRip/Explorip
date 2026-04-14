@@ -322,6 +322,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             Left = rect.Left / DpiScale;
             Width = (rect.Right - rect.Left) / DpiScale;
             Height = (rect.Bottom - rect.Top) / DpiScale;
+            ShellLogger.Debug($"Set PosSize of taskbar {Screen.NumScreen}:{Screen.DeviceName} to {Left},{Top},{Width},{Height}");
         }
         catch (Exception) { /* Ignore errors */ }
         finally { _positionAlreadyUnderChanged = false; }
@@ -472,7 +473,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             }
         }
 
-
+        ShellLogger.Debug($"Set PosSize of taskbar {Screen.NumScreen}:{Screen.DeviceName} to {Left},{Top},{Width},{Height}");
         if (EnvironmentHelper.IsAppRunningAsShell)
         {
             _appBarManager.SetWorkArea(Screen);

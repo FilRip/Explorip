@@ -324,7 +324,7 @@ public partial class Taskbar : AppBarWindow
         AddToolbars();
 
         FloatingButton.DataContext.SetParentTaskbar(this);
-        // TODO : Start in floatinng mode, not working yet
+        // TODO : Start in floating mode, not working yet
         /*if (ConfigManager.GetTaskbarConfig(_numScreen).StartFloating)
             DataContext.ExpandCollapseTaskbar(false.ToString());*/
     }

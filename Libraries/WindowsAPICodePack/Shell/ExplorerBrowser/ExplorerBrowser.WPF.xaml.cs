@@ -41,7 +41,7 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         WindowsFormsHost host = null;
         try
         {
-            // host the control           
+            // host the control
             host = new WindowsFormsHost()
             {
                 Focusable = true,

@@ -392,10 +392,10 @@ internal interface IServiceProvider
 internal interface IFolderView
 {
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    void GetCurrentViewMode([Out()] out uint pViewMode);
+    void GetCurrentViewMode([Out()] out FolderViewMode pViewMode);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    void SetCurrentViewMode(uint ViewMode);
+    void SetCurrentViewMode(FolderViewMode ViewMode);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void GetFolder(ref Guid riid, [MarshalAs(UnmanagedType.IUnknown)] out object ppv);
@@ -442,10 +442,10 @@ internal interface IFolderView2 : IFolderView
     // IFolderView
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    new HResult GetCurrentViewMode(out uint pViewMode);
+    new HResult GetCurrentViewMode(out FolderViewMode pViewMode);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    new void SetCurrentViewMode(uint ViewMode);
+    new void SetCurrentViewMode(FolderViewMode ViewMode);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     new void GetFolder(ref Guid riid, [MarshalAs(UnmanagedType.IUnknown)] out object ppv);
@@ -508,10 +508,10 @@ internal interface IFolderView2 : IFolderView
     void SetText(int iType, [MarshalAs(UnmanagedType.LPWStr)] string pwszText);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    void SetCurrentFolderFlags(uint dwMask, uint dwFlags);
+    void SetCurrentFolderFlags(uint dwMask, FolderOptions dwFlags);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    void GetCurrentFolderFlags(out uint pdwFlags);
+    void GetCurrentFolderFlags(out FolderOptions pdwFlags);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void GetSortColumnCount(out int pcColumns);
@@ -542,11 +542,11 @@ internal interface IFolderView2 : IFolderView
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    HResult SetViewModeAndIconSize(int uViewMode, int iImageSize);
+    HResult SetViewModeAndIconSize(FolderViewMode uViewMode, int iImageSize);
 
     [PreserveSig()]
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
-    HResult GetViewModeAndIconSize(out int puViewMode, out int piImageSize);
+    HResult GetViewModeAndIconSize(out FolderViewMode puViewMode, out int piImageSize);
 
     [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
     void SetGroupSubsetCount(uint cVisibleRows);

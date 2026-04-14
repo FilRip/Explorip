@@ -72,6 +72,7 @@ public static class ConfigManager
     private const string ConfigShowNameInWindowTitle = "ShowNameInWindowTitle";
     private const string ConfigExplorerPathColor = "PathColor";
     private const string ConfigTaskbarFlashingColor = "FlashingColor";
+    private const string ConfigExplorerIconSize = "IconSize";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -136,6 +137,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigExplorerViewMode, "None");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerPathColor, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerPathColor, $"255,{Colors.Yellow.R},{Colors.Yellow.G},{Colors.Yellow.B}");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerIconSize, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerIconSize, "0");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -527,6 +530,16 @@ public static class ConfigManager
         {
             if (AllowWrite)
                 _registryKeyExplorer.SetValue(ConfigExplorerPathColor, $"{value.A},{value.R},{value.G},{value.B}");
+        }
+    }
+
+    public static int ExplorerIconSize
+    {
+        get { return _registryKeyExplorer.ReadInteger(ConfigExplorerIconSize); }
+        set
+        {
+            if (ExplorerIconSize != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerIconSize, value.ToString());
         }
     }
 

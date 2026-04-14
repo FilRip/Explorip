@@ -93,9 +93,17 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                     if (_fs.ViewMode != ConfigManager.ExplorerViewMode)
                         _fs = new FolderSettings() { ViewMode = ConfigManager.ExplorerViewMode };
                     IFolderView2 fv = ExplorerBrowser.ExplorerBrowserControl.GetFolderView2();
-                    fv.GetCurrentFolderFlags(out uint ff);
-                    _fs.Options = (FolderOptions)ff;
+                    fv.GetCurrentFolderFlags(out FolderOptions ff);
+                    _fs.Options = ff;
                     ExplorerBrowser.ExplorerBrowserControl.ExplorerBrowserInterface.SetFolderSettings(ref _fs);
+                }
+                else if (ConfigManager.ExplorerIconSize > 0)
+                {
+                    IFolderView2 fv = ExplorerBrowser.ExplorerBrowserControl.GetFolderView2();
+                    fv.GetCurrentViewMode(out FolderViewMode fvm);
+                    if (fvm == FolderViewMode.Details)
+                        fvm = FolderViewMode.Icon;
+                    fv.SetViewModeAndIconSize(fvm, ConfigManager.ExplorerIconSize);
                 }
 
                 DataContext.ModeSearch = false;

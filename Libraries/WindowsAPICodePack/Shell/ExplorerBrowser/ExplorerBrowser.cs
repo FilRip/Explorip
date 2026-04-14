@@ -329,11 +329,11 @@ public sealed class ExplorerBrowser :
             if (antecreationNavigationTarget != null)
             {
                 BeginInvoke(new MethodInvoker(
-                delegate
-                {
-                    Navigate(antecreationNavigationTarget);
-                    antecreationNavigationTarget = null;
-                }));
+                    delegate
+                    {
+                        Navigate(antecreationNavigationTarget);
+                        antecreationNavigationTarget = null;
+                    }));
             }
         }
 
@@ -658,20 +658,20 @@ public sealed class ExplorerBrowser :
     internal FolderViewMode GetCurrentViewMode()
     {
         IFolderView2 ifv2 = GetFolderView2();
-        uint viewMode = 0;
         if (ifv2 != null)
         {
             try
             {
-                HResult hr = ifv2.GetCurrentViewMode(out viewMode);
+                HResult hr = ifv2.GetCurrentViewMode(out FolderViewMode viewMode);
                 if (hr != HResult.Ok) { throw new ShellException(hr); }
+                return viewMode;
             }
             finally
             {
                 Marshal.ReleaseComObject(ifv2);
             }
         }
-        return (FolderViewMode)viewMode;
+        return FolderViewMode.None;
     }
 
     /// <summary>
