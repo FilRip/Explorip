@@ -38,7 +38,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
     #region Properties
 
     public AppBarScreen Screen { get; set; }
-    public double DpiScale { get; set; } = 1.0;
+    public double DpiScale { get; set; }
     public IntPtr Handle { get; set; }
     public bool AllowClose { get; set; }
     public bool IsClosing { get; set; }
@@ -97,6 +97,10 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
         Screen = screen;
         AppBarEdge = edge;
+
+        Left = screen.Bounds.Left;
+        Top = screen.Bounds.Top;
+        DpiScale = screen.DpiScale;
 
         if (Orientation == Orientation.Vertical)
             DesiredWidth = size;
@@ -322,7 +326,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             Left = rect.Left / DpiScale;
             Width = (rect.Right - rect.Left) / DpiScale;
             Height = (rect.Bottom - rect.Top) / DpiScale;
-            ShellLogger.Debug($"Set PosSize of taskbar {Screen.NumScreen}:{Screen.DeviceName} to {Left},{Top},{Width},{Height}");
+            ShellLogger.Debug($"Set PosSize of taskbar by AppBar to {Left},{Top},{Width},{Height} for screen {Screen.NumScreen}:{Screen.DeviceName}, Bounds={Screen.Bounds}");
         }
         catch (Exception) { /* Ignore errors */ }
         finally { _positionAlreadyUnderChanged = false; }
@@ -473,7 +477,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             }
         }
 
-        ShellLogger.Debug($"Set PosSize of taskbar {Screen.NumScreen}:{Screen.DeviceName} to {Left},{Top},{Width},{Height}");
+        ShellLogger.Debug($"Set PosSize of taskbar to {Left},{Top},{Width},{Height} for screen {Screen.NumScreen}:{Screen.DeviceName}, Bounds={Screen.Bounds}");
         if (EnvironmentHelper.IsAppRunningAsShell)
         {
             _appBarManager.SetWorkArea(Screen);
