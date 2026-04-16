@@ -100,9 +100,9 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         Screen = screen;
         AppBarEdge = edge;
 
-        Left = screen.Bounds.Left;
-        Top = screen.Bounds.Top;
         DpiScale = screen.ScaleFactor;
+        Left = screen.Bounds.Left / DpiScale;
+        Top = screen.Bounds.Top / DpiScale;
 
         if (Orientation == Orientation.Vertical)
             DesiredWidth = size;
