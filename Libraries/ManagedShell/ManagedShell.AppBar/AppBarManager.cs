@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
+
+using WpfScreenHelper;
 
 using static ManagedShell.Interop.NativeMethods;
 
@@ -148,10 +149,10 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
 
             if (abWindow.Screen != null)
             {
-                top = abWindow.Screen.Bounds.Y;
-                left = abWindow.Screen.Bounds.X;
-                right = abWindow.Screen.Bounds.Right;
-                bottom = abWindow.Screen.Bounds.Bottom;
+                top = (int)abWindow.Screen.Bounds.Y;
+                left = (int)abWindow.Screen.Bounds.X;
+                right = (int)abWindow.Screen.Bounds.Right;
+                bottom = (int)abWindow.Screen.Bounds.Bottom;
             }
 
             if (!abWindow.RequiresScreenEdge)
@@ -247,7 +248,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
     #endregion
 
     #region Work area
-    public double GetAppBarEdgeWindowsHeight(AppBarEdge edge, AppBarScreen screen)
+    public double GetAppBarEdgeWindowsHeight(AppBarEdge edge, Screen screen)
     {
         double edgeHeight = 0;
         double dpiScale = 1;
@@ -272,7 +273,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
         return edgeHeight;
     }
 
-    public Rect GetWorkArea(ref double dpiScale, AppBarScreen screen, bool edgeBarsOnly, bool enabledBarsOnly)
+    public Rect GetWorkArea(ref double dpiScale, Screen screen, bool edgeBarsOnly, bool enabledBarsOnly)
     {
         double topEdgeWindowHeight = 0;
         double bottomEdgeWindowHeight = 0;
@@ -309,15 +310,15 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
             }
         }
 
-        rc.Top = screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
-        rc.Bottom = screen.Bounds.Bottom - (int)(bottomEdgeWindowHeight * dpiScale);
-        rc.Left = screen.Bounds.Left + (int)(leftEdgeWindowWidth * dpiScale);
-        rc.Right = screen.Bounds.Right - (int)(rightEdgeWindowWidth * dpiScale);
+        rc.Top = (int)screen.Bounds.Top + (int)(topEdgeWindowHeight * dpiScale);
+        rc.Bottom = (int)screen.Bounds.Bottom - (int)(bottomEdgeWindowHeight * dpiScale);
+        rc.Left = (int)screen.Bounds.Left + (int)(leftEdgeWindowWidth * dpiScale);
+        rc.Right = (int)screen.Bounds.Right - (int)(rightEdgeWindowWidth * dpiScale);
 
         return rc;
     }
 
-    public void SetWorkArea(AppBarScreen screen)
+    public void SetWorkArea(Screen screen)
     {
         double dpiScale = 1;
         Rect rc = GetWorkArea(ref dpiScale, screen, false, true);
@@ -332,10 +333,10 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
             // TODO this is wrong for multi-display
             // set work area back to full screen size. we can't assume what pieces of the old work area may or may not be still used
             Rect oldWorkArea;
-            oldWorkArea.Left = SystemInformation.VirtualScreen.Left;
-            oldWorkArea.Top = SystemInformation.VirtualScreen.Top;
-            oldWorkArea.Right = SystemInformation.VirtualScreen.Right;
-            oldWorkArea.Bottom = SystemInformation.VirtualScreen.Bottom;
+            oldWorkArea.Left = (int)SystemInformation.VirtualScreen.Left;
+            oldWorkArea.Top = (int)SystemInformation.VirtualScreen.Top;
+            oldWorkArea.Right = (int)SystemInformation.VirtualScreen.Right;
+            oldWorkArea.Bottom = (int)SystemInformation.VirtualScreen.Bottom;
 
             SystemParametersInfo(ESystemParametersInfo.SETWORKAREA, 1, ref oldWorkArea, SystemParametersInfoUpdateMethods.SENDWININICHANGE);
         }

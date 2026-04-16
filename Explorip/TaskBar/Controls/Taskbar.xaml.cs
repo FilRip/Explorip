@@ -21,6 +21,8 @@ using ManagedShell.Interop;
 using ManagedShell.WindowsTasks;
 using ManagedShell.WindowsTray;
 
+using WpfScreenHelper;
+
 namespace Explorip.TaskBar.Controls;
 
 /// <summary>
@@ -36,8 +38,8 @@ public partial class Taskbar : AppBarWindow
     public Popup MyPopup { get; private set; }
     public int TimeBeforeAutoCloseThumb { get; private set; }
 
-    public Taskbar(StartMenuMonitor startMenuMonitor, AppBarScreen screen)
-        : base(MyTaskbarApp.MyShellManager.AppBarManager, MyTaskbarApp.MyShellManager.ExplorerHelper, MyTaskbarApp.MyShellManager.FullScreenHelper, screen, ConfigManager.GetTaskbarConfig(screen.NumScreen).Edge, 0)
+    public Taskbar(StartMenuMonitor startMenuMonitor, Screen screen)
+        : base(MyTaskbarApp.MyShellManager.AppBarManager, MyTaskbarApp.MyShellManager.ExplorerHelper, MyTaskbarApp.MyShellManager.FullScreenHelper, screen, ConfigManager.GetTaskbarConfig(screen.DisplayNumber).Edge, 0)
     {
         InitializeComponent();
 
@@ -45,7 +47,7 @@ public partial class Taskbar : AppBarWindow
             return;
 
         _mainScreen = screen.Primary;
-        _numScreen = screen.NumScreen;
+        _numScreen = screen.DisplayNumber;
 
         base.DataContext = new TaskbarViewModel(this)
         {
@@ -165,7 +167,7 @@ public partial class Taskbar : AppBarWindow
             }
             else if (msg == (int)NativeMethods.WM.HOTKEY && (int)wParam == 1)
             {
-                WpfScreenHelper.Screen currentScreen = WpfScreenHelper.MouseHelper.MouseScreen;
+                Screen currentScreen = WpfScreenHelper.MouseHelper.MouseScreen;
                 foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar())
                 {
                     if (tb.NumScreen == currentScreen.DisplayNumber)
@@ -184,11 +186,11 @@ public partial class Taskbar : AppBarWindow
 
     public void SetPositionAndSize()
     {
-        double previousDpi = Screen.DpiScale;
-        AppBarScreen newScreen = AppBarScreen.FromAllScreens().FirstOrDefault(s => s.NumScreen == _numScreen);
+        double previousDpi = Screen.ScaleFactor;
+        Screen newScreen = Screen.AllScreens.FirstOrDefault(s => s.DisplayNumber == _numScreen);
         if (newScreen != null)
             Screen = newScreen;
-        DpiScale = Screen.DpiScale;
+        DpiScale = Screen.ScaleFactor;
 
         if (DpiScale != previousDpi)
         {

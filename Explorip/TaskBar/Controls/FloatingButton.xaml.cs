@@ -61,7 +61,7 @@ public partial class FloatingButton : UserControl
         {
             System.Drawing.Point pos = new();
             NativeMethods.GetCursorPos(ref pos);
-            Application.Current.Dispatcher.Invoke(() => { DataContext.ParentTaskbar.Top = (pos.Y / DataContext.ParentTaskbar.Screen.DpiScale) - offset.Y; });
+            Application.Current.Dispatcher.Invoke(() => { DataContext.ParentTaskbar.Top = (pos.Y / DataContext.ParentTaskbar.Screen.ScaleFactor) - offset.Y; });
             Thread.Sleep(10);
         }
         SaveNewPos();

@@ -114,7 +114,7 @@ public partial class MyTaskbarApp : Application
                 // Add taskbar on new monitor that is plugged
                 foreach (Screen screen in Screen.AllScreens.Where(s => !_taskbarList.Any(tb => tb.NumScreen == s.DisplayNumber)))
                 {
-                    Taskbar taskBar = new(_startMenuMonitor, AppBarScreen.FromScreen(screen.DisplayNumber));
+                    Taskbar taskBar = new(_startMenuMonitor, screen);
                     taskBar.Show();
                     _taskbarList.Add(taskBar);
                 }
@@ -210,7 +210,7 @@ public partial class MyTaskbarApp : Application
     private void OpenTaskbar()
     {
         Taskbar taskBar;
-        taskBar = new Taskbar(_startMenuMonitor, AppBarScreen.FromPrimaryScreen());
+        taskBar = new Taskbar(_startMenuMonitor, Screen.PrimaryScreen);
         taskBar.Show();
         _taskbarList.Add(taskBar);
         if (WindowsSettings.IsWindowsApplicationInDarkMode())
@@ -225,8 +225,8 @@ public partial class MyTaskbarApp : Application
     private void MakeTaskbarOnAllScreen()
     {
         Taskbar taskBar;
-        List<AppBarScreen> appBarScreens = AppBarScreen.FromAllOthersScreen();
-        foreach (AppBarScreen appBarScreen in appBarScreens)
+        IEnumerable<Screen> appBarScreens = Screen.AllScreens.Where(s => !s.Primary);
+        foreach (Screen appBarScreen in appBarScreens)
         {
             taskBar = new Taskbar(_startMenuMonitor, appBarScreen);
             taskBar.Show();

@@ -100,7 +100,7 @@ public partial class DesktopButtonViewModel : ObservableObject
             ShowPreviewDesktop();
             if (ConfigManager.ShowDesktopPreviewAllMonitors && Screen.AllScreens.Count() > 1)
             {
-                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Where(tb => tb.Screen.NumScreen != WpfScreenHelper.MouseHelper.MouseScreen.DisplayNumber))
+                foreach (Taskbar tb in ((MyTaskbarApp)Application.Current).ListAllTaskbar().Where(tb => tb.Screen.DisplayNumber != WpfScreenHelper.MouseHelper.MouseScreen.DisplayNumber))
                     tb.DesktopButton.DataContext.ShowPreviewDesktop();
             }
         });

@@ -11,6 +11,8 @@ using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
 
+using WpfScreenHelper;
+
 namespace ManagedShell.AppBar;
 
 public class AppBarWindow : Window, INotifyPropertyChanged
@@ -37,7 +39,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
     #region Properties
 
-    public AppBarScreen Screen { get; set; }
+    public Screen Screen { get; set; }
     public double DpiScale { get; set; }
     public IntPtr Handle { get; set; }
     public bool AllowClose { get; set; }
@@ -79,7 +81,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
     #region Constructors
 
-    public AppBarWindow(AppBarManager appBarManager, ExplorerHelper explorerHelper, FullScreenHelper fullScreenHelper, AppBarScreen screen, AppBarEdge edge, double size)
+    public AppBarWindow(AppBarManager appBarManager, ExplorerHelper explorerHelper, FullScreenHelper fullScreenHelper, Screen screen, AppBarEdge edge, double size)
     {
         _explorerHelper = explorerHelper;
         _fullScreenHelper = fullScreenHelper;
@@ -100,7 +102,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
 
         Left = screen.Bounds.Left;
         Top = screen.Bounds.Top;
-        DpiScale = screen.DpiScale;
+        DpiScale = screen.ScaleFactor;
 
         if (Orientation == Orientation.Vertical)
             DesiredWidth = size;
@@ -130,7 +132,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             DpiHelper.DpiScale = PresentationSource.FromVisual(Application.Current.MainWindow).CompositionTarget.TransformToDevice.M11;
         }
 
-        DpiScale = Screen.DpiScale;
+        DpiScale = Screen.ScaleFactor;
 
         SetPosition();
 
@@ -207,14 +209,14 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             switch ((NativeMethods.AppBarNotifications)wParam.ToInt32())
             {
                 case NativeMethods.AppBarNotifications.PosChanged:
-                    ShellLogger.Debug("AppBarWindow.WndProc PosChanged Screen " + Screen.NumScreen.ToString());
+                    ShellLogger.Debug("AppBarWindow.WndProc PosChanged Screen " + Screen.DisplayNumber.ToString());
                     if (Orientation == Orientation.Vertical)
                         _appBarManager.ABSetPos(this, DesiredWidth * DpiScale, ActualHeight * DpiScale, AppBarEdge);
                     else
                         _appBarManager.ABSetPos(this, ActualWidth * DpiScale, DesiredHeight * DpiScale, AppBarEdge);
                     break;
                 case NativeMethods.AppBarNotifications.WindowArrange:
-                    ShellLogger.Debug("AppBarWindow.WndProc WindowArrange Screen " + Screen.NumScreen.ToString());
+                    ShellLogger.Debug("AppBarWindow.WndProc WindowArrange Screen " + Screen.DisplayNumber.ToString());
                     if ((int)lParam != 0) // before
                         Visibility = Visibility.Collapsed;
                     else // after
@@ -244,17 +246,17 @@ public class AppBarWindow : Window, INotifyPropertyChanged
         }
         else if (msg == (int)NativeMethods.WM.WINDOWPOSCHANGED && EnableAppBar && !EnvironmentHelper.IsAppRunningAsShell && !AllowClose && !_positionAlreadyUnderChanged && IsRegistered)
         {
-            ShellLogger.Debug("AppBarWindowPosChanged Screen " + Screen.NumScreen.ToString());
+            ShellLogger.Debug("AppBarWindowPosChanged Screen " + Screen.DisplayNumber.ToString());
             _appBarManager.AppBarWindowPosChanged(hwnd);
         }
         else if ((msg == (int)NativeMethods.WM.DPICHANGED) && !_positionAlreadyUnderChanged)
         {
-            ShellLogger.Debug("AppBarWindow DpiChanged Screen " + Screen.NumScreen.ToString());
+            ShellLogger.Debug("AppBarWindow DpiChanged Screen " + Screen.DisplayNumber.ToString());
             if (Screen.Primary)
                 DpiHelper.DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
 
             DpiScale = (wParam.ToInt32() & 0xFFFF) / 96d;
-            Screen.ChangeDpi();
+            Screen.ChangeDpi(Screen.MonitorHandle);
 
             ProcessScreenChange(ScreenSetupReason.DpiChange);
         }
@@ -326,7 +328,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             Left = rect.Left / DpiScale;
             Width = (rect.Right - rect.Left) / DpiScale;
             Height = (rect.Bottom - rect.Top) / DpiScale;
-            ShellLogger.Debug($"Set PosSize of taskbar by AppBar to {Left},{Top},{Width},{Height} for screen {Screen.NumScreen}:{Screen.DeviceName}, Bounds={Screen.Bounds}");
+            ShellLogger.Debug($"Set PosSize of taskbar by AppBar to {Left},{Top},{Width},{Height} for screen {Screen.DisplayNumber}:{Screen.DeviceName}, Bounds={Screen.Bounds}");
         }
         catch (Exception) { /* Ignore errors */ }
         finally { _positionAlreadyUnderChanged = false; }
@@ -477,7 +479,7 @@ public class AppBarWindow : Window, INotifyPropertyChanged
             }
         }
 
-        ShellLogger.Debug($"Set PosSize of taskbar to {Left},{Top},{Width},{Height} for screen {Screen.NumScreen}:{Screen.DeviceName}, Bounds={Screen.Bounds}");
+        ShellLogger.Debug($"Set PosSize of taskbar to {Left},{Top},{Width},{Height} for screen {Screen.DisplayNumber}:{Screen.DeviceName}, Bounds={Screen.Bounds}");
         if (EnvironmentHelper.IsAppRunningAsShell)
         {
             _appBarManager.SetWorkArea(Screen);

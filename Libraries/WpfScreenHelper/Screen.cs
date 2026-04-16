@@ -50,33 +50,7 @@ public class Screen
     {
         if (NativeMethods.IsProcessDPIAware())
         {
-            uint dpiX;
-
-            try
-            {
-                if (monitor == (IntPtr)PRIMARY_MONITOR)
-                {
-                    IntPtr ptr = NativeMethods.MonitorFromPoint(new NativeMethods.PointStruct(0, 0), NativeMethods.MonitorDefault.MONITOR_DEFAULTTOPRIMARY);
-                    NativeMethods.GetDpiForMonitor(ptr, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
-                }
-                else
-                    NativeMethods.GetDpiForMonitor(monitor, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
-            }
-            catch
-            {
-                // Windows 7 fallback
-                int hr = NativeMethods.D2D1CreateFactory(NativeMethods.D2D1FactoryType.D2D1_FACTORY_TYPE_SINGLE_THREADED, typeof(NativeMethods.ID2D1Factory).GUID, IntPtr.Zero, out NativeMethods.ID2D1Factory factory);
-                if (hr < 0)
-                    dpiX = 96;
-                else
-                {
-                    factory.GetDesktopDpi(out float x, out _);
-                    Marshal.ReleaseComObject(factory);
-                    dpiX = (uint)x;
-                }
-            }
-
-            ScaleFactor = dpiX / 96.0;
+            ChangeDpi(monitor);
         }
 
         NativeMethods.DisplayDevice dd = new();
@@ -119,6 +93,37 @@ public class Screen
         }
 
         monitorHandle = monitor;
+    }
+
+    public void ChangeDpi(IntPtr monitor)
+    {
+        uint dpiX;
+
+        try
+        {
+            if (monitor == (IntPtr)PRIMARY_MONITOR)
+            {
+                IntPtr ptr = NativeMethods.MonitorFromPoint(new NativeMethods.PointStruct(0, 0), NativeMethods.MonitorDefault.MONITOR_DEFAULTTOPRIMARY);
+                NativeMethods.GetDpiForMonitor(ptr, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
+            }
+            else
+                NativeMethods.GetDpiForMonitor(monitor, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
+        }
+        catch (Exception)
+        {
+            // Windows 7 fallback
+            int hr = NativeMethods.D2D1CreateFactory(NativeMethods.D2D1FactoryType.D2D1_FACTORY_TYPE_SINGLE_THREADED, typeof(NativeMethods.ID2D1Factory).GUID, IntPtr.Zero, out NativeMethods.ID2D1Factory factory);
+            if (hr < 0)
+                dpiX = 96;
+            else
+            {
+                factory.GetDesktopDpi(out float x, out _);
+                Marshal.ReleaseComObject(factory);
+                dpiX = (uint)x;
+            }
+        }
+
+        ScaleFactor = dpiX / 96.0;
     }
 
     private static int GetLastId()
@@ -241,7 +246,7 @@ public class Screen
     /// Gets the scale factor of the display.
     /// </summary>
     /// <returns>The scale factor of the display.</returns>
-    public double ScaleFactor { get; } = 1.0;
+    public double ScaleFactor { get; private set; } = 1.0;
 
     /// <summary>
     /// Id of the monitor
