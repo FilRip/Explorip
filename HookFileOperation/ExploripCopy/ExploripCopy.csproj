@@ -17,6 +17,7 @@
         <StartupObject>ExploripCopy.Program</StartupObject>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <ApplicationIcon>IconGroup.ico</ApplicationIcon>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug|AnyCPU' ">
         <OutputPath>$(SolutionDir)build\Debug</OutputPath>
@@ -32,6 +33,9 @@
     </PropertyGroup>
     <ItemGroup>
         <None Remove="ExploripCopy.args.json" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="IconGroup.ico" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="System.Runtime.Remoting" />
