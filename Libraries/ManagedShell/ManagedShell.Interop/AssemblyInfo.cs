@@ -12,3 +12,4 @@
 [assembly: InternalsVisibleTo("ExploripCopy")]
 [assembly: InternalsVisibleTo("ExploripComponents")]
 [assembly: InternalsVisibleTo("CoolBytes.MemoryManagement")]
+[assembly: InternalsVisibleTo("ExploripConfig")]

@@ -73,6 +73,7 @@ public static class ConfigManager
     private const string ConfigExplorerPathColor = "PathColor";
     private const string ConfigTaskbarFlashingColor = "FlashingColor";
     private const string ConfigExplorerIconSize = "IconSize";
+    private const string ConfigTaskbarRdpDisplay = "UseMainScreenForRemoteDesktop";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -195,6 +196,8 @@ public static class ConfigManager
                 _registryRootTaskbar.SetValue(ConfigShowMemoryUsed, FalseValue);
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigTaskbarFlashingColor, "").ToString()))
                 _registryRootTaskbar.SetValue(ConfigTaskbarFlashingColor, $"255,{Colors.Red.R},{Colors.Red.G},{Colors.Red.B}");
+            if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigTaskbarRdpDisplay, "").ToString()))
+                _registryRootTaskbar.SetValue(ConfigTaskbarRdpDisplay, TrueValue);
 
             bool checkFirstRun = true;
             foreach (int numScreen in Screen.AllScreens.Select(s => s.DisplayNumber))
@@ -721,6 +724,8 @@ public static class ConfigManager
     {
         TaskbarConfig tbc;
         Screen screen = Screen.AllScreens.SingleOrDefault(s => s.DisplayNumber == numScreen);
+        if (ExtensionsSession.IsRdp)
+            screen = Screen.PrimaryScreen;
         if (screen != null)
         {
             tbc = _listTaskbar.SingleOrDefault(tbc => tbc.GetUniqueId == screen.Id);
@@ -1053,6 +1058,16 @@ public static class ConfigManager
         {
             if (AllowWrite)
                 _registryRootTaskbar.SetValue(ConfigTaskbarFlashingColor, $"{value.A},{value.R},{value.G},{value.B}");
+        }
+    }
+
+    public static bool UseMainScreenForRdp
+    {
+        get { return _registryRootTaskbar.ReadBoolean(ConfigTaskbarRdpDisplay); }
+        set
+        {
+            if (UseMainScreenForRdp != value && AllowWrite)
+                _registryRootTaskbar.SetValue(ConfigTaskbarRdpDisplay, value.ToString());
         }
     }
 
