@@ -14,6 +14,8 @@ using Explorip.Explorer.Windows;
 
 using ExploripConfig.Configuration;
 
+using ManagedShell.Interop;
+
 using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
@@ -44,9 +46,18 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         ExplorerBrowser.ExplorerBrowserControl.NavigationComplete += ExplorerBrowserControl_NavigationComplete;
         ExplorerBrowser.ExplorerBrowserControl.NavigationFailed += ExplorerBrowserControl_NavigationFailed;
         ExplorerBrowser.ExplorerBrowserControl.SelectionChanged += ExplorerBrowserControl_SelectionChanged;
+        /*ExplorerBrowser.ExplorerBrowserControl.WndProcEvent += ExplorerBrowserControl_WndProcEvent;
+        ExplorerBrowser.ExplorerBrowserControl.InterceptWndProc = true;*/
 
         CurrentPath.MouseDown += CurrentPath_MouseDown;
     }
+
+    /*private static void ExplorerBrowserControl_WndProcEvent(object sender, ExplorerBrowser.WndProcEventArgs e)
+    {
+        Debug.WriteLine("WndProc : " + ((NativeMethods.WM)e.Message).ToString("G"));
+        if (e.Message == (int)NativeMethods.WM.CONTEXTMENU || e.Message == (int)NativeMethods.WM.RBUTTONDOWN)
+            MessageBox.Show("Test");
+    }*/
 
     public new TabItemExplorerBrowserViewModel DataContext
     {
@@ -361,6 +372,10 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         if (disposing)
         {
             DisposeSearch();
+            ExplorerBrowser.ExplorerBrowserControl.NavigationComplete -= ExplorerBrowserControl_NavigationComplete;
+            ExplorerBrowser.ExplorerBrowserControl.NavigationFailed -= ExplorerBrowserControl_NavigationFailed;
+            ExplorerBrowser.ExplorerBrowserControl.SelectionChanged -= ExplorerBrowserControl_SelectionChanged;
+            //ExplorerBrowser.ExplorerBrowserControl.WndProcEvent -= ExplorerBrowserControl_WndProcEvent;
             ExplorerBrowser.Dispose();
         }
     }

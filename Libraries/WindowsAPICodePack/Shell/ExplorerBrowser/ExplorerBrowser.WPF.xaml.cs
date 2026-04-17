@@ -699,8 +699,13 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     /// <param name="disposed"></param>
     protected virtual void Dispose(bool disposed)
     {
-        if (disposed)
+        if (!disposedValue)
         {
+            if (disposed)
+            {
+                disposedValue = true;
+                ExplorerBrowserControl.Dispose();
+            }
             disposedValue = true;
         }
     }

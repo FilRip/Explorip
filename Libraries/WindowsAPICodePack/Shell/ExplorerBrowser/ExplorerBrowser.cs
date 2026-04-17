@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Windows.Forms;
 
@@ -37,6 +38,10 @@ public sealed class ExplorerBrowser :
 
     private IShellItemArray shellItemsArray;
     private ShellObjectCollection itemsCollection;
+
+    private IntPtr _currentShellHwnd = IntPtr.Zero;
+    public delegate IntPtr ShellWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
     /// <summary>
     /// The set of ShellObjects in the Explorer Browser
     /// </summary>
@@ -528,6 +533,8 @@ public sealed class ExplorerBrowser :
         // view mode may change 
         ContentOptions.folderSettings.ViewMode = GetCurrentViewMode();
 
+        ReHook();
+
         if (NavigationComplete != null)
         {
             NavigationCompleteEventArgs args = new()
@@ -846,6 +853,114 @@ public sealed class ExplorerBrowser :
         ViewSelectedItemChanged?.Invoke(this, EventArgs.Empty);
     }
     #endregion
+
+    #endregion
+
+    #region WndProc
+
+    private SubclassProcDelegate _currentSubclassProc;
+
+    private IntPtr SubclassProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam,
+                                uint idSubclass, IntPtr refData)
+    {
+        if (InterceptWndProc && WndProcEvent != null)
+        {
+            WndProcEventArgs args = new()
+            {
+                Message = msg,
+                WParam = wParam,
+                LParam = lParam,
+            };
+            WndProcEvent.Invoke(this, args);
+            if (args.Handled)
+                return args.Result;
+        }
+
+        return DefSubclassProc(hWnd, msg, wParam, lParam);
+    }
+
+    private void Unhook()
+    {
+        if (_currentShellHwnd != IntPtr.Zero)
+        {
+            RemoveWindowSubclass(_currentShellHwnd, SubclassProc, 1);
+        }
+    }
+
+    private void ReHook()
+    {
+        Unhook();
+        _currentSubclassProc = SubclassProc;
+        _currentShellHwnd = FindShellChildWindow(this.Handle);
+        if (_currentShellHwnd != IntPtr.Zero)
+        {
+            SetWindowSubclass(_currentShellHwnd, _currentSubclassProc, 1, IntPtr.Zero);
+        }
+    }
+
+    private IntPtr FindShellChildWindow(IntPtr parent)
+    {
+        IntPtr child = IntPtr.Zero;
+
+        while ((child = FindWindowEx(parent, child, null, null)) != IntPtr.Zero)
+        {
+            var className = new StringBuilder(256);
+            GetClassName(child, className, className.Capacity);
+
+            string cls = className.ToString();
+
+            if (cls == "SysListView32" || cls == "DirectUIHWND")
+                return child;
+
+            IntPtr deeper = FindShellChildWindow(child);
+            if (deeper != IntPtr.Zero)
+                return deeper;
+        }
+
+        return IntPtr.Zero;
+    }
+
+
+    #region Native Methods
+
+    private delegate IntPtr SubclassProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam,
+                                                 uint idSubclass, IntPtr refData);
+
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern bool SetWindowSubclass(IntPtr hWnd, SubclassProcDelegate pfnSubclass,
+                                                 uint uIdSubclass, IntPtr dwRefData);
+
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern bool RemoveWindowSubclass(IntPtr hWnd, SubclassProcDelegate pfnSubclass,
+                                                    uint uIdSubclass);
+
+    [DllImport("comctl32.dll", SetLastError = true)]
+    private static extern IntPtr DefSubclassProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    private static extern IntPtr FindWindowEx(IntPtr parent, IntPtr childAfter, string className, string windowTitle);
+
+    [DllImport("user32.dll")]
+    private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+
+    #endregion
+
+    public bool InterceptWndProc { get; set; }
+
+    public class WndProcEventArgs
+    {
+        public uint Message { get; set; }
+
+        public IntPtr WParam { get; set; }
+
+        public IntPtr LParam { get; set; }
+
+        public IntPtr Result { get; set; } = IntPtr.Zero;
+
+        public bool Handled { get; set; }
+    }
+
+    public event EventHandler<WndProcEventArgs> WndProcEvent;
 
     #endregion
 }

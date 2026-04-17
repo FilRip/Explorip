@@ -102,7 +102,7 @@ public partial class WpfExplorerBrowser : Window
 
         Left = ConfigManager.ExplorerPosX;
         Top = ConfigManager.ExplorerPosY;
-        if (MainSession)
+        if (MainSession && !Program.SecondInstance)
             WindowState = ConfigManager.ExplorerWindowState;
         if (WindowState == WindowState.Minimized && newInstance)
             WindowState = WindowState.Normal;

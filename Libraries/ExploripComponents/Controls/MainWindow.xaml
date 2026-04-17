@@ -22,6 +22,7 @@
             <Style TargetType="{x:Type local:ListViewEx}" BasedOn="{StaticResource {x:Type ListView}}" />
             <myconverters:FileSizeConverter x:Key="sizeConverter"/>
             <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+            
             <!-- Icons view -->
             <DataTemplate x:Key="IconsTemplate" DataType="local:OneFileSystem">
                 <VirtualizingStackPanel AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}" Background="{Binding BackgroundColor}">
@@ -47,6 +48,7 @@
                     </Grid>
                 </VirtualizingStackPanel>
             </DataTemplate>
+            
             <!-- Details view -->
             <DataTemplate x:Key="DetailsTemplate">
                 <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
@@ -80,6 +82,7 @@
                     </Grid>
                 </VirtualizingStackPanel>
             </DataTemplate>
+            
             <local:ListViewItemTemplateSelector x:Key="ListViewItemTemplateSelector"/>
             <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisibility"/>
         </ResourceDictionary>
@@ -252,6 +255,7 @@
                     <i:InvokeCommandAction Command="{Binding SetFocusToListViewCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
+            
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="Margin" Value="0 0 5 5"/>
@@ -263,6 +267,7 @@
                     </Style.Triggers>
                 </Style>
             </ListView.ItemContainerStyle>
+            
             <ListView.GroupStyle>
                 <GroupStyle>
                     <GroupStyle.HeaderTemplate>
@@ -278,6 +283,7 @@
                 </GroupStyle>
             </ListView.GroupStyle>
         </local:ListViewEx>
+        
         <!-- Error message -->
         <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding ErrorMessage}" Visibility="{Binding ErrorVisible, Converter={StaticResource boolToVisible}}" TextWrapping="Wrap" Foreground="Red"/>
         <!-- Progress ring -->

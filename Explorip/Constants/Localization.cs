@@ -53,8 +53,6 @@ public static class Localization
     public static string MINIMIZE { get; private set; }
     public static string MAXIMIZE { get; private set; }
     public static string CLOSE { get; private set; }
-    public static string ATTACH_TO_TASKBAR { get; private set; }
-    public static string DETACH_FROM_TASKBAR { get; private set; }
     public static string ADJUST_DATE_TIME { get; private set; }
     public static string CANCEL { get; private set; }
     public static string OK { get; private set; }
@@ -209,6 +207,7 @@ public static class Localization
     public static string COPY_SELECTION { get; private set; }
     public static string DELETE_SELECTION { get; private set; }
     public static string YOURE_UPTODATE { get; private set; }
+    public static string SHOW_PREVIOUS_CONTEXTMENU { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -238,8 +237,6 @@ public static class Localization
         MAXIMIZE = Load(OleAccRcDll, 143, "Maximize");
         CLOSE = Load(OleAccRcDll, 145, "Close");
         RESTORE = Load(OleAccRcDll, 146, "Restore");
-        ATTACH_TO_TASKBAR = Load(StartTileDataDll, 1009, "Attach to taskbar");
-        DETACH_FROM_TASKBAR = Load(StartTileDataDll, 1010, "Detach from taskbar");
         ADJUST_DATE_TIME = Load(Shell32Dll, 24135, "Modify date and hour");
         CANCEL = Load(Shell32Dll, 33228, "Cancel");
         CONTINUE = Load(Shell32Dll, 33229, "Continue").Replace("_", "");
@@ -407,6 +404,7 @@ public static class Localization
         COPY_SELECTION = Load(SrhDll, 3716, "Copy selection");
         DELETE_SELECTION = Load(SrhDll, 3718, "Delete selection");
         YOURE_UPTODATE = Load("Musupdatehandlers1.dll", 3, "You're up to date");
+        SHOW_PREVIOUS_CONTEXTMENU = Load("Windows.UI.FileExplorer.dll", 51841, "Show more options");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

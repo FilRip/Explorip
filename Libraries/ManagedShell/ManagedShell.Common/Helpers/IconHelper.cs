@@ -18,9 +18,10 @@ public static class IconHelper
     // IImageList references
     private static Guid iidImageList = new("46EB5926-582E-4017-9FDF-E8998DAA0950");
     private static IImageList imlLarge; // 32pt
+    private static IImageList imlMedium; // 24pt
     private static IImageList imlSmall; // 16pt
     private static IImageList imlExtraLarge; // 48pt
-    private static IImageList imlJumbo; // 256pt
+    private static IImageList imlJumbo; // 96pt
 
     private static void InitIml(IconSize size)
     {
@@ -42,7 +43,11 @@ public static class IconHelper
         {
             SHGetImageList((int)size, ref iidImageList, out imlJumbo);
         }
-        else if (size != IconSize.Small && size != IconSize.Large && size != IconSize.ExtraLarge && size != IconSize.Jumbo)
+        else if (size == IconSize.Medium && imlMedium == null)
+        {
+            SHGetImageList((int)size, ref iidImageList, out imlMedium);
+        }
+        else if (size != IconSize.Small && size != IconSize.Large && size != IconSize.ExtraLarge && size != IconSize.Jumbo && size != IconSize.Medium)
         {
             ShellLogger.Error($"IconHelper: Unsupported icon size {size}");
         }
@@ -74,6 +79,11 @@ public static class IconHelper
             {
                 Marshal.ReleaseComObject(imlJumbo);
                 imlJumbo = null;
+            }
+            if (imlMedium != null)
+            {
+                Marshal.ReleaseComObject(imlMedium);
+                imlMedium = null;
             }
         }
     }
@@ -180,6 +190,11 @@ public static class IconHelper
                 imlJumbo.GetIcon(iconIndex & 0xFFFFFF, ImageListDraws.TRANSPARENT, ref hIcon);
                 if (imlJumbo.GetOverlayImage(iconIndex >> 24, ref overlayIndex) == 0)
                     imlJumbo.GetIcon(overlayIndex, ImageListDraws.TRANSPARENT, ref hOverlay);
+                break;
+            case IconSize.Medium:
+                imlMedium.GetIcon(iconIndex & 0xFFFFFF, ImageListDraws.TRANSPARENT, ref hIcon);
+                if (imlMedium.GetOverlayImage(iconIndex >> 24, ref overlayIndex) == 0)
+                    imlMedium.GetIcon(overlayIndex, ImageListDraws.TRANSPARENT, ref hOverlay);
                 break;
         }
 
