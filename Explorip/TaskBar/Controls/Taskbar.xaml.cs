@@ -190,26 +190,25 @@ public partial class Taskbar : AppBarWindow
         Screen newScreen = Screen.AllScreens.FirstOrDefault(s => s.DisplayNumber == _numScreen);
         if (newScreen != null)
             Screen = newScreen;
-        DpiScale = Screen.ScaleFactor;
 
-        if (DpiScale != previousDpi)
+        if (Screen.ScaleFactor != previousDpi)
         {
             if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarHeight > 0)
             {
                 double newHeight = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight;
-                newHeight = newHeight / previousDpi * DpiScale;
+                newHeight = newHeight / previousDpi * Screen.ScaleFactor;
                 ConfigManager.GetTaskbarConfig(NumScreen).TaskbarHeight = newHeight;
             }
             if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarMinHeight > 0)
             {
                 double newMinHeight = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarMinHeight;
-                newMinHeight = newMinHeight / previousDpi * DpiScale;
+                newMinHeight = newMinHeight / previousDpi * Screen.ScaleFactor;
                 ConfigManager.GetTaskbarConfig(NumScreen).TaskbarMinHeight = newMinHeight;
             }
             if (ConfigManager.GetTaskbarConfig(NumScreen)?.TaskbarWidth > 0)
             {
                 double newWidth = ConfigManager.GetTaskbarConfig(NumScreen).TaskbarWidth;
-                newWidth = newWidth / previousDpi * DpiScale;
+                newWidth = newWidth / previousDpi * Screen.ScaleFactor;
                 ConfigManager.GetTaskbarConfig(NumScreen).TaskbarWidth = newWidth;
             }
         }
@@ -250,10 +249,10 @@ public partial class Taskbar : AppBarWindow
             edge = (NativeMethods.ABEdge)AppBarEdge,
             rc = new NativeMethods.Rect()
             {
-                Top = (int)(Top * DpiScale),
-                Left = (int)(Left * DpiScale),
-                Bottom = (int)((Top + Height) * DpiScale),
-                Right = (int)((Left + Width) * DpiScale),
+                Top = (int)(Top * Screen.ScaleFactor),
+                Left = (int)(Left * Screen.ScaleFactor),
+                Bottom = (int)((Top + Height) * Screen.ScaleFactor),
+                Right = (int)((Left + Width) * Screen.ScaleFactor),
             },
         });
     }
@@ -269,7 +268,7 @@ public partial class Taskbar : AppBarWindow
             double desiredLeft = 0;
 
             if (AppBarEdge == AppBarEdge.Right)
-                desiredLeft = Screen.Bounds.Right / DpiScale - Width;
+                desiredLeft = Screen.Bounds.Right / Screen.ScaleFactor - Width;
 
             if (Left != desiredLeft)
                 Left = desiredLeft;
@@ -279,7 +278,7 @@ public partial class Taskbar : AppBarWindow
             double desiredTop = 0;
 
             if (AppBarEdge == AppBarEdge.Bottom)
-                desiredTop = Screen.Bounds.Bottom / DpiScale - Height;
+                desiredTop = Screen.Bounds.Bottom / Screen.ScaleFactor - Height;
 
             if (Top != desiredTop)
                 Top = desiredTop;

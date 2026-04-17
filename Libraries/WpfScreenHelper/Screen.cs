@@ -48,9 +48,11 @@ public class Screen
     /// <param name="monitor">The monitor.</param>
     private Screen(IntPtr monitor)
     {
+        monitorHandle = monitor;
+
         if (NativeMethods.IsProcessDPIAware())
         {
-            ChangeDpi(monitor);
+            ChangeDpi();
         }
 
         NativeMethods.DisplayDevice dd = new();
@@ -91,23 +93,21 @@ public class Screen
             DisplayDevice = dd.StateFlags;
             DisplayNumber = GetLastId();
         }
-
-        monitorHandle = monitor;
     }
 
-    public void ChangeDpi(IntPtr monitor)
+    public void ChangeDpi()
     {
         uint dpiX;
 
         try
         {
-            if (monitor == (IntPtr)PRIMARY_MONITOR)
+            if (monitorHandle == (IntPtr)PRIMARY_MONITOR)
             {
                 IntPtr ptr = NativeMethods.MonitorFromPoint(new NativeMethods.PointStruct(0, 0), NativeMethods.MonitorDefault.MONITOR_DEFAULTTOPRIMARY);
                 NativeMethods.GetDpiForMonitor(ptr, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
             }
             else
-                NativeMethods.GetDpiForMonitor(monitor, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
+                NativeMethods.GetDpiForMonitor(monitorHandle, NativeMethods.DpiType.EFFECTIVE, out dpiX, out _);
         }
         catch (Exception)
         {

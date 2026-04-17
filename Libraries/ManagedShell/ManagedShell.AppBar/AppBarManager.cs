@@ -220,10 +220,10 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
             bool isSameCoords = false;
             if (!isCreate)
             {
-                bool topUnchanged = abd.rc.Top == (abWindow.Top * abWindow.DpiScale);
-                bool leftUnchanged = abd.rc.Left == (abWindow.Left * abWindow.DpiScale);
-                bool bottomUnchanged = abd.rc.Bottom == (abWindow.Top * abWindow.DpiScale) + sHeight;
-                bool rightUnchanged = abd.rc.Right == (abWindow.Left * abWindow.DpiScale) + sWidth;
+                bool topUnchanged = abd.rc.Top == (abWindow.Top * abWindow.Screen.ScaleFactor);
+                bool leftUnchanged = abd.rc.Left == (abWindow.Left * abWindow.Screen.ScaleFactor);
+                bool bottomUnchanged = abd.rc.Bottom == (abWindow.Top * abWindow.Screen.ScaleFactor) + sHeight;
+                bool rightUnchanged = abd.rc.Right == (abWindow.Left * abWindow.Screen.ScaleFactor) + sWidth;
 
                 isSameCoords = topUnchanged
                                && leftUnchanged
@@ -233,8 +233,10 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
 
             if (!isSameCoords)
             {
-                ShellLogger.Debug($"AppBarManager: {abWindow.Name} changing position (TxLxBxR) to {abd.rc.Top}x{abd.rc.Left}x{abd.rc.Bottom}x{abd.rc.Right} from {abWindow.Top * abWindow.DpiScale}x{abWindow.Left * abWindow.DpiScale}x{(abWindow.Top * abWindow.DpiScale) + sHeight}x{(abWindow.Left * abWindow.DpiScale) + sWidth}");
-                abWindow.SetAppBarPosition(abd.rc);
+                if (isCreate)
+                    WindowScreenHelper.SetWindowPosition(abWindow, abd.rc.Left, abd.rc.Top, abd.rc.Width, abd.rc.Height);
+                ShellLogger.Debug($"AppBarManager: {abWindow.Name} changing position (TxLxBxR) to {abd.rc.Top}x{abd.rc.Left}x{abd.rc.Bottom}x{abd.rc.Right} from {abWindow.Top * abWindow.Screen.ScaleFactor}x{abWindow.Left * abWindow.Screen.ScaleFactor}x{(abWindow.Top * abWindow.Screen.ScaleFactor) + sHeight}x{(abWindow.Left * abWindow.Screen.ScaleFactor) + sWidth}");
+                abWindow.SetPosition();
             }
 
             abWindow.AfterAppBarPos(isSameCoords, abd.rc);
@@ -306,7 +308,7 @@ public class AppBarManager(ExplorerHelper explorerHelper) : IDisposable
                     }
                 }
 
-                dpiScale = window.DpiScale;
+                dpiScale = window.Screen.ScaleFactor;
             }
         }
 

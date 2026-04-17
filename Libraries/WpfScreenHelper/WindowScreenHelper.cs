@@ -25,10 +25,11 @@ public static class WindowScreenHelper
             width = (int)window.ActualWidth;
         if (height == 0)
             height = (int)window.ActualHeight;
+        IntPtr windowHandle = new WindowInteropHelper(window).EnsureHandle();
         // The first move puts it on the correct monitor, which triggers WM_DPICHANGED
         // The +1/-1 coerces WPF to update Window.Top/Left/Width/Height in the second move
-        NativeMethods.MoveWindow(new WindowInteropHelper(window).EnsureHandle(), x - 1, y, width + 1, height, false);
-        NativeMethods.MoveWindow(new WindowInteropHelper(window).EnsureHandle(), x, y, width, height, true);
+        NativeMethods.MoveWindow(windowHandle, x - 1, y, width + 1, height, false);
+        NativeMethods.MoveWindow(windowHandle, x, y, width, height, true);
     }
 
     /// <summary>
