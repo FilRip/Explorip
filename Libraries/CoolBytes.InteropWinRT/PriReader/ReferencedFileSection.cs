@@ -28,7 +28,6 @@ public class ReferencedFileSection : Section
         /*uint totalDataLength = */
         binaryReader.ReadUInt32();
 
-#pragma warning disable IDE0028
         List<FolderInfo> folderInfos = new(numFolders);
 
         for (int i = 0; i < numFolders; i++)
@@ -106,7 +105,6 @@ public class ReferencedFileSection : Section
         }
 
         ReferencedFiles = referencedFiles;
-#pragma warning restore IDE0028
 
         return true;
     }

@@ -74,6 +74,7 @@ public static class ConfigManager
     private const string ConfigTaskbarFlashingColor = "FlashingColor";
     private const string ConfigExplorerIconSize = "IconSize";
     private const string ConfigTaskbarRdpDisplay = "UseMainScreenForRemoteDesktop";
+    private const string ConfigExplorerReplaceContextMenu = "ReplaceContextMenu";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -543,6 +544,16 @@ public static class ConfigManager
         {
             if (ExplorerIconSize != value && AllowWrite)
                 _registryKeyExplorer.SetValue(ConfigExplorerIconSize, value.ToString());
+        }
+    }
+
+    public static bool ExplorerReplaceContextMenu
+    {
+        get { return _registryKeyExplorer.ReadBoolean(ConfigExplorerReplaceContextMenu); }
+        set
+        {
+            if (ExplorerReplaceContextMenu != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerReplaceContextMenu, value.ToString());
         }
     }
 

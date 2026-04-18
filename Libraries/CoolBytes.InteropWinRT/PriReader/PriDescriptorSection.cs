@@ -44,7 +44,6 @@ public class PriDescriptorSection : Section
         ushort numDataItemSections = binaryReader.ReadUInt16();
         binaryReader.ExpectUInt16(0);
 
-#pragma warning disable IDE0028
         List<SectionRef<HierarchicalSchemaSection>> hierarchicalSchemaSections = new(numHierarchicalSchemaSections);
 
         for (int i = 0; i < numHierarchicalSchemaSections; i++)
@@ -74,7 +73,6 @@ public class PriDescriptorSection : Section
         ReferencedFileSections = referencedFileSections;
 
         List<SectionRef<DataItemSection>> dataItemSections = new(numDataItemSections);
-#pragma warning restore IDE0028
 
         for (int i = 0; i < numDataItemSections; i++)
             dataItemSections.Add(new SectionRef<DataItemSection>(binaryReader.ReadUInt16()));

@@ -86,9 +86,7 @@ public class ShellSearchFolder : ShellSearchCollection
         private set
         {
             searchScopePaths = [.. value];
-#pragma warning disable IDE0028
             List<IShellItem> shellItems = new(searchScopePaths.Length);
-#pragma warning restore IDE0028
 
             Guid shellItemGuid = new(ShellIidGuid.IShellItem);
 

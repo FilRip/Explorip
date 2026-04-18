@@ -858,10 +858,31 @@ public sealed class ExplorerBrowser :
 
     #region WndProc
 
+#pragma warning disable S1450
     private SubclassProcDelegate _currentSubclassProc;
+#pragma warning restore S1450
 
     private IntPtr SubclassProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam,
                                 uint idSubclass, IntPtr refData)
+    {
+        if (InterceptWndProc && WndProcEvent != null)
+        {
+            WndProcEventArgs args = new()
+            {
+                Message = msg,
+                WParam = wParam,
+                LParam = lParam,
+            };
+            WndProcEvent.Invoke(this, args);
+            if (args.Handled)
+                return args.Result;
+        }
+
+        return DefSubclassProc(hWnd, msg, wParam, lParam);
+    }
+
+    private IntPtr SubclassProc2(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam,
+                                    uint idSubclass, IntPtr refData)
     {
         if (InterceptWndProc && WndProcEvent != null)
         {
@@ -884,6 +905,7 @@ public sealed class ExplorerBrowser :
         if (_currentShellHwnd != IntPtr.Zero)
         {
             RemoveWindowSubclass(_currentShellHwnd, SubclassProc, 1);
+            _currentSubclassProc = null;
         }
     }
 
@@ -891,28 +913,44 @@ public sealed class ExplorerBrowser :
     {
         Unhook();
         _currentSubclassProc = SubclassProc;
-        _currentShellHwnd = FindShellChildWindow(this.Handle);
+        _currentShellHwnd = FindShellChildWindow(Handle, "SysListView32");
+        if (_currentShellHwnd == IntPtr.Zero)
+        {
+            _currentSubclassProc = SubclassProc2;
+            _currentShellHwnd = FindShellChildWindow(Handle, "SHELLDLL_DefView", false);
+        }
         if (_currentShellHwnd != IntPtr.Zero)
         {
             SetWindowSubclass(_currentShellHwnd, _currentSubclassProc, 1, IntPtr.Zero);
         }
     }
 
-    private IntPtr FindShellChildWindow(IntPtr parent)
+    private IntPtr FindShellChildWindow(IntPtr parent, string classToFind, bool testStyle = true)
     {
         IntPtr child = IntPtr.Zero;
 
         while ((child = FindWindowEx(parent, child, null, null)) != IntPtr.Zero)
         {
-            var className = new StringBuilder(256);
-            GetClassName(child, className, className.Capacity);
+            StringBuilder sb = new(256);
+            GetClassName(child, sb, sb.Capacity);
+            string className = sb.ToString().Split((char)0)[0];
 
-            string cls = className.ToString();
+            if (className == classToFind)
+            {
+                if (testStyle)
+                {
+                    int style = GetWindowLong(child, GWL_STYLE);
+                    bool isReport = (style & LVS_REPORT) != 0;
+                    bool isOwnerData = (style & LVS_OWNERDATA) != 0;
+                    if (isReport || isOwnerData)
+                        return child;
+                }
+                else
+                    return child;
+            }
 
-            if (cls == "SysListView32" || cls == "DirectUIHWND")
-                return child;
-
-            IntPtr deeper = FindShellChildWindow(child);
+            // Recherche récursive
+            var deeper = FindShellChildWindow(child, classToFind, testStyle);
             if (deeper != IntPtr.Zero)
                 return deeper;
         }
@@ -920,8 +958,11 @@ public sealed class ExplorerBrowser :
         return IntPtr.Zero;
     }
 
-
     #region Native Methods
+
+    private const int GWL_STYLE = -16;
+    private const int LVS_REPORT = 0x0001;
+    private const int LVS_OWNERDATA = 0x1000;
 
     private delegate IntPtr SubclassProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam,
                                                  uint idSubclass, IntPtr refData);
@@ -943,6 +984,9 @@ public sealed class ExplorerBrowser :
     [DllImport("user32.dll")]
     private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+    
     #endregion
 
     public bool InterceptWndProc { get; set; }

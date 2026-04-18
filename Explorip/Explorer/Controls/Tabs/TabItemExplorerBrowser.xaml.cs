@@ -46,18 +46,27 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         ExplorerBrowser.ExplorerBrowserControl.NavigationComplete += ExplorerBrowserControl_NavigationComplete;
         ExplorerBrowser.ExplorerBrowserControl.NavigationFailed += ExplorerBrowserControl_NavigationFailed;
         ExplorerBrowser.ExplorerBrowserControl.SelectionChanged += ExplorerBrowserControl_SelectionChanged;
-        /*ExplorerBrowser.ExplorerBrowserControl.WndProcEvent += ExplorerBrowserControl_WndProcEvent;
-        ExplorerBrowser.ExplorerBrowserControl.InterceptWndProc = true;*/
+
+        if (ConfigManager.ExplorerReplaceContextMenu)
+        {
+            ExplorerBrowser.ExplorerBrowserControl.WndProcEvent += ExplorerBrowserControl_WndProcEvent;
+            ExplorerBrowser.ExplorerBrowserControl.InterceptWndProc = true;
+        }
 
         CurrentPath.MouseDown += CurrentPath_MouseDown;
     }
 
-    /*private static void ExplorerBrowserControl_WndProcEvent(object sender, ExplorerBrowser.WndProcEventArgs e)
+    private void ExplorerBrowserControl_WndProcEvent(object sender, ExplorerBrowser.WndProcEventArgs e)
     {
-        Debug.WriteLine("WndProc : " + ((NativeMethods.WM)e.Message).ToString("G"));
-        if (e.Message == (int)NativeMethods.WM.CONTEXTMENU || e.Message == (int)NativeMethods.WM.RBUTTONDOWN)
-            MessageBox.Show("Test");
-    }*/
+        if (e.Message == (int)NativeMethods.WM.RBUTTONUP || e.Message == (int)NativeMethods.WM.CONTEXTMENU)
+        {
+            if (ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
+            {
+                e.Handled = true;
+                e.Result = new IntPtr(1);
+            }
+        }
+    }
 
     public new TabItemExplorerBrowserViewModel DataContext
     {
@@ -375,7 +384,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             ExplorerBrowser.ExplorerBrowserControl.NavigationComplete -= ExplorerBrowserControl_NavigationComplete;
             ExplorerBrowser.ExplorerBrowserControl.NavigationFailed -= ExplorerBrowserControl_NavigationFailed;
             ExplorerBrowser.ExplorerBrowserControl.SelectionChanged -= ExplorerBrowserControl_SelectionChanged;
-            //ExplorerBrowser.ExplorerBrowserControl.WndProcEvent -= ExplorerBrowserControl_WndProcEvent;
+            ExplorerBrowser.ExplorerBrowserControl.WndProcEvent -= ExplorerBrowserControl_WndProcEvent;
             ExplorerBrowser.Dispose();
         }
     }

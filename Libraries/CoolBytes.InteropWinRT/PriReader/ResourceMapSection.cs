@@ -86,7 +86,6 @@ public class ResourceMapSection : Section
                 HierarchicalSchemaReference = new HierarchicalSchemaReference(versionInfo, unknown1, unknown2, uniqueName);
             }
 
-#pragma warning disable IDE0028
         List<EResourceValueType> resourceValueTypeTable = new(resourceValueTypeTableSize);
         for (int i = 0; i < resourceValueTypeTableSize; i++)
         {
@@ -238,7 +237,6 @@ public class ResourceMapSection : Section
         }
 
         CandidateSets = candidateSets;
-#pragma warning restore IDE0028
 
         return true;
     }

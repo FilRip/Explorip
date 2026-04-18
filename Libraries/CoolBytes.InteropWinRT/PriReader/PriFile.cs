@@ -61,9 +61,7 @@ public class PriFile
 
         binaryReader.BaseStream.Seek(tocOffset, SeekOrigin.Begin);
 
-#pragma warning disable IDE0028
         List<TocEntry> toc = new(numSections);
-#pragma warning restore IDE0028
 
         for (int i = 0; i < numSections; i++)
             toc.Add(TocEntry.Parse(binaryReader));
