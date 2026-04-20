@@ -102,7 +102,10 @@ public class ServerInterface : MarshalByRefObject
             }
             if (ni == null)
             {
-                Process newProcess = Process.Start("HookFileOperationsManager.exe", "NI");
+                string filename = "HookFileOperationsManager.exe";
+                if (!File.Exists(filename))
+                    filename = "lib" + Path.DirectorySeparatorChar + filename;
+                Process newProcess = Process.Start(filename, "NI");
                 Thread.Sleep(100);
                 while (ni == null)
                 {

@@ -62,9 +62,14 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         {
             if (ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
             {
-                e.Handled = true;
-                e.Result = new IntPtr(1);
+                // SelectedItem context menu
             }
+            else
+            {
+                // Background context menu
+            }
+            e.Handled = true;
+            e.Result = new IntPtr(1);
         }
     }
 

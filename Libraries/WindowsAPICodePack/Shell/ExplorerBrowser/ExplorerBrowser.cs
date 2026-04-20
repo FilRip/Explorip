@@ -1007,4 +1007,10 @@ public sealed class ExplorerBrowser :
     public event EventHandler<WndProcEventArgs> WndProcEvent;
 
     #endregion
+
+    protected override void Dispose(bool disposing)
+    {
+        Unhook();
+        base.Dispose(disposing);
+    }
 }

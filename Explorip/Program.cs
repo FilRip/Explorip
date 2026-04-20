@@ -20,6 +20,7 @@ namespace Explorip;
 public static class Program
 {
     private static Application _WpfHost;
+
     internal static bool ModeShell { get; private set; }
     internal static bool SecondInstance { get; private set; }
 

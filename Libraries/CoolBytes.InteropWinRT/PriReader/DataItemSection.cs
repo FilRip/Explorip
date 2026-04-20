@@ -26,7 +26,9 @@ public class DataItemSection : Section
         ushort numBlobs = binaryReader.ReadUInt16();
         binaryReader.ReadUInt32();
 
+#pragma warning disable IDE0028
         List<ByteSpan> dataItems = new(numStrings + numBlobs);
+#pragma warning restore IDE0028
 
         long dataStartOffset = binaryReader.BaseStream.Position +
             numStrings * 2 * sizeof(ushort) + numBlobs * 2 * sizeof(uint);

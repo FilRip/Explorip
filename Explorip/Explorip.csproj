@@ -15,7 +15,7 @@
         <UseWPF>true</UseWPF>
         <UseWindowsForms>true</UseWindowsForms>
         <Version>2.2.0.0</Version>
-        <StartupObject>Explorip.Program</StartupObject>
+        <StartupObject>Explorip.MyAppDomain</StartupObject>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>Resources/FileExplorerIcon.ico</ApplicationIcon>
         <PlatformTarget>AnyCPU</PlatformTarget>

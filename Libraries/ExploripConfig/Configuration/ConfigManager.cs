@@ -75,6 +75,8 @@ public static class ConfigManager
     private const string ConfigExplorerIconSize = "IconSize";
     private const string ConfigTaskbarRdpDisplay = "UseMainScreenForRemoteDesktop";
     private const string ConfigExplorerReplaceContextMenu = "ReplaceContextMenu";
+    private const string ConfigExplorerContextMenuCornerRadius = "ContextMenuCornerRadius";
+    private const string ConfigExplorerContextMenuBackground = "ContextMenuBackground";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -141,6 +143,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigExplorerPathColor, $"255,{Colors.Yellow.R},{Colors.Yellow.G},{Colors.Yellow.B}");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerIconSize, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerIconSize, "0");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuCornerRadius, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerIconSize, "10");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -554,6 +558,34 @@ public static class ConfigManager
         {
             if (ExplorerReplaceContextMenu != value && AllowWrite)
                 _registryKeyExplorer.SetValue(ConfigExplorerReplaceContextMenu, value.ToString());
+        }
+    }
+
+    public static CornerRadius ExplorerContextMenuCornerRadius
+    {
+        get { return new CornerRadius(_registryKeyExplorer.ReadDouble(ConfigExplorerContextMenuCornerRadius)); }
+        set
+        {
+            if (ExplorerContextMenuCornerRadius.TopLeft != value.TopLeft && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuCornerRadius, value.ToString());
+        }
+    }
+
+    public static SolidColorBrush ExplorerContextMenuBackground
+    {
+        get
+        {
+            string bgColor = _registryKeyExplorer.GetValue(ConfigExplorerContextMenuBackground)?.ToString();
+            if (!string.IsNullOrWhiteSpace(bgColor))
+            {
+                return new SolidColorBrush(_registryKeyExplorer.ReadColor(ConfigExplorerContextMenuBackground, ExploripSharedCopy.Constants.Colors.BackgroundColor));
+            }
+            return null;
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue("BackgroundColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 

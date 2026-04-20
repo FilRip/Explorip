@@ -52,10 +52,13 @@ public partial class ExploripCopyApp : Application
 
             if (ExploripCopyConfig.InjectWindowsExplorer && Process.GetProcessesByName("explorer").Length > 0)
             {
-                string path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+                string path = ArgumentPathExe();
                 if (ArgumentVariableExists("currentdir"))
                     path = ArgumentValue("currentdir");
-                Process.Start(Path.Combine(path, "HookFileOperationsManager.exe"), Process.GetProcessesByName("explorer")[0].Id.ToString());
+                string filename = "HookFileOperationsManager.exe";
+                if (!File.Exists(Path.Combine(path, filename)))
+                    path = Path.Combine(path, "lib");
+                Process.Start(Path.Combine(path, filename), Process.GetProcessesByName("explorer")[0].Id.ToString());
             }
         }
         else

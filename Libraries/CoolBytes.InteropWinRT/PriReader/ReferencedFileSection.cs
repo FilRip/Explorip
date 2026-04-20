@@ -18,6 +18,7 @@ public class ReferencedFileSection : Section
     {
     }
 
+#pragma warning disable IDE0028
     protected override bool ParseSectionContent(BinaryReader binaryReader)
     {
         /*ushort numRoots = */
@@ -108,6 +109,7 @@ public class ReferencedFileSection : Section
 
         return true;
     }
+#pragma warning restore IDE0028
 
     private record struct FolderInfo
     (
