@@ -1,0 +1,72 @@
+﻿<Popup x:Class="Explorip.Explorer.Controls.PopUpExplorerContextMenu"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+       xmlns:local="clr-namespace:Explorip.Explorer.Controls"
+       xmlns:constants="clr-namespace:Explorip.Constants"
+       xmlns:commonConstants="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+       xmlns:config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig"
+       xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
+       mc:Ignorable="d"
+       d:DesignHeight="450" d:DesignWidth="800" AllowsTransparency="True" StaysOpen="False" Placement="Mouse" IsOpen="{Binding IsOpen}">
+
+    <Popup.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+    </Popup.Resources>
+    <Popup.DataContext>
+        <viewmodels:PopUpExplorerContextMenuViewModel/>
+    </Popup.DataContext>
+    
+    <Border BorderThickness="0" CornerRadius="{x:Static config:ConfigManager.ExplorerContextMenuCornerRadius}" Name="MainBorder" Background="{Binding Background}">
+        <StackPanel Background="Transparent" Margin="{x:Static config:ConfigManager.ExplorerContextMenuMargin}" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                
+                <Button Background="Transparent" Foreground="{Binding Foreground}" BorderThickness="0" Visibility="{Binding VisibleCut, Converter={StaticResource boolToVisible}}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{x:Static commonConstants:Colors.SelectedBackgroundShellObject}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <StackPanel HorizontalAlignment="Center">
+                        <TextBlock Text="&#xE8C6;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{x:Static constants:Localization.CUT}" Margin="2 0 0 0"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Background="Transparent" Foreground="{Binding Foreground}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleCopy, Converter={StaticResource boolToVisible}}">
+                    <StackPanel>
+                        <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{x:Static constants:Localization.COPY}" Margin="2 0 0 0"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Background="Transparent" Foreground="{Binding Foreground}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisiblePaste, Converter={StaticResource boolToVisible}}">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="&#xE77F;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{x:Static constants:Localization.PASTE}" Margin="2 0 0 0"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Background="Transparent" Foreground="{Binding Foreground}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleDelete, Converter={StaticResource boolToVisible}}">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{x:Static constants:Localization.DELETE}" Margin="2 0 0 0"/>
+                    </StackPanel>
+                </Button>
+                
+            </StackPanel>
+            <Button Background="Transparent" Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding ShowOlderContextMenuCommand}" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xEE47;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>
+                    <TextBlock Text="{x:Static constants:Localization.SHOW_PREVIOUS_CONTEXTMENU}" Margin="2 0 0 0"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Border>
+    
+</Popup>

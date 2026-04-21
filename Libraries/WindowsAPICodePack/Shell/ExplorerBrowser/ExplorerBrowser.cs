@@ -869,25 +869,7 @@ public sealed class ExplorerBrowser :
         {
             WndProcEventArgs args = new()
             {
-                Message = msg,
-                WParam = wParam,
-                LParam = lParam,
-            };
-            WndProcEvent.Invoke(this, args);
-            if (args.Handled)
-                return args.Result;
-        }
-
-        return DefSubclassProc(hWnd, msg, wParam, lParam);
-    }
-
-    private IntPtr SubclassProc2(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam,
-                                    uint idSubclass, IntPtr refData)
-    {
-        if (InterceptWndProc && WndProcEvent != null)
-        {
-            WndProcEventArgs args = new()
-            {
+                Hwnd = hWnd,
                 Message = msg,
                 WParam = wParam,
                 LParam = lParam,
@@ -915,14 +897,9 @@ public sealed class ExplorerBrowser :
         _currentSubclassProc = SubclassProc;
         _currentShellHwnd = FindShellChildWindow(Handle, "SysListView32");
         if (_currentShellHwnd == IntPtr.Zero)
-        {
-            _currentSubclassProc = SubclassProc2;
             _currentShellHwnd = FindShellChildWindow(Handle, "SHELLDLL_DefView", false);
-        }
         if (_currentShellHwnd != IntPtr.Zero)
-        {
             SetWindowSubclass(_currentShellHwnd, _currentSubclassProc, 1, IntPtr.Zero);
-        }
     }
 
     private IntPtr FindShellChildWindow(IntPtr parent, string classToFind, bool testStyle = true)
@@ -993,6 +970,8 @@ public sealed class ExplorerBrowser :
 
     public class WndProcEventArgs
     {
+        public IntPtr Hwnd { get; set; }
+
         public uint Message { get; set; }
 
         public IntPtr WParam { get; set; }

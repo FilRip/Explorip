@@ -77,6 +77,7 @@ public static class ConfigManager
     private const string ConfigExplorerReplaceContextMenu = "ReplaceContextMenu";
     private const string ConfigExplorerContextMenuCornerRadius = "ContextMenuCornerRadius";
     private const string ConfigExplorerContextMenuBackground = "ContextMenuBackground";
+    private const string ConfigExplorerContextMenuForeground = "ContextMenuForeground";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -571,21 +572,44 @@ public static class ConfigManager
         }
     }
 
+    public static Thickness ExplorerContextMenuMargin
+    {
+        get { return new Thickness(ExplorerContextMenuCornerRadius.TopLeft); }
+    }
+
     public static SolidColorBrush ExplorerContextMenuBackground
     {
         get
         {
-            string bgColor = _registryKeyExplorer.GetValue(ConfigExplorerContextMenuBackground)?.ToString();
-            if (!string.IsNullOrWhiteSpace(bgColor))
-            {
-                return new SolidColorBrush(_registryKeyExplorer.ReadColor(ConfigExplorerContextMenuBackground, ExploripSharedCopy.Constants.Colors.BackgroundColor));
-            }
-            return null;
+            Color bgColor;
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuBackground)?.ToString()))
+                bgColor = ExploripSharedCopy.Constants.Colors.BackgroundColor;
+            else
+                bgColor = _registryKeyExplorer.ReadColor(ConfigExplorerContextMenuBackground, ExploripSharedCopy.Constants.Colors.BackgroundColor);
+            return new SolidColorBrush(bgColor);
         }
         set
         {
             if (AllowWrite)
-                _registryKeyExplorer.SetValue("BackgroundColor", $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuBackground, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static SolidColorBrush ExplorerContextMenuForeground
+    {
+        get
+        {
+            Color fgColor;
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuForeground)?.ToString()))
+                fgColor = ExploripSharedCopy.Constants.Colors.ForegroundColor;
+            else
+                fgColor = _registryKeyExplorer.ReadColor(ConfigExplorerContextMenuForeground, ExploripSharedCopy.Constants.Colors.ForegroundColor);
+            return new SolidColorBrush(fgColor);
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuForeground, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 

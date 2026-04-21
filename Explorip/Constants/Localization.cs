@@ -208,6 +208,8 @@ public static class Localization
     public static string DELETE_SELECTION { get; private set; }
     public static string YOURE_UPTODATE { get; private set; }
     public static string SHOW_PREVIOUS_CONTEXTMENU { get; private set; }
+    public static string CUT { get; private set; }
+    public static string COPY { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -404,7 +406,9 @@ public static class Localization
         COPY_SELECTION = Load(SrhDll, 3716, "Copy selection");
         DELETE_SELECTION = Load(SrhDll, 3718, "Delete selection");
         YOURE_UPTODATE = Load("Musupdatehandlers1.dll", 3, "You're up to date");
-        SHOW_PREVIOUS_CONTEXTMENU = Load("Windows.UI.FileExplorer.dll", 51841, "Show more options");
+        SHOW_PREVIOUS_CONTEXTMENU = Load("Windows.UI.FileExplorer.dll", 51792, "Show more options");
+        CUT = Load(Shell32Dll, 33560, "Cut");
+        COPY = Load(Shell32Dll, 33561, "Copy");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

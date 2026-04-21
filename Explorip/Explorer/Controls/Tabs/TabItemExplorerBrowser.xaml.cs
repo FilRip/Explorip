@@ -35,6 +35,8 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     private string _searchDirectory;
     private string _tempTitle;
     private FolderSettings _fs;
+    private ExplorerBrowser.WndProcEventArgs _lastContextMenu;
+    private bool _forceOlderContextMenu;
 
     public TabItemExplorerBrowser() : base()
     {
@@ -58,19 +60,27 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     private void ExplorerBrowserControl_WndProcEvent(object sender, ExplorerBrowser.WndProcEventArgs e)
     {
-        if (e.Message == (int)NativeMethods.WM.RBUTTONUP || e.Message == (int)NativeMethods.WM.CONTEXTMENU)
+        if (e.Message == (int)NativeMethods.WM.CONTEXTMENU)
         {
-            if (ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
+            if (_forceOlderContextMenu)
             {
-                // SelectedItem context menu
-            }
-            else
+                _forceOlderContextMenu = false;
+                return;
+            }    
+            _lastContextMenu = e;
+            _ = new PopUpExplorerContextMenu()
             {
-                // Background context menu
-            }
+                ParentTab = this,
+            };
             e.Handled = true;
             e.Result = new IntPtr(1);
         }
+    }
+
+    public void ShowDefaultContextMenu()
+    {
+        _forceOlderContextMenu = true;
+        NativeMethods.SendMessage(_lastContextMenu.Hwnd, NativeMethods.WM.CONTEXTMENU, _lastContextMenu.WParam, _lastContextMenu.LParam);
     }
 
     public new TabItemExplorerBrowserViewModel DataContext
