@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
-using static ManagedShell.Interop.NativeMethods;
-
 namespace ManagedShell.Interop;
 
 public partial class NativeMethods
@@ -1958,18 +1956,16 @@ public partial class NativeMethods
         XBUTTON2 = 0x0002,
     }
 
-#pragma warning disable IDE0044
     [StructLayout(LayoutKind.Sequential)]
     public struct MouseInput
     {
-        int dx;
-        int dy;
-        uint mouseData;
-        MouseEventScans dwFlags;
-        uint time;
-        IntPtr dwExtraInfo;
+        public int dx;
+        public int dy;
+        public uint mouseData;
+        public MouseEventScans dwFlags;
+        public uint time;
+        public IntPtr dwExtraInfo;
     }
-#pragma warning restore IDE0044
 
     [StructLayout(LayoutKind.Sequential)]
     public struct KeyBDInput
@@ -1981,15 +1977,13 @@ public partial class NativeMethods
         public IntPtr dwExtraInfo;
     }
 
-#pragma warning disable IDE0044
     [StructLayout(LayoutKind.Sequential)]
     public struct HardwareInput
     {
-        uint uMsg;
-        ushort wParamL;
-        ushort wParamH;
+        public uint uMsg;
+        public ushort wParamL;
+        public ushort wParamH;
     }
-#pragma warning restore IDE0044
 
     [StructLayout(LayoutKind.Explicit)]
     public struct MouseKeybdHardwareInputUnion

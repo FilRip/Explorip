@@ -37,6 +37,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     private FolderSettings _fs;
     private ExplorerBrowser.WndProcEventArgs _lastContextMenu;
     private bool _forceOlderContextMenu;
+    private PopUpExplorerContextMenu _contextMenu;
 
     public TabItemExplorerBrowser() : base()
     {
@@ -66,9 +67,11 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             {
                 _forceOlderContextMenu = false;
                 return;
-            }    
+            }
             _lastContextMenu = e;
-            _ = new PopUpExplorerContextMenu()
+            if (_contextMenu != null && _contextMenu.IsOpen)
+                _contextMenu.DataContext.ForceClose();
+            _contextMenu = new PopUpExplorerContextMenu()
             {
                 ParentTab = this,
             };
@@ -396,6 +399,8 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         if (disposing)
         {
             DisposeSearch();
+            if (_contextMenu?.IsOpen == true)
+                _contextMenu.DataContext.ForceClose();
             ExplorerBrowser.ExplorerBrowserControl.NavigationComplete -= ExplorerBrowserControl_NavigationComplete;
             ExplorerBrowser.ExplorerBrowserControl.NavigationFailed -= ExplorerBrowserControl_NavigationFailed;
             ExplorerBrowser.ExplorerBrowserControl.SelectionChanged -= ExplorerBrowserControl_SelectionChanged;

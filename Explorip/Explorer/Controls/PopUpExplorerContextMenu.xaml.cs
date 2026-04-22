@@ -31,4 +31,14 @@ public partial class PopUpExplorerContextMenu : Popup
             DataContext.SetParentTab(_parentTab);
         }
     }
+
+    private void Popup_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        DataContext.Closing(true);
+    }
+
+    private void Popup_PreviewMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        DataContext.Closing(false);
+    }
 }

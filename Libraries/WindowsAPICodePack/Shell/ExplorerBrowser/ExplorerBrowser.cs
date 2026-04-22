@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Windows.Forms;
 
@@ -963,7 +962,7 @@ public sealed class ExplorerBrowser :
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-    
+
     #endregion
 
     public bool InterceptWndProc { get; set; }

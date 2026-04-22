@@ -20,7 +20,6 @@ using ExploripSharedCopy.Helpers;
 using ExploripSharedCopy.WinAPI;
 
 using ManagedShell;
-using ManagedShell.AppBar;
 using ManagedShell.Common.Helpers;
 using ManagedShell.Common.Logging;
 using ManagedShell.Interop;
