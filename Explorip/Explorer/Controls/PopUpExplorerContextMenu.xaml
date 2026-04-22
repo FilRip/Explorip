@@ -8,7 +8,7 @@
        xmlns:commonConstants="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
        xmlns:config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig"
        xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
-       mc:Ignorable="d"
+       mc:Ignorable="d" 
        d:DesignHeight="450" d:DesignWidth="800" AllowsTransparency="True" StaysOpen="False" Placement="Mouse" IsOpen="{Binding IsOpen}" PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown" PreviewMouseRightButtonDown="Popup_PreviewMouseRightButtonDown">
 
     <Popup.Resources>
@@ -71,7 +71,11 @@
             </StackPanel>
 
             <Line X1="1" Y1="1" Stretch="Fill" Stroke="{x:Static commonConstants:Colors.ForegroundColorBrush}" Margin="0 5 0 0"/>
-            
+
+            <Button Foreground="{Binding Foreground}" Content="{x:Static constants:Localization.PROPERTIES}" Margin="5 0 0 0" Command="{Binding GetPropertiesCommand}" Style="{StaticResource BtnStyle}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch"/>
+
+            <Line X1="1" Y1="1" Stretch="Fill" Stroke="{x:Static commonConstants:Colors.ForegroundColorBrush}" Margin="0 5 0 0"/>
+
             <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding ShowOlderContextMenuCommand}" HorizontalAlignment="Left" Style="{StaticResource BtnStyle}">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="&#xEE47;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>

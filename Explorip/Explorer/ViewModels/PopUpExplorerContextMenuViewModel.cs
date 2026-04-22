@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
@@ -167,6 +168,18 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
                     inputs[1].mkhi.mi.dwFlags = NativeMethods.MouseEventScans.RIGHTUP;
                 }
             }).Start();
+        }
+    }
+
+    [RelayCommand()]
+    private void GetProperties()
+    {
+        if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
+        {
+            if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.Count == 1)
+                ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems[0].ParsingName);
+            else
+                ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.DataContext.EditPath, _parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.Select(so => so.ParsingName));
         }
     }
 }

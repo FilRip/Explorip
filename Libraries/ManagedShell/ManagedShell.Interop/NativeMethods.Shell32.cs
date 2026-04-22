@@ -9,7 +9,6 @@ public partial class NativeMethods
 {
     const string Shell32_DllName = "shell32.dll";
     public const int S_OK = 0;
-    public static readonly Guid CLSID_DragDropHelper = new("{4657278A-411B-11d2-839A-00C04FD918D0}");
 
     [StructLayout(LayoutKind.Sequential)]
     public struct AppBarData
@@ -130,12 +129,53 @@ public partial class NativeMethods
     [DllImport(Shell32_DllName, CharSet = CharSet.Auto)]
     internal static extern bool ShellExecuteEx(ref ShellExecuteInfo lpExecInfo);
 
+    public enum ShellExecuteInfos : uint
+    {
+        Default = 0x00000000,
+        ClassName = 0x00000001,
+        ClassKey = 0x00000003,
+        IdList = 0x00000004,
+        InvokeIdList = 0x0000000C,
+        Icon = 0x00000010,
+        HotKey = 0x00000020,
+        NoCloseProcess = 0x00000040,
+        ConnectNetDrv = 0x00000080,
+        NoAsync = 0x00000100,
+        DdeWait = 0x00000100,
+        DoEnvSubst = 0x00000200,
+        NoUi = 0x00000400,
+        Unicode = 0x00004000,
+        NoConsole = 0x00008000,
+        AsyncOk = 0x00100000,
+        NoQueryClassStore = 0x01000000,
+        HMonitor = 0x00200000,
+        NoZoneChecks = 0x00800000,
+        WaitForInputIdle = 0x02000000,
+        LogUsage = 0x04000000,
+        HInstIsSite = 0x08000000,
+    }
+
+    public static class ShellExecuteInfoVerb
+    {
+        public const string Edit = "edit";
+        public const string Explore = "explore";
+        public const string Find = "fin";
+        public const string Open = "open";
+        public const string OpenAs = "openas";
+        public const string Print = "print";
+        public const string Properties = "properties";
+        public const string RunAs = "runas";
+    }
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct ShellExecuteInfo
     {
         public int cbSize;
-        public uint fMask;
+        public ShellExecuteInfos fMask;
         public IntPtr hwnd;
+        /// <summary>
+        /// See <see cref="ShellExecuteInfoVerb"/> for a list of suggestions
+        /// </summary>
         [MarshalAs(UnmanagedType.LPTStr)]
         public string lpVerb;
         [MarshalAs(UnmanagedType.LPTStr)]
@@ -144,6 +184,9 @@ public partial class NativeMethods
         public string lpParameters;
         [MarshalAs(UnmanagedType.LPTStr)]
         public string lpDirectory;
+        /// <summary>
+        /// Most of time, represent a value of <see cref="WindowShowStyle"/>
+        /// </summary>
         public int nShow;
         public IntPtr hInstApp;
         public IntPtr lpIDList;
@@ -800,4 +843,28 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName)]
     internal static extern int SHQueryRecycleBin(string pszRootPath, ref ShQueryRbInfo pSHQueryRBInfo);
+
+    [DllImport(Shell32_DllName)]
+    internal static extern IntPtr ILFindLastID(IntPtr pidl);
+
+    [DllImport(Shell32_DllName)]
+    internal static extern int ILGetSize(IntPtr pidl);
+
+    [DllImport(Shell32_DllName)]
+    internal static extern IntPtr ILClone(IntPtr pidl);
+
+    [DllImport(Shell32_DllName)]
+    internal static extern int CIDLData_CreateFromIDArray(IntPtr pidlFolder, uint cidl, IntPtr[] apidl, out IDataObject dataObject);
+
+    [DllImport(Shell32_DllName)]
+    internal static extern int SHMultiFileProperties(IDataObject pdtobj, uint flags);
+
+    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
+    internal static extern int SHILCreateFromPath(string pszPath, out IntPtr ppidl, ref uint rgflnOut);
+
+    [DllImport(Shell32_DllName, CharSet = CharSet.Unicode)]
+    internal static extern int SHILCreateFromPath(string pszPath, out IntPtr ppidl, [Optional()] uint rgflnOut);
+
+    [DllImport(Shell32_DllName)]
+    internal static extern bool ILRemoveLastID(IntPtr pidl);
 }

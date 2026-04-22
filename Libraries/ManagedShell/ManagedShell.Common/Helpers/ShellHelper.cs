@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -260,8 +261,44 @@ public static class ShellHelper
         info.lpVerb = "properties";
         info.lpFile = Filename;
         info.nShow = (int)WindowShowStyle.Show;
-        info.fMask = SEE_MASK_INVOKEIDLIST;
+        info.fMask = ShellExecuteInfos.InvokeIdList;
         return ShellExecuteEx(ref info);
+    }
+
+    public static bool ShowFileProperties(string parentFolder, IEnumerable<string> files)
+    {
+        if (string.IsNullOrWhiteSpace(parentFolder) || files == null || !files.Any())
+            return false;
+
+        SHILCreateFromPath(parentFolder, out IntPtr pidlParent);
+        List<IntPtr> pidlItems = [];
+
+        foreach (string file in files)
+        {
+            if (SHILCreateFromPath(file, out IntPtr pidlFull) == 0)
+            {
+                pidlItems.Add(ILClone(ILFindLastID(pidlFull)));
+                ILRemoveLastID(pidlFull);
+                ILFree(pidlFull);
+            }
+        }
+
+        try
+        {
+            if (CIDLData_CreateFromIDArray(pidlParent, (uint)pidlItems.Count, [.. pidlItems], out System.Runtime.InteropServices.ComTypes.IDataObject dataObj) == 0)
+            {
+                return SHMultiFileProperties(dataObj, 0) == S_OK;
+            }
+        }
+        finally
+        {
+            ILFree(pidlParent);
+            foreach (IntPtr pidl in pidlItems)
+                ILFree(pidl);
+        }
+
+
+        return false;
     }
 
     /// <summary>

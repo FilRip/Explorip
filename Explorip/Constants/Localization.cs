@@ -210,6 +210,7 @@ public static class Localization
     public static string SHOW_PREVIOUS_CONTEXTMENU { get; private set; }
     public static string CUT { get; private set; }
     public static string COPY { get; private set; }
+    public static string PROPERTIES { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -409,6 +410,7 @@ public static class Localization
         SHOW_PREVIOUS_CONTEXTMENU = Load("Windows.UI.FileExplorer.dll", 51792, "Show more options");
         CUT = Load(Shell32Dll, 33560, "Cut");
         COPY = Load(Shell32Dll, 33561, "Copy");
+        PROPERTIES = Load(Shell32Dll, 33555, "Properties");
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
