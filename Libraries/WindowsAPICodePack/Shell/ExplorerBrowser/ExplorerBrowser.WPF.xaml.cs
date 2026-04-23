@@ -16,7 +16,7 @@ public partial class ExplorerBrowser : UserControl, IDisposable
     /// <summary>
     /// The underlying WinForms control
     /// </summary>
-    public Shell.ExplorerBrowser.ExplorerBrowser ExplorerBrowserControl { get; set; }
+    public Shell.ExplorerBrowser.ExplorerBrowser ExplorerBrowserControl { get; private set; }
 
     private ShellObject initialNavigationTarget;
     private ExplorerBrowserViewMode? initialViewMode;

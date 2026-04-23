@@ -857,6 +857,11 @@ public sealed class ExplorerBrowser :
 
     #region WndProc
 
+    public IntPtr ShellViewHandle
+    {
+        get { return _currentShellHwnd; }
+    }
+
 #pragma warning disable S1450
     private SubclassProcDelegate _currentSubclassProc;
 #pragma warning restore S1450

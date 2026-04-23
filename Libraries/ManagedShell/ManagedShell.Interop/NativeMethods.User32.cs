@@ -4684,4 +4684,7 @@ public partial class NativeMethods
         [In(), Out()] DisplayConfigPathInfo[] pathInfoArray,
         ref uint numModeInfoArrayElements,
         [In(), Out()] DisplayConfigModeInfo[] modeInfoArray);
+
+    [DllImport(User32_DllName)]
+    internal static extern IntPtr WindowFromPoint(System.Drawing.Point point);
 }
