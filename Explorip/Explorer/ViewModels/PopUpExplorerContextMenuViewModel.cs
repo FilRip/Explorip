@@ -30,10 +30,13 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     private SolidColorBrush _background, _foreground;
     [ObservableProperty()]
     private bool _isOpen = true, _visibleCut, _visibleCopy, _visibleDelete, _visiblePaste;
+    [ObservableProperty()]
+    private double _dpi;
 
     public void SetParentTab(TabItemExplorerBrowser parentTab)
     {
         _parentTab = parentTab;
+        Dpi = VisualTreeHelper.GetDpi(parentTab).DpiScaleX;
         if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
         {
             VisibleCopy = true;

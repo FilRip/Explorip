@@ -183,10 +183,20 @@ public partial class MainViewModels : ObservableObject, IDisposable
                             op.Size = (ulong)(new FileInfo(op.Source)?.Length ?? 0);
                     }
 
+                    int lastPos = 0;
+                    if (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Delete)
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            OneFileOperation ofop = ListWaiting.LastOrDefault(o => o.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Delete);
+                            if (ofop != null)
+                                lastPos = ListWaiting.IndexOf(ofop) + 1;
+                        });
+                    }
                     if (ExploripCopyConfig.PriorityToLowerOperations &&
                         (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Create || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Delete || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Rename))
                     {
-                        AddOrInsertOp(op, 0);
+                        AddOrInsertOp(op, lastPos);
                     }
                     else
                         AddOrInsertOp(op);
@@ -199,7 +209,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         System.Windows.Application.Current.Dispatcher.Invoke(() =>
         {
-            if (pos >= 0)
+            if (pos >= 0 || pos < ListWaiting.Count - 1)
                 ListWaiting.Insert(pos, op);
             else
                 ListWaiting.Add(op);
