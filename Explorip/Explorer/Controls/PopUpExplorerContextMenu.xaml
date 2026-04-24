@@ -19,7 +19,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -76,7 +76,7 @@
 
             <Line X1="1" Y1="1" Stretch="Fill" Stroke="{x:Static commonConstants:Colors.ForegroundColorBrush}" Margin="0 5 0 0"/>
 
-            <Button Foreground="{Binding Foreground}" Content="{x:Static constants:Localization.PROPERTIES}" Margin="5 0 0 0" Command="{Binding GetPropertiesCommand}" Style="{StaticResource BtnStyle}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch"/>
+            <Button Foreground="{Binding Foreground}" Content="{x:Static constants:Localization.PROPERTIES}" Margin="5 0 0 0" Command="{Binding GetPropertiesCommand}" Style="{StaticResource BtnStyle}" HorizontalAlignment="Stretch"/>
 
             <Line X1="1" Y1="1" Stretch="Fill" Stroke="{x:Static commonConstants:Colors.ForegroundColorBrush}" Margin="0 5 0 0"/>
 

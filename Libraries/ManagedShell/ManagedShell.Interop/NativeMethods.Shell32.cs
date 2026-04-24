@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 
+using Explorip.HookFileOperations.FilesOperations.Interfaces;
+
 namespace ManagedShell.Interop;
 
 public partial class NativeMethods
@@ -867,4 +869,21 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName)]
     internal static extern bool ILRemoveLastID(IntPtr pidl);
+
+    [ComImport()]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    [Guid("a08ce4d0-fa25-44ab-b07f-4611a2e32c9c")]
+    public interface IExplorerCommand
+    {
+        void GetTitle([MarshalAs(UnmanagedType.Interface)] object psiItemArray, out IntPtr ppszName);
+        void GetIcon([MarshalAs(UnmanagedType.Interface)] object psiItemArray, out IntPtr ppszIcon);
+        void GetToolTip([MarshalAs(UnmanagedType.Interface)] object psiItemArray, out IntPtr ppszInfotip);
+        void GetCanonicalName(out Guid pguidCommandName);
+        void GetState([MarshalAs(UnmanagedType.Interface)] object psiItemArray, bool fOkToBeSlow, out uint cmdState);
+        void Invoke([MarshalAs(UnmanagedType.Interface)] object psiItemArray, [MarshalAs(UnmanagedType.Interface)] object punkSite);
+        void EnumSubCommands(out IntPtr ppEnum);
+    }
+
+    [DllImport(Shell32_DllName)]
+    internal static extern int SHCreateShellItemArrayFromShellItem(IShellItem psi, [MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IShellItemArray ppsiItemArray);
 }
