@@ -109,6 +109,8 @@ public partial class WpfExplorerBrowser : Window
 
         if (RightTab.Visibility == Visibility.Visible)
             _firstLeftTabWidth = ConfigManager.ExplorerLeftTabWidth;
+
+        Background = ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
     }
 
     public new WpfExplorerBrowserViewModel DataContext

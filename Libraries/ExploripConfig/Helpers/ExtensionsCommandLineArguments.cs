@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace ExploripConfig.Helpers;
@@ -135,7 +136,7 @@ public static class ExtensionsCommandLineArguments
     /// </summary>
     public static string ArgumentFullPathExe()
     {
-        return Environment.GetCommandLineArgs()[0];
+        return Assembly.GetEntryAssembly().Location;
     }
 
     /// <summary>
@@ -143,7 +144,7 @@ public static class ExtensionsCommandLineArguments
     /// </summary>
     public static string ArgumentFileNameExe()
     {
-        return Path.GetFileName(Environment.GetCommandLineArgs()[0]);
+        return Path.GetFileName(ArgumentFullPathExe());
     }
 
     /// <summary>
@@ -151,7 +152,7 @@ public static class ExtensionsCommandLineArguments
     /// </summary>
     public static string ArgumentPathExe()
     {
-        return Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
+        return Path.GetDirectoryName(ArgumentFullPathExe());
     }
 
     /// <summary>

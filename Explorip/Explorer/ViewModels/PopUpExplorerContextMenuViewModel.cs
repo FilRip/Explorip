@@ -11,7 +11,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Explorer.Controls;
-using Explorip.Explorer.Helpers;
 using Explorip.HookFileOperations.FilesOperations;
 
 using ExploripConfig.Configuration;

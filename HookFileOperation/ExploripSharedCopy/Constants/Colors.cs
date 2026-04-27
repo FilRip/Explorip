@@ -14,6 +14,7 @@ public static class Colors
     public static SolidColorBrush ForegroundColorBrush { get; private set; }
     public static SolidColorBrush TransparentColorBrush { get; private set; }
     public static SolidColorBrush SelectedBackgroundShellObject { get; set; }
+    public static SolidColorBrush OppositeAccentColor { get; set; }
 
     public static void LoadTheme()
     {
@@ -32,11 +33,22 @@ public static class Colors
         ResetBrush();
         TransparentColorBrush = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
         SelectedBackgroundShellObject = new SolidColorBrush(Color.FromArgb(128, System.Drawing.Color.DarkGray.R, System.Drawing.Color.DarkGray.G, System.Drawing.Color.DarkGray.B));
+        OppositeAccentColor = GetOppositeColor(AccentColor);
     }
 
     public static void ResetBrush()
     {
         BackgroundColorBrush = new SolidColorBrush(Color.FromArgb(255, BackgroundColor.R, BackgroundColor.G, BackgroundColor.B));
         ForegroundColorBrush = new SolidColorBrush(Color.FromArgb(255, ForegroundColor.R, ForegroundColor.G, ForegroundColor.B));
+        OppositeAccentColor = ForegroundColorBrush;
+    }
+
+    public static SolidColorBrush GetOppositeColor(Color bg)
+    {
+        double r = bg.R / 255d;
+        double g = bg.G / 255d;
+        double b = bg.B / 255d;
+        double luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        return luminance > 0.5 ? ForegroundColorBrush : BackgroundColorBrush;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text.Json;
@@ -103,12 +104,12 @@ internal static class AutoUpdater
     {
         try
         {
-            foreach (string file in Directory.GetFiles(dir, $"*{UpdateExtension}"))
+            foreach (string file in Directory.GetFiles(dir, $"*{UpdateExtension}").Where(f => !string.IsNullOrWhiteSpace(f) && f != "." && f != ".."))
             {
                 File.Delete(file);
             }
 
-            foreach (string subDir in Directory.GetDirectories(dir))
+            foreach (string subDir in Directory.GetDirectories(dir).Where(d => !string.IsNullOrWhiteSpace(d) && Path.GetFileName(d) != "." && Path.GetFileName(d) != ".."))
             {
                 RemoveAllOlderFile(subDir);
             }

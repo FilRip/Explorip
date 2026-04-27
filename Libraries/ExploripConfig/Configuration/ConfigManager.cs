@@ -22,6 +22,7 @@ public static class ConfigManager
     private const string HKeyRoot = "Software\\CoolBytes\\Explorip";
     internal const string ToolBarNameInRegistry = "Toolbar";
     private const string ConfigLeftTab = "LeftTab";
+    private const string ConfigRightTab = "RightTab";
     private const string ConfigOverrideDefaultColor = "OverrideDefaultColor";
     private const string ConfigDefaultBackgroundColor = "DefaultBackgroundColor";
     private const string ConfigDefaultForegroundColor = "DefaultForegroundColor";
@@ -78,6 +79,9 @@ public static class ConfigManager
     private const string ConfigExplorerContextMenuCornerRadius = "ContextMenuCornerRadius";
     private const string ConfigExplorerContextMenuBackground = "ContextMenuBackground";
     private const string ConfigExplorerContextMenuForeground = "ContextMenuForeground";
+    private const string ConfigExplorerWindowState = "ExplorerWindowState";
+    private const string ConfigExplorerHeaderBackground = "HeaderBackground";
+    private const string ConfigExplorerHeaderForeground = "HeaderForeground";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -94,9 +98,11 @@ public static class ConfigManager
         _registryKeyExplorer = Registry.CurrentUser.CreateSubKey(HKeyRoot, true);
         if (_registryKeyExplorer == null)
             AllowWrite = false;
-        _registryRootDesktop = _registryKeyExplorer?.CreateSubKey("Desktops");
-        _registryRootTaskbar = _registryKeyExplorer?.CreateSubKey("Taskbars");
-        startMenuRegistry = _registryKeyExplorer?.CreateSubKey("StartMenu");
+        Registry.CurrentUser.CreateSubKey(HKeyRoot + "\\" + ConfigLeftTab, true);
+        Registry.CurrentUser.CreateSubKey(HKeyRoot + "\\" + ConfigRightTab, true);
+        _registryRootDesktop = _registryKeyExplorer?.CreateSubKey("Desktops", true);
+        _registryRootTaskbar = _registryKeyExplorer?.CreateSubKey("Taskbars", true);
+        startMenuRegistry = _registryKeyExplorer?.CreateSubKey("StartMenu", true);
 
         if (allowWrite && _registryKeyExplorer != null)
         {
@@ -119,9 +125,9 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigUseOwnCopier, TrueValue);
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigStartTwoExplorer, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigStartTwoExplorer, TrueValue);
-            string ws = _registryKeyExplorer.GetValue("ExplorerWindowState", "").ToString();
+            string ws = _registryKeyExplorer.GetValue(ConfigExplorerWindowState, "").ToString();
             if (string.IsNullOrWhiteSpace(ws) || !Enum.TryParse<WindowState>(ws, out _))
-                ExplorerWindowState = WindowState.Normal;
+                _registryKeyExplorer.SetValue(ConfigExplorerWindowState, WindowState.Maximized.ToString("D"));
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerPosX, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerPosX, (Screen.PrimaryScreen.WpfWorkingArea.X + 50).ToString());
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerPosY, "").ToString()))
@@ -146,6 +152,10 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigExplorerIconSize, "0");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuCornerRadius, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerIconSize, "10");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerHeaderBackground, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerHeaderBackground, $"{Colors.Blue.A},{Colors.Blue.R},{Colors.Blue.G},{Colors.Blue.B}");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerHeaderForeground, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerHeaderForeground, $"{Colors.White.A},{Colors.White.R},{Colors.White.G},{Colors.White.B}");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -414,11 +424,11 @@ public static class ConfigManager
 
     public static WindowState ExplorerWindowState
     {
-        get { return _registryKeyExplorer.ReadEnum<WindowState>("ExplorerWindowState"); }
+        get { return _registryKeyExplorer.ReadEnum<WindowState>(ConfigExplorerWindowState); }
         set
         {
             if (ExplorerWindowState != value && AllowWrite)
-                _registryKeyExplorer.SetValue("ExplorerWindowState", ((int)value).ToString());
+                _registryKeyExplorer.SetValue(ConfigExplorerWindowState, ((int)value).ToString());
         }
     }
 
@@ -613,6 +623,42 @@ public static class ConfigManager
         }
     }
 
+    public static SolidColorBrush ExplorerHeaderForeground
+    {
+        get
+        {
+            Color fgColor;
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerHeaderForeground)?.ToString()))
+                fgColor = ExploripSharedCopy.Constants.Colors.ForegroundColor;
+            else
+                fgColor = _registryKeyExplorer.ReadColor(ConfigExplorerHeaderForeground, ExploripSharedCopy.Constants.Colors.ForegroundColor);
+            return new SolidColorBrush(fgColor);
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerHeaderForeground, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static SolidColorBrush ExplorerHeaderBackground
+    {
+        get
+        {
+            Color bgColor;
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerHeaderBackground)?.ToString()))
+                bgColor = ExploripSharedCopy.Constants.Colors.BackgroundColor;
+            else
+                bgColor = _registryKeyExplorer.ReadColor(ConfigExplorerHeaderBackground, ExploripSharedCopy.Constants.Colors.BackgroundColor);
+            return new SolidColorBrush(bgColor);
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerHeaderBackground, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
     #endregion
 
     #region Toolbars
@@ -682,11 +728,11 @@ public static class ConfigManager
 
     public static string[] RightTabs
     {
-        get { return GetAllTabs("RightTab"); }
+        get { return GetAllTabs(ConfigRightTab); }
         set
         {
             if (AllowWrite)
-                SaveAllTabs("RightTab", value);
+                SaveAllTabs(ConfigRightTab, value);
         }
     }
 

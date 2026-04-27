@@ -50,6 +50,7 @@ public class TaskbarConfig
     private const string ConfigShowSystray = "ShowSystray";
     private const string ConfigShowPinnedApp = "ShowPinnedApp";
     private const string ConfigShowTitleApplication = "ShowTitleApplicationWindow";
+    private const string ConfigEdge = "Edge";
     #endregion
 
     private RegistryKey _registryTaskbar;
@@ -76,9 +77,9 @@ public class TaskbarConfig
                 _registryTaskbar.SetValue(ConfigCollapseNotifyIcons, "True");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigAllowFontSmoothing, "").ToString()))
                 _registryTaskbar.SetValue(ConfigAllowFontSmoothing, "True");
-            string edge = _registryTaskbar.GetValue("Edge", "").ToString();
+            string edge = _registryTaskbar.GetValue(ConfigEdge, "").ToString();
             if (string.IsNullOrWhiteSpace(edge) || !Enum.TryParse<AppBarEdge>(edge, out _))
-                Edge = AppBarEdge.Bottom;
+                _registryTaskbar.SetValue(ConfigEdge, AppBarEdge.Bottom.ToString("G"));
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarThumbHeight, "").ToString()))
                 _registryTaskbar.SetValue(ConfigTaskbarThumbHeight, "150");
             if (string.IsNullOrWhiteSpace(_registryTaskbar.GetValue(ConfigTaskbarThumbWidth, "").ToString()))
@@ -238,11 +239,11 @@ public class TaskbarConfig
 
     public AppBarEdge Edge
     {
-        get { return _registryTaskbar.ReadEnum<AppBarEdge>("Edge"); }
+        get { return _registryTaskbar.ReadEnum<AppBarEdge>(ConfigEdge); }
         set
         {
             if (Edge != value && AllowWrite)
-                _registryTaskbar.SetValue("Edge", ((int)value).ToString());
+                _registryTaskbar.SetValue(ConfigEdge, ((int)value).ToString());
         }
     }
 
