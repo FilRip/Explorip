@@ -25,6 +25,8 @@ using ManagedShell.ShellFolders;
 
 using Securify.ShellLink;
 
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
+
 namespace Explorip.TaskBar.ViewModels;
 
 public partial class ToolbarViewModel : BaseToolbarViewModel
@@ -151,7 +153,7 @@ public partial class ToolbarViewModel : BaseToolbarViewModel
                 {
                     int lastPosition = -1;
                     Dictionary<string, int> orders = [];
-                    string config = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Config", "exploripToolbar" + ConfigManager.ToolbarNumber(Path) + ".ini");
+                    string config = System.IO.Path.Combine(ArgumentPathExe(), "Config", "exploripToolbar" + ConfigManager.ToolbarNumber(Path) + ".ini");
                     if (File.Exists(config))
                     {
                         string[] lines = File.ReadAllLines(config);

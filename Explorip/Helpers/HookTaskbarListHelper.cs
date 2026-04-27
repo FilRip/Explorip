@@ -4,6 +4,8 @@ using ManagedShell.Interop;
 
 using Microsoft.Win32;
 
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
+
 namespace Explorip.Helpers;
 
 internal static class HookTaskbarListHelper
@@ -19,7 +21,7 @@ internal static class HookTaskbarListHelper
         RegistryKey userKey = Registry.CurrentUser.CreateSubKey("Software\\Classes\\CLSID\\{" + typeof(TaskbarList.TaskbarList).GUID.ToString() + "}", true);
         userKey.SetValue("", original.GetValue(""));
         original.Close();
-        userKey.CreateSubKey("LocalServer32").SetValue("", Environment.GetCommandLineArgs()[0]);
+        userKey.CreateSubKey("LocalServer32").SetValue("", ArgumentFullPathExe());
         userKey.Close();
 
         Guid regGuid = typeof(TaskbarList.TaskbarList).GUID;
@@ -43,7 +45,7 @@ internal static class HookTaskbarListHelper
 
     internal static void RegisterAsShellForCurrentUser()
     {
-        Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true).SetValue("Shell", Environment.GetCommandLineArgs()[0]);
+        Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true).SetValue("Shell", ArgumentFullPathExe());
     }
 
     internal static void UnregisterAsShellForCurrentUser()

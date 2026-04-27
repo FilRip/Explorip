@@ -7,6 +7,8 @@ using System.Reflection;
 
 using ExploripPlugins;
 
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
+
 namespace Explorip.TaskBar.Helpers;
 
 public static class PluginsManager
@@ -15,7 +17,7 @@ public static class PluginsManager
 
     public static void LoadPlugins()
     {
-        string root = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Plugins");
+        string root = Path.Combine(ArgumentPathExe(), "Plugins");
         if (!Directory.Exists(root))
             return;
         LoadPlugins(root);

@@ -52,7 +52,7 @@ public static class Program
 
             if (!Debugger.IsAttached || ArgumentExists("update"))
             {
-                if (Directory.Exists(Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), Updater.AutoUpdater.UpdateFolder)))
+                if (Directory.Exists(Path.Combine(ArgumentPathExe(), Updater.AutoUpdater.UpdateFolder)))
                 {
                     Process.Start("autoupdate.cmd", Updater.AutoUpdater.UpdateFolder);
                     return;

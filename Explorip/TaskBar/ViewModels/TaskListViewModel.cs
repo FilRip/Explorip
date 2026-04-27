@@ -28,6 +28,8 @@ using Securify.ShellLink;
 using VirtualDesktop;
 using VirtualDesktop.Models;
 
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
+
 namespace Explorip.TaskBar.ViewModels;
 
 public partial class TaskListViewModel : ObservableObject, IDisposable
@@ -363,7 +365,7 @@ public partial class TaskListViewModel : ObservableObject, IDisposable
         Dictionary<string, int> orders = [];
         try
         {
-            string exploripConfigFile = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), "Config", "exploripTaskbar.ini");
+            string exploripConfigFile = Path.Combine(ArgumentPathExe(), "Config", "exploripTaskbar.ini");
             if (File.Exists(exploripConfigFile))
             {
                 string[] lines = File.ReadAllLines(exploripConfigFile);

@@ -30,6 +30,8 @@ using Hardcodet.Wpf.TaskbarNotification;
 
 using ManagedShell.Interop;
 
+using static ExploripConfig.Helpers.ExtensionsCommandLineArguments;
+
 namespace ExploripCopy.ViewModels;
 
 public partial class MainViewModels : ObservableObject, IDisposable
@@ -796,7 +798,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
             if (soundToPlay.Length > 1)
             {
                 if (soundToPlay.StartsWith("."))
-                    soundToPlay = Path.Combine(Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]), soundToPlay);
+                    soundToPlay = Path.Combine(ArgumentPathExe(), soundToPlay);
                 else
                     soundToPlay = Path.Combine(Environment.ExpandEnvironmentVariables("%windir%"), "Media", soundToPlay);
             }
