@@ -72,6 +72,6 @@ You can make plugins. Plugins will be available like toolbar, to add custom cont
 
 Tested under
 ------------
-- Windows 10 22H2 build 19041 (no more tested since v1.2 but still should work)
-- Windows 11 23H2 build 22631
-- Windows 11 25H2 build 26200
+- Windows 10 22H2 x64 build 19041 (no more tested since v1.2 but still should work)
+- Windows 11 23H2 x64 build 22631
+- Windows 11 25H2 x64 build 26200
