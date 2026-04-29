@@ -107,7 +107,7 @@ public partial class ConsoleHost : UserControl, IDisposable
             NativeMethods.SetCapture(_srcPtr);
             NativeMethods.SetFocus(_srcPtr);
             NativeMethods.SetActiveWindow(_srcPtr);
-            NativeMethods.EnableWindow(_srcPtr, 1);
+            NativeMethods.EnableWindow(_srcPtr, true);
         });
     }
 

@@ -4074,7 +4074,7 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool EnableWindow(IntPtr hWnd, int bEnable);
+    internal static extern bool EnableWindow(IntPtr hWnd, [MarshalAs(UnmanagedType.Bool)] bool bEnable);
 
     [DllImport(User32_DllName)]
     [return: MarshalAs(UnmanagedType.Bool)]
