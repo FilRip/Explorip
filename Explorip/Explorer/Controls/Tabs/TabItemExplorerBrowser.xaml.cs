@@ -61,6 +61,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     private void ExplorerBrowserControl_WndProcEvent(object sender, ExplorerBrowser.WndProcEventArgs e)
     {
+        Debug.WriteLine($"Message reçu : {((NativeMethods.WM)e.Message):G}");
         if (e.Message == (int)NativeMethods.WM.CONTEXTMENU)
         {
             if (_forceOlderContextMenu)

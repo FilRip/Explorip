@@ -152,7 +152,8 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         NativeMethods.GetCursorPos(ref point);
         IntPtr handle = NativeMethods.GetParent(NativeMethods.WindowFromPoint(point));
         // HACK : Smulate click, because the previous click has been already used to close the popup
-        if (_sendMouseClick && !IsOpen && handle == _parentTab.ExplorerBrowser.ExplorerBrowserControl.ShellViewHandle)
+        if (_sendMouseClick && !IsOpen && (handle == _parentTab.ExplorerBrowser.ExplorerBrowserControl.ShellViewHandle ||
+                                           handle == _parentTab.ExplorerBrowser.ExplorerBrowserControl.ShellTreeViewHandle))
         {
             new Thread(() =>
             {

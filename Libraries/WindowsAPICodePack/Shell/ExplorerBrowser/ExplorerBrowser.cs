@@ -38,9 +38,6 @@ public sealed class ExplorerBrowser :
     private IShellItemArray shellItemsArray;
     private ShellObjectCollection itemsCollection;
 
-    private IntPtr _currentShellHwnd = IntPtr.Zero;
-    public delegate IntPtr ShellWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-
     /// <summary>
     /// The set of ShellObjects in the Explorer Browser
     /// </summary>
@@ -495,6 +492,8 @@ public sealed class ExplorerBrowser :
     {
         bool canceled = false;
 
+        Unhook();
+
         if (NavigationPending != null)
         {
             NavigationPendingEventArgs args = new()
@@ -557,6 +556,7 @@ public sealed class ExplorerBrowser :
         }
         return HResult.Ok;
     }
+
     #endregion
 
     #region ICommDlgBrowser
@@ -857,53 +857,87 @@ public sealed class ExplorerBrowser :
 
     #region WndProc
 
+    private IntPtr _currentShellHwnd = IntPtr.Zero, _currentShellTVHwnd = IntPtr.Zero;
+    public delegate IntPtr ShellWndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
     public IntPtr ShellViewHandle
     {
         get { return _currentShellHwnd; }
     }
 
+    public IntPtr ShellTreeViewHandle
+    {
+        get { return _currentShellTVHwnd; }
+    }
+
 #pragma warning disable S1450
     private SubclassProcDelegate _currentSubclassProc;
 #pragma warning restore S1450
+    private readonly object _lockSubClassProc = new();
 
     private IntPtr SubclassProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam,
                                 uint idSubclass, IntPtr refData)
     {
-        if (InterceptWndProc && WndProcEvent != null)
+        lock (_lockSubClassProc)
         {
-            WndProcEventArgs args = new()
+            if (InterceptWndProc && WndProcEvent != null)
             {
-                Hwnd = hWnd,
-                Message = msg,
-                WParam = wParam,
-                LParam = lParam,
-            };
-            WndProcEvent.Invoke(this, args);
-            if (args.Handled)
-                return args.Result;
-        }
+                WndProcEventArgs args = new()
+                {
+                    Hwnd = hWnd,
+                    Message = msg,
+                    WParam = wParam,
+                    LParam = lParam,
+                };
+                WndProcEvent.Invoke(this, args);
+                if (args.Handled)
+                    return args.Result;
+            }
 
-        return DefSubclassProc(hWnd, msg, wParam, lParam);
+            try
+            {
+                return DefSubclassProc(hWnd, msg, wParam, lParam);
+            }
+            catch (Exception)
+            {
+                Unhook();
+                return IntPtr.Zero;
+            }
+        }
     }
 
     private void Unhook()
     {
-        if (_currentShellHwnd != IntPtr.Zero)
+        lock (_lockSubClassProc)
         {
-            RemoveWindowSubclass(_currentShellHwnd, SubclassProc, 1);
-            _currentSubclassProc = null;
+            if (_currentShellHwnd != IntPtr.Zero)
+            {
+                RemoveWindowSubclass(_currentShellHwnd, SubclassProc, 1);
+                RemoveWindowSubclass(_currentShellTVHwnd, SubclassProc, 1);
+                _currentShellHwnd = IntPtr.Zero;
+                _currentShellTVHwnd = IntPtr.Zero;
+                _currentSubclassProc = null;
+            }
         }
     }
 
     private void ReHook()
     {
-        Unhook();
-        _currentSubclassProc = SubclassProc;
-        _currentShellHwnd = FindShellChildWindow(Handle, "SysListView32");
-        if (_currentShellHwnd == IntPtr.Zero)
-            _currentShellHwnd = FindShellChildWindow(Handle, "SHELLDLL_DefView", false);
-        if (_currentShellHwnd != IntPtr.Zero)
-            SetWindowSubclass(_currentShellHwnd, _currentSubclassProc, 1, IntPtr.Zero);
+        lock (_lockSubClassProc)
+        {
+            Unhook();
+
+            _currentSubclassProc = SubclassProc;
+            _currentShellHwnd = FindShellChildWindow(Handle, "SysListView32");
+            if (_currentShellHwnd == IntPtr.Zero)
+                _currentShellHwnd = FindShellChildWindow(Handle, "SHELLDLL_DefView", false);
+            if (_currentShellHwnd != IntPtr.Zero)
+                SetWindowSubclass(_currentShellHwnd, _currentSubclassProc, 1, IntPtr.Zero);
+
+            _currentShellTVHwnd = FindShellChildWindow(Handle, "SysTreeView32");
+            if (_currentShellTVHwnd != IntPtr.Zero && _currentShellHwnd != IntPtr.Zero)
+                SetWindowSubclass(_currentShellTVHwnd, _currentSubclassProc, 1, IntPtr.Zero);
+        }
     }
 
     private IntPtr FindShellChildWindow(IntPtr parent, string classToFind, bool testStyle = true)
@@ -947,25 +981,27 @@ public sealed class ExplorerBrowser :
 
     private delegate IntPtr SubclassProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam,
                                                  uint idSubclass, IntPtr refData);
+    private const string ComCtl32Dll = "comctl32.dll";
+    private const string User32Dll = "user32.dll";
 
-    [DllImport("comctl32.dll", SetLastError = true)]
+    [DllImport(ComCtl32Dll, SetLastError = true)]
     private static extern bool SetWindowSubclass(IntPtr hWnd, SubclassProcDelegate pfnSubclass,
                                                  uint uIdSubclass, IntPtr dwRefData);
 
-    [DllImport("comctl32.dll", SetLastError = true)]
+    [DllImport(ComCtl32Dll, SetLastError = true)]
     private static extern bool RemoveWindowSubclass(IntPtr hWnd, SubclassProcDelegate pfnSubclass,
                                                     uint uIdSubclass);
 
-    [DllImport("comctl32.dll", SetLastError = true)]
+    [DllImport(ComCtl32Dll, SetLastError = true)]
     private static extern IntPtr DefSubclassProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
-    [DllImport("user32.dll", CharSet = CharSet.Auto)]
+    [DllImport(User32Dll, CharSet = CharSet.Auto)]
     private static extern IntPtr FindWindowEx(IntPtr parent, IntPtr childAfter, string className, string windowTitle);
 
-    [DllImport("user32.dll")]
+    [DllImport(User32Dll)]
     private static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
-    [DllImport("user32.dll", SetLastError = true)]
+    [DllImport(User32Dll, SetLastError = true)]
     private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
     #endregion
