@@ -46,29 +46,29 @@
                 
                 <Button Foreground="{Binding Foreground}" BorderThickness="0" Visibility="{Binding VisibleCut, Converter={StaticResource boolToVisible}}" Command="{Binding CutCommand}" Style="{StaticResource BtnStyle}">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="&#xE8C6;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{x:Static constants:Localization.CUT}" Margin="2 0 0 0"/>
+                        <TextBlock Text="&#xE8C6;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
+                        <TextBlock Text="{x:Static constants:Localization.CUT}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
 
                 <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleCopy, Converter={StaticResource boolToVisible}}" Command="{Binding CopyCommand}" Style="{StaticResource BtnStyle}">
                     <StackPanel>
-                        <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{x:Static constants:Localization.COPY}" Margin="2 0 0 0"/>
+                        <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
+                        <TextBlock Text="{x:Static constants:Localization.COPY}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
 
                 <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisiblePaste, Converter={StaticResource boolToVisible}}" Command="{Binding PasteCommand}" Style="{StaticResource BtnStyle}">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="&#xE77F;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{x:Static constants:Localization.PASTE}" Margin="2 0 0 0"/>
+                        <TextBlock Text="&#xE77F;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
+                        <TextBlock Text="{x:Static constants:Localization.PASTE}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
 
                 <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleDelete, Converter={StaticResource boolToVisible}}" Command="{Binding DeleteCommand}" Style="{StaticResource BtnStyle}">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{x:Static constants:Localization.DELETE}" Margin="2 0 0 0"/>
+                        <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
+                        <TextBlock Text="{x:Static constants:Localization.DELETE}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
                 
@@ -76,14 +76,18 @@
 
             <Line X1="1" Y1="1" Stretch="Fill" Stroke="{x:Static commonConstants:Colors.ForegroundColorBrush}" Margin="0 5 0 0"/>
 
-            <Button Foreground="{Binding Foreground}" Content="{x:Static constants:Localization.PROPERTIES}" Margin="5 0 0 0" Command="{Binding GetPropertiesCommand}" Style="{StaticResource BtnStyle}" HorizontalAlignment="Stretch"/>
+            <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding GetPropertiesCommand}" Style="{StaticResource BtnStyle}" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{x:Static constants:Localization.PROPERTIES}" Margin="2 4 0 4"/>
+                </StackPanel>
+            </Button>
 
             <Line X1="1" Y1="1" Stretch="Fill" Stroke="{x:Static commonConstants:Colors.ForegroundColorBrush}" Margin="0 5 0 0"/>
 
-            <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding ShowOlderContextMenuCommand}" HorizontalAlignment="Left" Style="{StaticResource BtnStyle}">
+            <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding ShowOlderContextMenuCommand}" Style="{StaticResource BtnStyle}" HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="&#xEE47;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>
-                    <TextBlock Text="{x:Static constants:Localization.SHOW_PREVIOUS_CONTEXTMENU}" Margin="2 0 0 0"/>
+                    <TextBlock Text="{x:Static constants:Localization.SHOW_PREVIOUS_CONTEXTMENU}" Margin="2 4 0 4"/>
                 </StackPanel>
             </Button>
         </StackPanel>

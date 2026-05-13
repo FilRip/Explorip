@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +16,7 @@ using Explorip.Explorer.Windows;
 
 using ExploripConfig.Configuration;
 
+using ManagedShell.Common.Enums;
 using ManagedShell.Interop;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;
@@ -53,7 +56,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         if (ConfigManager.ExplorerReplaceContextMenu)
         {
             ExplorerBrowser.ExplorerBrowserControl.WndProcEvent += ExplorerBrowserControl_WndProcEvent;
-            ExplorerBrowser.ExplorerBrowserControl.InterceptWndProc = true;
+            ExplorerBrowser.InterceptWndProc = true;
         }
 
         CurrentPath.MouseDown += CurrentPath_MouseDown;
@@ -61,7 +64,6 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     private void ExplorerBrowserControl_WndProcEvent(object sender, ExplorerBrowser.WndProcEventArgs e)
     {
-        Debug.WriteLine($"Message reçu : {((NativeMethods.WM)e.Message):G}");
         if (e.Message == (int)NativeMethods.WM.CONTEXTMENU)
         {
             if (_forceOlderContextMenu)
@@ -76,6 +78,66 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             {
                 ParentTab = this,
             };
+            if (e.FromTreeView)
+            {
+                int x = (short)((uint)e.LParam & 0xFFFF);
+                int y = (short)(((uint)e.LParam >> 16) & 0xFFFF);
+
+                NativeMethods.PointInt pt = new(x, y);
+                if (NativeMethods.ScreenToClient(e.Hwnd, ref pt))
+                {
+                    NativeMethods.TvHitTestInfo hit = new()
+                    {
+                        pt = pt,
+                    };
+                    NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_HITTEST, IntPtr.Zero, ref hit);
+                    NativeMethods.TvItemEx item = new()
+                    {
+                        mask = NativeMethods.TreeViewItemMasks.TVIF_PARAM | NativeMethods.TreeViewItemMasks.TVIF_STATE | NativeMethods.TreeViewItemMasks.TVIF_STATEEX,
+                        hItem = hit.hItem,
+                    };
+                    if (NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_GETITEM, IntPtr.Zero, ref item) && item.lParam != IntPtr.Zero)
+                    {
+                        try
+                        {
+                            // That does not work yet
+                            ManagedShell.ShellFolders.Interfaces.IShellItem shellItem = (ManagedShell.ShellFolders.Interfaces.IShellItem)Marshal.GetObjectForIUnknown(item.lParam);
+                            if (shellItem != null)
+                            {
+                                shellItem.GetDisplayName(ManagedShell.ShellFolders.Enums.ShellItemGetDisplayName.FILESYSPATH, out IntPtr ptrPath);
+                                if (ptrPath != IntPtr.Zero)
+                                {
+                                    string path = Marshal.PtrToStringUni(ptrPath);
+                                    Marshal.FreeCoTaskMem(ptrPath);
+                                    _contextMenu.DataContext.SetSelected([ShellObject.FromParsingName(path)]);
+                                }
+                            }
+                        }
+                        catch (Exception) { /* Ignore errors */ }
+                        if (item.Selected)
+                            _contextMenu.DataContext.SetSelected([ShellObject.FromParsingName(DataContext.EditPath)]);
+                        else
+                        {
+                            // TODO : Until previous try/catch code working (get folder where we right click, and it's not the one currently selected/currently in View)
+                            // We display older shell context menu
+                            _contextMenu.DataContext.ForceClose();
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
+                    _contextMenu.DataContext.SetSelected([.. ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()]);
+                else
+                    _contextMenu.DataContext.SetSelected([ShellObject.FromParsingName(DataContext.EditPath)]);
+            }
+            e.Handled = true;
+            e.Result = new IntPtr(1);
+        }
+        else if (e.Message == (int)NativeMethods.WM.RBUTTONDOWN && e.FromTreeView)
+        {
             e.Handled = true;
             e.Result = new IntPtr(1);
         }

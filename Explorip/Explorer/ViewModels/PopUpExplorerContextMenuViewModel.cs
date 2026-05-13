@@ -25,6 +25,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
 {
     private TabItemExplorerBrowser _parentTab;
     private bool _sendMouseClick = true;
+    private ShellObject[] _listSelected;
 
     [ObservableProperty()]
     private SolidColorBrush _background, _foreground;
@@ -37,13 +38,18 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     {
         _parentTab = parentTab;
         Dpi = VisualTreeHelper.GetDpi(parentTab).DpiScaleX;
-        if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
+    }
+
+    public void SetSelected(ShellObject[] selectedItems)
+    {
+        _listSelected = selectedItems;
+        if (_listSelected?.Length > 0)
         {
             VisibleCopy = true;
             VisibleCut = true;
             VisibleDelete = true;
-            if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.Count == 1 &&
-                _parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems[0] is ShellFolder &&
+            if (_listSelected.Length == 1 &&
+                _listSelected[0] is ShellFolder &&
                 Clipboard.ContainsFileDropList())
             {
                 VisiblePaste = true;
@@ -70,10 +76,10 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     private void Cut()
     {
         ForceClose();
-        if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
+        if (_listSelected?.Length > 0)
         {
             List<string> list = [];
-            foreach (ShellObject so in _parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems)
+            foreach (ShellObject so in _listSelected)
                 list.Add(so.ParsingName);
             DataObject data = new();
             data.SetFileDropList([.. list]);
@@ -87,10 +93,10 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     private void Copy()
     {
         ForceClose();
-        if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
+        if (_listSelected?.Length > 0)
         {
             List<string> list = [];
-            foreach (ShellObject so in _parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems)
+            foreach (ShellObject so in _listSelected)
                 list.Add(so.ParsingName);
             DataObject data = new();
             data.SetFileDropList([.. list]);
@@ -131,7 +137,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     {
         ForceClose();
         FileOperation fileOp = new(NativeMethods.GetDesktopWindow());
-        foreach (ShellObject fs in _parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems)
+        foreach (ShellObject fs in _listSelected)
             fileOp.DeleteItem(fs.ParsingName);
         fileOp.ChangeOperationFlags(EFileOperation.FOF_RENAMEONCOLLISION |
             EFileOperation.FOF_NOCONFIRMMKDIR |
@@ -182,12 +188,12 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     [RelayCommand()]
     private void GetProperties()
     {
-        if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
+        if (_listSelected?.Length > 0)
         {
-            if (_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.Count == 1)
-                ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems[0].ParsingName);
+            if (_listSelected.Length == 1)
+                ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_listSelected[0].ParsingName);
             else
-                ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.DataContext.EditPath, _parentTab.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.Select(so => so.ParsingName));
+                ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.DataContext.EditPath, _listSelected.Select(so => so.ParsingName));
         }
     }
 }

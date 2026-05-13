@@ -10,6 +10,8 @@ public partial class NativeMethods
 {
     private const string User32_DllName = "user32";
 
+    private const int TVN_FIRST = -400;
+
     public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
 
     [Flags()]
@@ -418,6 +420,13 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     internal static extern IntPtr SendMessage(IntPtr hWnd, WM Msg, uint wParam, uint lParam);
+
+
+    [DllImport(User32_DllName, CharSet = CharSet.Auto)]
+    internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, ref TvHitTestInfo lParam);
+
+    [DllImport(User32_DllName, CharSet = CharSet.Auto)]
+    internal static extern bool SendMessage(IntPtr hWnd, int msg, IntPtr wParam, ref TvItemEx lParam);
 
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowInfo
@@ -4687,4 +4696,908 @@ public partial class NativeMethods
 
     [DllImport(User32_DllName)]
     internal static extern IntPtr WindowFromPoint(System.Drawing.Point point);
+
+    public enum Tvn
+    {
+        /// <summary>
+        /// <para>
+        /// Sent by a tree-view control to its parent when the drawing of a icon or overlay has failed. This notification code is sent in the
+        /// form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>ASYNCDRAW pnmTVAsynchDraw = (NMTVASYNCDRAW *) lParam;</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>Pointer to an <c>NMTVASYNCDRAW</c> structure. The <c>NMTVASYNCDRAW</c> structure contains the reason the draw failed.</para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>No return value.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The tree-view control must have the <c>TVS_EX_DRAWIMAGEASYNC</c> extended style. Note that this is equivalent to list-view's
+        /// LVN_ASYNCDRAWN flag and its corresponding style.
+        /// </para>
+        /// <para>
+        /// This control does not draw asynchronously. Asynchronous is used in the context that the tree-view control does not synchronously
+        /// extract an image if it is not available. (For instance, the image may not be available if the tree-view control uses a sparse
+        /// image list, since the image may be unloaded.) Instead, when an image is not available, the control synchronously asks the parent
+        /// what action to take by sending the parent an ASYNCDRAW notification with a <c>NMTVASYNCDRAW</c> structure. The <c>hr</c>
+        /// member of this structure describes the reason the control's draw failed. An <c>hr</c> result of E_PENDING means the image is not
+        /// present at all (the image needs to be extracted). Success indicates that the image is present but not at the required image quality.
+        /// </para>
+        /// <para>
+        /// The parent sets the <c>dwRetFlags</c> member of the structure to inform the control how to proceed. For instance, the parent may
+        /// return another image, in the <c>iRetImageIndex</c> member, for the control to draw. In this case, the parent sets the
+        /// <c>dwRetFlags</c> member to ADRF_DRAWIMAGE. If the control finds the returned image has not been extracted, yet another
+        /// ASYNCDRAW notification may be sent by the control.
+        /// </para>
+        /// <para>
+        /// If an image is not available, the idea behind asynchronous is to allow the parent do the extraction in the background so that
+        /// extraction does not block the UI thread, that is, the thread the control is on. The parent may return ADRF_DRAWNOTHING to the
+        /// control, then launch a background thread to extract the icon. Once extracted, the parent may set the icon in the treeview control
+        /// with macro <c>TreeView_SetItem</c>. This causes tree-view to invalidate the item and eventually repaint it with the extracted
+        /// image in the image list.
+        /// </para>
+        /// <para>
+        /// The following code example, to be used as part of a larger program, shows how a parent may process two possible return codes in
+        /// this notification by a control, and decide what action the control should take. Setting <c>dwRetFlags</c> is not shown.
+        /// </para>
+        /// <para>
+        /// <code>case ASYNCDRAW: NMTVASYNCDRAW *pnm = (NMTVASYNCDRAW *)lParam short dwDrawSuccessFlags = ShortFromResult(pnm-&gt;hr); if (dwDrawSuccessFlags &amp; ILDRF_IMAGELOWQUALITY) { // Need to re-extract the icon } if (dwDrawSuccessFlags &amp; ILDRF_OVERLAYLOWQUALITY) { // Need to re-extract the overlay }</code>
+        /// </para>
+        /// </remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-asyncdraw
+        ASYNCDRAW = TVN_FIRST - 20,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that a drag-and-drop operation involving the left mouse button is being initiated.
+        /// This notification code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>BEGINDRAG pnmtv = (LPNMTREEVIEW) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTREEVIEW</c> structure. The <c>itemNew</c> member is a <c>TVITEM</c> structure that contains valid information
+        /// about the item being dragged in the <c>hItem</c>, <c>state</c>, and <c>lParam</c> members. The <c>ptDrag</c> member specifies the
+        /// current screen coordinates of the mouse.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>The return value is ignored.</para>
+        /// </summary>
+        /// <remarks>A tree-view control that has the <c>TVS_DISABLEDRAGDROP</c> style does not send this notification code.</remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-begindrag
+        BEGINDRAG = TVN_FIRST - 56,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window about the start of label editing for an item. This notification code is sent in the
+        /// form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>BEGINLABELEDIT ptvdi = (LPNMTVDISPINFO) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTVDISPINFO</c> structure. The <c>item</c> member is a <c>TVITEM</c> structure that contains valid information
+        /// about the item being edited in the <c>hItem</c>, <c>state</c>, <c>lParam</c>, and <c>pszText</c> members.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>Returns <c>TRUE</c> to cancel label editing.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// When label editing begins, an edit control is created but not positioned or displayed. Before it is displayed, the tree-view
+        /// control sends its parent window a BEGINLABELEDIT notification code.
+        /// </para>
+        /// <para>
+        /// To customize label editing, implement a handler for BEGINLABELEDIT and have it send a <c>TVM_GETEDITCONTROL</c> message to
+        /// the tree-view control. If a label is being edited, the return value will be a handle to the edit control. Use this handle to
+        /// customize the edit control by sending the usual EM_XXX messages.
+        /// </para>
+        /// <para>When the user cancels or completes the editing, the parent window receives a ENDLABELEDIT notification code.</para>
+        /// </remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-beginlabeledit
+        BEGINLABELEDIT = TVN_FIRST - 59,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window about the initiation of a drag-and-drop operation involving the right mouse button.
+        /// This notification code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>BEGINRDRAG pnmtv = (LPNMTREEVIEW) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTREEVIEW</c> structure. The <c>itemNew</c> member is a <c>TVITEM</c> structure that contains valid information
+        /// in the <c>hItem</c>, <c>state</c>, and <c>lParam</c> members about the item to be dragged. The <c>ptDrag</c> member specifies the
+        /// current screen coordinates of the mouse.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>The return value is ignored.</para>
+        /// </summary>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-beginrdrag
+        BEGINRDRAG = TVN_FIRST - 57,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that an item is being deleted. This notification code is sent in the form of a
+        /// <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>DELETEITEM pnmtv = (LPNMTREEVIEW) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTREEVIEW</c> structure. The <c>itemOld</c> member is a <c>TVITEM</c> structure whose <c>hItem</c> and
+        /// <c>lParam</c> members contain valid information about the item being deleted.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>The return value is ignored.</para>
+        /// </summary>
+        /// <remarks>
+        /// If the <c>lParam</c> member of the <c>TVITEM</c> structure points to memory allocated by your application, you can free it when
+        /// you receive the DELETEITEM notification code.
+        /// </remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-deleteitem
+        DELETEITEM = TVN_FIRST - 58,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window about the end of label editing for an item. This notification code is sent in the
+        /// form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>ENDLABELEDIT ptvdi = (LPNMTVDISPINFO) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTVDISPINFO</c> structure. The <c>item</c> member of this structure is a <c>TVITEM</c> structure whose
+        /// <c>hItem</c>, <c>lParam</c>, and <c>pszText</c> members contain valid information about the item that was edited. If label
+        /// editing was canceled, the <c>pszText</c> member of the <c>TVITEM</c> structure is <c>NULL</c>; otherwise, <c>pszText</c> is the
+        /// address of the edited text.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>
+        /// If the <c>pszText</c> member is non- <c>NULL</c>, return <c>TRUE</c> to set the item's label to the edited text. Return
+        /// <c>FALSE</c> to reject the edited text and revert to the original label.
+        /// </para>
+        /// </summary>
+        /// <remarks>
+        /// <para>If the <c>pszText</c> member is <c>NULL</c>, the return value is ignored.</para>
+        /// <para>
+        /// If you specified the LPSTR_TEXTCALLBACK value for this item and the <c>pszText</c> member is non- <c>NULL</c>, your
+        /// ENDLABELEDIT handler should copy the text from <c>pszText</c> to your local storage.
+        /// </para>
+        /// </remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-endlabeledit
+        ENDLABELEDIT = TVN_FIRST - 60,
+
+        /// <summary>
+        /// <para>
+        /// Requests that a tree-view control's parent window provide information needed to display or sort an item. This notification code
+        /// is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>GETDISPINFO lptvdi = (LPNMTVDISPINFO) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTVDISPINFO</c> structure. The <c>item</c> member is a <c>TVITEM</c> structure whose <c>mask</c>, <c>hItem</c>,
+        /// <c>state</c>, and <c>lParam</c> members specify the type of information required. You must fill the members of the structure with
+        /// the appropriate information.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>The return value is ignored.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>This notification code is sent under the following circumstances:</para>
+        /// <list type="bullet">
+        /// <item>
+        /// <term>
+        /// If the <c>pszText</c> member of the item's <c>TVITEM</c> structure is the LPSTR_TEXTCALLBACK value, the control sends this
+        /// notification code to retrieve the item's text. In this case, the <c>mask</c> member of lParam will have the TVIF_TEXT flag set.
+        /// </term>
+        /// </item>
+        /// <item>
+        /// <term>
+        /// If the <c>iImage</c> or <c>iSelectedImage</c> member of the item's <c>TVITEM</c> structure is the I_IMAGECALLBACK value, the
+        /// control sends this notification code to retrieve the index of an item's icons in the control's image list. In this case, if the
+        /// item is selected, the <c>mask</c> member of lParam will have the TVIF_SELECTEDIMAGE flag set. If the item is not selected, the
+        /// <c>mask</c> member of lParam will have the TVIF_IMAGE flag set.
+        /// </term>
+        /// </item>
+        /// <item>
+        /// <term>
+        /// If the <c>cChildren</c> member of the item's <c>TVITEM</c> structure is the I_CHILDRENCALLBACK value, the control sends this
+        /// notification code to retrieve a value that indicates whether the item has child items. In this case, the <c>mask</c> member of
+        /// lParam will have the TVIF_CHILDREN flag set.
+        /// </term>
+        /// </item>
+        /// </list>
+        /// </remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-getdispinfo
+        GETDISPINFO = TVN_FIRST - 52,
+
+        /// <summary>
+        /// <para>
+        /// Sent by a tree-view control that has the <c>TVS_INFOTIP</c> style. This notification code is sent when the control is requesting
+        /// additional text information to be displayed in a tooltip. The notification code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>GETINFOTIP lpGetInfoTip = (LPNMTVGETINFOTIP)lParam;</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>Pointer to an <c>NMTVGETINFOTIP</c> structure that contains information about this notification code.</para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>The control ignores the return value for this notification code.</para>
+        /// </summary>
+        /// <remarks>This notification code is only sent by tree-view controls that have the <c>TVS_INFOTIP</c> style.</remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-getinfotip
+        GETINFOTIP = TVN_FIRST - 14,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that item attributes have changed. This notification code is sent in the form of a
+        /// <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>ITEMCHANGED pnm = (NMTVITEMCHANGE *) lParam;</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>Pointer to a <c>NMTVITEMCHANGE</c> structure describing the item that changed. The <c>uChanged</c> member is set to TVIF_STATE.</para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>Returns <c>FALSE</c> to accept the change, or <c>TRUE</c> to prevent the change.</para>
+        /// </summary>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemchanged
+        ITEMCHANGED = TVN_FIRST - 19,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that item attributes are about to change. This notification code is sent in the form
+        /// of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>ITEMCHANGING pnm = (NMTVITEMCHANGE *) lParam;</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTVITEMCHANGE</c> structure describing the item that is changing. The <c>uChanged</c> member is set to TVIF_STATE.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>Returns <c>FALSE</c> to accept the change, or <c>TRUE</c> to prevent the change.</para>
+        /// </summary>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemchanging
+        ITEMCHANGING = TVN_FIRST - 17,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that a parent item's list of child items has expanded or collapsed. This
+        /// notification code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>ITEMEXPANDED pnmtv = (LPNMTREEVIEW) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTREEVIEW</c> structure. The <c>itemNew</c> member is a <c>TVITEM</c> structure that contains valid information
+        /// about the parent item in the <c>hItem</c>, <c>state</c>, and <c>lParam</c> members. The <c>action</c> member indicates whether
+        /// the list expanded or collapsed. For a list of possible values, see the description of the <c>TVM_EXPAND</c> message.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>The return value is ignored.</para>
+        /// </summary>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanded
+        ITEMEXPANDED = TVN_FIRST - 55,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that a parent item's list of child items is about to expand or collapse. This
+        /// notification code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>ITEMEXPANDING pnmtv = (LPNMTREEVIEW) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTREEVIEW</c> structure. The <c>itemNew</c> member is a <c>TVITEM</c> structure that contains valid information
+        /// about the parent item in the <c>hItem</c>, <c>state</c>, and <c>lParam</c> members. The <c>action</c> member indicates whether
+        /// the list is to expand or collapse. For a list of possible values, see the description of the <c>TVM_EXPAND</c> message.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>Returns <c>TRUE</c> to prevent the list from expanding or collapsing.</para>
+        /// </summary>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanding
+        ITEMEXPANDING = TVN_FIRST - 54,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that the user pressed a key and the tree-view control has the input focus. This
+        /// notification code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>KEYDOWN ptvkd = (LPNMTVKEYDOWN) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>Pointer to an <c>NMTVKEYDOWN</c> structure. The <c>wVKey</c> member specifies the virtual key code.</para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>
+        /// If the <c>wVKey</c> member of lParam is a character key code, the character will be used as part of an incremental search. Return
+        /// nonzero to exclude the character from the incremental search, or zero to include the character in the search. For all other keys,
+        /// the return value is ignored.
+        /// </para>
+        /// </summary>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-keydown
+        KEYDOWN = TVN_FIRST - 12,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that the selection has changed from one item to another. This notification code is
+        /// sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>SELCHANGED pnmtv = (LPNMTREEVIEW) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTREEVIEW</c> structure. The <c>itemOld</c> and <c>itemNew</c> members of the <c>NMTREEVIEW</c> structure are
+        /// <c>TVITEM</c> structures that contain information about the previously selected item and the newly selected item. Only the
+        /// <c>mask</c>, <c>hItem</c>, <c>state</c>, and <c>lParam</c> members of these structures are valid. The <c>stateMask</c> members of
+        /// the <c>TVITEM</c> structures specified by <c>itemOld</c> and <c>itemNew</c> are undefined on input. The <c>action</c> member of
+        /// the <c>NMTREEVIEW</c> structure indicates the type of action that caused the selection to change. It can be one of the following values:
+        /// </para>
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Requirement</term>
+        /// <term>Value</term>
+        /// </listheader>
+        /// <item>
+        /// <term>TVC_BYKEYBOARD</term>
+        /// <term>By a keystroke.</term>
+        /// </item>
+        /// <item>
+        /// <term>TVC_BYMOUSE</term>
+        /// <term>By a mouse click.</term>
+        /// </item>
+        /// <item>
+        /// <term>TVC_UNKNOWN</term>
+        /// <term>Unknown.</term>
+        /// </item>
+        /// </list>
+        /// <para><strong>Returns</strong></para>
+        /// <para>The return value is ignored.</para>
+        /// </summary>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-selchanged
+        SELCHANGED = TVN_FIRST - 51,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that the selection is about to change from one item to another. This notification
+        /// code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>SELCHANGING pnmtv = (LPNMTREEVIEW) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTREEVIEW</c> structure. The <c>itemOld</c> and <c>itemNew</c> members contain valid information about the
+        /// currently selected item and the newly selected item. The <c>action</c> member indicates whether a mouse or keyboard action is
+        /// causing the selection to change. For a list of possible values, see the description of the SELCHANGED notification code.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>Returns <c>TRUE</c> to prevent the selection from changing.</para>
+        /// </summary>
+        /// <remarks>
+        /// When responding to this notification code, applications should not delete the items that are gaining or losing the selection.
+        /// </remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-selchanging
+        SELCHANGING = TVN_FIRST - 50,
+
+        /// <summary>
+        /// <para>
+        /// Notifies a tree-view control's parent window that it must update the information it maintains about an item. This notification
+        /// code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>SETDISPINFO lptvdi = (LPNMTVDISPINFO) lParam</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>
+        /// Pointer to an <c>NMTVDISPINFO</c> structure that describes the item being updated. The <c>hItem</c> member of the <c>TVITEM</c>
+        /// structure specifies the item being updated, and the <c>mask</c> member specifies which attributes of the item are being updated.
+        /// </para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>The return value is ignored.</para>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// If the <c>pszText</c> member of the item's <c>TVITEM</c> structure is the LPSTR_TEXTCALLBACK value, the control sends this
+        /// notification to set the item's text. In this case, the <c>mask</c> member of lParam will have the TVIF_TEXT flag set.
+        /// </para>
+        /// <para>
+        /// If the <c>iImage</c> or <c>iSelectedImage</c> member of the item's <c>TVITEM</c> structure is the I_IMAGECALLBACK value, the
+        /// control sends this notification to retrieve the index of the icon image to display. In this case, the <c>mask</c> member of
+        /// lParam will have the TVIF_IMAGE or TVIF_SELECTEDIMAGE flag set.
+        /// </para>
+        /// </remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-setdispinfo
+        SETDISPINFO = TVN_FIRST - 53,
+
+        /// <summary>
+        /// <para>
+        /// Sent by a tree-view control with the <c>TVS_SINGLEEXPAND</c> style when the user opens or closes a tree item using a single click
+        /// of the mouse. This notification code is sent in the form of a <c>WM_NOTIFY</c> message.
+        /// </para>
+        /// <para>
+        /// <code>SINGLEEXPAND lpnmtv = (LPNMTREEVIEW)lParam;</code>
+        /// </para>
+        /// <para><strong>Parameters</strong></para>
+        /// <para><em>lParam</em></para>
+        /// <para>Pointer to an <c>NMTREEVIEW</c> structure that contains information about this notification code.</para>
+        /// <para><strong>Returns</strong></para>
+        /// <para>Return TVNRET_DEFAULT to allow the default behavior to occur. To modify the default behavior, return:</para>
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Return code</term>
+        /// <term>Description</term>
+        /// </listheader>
+        /// <item>
+        /// <term><c>TVNRET_SKIPOLD</c></term>
+        /// <term>Skip default processing of the item being unselected.</term>
+        /// </item>
+        /// <item>
+        /// <term><c>TVNRET_SKIPNEW</c></term>
+        /// <term>Skip default processing of the item being selected.</term>
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// To skip default processing of selected and unselected items, return both TVNRET_SKIPOLD and TVNRET_SKIPNEW by combining them with
+        /// a logical OR.
+        /// </para>
+        /// <para>This notification code is only sent by tree-view controls that have the <c>TVS_SINGLEEXPAND</c> style.</para>
+        /// </remarks>
+        // https://docs.microsoft.com/en-us/windows/win32/controls/tvn-singleexpand
+        SINGLEEXPAND = TVN_FIRST - 15,
+    }
+
+    [DllImport(User32_DllName)]
+    internal static extern bool ScreenToClient(IntPtr hWnd, ref PointInt lpPoint);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct TvHitTestInfo
+    {
+        public PointInt pt;
+        public uint flags;
+        public IntPtr hItem;
+    }
+
+#pragma warning disable S4070
+    [Flags()]
+    public enum TreeViewItemStates
+    {
+        /// <summary>
+        /// The item is selected. Its appearance depends on whether it has the focus. The item will be drawn using the system colors for selection.
+        /// </summary>
+        TVIS_SELECTED = 0x0002,
+
+        /// <summary>The item is selected as part of a cut-and-paste operation.</summary>
+        TVIS_CUT = 0x0004,
+
+        /// <summary>The item is selected as a drag-and-drop target.</summary>
+        TVIS_DROPHILITED = 0x0008,
+
+        /// <summary>The item is bold.</summary>
+        TVIS_BOLD = 0x0010,
+
+        /// <summary>
+        /// The item's list of child items is currently expanded; that is, the child items are visible. This value applies only to parent items.
+        /// </summary>
+        TVIS_EXPANDED = 0x0020,
+
+        /// <summary>
+        /// The item's list of child items has been expanded at least once. The TVN_ITEMEXPANDING and TVN_ITEMEXPANDED notification codes are
+        /// not generated for parent items that have this state set in response to a TVM_EXPAND message. Using TVE_COLLAPSE and
+        /// TVE_COLLAPSERESET with TVM_EXPAND will cause this state to be reset. This value applies only to parent items.
+        /// </summary>
+        TVIS_EXPANDEDONCE = 0x0040,
+
+        /// <summary>
+        /// Version 4.70. A partially expanded tree-view item. In this state, some, but not all, of the child items are visible and the
+        /// parent item's plus symbol is displayed.
+        /// </summary>
+        TVIS_EXPANDPARTIAL = 0x0080,
+
+        /// <summary>Mask for the bits used to specify the item's overlay image index.</summary>
+        TVIS_OVERLAYMASK = 0x0F00,
+
+        /// <summary>Mask for the bits used to specify the item's state image index.</summary>
+        TVIS_STATEIMAGEMASK = 0xF000,
+
+        /// <summary>Same as TVIS_STATEIMAGEMASK.</summary>
+        TVIS_USERMASK = 0xF000,
+
+        /// <summary>Version 6.00 and Windows Vista. The iExpandedImage member is valid.</summary>
+        TVIF_EXPANDEDIMAGE = 0x0200,
+
+        /// <summary>Version 6.00 and Windows Vista. The uStateEx member is valid.</summary>
+        TVIF_STATEEX = 0x0100
+    }
+#pragma warning restore S4070
+
+    [Flags()]
+    public enum TreeViewItemMasks
+    {
+        /// <summary>The cChildren member is valid.</summary>
+        TVIF_CHILDREN = 0x0040,
+
+        /// <summary>
+        /// The tree-view control will retain the supplied information and will not request it again. This flag is valid only when processing
+        /// the TVN_GETDISPINFO notification.
+        /// </summary>
+        TVIF_DI_SETITEM = 0x1000,
+
+        /// <summary>Version 6.00 and Windows Vista. The iExpandedImage member is valid.</summary>
+        TVIF_EXPANDEDIMAGE = 0x0200,
+
+        /// <summary>The hItem member is valid.</summary>
+        TVIF_HANDLE = 0x0010,
+
+        /// <summary>The iImage member is valid.</summary>
+        TVIF_IMAGE = 0x0002,
+
+        /// <summary>The iIntegral member is valid.</summary>
+        TVIF_INTEGRAL = 0x0080,
+
+        /// <summary>The lParam member is valid.</summary>
+        TVIF_PARAM = 0x0004,
+
+        /// <summary>The iSelectedImage member is valid.</summary>
+        TVIF_SELECTEDIMAGE = 0x0020,
+
+        /// <summary>The state and stateMask members are valid.</summary>
+        TVIF_STATE = 0x0008,
+
+        /// <summary>Version 6.00 and Windows Vista. The uStateEx member is valid.</summary>
+        TVIF_STATEEX = 0x0100,
+
+        /// <summary>The pszText and cchTextMax members are valid.</summary>
+        TVIF_TEXT = 0x0001,
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public readonly struct HTreeItem(IntPtr preexistingHandle)
+    {
+        private readonly IntPtr handle = preexistingHandle;
+
+        /// <summary>Returns an invalid handle by instantiating a <see cref="HTreeItem"/> object with <see cref="IntPtr.Zero"/>.</summary>
+        public static HTreeItem NULL => new(IntPtr.Zero);
+
+        /// <summary>Gets a value indicating whether this instance is a null handle.</summary>
+        public bool IsNull => handle == IntPtr.Zero;
+
+        /// <summary>Performs an explicit conversion from <see cref="HTreeItem"/> to <see cref="IntPtr"/>.</summary>
+        /// <param name="h">The handle.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static explicit operator IntPtr(HTreeItem h) => h.handle;
+
+        /// <summary>Performs an implicit conversion from <see cref="IntPtr"/> to <see cref="HTreeItem"/>.</summary>
+        /// <param name="h">The pointer to a handle.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator HTreeItem(IntPtr h) => new(h);
+
+        /// <summary>Implements the operator !=.</summary>
+        /// <param name="h1">The first handle.</param>
+        /// <param name="h2">The second handle.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(HTreeItem h1, HTreeItem h2) => !(h1 == h2);
+
+        /// <summary>Implements the operator ==.</summary>
+        /// <param name="h1">The first handle.</param>
+        /// <param name="h2">The second handle.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(HTreeItem h1, HTreeItem h2) => h1.Equals(h2);
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj) => obj is HTreeItem h && handle == h.handle;
+
+        /// <inheritdoc/>
+        public override int GetHashCode() => handle.GetHashCode();
+
+        /// <summary>Add the item as a root item.</summary>
+        public static readonly HTreeItem TVI_ROOT = new((IntPtr)(-65536));
+
+        /// <summary>Inserts the item at the beginning of the list.</summary>
+        public static readonly HTreeItem TVI_FIRST = new((IntPtr)(-65535));
+
+        /// <summary>Inserts the item at the end of the list.</summary>
+        /// The tvi first
+        public static readonly HTreeItem TVI_LAST = new((IntPtr)(-65534));
+
+        /// <summary>Inserts the item into the list in alphabetical order.</summary>
+        public static readonly HTreeItem TVI_SORT = new((IntPtr)(-65533));
+    }
+
+    [Flags()]
+    public enum TreeViewItemStatesExs
+    {
+        /// <summary>
+        /// Creates a flat item—the item is virtual and is not visible in the tree; instead, its children take its place in the tree
+        /// hierarchy. This state is valid only when adding an item to the tree-view control.
+        /// </summary>
+        TVIS_EX_FLAT = 0x0001,
+
+        /// <summary>Windows Vista and later. Creates a control that is drawn in gray, that the user cannot interact with.</summary>
+        TVIS_EX_DISABLED = 0x0002,
+
+        /// <summary>Creates a separate HWND for the item. This state is valid only when adding an item to the tree-view control.</summary>
+        TVIS_EX_HWND = 0x0004,
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+    public struct TvItemEx
+    {
+        /// <summary>
+        /// Array of flags that indicate which of the other structure members contain valid data. When this structure is used with the
+        /// TVM_GETITEM message, the mask member indicates the item attributes to retrieve. If used with the TVM_SETITEM message, the mask
+        /// indicates the attributes to set.
+        /// </summary>
+        public TreeViewItemMasks mask;
+
+        /// <summary>Handle to the item.</summary>
+        public HTreeItem hItem;
+
+        /// <summary>
+        /// Set of bit flags and image list indexes that indicate the item's state. When setting the state of an item, the stateMask member
+        /// indicates the valid bits of this member. When retrieving the state of an item, this member returns the current state for the bits
+        /// indicated in the stateMask member.
+        /// </summary>
+        public uint state;
+
+        /// <summary>
+        /// Bits of the state member that are valid. If you are retrieving an item's state, set the bits of the stateMask member to indicate
+        /// the bits to be returned in the state member. If you are setting an item's state, set the bits of the stateMask member to indicate
+        /// the bits of the state member that you want to set. To set or retrieve an item's overlay image index, set the TVIS_OVERLAYMASK
+        /// bits. To set or retrieve an item's state image index, set the TVIS_STATEIMAGEMASK bits.
+        /// </summary>
+        public TreeViewItemStates stateMask;
+
+        /// <summary>
+        /// Pointer to a null-terminated string that contains the item text if the structure specifies item attributes. If this member is the
+        /// LPSTR_TEXTCALLBACK value, the parent window is responsible for storing the name. In this case, the tree-view control sends the
+        /// parent window a TVN_GETDISPINFO notification code when it needs the item text for displaying, sorting, or editing and a
+        /// TVN_SETDISPINFO notification code when the item text changes. If the structure is receiving item attributes, this member is the
+        /// address of the buffer that receives the item text. Note that although the tree-view control allows any length string to be stored
+        /// as item text, only the first 260 characters are displayed.
+        /// </summary>
+        public IntPtr pszText;
+
+        /// <summary>
+        /// Size of the buffer pointed to by the pszText member, in characters. If this structure is being used to set item attributes, this
+        /// member is ignored.
+        /// </summary>
+        public int cchTextMax;
+
+        /// <summary>
+        /// Index in the tree-view control's image list of the icon image to use when the item is in the nonselected state. If this member is
+        /// the I_IMAGECALLBACK value, the parent window is responsible for storing the index. In this case, the tree-view control sends the
+        /// parent a TVN_GETDISPINFO notification code to retrieve the index when it needs to display the image.
+        /// </summary>
+        public int iImage;
+
+        /// <summary>
+        /// Index in the tree-view control's image list of the icon image to use when the item is in the selected state. If this member is
+        /// the I_IMAGECALLBACK value, the parent window is responsible for storing the index. In this case, the tree-view control sends the
+        /// parent a TVN_GETDISPINFO notification code to retrieve the index when it needs to display the image.
+        /// </summary>
+        public int iSelectedImage;
+
+        /// <summary>
+        /// Flag that indicates whether the item has associated child items. This member can be one of the following values.
+        /// <list type="table">
+        /// <listheader>
+        /// <term>Value</term>
+        /// <term>Meaning</term>
+        /// </listheader>
+        /// <item>
+        /// <term>zero</term>
+        /// <description>The item has no child items.</description>
+        /// </item>
+        /// <item>
+        /// <term>one</term>
+        /// <description>The item has one or more child items.</description>
+        /// </item>
+        /// <item>
+        /// <term>I_CHILDRENCALLBACK</term>
+        /// <description>
+        /// The parent window keeps track of whether the item has child items.In this case, when the tree-view control needs to display the
+        /// item, the control sends the parent a TVN_GETDISPINFO notification code to determine whether the item has child items.
+        /// <para>
+        /// If the tree-view control has the TVS_HASBUTTONS style, it uses this member to determine whether to display the button indicating
+        /// the presence of child items. You can use this member to force the control to display the button even though the item does not
+        /// have any child items inserted. This allows you to display the button while minimizing the control's memory usage by inserting
+        /// child items only when the item is visible or expanded.
+        /// </para>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <term>I_CHILDRENAUTO</term>
+        /// <description>
+        /// Version 6.0 Intended for internal use; not recommended for use in applications.The tree-view control automatically determines
+        /// whether the item has child items. <note>This flag may not be supported in future versions of Comctl32.dll.Also, this flag is not
+        /// defined in commctrl.h.Add the following definition to the source files of your application to use the flag:</note>
+        /// <code>
+        ///#define I_CHILDRENAUTO (-2)
+        /// </code>
+        /// </description>
+        /// </item>
+        /// </list>
+        /// </summary>
+        public int cChildren;
+
+        /// <summary>A value to associate with the item.</summary>
+        public IntPtr lParam;
+
+        /// <summary>The i integral</summary>
+        public int iIntegral;
+
+        /// <summary>The u state ex</summary>
+        public TreeViewItemStatesExs uStateEx;
+
+        /// <summary>The HWND</summary>
+        public IntPtr hwnd;
+
+        /// <summary>The i expanded image</summary>
+        public int iExpandedImage;
+
+        /// <summary>The i reserved</summary>
+        public int iReserved;
+
+        /// <summary>Gets or sets a value indicating whether this <see cref="TVITEM"/> is bold.</summary>
+        /// <value><c>true</c> if bold; otherwise, <c>false</c>.</value>
+        public bool Bold
+        {
+            readonly get => GetState(TreeViewItemStates.TVIS_BOLD);
+            set => SetState(TreeViewItemStates.TVIS_BOLD, value);
+        }
+
+        /// <summary>Gets or sets a value indicating whether this <see cref="TVITEM"/> is expanded.</summary>
+        /// <value><c>true</c> if expanded; otherwise, <c>false</c>.</value>
+        public bool Expanded
+        {
+            readonly get => GetState(TreeViewItemStates.TVIS_EXPANDED);
+            set => SetState(TreeViewItemStates.TVIS_EXPANDED, value);
+        }
+
+        /// <summary>Gets or sets a value indicating whether child items have been expanded at least once.</summary>
+        /// <value><c>true</c> if child items have been expanded at least once; otherwise, <c>false</c>.</value>
+        public bool ExpandedOnce
+        {
+            readonly get => GetState(TreeViewItemStates.TVIS_EXPANDEDONCE);
+            set => SetState(TreeViewItemStates.TVIS_EXPANDEDONCE, value);
+        }
+
+        /// <summary>Gets or sets a value indicating whether item is partially expanded.</summary>
+        /// <value><c>true</c> if partially expanded; otherwise, <c>false</c>.</value>
+        public bool ExpandedPartial
+        {
+            readonly get => GetState(TreeViewItemStates.TVIS_EXPANDPARTIAL);
+            set => SetState(TreeViewItemStates.TVIS_EXPANDPARTIAL, value);
+        }
+
+        /// <summary>Gets or sets the index of the overlay image.</summary>
+        /// <value>The index of the overlay image.</value>
+        /// <exception cref="ArgumentOutOfRangeException">OverlayImageIndex - Overlay image index must be between 0 and 15</exception>
+        public uint OverlayImageIndex
+        {
+            readonly get => (state & 0x00000F00) >> 8; set
+            {
+                if (value > 15)
+                    throw new ArgumentOutOfRangeException(nameof(OverlayImageIndex), "Overlay image index must be between 0 and 15");
+                mask |= TreeViewItemMasks.TVIF_STATE;
+                stateMask |= TreeViewItemStates.TVIS_OVERLAYMASK;
+                state = (value << 8) | (state & 0xFFFFF0FF);
+            }
+        }
+
+        /// <summary>Gets or sets a value indicating whether this <see cref="TVITEM"/> is selected.</summary>
+        /// <value><c>true</c> if selected; otherwise, <c>false</c>.</value>
+        public bool Selected
+        {
+            readonly get => GetState(TreeViewItemStates.TVIS_SELECTED);
+            set => SetState(TreeViewItemStates.TVIS_SELECTED, value);
+        }
+
+        /// <summary>Gets or sets a value indicating whether item is selected as part of a cut-and-paste operation.</summary>
+        /// <value><c>true</c> if item is selected as part of a cut-and-paste operation; otherwise, <c>false</c>.</value>
+        public bool SelectedForCut
+        {
+            readonly get => GetState(TreeViewItemStates.TVIS_CUT);
+            set => SetState(TreeViewItemStates.TVIS_CUT, value);
+        }
+
+        /// <summary>Gets or sets a value indicating whether item is selected as a drag-and-drop target.</summary>
+        /// <value><c>true</c> if item is selected as a drag-and-drop target; otherwise, <c>false</c>.</value>
+        public bool SelectedForDragDrop
+        {
+            readonly get => GetState(TreeViewItemStates.TVIS_DROPHILITED);
+            set => SetState(TreeViewItemStates.TVIS_DROPHILITED, value);
+        }
+
+        /// <summary>Gets the state.</summary>
+        /// <value>The state.</value>
+        public readonly TreeViewItemStates State => (TreeViewItemStates)(state & 0x000000FF);
+
+        /// <summary>Gets or sets the index of the state image.</summary>
+        /// <value>The index of the state image.</value>
+        /// <exception cref="ArgumentOutOfRangeException">StateImageIndex - State image index must be between 0 and 15</exception>
+        public uint StateImageIndex
+        {
+            readonly get => (state & 0x0000F000) >> 12; set
+            {
+                if (value > 15)
+                    throw new ArgumentOutOfRangeException(nameof(StateImageIndex), "State image index must be between 0 and 15");
+                mask |= TreeViewItemMasks.TVIF_STATE;
+                stateMask |= TreeViewItemStates.TVIS_STATEIMAGEMASK;
+                state = (value << 12) | (state & 0xFFFF0FFF);
+            }
+        }
+
+        /// <summary>Gets the text.</summary>
+        /// <value>The text.</value>
+        public readonly string Text => pszText == IntPtr.Zero ? null : Marshal.PtrToStringUni(pszText);
+
+        /// <summary>Gets a value on whether the specified state is set.</summary>
+        /// <param name="itemState">State of the item.</param>
+        /// <returns><c>true</c> if the specified state is set; otherwise, <c>false</c>.</returns>
+        public readonly bool GetState(TreeViewItemStates itemState) => State.HasFlag(itemState);
+
+        /// <summary>Sets the state of the specified state.</summary>
+        /// <param name="itemState">State of the item.</param>
+        /// <param name="on">if set to <c>true</c> set this state on.</param>
+        public void SetState(TreeViewItemStates itemState, bool on = true)
+        {
+            mask |= TreeViewItemMasks.TVIF_STATE;
+            stateMask |= itemState;
+            TreeViewItemStates tempState = State;
+            if (on && !tempState.HasFlag(itemState))
+                tempState |= itemState;
+            else if (!on && tempState.HasFlag(itemState))
+                tempState = ~itemState;
+            state = (uint)tempState | (state & 0xFFFFFF00);
+        }
+
+        /// <summary>Sets the text.</summary>
+        /// <param name="managedStringPtr">The managed string PTR.</param>
+        /// <param name="stringLen">Length of the string.</param>
+        public void SetText(IntPtr managedStringPtr, int stringLen)
+        {
+            pszText = managedStringPtr;
+            cchTextMax = stringLen;
+            mask |= TreeViewItemMasks.TVIF_TEXT;
+        }
+
+        /// <summary>Returns a <see cref="string"/> that represents this instance.</summary>
+        /// <returns>A <see cref="string"/> that represents this instance.</returns>
+        public override readonly string ToString() => $"TVITEM: pszText={Text}; iImage={iImage}; iSelectedImage={iSelectedImage}; state={state}; iExpandedImage={iExpandedImage}; iIntegral={iIntegral}; cChildren={cChildren}";
+    }
 }

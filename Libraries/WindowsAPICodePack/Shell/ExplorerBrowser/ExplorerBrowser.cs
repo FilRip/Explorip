@@ -354,7 +354,7 @@ public sealed class ExplorerBrowser :
                 Top = ClientRectangle.Top,
                 Left = ClientRectangle.Left,
                 Right = ClientRectangle.Right,
-                Bottom = ClientRectangle.Bottom
+                Bottom = ClientRectangle.Bottom,
             };
 
             IntPtr ptr = IntPtr.Zero;
@@ -888,6 +888,7 @@ public sealed class ExplorerBrowser :
                     Message = msg,
                     WParam = wParam,
                     LParam = lParam,
+                    FromTreeView = (hWnd == _currentShellTVHwnd),
                 };
                 WndProcEvent.Invoke(this, args);
                 if (args.Handled)
@@ -1021,6 +1022,8 @@ public sealed class ExplorerBrowser :
         public IntPtr Result { get; set; } = IntPtr.Zero;
 
         public bool Handled { get; set; }
+
+        public bool FromTreeView { get; set; }
     }
 
     public event EventHandler<WndProcEventArgs> WndProcEvent;

@@ -20,6 +20,7 @@ public partial class ExplorerBrowser : UserControl, IDisposable
 
     private ShellObject initialNavigationTarget;
     private ExplorerBrowserViewMode? initialViewMode;
+    private bool _interceptWndProc;
 
     /// <summary>
     /// Hosts the ExplorerBrowser WinForms wrapper in this control
@@ -29,11 +30,24 @@ public partial class ExplorerBrowser : UserControl, IDisposable
         InitializeComponent();
 
         // the ExplorerBrowser WinForms control
-        ExplorerBrowserControl = new Shell.ExplorerBrowser.ExplorerBrowser();
+        ExplorerBrowserControl = new Shell.ExplorerBrowser.ExplorerBrowser()
+        {
+            InterceptWndProc = _interceptWndProc,
+        };
 
         Init();
 
         Loaded += new RoutedEventHandler(ExplorerBrowser_Loaded);
+    }
+
+    public bool InterceptWndProc
+    {
+        get { return _interceptWndProc; }
+        set
+        {
+            _interceptWndProc = value;
+            ExplorerBrowserControl.InterceptWndProc = _interceptWndProc;
+        }
     }
 
     private void Init()
