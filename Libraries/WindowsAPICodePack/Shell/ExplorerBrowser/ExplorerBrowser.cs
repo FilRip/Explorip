@@ -232,6 +232,7 @@ public sealed class ExplorerBrowser :
     public ExplorerBrowser()
         : base()
     {
+        _currentSubclassProc = SubclassProc;
         NavigationOptions = new ExplorerBrowserNavigationOptions(this);
         ContentOptions = new ExplorerBrowserContentOptions(this);
         NavigationLog = new ExplorerBrowserNavigationLog(this);
@@ -871,7 +872,7 @@ public sealed class ExplorerBrowser :
     }
 
 #pragma warning disable S1450
-    private SubclassProcDelegate _currentSubclassProc;
+    private readonly SubclassProcDelegate _currentSubclassProc;
 #pragma warning restore S1450
     private readonly object _lockSubClassProc = new();
 
@@ -913,22 +914,23 @@ public sealed class ExplorerBrowser :
         {
             if (_currentShellHwnd != IntPtr.Zero)
             {
-                RemoveWindowSubclass(_currentShellHwnd, SubclassProc, 1);
-                RemoveWindowSubclass(_currentShellTVHwnd, SubclassProc, 1);
+                RemoveWindowSubclass(_currentShellHwnd, _currentSubclassProc, 1);
+                RemoveWindowSubclass(_currentShellTVHwnd, _currentSubclassProc, 1);
                 _currentShellHwnd = IntPtr.Zero;
                 _currentShellTVHwnd = IntPtr.Zero;
-                _currentSubclassProc = null;
             }
         }
     }
 
     private void ReHook()
     {
+        if (!InterceptWndProc)
+            return;
+
         lock (_lockSubClassProc)
         {
             Unhook();
 
-            _currentSubclassProc = SubclassProc;
             _currentShellHwnd = FindShellChildWindow(Handle, "SysListView32");
             if (_currentShellHwnd == IntPtr.Zero)
                 _currentShellHwnd = FindShellChildWindow(Handle, "SHELLDLL_DefView", false);
