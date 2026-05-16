@@ -162,8 +162,10 @@ public partial class MainViewModels : ObservableObject, IDisposable
         {
             Task.Run(() =>
             {
+                int lastPos;
                 foreach (OneFileOperation op in list)
                 {
+                    lastPos = -1;
                     if (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Copy || op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Move)
                     {
                         if (op.Attributes == 0)
@@ -184,9 +186,7 @@ public partial class MainViewModels : ObservableObject, IDisposable
                         else
                             op.Size = (ulong)(new FileInfo(op.Source)?.Length ?? 0);
                     }
-
-                    int lastPos = 0;
-                    if (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Delete)
+                    else if (op.FileOperation == Explorip.HookFileOperations.Models.EFileOperation.Delete)
                     {
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
