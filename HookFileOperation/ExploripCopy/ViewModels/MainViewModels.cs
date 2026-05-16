@@ -211,8 +211,17 @@ public partial class MainViewModels : ObservableObject, IDisposable
     {
         System.Windows.Application.Current.Dispatcher.Invoke(() =>
         {
-            if (pos >= 0 || pos < ListWaiting.Count - 1)
-                ListWaiting.Insert(pos, op);
+            if (pos >= 0 && pos < ListWaiting.Count - 1)
+            {
+                try
+                {
+                    ListWaiting.Insert(pos, op);
+                }
+                catch (Exception)
+                {
+                    ListWaiting.Add(op);
+                }
+            }
             else
                 ListWaiting.Add(op);
         });
