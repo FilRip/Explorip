@@ -78,7 +78,7 @@
 
             <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding GetPropertiesCommand}" Style="{StaticResource BtnStyle}" HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Static constants:Localization.PROPERTIES}" Margin="2 4 0 4"/>
+                    <TextBlock Text="{x:Static constants:Localization.PROPERTIES}" Margin="4 4 0 4"/>
                 </StackPanel>
             </Button>
 
@@ -86,8 +86,8 @@
 
             <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding ShowOlderContextMenuCommand}" Style="{StaticResource BtnStyle}" HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="&#xEE47;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>
-                    <TextBlock Text="{x:Static constants:Localization.SHOW_PREVIOUS_CONTEXTMENU}" Margin="2 4 0 4"/>
+                    <TextBlock Text="&#xEE47;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="4 0 0 0"/>
+                    <TextBlock Text="{x:Static constants:Localization.SHOW_PREVIOUS_CONTEXTMENU}" Margin="4 4 0 4"/>
                 </StackPanel>
             </Button>
         </StackPanel>

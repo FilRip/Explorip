@@ -112,7 +112,7 @@ public class FileOperationProgressSink : IFileOperationProgressSink
         string action, IShellItem item, uint hresult)
     {
         TraceAction(action,
-            item?.GetDisplayName(SIGDN.NORMALDISPLAY),
+            item?.GetDisplayName(EShellItemGetDisplayName.NORMALDISPLAY),
             hresult);
     }
 }

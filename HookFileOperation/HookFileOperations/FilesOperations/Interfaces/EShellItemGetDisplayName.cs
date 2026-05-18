@@ -1,6 +1,6 @@
 ﻿namespace Explorip.HookFileOperations.FilesOperations.Interfaces;
 
-public enum SIGDN : uint
+public enum EShellItemGetDisplayName : uint
 {
     NORMALDISPLAY = 0,
     PARENTRELATIVEPARSING = 0x80018001,

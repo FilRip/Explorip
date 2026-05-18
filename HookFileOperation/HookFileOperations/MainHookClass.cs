@@ -121,7 +121,7 @@ public class MainHookClass : IEntryPoint
     private void CopyItemHooked(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem)
     {
         _server?.ReportMessage("Intercept CopyItem");
-        _server?.CopyItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH), psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), pszCopyName);
+        _server?.CopyItem(punkItems.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH), psiDestinationFolder.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH), pszCopyName);
     }
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
@@ -133,8 +133,8 @@ public class MainHookClass : IEntryPoint
         if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
         {
             IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
-            string src = si.GetDisplayName(SIGDN.FILESYSPATH);
-            _server?.CopyItem(src, psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), Path.GetFileName(src));
+            string src = si.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH);
+            _server?.CopyItem(src, psiDestinationFolder.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH), Path.GetFileName(src));
         }
     }
 
@@ -143,7 +143,7 @@ public class MainHookClass : IEntryPoint
     private void MoveItemHooked(IFileOperation self, IShellItem punkItems, IShellItem psiDestinationFolder, [MarshalAs(UnmanagedType.LPWStr)] string pszCopyName, IFileOperationProgressSink pfopsItem)
     {
         _server?.ReportMessage("Intercept MoveItem");
-        _server?.MoveItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH), psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), pszCopyName);
+        _server?.MoveItem(punkItems.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH), psiDestinationFolder.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH), pszCopyName);
     }
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
@@ -155,8 +155,8 @@ public class MainHookClass : IEntryPoint
         if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
         {
             IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
-            string src = si.GetDisplayName(SIGDN.FILESYSPATH);
-            _server?.MoveItem(src, psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), Path.GetFileName(src));
+            string src = si.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH);
+            _server?.MoveItem(src, psiDestinationFolder.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH), Path.GetFileName(src));
         }
     }
 
@@ -165,7 +165,7 @@ public class MainHookClass : IEntryPoint
     private void DeleteItemHooked(IFileOperation self, IShellItem punkItems, IFileOperationProgressSink pfopsItem)
     {
         _server?.ReportMessage("Intercept DeleteItem");
-        _server?.DeleteItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH));
+        _server?.DeleteItem(punkItems.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH));
     }
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
@@ -178,7 +178,7 @@ public class MainHookClass : IEntryPoint
         if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
         {
             IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
-            string src = si.GetDisplayName(SIGDN.FILESYSPATH);
+            string src = si.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH);
             _server?.DeleteItem(src);
         }
         else if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIDataObject, out IntPtr ptrDataObject) == 0)
@@ -211,7 +211,7 @@ public class MainHookClass : IEntryPoint
     private void RenameItemHooked(IFileOperation self, IShellItem punkItems, [MarshalAs(UnmanagedType.LPWStr)] string pszNewName, IFileOperationProgressSink pfopsItem)
     {
         _server?.ReportMessage("Intercept RenameItem");
-        _server?.RenameItem(punkItems.GetDisplayName(SIGDN.FILESYSPATH), pszNewName);
+        _server?.RenameItem(punkItems.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH), pszNewName);
     }
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = false)]
@@ -223,7 +223,7 @@ public class MainHookClass : IEntryPoint
         if (Marshal.QueryInterface(Marshal.GetIUnknownForObject(punkItems), ref guidIShellItem, out IntPtr ptrShellItem) == 0)
         {
             IShellItem si = (IShellItem)Marshal.GetObjectForIUnknown(ptrShellItem);
-            string src = si.GetDisplayName(SIGDN.FILESYSPATH);
+            string src = si.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH);
             _server?.RenameItem(src, pszNewName);
         }
     }
@@ -240,7 +240,7 @@ public class MainHookClass : IEntryPoint
     private uint NewItemHooked(IFileOperation self, IShellItem psiDestinationFolder, FileAttributes dwFileAttributes, [MarshalAs(UnmanagedType.LPWStr)] string pszName, [MarshalAs(UnmanagedType.LPWStr)] string pszTemplateName, IFileOperationProgressSink pfopsItem)
     {
         _server?.ReportMessage("Intercept NewItem");
-        _server?.NewItem(psiDestinationFolder.GetDisplayName(SIGDN.FILESYSPATH), dwFileAttributes, pszName);
+        _server?.NewItem(psiDestinationFolder.GetDisplayName(EShellItemGetDisplayName.FILESYSPATH), dwFileAttributes, pszName);
         return 0;
     }
 

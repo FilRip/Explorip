@@ -152,7 +152,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         IsOpen = false;
     }
 
-    public void Closing(bool leftClick)
+    public void Closing()
     {
         System.Drawing.Point point = new();
         NativeMethods.GetCursorPos(ref point);
@@ -176,11 +176,6 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
                     dwFlags = NativeMethods.MouseEventScans.LEFTUP,
                 };
                 NativeMethods.SendInput(2, inputs, Marshal.SizeOf<NativeMethods.Input>());
-                if (!leftClick)
-                {
-                    inputs[0].mkhi.mi.dwFlags = NativeMethods.MouseEventScans.RIGHTDOWN;
-                    inputs[1].mkhi.mi.dwFlags = NativeMethods.MouseEventScans.RIGHTUP;
-                }
             }).Start();
         }
     }

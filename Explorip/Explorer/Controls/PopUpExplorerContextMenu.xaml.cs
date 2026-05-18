@@ -34,11 +34,11 @@ public partial class PopUpExplorerContextMenu : Popup
 
     private void Popup_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        DataContext.Closing(true);
+        DataContext.Closing();
     }
 
     private void Popup_PreviewMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
-        DataContext.Closing(false);
+        DataContext.Closing();
     }
 }

@@ -15,7 +15,7 @@ public interface IShellItem
     IShellItem GetParent();
 
     [return: MarshalAs(UnmanagedType.LPWStr)]
-    string GetDisplayName(SIGDN sigdnName);
+    string GetDisplayName(EShellItemGetDisplayName sigdnName);
 
     uint GetAttributes(uint sfgaoMask);
 
