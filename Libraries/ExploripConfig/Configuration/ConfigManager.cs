@@ -82,6 +82,7 @@ public static class ConfigManager
     private const string ConfigExplorerWindowState = "ExplorerWindowState";
     private const string ConfigExplorerHeaderBackground = "HeaderBackground";
     private const string ConfigExplorerHeaderForeground = "HeaderForeground";
+    private const string ConfigExplorerTitleFontSize = "TitleFontSize";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -156,6 +157,8 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigExplorerHeaderBackground, $"{Colors.Blue.A},{Colors.Blue.R},{Colors.Blue.G},{Colors.Blue.B}");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerHeaderForeground, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerHeaderForeground, $"{Colors.White.A},{Colors.White.R},{Colors.White.G},{Colors.White.B}");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerTitleFontSize, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerTitleFontSize, "12");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -479,6 +482,16 @@ public static class ConfigManager
         {
             if (ExplorerHeaderFontSize != value && AllowWrite)
                 _registryKeyExplorer.SetValue(ConfigExplorerHeaderFontSize, value.ToString(CultureInfo.InvariantCulture));
+        }
+    }
+
+    public static double ExplorerTitleFontSize
+    {
+        get { return _registryKeyExplorer.ReadDouble(ConfigExplorerTitleFontSize); }
+        set
+        {
+            if (ExplorerTitleFontSize != value && AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerTitleFontSize, value.ToString(CultureInfo.InvariantCulture));
         }
     }
 

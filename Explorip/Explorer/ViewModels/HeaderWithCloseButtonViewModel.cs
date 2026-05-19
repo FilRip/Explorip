@@ -6,6 +6,8 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.Explorer.Controls;
 using Explorip.Explorer.Windows;
 
+using ExploripConfig.Configuration;
+
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Shell.Common;
 using Microsoft.WindowsAPICodePack.Shell.KnownFolders;
@@ -28,6 +30,8 @@ public partial class HeaderWithCloseButtonViewModel(HeaderWithCloseButton contro
     private string _title;
     [ObservableProperty()]
     private bool _plusButton;
+    [ObservableProperty()]
+    private double _titleFontSize = ConfigManager.ExplorerTitleFontSize;
 
     #endregion
 
