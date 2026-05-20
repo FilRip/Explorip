@@ -85,9 +85,7 @@ public class HierarchicalSchemaSection : Section
         if (extendedHNames)
             binaryReader.ReadUInt32(); // meaning unknown
 
-#pragma warning disable IDE0028
         List<ScopeAndItemInfo> scopeAndItemInfos = new((int)(numScopes + numItems));
-#pragma warning restore IDE0028
 
         for (int i = 0; i < numScopes + numItems; i++)
         {
@@ -103,9 +101,7 @@ public class HierarchicalSchemaSection : Section
             scopeAndItemInfos.Add(new ScopeAndItemInfo(parent, fullPathLength, flags, nameOffset, index));
         }
 
-#pragma warning disable IDE0028
         List<ScopeExInfo> scopeExInfos = new((int)numScopes);
-#pragma warning restore IDE0028
 
         for (int i = 0; i < numScopes; i++)
         {
@@ -180,9 +176,7 @@ public class HierarchicalSchemaSection : Section
 
         for (int i = 0; i < numScopes; i++)
         {
-#pragma warning disable IDE0028
             List<ResourceMapEntry> children = new(scopeExInfos[i].ChildCount);
-#pragma warning restore IDE0028
 
             for (int j = 0; j < scopeExInfos[i].ChildCount; j++)
             {

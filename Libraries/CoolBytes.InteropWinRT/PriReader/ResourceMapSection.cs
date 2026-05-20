@@ -86,9 +86,7 @@ public class ResourceMapSection : Section
                 HierarchicalSchemaReference = new HierarchicalSchemaReference(versionInfo, unknown1, unknown2, uniqueName);
             }
 
-#pragma warning disable IDE0028
         List<EResourceValueType> resourceValueTypeTable = new(resourceValueTypeTableSize);
-#pragma warning restore IDE0028
         for (int i = 0; i < resourceValueTypeTableSize; i++)
         {
             binaryReader.ExpectUInt32(4);
@@ -154,9 +152,7 @@ public class ResourceMapSection : Section
                     throw new InvalidDataException();
             }
 
-#pragma warning disable IDE0028
         List<CandidateInfo> candidateInfos = new((int)numCandidates);
-#pragma warning restore IDE0028
         for (int i = 0; i < numCandidates; i++)
         {
             byte type = binaryReader.ReadByte();
@@ -203,9 +199,7 @@ public class ResourceMapSection : Section
 
                 Decision decision = PriFile.GetSectionByRef(DecisionInfoSection).Decisions[decisionIndex];
 
-#pragma warning disable IDE0028
                 List<Candidate> candidates = new(decision.QualifierSets.Count);
-#pragma warning restore IDE0028
 
                 for (int i = 0; i < decision.QualifierSets.Count; i++)
                 {

@@ -211,6 +211,8 @@ public static class Localization
     public static string CUT { get; private set; }
     public static string COPY { get; private set; }
     public static string PROPERTIES { get; private set; }
+    public static string SERVER_SSH { get; private set; }
+    public static string SERVER_FTP { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -411,6 +413,8 @@ public static class Localization
         CUT = Load(Shell32Dll, 33560, "Cut");
         COPY = Load(Shell32Dll, 33561, "Copy");
         PROPERTIES = Load(Shell32Dll, 33555, "Properties");
+        SERVER_SSH = Load("firewallapi.dll", 53602, "Ssh server").Trim((char)0);
+        SERVER_FTP = Load("firewallapi.dll", 38525, "Ftp server").Trim((char)0);
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)

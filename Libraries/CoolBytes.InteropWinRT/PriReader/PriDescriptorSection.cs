@@ -26,7 +26,6 @@ public class PriDescriptorSection : Section
     {
     }
 
-#pragma warning disable IDE0028
     protected override bool ParseSectionContent(BinaryReader binaryReader)
     {
         PriFlags = (EPriDescriptors)binaryReader.ReadUInt16();
@@ -82,5 +81,4 @@ public class PriDescriptorSection : Section
 
         return true;
     }
-#pragma warning restore IDE0028
 }

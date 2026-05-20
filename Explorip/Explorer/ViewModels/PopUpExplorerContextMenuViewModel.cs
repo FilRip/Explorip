@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,6 +12,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Explorer.Controls;
+using Explorip.Explorer.Helpers;
 using Explorip.HookFileOperations.FilesOperations;
 
 using ExploripConfig.Configuration;
@@ -26,6 +28,8 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     private TabItemExplorerBrowser _parentTab;
     private bool _sendMouseClick = true;
     private ShellObject[] _listSelected;
+    private bool _backgroundContextMenu;
+    private List<ShellContextMenuEntry> _listToBuild;
 
     [ObservableProperty()]
     private SolidColorBrush _background, _foreground;
@@ -33,6 +37,8 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     private bool _isOpen = true, _visibleCut, _visibleCopy, _visibleDelete, _visiblePaste;
     [ObservableProperty()]
     private double _dpi;
+    [ObservableProperty()]
+    private ObservableCollection<ContextMenuEntryViewModel> _listContextMenuEntry;
 
     public void SetParentTab(TabItemExplorerBrowser parentTab)
     {
@@ -40,20 +46,27 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         Dpi = VisualTreeHelper.GetDpi(parentTab).DpiScaleX;
     }
 
-    public void SetSelected(ShellObject[] selectedItems)
+    public void SetSelected(ShellObject[] selectedItems, bool background = false)
     {
+        _backgroundContextMenu = background;
         _listSelected = selectedItems;
         if (_listSelected?.Length > 0)
         {
-            VisibleCopy = true;
-            VisibleCut = true;
-            VisibleDelete = true;
+            VisibleCopy = !background;
+            VisibleCut = !background;
+            VisibleDelete = !background;
             if (_listSelected.Length == 1 &&
                 _listSelected[0] is ShellFolder &&
                 Clipboard.ContainsFileDropList())
             {
                 VisiblePaste = true;
             }
+            bool onlyFolder = !_listSelected.Any(so => so is not ShellFolder);
+#pragma warning disable S3358
+            ESourceType sourceType = (onlyFolder ? (_listSelected.Length == 1 ? ESourceType.Folder : ESourceType.MultipleFolders) :
+                                                   (_listSelected.Length == 1 ? ESourceType.File : ESourceType.MultipleFiles));
+#pragma warning restore S3358
+            _listToBuild = ExtensionsContextMenu.GetAllCommands(sourceType, (_listSelected.Length == 1 && sourceType == ESourceType.File ? Path.GetExtension(_listSelected[0].ParsingName) : ""), !background);
         }
         else
             VisiblePaste = true;
@@ -122,9 +135,9 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         FileOperation fileOp = new(NativeMethods.GetDesktopWindow());
         foreach (string fs in listItems)
             if (move)
-                fileOp.MoveItem(fs, _parentTab.DataContext.EditPath, Path.GetFileName(fs));
+                fileOp.MoveItem(fs, _parentTab.CurrentDirectory.ParsingName, Path.GetFileName(fs));
             else
-                fileOp.CopyItem(fs, _parentTab.DataContext.EditPath, Path.GetFileName(fs));
+                fileOp.CopyItem(fs, _parentTab.CurrentDirectory.ParsingName, Path.GetFileName(fs));
         fileOp.ChangeOperationFlags(EFileOperation.FOF_RENAMEONCOLLISION |
             EFileOperation.FOF_NOCONFIRMMKDIR |
             EFileOperation.FOFX_ADDUNDORECORD);
@@ -157,7 +170,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         System.Drawing.Point point = new();
         NativeMethods.GetCursorPos(ref point);
         IntPtr handle = NativeMethods.GetParent(NativeMethods.WindowFromPoint(point));
-        // HACK : Smulate click, because the previous click has been already used to close the popup
+        // HACK : Simulate click, because the previous click has already been used to close the popup
         if (_sendMouseClick && !IsOpen && (handle == _parentTab.ExplorerBrowser.ExplorerBrowserControl.ShellViewHandle ||
                                            handle == _parentTab.ExplorerBrowser.ExplorerBrowserControl.ShellTreeViewHandle))
         {
@@ -188,7 +201,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
             if (_listSelected.Length == 1)
                 ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_listSelected[0].ParsingName);
             else
-                ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.DataContext.EditPath, _listSelected.Select(so => so.ParsingName));
+                ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.CurrentDirectory.ParsingName, _listSelected.Select(so => so.ParsingName));
         }
     }
 }

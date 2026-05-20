@@ -115,7 +115,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                         }
                         catch (Exception) { /* Ignore errors */ }
                         if (item.Selected)
-                            _contextMenu.DataContext.SetSelected([ShellObject.FromParsingName(DataContext.EditPath)]);
+                            _contextMenu.DataContext.SetSelected([CurrentDirectory]);
                         else
                         {
                             // TODO : Until previous try/catch code working (get folder where we right click, and it's not the one currently selected/currently in View)
@@ -131,7 +131,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 if (ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
                     _contextMenu.DataContext.SetSelected([.. ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()]);
                 else
-                    _contextMenu.DataContext.SetSelected([ShellObject.FromParsingName(DataContext.EditPath)]);
+                    _contextMenu.DataContext.SetSelected([CurrentDirectory], true);
             }
             e.Handled = true;
             e.Result = new IntPtr(1);
