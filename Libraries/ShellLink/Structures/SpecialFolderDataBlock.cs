@@ -23,7 +23,7 @@ public class SpecialFolderDataBlock : ExtraDataBlock
     /// </summary>
     /// <param name="SpecialFolderID">nsigned integer that specifies the folder integer ID.</param>
     /// <param name="Offset">The offset, in bytes, into the link target IDList.</param>
-    public SpecialFolderDataBlock(CSIDL SpecialFolderID, uint Offset) : base()
+    public SpecialFolderDataBlock(CsIdl SpecialFolderID, uint Offset) : base()
     {
         this.SpecialFolderID = SpecialFolderID;
         this.Offset = Offset;
@@ -46,7 +46,7 @@ public class SpecialFolderDataBlock : ExtraDataBlock
     /// SpecialFolderID (4 bytes): A 32-bit, unsigned integer that specifies the folder 
     /// integer ID.
     /// </summary>
-    public CSIDL SpecialFolderID { get; set; }
+    public CsIdl SpecialFolderID { get; set; }
 
     /// <summary>
     /// Offset (4 bytes): A 32-bit, unsigned integer that specifies the location of the 
@@ -108,7 +108,7 @@ public class SpecialFolderDataBlock : ExtraDataBlock
             throw new ArgumentException(string.Format("BlockSignature is {0} is incorrect (expected {1})", blockSignature, SpecialFolderDataBlock.BlockSignature));
         }
 
-        SpecialFolderDataBlock.SpecialFolderID = (CSIDL)BitConverter.ToUInt32(ba, 8);
+        SpecialFolderDataBlock.SpecialFolderID = (CsIdl)BitConverter.ToUInt32(ba, 8);
         SpecialFolderDataBlock.Offset = BitConverter.ToUInt32(ba, 12);
 
         return SpecialFolderDataBlock;

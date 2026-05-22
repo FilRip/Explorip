@@ -1,5 +1,5 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Media;
+using System.Diagnostics;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -8,19 +8,81 @@ using Explorip.Explorer.Helpers;
 
 namespace Explorip.Explorer.ViewModels;
 
-public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry) : ObservableObject
+public partial class ContextMenuEntryViewModel : ObservableObject
 {
-    private readonly ShellContextMenuEntry _entry = entry;
+    private PopUpExplorerContextMenuViewModel _parent;
 
     [ObservableProperty()]
-    private ImageSource _icon;
-    [ObservableProperty()]
-    private string _label;
+    private ShellContextMenuEntry _entry;
     [ObservableProperty()]
     private ObservableCollection<ContextMenuEntryViewModel> _subItems;
+    [ObservableProperty()]
+    private bool _isVisible;
+    [ObservableProperty()]
+    private bool _isEnabled;
+
+    public ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopUpExplorerContextMenuViewModel parent)
+    {
+        _parent = parent;
+        _entry = entry;
+        _isVisible = true;
+        _isEnabled = true;
+    }
+
+    public string Label
+    {
+        get { return Entry.Name.Replace("&", ""); }
+    }
+
+    public bool IconVisible
+    {
+        get { return Entry.Icon != null; }
+    }
 
     [RelayCommand()]
     private void Execute()
+    {
+        switch (Entry.Source)
+        {
+            case ETypeCommand.ShellVerb:
+                string command, param;
+                command = Entry.Command;
+                param = _parent.ListSelected[0].ParsingName;
+                int lastIndex;
+                if (Entry.Command.StartsWith("\""))
+                    lastIndex = command.IndexOf('\"', 1);
+                else
+                    lastIndex = command.IndexOf(' ');
+                command = command.Substring(0, lastIndex + 1);
+                if (Entry.Command.Length > lastIndex + 1)
+                    param = Entry.Command.Substring(lastIndex + 1).Replace("%1", _parent.ListSelected[0].ParsingName).Trim();
+                Process.Start(command, param);
+                break;
+            case ETypeCommand.ContextMenuHandler:
+                break;
+            case ETypeCommand.CommandStore:
+                break;
+            case ETypeCommand.SendTo:
+                break;
+            case ETypeCommand.CreateShortcut:
+                break;
+            case ETypeCommand.Rename:
+                break;
+            case ETypeCommand.Share:
+                break;
+            case ETypeCommand.New:
+                break;
+        }
+    }
+
+    [RelayCommand()]
+    private void MouseEnter()
+    {
+
+    }
+
+    [RelayCommand()]
+    private void MouseLeave()
     {
 
     }

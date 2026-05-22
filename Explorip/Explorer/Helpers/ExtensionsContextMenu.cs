@@ -34,6 +34,7 @@ public enum ETypeCommand
     CreateShortcut = 4,
     Rename = 5,
     Share = 6,
+    New = 7,
 }
 
 public class ShellContextMenuEntry
@@ -103,7 +104,7 @@ public static class ExtensionsContextMenu
         return results;
     }
 
-    private static void ExpandSendTo(ref List<ShellContextMenuEntry> results, bool addDrives)
+    public static void ExpandSendTo(ref List<ShellContextMenuEntry> results, bool addDrives)
     {
         string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "SendTo");
         string label;
@@ -117,6 +118,7 @@ public static class ExtensionsContextMenu
                 Command = file,
                 Icon = IconManager.GetIconFromFile(file, 0, false),
             };
+            info.Icon?.Freeze();
             // Try to get the localized name
             NativeMethods.SHILCreateFromPath(file, out IntPtr pidl);
             if (pidl != IntPtr.Zero)
@@ -161,6 +163,7 @@ public static class ExtensionsContextMenu
                     Command = di.Name,
                     Icon = IconManager.GetIconFromFile(di.Name, 0, false),
                 };
+                info.Icon?.Freeze();
                 results.Add(info);
             }
         }
@@ -203,7 +206,9 @@ public static class ExtensionsContextMenu
                 ExplorerCommandHandler = explorerCommand,
                 Command = command,
             };
-            if (handlerKey.GetSubKeyNames().Contains("icon") && !string.IsNullOrWhiteSpace(handlerKey.GetValue("icon", "").ToString()))
+            if (!string.IsNullOrWhiteSpace(handlerKey.GetValue("", "").ToString()))
+                info.Name = handlerKey.GetValue("").ToString();
+            if (!string.IsNullOrWhiteSpace(handlerKey.GetValue("icon", "").ToString()))
             {
                 iconPath = handlerKey.GetValue("icon", "").ToString();
                 int index = 0;
@@ -215,6 +220,7 @@ public static class ExtensionsContextMenu
                         iconPath = iconPath.Substring(0, iconPath.Length - (indexStr.Length + 1));
                 }
                 info.Icon = IconManager.GetIconFromFile(iconPath, index, false);
+                info.Icon?.Freeze();
             }
             results.RemoveAll(i => i.Source == source && i.Name == verb && (i.Command == command || i.ExplorerCommandHandler == explorerCommand));
             results.Add(info);

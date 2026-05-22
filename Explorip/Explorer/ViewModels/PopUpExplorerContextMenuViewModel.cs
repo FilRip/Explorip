@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
@@ -29,7 +30,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     private bool _sendMouseClick = true;
     private ShellObject[] _listSelected;
     private bool _backgroundContextMenu;
-    private List<ShellContextMenuEntry> _listToBuild;
+    private readonly Thread _threadBuildContextMenu;
 
     [ObservableProperty()]
     private SolidColorBrush _background, _foreground;
@@ -61,21 +62,40 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
             {
                 VisiblePaste = true;
             }
+            _threadBuildContextMenu.Start();
+        }
+        else
+            VisiblePaste = true;
+    }
+
+    private void BuildContextMenu()
+    {
+        try
+        {
             bool onlyFolder = !_listSelected.Any(so => so is not ShellFolder);
 #pragma warning disable S3358
             ESourceType sourceType = (onlyFolder ? (_listSelected.Length == 1 ? ESourceType.Folder : ESourceType.MultipleFolders) :
                                                    (_listSelected.Length == 1 ? ESourceType.File : ESourceType.MultipleFiles));
 #pragma warning restore S3358
-            _listToBuild = ExtensionsContextMenu.GetAllCommands(sourceType, (_listSelected.Length == 1 && sourceType == ESourceType.File ? Path.GetExtension(_listSelected[0].ParsingName) : ""), !background);
+            List<ShellContextMenuEntry> listToBuild = ExtensionsContextMenu.GetAllCommands(sourceType, (_listSelected.Length == 1 && sourceType == ESourceType.File ? Path.GetExtension(_listSelected[0].ParsingName) : ""), !_backgroundContextMenu);
+            foreach (ShellContextMenuEntry entry in listToBuild)
+            {
+                ContextMenuEntryViewModel vm = new(entry, this);
+                Application.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    ListContextMenuEntry.Add(vm);
+                });
+            }
         }
-        else
-            VisiblePaste = true;
+        catch (Exception) { /* Ignore errors */ }
     }
 
     public PopUpExplorerContextMenuViewModel() : base()
     {
         Background = ConfigManager.ExplorerContextMenuBackground ?? ExploripSharedCopy.Constants.Colors.BackgroundColorBrush;
         Foreground = ConfigManager.ExplorerContextMenuForeground ?? ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
+        _listContextMenuEntry = [];
+        _threadBuildContextMenu = new Thread(new ThreadStart(BuildContextMenu));
     }
 
     [RelayCommand()]
@@ -161,6 +181,8 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
 
     public void ForceClose()
     {
+        if (_threadBuildContextMenu != null && _threadBuildContextMenu.ThreadState == ThreadState.Running)
+            _threadBuildContextMenu.Abort();
         _sendMouseClick = false;
         IsOpen = false;
     }
@@ -203,5 +225,10 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
             else
                 ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.CurrentDirectory.ParsingName, _listSelected.Select(so => so.ParsingName));
         }
+    }
+
+    public ShellObject[] ListSelected
+    {
+        get { return _listSelected; }
     }
 }

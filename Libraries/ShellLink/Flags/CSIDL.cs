@@ -5,7 +5,7 @@
 /// folders used frequently by applications, but which may not have the same name or location on any given 
 /// system. For example, the system folder may be "C:\Windows" on one system and "C:\Winnt" on another. 
 /// </summary>
-public enum CSIDL : uint
+public enum CsIdl : uint
 {
     /// <summary>
     /// The virtual folder that represents the Windows desktop, the root of the namespace.
