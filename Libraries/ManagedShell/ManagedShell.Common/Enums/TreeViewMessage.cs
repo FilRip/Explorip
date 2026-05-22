@@ -1258,3 +1258,19 @@ public enum TreeViewMessage
     // https://docs.microsoft.com/en-us/windows/win32/controls/tvm-getitempartrect
     TVM_GETITEMPARTRECT = TV_FIRST + 72,
 }
+
+public enum TreeViewGetNext
+{
+    TVGN_ROOT = 0,
+    TVGN_NEXT = 1,
+    TVGN_PREVIOUS = 2,
+    TVGN_PARENT = 3,
+    TVGN_CHILD = 4,
+    TVGN_FIRSTVISIBLE = 5,
+    TVGN_NEXTVISIBLE = 6,
+    TVGN_PREVIOUSVISIBLE = 7,
+    TVGN_DROPPHILITE = 8,
+    TVGN_CARET = 9,
+    TVGN_LASTVISIBLE = 10,
+    TVGN_NEXTSELECTED = 11,
+}

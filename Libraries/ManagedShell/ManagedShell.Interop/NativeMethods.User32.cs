@@ -428,6 +428,9 @@ public partial class NativeMethods
     [DllImport(User32_DllName, CharSet = CharSet.Auto)]
     internal static extern bool SendMessage(IntPtr hWnd, int msg, IntPtr wParam, ref TvItemEx lParam);
 
+    [DllImport(User32_DllName, CharSet = CharSet.Auto)]
+    internal static extern IntPtr SendMessage(IntPtr hWnd, int msg, int wParam, ref TvItemEx lParam);
+
     [StructLayout(LayoutKind.Sequential)]
     public struct WindowInfo
     {

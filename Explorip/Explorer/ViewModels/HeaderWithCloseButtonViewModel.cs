@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Explorer.Controls;
+using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.Windows;
 
 using ExploripConfig.Configuration;

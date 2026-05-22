@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Media;
 
 using Explorip.Helpers;
+
+using ManagedShell.Interop;
+using ManagedShell.ShellFolders.Interfaces;
 
 using Microsoft.Win32;
 
@@ -102,7 +107,7 @@ public static class ExtensionsContextMenu
     {
         string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "SendTo");
         string label;
-        foreach (string file in Directory.GetFiles(path))
+        foreach (string file in Directory.GetFiles(path).Where(f => Path.GetFileName(f).ToLower() != "desktop.ini"))
         {
             label = Path.GetFileNameWithoutExtension(file);
             ShellContextMenuEntry info = new()
@@ -112,13 +117,43 @@ public static class ExtensionsContextMenu
                 Command = file,
                 Icon = IconManager.GetIconFromFile(file, 0, false),
             };
+            // Try to get the localized name
+            NativeMethods.SHILCreateFromPath(file, out IntPtr pidl);
+            if (pidl != IntPtr.Zero)
+            {
+                NativeMethods.SHCreateShellItem(IntPtr.Zero, IntPtr.Zero, pidl, out IntPtr shellItemPtr);
+                if (shellItemPtr != IntPtr.Zero)
+                {
+                    IShellItem shellItem = (IShellItem)Marshal.GetTypedObjectForIUnknown(shellItemPtr, typeof(IShellItem));
+                    shellItem.GetDisplayName(ManagedShell.ShellFolders.Enums.ShellItemGetDisplayName.NORMALDISPLAY, out IntPtr namePtr);
+                    if (namePtr != IntPtr.Zero)
+                    {
+                        info.Name = Marshal.PtrToStringUni(namePtr);
+                        Marshal.FreeCoTaskMem(namePtr);
+                    }
+                    Marshal.ReleaseComObject(shellItem);
+                    Marshal.Release(shellItemPtr);
+                }
+                NativeMethods.ILFree(pidl);
+            }
             results.Add(info);
         }
         if (addDrives)
         {
-            foreach (DriveInfo di in DriveInfo.GetDrives())
+            foreach (DriveInfo di in DriveInfo.GetDrives().Where(d => d.IsReady))
             {
-                label = $"{di.VolumeLabel} ({di.Name})";
+                if (di.DriveType == DriveType.Network)
+                {
+                    // Get shared name, like explorer.exe do
+                    int maxPath = 256;
+                    StringBuilder sb = new(maxPath);
+                    if (NativeMethods.WNetGetConnection(di.Name.Trim('\\'), sb, ref maxPath) == NativeMethods.S_OK)
+                        label = $"{sb.ToString().Trim((char)0).ToUpper()} ({di.Name})";
+                    else
+                        label = di.Name;
+                }
+                else
+                    label = $"{di.VolumeLabel} ({di.Name})";
                 ShellContextMenuEntry info = new()
                 {
                     Source = ETypeCommand.SendTo,
@@ -177,10 +212,11 @@ public static class ExtensionsContextMenu
                     string[] splitter = iconPath.Split(',');
                     string indexStr = splitter[splitter.Length - 1];
                     if (int.TryParse(indexStr, out index))
-                        iconPath = iconPath.Substring(0, iconPath.Length - indexStr.Length);
+                        iconPath = iconPath.Substring(0, iconPath.Length - (indexStr.Length + 1));
                 }
                 info.Icon = IconManager.GetIconFromFile(iconPath, index, false);
             }
+            results.RemoveAll(i => i.Source == source && i.Name == verb && (i.Command == command || i.ExplorerCommandHandler == explorerCommand));
             results.Add(info);
         }
     }

@@ -11,6 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using Explorip.Exceptions;
 using Explorip.Explorer.ViewModels;
 using Explorip.Explorer.Windows;
 
@@ -24,7 +25,7 @@ using Microsoft.WindowsAPICodePack.Shell.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.Interop.ExplorerBrowser;
 using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 
-namespace Explorip.Explorer.Controls;
+namespace Explorip.Explorer.Controls.Tabs;
 
 /// <summary>
 /// Logique d'interaction pour TabItemExplorerBrowser.xaml
@@ -91,38 +92,60 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                         pt = pt,
                     };
                     NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_HITTEST, IntPtr.Zero, ref hit);
-                    NativeMethods.TvItemEx item = new()
+                    IntPtr namePtr = Marshal.AllocHGlobal(256);
+                    StringBuilder fullPath = new();
+                    try
                     {
-                        mask = NativeMethods.TreeViewItemMasks.TVIF_PARAM | NativeMethods.TreeViewItemMasks.TVIF_STATE | NativeMethods.TreeViewItemMasks.TVIF_STATEEX,
-                        hItem = hit.hItem,
-                    };
-                    if (NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_GETITEM, IntPtr.Zero, ref item) && item.lParam != IntPtr.Zero)
-                    {
-                        try
+                        NativeMethods.TvItemEx item = new()
                         {
-                            // That does not work yet
-                            ManagedShell.ShellFolders.Interfaces.IShellItem shellItem = (ManagedShell.ShellFolders.Interfaces.IShellItem)Marshal.GetObjectForIUnknown(item.lParam);
-                            if (shellItem != null)
+                            mask = NativeMethods.TreeViewItemMasks.TVIF_PARAM | NativeMethods.TreeViewItemMasks.TVIF_STATE | NativeMethods.TreeViewItemMasks.TVIF_STATEEX | NativeMethods.TreeViewItemMasks.TVIF_TEXT,
+                            hItem = hit.hItem,
+                            pszText = namePtr,
+                            cchTextMax = 256,
+                        };
+                        if (NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_GETITEM, IntPtr.Zero, ref item) && item.lParam != IntPtr.Zero)
+                        {
+                            if (item.Selected)
+                                _contextMenu.DataContext.SetSelected([CurrentDirectory]);
+                            else
                             {
-                                shellItem.GetDisplayName(ManagedShell.ShellFolders.Enums.ShellItemGetDisplayName.FILESYSPATH, out IntPtr ptrPath);
-                                if (ptrPath != IntPtr.Zero)
+                                IntPtr parent;
+                                while (true)
                                 {
-                                    string path = Marshal.PtrToStringUni(ptrPath);
-                                    Marshal.FreeCoTaskMem(ptrPath);
-                                    _contextMenu.DataContext.SetSelected([ShellObject.FromParsingName(path)]);
+                                    if (fullPath.Length > 0)
+                                        fullPath.Insert(0, Path.DirectorySeparatorChar);
+                                    if (item.Text.IndexOf(':') >= 0)
+                                    {
+                                        fullPath.Insert(0, item.Text.Substring(item.Text.IndexOf(':') - 1, 2));
+                                        break;
+                                    }
+                                    fullPath.Insert(0, item.Text);
+                                    parent = NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_GETNEXTITEM, (IntPtr)TreeViewGetNext.TVGN_PARENT, (IntPtr)item.hItem);
+                                    item.hItem = parent;
+                                    if (parent == IntPtr.Zero || !NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_GETITEM, IntPtr.Zero, ref item))
+                                        break;
+                                }
+                                try
+                                {
+                                    if (fullPath.ToString().StartsWith(Constants.Localization.DesktopFolderName + Path.DirectorySeparatorChar + Constants.Localization.NetworkFolderName))
+                                    {
+                                        fullPath = new(fullPath.ToString().Substring(Constants.Localization.DesktopFolderName.Length + Constants.Localization.NetworkFolderName.Length + 1));
+                                        fullPath.Insert(0, Path.DirectorySeparatorChar);
+                                    }
+                                    ShellObject so = ShellObject.FromParsingName(fullPath.ToString()) ?? throw new ExploripException("Unknown path");
+                                    _contextMenu.DataContext.SetSelected([so]);
+                                }
+                                catch (Exception)
+                                {
+                                    _contextMenu.DataContext.ForceClose();
+                                    return;
                                 }
                             }
                         }
-                        catch (Exception) { /* Ignore errors */ }
-                        if (item.Selected)
-                            _contextMenu.DataContext.SetSelected([CurrentDirectory]);
-                        else
-                        {
-                            // TODO : Until previous try/catch code working (get folder where we right click, and it's not the one currently selected/currently in View)
-                            // We display older shell context menu
-                            _contextMenu.DataContext.ForceClose();
-                            return;
-                        }
+                    }
+                    finally
+                    {
+                        Marshal.FreeHGlobal(namePtr);
                     }
                 }
             }

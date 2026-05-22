@@ -7,7 +7,7 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Explorer.Controls;
+using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels.Registry;
 using Explorip.Helpers;
 

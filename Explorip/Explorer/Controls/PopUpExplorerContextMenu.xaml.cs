@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls.Primitives;
 
+using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels;
 
 namespace Explorip.Explorer.Controls;

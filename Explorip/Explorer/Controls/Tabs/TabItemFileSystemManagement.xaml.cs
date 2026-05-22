@@ -1,6 +1,6 @@
 ﻿using Explorip.Explorer.ViewModels;
 
-namespace Explorip.Explorer.Controls;
+namespace Explorip.Explorer.Controls.Tabs;
 
 /// <summary>
 /// Logique d'interaction pour TabItemFileSystemManager.xaml

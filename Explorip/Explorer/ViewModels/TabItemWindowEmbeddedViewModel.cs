@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Explorer.Controls;
+using Explorip.Explorer.Controls.Tabs;
 
 using ManagedShell.Interop;
 

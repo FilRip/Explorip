@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
+using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;

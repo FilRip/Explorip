@@ -415,6 +415,16 @@ public static class Localization
         PROPERTIES = Load(Shell32Dll, 33555, "Properties");
         SERVER_SSH = Load("firewallapi.dll", 53602, "Ssh server").Trim((char)0);
         SERVER_FTP = Load("firewallapi.dll", 38525, "Ftp server").Trim((char)0);
+
+        string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
+        ManagedShell.ShellFolders.ShellItem si = new(specialPath);
+        NetworkFolderName = si.DisplayName;
+        si.Dispose();
+
+        specialPath = "::{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}";
+        si = new ManagedShell.ShellFolders.ShellItem(specialPath);
+        DesktopFolderName = si.DisplayName;
+        si.Dispose();
     }
 
     public static string LoadMsResourceString(string key, string defaultValue, int maxChar = 256)
@@ -484,4 +494,8 @@ public static class Localization
         }
         return defaultText;
     }
+
+    public static string DesktopFolderName { get; private set; }
+
+    public static string NetworkFolderName { get; private set; }
 }

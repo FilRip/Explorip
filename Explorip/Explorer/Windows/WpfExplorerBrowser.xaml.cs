@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 using Explorip.Explorer.Controls;
+using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels;
 using Explorip.Helpers;
 

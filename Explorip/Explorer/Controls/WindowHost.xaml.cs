@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 
+using Explorip.Explorer.Controls.Tabs;
 using Explorip.Helpers;
 
 using ManagedShell.Interop;

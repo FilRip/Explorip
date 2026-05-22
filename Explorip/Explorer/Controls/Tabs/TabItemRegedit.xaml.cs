@@ -5,7 +5,7 @@ using System.Windows.Input;
 using Explorip.Explorer.ViewModels;
 using Explorip.Explorer.ViewModels.Registry;
 
-namespace Explorip.Explorer.Controls;
+namespace Explorip.Explorer.Controls.Tabs;
 
 /// <summary>
 /// Logique d'interaction pour TabItemRegedit.xaml

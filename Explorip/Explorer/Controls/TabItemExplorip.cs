@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Explorip.Explorer.Controls.Tabs;
+
 using ExploripPlugins.Models;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;
