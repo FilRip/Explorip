@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls;
 
 using Explorip.Explorer.ViewModels;
 
@@ -7,7 +7,7 @@ namespace Explorip.Explorer.Controls;
 /// <summary>
 /// Logique d'interaction pour PopUpExplorerContextMenu.xaml
 /// </summary>
-public partial class PopUpExplorerContextMenuSubItems : Popup
+public partial class PopUpExplorerContextMenuSubItems : ContextMenu
 {
     public PopUpExplorerContextMenuSubItems()
     {

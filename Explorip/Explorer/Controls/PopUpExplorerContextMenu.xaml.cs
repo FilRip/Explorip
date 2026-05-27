@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls.Primitives;
+﻿using System.Windows.Controls;
+using System.Windows.Input;
 
 using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels;
@@ -8,7 +9,7 @@ namespace Explorip.Explorer.Controls;
 /// <summary>
 /// Logique d'interaction pour PopUpExplorerContextMenu.xaml
 /// </summary>
-public partial class PopUpExplorerContextMenu : Popup
+public partial class PopUpExplorerContextMenu : ContextMenu
 {
     private TabItemExplorerBrowser _parentTab;
 
@@ -33,12 +34,12 @@ public partial class PopUpExplorerContextMenu : Popup
         }
     }
 
-    private void Popup_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void Popup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         DataContext.Closing();
     }
 
-    private void Popup_PreviewMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void Popup_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
     {
         DataContext.Closing();
     }

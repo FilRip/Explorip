@@ -34,7 +34,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     [ObservableProperty()]
     private SolidColorBrush _background, _foreground;
     [ObservableProperty()]
-    private bool _isOpen = true, _visibleCut, _visibleCopy, _visibleDelete, _visiblePaste;
+    private bool _isOpen, _visibleCut, _visibleCopy, _visibleDelete, _visiblePaste;
     [ObservableProperty()]
     private double _dpi;
     [ObservableProperty()]
@@ -109,6 +109,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         Foreground = ConfigManager.ExplorerContextMenuForeground ?? ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
         _listContextMenuEntry = [];
         _threadBuildContextMenu = new Thread(new ThreadStart(BuildContextMenu));
+        _isOpen = true;
     }
 
     [RelayCommand()]

@@ -11,30 +11,21 @@ using Explorip.Explorer.Helpers;
 
 namespace Explorip.Explorer.ViewModels;
 
-public partial class ContextMenuEntryViewModel : ObservableObject
+public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopUpExplorerContextMenuViewModel parent) : ObservableObject
 {
-    private PopUpExplorerContextMenuViewModel _parent;
+    private readonly PopUpExplorerContextMenuViewModel _parent = parent;
     private PopUpExplorerContextMenuSubItems _popup;
 
     [ObservableProperty()]
-    private ShellContextMenuEntry _entry;
+    private ShellContextMenuEntry _entry = entry;
     [ObservableProperty(), NotifyPropertyChangedFor(nameof(HasSubItems))]
-    private ObservableCollection<ContextMenuEntryViewModel> _subItems;
+    private ObservableCollection<ContextMenuEntryViewModel> _subItems = [];
     [ObservableProperty()]
-    private bool _isVisible;
+    private bool _isVisible = true;
     [ObservableProperty()]
-    private bool _isEnabled;
+    private bool _isEnabled = true;
     [ObservableProperty()]
     private bool _isOpen;
-
-    public ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopUpExplorerContextMenuViewModel parent)
-    {
-        _parent = parent;
-        _entry = entry;
-        _isVisible = true;
-        _isEnabled = true;
-        _subItems = [];
-    }
 
     public SolidColorBrush Background
     {
@@ -112,7 +103,7 @@ public partial class ContextMenuEntryViewModel : ObservableObject
     {
         Debug.WriteLine($"MouseEnter ContextMenu {Label}");
         IsMouseOver = true;
-        if (HasSubItems)
+        if (HasSubItems && _popup == null)
         {
             Debug.WriteLine($"MouseEnter ContextMenu ShowSubItems {Label}");
             _popup = new PopUpExplorerContextMenuSubItems()
@@ -120,6 +111,7 @@ public partial class ContextMenuEntryViewModel : ObservableObject
                 DataContext = this,
                 IsOpen = true,
             };
+            SubItems[0].IsMouseOver = true;
         }
     }
 
