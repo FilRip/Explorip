@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,7 +14,7 @@ namespace Explorip.Explorer.ViewModels;
 public partial class ContextMenuEntryViewModel : ObservableObject
 {
     private PopUpExplorerContextMenuViewModel _parent;
-    //private PopUpExplorerContextMenuSubItems _popup;
+    private PopUpExplorerContextMenuSubItems _popup;
 
     [ObservableProperty()]
     private ShellContextMenuEntry _entry;
@@ -22,6 +24,8 @@ public partial class ContextMenuEntryViewModel : ObservableObject
     private bool _isVisible;
     [ObservableProperty()]
     private bool _isEnabled;
+    [ObservableProperty()]
+    private bool _isOpen;
 
     public ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopUpExplorerContextMenuViewModel parent)
     {
@@ -30,7 +34,21 @@ public partial class ContextMenuEntryViewModel : ObservableObject
         _isVisible = true;
         _isEnabled = true;
         _subItems = [];
-        //_popup = new PopUpExplorerContextMenuSubItems();
+    }
+
+    public SolidColorBrush Background
+    {
+        get { return _parent.Background; }
+    }
+
+    public SolidColorBrush Foreground
+    {
+        get { return _parent.Foreground; }
+    }
+
+    public double Dpi
+    {
+        get { return _parent.Dpi; }
     }
 
     public string Label
@@ -47,6 +65,8 @@ public partial class ContextMenuEntryViewModel : ObservableObject
     {
         get { return SubItems.Count > 0; }
     }
+
+    public bool IsMouseOver { get; set; }
 
     [RelayCommand()]
     private void Execute()
@@ -90,18 +110,29 @@ public partial class ContextMenuEntryViewModel : ObservableObject
     [RelayCommand()]
     private void MouseEnter()
     {
+        Debug.WriteLine($"MouseEnter ContextMenu {Label}");
+        IsMouseOver = true;
         if (HasSubItems)
         {
-            //_popup?.IsOpen = true;
+            Debug.WriteLine($"MouseEnter ContextMenu ShowSubItems {Label}");
+            _popup = new PopUpExplorerContextMenuSubItems()
+            {
+                DataContext = this,
+                IsOpen = true,
+            };
         }
     }
 
     [RelayCommand()]
     private void MouseLeave()
     {
-        if (HasSubItems)
+        Debug.WriteLine($"MouseLeave ContextMenu {Label}");
+        if (HasSubItems && _popup != null && !SubItems.Any(p => p.IsMouseOver))
         {
-            //_popup?.IsOpen = false;
+            Debug.WriteLine($"MouseLeave CloseSubItems {Label}");
+            _popup.IsOpen = false;
+            _popup = null;
         }
+        IsMouseOver = false;
     }
 }

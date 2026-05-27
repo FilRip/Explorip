@@ -9,8 +9,8 @@
        xmlns:config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig"
        xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-       mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:PopUpExplorerContextMenuViewModel}"
-       d:DesignHeight="450" d:DesignWidth="800" AllowsTransparency="True" StaysOpen="False" Placement="Mouse" IsOpen="{Binding IsOpen}" PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown" PreviewMouseRightButtonDown="Popup_PreviewMouseRightButtonDown">
+       mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:ContextMenuEntryViewModel}"
+       d:DesignHeight="450" d:DesignWidth="800" AllowsTransparency="True" StaysOpen="False" Placement="Mouse" PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown" PreviewMouseRightButtonDown="Popup_PreviewMouseRightButtonDown">
 
     <Popup.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>
@@ -51,7 +51,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Button Foreground="{Binding DataContext.Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PopUpExplorerContextMenu}}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding IsVisible, Converter={StaticResource boolToVisible}}" IsEnabled="{Binding IsEnabled}" Command="{Binding ExecuteCommand}" Style="{StaticResource BtnStyle}">
+                            <Button Foreground="{Binding DataContext.Foreground, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PopUpExplorerContextMenuSubItems}}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding IsVisible, Converter={StaticResource boolToVisible}}" IsEnabled="{Binding IsEnabled}" Command="{Binding ExecuteCommand}" Style="{StaticResource BtnStyle}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="MouseEnter">
                                         <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
@@ -68,7 +68,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Image Grid.Column="0" Source="{Binding Entry.Icon}" Margin="0 0 5 0" VerticalAlignment="Center" Visibility="{Binding IconVisible, Converter={StaticResource boolToVisible}}"/>
                                     <TextBlock Grid.Column="1" Text="{Binding Label}" Margin="4 4 0 4"/>
-                                    <TextBlock Grid.Column="2" Text=">" VerticalAlignment="Center" Margin="0 0 4 0" Visibility="{Binding HasSubItems, Converter={StaticResource boolToVisible}}"/>
+                                    <TextBlock Grid.Column="2" Text=">" FontWeight="Bold" VerticalAlignment="Center" Margin="0 0 4 0" Visibility="{Binding HasSubItems, Converter={StaticResource boolToVisible}}"/>
                                 </Grid>
                             </Button>
                         </Grid>

@@ -1,6 +1,5 @@
 ﻿using System.Windows.Controls.Primitives;
 
-using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels;
 
 namespace Explorip.Explorer.Controls;
@@ -10,8 +9,6 @@ namespace Explorip.Explorer.Controls;
 /// </summary>
 public partial class PopUpExplorerContextMenuSubItems : Popup
 {
-    private TabItemExplorerBrowser _parentTab;
-
     public PopUpExplorerContextMenuSubItems()
     {
         InitializeComponent();

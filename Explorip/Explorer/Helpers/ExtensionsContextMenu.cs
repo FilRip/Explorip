@@ -6,8 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Media;
 
-using Explorip.Helpers;
-
+using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Interfaces;
 
@@ -111,7 +110,7 @@ public static class ExtensionsContextMenu
                 Source = ETypeCommand.SendTo,
                 Name = label,
                 Command = file,
-                Icon = IconManager.GetIconFromFile(file, 0, false),
+                Icon = IconImageConverter.GetImageFromAssociatedIcon(file.Trim('\"'), ManagedShell.Common.Enums.IconSize.Small),
             };
             info.Icon?.Freeze();
             // Try to get the localized name
@@ -156,7 +155,7 @@ public static class ExtensionsContextMenu
                     Source = ETypeCommand.SendTo,
                     Name = label,
                     Command = di.Name,
-                    Icon = IconManager.GetIconFromFile(di.Name, 0, false),
+                    Icon = IconImageConverter.GetImageFromAssociatedIcon(di.Name, ManagedShell.Common.Enums.IconSize.Small),
                 };
                 info.Icon?.Freeze();
                 results.Add(info);
@@ -203,7 +202,30 @@ public static class ExtensionsContextMenu
                 Command = command,
             };
             if (!string.IsNullOrWhiteSpace(handlerKey.GetValue("", "").ToString()))
+            {
                 info.Name = handlerKey.GetValue("").ToString();
+                if (handlerKey.GetValue("").ToString().StartsWith("@"))
+                {
+                    // Try get resources label
+                    string lib = handlerKey.GetValue("").ToString().TrimStart('@');
+                    if (lib.Contains("ms-resource://"))
+                    {
+                        info.Name = Constants.Localization.LoadMsResourceString(handlerKey.GetValue("").ToString(), handlerKey.GetValue("").ToString());
+                    }
+                    else
+                    {
+                        int index = 0;
+                        if (lib.Contains(','))
+                        {
+                            string[] splitter = lib.Split(',');
+                            string strIndex = splitter[splitter.Length - 1].TrimStart('-');
+                            if (int.TryParse(strIndex, out index))
+                                lib = lib.Substring(0, lib.Length - (strIndex.Length + 1)).TrimEnd(',');
+                        }
+                        info.Name = Constants.Localization.Load(lib, (uint)index, handlerKey.GetValue("").ToString());
+                    }
+                }
+            }
             if (!string.IsNullOrWhiteSpace(handlerKey.GetValue("icon", "").ToString()))
             {
                 iconPath = handlerKey.GetValue("icon", "").ToString();
@@ -215,7 +237,7 @@ public static class ExtensionsContextMenu
                     if (int.TryParse(indexStr, out index))
                         iconPath = iconPath.Substring(0, iconPath.Length - (indexStr.Length + 1));
                 }
-                info.Icon = IconManager.GetIconFromFile(iconPath, index, false);
+                info.Icon = IconImageConverter.GetImageFromAssociatedIcon(iconPath.Trim('\"'), ManagedShell.Common.Enums.IconSize.Small);
                 info.Icon?.Freeze();
             }
             results.RemoveAll(i => i.Source == info.Source && i.Name == info.Name && (i.Command == info.Command || i.ExplorerCommandHandler == info.ExplorerCommandHandler));
