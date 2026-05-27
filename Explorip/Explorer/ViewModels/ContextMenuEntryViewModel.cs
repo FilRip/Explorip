@@ -4,6 +4,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.Explorer.Controls;
 using Explorip.Explorer.Helpers;
 
 namespace Explorip.Explorer.ViewModels;
@@ -11,10 +12,11 @@ namespace Explorip.Explorer.ViewModels;
 public partial class ContextMenuEntryViewModel : ObservableObject
 {
     private PopUpExplorerContextMenuViewModel _parent;
+    //private PopUpExplorerContextMenuSubItems _popup;
 
     [ObservableProperty()]
     private ShellContextMenuEntry _entry;
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(HasSubItems))]
     private ObservableCollection<ContextMenuEntryViewModel> _subItems;
     [ObservableProperty()]
     private bool _isVisible;
@@ -27,6 +29,8 @@ public partial class ContextMenuEntryViewModel : ObservableObject
         _entry = entry;
         _isVisible = true;
         _isEnabled = true;
+        _subItems = [];
+        //_popup = new PopUpExplorerContextMenuSubItems();
     }
 
     public string Label
@@ -39,9 +43,17 @@ public partial class ContextMenuEntryViewModel : ObservableObject
         get { return Entry.Icon != null; }
     }
 
+    public bool HasSubItems
+    {
+        get { return SubItems.Count > 0; }
+    }
+
     [RelayCommand()]
     private void Execute()
     {
+        if (HasSubItems)
+            return;
+
         switch (Entry.Source)
         {
             case ETypeCommand.ShellVerb:
@@ -78,12 +90,18 @@ public partial class ContextMenuEntryViewModel : ObservableObject
     [RelayCommand()]
     private void MouseEnter()
     {
-
+        if (HasSubItems)
+        {
+            //_popup?.IsOpen = true;
+        }
     }
 
     [RelayCommand()]
     private void MouseLeave()
     {
-
+        if (HasSubItems)
+        {
+            //_popup?.IsOpen = false;
+        }
     }
 }

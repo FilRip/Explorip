@@ -49,7 +49,7 @@ public class ShellContextMenuEntry
 
 public static class ExtensionsContextMenu
 {
-    public static List<ShellContextMenuEntry> GetAllCommands(ESourceType sourceType, string fileExtension = "", bool withSendTo = true, bool addDrivesInSendTo = true)
+    public static List<ShellContextMenuEntry> GetAllCommands(ESourceType sourceType, string fileExtension = "")
     {
         List<ShellContextMenuEntry> results = [];
 
@@ -77,7 +77,6 @@ public static class ExtensionsContextMenu
         {
             ScanShellContextMenuCurrentUser(@"Drive\shell", ref results, ETypeCommand.ShellVerb);
             ScanShellContextMenuCurrentUser(@"Drive\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
-            withSendTo = false;
         }
         else if (sourceType == ESourceType.MultipleFiles)
         {
@@ -96,16 +95,12 @@ public static class ExtensionsContextMenu
         // CommandStore shell
         //ScanShellContextMenu(Registry.LocalMachine, @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell", ref results, ETypeCommand.CommandStore);
 
-        if (withSendTo)
-        {
-            ExpandSendTo(ref results, addDrivesInSendTo);
-        }
-
         return results;
     }
 
-    public static void ExpandSendTo(ref List<ShellContextMenuEntry> results, bool addDrives)
+    public static List<ShellContextMenuEntry> ExpandSendTo(bool addDrives)
     {
+        List<ShellContextMenuEntry> results = [];
         string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "SendTo");
         string label;
         foreach (string file in Directory.GetFiles(path).Where(f => Path.GetFileName(f).ToLower() != "desktop.ini"))
@@ -167,6 +162,7 @@ public static class ExtensionsContextMenu
                 results.Add(info);
             }
         }
+        return results;
     }
 
     private static void ScanShellContextMenuCurrentUser(string subPath, ref List<ShellContextMenuEntry> results, ETypeCommand source)
@@ -222,7 +218,7 @@ public static class ExtensionsContextMenu
                 info.Icon = IconManager.GetIconFromFile(iconPath, index, false);
                 info.Icon?.Freeze();
             }
-            results.RemoveAll(i => i.Source == source && i.Name == verb && (i.Command == command || i.ExplorerCommandHandler == explorerCommand));
+            results.RemoveAll(i => i.Source == info.Source && i.Name == info.Name && (i.Command == info.Command || i.ExplorerCommandHandler == info.ExplorerCommandHandler));
             results.Add(info);
         }
     }

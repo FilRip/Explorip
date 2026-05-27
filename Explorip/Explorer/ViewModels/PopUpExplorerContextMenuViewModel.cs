@@ -77,13 +77,27 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
             ESourceType sourceType = (onlyFolder ? (_listSelected.Length == 1 ? ESourceType.Folder : ESourceType.MultipleFolders) :
                                                    (_listSelected.Length == 1 ? ESourceType.File : ESourceType.MultipleFiles));
 #pragma warning restore S3358
-            List<ShellContextMenuEntry> listToBuild = ExtensionsContextMenu.GetAllCommands(sourceType, (_listSelected.Length == 1 && sourceType == ESourceType.File ? Path.GetExtension(_listSelected[0].ParsingName) : ""), !_backgroundContextMenu);
+            List<ShellContextMenuEntry> listToBuild = ExtensionsContextMenu.GetAllCommands(sourceType, (_listSelected.Length == 1 && sourceType == ESourceType.File ? Path.GetExtension(_listSelected[0].ParsingName) : ""));
             foreach (ShellContextMenuEntry entry in listToBuild)
             {
                 ContextMenuEntryViewModel vm = new(entry, this);
                 Application.Current.Dispatcher.BeginInvoke(() =>
                 {
                     ListContextMenuEntry.Add(vm);
+                });
+            }
+            if (sourceType != ESourceType.Drive && !_backgroundContextMenu)
+            {
+                ContextMenuEntryViewModel vmSendTo = new(new ShellContextMenuEntry()
+                {
+                    Source = ETypeCommand.SendTo,
+                    Name = Constants.Localization.SEND_TO.Replace("_", ""),
+                }, this);
+                foreach (ShellContextMenuEntry entry in ExtensionsContextMenu.ExpandSendTo(true))
+                    vmSendTo.SubItems.Add(new ContextMenuEntryViewModel(entry, this));
+                Application.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    ListContextMenuEntry.Add(vmSendTo);
                 });
             }
         }
