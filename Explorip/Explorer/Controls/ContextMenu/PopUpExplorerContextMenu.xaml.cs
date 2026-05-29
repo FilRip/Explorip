@@ -1,15 +1,16 @@
-﻿using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows;
 
 using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels;
 
-namespace Explorip.Explorer.Controls;
+using ManagedShell.Interop;
+
+namespace Explorip.Explorer.Controls.ContextMenu;
 
 /// <summary>
 /// Logique d'interaction pour PopUpExplorerContextMenu.xaml
 /// </summary>
-public partial class PopUpExplorerContextMenu : ContextMenu
+public partial class PopUpExplorerContextMenu : Window
 {
     private TabItemExplorerBrowser _parentTab;
 
@@ -30,17 +31,17 @@ public partial class PopUpExplorerContextMenu : ContextMenu
         set
         {
             _parentTab = value;
+            Owner = GetWindow(_parentTab);
             DataContext.SetParentTab(_parentTab);
+            DataContext.Close = Close;
         }
     }
 
-    private void Popup_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        DataContext.Closing();
-    }
-
-    private void Popup_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-    {
-        DataContext.Closing();
+        System.Drawing.Point mousePos = new();
+        NativeMethods.GetCursorPos(ref mousePos);
+        Left = mousePos.X;
+        Top = mousePos.Y;
     }
 }

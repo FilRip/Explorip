@@ -1,12 +1,13 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-using Explorip.Explorer.Controls;
+using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.Helpers;
 
 namespace Explorip.Explorer.ViewModels;
@@ -14,7 +15,6 @@ namespace Explorip.Explorer.ViewModels;
 public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopUpExplorerContextMenuViewModel parent) : ObservableObject
 {
     private readonly PopUpExplorerContextMenuViewModel _parent = parent;
-    private PopUpExplorerContextMenuSubItems _popup;
 
     [ObservableProperty()]
     private ShellContextMenuEntry _entry = entry;
@@ -24,8 +24,6 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
     private bool _isVisible = true;
     [ObservableProperty()]
     private bool _isEnabled = true;
-    [ObservableProperty()]
-    private bool _isOpen;
 
     public SolidColorBrush Background
     {
@@ -101,29 +99,39 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
     [RelayCommand()]
     private void MouseEnter()
     {
-        Debug.WriteLine($"MouseEnter ContextMenu {Label}");
+        Debug.WriteLine($"MouseEnter {Label}");
         IsMouseOver = true;
-        if (HasSubItems && _popup == null)
+        if (HasSubItems && _parent.Popup == null)
         {
-            Debug.WriteLine($"MouseEnter ContextMenu ShowSubItems {Label}");
-            _popup = new PopUpExplorerContextMenuSubItems()
+            Debug.WriteLine($"MouseEnter {Label} ShowSubitems");
+            _parent.Popup = new PopUpExplorerContextMenuSubItems()
             {
                 DataContext = this,
-                IsOpen = true,
+                Owner = Window.GetWindow(_parent.ParentTab),
             };
             SubItems[0].IsMouseOver = true;
+            _parent.Popup.Show();
+        }
+        else
+        {
+            if (!HasSubItems || _parent.Popup?.DataContext != this)
+            {
+                Debug.WriteLine($"MouseEnter {Label} CloseSubItems");
+                _parent.Popup?.Close();
+                _parent.Popup = null;
+            }
         }
     }
 
     [RelayCommand()]
     private void MouseLeave()
     {
-        Debug.WriteLine($"MouseLeave ContextMenu {Label}");
-        if (HasSubItems && _popup != null && !SubItems.Any(p => p.IsMouseOver))
+        Debug.WriteLine($"MouseLeave {Label}");
+        if (HasSubItems && _parent.Popup != null && !SubItems.Any(p => p.IsMouseOver))
         {
-            Debug.WriteLine($"MouseLeave CloseSubItems {Label}");
-            _popup.IsOpen = false;
-            _popup = null;
+            Debug.WriteLine($"MouseLeave {Label} CloseSubItems");
+            _parent.Popup.Close();
+            _parent.Popup = null;
         }
         IsMouseOver = false;
     }

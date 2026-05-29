@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
@@ -11,6 +10,7 @@ using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
+using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.Helpers;
 using Explorip.HookFileOperations.FilesOperations;
@@ -26,19 +26,28 @@ namespace Explorip.Explorer.ViewModels;
 public partial class PopUpExplorerContextMenuViewModel : ObservableObject
 {
     private TabItemExplorerBrowser _parentTab;
-    private bool _sendMouseClick = true;
     private ShellObject[] _listSelected;
     private bool _backgroundContextMenu;
     private readonly Thread _threadBuildContextMenu;
-
+    [ObservableProperty()]
+    private SolidColorBrush _foregroundCut, _foregroundCopy, _foregroundPaste, _foregroundDelete;
     [ObservableProperty()]
     private SolidColorBrush _background, _foreground;
     [ObservableProperty()]
-    private bool _isOpen, _visibleCut, _visibleCopy, _visibleDelete, _visiblePaste;
+    private bool _visibleCut, _visibleCopy, _visibleDelete, _visiblePaste;
     [ObservableProperty()]
     private double _dpi;
     [ObservableProperty()]
     private ObservableCollection<ContextMenuEntryViewModel> _listContextMenuEntry;
+
+    public PopUpExplorerContextMenuSubItems Popup { get; set; }
+
+    public TabItemExplorerBrowser ParentTab
+    {
+        get { return _parentTab; }
+    }
+
+    public Action Close { get; set; }
 
     public void SetParentTab(TabItemExplorerBrowser parentTab)
     {
@@ -109,7 +118,10 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         Foreground = ConfigManager.ExplorerContextMenuForeground ?? ExploripSharedCopy.Constants.Colors.ForegroundColorBrush;
         _listContextMenuEntry = [];
         _threadBuildContextMenu = new Thread(new ThreadStart(BuildContextMenu));
-        _isOpen = true;
+        _foregroundDelete = ConfigManager.ExplorerContextMenuDeleteColor;
+        _foregroundCut = ConfigManager.ExplorerContextMenuCutColor;
+        _foregroundCopy = ConfigManager.ExplorerContextMenuCopyColor;
+        _foregroundPaste = ConfigManager.ExplorerContextMenuPasteColor;
     }
 
     [RelayCommand()]
@@ -172,9 +184,6 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
                 fileOp.MoveItem(fs, _parentTab.CurrentDirectory.ParsingName, Path.GetFileName(fs));
             else
                 fileOp.CopyItem(fs, _parentTab.CurrentDirectory.ParsingName, Path.GetFileName(fs));
-        fileOp.ChangeOperationFlags(EFileOperation.FOF_RENAMEONCOLLISION |
-            EFileOperation.FOF_NOCONFIRMMKDIR |
-            EFileOperation.FOFX_ADDUNDORECORD);
         fileOp.PerformOperations();
         fileOp.Dispose();
     }
@@ -186,9 +195,6 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         FileOperation fileOp = new(NativeMethods.GetDesktopWindow());
         foreach (ShellObject fs in _listSelected)
             fileOp.DeleteItem(fs.ParsingName);
-        fileOp.ChangeOperationFlags(EFileOperation.FOF_RENAMEONCOLLISION |
-            EFileOperation.FOF_NOCONFIRMMKDIR |
-            EFileOperation.FOFX_ADDUNDORECORD);
         fileOp.PerformOperations();
         fileOp.Dispose();
     }
@@ -197,36 +203,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     {
         if (_threadBuildContextMenu != null && _threadBuildContextMenu.ThreadState == ThreadState.Running)
             _threadBuildContextMenu.Abort();
-        _sendMouseClick = false;
-        IsOpen = false;
-    }
-
-    public void Closing()
-    {
-        System.Drawing.Point point = new();
-        NativeMethods.GetCursorPos(ref point);
-        IntPtr handle = NativeMethods.GetParent(NativeMethods.WindowFromPoint(point));
-        // HACK : Simulate click, because the previous click has already been used to close the popup
-        if (_sendMouseClick && !IsOpen && (handle == _parentTab.ExplorerBrowser.ExplorerBrowserControl.ShellViewHandle ||
-                                           handle == _parentTab.ExplorerBrowser.ExplorerBrowserControl.ShellTreeViewHandle))
-        {
-            new Thread(() =>
-            {
-                Thread.Sleep(10);
-                NativeMethods.Input[] inputs = new NativeMethods.Input[2];
-                inputs[0].type = NativeMethods.TypeInput.Mouse;
-                inputs[0].mkhi.mi = new NativeMethods.MouseInput()
-                {
-                    dwFlags = NativeMethods.MouseEventScans.LEFTDOWN,
-                };
-                inputs[1].type = NativeMethods.TypeInput.Mouse;
-                inputs[1].mkhi.mi = new NativeMethods.MouseInput()
-                {
-                    dwFlags = NativeMethods.MouseEventScans.LEFTUP,
-                };
-                NativeMethods.SendInput(2, inputs, Marshal.SizeOf<NativeMethods.Input>());
-            }).Start();
-        }
+        Close.Invoke();
     }
 
     [RelayCommand()]

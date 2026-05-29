@@ -83,6 +83,10 @@ public static class ConfigManager
     private const string ConfigExplorerHeaderBackground = "HeaderBackground";
     private const string ConfigExplorerHeaderForeground = "HeaderForeground";
     private const string ConfigExplorerTitleFontSize = "TitleFontSize";
+    private const string ConfigExplorerContextMenuCutColor = "ContextMenuCutColor";
+    private const string ConfigExplorerContextMenuCopyColor = "ContextMenuCopyColor";
+    private const string ConfigExplorerContextMenuPasteColor = "ContextMenuPasteColor";
+    private const string ConfigExplorerContextMenuDeleteColor = "ContextMenuDeleteColor";
     #endregion
 
     public static bool AllowWrite { get; set; }
@@ -159,6 +163,14 @@ public static class ConfigManager
                 _registryKeyExplorer.SetValue(ConfigExplorerHeaderForeground, $"{Colors.White.A},{Colors.White.R},{Colors.White.G},{Colors.White.B}");
             if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerTitleFontSize, "").ToString()))
                 _registryKeyExplorer.SetValue(ConfigExplorerTitleFontSize, "12");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuCutColor, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuCutColor, $"{Colors.Yellow.A},{Colors.Yellow.R},{Colors.Yellow.G},{Colors.Yellow.B}");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuCopyColor, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuCopyColor, $"{Colors.Lime.A},{Colors.Lime.R},{Colors.Lime.G},{Colors.Lime.B}");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuPasteColor, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuPasteColor, $"{Colors.Cyan.A},{Colors.Cyan.R},{Colors.Cyan.G},{Colors.Cyan.B}");
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuDeleteColor, "").ToString()))
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuDeleteColor, $"{Colors.Red.A},{Colors.Red.R},{Colors.Red.G},{Colors.Red.B}");
 
             // Taskbar
             if (string.IsNullOrWhiteSpace(_registryRootTaskbar.GetValue(ConfigDelayBeforeShowThumbnail, "").ToString()))
@@ -651,6 +663,78 @@ public static class ConfigManager
         {
             if (AllowWrite)
                 _registryKeyExplorer.SetValue(ConfigExplorerHeaderForeground, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static SolidColorBrush ExplorerContextMenuCutColor
+    {
+        get
+        {
+            Color fgColor;
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuCutColor)?.ToString()))
+                fgColor = Colors.Yellow;
+            else
+                fgColor = _registryKeyExplorer.ReadColor(ConfigExplorerContextMenuCutColor, Colors.Yellow);
+            return new SolidColorBrush(fgColor);
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuCutColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static SolidColorBrush ExplorerContextMenuCopyColor
+    {
+        get
+        {
+            Color fgColor;
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuCopyColor)?.ToString()))
+                fgColor = Colors.Green;
+            else
+                fgColor = _registryKeyExplorer.ReadColor(ConfigExplorerContextMenuCopyColor, Colors.Green);
+            return new SolidColorBrush(fgColor);
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuCopyColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static SolidColorBrush ExplorerContextMenuPasteColor
+    {
+        get
+        {
+            Color fgColor;
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuPasteColor)?.ToString()))
+                fgColor = Colors.Cyan;
+            else
+                fgColor = _registryKeyExplorer.ReadColor(ConfigExplorerContextMenuPasteColor, Colors.Cyan);
+            return new SolidColorBrush(fgColor);
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuPasteColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
+        }
+    }
+
+    public static SolidColorBrush ExplorerContextMenuDeleteColor
+    {
+        get
+        {
+            Color fgColor;
+            if (string.IsNullOrWhiteSpace(_registryKeyExplorer.GetValue(ConfigExplorerContextMenuDeleteColor)?.ToString()))
+                fgColor = Colors.Red;
+            else
+                fgColor = _registryKeyExplorer.ReadColor(ConfigExplorerContextMenuDeleteColor, Colors.Red);
+            return new SolidColorBrush(fgColor);
+        }
+        set
+        {
+            if (AllowWrite)
+                _registryKeyExplorer.SetValue(ConfigExplorerContextMenuDeleteColor, $"{value.Color.A},{value.Color.R},{value.Color.G},{value.Color.B}");
         }
     }
 

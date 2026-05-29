@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Explorip.Exceptions;
+using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.ViewModels;
 using Explorip.Explorer.Windows;
 
@@ -65,6 +66,9 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
 
     private void ExplorerBrowserControl_WndProcEvent(object sender, ExplorerBrowser.WndProcEventArgs e)
     {
+        if (Keyboard.Modifiers.HasFlag(ModifierKeys.Shift))
+            return;
+
         if (e.Message == (int)NativeMethods.WM.CONTEXTMENU)
         {
             if (_forceOlderContextMenu)
@@ -73,12 +77,13 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 return;
             }
             _lastContextMenu = e;
-            if (_contextMenu != null && _contextMenu.IsOpen)
+            if (_contextMenu != null && _contextMenu.IsVisible)
                 _contextMenu.DataContext.ForceClose();
             _contextMenu = new PopUpExplorerContextMenu()
             {
                 ParentTab = this,
             };
+            _contextMenu.Show();
             if (e.FromTreeView)
             {
                 int x = (short)((uint)e.LParam & 0xFFFF);
@@ -485,7 +490,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         if (disposing)
         {
             DisposeSearch();
-            if (_contextMenu?.IsOpen == true)
+            if (_contextMenu?.IsVisible == true)
                 _contextMenu.DataContext.ForceClose();
             ExplorerBrowser.ExplorerBrowserControl.NavigationComplete -= ExplorerBrowserControl_NavigationComplete;
             ExplorerBrowser.ExplorerBrowserControl.NavigationFailed -= ExplorerBrowserControl_NavigationFailed;

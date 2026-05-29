@@ -1,41 +1,19 @@
-﻿<ContextMenu x:Class="Explorip.Explorer.Controls.PopUpExplorerContextMenuSubItems"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Explorip.Explorer.Controls"
-             xmlns:constants="clr-namespace:Explorip.Constants"
-             xmlns:commonConstants="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
-             xmlns:config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig"
-             xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:ContextMenuEntryViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800" StaysOpen="False" Placement="Mouse" PreviewMouseLeftButtonDown="Popup_PreviewMouseLeftButtonDown" PreviewMouseRightButtonDown="Popup_PreviewMouseRightButtonDown">
+﻿<Window x:Class="Explorip.Explorer.Controls.ContextMenu.PopUpExplorerContextMenuSubItems"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:local="clr-namespace:Explorip.Explorer.Controls.ContextMenu"
+        xmlns:constants="clr-namespace:Explorip.Constants"
+        xmlns:commonConstants="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+        xmlns:config="clr-namespace:ExploripConfig.Configuration;assembly=ExploripConfig"
+        xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:ContextMenuEntryViewModel}"
+        ShowInTaskbar="False" WindowStyle="None" Loaded="Window_Loaded" SizeToContent="WidthAndHeight" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" Margin="0"
+        d:DesignHeight="450" d:DesignWidth="800">
 
-    <ContextMenu.Style>
-        <Style TargetType="ContextMenu">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ContextMenu">
-                        <Border Background="Transparent" BorderThickness="0" Padding="0">
-                            <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Items}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel IsItemsHost="True" Background="Transparent" Margin="0"/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-                            </ItemsControl>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </ContextMenu.Style>
-
-    <ContextMenu.Resources>
+    <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>
         <Style TargetType="Button" x:Key="BtnStyle">
             <Setter Property="Background" Value="Transparent"/>
@@ -56,13 +34,13 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-    </ContextMenu.Resources>
+    </Window.Resources>
     
-    <ContextMenu.LayoutTransform>
+    <Window.LayoutTransform>
         <ScaleTransform ScaleX="{Binding Dpi}" ScaleY="{Binding Dpi}"/>
-    </ContextMenu.LayoutTransform>
+    </Window.LayoutTransform>
     
-    <Border BorderThickness="0" CornerRadius="{x:Static config:ConfigManager.ExplorerContextMenuCornerRadius}" Background="{Binding Background}">
+    <Border BorderThickness="0" CornerRadius="{x:Static config:ConfigManager.ExplorerContextMenuCornerRadius}" Background="{Binding Background}" Margin="0">
         <StackPanel Background="Transparent" Margin="{x:Static config:ConfigManager.ExplorerContextMenuMargin}" Orientation="Vertical" HorizontalAlignment="Left">
 
             <ItemsControl ItemsSource="{Binding SubItems}">
@@ -97,4 +75,4 @@
         </StackPanel>
     </Border>
     
-</ContextMenu>
+</Window>
