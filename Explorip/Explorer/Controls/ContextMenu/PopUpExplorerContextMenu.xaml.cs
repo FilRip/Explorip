@@ -5,6 +5,8 @@ using Explorip.Explorer.ViewModels;
 
 using ManagedShell.Interop;
 
+using WpfScreenHelper;
+
 namespace Explorip.Explorer.Controls.ContextMenu;
 
 /// <summary>
@@ -41,7 +43,8 @@ public partial class PopUpExplorerContextMenu : Window
     {
         System.Drawing.Point mousePos = new();
         NativeMethods.GetCursorPos(ref mousePos);
-        Left = mousePos.X;
-        Top = mousePos.Y;
+        Screen screen = Screen.FromPoint(new Point(mousePos.X, mousePos.Y));
+        Left = mousePos.X / screen.ScaleFactor;
+        Top = mousePos.Y / screen.ScaleFactor;
     }
 }
