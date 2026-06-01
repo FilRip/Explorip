@@ -356,4 +356,7 @@ public partial class NativeMethods
 
     [DllImport(Ole32_DllName, SetLastError = false)]
     internal static extern int CoRevokeClassObject(uint dwRegister);
+
+    [DllImport(Ole32_DllName)]
+    internal static extern int CLSIDFromString([MarshalAs(UnmanagedType.LPWStr)] string lpStrProgID, out Guid guid);
 }

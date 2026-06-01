@@ -88,7 +88,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
             List<ShellContextMenuEntry> listToBuild = ExtensionsContextMenu.GetAllCommands(sourceType, (_listSelected.Length == 1 && sourceType == ESourceType.File ? Path.GetExtension(_listSelected[0].ParsingName) : ""));
             foreach (ShellContextMenuEntry entry in listToBuild)
             {
-                ContextMenuEntryViewModel vm = new(entry, this);
+                ContextMenuEntryViewModel vm = new(entry, this, null);
                 Application.Current.Dispatcher.BeginInvoke(() =>
                 {
                     ListContextMenuEntry.Add(vm);
@@ -100,9 +100,9 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
                 {
                     Source = ETypeCommand.SendTo,
                     Name = Constants.Localization.SEND_TO.Replace("_", ""),
-                }, this);
+                }, this, null);
                 foreach (ShellContextMenuEntry entry in ExtensionsContextMenu.ExpandSendTo(true))
-                    vmSendTo.SubItems.Add(new ContextMenuEntryViewModel(entry, this));
+                    vmSendTo.SubItems.Add(new ContextMenuEntryViewModel(entry, this, vmSendTo));
                 Application.Current.Dispatcher.BeginInvoke(() =>
                 {
                     ListContextMenuEntry.Add(vmSendTo);
@@ -221,5 +221,12 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     public ShellObject[] ListSelected
     {
         get { return _listSelected; }
+    }
+
+    [RelayCommand()]
+    private void MouseEnter()
+    {
+        Popup?.Close();
+        Popup = null;
     }
 }

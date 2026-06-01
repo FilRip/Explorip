@@ -11,7 +11,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         ShowInTaskbar="False" WindowStyle="None" Loaded="Window_Loaded" SizeToContent="WidthAndHeight" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" Margin="0"
-        d:DesignHeight="450" d:DesignWidth="800">
+        d:DesignHeight="450" d:DesignWidth="800" SizeChanged="Window_SizeChanged" PreviewKeyUp="Window_PreviewKeyUp">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>
@@ -49,24 +49,44 @@
             
             <StackPanel Orientation="Horizontal">
                 <Button Foreground="{Binding ForegroundCut}" BorderThickness="0" Visibility="{Binding VisibleCut, Converter={StaticResource boolToVisible}}" Command="{Binding CutCommand}" Style="{StaticResource BtnStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <StackPanel HorizontalAlignment="Center">
                         <TextBlock Text="&#xE8C6;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
                         <TextBlock Text="{x:Static constants:Localization.CUT}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
                 <Button Foreground="{Binding ForegroundCopy}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleCopy, Converter={StaticResource boolToVisible}}" Command="{Binding CopyCommand}" Style="{StaticResource BtnStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <StackPanel>
                         <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
                         <TextBlock Text="{x:Static constants:Localization.COPY}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
                 <Button Foreground="{Binding ForegroundPaste}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisiblePaste, Converter={StaticResource boolToVisible}}" Command="{Binding PasteCommand}" Style="{StaticResource BtnStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="&#xE77F;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
                         <TextBlock Text="{x:Static constants:Localization.PASTE}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
                 <Button Foreground="{Binding ForegroundDelete}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleDelete, Converter={StaticResource boolToVisible}}" Command="{Binding DeleteCommand}" Style="{StaticResource BtnStyle}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseEnter">
+                            <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
                         <TextBlock Text="{x:Static constants:Localization.DELETE}" Margin="4 2 4 4"/>
@@ -106,6 +126,11 @@
             <Rectangle Stroke="{x:Static commonConstants:Colors.ForegroundColorBrush}" Height="1" Stretch="Fill"/>
 
             <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding GetPropertiesCommand}" Style="{StaticResource BtnStyle}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseEnter">
+                        <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{x:Static constants:Localization.PROPERTIES}" Margin="4 4 0 4"/>
                 </StackPanel>
@@ -114,6 +139,11 @@
             <Rectangle Stroke="{x:Static commonConstants:Colors.ForegroundColorBrush}" Height="1" Stretch="Fill"/>
 
             <Button Foreground="{Binding Foreground}" BorderThickness="0" Margin="0 5 0 0" Command="{Binding ShowOlderContextMenuCommand}" Style="{StaticResource BtnStyle}" Name="BtnOlderCM" Focusable="True" IsTabStop="True">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseEnter">
+                        <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="&#xEE47;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="4 0 0 0"/>
                     <TextBlock Text="{x:Static constants:Localization.SHOW_PREVIOUS_CONTEXTMENU}" Margin="4 4 0 4"/>

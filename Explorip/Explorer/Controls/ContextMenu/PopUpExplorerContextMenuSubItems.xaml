@@ -11,7 +11,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=viewmodels:ContextMenuEntryViewModel}"
         ShowInTaskbar="False" WindowStyle="None" Loaded="Window_Loaded" SizeToContent="WidthAndHeight" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize" Margin="0"
-        d:DesignHeight="450" d:DesignWidth="800">
+        d:DesignHeight="450" d:DesignWidth="800" SizeChanged="Window_SizeChanged" PreviewKeyUp="Window_PreviewKeyUp">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>

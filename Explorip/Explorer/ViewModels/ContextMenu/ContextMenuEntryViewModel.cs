@@ -1,6 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
@@ -10,11 +13,14 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.Helpers;
 
+using Microsoft.WindowsAPICodePack.Shell.Common;
+
 namespace Explorip.Explorer.ViewModels;
 
-public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopUpExplorerContextMenuViewModel parent) : ObservableObject
+public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopUpExplorerContextMenuViewModel parent, ContextMenuEntryViewModel contextMenuEntry) : ObservableObject
 {
     private readonly PopUpExplorerContextMenuViewModel _parent = parent;
+    private readonly ContextMenuEntryViewModel _parentContextMenuEntry = contextMenuEntry;
 
     [ObservableProperty()]
     private ShellContextMenuEntry _entry = entry;
@@ -76,7 +82,11 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                     lastIndex = command.IndexOf(' ');
                 command = command.Substring(0, lastIndex + 1);
                 if (Entry.Command.Length > lastIndex + 1)
-                    param = Entry.Command.Substring(lastIndex + 1).Replace("%1", _parent.ListSelected[0].ParsingName).Trim();
+                {
+                    param = Entry.Command.Substring(lastIndex + 1);
+                    for (int i = 1; i <= _parent.ListSelected.Length; i++)
+                        param = param.Replace($"%{i}", _parent.ListSelected[i - 1].ParsingName).Trim();
+                }
                 Process.Start(command, param);
                 break;
             case ETypeCommand.ContextMenuHandler:
@@ -84,6 +94,33 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
             case ETypeCommand.CommandStore:
                 break;
             case ETypeCommand.SendTo:
+                if (Path.GetExtension(Entry.Command) == ".lnk")
+                {
+                    StringBuilder sb = new();
+                    foreach (ShellObject so in _parent.ListSelected)
+                    {
+                        if (sb.Length > 0)
+                            sb.Append(' ');
+                        sb.Append('\"');
+                        sb.Append(so.ParsingName);
+                        sb.Append('\"');
+                    }
+                    Process.Start(Entry.Command, sb.ToString());
+                }
+                else if (Guid.TryParse(Entry.Command, out Guid guid) || Entry.Command.StartsWith("CLSID\\"))
+                {
+                    if (guid == Guid.Empty)
+                    {
+                        Guid.TryParse(Entry.Command.Replace("CLSID\\", ""), out guid);
+                    }
+                    if (guid != Guid.Empty)
+                    {
+                        try
+                        {
+                        }
+                        catch (Exception) { /* Errors */ }
+                    }
+                }
                 break;
             case ETypeCommand.CreateShortcut:
                 break;
@@ -99,11 +136,9 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
     [RelayCommand()]
     private void MouseEnter()
     {
-        Debug.WriteLine($"MouseEnter {Label}");
         IsMouseOver = true;
         if (HasSubItems && _parent.Popup == null)
         {
-            Debug.WriteLine($"MouseEnter {Label} ShowSubitems");
             _parent.Popup = new PopUpExplorerContextMenuSubItems()
             {
                 DataContext = this,
@@ -116,7 +151,8 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
         {
             if (!HasSubItems || _parent.Popup?.DataContext != this)
             {
-                Debug.WriteLine($"MouseEnter {Label} CloseSubItems");
+                if (_parentContextMenuEntry != null && _parentContextMenuEntry.SubItems.Contains(this))
+                    return;
                 _parent.Popup?.Close();
                 _parent.Popup = null;
             }
@@ -126,13 +162,13 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
     [RelayCommand()]
     private void MouseLeave()
     {
-        Debug.WriteLine($"MouseLeave {Label}");
+        IsMouseOver = false;
         if (HasSubItems && _parent.Popup != null && !SubItems.Any(p => p.IsMouseOver))
         {
-            Debug.WriteLine($"MouseLeave {Label} CloseSubItems");
+            if (_parentContextMenuEntry == null || !_parentContextMenuEntry.SubItems.Contains(this))
+                return;
             _parent.Popup.Close();
             _parent.Popup = null;
         }
-        IsMouseOver = false;
     }
 }
