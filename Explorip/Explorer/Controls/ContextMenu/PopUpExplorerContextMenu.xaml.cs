@@ -54,9 +54,9 @@ public partial class PopUpExplorerContextMenu : Window
     {
         Screen screen = Screen.FromWindow(this);
         if ((Top + Height) > screen.WpfWorkingArea.Bottom)
-            Top = screen.WpfWorkingArea.Bottom - Height - ConfigManager.ExplorerContextMenuMargin.Top - ConfigManager.ExplorerContextMenuMargin.Bottom;
+            Top = screen.WpfWorkingArea.Bottom - Height - ConfigManager.ExplorerContextMenuMargin.Top * screen.ScaleFactor * 2 - ConfigManager.ExplorerContextMenuCornerRadius.TopLeft * screen.ScaleFactor * 3;
         if ((Left + Width) > screen.WpfWorkingArea.Right)
-            Left = screen.WpfWorkingArea.Right - Width - ConfigManager.ExplorerContextMenuMargin.Right;
+            Left = screen.WpfWorkingArea.Right - Width - ConfigManager.ExplorerContextMenuMargin.Right * screen.ScaleFactor;
     }
 
     private void Window_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
