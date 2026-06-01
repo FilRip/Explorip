@@ -111,7 +111,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                         if (NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_GETITEM, IntPtr.Zero, ref item) && item.lParam != IntPtr.Zero)
                         {
                             if (item.Selected)
-                                _contextMenu.DataContext.SetSelected([CurrentDirectory]);
+                                _contextMenu.DataContext.SetSelected([CurrentDirectory], (ShellFolder)CurrentDirectory);
                             else
                             {
                                 IntPtr parent;
@@ -138,7 +138,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                                         fullPath.Insert(0, Path.DirectorySeparatorChar);
                                     }
                                     ShellObject so = ShellObject.FromParsingName(fullPath.ToString()) ?? throw new ExploripException("Unknown path");
-                                    _contextMenu.DataContext.SetSelected([so]);
+                                    _contextMenu.DataContext.SetSelected([so], (ShellFolder)so);
                                 }
                                 catch (Exception)
                                 {
@@ -157,9 +157,9 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             else
             {
                 if (ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
-                    _contextMenu.DataContext.SetSelected([.. ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()]);
+                    _contextMenu.DataContext.SetSelected([.. ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()], (ShellFolder)CurrentDirectory);
                 else
-                    _contextMenu.DataContext.SetSelected([CurrentDirectory], true);
+                    _contextMenu.DataContext.SetSelected([CurrentDirectory], (ShellFolder)CurrentDirectory, true);
             }
             e.Handled = true;
             e.Result = new IntPtr(1);

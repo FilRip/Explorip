@@ -27,6 +27,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
 {
     private TabItemExplorerBrowser _parentTab;
     private ShellObject[] _listSelected;
+    private ShellFolder _parentFolder;
     private bool _backgroundContextMenu;
     private readonly Thread _threadBuildContextMenu;
     [ObservableProperty()]
@@ -55,10 +56,11 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
         Dpi = VisualTreeHelper.GetDpi(parentTab).DpiScaleX;
     }
 
-    public void SetSelected(ShellObject[] selectedItems, bool background = false)
+    public void SetSelected(ShellObject[] selectedItems, ShellFolder parentFolder, bool background = false)
     {
         _backgroundContextMenu = background;
         _listSelected = selectedItems;
+        _parentFolder = parentFolder;
         if (_listSelected?.Length > 0)
         {
             VisibleCopy = !background;
@@ -221,6 +223,16 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     public ShellObject[] ListSelected
     {
         get { return _listSelected; }
+    }
+
+    public bool BackgroundContextMenu
+    {
+        get { return _backgroundContextMenu; }
+    }
+
+    public ShellFolder ParentFolder
+    {
+        get { return _parentFolder; }
     }
 
     [RelayCommand()]

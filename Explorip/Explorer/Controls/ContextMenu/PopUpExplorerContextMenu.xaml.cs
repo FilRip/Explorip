@@ -54,7 +54,7 @@ public partial class PopUpExplorerContextMenu : Window
     {
         Screen screen = Screen.FromWindow(this);
         if ((Top + Height) > screen.WpfWorkingArea.Bottom)
-            Top = screen.WpfWorkingArea.Bottom - Height - ConfigManager.ExplorerContextMenuMargin.Top * screen.ScaleFactor * 2 - ConfigManager.ExplorerContextMenuCornerRadius.TopLeft * screen.ScaleFactor * 3;
+            Top = screen.WpfWorkingArea.Bottom - Height - ConfigManager.ExplorerContextMenuMargin.Top * screen.ScaleFactor * 2 - ConfigManager.ExplorerContextMenuCornerRadius.TopLeft * screen.ScaleFactor;
         if ((Left + Width) > screen.WpfWorkingArea.Right)
             Left = screen.WpfWorkingArea.Right - Width - ConfigManager.ExplorerContextMenuMargin.Right * screen.ScaleFactor;
     }

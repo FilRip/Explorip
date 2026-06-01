@@ -889,4 +889,7 @@ public partial class NativeMethods
 
     [DllImport(Shell32_DllName, SetLastError = true, CharSet = CharSet.Unicode)]
     internal static extern int SHGetNameFromIDList(IntPtr pidl, uint sigdnName, out IntPtr ppszName);
+
+    [DllImport(Shell32_DllName)]
+    internal static extern int SHCreateDataObject(IntPtr pidlFolder, uint cidl, IntPtr[] apidl, IntPtr pdtInner, [MarshalAs(UnmanagedType.LPStruct)] Guid riid, out IntPtr ppv);
 }
