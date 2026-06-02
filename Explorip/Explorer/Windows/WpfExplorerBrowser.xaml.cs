@@ -394,4 +394,13 @@ public partial class WpfExplorerBrowser : Window
         if (_snapVisible)
             DispatcherTimer_Tick(null, null);
     }
+
+    private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            LeftTab.CurrentTabExplorer?.contextMenu?.Close();
+            RightTab?.CurrentTabExplorer?.contextMenu?.Close();
+        }
+    }
 }

@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
+using CommunityToolkit.Mvvm.ComponentModel;
+
+using Explorip.Helpers;
+
+using ExploripConfig.Configuration;
 
 using ManagedShell.Common.Helpers;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Interfaces;
 
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
 namespace Explorip.Explorer.Helpers;
 
@@ -22,6 +28,8 @@ public enum ESourceType
     Drive = 4,
     MultipleFiles = 5,
     MultipleFolders = 6,
+    RecycleBin = 7,
+    Background = 8,
 }
 
 public enum ETypeCommand
@@ -29,21 +37,124 @@ public enum ETypeCommand
     ShellVerb = 0,
     ContextMenuHandler = 1,
     CommandStore = 2,
-    SendTo = 3,
+    //SendTo = 3,
     CreateShortcut = 4,
     Rename = 5,
     Share = 6,
     New = 7,
 }
 
-public class ShellContextMenuEntry
+public partial class ShellContextMenuEntry : ObservableObject, ICloneable
 {
-    public ETypeCommand Source { get; set; }
-    public string KeyPath { get; set; }
-    public string Name { get; set; }
-    public string ExplorerCommandHandler { get; set; }
-    public string Command { get; set; }
-    public ImageSource Icon { get; set; }
+    [ObservableProperty()]
+    private ETypeCommand _source;
+    [ObservableProperty()]
+    private string _keyPath;
+    [ObservableProperty()]
+    private string _name;
+    [ObservableProperty()]
+    private string _explorerCommandHandler;
+    [ObservableProperty()]
+    private string _command;
+    [ObservableProperty()]
+    private ImageSource _icon;
+
+    public object Clone()
+    {
+        return new ShellContextMenuEntry()
+        {
+            Source = Source,
+            KeyPath = KeyPath,
+            Name = Name,
+            ExplorerCommandHandler = ExplorerCommandHandler,
+            Command = Command,
+            Icon = Icon,
+        };
+    }
+
+    public void ExpandIt(ref List<ShellContextMenuEntry> list, ShellFolder parentFolder, ShellObject[] selectedItems)
+    {
+        bool toRemove = false;
+        if (Guid.TryParse(Command, out Guid guid))
+        {
+            IContextMenu exCommand = null;
+            IntPtr hMenu = IntPtr.Zero;
+            IntPtr ptrData = IntPtr.Zero;
+
+            try
+            {
+                Type t = Type.GetTypeFromCLSID(guid);
+                exCommand = Activator.CreateInstance(t) as IContextMenu;
+                if (exCommand != null)
+                {
+                    List<IntPtr> listPidlRelative = [];
+                    foreach (ShellObject so in selectedItems)
+                        listPidlRelative.Add(NativeMethods.ILFindLastID(so.PIDL));
+                    Guid guidIDataObject = new("{0000010e-0000-0000-C000-000000000046}");
+                    NativeMethods.SHCreateDataObject(parentFolder.PIDL, (uint)selectedItems.Length, [.. listPidlRelative], IntPtr.Zero, guidIDataObject, out ptrData);
+                    if (ptrData != IntPtr.Zero)
+                    {
+                        ((IShellExtInit)exCommand).Initialize(IntPtr.Zero, ptrData, 0);
+                        hMenu = NativeMethods.CreatePopupMenu();
+                        exCommand.QueryContextMenu(hMenu, 0, 1, int.MaxValue, ManagedShell.ShellFolders.Enums.ContextMenuStates.NORMAL);
+                        int count = NativeMethods.GetMenuItemCount(hMenu);
+                        if (count > 0)
+                        {
+                            int index = 0;
+                            if (count > 1)
+                                index = list.IndexOf(this);
+                            for (uint i = 0; i < count; i++)
+                            {
+                                NativeMethods.MenuItemInfo menuItemInfo = new()
+                                {
+                                    fMask = NativeMethods.MenuItemIntegrateMembers.STATE | NativeMethods.MenuItemIntegrateMembers.STRING | NativeMethods.MenuItemIntegrateMembers.ID | NativeMethods.MenuItemIntegrateMembers.SUBMENU | NativeMethods.MenuItemIntegrateMembers.BITMAP,
+                                    dwTypeData = new string((char)0, 256),
+                                    cch = 255,
+                                    fType = NativeMethods.MenuItemTypes.DISABLED | NativeMethods.MenuItemTypes.GRAYED | NativeMethods.MenuItemTypes.STRING,
+                                };
+                                if (NativeMethods.GetMenuItemInfo(hMenu, i, true, ref menuItemInfo))
+                                {
+                                    if (string.IsNullOrWhiteSpace(menuItemInfo.dwTypeData.Trim()))
+                                        toRemove = true;
+                                    else if (i == 0)
+                                    {
+                                        Name = menuItemInfo.dwTypeData.Trim();
+                                        if (menuItemInfo.hbmpItem != IntPtr.Zero)
+                                            Icon = ((BitmapSource)IconImageConverter.GetImageFromHBitmap(menuItemInfo.hbmpItem, false)).MakeTransparentColor(ConfigManager.ExplorerContextMenuBackground?.Color ?? ExploripSharedCopy.Constants.Colors.BackgroundColor);
+                                    }
+                                    else
+                                    {
+                                        index++;
+                                        ShellContextMenuEntry newEntry = (ShellContextMenuEntry)Clone();
+                                        newEntry.Name = menuItemInfo.dwTypeData.Trim();
+                                        if (menuItemInfo.hbmpItem != IntPtr.Zero)
+                                            newEntry.Icon = ((BitmapSource)IconImageConverter.GetImageFromHBitmap(menuItemInfo.hbmpItem, false)).MakeTransparentColor(ConfigManager.ExplorerContextMenuBackground?.Color ?? ExploripSharedCopy.Constants.Colors.BackgroundColor);
+                                        list.Insert(index, newEntry);
+                                    }
+                                }
+                                else
+                                    toRemove = true;
+                            }
+                        }
+                        else
+                            toRemove = true;
+                    }
+                }
+            }
+            catch (Exception) { /* Errors */ }
+            finally
+            {
+                if (toRemove)
+                    list.Remove(this);
+                if (exCommand != null)
+                    Marshal.ReleaseComObject(exCommand);
+                if (hMenu != IntPtr.Zero)
+                    NativeMethods.DestroyMenu(hMenu);
+                if (ptrData != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(ptrData);
+            }
+        }
+    }
 }
 
 public static class ExtensionsContextMenu
@@ -97,7 +208,7 @@ public static class ExtensionsContextMenu
         return results;
     }
 
-    public static List<ShellContextMenuEntry> ExpandSendTo(bool addDrives)
+    /*public static List<ShellContextMenuEntry> ExpandSendTo(bool addDrives)
     {
         List<ShellContextMenuEntry> results = [];
         string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Microsoft", "Windows", "SendTo");
@@ -162,7 +273,7 @@ public static class ExtensionsContextMenu
             }
         }
         return results;
-    }
+    }*/
 
     private static void ScanShellContextMenuCurrentUser(string subPath, ref List<ShellContextMenuEntry> results, ETypeCommand source)
     {
@@ -199,7 +310,7 @@ public static class ExtensionsContextMenu
                 KeyPath = $"{root.Name}\\{subPath}\\{verb}",
                 Name = verb,
                 ExplorerCommandHandler = explorerCommand,
-                Command = command,
+                Command = command.Replace("CLSID\\", ""),
             };
             if (!string.IsNullOrWhiteSpace(handlerKey.GetValue("", "").ToString()))
             {

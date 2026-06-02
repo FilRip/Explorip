@@ -56,7 +56,7 @@
                     </i:Interaction.Triggers>
                     <StackPanel HorizontalAlignment="Center">
                         <TextBlock Text="&#xE8C6;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
-                        <TextBlock Text="{x:Static constants:Localization.CUT}" Margin="4 2 4 4"/>
+                        <AccessText Text="{x:Static constants:Localization.CUT}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
                 <Button Foreground="{Binding ForegroundCopy}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleCopy, Converter={StaticResource boolToVisible}}" Command="{Binding CopyCommand}" Style="{StaticResource BtnStyle}">
@@ -67,7 +67,7 @@
                     </i:Interaction.Triggers>
                     <StackPanel>
                         <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
-                        <TextBlock Text="{x:Static constants:Localization.COPY}" Margin="4 2 4 4"/>
+                        <AccessText Text="{x:Static constants:Localization.COPY}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
                 <Button Foreground="{Binding ForegroundPaste}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisiblePaste, Converter={StaticResource boolToVisible}}" Command="{Binding PasteCommand}" Style="{StaticResource BtnStyle}">
@@ -78,7 +78,7 @@
                     </i:Interaction.Triggers>
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="&#xE77F;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
-                        <TextBlock Text="{x:Static constants:Localization.PASTE}" Margin="4 2 4 4"/>
+                        <AccessText Text="{x:Static constants:Localization.PASTE}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
                 <Button Foreground="{Binding ForegroundDelete}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleDelete, Converter={StaticResource boolToVisible}}" Command="{Binding DeleteCommand}" Style="{StaticResource BtnStyle}">
@@ -89,7 +89,7 @@
                     </i:Interaction.Triggers>
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" HorizontalAlignment="Center" Margin="0 4 0 2"/>
-                        <TextBlock Text="{x:Static constants:Localization.DELETE}" Margin="4 2 4 4"/>
+                        <AccessText Text="{x:Static constants:Localization.DELETE}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -115,7 +115,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Image Grid.Column="0" Source="{Binding Entry.Icon}" Margin="0 0 5 0" VerticalAlignment="Center" Visibility="{Binding IconVisible, Converter={StaticResource boolToVisible}}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Label}" Margin="4 4 0 4"/>
+                                <AccessText Grid.Column="1" Text="{Binding Label}" Margin="4 4 0 4"/>
                                 <TextBlock Grid.Column="2" Text=">" FontWeight="Bold" VerticalAlignment="Center" Margin="0 0 4 0" Visibility="{Binding HasSubItems, Converter={StaticResource boolToVisible}}"/>
                             </Grid>
                         </Button>
@@ -132,7 +132,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{x:Static constants:Localization.PROPERTIES}" Margin="4 4 0 4"/>
+                    <AccessText Text="{x:Static constants:Localization.PROPERTIES}" Margin="4 4 0 4"/>
                 </StackPanel>
             </Button>
 
@@ -146,7 +146,7 @@
                 </i:Interaction.Triggers>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="&#xEE47;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="4 0 0 0"/>
-                    <TextBlock Text="{x:Static constants:Localization.SHOW_PREVIOUS_CONTEXTMENU}" Margin="4 4 0 4"/>
+                    <AccessText Text="{x:Static constants:Localization.SHOW_PREVIOUS_CONTEXTMENU}" Margin="4 4 0 4"/>
                 </StackPanel>
             </Button>
         </StackPanel>

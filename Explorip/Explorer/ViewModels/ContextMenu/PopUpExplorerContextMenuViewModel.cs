@@ -88,6 +88,8 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
                                                    (_listSelected.Length == 1 ? ESourceType.File : ESourceType.MultipleFiles));
 #pragma warning restore S3358
             List<ShellContextMenuEntry> listToBuild = ExtensionsContextMenu.GetAllCommands(sourceType, (_listSelected.Length == 1 && sourceType == ESourceType.File ? Path.GetExtension(_listSelected[0].ParsingName) : ""));
+            for (int i = listToBuild.Count - 1; i >= 0; i--)
+                listToBuild[i].ExpandIt(ref listToBuild, _parentFolder, ListSelected);
             foreach (ShellContextMenuEntry entry in listToBuild)
             {
                 ContextMenuEntryViewModel vm = new(entry, this, null);
@@ -96,7 +98,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
                     ListContextMenuEntry.Add(vm);
                 });
             }
-            if (sourceType != ESourceType.Drive && !_backgroundContextMenu)
+            /*if (sourceType != ESourceType.Drive && !_backgroundContextMenu)
             {
                 ContextMenuEntryViewModel vmSendTo = new(new ShellContextMenuEntry()
                 {
@@ -109,7 +111,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
                 {
                     ListContextMenuEntry.Add(vmSendTo);
                 });
-            }
+            }*/
         }
         catch (Exception) { /* Ignore errors */ }
     }

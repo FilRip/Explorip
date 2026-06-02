@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -94,41 +95,10 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                 Process.Start(command, param);
                 break;
             case ETypeCommand.ContextMenuHandler:
-                if (Guid.TryParse(Entry.Command, out Guid guid) || Entry.Command.StartsWith("CLSID\\"))
-                {
-                    if (guid == Guid.Empty)
-                    {
-                        Guid.TryParse(Entry.Command.Replace("CLSID\\", ""), out guid);
-                    }
-                    if (guid != Guid.Empty)
-                    {
-                        try
-                        {
-                            Type t = Type.GetTypeFromCLSID(guid);
-                            IContextMenu exCommand = (IContextMenu)Activator.CreateInstance(t);
-                            Guid guidIDataObject = new("{0000010e-0000-0000-C000-000000000046}");
-                            IntPtr pidlRelatif = NativeMethods.ILFindLastID(_parent.ListSelected[0].PIDL);
-                            NativeMethods.SHCreateDataObject(_parent.ParentFolder.PIDL, (uint)_parent.ListSelected.Length, [pidlRelatif], IntPtr.Zero, guidIDataObject, out IntPtr ptrData);
-                            ((IShellExtInit)exCommand).Initialize(IntPtr.Zero, ptrData, 0);
-                            IntPtr hMenu = NativeMethods.CreatePopupMenu();
-                            exCommand.QueryContextMenu(hMenu, 0, 1, int.MaxValue, ManagedShell.ShellFolders.Enums.ContextMenuStates.NORMAL);
-                            NativeMethods.MenuItemInfo menuItemInfo = new()
-                            {
-                                fMask = NativeMethods.MenuItemIntegrateMembers.STATE | NativeMethods.MenuItemIntegrateMembers.STRING | NativeMethods.MenuItemIntegrateMembers.ID | NativeMethods.MenuItemIntegrateMembers.SUBMENU,
-                                dwTypeData = new string((char)0, 256),
-                                cch = 255,
-                                fType = NativeMethods.MenuItemTypes.DISABLED | NativeMethods.MenuItemTypes.GRAYED | NativeMethods.MenuItemTypes.STRING,
-                            };
-                            NativeMethods.GetMenuItemInfo(hMenu, 0, true, ref menuItemInfo);
-                            Entry.Name = menuItemInfo.dwTypeData.Trim();
-                        }
-                        catch (Exception) { /* Errors */ }
-                    }
-                }
                 break;
             case ETypeCommand.CommandStore:
                 break;
-            case ETypeCommand.SendTo:
+            /*case ETypeCommand.SendTo:
                 if (Path.GetExtension(Entry.Command) == ".lnk")
                 {
                     StringBuilder sb = new();
@@ -142,11 +112,11 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                     }
                     Process.Start(Entry.Command, sb.ToString());
                 }
-                else if (Guid.TryParse(Entry.Command, out Guid guidSendTo) || Entry.Command.StartsWith("CLSID\\"))
+                else if (Guid.TryParse(Entry.Command, out Guid guidSendTo))
                 {
                     if (guidSendTo == Guid.Empty)
                     {
-                        Guid.TryParse(Entry.Command.Replace("CLSID\\", ""), out guidSendTo);
+                        Guid.TryParse(Entry.Command, out guidSendTo);
                     }
                     if (guidSendTo != Guid.Empty)
                     {
@@ -161,10 +131,10 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                                 Marshal.FreeCoTaskMem(ptrTitle);
                             }
                         }
-                        catch (Exception) { /* Errors */ }
+                        catch (Exception) { /* Errors *//* }
                     }
                 }
-                break;
+                break;*/
             case ETypeCommand.CreateShortcut:
                 break;
             case ETypeCommand.Rename:

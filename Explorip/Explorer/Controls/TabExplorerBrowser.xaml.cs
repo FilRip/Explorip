@@ -79,7 +79,7 @@ public partial class TabExplorerBrowser : TabControl
 
     public TabItemExplorerBrowser CurrentTabExplorer
     {
-        get { return (TabItemExplorerBrowser)SelectedItem; }
+        get { return SelectedItem as TabItemExplorerBrowser; }
     }
 
     public WpfExplorerBrowser MyWindow

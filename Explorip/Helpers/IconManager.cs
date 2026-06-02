@@ -144,6 +144,30 @@ public static class IconManager
         return result;
     }
 
+    public static BitmapSource MakeTransparentColor(this BitmapSource source, System.Windows.Media.Color transparentColor, byte tolerance = 0, bool freeze = true)
+    {
+        WriteableBitmap wb = new(source);
+
+        int width = wb.PixelWidth;
+        int height = wb.PixelHeight;
+        int stride = width * 4;
+        byte[] pixels = new byte[height * stride];
+
+        wb.CopyPixels(pixels, stride, 0);
+
+        for (int i = 0; i < pixels.Length; i += 4)
+        {
+            if (Math.Abs(pixels[i + 2] - transparentColor.R) <= tolerance && Math.Abs(pixels[i + 1] - transparentColor.G) <= tolerance && Math.Abs(pixels[i] - transparentColor.B) <= tolerance)
+                pixels[i + 3] = 0;
+        }
+
+        wb.WritePixels(new Int32Rect(0, 0, width, height), pixels, stride, 0);
+        if (freeze)
+            wb.Freeze();
+
+        return wb;
+    }
+
     public static bool SaveImageSource(this ImageSource image, string path, double width = 0, double height = 0)
     {
         try

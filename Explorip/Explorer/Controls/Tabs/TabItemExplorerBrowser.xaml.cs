@@ -42,7 +42,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
     private FolderSettings _fs;
     private ExplorerBrowser.WndProcEventArgs _lastContextMenu;
     private bool _forceOlderContextMenu;
-    private PopUpExplorerContextMenu _contextMenu;
+    internal PopUpExplorerContextMenu contextMenu;
 
     public TabItemExplorerBrowser() : base()
     {
@@ -77,13 +77,13 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                 return;
             }
             _lastContextMenu = e;
-            if (_contextMenu != null && _contextMenu.IsVisible)
-                _contextMenu.DataContext.ForceClose();
-            _contextMenu = new PopUpExplorerContextMenu()
+            if (contextMenu != null && contextMenu.IsVisible)
+                contextMenu.DataContext.ForceClose();
+            contextMenu = new PopUpExplorerContextMenu()
             {
                 ParentTab = this,
             };
-            _contextMenu.Show();
+            contextMenu.Show();
             if (e.FromTreeView)
             {
                 int x = (short)((uint)e.LParam & 0xFFFF);
@@ -111,7 +111,7 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                         if (NativeMethods.SendMessage(e.Hwnd, (int)TreeViewMessage.TVM_GETITEM, IntPtr.Zero, ref item) && item.lParam != IntPtr.Zero)
                         {
                             if (item.Selected)
-                                _contextMenu.DataContext.SetSelected([CurrentDirectory], (ShellFolder)CurrentDirectory);
+                                contextMenu.DataContext.SetSelected([CurrentDirectory], (ShellFolder)CurrentDirectory);
                             else
                             {
                                 IntPtr parent;
@@ -138,11 +138,11 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
                                         fullPath.Insert(0, Path.DirectorySeparatorChar);
                                     }
                                     ShellObject so = ShellObject.FromParsingName(fullPath.ToString()) ?? throw new ExploripException("Unknown path");
-                                    _contextMenu.DataContext.SetSelected([so], (ShellFolder)so);
+                                    contextMenu.DataContext.SetSelected([so], (ShellFolder)so);
                                 }
                                 catch (Exception)
                                 {
-                                    _contextMenu.DataContext.ForceClose();
+                                    contextMenu.DataContext.ForceClose();
                                     return;
                                 }
                             }
@@ -157,9 +157,9 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
             else
             {
                 if (ExplorerBrowser.ExplorerBrowserControl.SelectedItems?.Count > 0)
-                    _contextMenu.DataContext.SetSelected([.. ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()], (ShellFolder)CurrentDirectory);
+                    contextMenu.DataContext.SetSelected([.. ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()], (ShellFolder)CurrentDirectory);
                 else
-                    _contextMenu.DataContext.SetSelected([CurrentDirectory], (ShellFolder)CurrentDirectory, true);
+                    contextMenu.DataContext.SetSelected([CurrentDirectory], (ShellFolder)CurrentDirectory, true);
             }
             e.Handled = true;
             e.Result = new IntPtr(1);
@@ -490,8 +490,8 @@ public partial class TabItemExplorerBrowser : TabItemExplorip
         if (disposing)
         {
             DisposeSearch();
-            if (_contextMenu?.IsVisible == true)
-                _contextMenu.DataContext.ForceClose();
+            if (contextMenu?.IsVisible == true)
+                contextMenu.DataContext.ForceClose();
             ExplorerBrowser.ExplorerBrowserControl.NavigationComplete -= ExplorerBrowserControl_NavigationComplete;
             ExplorerBrowser.ExplorerBrowserControl.NavigationFailed -= ExplorerBrowserControl_NavigationFailed;
             ExplorerBrowser.ExplorerBrowserControl.SelectionChanged -= ExplorerBrowserControl_SelectionChanged;
