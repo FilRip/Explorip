@@ -52,4 +52,9 @@ public partial class PopUpExplorerContextMenuSubItems : Window
         if (e.Key == System.Windows.Input.Key.Escape)
             Close();
     }
+
+    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        DataContext?.Popup?.Close();
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels;
@@ -48,20 +49,31 @@ public partial class PopUpExplorerContextMenu : Window
         Screen screen = Screen.FromPoint(new Point(mousePos.X, mousePos.Y));
         Left = mousePos.X / screen.ScaleFactor;
         Top = (mousePos.Y - 6) / screen.ScaleFactor;
+        Focus();
+        FocusManager.SetFocusedElement(this, this);
+        Keyboard.Focus(this);
     }
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        Screen screen = Screen.FromWindow(this);
-        if ((Top + Height) > screen.WpfWorkingArea.Bottom)
-            Top = screen.WpfWorkingArea.Bottom - Height - ConfigManager.ExplorerContextMenuMargin.Top * screen.ScaleFactor * 2 - ConfigManager.ExplorerContextMenuCornerRadius.TopLeft * screen.ScaleFactor;
-        if ((Left + Width) > screen.WpfWorkingArea.Right)
-            Left = screen.WpfWorkingArea.Right - Width - ConfigManager.ExplorerContextMenuMargin.Right * screen.ScaleFactor;
+        Dispatcher.BeginInvoke(() =>
+        {
+            Screen screen = Screen.FromWindow(this);
+            if ((Top + Height) > screen.WpfWorkingArea.Bottom)
+                Top = screen.WpfWorkingArea.Bottom - Height - ConfigManager.ExplorerContextMenuMargin.Top * screen.ScaleFactor * 2 - ConfigManager.ExplorerContextMenuCornerRadius.TopLeft * screen.ScaleFactor;
+            if ((Left + Width) > screen.WpfWorkingArea.Right)
+                Left = screen.WpfWorkingArea.Right - Width - ConfigManager.ExplorerContextMenuMargin.Right * screen.ScaleFactor;
+        }, System.Windows.Threading.DispatcherPriority.Render);
     }
 
-    private void Window_PreviewKeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+    private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
     {
-        if (e.Key == System.Windows.Input.Key.Escape)
+        if (e.Key == Key.Escape)
             Close();
+    }
+
+    private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        DataContext?.Popup?.Close();
     }
 }

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,9 +13,9 @@ using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.Helpers;
 
 using ManagedShell.Interop;
-using ManagedShell.ShellFolders.Interfaces;
+using ManagedShell.ShellFolders.Enums;
 
-using Microsoft.WindowsAPICodePack.Shell.Common;
+using ManagedShell.ShellFolders.Structs;
 
 namespace Explorip.Explorer.ViewModels;
 
@@ -35,6 +32,8 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
     private bool _isVisible = true;
     [ObservableProperty()]
     private bool _isEnabled = true;
+
+    public PopUpExplorerContextMenuSubItems Popup { get; set; }
 
     public SolidColorBrush Background
     {
@@ -95,6 +94,20 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                 Process.Start(command, param);
                 break;
             case ETypeCommand.ContextMenuHandler:
+                /*CmInvokeCommandInfoEx invoke = new()
+                {
+                    lpVerbW = new IntPtr(Entry.nCmd),
+                    lpVerb = new IntPtr(Entry.nCmd),
+                    lpDirectoryW = _parent.ParentFolder.ParsingName,
+                    lpDirectory = _parent.ParentFolder.ParsingName,
+                    fMask = ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
+                        (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
+                        (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
+                    ptInvoke = new NativeMethods.Point((long)pointInvoke.X, (long)pointInvoke.Y),
+                    nShow = NativeMethods.WindowShowStyle.ShowNormal,
+                    hwnd = _viewModel.CurrentControl.Handle,
+                };
+                Entry.ContextMenu?.InvokeCommand(ref invoke);*/
                 break;
             case ETypeCommand.CommandStore:
                 break;
@@ -150,24 +163,56 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
     private void MouseEnter()
     {
         IsMouseOver = true;
-        if (HasSubItems && _parent.Popup == null)
+        if (HasSubItems && ((_parentContextMenuEntry == null && _parent.Popup != null && _parent.Popup.DataContext != this) || (_parentContextMenuEntry != null && _parentContextMenuEntry.Popup != null && _parentContextMenuEntry.Popup.DataContext != this)))
         {
-            _parent.Popup = new PopUpExplorerContextMenuSubItems()
+            if (_parentContextMenuEntry == null)
             {
-                DataContext = this,
-                Owner = Window.GetWindow(_parent.ParentTab),
-            };
-            SubItems[0].IsMouseOver = true;
-            _parent.Popup.Show();
+                _parent.Popup?.Close();
+                _parent.Popup = null;
+            }
+            else
+            {
+                _parentContextMenuEntry.Popup?.Close();
+                _parentContextMenuEntry.Popup = null;
+            }
+        }
+        if (HasSubItems && ((_parentContextMenuEntry == null && _parent.Popup == null) || (_parentContextMenuEntry != null && _parentContextMenuEntry.Popup == null)))
+        {
+            if (_parentContextMenuEntry == null)
+            {
+                _parent.Popup = new PopUpExplorerContextMenuSubItems()
+                {
+                    DataContext = this,
+                    Owner = Window.GetWindow(_parent.ParentTab),
+                };
+                SubItems[0].IsMouseOver = true;
+                _parent.Popup.Show();
+            }
+            else
+            {
+                _parentContextMenuEntry.Popup = new PopUpExplorerContextMenuSubItems()
+                {
+                    DataContext = this,
+                    Owner = _parent.Popup,
+                };
+                SubItems[0].IsMouseOver = true;
+                _parentContextMenuEntry.Popup.Show();
+            }
         }
         else
         {
-            if (!HasSubItems || _parent.Popup?.DataContext != this)
+            if (!HasSubItems || ((_parentContextMenuEntry == null && _parent.Popup?.DataContext != this) || (_parentContextMenuEntry != null && _parentContextMenuEntry.Popup.DataContext != this)))
             {
-                if (_parentContextMenuEntry != null && _parentContextMenuEntry.SubItems.Contains(this))
-                    return;
-                _parent.Popup?.Close();
-                _parent.Popup = null;
+                if (_parentContextMenuEntry == null)
+                {
+                    _parent.Popup?.Close();
+                    _parent.Popup = null;
+                }
+                else
+                {
+                    _parentContextMenuEntry.Popup?.Close();
+                    _parentContextMenuEntry.Popup = null;
+                }
             }
         }
     }
@@ -176,12 +221,18 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
     private void MouseLeave()
     {
         IsMouseOver = false;
-        if (HasSubItems && _parent.Popup != null && !SubItems.Any(p => p.IsMouseOver))
+        if (HasSubItems && ((_parentContextMenuEntry == null && _parent.Popup != null) || (_parentContextMenuEntry != null && _parentContextMenuEntry.Popup != null)) && !SubItems.Any(p => p.IsMouseOver))
         {
-            if (_parentContextMenuEntry == null || !_parentContextMenuEntry.SubItems.Contains(this))
-                return;
-            _parent.Popup.Close();
-            _parent.Popup = null;
+            if ((_parentContextMenuEntry == null))
+            {
+                _parent.Popup.Close();
+                _parent.Popup = null;
+            }
+            else
+            {
+                _parentContextMenuEntry.Popup.Close();
+                _parentContextMenuEntry.Popup = null;
+            }
         }
     }
 }

@@ -93,17 +93,31 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
             foreach (ShellContextMenuEntry entry in listToBuild)
             {
                 ContextMenuEntryViewModel vm = new(entry, this, null);
+                vm.SubItems = [.. ExpandSubItems(vm)];
                 Application.Current.Dispatcher.BeginInvoke(() =>
                 {
                     ListContextMenuEntry.Add(vm);
                 });
+            }
+
+            ContextMenuEntryViewModel[] ExpandSubItems(ContextMenuEntryViewModel item)
+            {
+                List<ContextMenuEntryViewModel> result = [];
+                if (item.Entry.Subitems?.Count > 0)
+                    foreach (ShellContextMenuEntry subItem in item.Entry.Subitems)
+                    {
+                        result.Add(new ContextMenuEntryViewModel(subItem, this, item));
+                        if (subItem.Subitems?.Count > 0)
+                            result[result.Count - 1].SubItems = [.. ExpandSubItems(result[result.Count - 1])];
+                    }
+                return [.. result];
             }
             /*if (sourceType != ESourceType.Drive && !_backgroundContextMenu)
             {
                 ContextMenuEntryViewModel vmSendTo = new(new ShellContextMenuEntry()
                 {
                     Source = ETypeCommand.SendTo,
-                    Name = Constants.Localization.SEND_TO.Replace("_", ""),
+                    Name = Constants.Localization.SEND_TO,
                 }, this, null);
                 foreach (ShellContextMenuEntry entry in ExtensionsContextMenu.ExpandSendTo(true))
                     vmSendTo.SubItems.Add(new ContextMenuEntryViewModel(entry, this, vmSendTo));

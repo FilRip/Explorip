@@ -31,4 +31,9 @@ public struct CmInvokeCommandInfoEx
     [MarshalAs(UnmanagedType.LPWStr)]
     public string lpTitleW;
     public NativeMethods.Point ptInvoke;
+
+    public CmInvokeCommandInfoEx()
+    {
+        cbSize = Marshal.SizeOf<CmInvokeCommandInfoEx>();
+    }
 }

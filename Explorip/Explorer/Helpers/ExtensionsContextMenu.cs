@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
@@ -58,6 +59,10 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
     private string _command;
     [ObservableProperty()]
     private ImageSource _icon;
+    [ObservableProperty()]
+    private string _toolTip;
+    [ObservableProperty()]
+    private ObservableCollection<ShellContextMenuEntry> _subitems = [];
 
     public object Clone()
     {
@@ -115,20 +120,31 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
                                 if (NativeMethods.GetMenuItemInfo(hMenu, i, true, ref menuItemInfo))
                                 {
                                     if (string.IsNullOrWhiteSpace(menuItemInfo.dwTypeData.Trim()))
-                                        toRemove = true;
+                                    {
+                                        if (i == 0)
+                                            toRemove = true;
+                                    }
                                     else if (i == 0)
                                     {
                                         Name = menuItemInfo.dwTypeData.Trim();
-                                        if (menuItemInfo.hbmpItem != IntPtr.Zero)
+                                        Icon = ExtensionsContextMenu.GetDefaultIcon(Command);
+                                        Icon?.Freeze();
+                                        if (Icon == null && menuItemInfo.hbmpItem != IntPtr.Zero)
                                             Icon = ((BitmapSource)IconImageConverter.GetImageFromHBitmap(menuItemInfo.hbmpItem, false)).MakeTransparentColor(ConfigManager.ExplorerContextMenuBackground?.Color ?? ExploripSharedCopy.Constants.Colors.BackgroundColor);
+                                        if (menuItemInfo.hSubMenu != IntPtr.Zero)
+                                            ExpandContextMenuSubItems(menuItemInfo.hSubMenu, this);
                                     }
                                     else
                                     {
                                         index++;
                                         ShellContextMenuEntry newEntry = (ShellContextMenuEntry)Clone();
                                         newEntry.Name = menuItemInfo.dwTypeData.Trim();
-                                        if (menuItemInfo.hbmpItem != IntPtr.Zero)
+                                        newEntry.Icon = ExtensionsContextMenu.GetDefaultIcon(Command);
+                                        newEntry.Icon?.Freeze();
+                                        if (newEntry.Icon == null && menuItemInfo.hbmpItem != IntPtr.Zero)
                                             newEntry.Icon = ((BitmapSource)IconImageConverter.GetImageFromHBitmap(menuItemInfo.hbmpItem, false)).MakeTransparentColor(ConfigManager.ExplorerContextMenuBackground?.Color ?? ExploripSharedCopy.Constants.Colors.BackgroundColor);
+                                        if (menuItemInfo.hSubMenu != IntPtr.Zero)
+                                            ExpandContextMenuSubItems(menuItemInfo.hSubMenu, newEntry);
                                         list.Insert(index, newEntry);
                                     }
                                 }
@@ -152,6 +168,42 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
                     NativeMethods.DestroyMenu(hMenu);
                 if (ptrData != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(ptrData);
+            }
+        }
+    }
+
+    private void ExpandContextMenuSubItems(IntPtr hMenu, ShellContextMenuEntry parent)
+    {
+        int count = NativeMethods.GetMenuItemCount(hMenu);
+        if (count > 0)
+        {
+            for (uint i = 0; i < count; i++)
+            {
+                NativeMethods.MenuItemInfo menuItemInfo = new()
+                {
+                    fMask = NativeMethods.MenuItemIntegrateMembers.STATE | NativeMethods.MenuItemIntegrateMembers.STRING | NativeMethods.MenuItemIntegrateMembers.ID | NativeMethods.MenuItemIntegrateMembers.SUBMENU | NativeMethods.MenuItemIntegrateMembers.BITMAP,
+                    dwTypeData = new string((char)0, 256),
+                    cch = 255,
+                    fType = NativeMethods.MenuItemTypes.DISABLED | NativeMethods.MenuItemTypes.GRAYED | NativeMethods.MenuItemTypes.STRING,
+                };
+                if (NativeMethods.GetMenuItemInfo(hMenu, i, true, ref menuItemInfo))
+                {
+                    if (string.IsNullOrWhiteSpace(menuItemInfo.dwTypeData.Trim()))
+                        continue;
+                    ShellContextMenuEntry newEntry;
+                    if (i == 0)
+                        newEntry = (ShellContextMenuEntry)parent?.Clone();
+                    else
+                        newEntry = (ShellContextMenuEntry)Clone();
+                    newEntry.Name = menuItemInfo.dwTypeData.Trim();
+                    newEntry.Icon = ExtensionsContextMenu.GetDefaultIcon(Command);
+                    newEntry.Icon?.Freeze();
+                    if (newEntry.Icon == null && menuItemInfo.hbmpItem != IntPtr.Zero)
+                        newEntry.Icon = ((BitmapSource)IconImageConverter.GetImageFromHBitmap(menuItemInfo.hbmpItem, false)).MakeTransparentColor(ConfigManager.ExplorerContextMenuBackground?.Color ?? ExploripSharedCopy.Constants.Colors.BackgroundColor);
+                    parent.Subitems.Add(newEntry);
+                    if (menuItemInfo.hSubMenu != IntPtr.Zero)
+                        ExpandContextMenuSubItems(menuItemInfo.hSubMenu, newEntry);
+                }
             }
         }
     }
@@ -344,15 +396,54 @@ public static class ExtensionsContextMenu
                 if (iconPath.Contains(','))
                 {
                     string[] splitter = iconPath.Split(',');
-                    string indexStr = splitter[splitter.Length - 1];
+                    string indexStr = splitter[splitter.Length - 1].TrimStart('-');
                     if (int.TryParse(indexStr, out index))
-                        iconPath = iconPath.Substring(0, iconPath.Length - (indexStr.Length + 1));
+                        iconPath = iconPath.Substring(0, iconPath.Length - (indexStr.Length + 1)).TrimEnd(',');
                 }
-                info.Icon = IconImageConverter.GetImageFromAssociatedIcon(iconPath.Trim('\"'), ManagedShell.Common.Enums.IconSize.Small);
+                info.Icon = IconManager.GetIconFromFile(iconPath.Trim('\"'), index, false);
                 info.Icon?.Freeze();
             }
             results.RemoveAll(i => i.Source == info.Source && i.Name == info.Name && (i.Command == info.Command || i.ExplorerCommandHandler == info.ExplorerCommandHandler));
             results.Add(info);
         }
+    }
+
+    public static ImageSource GetDefaultIcon(string guid)
+    {
+        RegistryKey reg;
+        reg = Registry.CurrentUser.OpenSubKey($"Software\\Classes\\CLSID\\{guid}");
+        reg ??= Registry.ClassesRoot.OpenSubKey($"CLSID\\{guid}");
+
+        if (reg == null)
+            return null;
+
+        string filePath;
+        int index = 0;
+
+        if (reg.GetSubKeyNames().Contains("DefaultIcon", StringComparer.OrdinalIgnoreCase))
+        {
+            filePath = reg.OpenSubKey("DefaultIcon").GetValue("", "").ToString();
+            if (!string.IsNullOrWhiteSpace(filePath))
+            {
+                if (filePath.Contains(','))
+                {
+                    string[] splitter = filePath.Split(',');
+                    string strIndex = splitter[splitter.Length - 1].TrimStart('-');
+                    if (int.TryParse(strIndex, out index))
+                        filePath = filePath.Substring(0, filePath.Length - (strIndex.Length + 1)).TrimEnd(',');
+                }
+                return IconManager.GetIconFromFile(filePath, index, false);
+            }
+        }
+        if (reg.GetSubKeyNames().Contains("InProcServer32", StringComparer.OrdinalIgnoreCase))
+        {
+            filePath = reg.OpenSubKey("InProcServer32").GetValue("", "").ToString();
+            if (!string.IsNullOrWhiteSpace(filePath))
+            {
+                return IconManager.GetIconFromFile(filePath, 0, false);
+            }
+        }
+
+        return null;
     }
 }

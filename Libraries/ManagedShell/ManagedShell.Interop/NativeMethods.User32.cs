@@ -86,7 +86,7 @@ public partial class NativeMethods
         public IntPtr hbmpChecked;
         public IntPtr hbmpUnchecked;
         public IntPtr dwItemData;
-        [MarshalAs(UnmanagedType.LPTStr)]
+        [MarshalAs(UnmanagedType.LPWStr)]
         public string dwTypeData;
         public int cch;
         public IntPtr hbmpItem;

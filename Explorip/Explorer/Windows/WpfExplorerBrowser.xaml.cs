@@ -399,8 +399,19 @@ public partial class WpfExplorerBrowser : Window
     {
         if (e.Key == Key.Escape)
         {
-            LeftTab.CurrentTabExplorer?.contextMenu?.Close();
-            RightTab?.CurrentTabExplorer?.contextMenu?.Close();
+            CloseContextMenu();
         }
+    }
+
+    public void CloseContextMenu()
+    {
+        Debug.WriteLine("Try close context menu");
+        LeftTab.CurrentTabExplorer?.contextMenu?.DataContext?.ForceClose();
+        RightTab?.CurrentTabExplorer?.contextMenu?.DataContext?.ForceClose();
+    }
+
+    private void Window_Activated(object sender, EventArgs e)
+    {
+        CloseContextMenu();
     }
 }

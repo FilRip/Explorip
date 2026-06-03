@@ -52,7 +52,6 @@ public static class IconImageConverter
             try
             {
                 bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(hBitmap, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                bs.Freeze();
             }
             catch
             {
