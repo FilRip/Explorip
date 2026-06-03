@@ -405,7 +405,6 @@ public partial class WpfExplorerBrowser : Window
 
     public void CloseContextMenu()
     {
-        Debug.WriteLine("Try close context menu");
         LeftTab.CurrentTabExplorer?.contextMenu?.DataContext?.ForceClose();
         RightTab?.CurrentTabExplorer?.contextMenu?.DataContext?.ForceClose();
     }
