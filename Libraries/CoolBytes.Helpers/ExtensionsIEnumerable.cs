@@ -40,7 +40,7 @@ public static class ExtensionsIEnumerable
             if (@object is IList list)
                 result = DumpList<object>(list);
             else if (@object is IDictionary dict)
-                result = DumpDictionnaire<object, object>(dict);
+                result = DumpDictionary<object, object>(dict);
             else
                 result = @object == null ? "null" : @object.ToString();
         }
@@ -52,7 +52,7 @@ public static class ExtensionsIEnumerable
     {
         string result = "";
         if (dictionary != null)
-            result = DumpDictionnaire<T1, T2>(dictionary);
+            result = DumpDictionary<T1, T2>(dictionary);
         return result;
     }
 
@@ -76,7 +76,7 @@ public static class ExtensionsIEnumerable
         return result.ToString();
     }
 
-    private static string DumpDictionnaire<T1, T2>(IDictionary dictionary)
+    private static string DumpDictionary<T1, T2>(IDictionary dictionary)
     {
         StringBuilder result = new();
         T2 value;

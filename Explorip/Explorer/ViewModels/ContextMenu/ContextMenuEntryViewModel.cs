@@ -15,13 +15,17 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.Helpers.ContextMenu;
 using Explorip.Explorer.Windows;
+using Explorip.HookFileOperations.FilesOperations.Interfaces;
 
+using ManagedShell.Common.Structs;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
-
+using ManagedShell.ShellFolders.Interfaces;
 using ManagedShell.ShellFolders.Structs;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;
+
+using IShellItem = ManagedShell.ShellFolders.Interfaces.IShellItem;
 
 namespace Explorip.Explorer.ViewModels;
 
@@ -112,7 +116,7 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                     fMask = ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
                         (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
                         (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
-                    ptInvoke = new NativeMethods.Point((long)mousePos.X, (long)mousePos.Y),
+                    ptInvoke = new NativeMethods.Point(mousePos.X, mousePos.Y),
                     nShow = NativeMethods.WindowShowStyle.ShowNormal,
                     hwnd = ((WpfExplorerBrowser)Window.GetWindow(_parent.ParentTab)).WindowHandle,
                 };
@@ -123,39 +127,21 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                 break;
             case ETypeCommand.SendTo:
                 if (Path.GetExtension(Entry.Command) == ".lnk")
+                    Process.Start(Entry.Command, _parent.GetSelectedAsArguments());
+                else if (Guid.TryParse(Entry.Command, out Guid guidSendTo) && guidSendTo != Guid.Empty)
                 {
-                    StringBuilder sb = new();
-                    foreach (ShellObject so in _parent.ListSelected)
+                    try
                     {
-                        if (sb.Length > 0)
-                            sb.Append(' ');
-                        sb.Append('\"');
-                        sb.Append(so.ParsingName);
-                        sb.Append('\"');
-                    }
-                    Process.Start(Entry.Command, sb.ToString());
-                }
-                else if (Guid.TryParse(Entry.Command, out Guid guidSendTo))
-                {
-                    if (guidSendTo == Guid.Empty)
-                    {
-                        Guid.TryParse(Entry.Command, out guidSendTo);
-                    }
-                    if (guidSendTo != Guid.Empty)
-                    {
-                        try
+                        Type t = Type.GetTypeFromCLSID(guidSendTo);
+                        NativeMethods.IExplorerCommand exCommand = (NativeMethods.IExplorerCommand)Activator.CreateInstance(t);
+                        exCommand.GetTitle(null, out IntPtr ptrTitle);
+                        if (ptrTitle != IntPtr.Zero)
                         {
-                            Type t = Type.GetTypeFromCLSID(guidSendTo);
-                            NativeMethods.IExplorerCommand exCommand = (NativeMethods.IExplorerCommand)Activator.CreateInstance(t);
-                            exCommand.GetTitle(null, out IntPtr ptrTitle);
-                            if (ptrTitle != IntPtr.Zero)
-                            {
-                                Entry.Name = Marshal.PtrToStringUni(ptrTitle);
-                                Marshal.FreeCoTaskMem(ptrTitle);
-                            }
+                            Entry.Name = Marshal.PtrToStringUni(ptrTitle);
+                            Marshal.FreeCoTaskMem(ptrTitle);
                         }
-                        catch (Exception) { /* Errors, certainly not a IExplorerCommand */ }
                     }
+                    catch (Exception) { /* Errors, certainly not a IExplorerCommand */ }
                 }
                 _parent.Close();
                 break;
@@ -166,6 +152,18 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
             case ETypeCommand.Share:
                 break;
             case ETypeCommand.New:
+                break;
+            case ETypeCommand.OpenWith:
+                if (Entry.Command.StartsWith("shell:"))
+                {
+                    IApplicationActivationManager activeUwp = (IApplicationActivationManager)new ApplicationActivationManager();
+                    Guid iShellItemGuid = typeof(IShellItem).GUID;
+                    NativeMethods.SHCreateItemFromParsingName(_parent.ListSelected[0].ParsingName, IntPtr.Zero, ref iShellItemGuid, out IntPtr ishellItemPtr);
+                    NativeMethods.SHCreateShellItemArrayFromShellItem(ishellItemPtr, typeof(ManagedShell.ShellFolders.Interfaces.IShellItemArray).GUID, out ManagedShell.ShellFolders.Interfaces.IShellItemArray files);
+                    activeUwp.ActivateForFile(Entry.Command.Replace("shell:AppsFolder\\", ""), files, null, out _);
+                }
+                else
+                    Process.Start(Entry.Command, _parent.GetSelectedAsArguments());
                 break;
         }
     }

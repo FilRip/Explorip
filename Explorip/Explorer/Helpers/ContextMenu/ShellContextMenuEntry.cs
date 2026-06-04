@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -77,11 +78,17 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                             Subitems = [.. ExtensionsContextMenu.ExpandSendTo(true)];
                             break;
                         }
+                        else if (guid == Guid.Parse("{09799AFB-AD67-11d1-ABCD-00C04FC30936}"))
+                        {
+                            Source = ETypeCommand.OpenWith;
+                            Name = Constants.Localization.OPEN_WITH;
+                            Subitems = [.. ExtensionsContextMenu.ExpandOpenWith(Path.GetExtension(selectedItems[0].ParsingName))];
+                            break;
+                        }
 
                         try
                         {
                             exCommand = Activator.CreateInstance(Type.GetTypeFromCLSID(guid)) as IContextMenu;
-                            //IContextMenu2 exCommand2 = Activator.CreateInstance(Type.GetTypeFromCLSID(guid)) as IContextMenu2;
 
                             if (exCommand != null)
                             {
@@ -95,13 +102,13 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                 {
                                     ((IShellExtInit)exCommand).Initialize(IntPtr.Zero, ptrData, 0);
                                     hMenu = NativeMethods.CreatePopupMenu();
-                                    exCommand.QueryContextMenu(hMenu, 0, 1, int.MaxValue, ManagedShell.ShellFolders.Enums.ContextMenuStates.NORMAL);
+                                    exCommand.QueryContextMenu(hMenu, 0, 1, (uint)short.MaxValue, ManagedShell.ShellFolders.Enums.ContextMenuStates.NORMAL);
                                     _menuHandle = hMenu;
                                     int count = NativeMethods.GetMenuItemCount(hMenu);
                                     if (count > 0)
                                     {
                                         // Auto expand sub menu
-                                        /*if (exCommand2 != null)
+                                        if (Activator.CreateInstance(Type.GetTypeFromCLSID(guid)) is IContextMenu2 exCommand2)
                                         {
                                             for (int i = 0; i < count; i++)
                                             {
@@ -112,7 +119,7 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                                     exCommand2.HandleMenuMsg((int)NativeMethods.WM.INITMENUPOPUP, idSubMenu, new IntPtr(i));
                                                 }
                                             }
-                                        }*/
+                                        }
                                         int index = 0;
                                         if (count > 1)
                                             index = list.IndexOf(this);

@@ -24,6 +24,7 @@
 
     <ItemGroup>
         <PackageReference Include="System.Data.OleDb" Version="9.0.3" />
+        <ProjectReference Include="..\..\..\HookFileOperation\HookFileOperations\HookFileOperations.csproj" />
         <ProjectReference Include="..\ManagedShell.Interop\ManagedShell.Interop.csproj" />
     </ItemGroup>
 

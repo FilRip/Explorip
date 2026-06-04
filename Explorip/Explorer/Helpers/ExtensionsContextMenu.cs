@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Media;
 
+using CoolBytes.Helpers;
+
 using Explorip.Explorer.Helpers.ContextMenu;
 using Explorip.Helpers;
 
@@ -253,5 +255,76 @@ public static class ExtensionsContextMenu
         }
 
         return null;
+    }
+
+    public static List<ShellContextMenuEntry> ExpandOpenWith(string ext, RegistryKey root = null)
+    {
+        List<ShellContextMenuEntry> result = [];
+        if (string.IsNullOrWhiteSpace(ext) || ext == ".")
+            ext = "*";
+        if (root == null)
+            result.AddRange(ExpandOpenWith(ext, Registry.ClassesRoot));
+        root ??= Registry.CurrentUser.OpenSubKey("Software\\Classes");
+        RegistryKey reg = root.OpenSubKey(ext);
+        if (reg != null && reg.GetSubKeyNames().Contains("OpenWithProgids"))
+        {
+            reg = reg.OpenSubKey("OpenWithProgids");
+            foreach (string app in reg.GetValueNames())
+            {
+                try
+                {
+                    RegistryKey appKey = root.OpenSubKey(app) ?? Registry.ClassesRoot.OpenSubKey(app);
+                    if (appKey != null)
+                    {
+                        RegistryKey appDescriptionKey = appKey.OpenSubKey("Application");
+                        RegistryKey appDefaultIconKey = appKey.OpenSubKey("DefaultIcon");
+                        if (appDescriptionKey != null)
+                        {
+                            ShellContextMenuEntry entry = new()
+                            {
+                                Command = $"shell:AppsFolder\\{appDescriptionKey.GetValue("AppUserModelID", "")}",
+                                Source = ETypeCommand.OpenWith,
+                                KeyPath = $"{appKey.Name}\\{ext}",
+                                Name = Constants.Localization.LoadMsResourceString(appDescriptionKey.GetValue("ApplicationName", "").ToString(), app),
+                            };
+                            string uriIcon = null;
+                            if (appDescriptionKey.GetValueNames().Contains("ApplicationIcon"))
+                                uriIcon = appDescriptionKey.GetValue("ApplicationIcon", "").ToString();
+                            else if (appDefaultIconKey != null && !string.IsNullOrWhiteSpace(appDefaultIconKey.GetValue("", "").ToString()))
+                                uriIcon = appDefaultIconKey.GetValue("", "").ToString();
+                            if (!string.IsNullOrWhiteSpace(uriIcon))
+                                entry.Icon = IconManager.GetImageSource(uriIcon);
+                            result.Add(entry);
+                        }
+                    }
+                }
+                catch (Exception) { /* TODO : Ignore errors ? */ }
+            }
+        }
+        if (root.OpenSubKey(ext).GetSubKeyNames().Contains("OpenWithList"))
+        {
+            reg = root.OpenSubKey(ext).OpenSubKey("OpenWithList");
+            foreach (string key in reg.GetSubKeyNames())
+            {
+                StringBuilder sb = new(256);
+                if (NativeMethods.SearchPath(null, key, null, 256, sb, out _) > 0)
+                {
+                    ShellContextMenuEntry entry = new()
+                    {
+                        Command = key,
+                        Source = ETypeCommand.OpenWith,
+                        KeyPath = $"{root.Name}\\{reg.Name}\\{key}",
+                        Name = Path.GetFileNameWithoutExtension(key),
+                        Icon = IconManager.GetIconFromFile(sb.ToString(), 0, false),
+                    };
+                    entry.Icon?.Freeze();
+                    result.Add(entry);
+                }
+            }
+        }
+        if (ext != "*")
+            result.AddRange(ExpandOpenWith("*", root));
+        result = result.Distinct(r => r.Name);
+        return result;
     }
 }

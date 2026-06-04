@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -205,5 +206,47 @@ public static class IconManager
         {
             return null;
         }
+    }
+
+    public static ImageSource GetImageSource(string uri, int width = 16, int height = 16)
+    {
+        ImageSource img = null;
+        try
+        {
+            if (uri.Contains("ms-resource://"))
+            {
+                img = new BitmapImage();
+                ((BitmapImage)img).BeginInit();
+                ((BitmapImage)img).CacheOption = BitmapCacheOption.OnLoad;
+                ((BitmapImage)img).UriSource = new Uri(Constants.Localization.LoadMsResourceString(uri, uri));
+                ((BitmapImage)img).EndInit();
+                img = img.Resize(width, height);
+            }
+            else
+            {
+                int index = 0;
+                if (uri.Contains(','))
+                {
+                    string[] splitter = uri.Split(',');
+                    string strIndex = splitter[splitter.Length - 1].TrimStart('-');
+                    if (int.TryParse(strIndex, out index))
+                        uri = uri.Substring(0, uri.Length - (strIndex.Length + 1)).TrimEnd(',');
+                }
+                bool large = (width > 16);
+                img = GetIconFromFile(uri, index, large);
+            }
+            img.Freeze();
+            return img;
+        }
+        catch (Exception) { /* Ignore errors */ }
+        return img;
+    }
+
+    public static ImageSource Resize(this ImageSource source, int width, int height)
+    {
+        TransformGroup tg = new();
+        tg.Children.Add(new ScaleTransform(width / source.Width, height / source.Height));
+        TransformedBitmap tb = new((BitmapSource)source, tg);
+        return tb;
     }
 }

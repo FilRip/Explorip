@@ -10,4 +10,5 @@ public enum ETypeCommand
     Rename = 5,
     Share = 6,
     New = 7,
+    OpenWith = 8,
 }

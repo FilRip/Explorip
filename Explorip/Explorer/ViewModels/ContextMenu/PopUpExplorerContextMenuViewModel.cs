@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
@@ -240,6 +241,20 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     public ShellObject[] ListSelected
     {
         get { return _listSelected; }
+    }
+
+    public string GetSelectedAsArguments()
+    {
+        StringBuilder args = new();
+        foreach (ShellObject so in ListSelected)
+        {
+            if (args.Length > 0)
+                args.Append(' ');
+            args.Append('\"');
+            args.Append(so.ParsingName);
+            args.Append('\"');
+        }
+        return args.ToString();
     }
 
     public bool BackgroundContextMenu

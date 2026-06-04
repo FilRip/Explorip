@@ -717,4 +717,7 @@ public partial class NativeMethods
 
     [DllImport(Kernel32_DllName, SetLastError = true)]
     internal static extern uint GetLargePageMinimum();
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    internal static extern uint SearchPath(string lpPath, string lpFileName, string lpExtension, int nBufferLength, StringBuilder lpBuffer, out IntPtr lpFilePart);
 }
