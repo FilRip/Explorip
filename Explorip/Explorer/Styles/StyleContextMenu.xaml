@@ -226,5 +226,10 @@
     <Style TargetType="{x:Type Separator}" BasedOn="{StaticResource {x:Type Separator}}" x:Key="MySeparatorStyle">
         <Setter Property="Margin" Value="3,0,0,0"/>
     </Style>
+
+    <Style TargetType="{x:Type ToolTip}">
+        <Setter Property="Background" Value="{x:Static colors:Colors.BackgroundColorBrush}"/>
+        <Setter Property="Foreground" Value="{x:Static colors:Colors.ForegroundColorBrush}"/>
+    </Style>
     
 </ResourceDictionary>

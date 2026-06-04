@@ -48,7 +48,7 @@
         <StackPanel Background="Transparent" Margin="{x:Static config:ConfigManager.ExplorerContextMenuMargin}" Orientation="Vertical" HorizontalAlignment="Left">
             
             <StackPanel Orientation="Horizontal">
-                <Button Foreground="{Binding ForegroundCut}" BorderThickness="0" Visibility="{Binding VisibleCut, Converter={StaticResource boolToVisible}}" Command="{Binding CutCommand}" Style="{StaticResource BtnStyle}">
+                <Button Foreground="{Binding ForegroundCut}" BorderThickness="0" Visibility="{Binding VisibleCut, Converter={StaticResource boolToVisible}}" Command="{Binding CutCommand}" Style="{StaticResource BtnStyle}" ToolTip="{x:Static constants:Localization.CUT_TOOLTIP}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
@@ -59,7 +59,7 @@
                         <AccessText Text="{x:Static constants:Localization.CUT}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
-                <Button Foreground="{Binding ForegroundCopy}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleCopy, Converter={StaticResource boolToVisible}}" Command="{Binding CopyCommand}" Style="{StaticResource BtnStyle}">
+                <Button Foreground="{Binding ForegroundCopy}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleCopy, Converter={StaticResource boolToVisible}}" Command="{Binding CopyCommand}" Style="{StaticResource BtnStyle}" ToolTip="{x:Static constants:Localization.COPY_TOOLTIP}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
@@ -70,7 +70,7 @@
                         <AccessText Text="{x:Static constants:Localization.COPY}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
-                <Button Foreground="{Binding ForegroundPaste}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisiblePaste, Converter={StaticResource boolToVisible}}" Command="{Binding PasteCommand}" Style="{StaticResource BtnStyle}">
+                <Button Foreground="{Binding ForegroundPaste}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisiblePaste, Converter={StaticResource boolToVisible}}" Command="{Binding PasteCommand}" Style="{StaticResource BtnStyle}" ToolTip="{x:Static constants:Localization.PASTE_TOOLTIP}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>
@@ -81,7 +81,7 @@
                         <AccessText Text="{x:Static constants:Localization.PASTE}" Margin="4 2 4 4"/>
                     </StackPanel>
                 </Button>
-                <Button Foreground="{Binding ForegroundDelete}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleDelete, Converter={StaticResource boolToVisible}}" Command="{Binding DeleteCommand}" Style="{StaticResource BtnStyle}">
+                <Button Foreground="{Binding ForegroundDelete}" BorderThickness="0" Margin="5 0 0 0" Visibility="{Binding VisibleDelete, Converter={StaticResource boolToVisible}}" Command="{Binding DeleteCommand}" Style="{StaticResource BtnStyle}" ToolTip="{x:Static constants:Localization.DELETE_TOOLTIP}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseEnter">
                             <i:InvokeCommandAction Command="{Binding MouseEnterCommand}"/>

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 using Explorip.Explorer.Controls.Tabs;
@@ -74,6 +75,9 @@ public partial class PopUpExplorerContextMenu : Window
 
     private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
     {
+        if (DataContext.ListContextMenuEntry?.Count > 0)
+            for (int i = DataContext.ListContextMenuEntry.Count - 1; i >= 0; i--)
+                DataContext.ListContextMenuEntry[i].Entry.Dispose();
         DataContext?.Popup?.Close();
     }
 }

@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.Helpers;
+using Explorip.Explorer.Windows;
 
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
@@ -92,22 +93,26 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                         param = param.Replace($"%{i}", _parent.ListSelected[i - 1].ParsingName).Trim();
                 }
                 Process.Start(command, param);
+                _parent.Close();
                 break;
             case ETypeCommand.ContextMenuHandler:
-                /*CmInvokeCommandInfoEx invoke = new()
+                System.Drawing.Point mousePos = new();
+                NativeMethods.GetCursorPos(ref mousePos);
+                CmInvokeCommandInfoEx invoke = new()
                 {
-                    lpVerbW = new IntPtr(Entry.nCmd),
-                    lpVerb = new IntPtr(Entry.nCmd),
+                    lpVerbW = new IntPtr(Entry.NumCmd),
+                    lpVerb = new IntPtr(Entry.NumCmd),
                     lpDirectoryW = _parent.ParentFolder.ParsingName,
                     lpDirectory = _parent.ParentFolder.ParsingName,
                     fMask = ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
                         (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
                         (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
-                    ptInvoke = new NativeMethods.Point((long)pointInvoke.X, (long)pointInvoke.Y),
+                    ptInvoke = new NativeMethods.Point((long)mousePos.X, (long)mousePos.Y),
                     nShow = NativeMethods.WindowShowStyle.ShowNormal,
-                    hwnd = _viewModel.CurrentControl.Handle,
+                    hwnd = ((WpfExplorerBrowser)Window.GetWindow(_parent.ParentTab)).WindowHandle,
                 };
-                Entry.ContextMenu?.InvokeCommand(ref invoke);*/
+                Entry.ContextMenu?.InvokeCommand(ref invoke);
+                _parent.Close();
                 break;
             case ETypeCommand.CommandStore:
                 break;

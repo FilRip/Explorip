@@ -213,6 +213,10 @@ public static class Localization
     public static string PROPERTIES { get; private set; }
     public static string SERVER_SSH { get; private set; }
     public static string SERVER_FTP { get; private set; }
+    public static string COPY_TOOLTIP { get; private set; }
+    public static string CUT_TOOLTIP { get; private set; }
+    public static string PASTE_TOOLTIP { get; private set; }
+    public static string DELETE_TOOLTIP { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -415,6 +419,10 @@ public static class Localization
         PROPERTIES = Load(Shell32Dll, 33555, "Properties");
         SERVER_SSH = Load("firewallapi.dll", 53602, "Ssh server").Trim((char)0);
         SERVER_FTP = Load("firewallapi.dll", 38525, "Ftp server").Trim((char)0);
+        COPY_TOOLTIP = Load(ExplorerFrameDll, 50219, "Copy (Ctrl+C)");
+        CUT_TOOLTIP = Load(ExplorerFrameDll, 50217, "Cut (Ctrl+X)");
+        PASTE_TOOLTIP = Load(ExplorerFrameDll, 50218, "Paste (Ctrl+V)");
+        DELETE_TOOLTIP = Load(ExplorerFrameDll, 50228, "Copy (Ctrl+D)");
 
         string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
         ManagedShell.ShellFolders.ShellItem si = new(specialPath);

@@ -45,8 +45,11 @@ public enum ETypeCommand
     New = 7,
 }
 
-public partial class ShellContextMenuEntry : ObservableObject, ICloneable
+public partial class ShellContextMenuEntry : ObservableObject, ICloneable, IDisposable
 {
+    private bool disposedValue;
+    private IntPtr _menuHandle;
+
     [ObservableProperty()]
     private ETypeCommand _source;
     [ObservableProperty()]
@@ -64,6 +67,9 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
     [ObservableProperty()]
     private ObservableCollection<ShellContextMenuEntry> _subitems = [];
 
+    public IContextMenu ContextMenu { get; set; }
+    public uint NumCmd { get; set; }
+
     public object Clone()
     {
         return new ShellContextMenuEntry()
@@ -74,6 +80,7 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
             ExplorerCommandHandler = ExplorerCommandHandler,
             Command = Command,
             Icon = Icon,
+            ContextMenu = ContextMenu,
         };
     }
 
@@ -92,6 +99,7 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
                 exCommand = Activator.CreateInstance(t) as IContextMenu;
                 if (exCommand != null)
                 {
+                    ContextMenu = exCommand;
                     List<IntPtr> listPidlRelative = [];
                     foreach (ShellObject so in selectedItems)
                         listPidlRelative.Add(NativeMethods.ILFindLastID(so.PIDL));
@@ -102,6 +110,7 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
                         ((IShellExtInit)exCommand).Initialize(IntPtr.Zero, ptrData, 0);
                         hMenu = NativeMethods.CreatePopupMenu();
                         exCommand.QueryContextMenu(hMenu, 0, 1, int.MaxValue, ManagedShell.ShellFolders.Enums.ContextMenuStates.NORMAL);
+                        _menuHandle = hMenu;
                         int count = NativeMethods.GetMenuItemCount(hMenu);
                         if (count > 0)
                         {
@@ -127,6 +136,7 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
                                     else if (i == 0)
                                     {
                                         Name = menuItemInfo.dwTypeData.Trim();
+                                        NumCmd = menuItemInfo.wID;
                                         Icon = ExtensionsContextMenu.GetDefaultIcon(Command);
                                         Icon?.Freeze();
                                         if (Icon == null && menuItemInfo.hbmpItem != IntPtr.Zero)
@@ -139,6 +149,7 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
                                         index++;
                                         ShellContextMenuEntry newEntry = (ShellContextMenuEntry)Clone();
                                         newEntry.Name = menuItemInfo.dwTypeData.Trim();
+                                        newEntry.NumCmd = menuItemInfo.wID;
                                         newEntry.Icon = ExtensionsContextMenu.GetDefaultIcon(Command);
                                         newEntry.Icon?.Freeze();
                                         if (newEntry.Icon == null && menuItemInfo.hbmpItem != IntPtr.Zero)
@@ -162,10 +173,6 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
             {
                 if (toRemove)
                     list.Remove(this);
-                if (exCommand != null)
-                    Marshal.ReleaseComObject(exCommand);
-                if (hMenu != IntPtr.Zero)
-                    NativeMethods.DestroyMenu(hMenu);
                 if (ptrData != IntPtr.Zero)
                     Marshal.FreeCoTaskMem(ptrData);
             }
@@ -196,6 +203,7 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
                     else
                         newEntry = (ShellContextMenuEntry)Clone();
                     newEntry.Name = menuItemInfo.dwTypeData.Trim();
+                    newEntry.NumCmd = menuItemInfo.wID;
                     newEntry.Icon = ExtensionsContextMenu.GetDefaultIcon(Command);
                     newEntry.Icon?.Freeze();
                     if (newEntry.Icon == null && menuItemInfo.hbmpItem != IntPtr.Zero)
@@ -206,6 +214,46 @@ public partial class ShellContextMenuEntry : ObservableObject, ICloneable
                 }
             }
         }
+    }
+
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                if (Subitems?.Count > 0)
+                    for (int i = Subitems.Count - 1; i >= 0; i--)
+                        Subitems[i].Dispose();
+                try
+                {
+                    if (ContextMenu != null)
+                    {
+                        Marshal.ReleaseComObject(ContextMenu);
+                        ContextMenu = null;
+                    }
+                    if (_menuHandle != IntPtr.Zero)
+                    {
+                        NativeMethods.DestroyMenu(_menuHandle);
+                        _menuHandle = IntPtr.Zero;
+                    }
+                }
+                catch (Exception) { /* Ignore errors, COM object certainly already released */ }
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }
 

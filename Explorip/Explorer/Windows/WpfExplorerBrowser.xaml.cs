@@ -40,6 +40,11 @@ public partial class WpfExplorerBrowser : Window
 
     public bool MainSession { get; private set; }
 
+    public IntPtr WindowHandle
+    {
+        get { return _windowHandle; }
+    }
+
     public WpfExplorerBrowser() : this(Environment.GetCommandLineArgs().RemoveAt(0)) { }
 
     public WpfExplorerBrowser(string[] args, bool mainSession = true)
