@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -10,13 +13,15 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 using Explorip.Explorer.Controls.ContextMenu;
-using Explorip.Explorer.Helpers;
+using Explorip.Explorer.Helpers.ContextMenu;
 using Explorip.Explorer.Windows;
 
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
 
 using ManagedShell.ShellFolders.Structs;
+
+using Microsoft.WindowsAPICodePack.Shell.Common;
 
 namespace Explorip.Explorer.ViewModels;
 
@@ -116,7 +121,7 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                 break;
             case ETypeCommand.CommandStore:
                 break;
-            /*case ETypeCommand.SendTo:
+            case ETypeCommand.SendTo:
                 if (Path.GetExtension(Entry.Command) == ".lnk")
                 {
                     StringBuilder sb = new();
@@ -149,10 +154,11 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                                 Marshal.FreeCoTaskMem(ptrTitle);
                             }
                         }
-                        catch (Exception) { /* Errors *//* }
+                        catch (Exception) { /* Errors, certainly not a IExplorerCommand */ }
                     }
                 }
-                break;*/
+                _parent.Close();
+                break;
             case ETypeCommand.CreateShortcut:
                 break;
             case ETypeCommand.Rename:

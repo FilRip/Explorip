@@ -13,6 +13,7 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.Helpers;
+using Explorip.Explorer.Helpers.ContextMenu;
 using Explorip.HookFileOperations.FilesOperations;
 
 using ExploripConfig.Configuration;
