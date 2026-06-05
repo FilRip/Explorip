@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Media;
+using System.Xml.Linq;
 
 using CoolBytes.Helpers;
 
@@ -298,11 +299,15 @@ public static class ExtensionsContextMenu
                             if (!string.IsNullOrWhiteSpace(uriIcon))
                                 entry.Icon = IconManager.GetImageSource(uriIcon);
                             result.Add(entry);
+                            appDescriptionKey.Dispose();
                         }
+                        appDefaultIconKey?.Dispose();
+                        shellCommand?.Dispose();
                     }
                 }
                 catch (Exception) { /* TODO : Ignore errors ? */ }
             }
+            reg.Dispose();
         }
         if (root.OpenSubKey(ext)?.GetSubKeyNames()?.Contains("OpenWithList") == true)
         {
@@ -327,10 +332,80 @@ public static class ExtensionsContextMenu
                     result.Add(entry);
                 }
             }
+            reg?.Dispose();
         }
         if (ext != "*")
             result.AddRange(ExpandOpenWith("*", root));
         result = result.Distinct(r => r.Name);
+        return result;
+    }
+
+    public static List<ShellContextMenuEntry> ExpandNew()
+    {
+        List<ShellContextMenuEntry> result = [];
+
+        string[] blacklist =
+        [
+            ".lnk", ".url", ".contact", ".library-ms", ".search-ms",
+            ".settingcontent-ms", ".sys", ".dll", ".ocx", ".cpl",
+            ".mui", ".manifest", ".application", ".pri", ".cat",
+        ];
+
+        BrowseIn(Registry.CurrentUser.OpenSubKey("Software\\Classes"));
+        BrowseIn(Registry.ClassesRoot);
+
+        void BrowseIn(RegistryKey root, int nbSubKey = 0)
+        {
+            foreach (string subKey in root.GetSubKeyNames().Where(s => !blacklist.Contains(s) &&
+                                                                       !root.OpenSubKey(s).GetValueNames().Contains("NeverShowExt")))
+            {
+                if (root.OpenSubKey(subKey).GetSubKeyNames()?.Contains("ShellNew") == true)
+                {
+                    RegistryKey key = root.OpenSubKey(subKey).OpenSubKey("ShellNew");
+                    string name = null;
+                    string command = key.GetValue("FileName", "").ToString();
+                    if (!string.IsNullOrWhiteSpace(key.GetValue("FriendlyTypeName", "").ToString()))
+                        name = Constants.Localization.LoadMsResourceString(key.GetValue("FriendlyTypeName", "").ToString(), key.GetValue("FriendlyTypeName", "").ToString());
+                    else if (!string.IsNullOrWhiteSpace(key.GetValue("ItemName", "").ToString()))
+                        name = Constants.Localization.LoadMsResourceString(key.GetValue("ItemName", "").ToString(), key.GetValue("ItemName", "").ToString());
+                    else
+                        name = GetValueFromProgId(subKey, "FriendlyTypeName");
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        ShellContextMenuEntry entry = new()
+                        {
+                            Command = command,
+                            Name = name,
+                            Source = ETypeCommand.New,
+                            KeyPath = subKey,
+                        };
+                        result.Add(entry);
+                    }
+                    key.Dispose();
+                }
+                if (nbSubKey == 0)
+                    BrowseIn(root.OpenSubKey(subKey), 1);
+            }
+        }
+
+        static string GetValueFromProgId(string progId, string value)
+        {
+            string name;
+            if (Registry.CurrentUser.OpenSubKey("Software\\Classes").OpenSubKey(progId) != null &&
+                !string.IsNullOrWhiteSpace(Registry.CurrentUser.OpenSubKey("Software\\Classes").OpenSubKey(progId).GetValue(value, "").ToString()))
+            {
+                name = Registry.CurrentUser.OpenSubKey("Software\\Classes").OpenSubKey(progId).GetValue(value, "").ToString();
+                return Constants.Localization.LoadMsResourceString(name, name);
+            }
+            else if (Registry.ClassesRoot.OpenSubKey(progId) != null &&
+                     !string.IsNullOrWhiteSpace(Registry.ClassesRoot.OpenSubKey(progId).GetValue(value, "").ToString()))
+            {
+                name = Registry.ClassesRoot.OpenSubKey(progId).GetValue(value, "").ToString();
+                return Constants.Localization.LoadMsResourceString(name, name);
+            }
+            return null;
+        }
+
         return result;
     }
 }

@@ -65,7 +65,7 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
 
     public string Label
     {
-        get { return Entry.Name.Replace("&", ""); }
+        get { return Entry.Name?.Replace('&', '_'); }
     }
 
     public bool IconVisible
@@ -105,7 +105,7 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                         param = param.Replace($"%{i}", _parent.ListSelected[i - 1].ParsingName).Trim();
                 }
                 Process.Start(command, param);
-                _parent.Close();
+                _parent.ForceClose();
                 break;
             case ETypeCommand.ContextMenuHandler:
                 System.Drawing.Point mousePos = new();
@@ -124,7 +124,7 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                     hwnd = ((WpfExplorerBrowser)Window.GetWindow(_parent.ParentTab)).WindowHandle,
                 };
                 Entry.ContextMenu?.InvokeCommand(ref invoke);
-                _parent.Close();
+                _parent.ForceClose();
                 break;
             case ETypeCommand.CommandStore:
                 break;
@@ -146,7 +146,7 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                     }
                     catch (Exception) { /* Errors, certainly not a IExplorerCommand */ }
                 }
-                _parent.Close();
+                _parent.ForceClose();
                 break;
             case ETypeCommand.CreateShortcut:
                 break;
@@ -172,7 +172,7 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                     Process.Start(Entry.Command);
                 else if (!string.IsNullOrWhiteSpace(Entry.Command))
                     Process.Start(Entry.Command, _parent.GetSelectedAsArguments());
-                _parent.Close();
+                _parent.ForceClose();
                 break;
         }
     }

@@ -223,7 +223,11 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     {
         if (_threadBuildContextMenu != null && _threadBuildContextMenu.ThreadState == ThreadState.Running)
             _threadBuildContextMenu.Abort();
-        Close.Invoke();
+        try
+        {
+            Close.Invoke();
+        }
+        catch (Exception) { /* Ignore errors, window certainly already closed */ }
     }
 
     [RelayCommand()]
@@ -236,6 +240,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
             else
                 ManagedShell.Common.Helpers.ShellHelper.ShowFileProperties(_parentTab.CurrentDirectory.ParsingName, _listSelected.Select(so => so.ParsingName));
         }
+        ForceClose();
     }
 
     public ShellObject[] ListSelected

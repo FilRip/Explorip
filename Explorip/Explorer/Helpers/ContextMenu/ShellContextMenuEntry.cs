@@ -113,8 +113,8 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                     int count = NativeMethods.GetMenuItemCount(hMenu);
                                     if (count > 0)
                                     {
-                                        // Auto expand sub menu
-                                        if (Activator.CreateInstance(Type.GetTypeFromCLSID(guid)) is IContextMenu2 exCommand2)
+                                        // Auto expand sub menu. Not working
+                                        /*if (Activator.CreateInstance(Type.GetTypeFromCLSID(guid)) is IContextMenu2 exCommand2)
                                         {
                                             for (int i = 0; i < count; i++)
                                             {
@@ -125,7 +125,7 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                                     exCommand2.HandleMenuMsg((int)NativeMethods.WM.INITMENUPOPUP, idSubMenu, new IntPtr(i));
                                                 }
                                             }
-                                        }
+                                        }*/
                                         int index = 0;
                                         if (count > 1)
                                             index = list.IndexOf(this);
@@ -147,20 +147,25 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                                 }
                                                 else if (i == 0)
                                                 {
-                                                    Name = menuItemInfo.dwTypeData.Trim();
+                                                    Name = menuItemInfo.dwTypeData.Trim().Replace('&', '_');
                                                     NumCmd = menuItemInfo.wID;
                                                     Icon = ExtensionsContextMenu.GetDefaultIcon(Command);
                                                     Icon?.Freeze();
                                                     if (Icon == null && menuItemInfo.hbmpItem != IntPtr.Zero)
                                                         Icon = ((BitmapSource)IconImageConverter.GetImageFromHBitmap(menuItemInfo.hbmpItem, false)).MakeTransparentColor(ConfigManager.ExplorerContextMenuBackground?.Color ?? ExploripSharedCopy.Constants.Colors.BackgroundColor);
-                                                    if (menuItemInfo.hSubMenu != IntPtr.Zero)
+                                                    if (Name == Constants.Localization.NEW)
+                                                    {
+                                                        Subitems.AddRange(ExtensionsContextMenu.ExpandNew());
+                                                        Icon = Constants.Icons.Folder;
+                                                    }
+                                                    else if (menuItemInfo.hSubMenu != IntPtr.Zero)
                                                         ExpandContextMenuSubItems(menuItemInfo.hSubMenu, this);
                                                 }
                                                 else
                                                 {
                                                     index++;
                                                     ShellContextMenuEntry newEntry = (ShellContextMenuEntry)Clone();
-                                                    newEntry.Name = menuItemInfo.dwTypeData.Trim();
+                                                    newEntry.Name = menuItemInfo.dwTypeData.Trim().Replace('&', '_');
                                                     newEntry.NumCmd = menuItemInfo.wID;
                                                     newEntry.Icon = ExtensionsContextMenu.GetDefaultIcon(Command);
                                                     newEntry.Icon?.Freeze();
