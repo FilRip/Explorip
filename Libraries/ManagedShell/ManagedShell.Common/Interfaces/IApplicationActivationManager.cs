@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
 
-namespace ManagedShell.Common.Structs;
+namespace ManagedShell.Common.Interfaces;
 
 [ComImport()]
 [Guid("2e941141-7f97-4756-ba1d-9decde894a3d")]

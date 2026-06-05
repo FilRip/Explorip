@@ -83,6 +83,12 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                             Source = ETypeCommand.OpenWith;
                             Name = Constants.Localization.OPEN_WITH;
                             Subitems = [.. ExtensionsContextMenu.ExpandOpenWith(Path.GetExtension(selectedItems[0].ParsingName))];
+                            Subitems.Add(new ShellContextMenuEntry()
+                            {
+                                Name = Constants.Localization.CHOICE_ANOTHER_APP,
+                                Source = ETypeCommand.OpenWith,
+                                Command = "rundll32.exe",
+                            });
                             break;
                         }
 
@@ -102,7 +108,7 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                 {
                                     ((IShellExtInit)exCommand).Initialize(IntPtr.Zero, ptrData, 0);
                                     hMenu = NativeMethods.CreatePopupMenu();
-                                    exCommand.QueryContextMenu(hMenu, 0, 1, (uint)short.MaxValue, ManagedShell.ShellFolders.Enums.ContextMenuStates.NORMAL);
+                                    exCommand.QueryContextMenu(hMenu, 0, 0, (uint)short.MaxValue, ManagedShell.ShellFolders.Enums.ContextMenuStates.NORMAL);
                                     _menuHandle = hMenu;
                                     int count = NativeMethods.GetMenuItemCount(hMenu);
                                     if (count > 0)

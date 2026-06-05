@@ -278,6 +278,7 @@ public static class ExtensionsContextMenu
                     {
                         RegistryKey appDescriptionKey = appKey.OpenSubKey("Application");
                         RegistryKey appDefaultIconKey = appKey.OpenSubKey("DefaultIcon");
+                        RegistryKey shellCommand = appKey.OpenSubKey("Shell\\open\\command");
                         if (appDescriptionKey != null)
                         {
                             ShellContextMenuEntry entry = new()
@@ -287,6 +288,8 @@ public static class ExtensionsContextMenu
                                 KeyPath = $"{appKey.Name}\\{ext}",
                                 Name = Constants.Localization.LoadMsResourceString(appDescriptionKey.GetValue("ApplicationName", "").ToString(), app),
                             };
+                            if (shellCommand != null && !string.IsNullOrWhiteSpace(shellCommand.GetValue("", "").ToString()))
+                                entry.Command = shellCommand.GetValue("", "").ToString();
                             string uriIcon = null;
                             if (appDescriptionKey.GetValueNames().Contains("ApplicationIcon"))
                                 uriIcon = appDescriptionKey.GetValue("ApplicationIcon", "").ToString();
@@ -301,7 +304,7 @@ public static class ExtensionsContextMenu
                 catch (Exception) { /* TODO : Ignore errors ? */ }
             }
         }
-        if (root.OpenSubKey(ext).GetSubKeyNames().Contains("OpenWithList"))
+        if (root.OpenSubKey(ext)?.GetSubKeyNames()?.Contains("OpenWithList") == true)
         {
             reg = root.OpenSubKey(ext).OpenSubKey("OpenWithList");
             foreach (string key in reg.GetSubKeyNames())
@@ -309,6 +312,9 @@ public static class ExtensionsContextMenu
                 StringBuilder sb = new(256);
                 if (NativeMethods.SearchPath(null, key, null, 256, sb, out _) > 0)
                 {
+                    FileInfo fi = new(sb.ToString());
+                    if (fi.Length == 0)
+                        continue;
                     ShellContextMenuEntry entry = new()
                     {
                         Command = key,

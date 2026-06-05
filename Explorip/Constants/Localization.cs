@@ -218,6 +218,7 @@ public static class Localization
     public static string PASTE_TOOLTIP { get; private set; }
     public static string DELETE_TOOLTIP { get; private set; }
     public static string OPEN_WITH { get; private set; }
+    public static string CHOICE_ANOTHER_APP { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -425,6 +426,7 @@ public static class Localization
         PASTE_TOOLTIP = Load(ExplorerFrameDll, 50218, "Paste (Ctrl+V)");
         DELETE_TOOLTIP = Load(ExplorerFrameDll, 50228, "Copy (Ctrl+D)");
         OPEN_WITH = Load(Shell32Dll, 5377, "Open with...");
+        CHOICE_ANOTHER_APP = Load(Shell32Dll, 5378, "Choose another application");
 
         string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
         ManagedShell.ShellFolders.ShellItem si = new(specialPath);

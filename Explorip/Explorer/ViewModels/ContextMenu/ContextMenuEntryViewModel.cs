@@ -17,6 +17,7 @@ using Explorip.Explorer.Helpers.ContextMenu;
 using Explorip.Explorer.Windows;
 using Explorip.HookFileOperations.FilesOperations.Interfaces;
 
+using ManagedShell.Common.Interfaces;
 using ManagedShell.Common.Structs;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
@@ -24,6 +25,8 @@ using ManagedShell.ShellFolders.Interfaces;
 using ManagedShell.ShellFolders.Structs;
 
 using Microsoft.WindowsAPICodePack.Shell.Common;
+
+using static System.Net.Mime.MediaTypeNames;
 
 using IShellItem = ManagedShell.ShellFolders.Interfaces.IShellItem;
 
@@ -154,16 +157,22 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
             case ETypeCommand.New:
                 break;
             case ETypeCommand.OpenWith:
-                if (Entry.Command.StartsWith("shell:"))
+                if (Entry.Command == "rundll32.exe")
                 {
-                    IApplicationActivationManager activeUwp = (IApplicationActivationManager)new ApplicationActivationManager();
-                    Guid iShellItemGuid = typeof(IShellItem).GUID;
-                    NativeMethods.SHCreateItemFromParsingName(_parent.ListSelected[0].ParsingName, IntPtr.Zero, ref iShellItemGuid, out IntPtr ishellItemPtr);
-                    NativeMethods.SHCreateShellItemArrayFromShellItem(ishellItemPtr, typeof(ManagedShell.ShellFolders.Interfaces.IShellItemArray).GUID, out ManagedShell.ShellFolders.Interfaces.IShellItemArray files);
-                    activeUwp.ActivateForFile(Entry.Command.Replace("shell:AppsFolder\\", ""), files, null, out _);
+                    ProcessStartInfo psi = new()
+                    {
+                        FileName = Entry.Command,
+                        Arguments = $"shell32.dll,OpenAs_RunDLL {_parent.ListSelected[0].ParsingName}",
+                        UseShellExecute = true,
+                        WindowStyle = ProcessWindowStyle.Normal,
+                    };
+                    Process.Start(psi);
                 }
-                else
+                else if (Entry.Command?.StartsWith("shell:") == true)
+                    Process.Start(Entry.Command);
+                else if (!string.IsNullOrWhiteSpace(Entry.Command))
                     Process.Start(Entry.Command, _parent.GetSelectedAsArguments());
+                _parent.Close();
                 break;
         }
     }
