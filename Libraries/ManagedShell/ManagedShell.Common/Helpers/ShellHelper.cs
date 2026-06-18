@@ -216,9 +216,7 @@ public static class ShellHelper
                 object menuDropAlignmentValue = windowsKey.GetValue("MenuDropAlignment");
 
                 if (menuDropAlignmentValue != null)
-                {
                     menuDropAlignment = Convert.ToInt32(menuDropAlignmentValue);
-                }
             }
         }
         catch (Exception) { /* Ignore errors */ }
@@ -245,7 +243,7 @@ public static class ShellHelper
                 FileAttributes attributes = File.GetAttributes(fileName);
                 return (((attributes & FileAttributes.Hidden) != FileAttributes.Hidden) && ((attributes & FileAttributes.System) != FileAttributes.System) && ((attributes & FileAttributes.Temporary) != FileAttributes.Temporary));
             }
-            catch
+            catch (Exception)
             {
                 return false;
             }
@@ -286,9 +284,7 @@ public static class ShellHelper
         try
         {
             if (CIDLData_CreateFromIDArray(pidlParent, (uint)pidlItems.Count, [.. pidlItems], out System.Runtime.InteropServices.ComTypes.IDataObject dataObj) == 0)
-            {
                 return SHMultiFileProperties(dataObj, 0) == S_OK;
-            }
         }
         finally
         {
@@ -1216,8 +1212,7 @@ public static class ShellHelper
             {
                 aumid = prop.Value.ToString();
             }
-            catch (Exception)
-            { /* Ignore errors */ }
+            catch (Exception) { /* Ignore errors */ }
 
             prop.Clear();
         }
@@ -1244,9 +1239,7 @@ public static class ShellHelper
     public static string GetAppUserModelIdForHandle(IntPtr hWnd)
     {
         if (!EnvironmentHelper.IsWindows8OrBetter)
-        {
             return GetAppUserModelIdPropertyForHandle(hWnd);
-        }
 
         GetWindowThreadProcessId(hWnd, out uint procId);
 
@@ -1260,9 +1253,7 @@ public static class ShellHelper
             GetApplicationUserModelId(hProcess, ref len, outAumid);
             CloseHandle(hProcess);
             if (outAumid.Length > 0)
-            {
                 return outAumid.ToString();
-            }
         }
 
         return GetAppUserModelIdPropertyForHandle(hWnd);
@@ -1290,7 +1281,6 @@ public static class ShellHelper
 
 
         if (hWnd == IntPtr.Zero)
-        {
             EnumWindows((hwnd, lParam) =>
             {
                 StringBuilder cName = new(256);
@@ -1306,7 +1296,6 @@ public static class ShellHelper
                 }
                 return true;
             }, 0);
-        }
 
         WindowInfo info = new();
         info.cbSize = (uint)Marshal.SizeOf(info);

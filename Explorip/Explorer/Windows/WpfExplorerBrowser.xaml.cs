@@ -214,6 +214,7 @@ public partial class WpfExplorerBrowser : Window
 
     public void HideRightTab(bool newInstance = false)
     {
+        DataContext.ShowMiddleButtons = false;
         RightGrid.Width = new GridLength(0);
         RightTab.Visibility = Visibility.Hidden;
         LeftTab.SetValue(Grid.ColumnSpanProperty, 6);
@@ -223,6 +224,7 @@ public partial class WpfExplorerBrowser : Window
 
     public void ShowRightTab()
     {
+        DataContext.ShowMiddleButtons = true;
         RightGrid.Width = new GridLength(1, GridUnitType.Star);
         RightTab.Visibility = Visibility.Visible;
         LeftTab.SetValue(Grid.ColumnSpanProperty, 1);

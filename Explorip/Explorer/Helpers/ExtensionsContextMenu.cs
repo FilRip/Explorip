@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Media;
-using System.Xml.Linq;
 
 using CoolBytes.Helpers;
 
@@ -22,47 +21,50 @@ namespace Explorip.Explorer.Helpers;
 
 public static class ExtensionsContextMenu
 {
+    private const string FriendlyTypeNameKey = "FriendlyTypeName";
+    private const string SubRootKey = @"SOFTWARE\Classes";
+    private const string ClSidKey = "CLSID\\";
+    private const string DefaultIconKey = "DefaultIcon";
+
     public static List<ShellContextMenuEntry> GetAllCommands(ESourceType sourceType, string fileExtension = "")
     {
         List<ShellContextMenuEntry> results = [];
 
-        if (sourceType == ESourceType.File)
+        switch (sourceType)
         {
-            ScanShellContextMenuCurrentUser(@"*\shell", ref results, ETypeCommand.ShellVerb);
-            if (!string.IsNullOrWhiteSpace(fileExtension))
-            {
-                ScanShellContextMenuCurrentUser(@$"{fileExtension}\shell", ref results, ETypeCommand.ShellVerb);
-                ScanShellContextMenuCurrentUser(@$"SystemFileAssociations\{fileExtension}\shell", ref results, ETypeCommand.ShellVerb);
-            }
-            ScanShellContextMenuCurrentUser(@"AllFileSystemObjects\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"SystemFileAssociations\*\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"*\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
-            ScanShellContextMenuCurrentUser(@"AllFileSystemObjects\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
-        }
-        else if (sourceType == ESourceType.Folder)
-        {
-            ScanShellContextMenuCurrentUser(@"Directory\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"Directory\Background\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"Directory\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
-            ScanShellContextMenuCurrentUser(@"Directory\Background\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
-        }
-        else if (sourceType == ESourceType.Drive)
-        {
-            ScanShellContextMenuCurrentUser(@"Drive\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"Drive\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
-        }
-        else if (sourceType == ESourceType.MultipleFiles)
-        {
-            ScanShellContextMenuCurrentUser(@"*\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"AllFileSystemObjects\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"SystemFileAssociations\*\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"*\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
-            ScanShellContextMenuCurrentUser(@"AllFileSystemObjects\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
-        }
-        else if (sourceType == ESourceType.MultipleFolders)
-        {
-            ScanShellContextMenuCurrentUser(@"Directory\shell", ref results, ETypeCommand.ShellVerb);
-            ScanShellContextMenuCurrentUser(@"Directory\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+            case ESourceType.File:
+                ScanShellContextMenuCurrentUser(@"*\shell", ref results, ETypeCommand.ShellVerb);
+                if (!string.IsNullOrWhiteSpace(fileExtension))
+                {
+                    ScanShellContextMenuCurrentUser(@$"{fileExtension}\shell", ref results, ETypeCommand.ShellVerb);
+                    ScanShellContextMenuCurrentUser(@$"SystemFileAssociations\{fileExtension}\shell", ref results, ETypeCommand.ShellVerb);
+                }
+                ScanShellContextMenuCurrentUser(@"AllFileSystemObjects\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"SystemFileAssociations\*\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"*\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+                ScanShellContextMenuCurrentUser(@"AllFileSystemObjects\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+                break;
+            case ESourceType.Folder:
+                ScanShellContextMenuCurrentUser(@"Directory\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"Directory\Background\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"Directory\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+                ScanShellContextMenuCurrentUser(@"Directory\Background\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+                break;
+            case ESourceType.Drive:
+                ScanShellContextMenuCurrentUser(@"Drive\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"Drive\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+                break;
+            case ESourceType.MultipleFiles:
+                ScanShellContextMenuCurrentUser(@"*\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"AllFileSystemObjects\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"SystemFileAssociations\*\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"*\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+                ScanShellContextMenuCurrentUser(@"AllFileSystemObjects\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+                break;
+            case ESourceType.MultipleFolders:
+                ScanShellContextMenuCurrentUser(@"Directory\shell", ref results, ETypeCommand.ShellVerb);
+                ScanShellContextMenuCurrentUser(@"Directory\shellex\ContextMenuHandlers", ref results, ETypeCommand.ContextMenuHandler);
+                break;
         }
 
         // CommandStore shell
@@ -130,6 +132,7 @@ public static class ExtensionsContextMenu
                     Name = label,
                     Command = di.Name,
                     Icon = IconImageConverter.GetImageFromAssociatedIcon(di.Name, ManagedShell.Common.Enums.IconSize.Small),
+                    DriveInfo = di,
                 };
                 info.Icon?.Freeze();
                 results.Add(info);
@@ -141,7 +144,7 @@ public static class ExtensionsContextMenu
     private static void ScanShellContextMenuCurrentUser(string subPath, ref List<ShellContextMenuEntry> results, ETypeCommand source)
     {
         ScanShellContextMenu(Registry.ClassesRoot, subPath, ref results, source);
-        ScanShellContextMenu(Registry.CurrentUser, @$"Software\Classes\{subPath}", ref results, source);
+        ScanShellContextMenu(Registry.CurrentUser, @$"{SubRootKey}\{subPath}", ref results, source);
     }
 
     private static void ScanShellContextMenu(RegistryKey root, string subPath, ref List<ShellContextMenuEntry> results, ETypeCommand source)
@@ -149,7 +152,7 @@ public static class ExtensionsContextMenu
         using RegistryKey key = root.OpenSubKey(subPath, false);
         if (key == null)
             return;
-        string command, explorerCommand, iconPath;
+        string command, explorerCommand;
         foreach (string verb in key.GetSubKeyNames())
         {
             using RegistryKey handlerKey = key.OpenSubKey(verb, false);
@@ -171,49 +174,31 @@ public static class ExtensionsContextMenu
             {
                 Source = source,
                 KeyPath = $"{root.Name}\\{subPath}\\{verb}",
-                Name = verb,
+                Name = handlerKey.GetValue("", "").ToString(),
                 ExplorerCommandHandler = explorerCommand,
-                Command = command.Replace("CLSID\\", ""),
+                Command = command.Replace(ClSidKey, ""),
             };
-            if (!string.IsNullOrWhiteSpace(handlerKey.GetValue("", "").ToString()))
+            if (!string.IsNullOrWhiteSpace(handlerKey.GetValue("", "").ToString()) && info.Name.StartsWith("@"))
             {
-                info.Name = handlerKey.GetValue("").ToString();
-                if (handlerKey.GetValue("").ToString().StartsWith("@"))
+                // Try get resources label
+                string lib = handlerKey.GetValue("").ToString().TrimStart('@');
+                if (lib.Contains("ms-resource://"))
+                    info.Name = Constants.Localization.LoadMsResourceString(handlerKey.GetValue("").ToString(), handlerKey.GetValue("").ToString());
+                else
                 {
-                    // Try get resources label
-                    string lib = handlerKey.GetValue("").ToString().TrimStart('@');
-                    if (lib.Contains("ms-resource://"))
+                    int index = 0;
+                    if (lib.Contains(','))
                     {
-                        info.Name = Constants.Localization.LoadMsResourceString(handlerKey.GetValue("").ToString(), handlerKey.GetValue("").ToString());
+                        string[] splitter = lib.Split(',');
+                        string strIndex = splitter[splitter.Length - 1].TrimStart('-');
+                        if (int.TryParse(strIndex, out index))
+                            lib = lib.Substring(0, lib.Length - (strIndex.Length + 1)).TrimEnd(',');
                     }
-                    else
-                    {
-                        int index = 0;
-                        if (lib.Contains(','))
-                        {
-                            string[] splitter = lib.Split(',');
-                            string strIndex = splitter[splitter.Length - 1].TrimStart('-');
-                            if (int.TryParse(strIndex, out index))
-                                lib = lib.Substring(0, lib.Length - (strIndex.Length + 1)).TrimEnd(',');
-                        }
-                        info.Name = Constants.Localization.Load(lib, (uint)index, handlerKey.GetValue("").ToString());
-                    }
+                    info.Name = Constants.Localization.Load(lib, (uint)index, handlerKey.GetValue("").ToString());
                 }
             }
             if (!string.IsNullOrWhiteSpace(handlerKey.GetValue("icon", "").ToString()))
-            {
-                iconPath = handlerKey.GetValue("icon", "").ToString();
-                int index = 0;
-                if (iconPath.Contains(','))
-                {
-                    string[] splitter = iconPath.Split(',');
-                    string indexStr = splitter[splitter.Length - 1].TrimStart('-');
-                    if (int.TryParse(indexStr, out index))
-                        iconPath = iconPath.Substring(0, iconPath.Length - (indexStr.Length + 1)).TrimEnd(',');
-                }
-                info.Icon = IconManager.GetIconFromFile(iconPath.Trim('\"'), index, false);
-                info.Icon?.Freeze();
-            }
+                info.Icon = IconManager.GetImageSource(handlerKey.GetValue("icon", "").ToString());
             results.RemoveAll(i => i.Source == info.Source && i.Name == info.Name && (i.Command == info.Command || i.ExplorerCommandHandler == info.ExplorerCommandHandler));
             results.Add(info);
         }
@@ -222,8 +207,8 @@ public static class ExtensionsContextMenu
     public static ImageSource GetDefaultIcon(string guid)
     {
         RegistryKey reg;
-        reg = Registry.CurrentUser.OpenSubKey($"Software\\Classes\\CLSID\\{guid}");
-        reg ??= Registry.ClassesRoot.OpenSubKey($"CLSID\\{guid}");
+        reg = Registry.CurrentUser.OpenSubKey($"{SubRootKey}\\{ClSidKey}{guid}");
+        reg ??= Registry.ClassesRoot.OpenSubKey($"{ClSidKey}{guid}");
 
         if (reg == null)
             return null;
@@ -231,9 +216,9 @@ public static class ExtensionsContextMenu
         string filePath;
         int index = 0;
 
-        if (reg.GetSubKeyNames().Contains("DefaultIcon", StringComparer.OrdinalIgnoreCase))
+        if (reg.GetSubKeyNames().Contains(DefaultIconKey, StringComparer.OrdinalIgnoreCase))
         {
-            filePath = reg.OpenSubKey("DefaultIcon").GetValue("", "").ToString();
+            filePath = reg.OpenSubKey(DefaultIconKey).GetValue("", "").ToString();
             if (!string.IsNullOrWhiteSpace(filePath))
             {
                 if (filePath.Contains(','))
@@ -265,7 +250,7 @@ public static class ExtensionsContextMenu
             ext = "*";
         if (root == null)
             result.AddRange(ExpandOpenWith(ext, Registry.ClassesRoot));
-        root ??= Registry.CurrentUser.OpenSubKey("Software\\Classes");
+        root ??= Registry.CurrentUser.OpenSubKey(SubRootKey);
         RegistryKey reg = root.OpenSubKey(ext);
         if (reg != null && reg.GetSubKeyNames().Contains("OpenWithProgids"))
         {
@@ -278,7 +263,7 @@ public static class ExtensionsContextMenu
                     if (appKey != null)
                     {
                         RegistryKey appDescriptionKey = appKey.OpenSubKey("Application");
-                        RegistryKey appDefaultIconKey = appKey.OpenSubKey("DefaultIcon");
+                        RegistryKey appDefaultIconKey = appKey.OpenSubKey(DefaultIconKey);
                         RegistryKey shellCommand = appKey.OpenSubKey("Shell\\open\\command");
                         if (appDescriptionKey != null)
                         {
@@ -351,7 +336,7 @@ public static class ExtensionsContextMenu
             ".mui", ".manifest", ".application", ".pri", ".cat",
         ];
 
-        BrowseIn(Registry.CurrentUser.OpenSubKey("Software\\Classes"));
+        BrowseIn(Registry.CurrentUser.OpenSubKey(SubRootKey));
         BrowseIn(Registry.ClassesRoot);
 
         void BrowseIn(RegistryKey root, int nbSubKey = 0)
@@ -364,12 +349,12 @@ public static class ExtensionsContextMenu
                     RegistryKey key = root.OpenSubKey(subKey).OpenSubKey("ShellNew");
                     string name = null;
                     string command = key.GetValue("FileName", "").ToString();
-                    if (!string.IsNullOrWhiteSpace(key.GetValue("FriendlyTypeName", "").ToString()))
-                        name = Constants.Localization.LoadMsResourceString(key.GetValue("FriendlyTypeName", "").ToString(), key.GetValue("FriendlyTypeName", "").ToString());
+                    if (!string.IsNullOrWhiteSpace(key.GetValue(FriendlyTypeNameKey, "").ToString()))
+                        name = Constants.Localization.LoadMsResourceString(key.GetValue(FriendlyTypeNameKey, "").ToString(), key.GetValue(FriendlyTypeNameKey, "").ToString());
                     else if (!string.IsNullOrWhiteSpace(key.GetValue("ItemName", "").ToString()))
                         name = Constants.Localization.LoadMsResourceString(key.GetValue("ItemName", "").ToString(), key.GetValue("ItemName", "").ToString());
                     else
-                        name = GetValueFromProgId(subKey, "FriendlyTypeName");
+                        name = GetValueFromProgId(subKey, FriendlyTypeNameKey);
                     if (!string.IsNullOrWhiteSpace(name))
                     {
                         ShellContextMenuEntry entry = new()
@@ -378,6 +363,7 @@ public static class ExtensionsContextMenu
                             Name = name,
                             Source = ETypeCommand.New,
                             KeyPath = subKey,
+                            Icon = IconManager.GetImageSource(GetValueFromProgId(subKey, "", DefaultIconKey)),
                         };
                         result.Add(entry);
                     }
@@ -388,22 +374,22 @@ public static class ExtensionsContextMenu
             }
         }
 
-        static string GetValueFromProgId(string progId, string value)
+        static string GetValueFromProgId(string progId, string value, string subKey = null)
         {
-            string name;
-            if (Registry.CurrentUser.OpenSubKey("Software\\Classes").OpenSubKey(progId) != null &&
-                !string.IsNullOrWhiteSpace(Registry.CurrentUser.OpenSubKey("Software\\Classes").OpenSubKey(progId).GetValue(value, "").ToString()))
+            string name = null;
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(SubRootKey)?.OpenSubKey(progId);
+            key ??= Registry.ClassesRoot.OpenSubKey(progId);
+            if (key != null)
             {
-                name = Registry.CurrentUser.OpenSubKey("Software\\Classes").OpenSubKey(progId).GetValue(value, "").ToString();
-                return Constants.Localization.LoadMsResourceString(name, name);
+                if (!string.IsNullOrWhiteSpace(subKey))
+                    key = key.OpenSubKey(subKey);
+                if (key != null)
+                    name = key.GetValue(value, "").ToString();
+                if (!string.IsNullOrWhiteSpace(name))
+                    name = Constants.Localization.LoadMsResourceString(name, name);
+                key.Dispose();
             }
-            else if (Registry.ClassesRoot.OpenSubKey(progId) != null &&
-                     !string.IsNullOrWhiteSpace(Registry.ClassesRoot.OpenSubKey(progId).GetValue(value, "").ToString()))
-            {
-                name = Registry.ClassesRoot.OpenSubKey(progId).GetValue(value, "").ToString();
-                return Constants.Localization.LoadMsResourceString(name, name);
-            }
-            return null;
+            return name;
         }
 
         return result;

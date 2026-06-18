@@ -26,6 +26,7 @@ public static class Localization
     private const string ComDlg32 = "comdlg32.dll";
     private const string TwinUiPcShellDll = "twinui.pcshell.dll";
     private const string SrhDll = "srh.dll";
+    private const string ComResDll = "comres.dll";
 
     public static string PASTE { get; private set; }
     public static string PASTE_SHORTCUT { get; private set; }
@@ -220,6 +221,11 @@ public static class Localization
     public static string OPEN_WITH { get; private set; }
     public static string CHOICE_ANOTHER_APP { get; private set; }
     public static string NEW { get; private set; }
+    public static string CopyPathToClipboard { get; private set; }
+    public static string NEW_FILE { get; private set; }
+    public static string SFTP { get; private set; }
+    public static string SSH { get; private set; }
+    public static string CONNECTION { get; private set; }
 
     public static void LoadTranslation()
     {
@@ -429,6 +435,11 @@ public static class Localization
         OPEN_WITH = Load(Shell32Dll, 5377, "Open with...");
         CHOICE_ANOTHER_APP = Load(Shell32Dll, 5378, "Choose another application");
         NEW = Load(Shell32Dll, 30315, "New").Replace('&', '_');
+        CopyPathToClipboard = Load(Shell32Dll, 30328, "Copy as the file path");
+        NEW_FILE = Load(Shell32Dll, 4151, "New");
+        SFTP = "SFTP";
+        SSH = "SSH";
+        CONNECTION = Load(ComResDll, 1816, "Connection");
 
         string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
         ManagedShell.ShellFolders.ShellItem si = new(specialPath);

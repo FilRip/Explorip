@@ -22,4 +22,7 @@ public partial class WpfExplorerBrowserViewModel : ObservableObject
 
     [ObservableProperty()]
     private double _middleFileOperationFontSize;
+
+    [ObservableProperty()]
+    private bool _showMiddleButtons;
 }

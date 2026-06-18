@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="Styles/StyleButton.xaml"/>
                 <ResourceDictionary Source="Styles/StyleTreeViewItem.xaml"/>
                 <ResourceDictionary Source="Styles/StyleContextMenu.xaml"/>
+                <ResourceDictionary Source="Styles/StyleNumericUpDown.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

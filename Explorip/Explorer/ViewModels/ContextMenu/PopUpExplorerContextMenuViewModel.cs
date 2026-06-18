@@ -36,7 +36,7 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     private SolidColorBrush _foregroundCut, _foregroundCopy, _foregroundPaste, _foregroundDelete;
     [ObservableProperty()]
     private SolidColorBrush _background, _foreground;
-    [ObservableProperty()]
+    [ObservableProperty(), NotifyPropertyChangedFor(nameof(VisibleIcons))]
     private bool _visibleCut, _visibleCopy, _visibleDelete, _visiblePaste;
     [ObservableProperty()]
     private double _dpi;
@@ -114,20 +114,6 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
                     }
                 return [.. result];
             }
-            /*if (sourceType != ESourceType.Drive && !_backgroundContextMenu)
-            {
-                ContextMenuEntryViewModel vmSendTo = new(new ShellContextMenuEntry()
-                {
-                    Source = ETypeCommand.SendTo,
-                    Name = Constants.Localization.SEND_TO,
-                }, this, null);
-                foreach (ShellContextMenuEntry entry in ExtensionsContextMenu.ExpandSendTo(true))
-                    vmSendTo.SubItems.Add(new ContextMenuEntryViewModel(entry, this, vmSendTo));
-                Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    ListContextMenuEntry.Add(vmSendTo);
-                });
-            }*/
         }
         catch (Exception) { /* Ignore errors */ }
     }
@@ -149,6 +135,11 @@ public partial class PopUpExplorerContextMenuViewModel : ObservableObject
     {
         ForceClose();
         _parentTab.ShowDefaultContextMenu();
+    }
+
+    public bool VisibleIcons
+    {
+        get { return VisibleCopy || VisibleCut || VisibleDelete || VisiblePaste; }
     }
 
     [RelayCommand()]

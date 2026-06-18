@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -15,20 +14,10 @@ using CommunityToolkit.Mvvm.Input;
 using Explorip.Explorer.Controls.ContextMenu;
 using Explorip.Explorer.Helpers.ContextMenu;
 using Explorip.Explorer.Windows;
-using Explorip.HookFileOperations.FilesOperations.Interfaces;
 
-using ManagedShell.Common.Interfaces;
-using ManagedShell.Common.Structs;
 using ManagedShell.Interop;
 using ManagedShell.ShellFolders.Enums;
-using ManagedShell.ShellFolders.Interfaces;
 using ManagedShell.ShellFolders.Structs;
-
-using Microsoft.WindowsAPICodePack.Shell.Common;
-
-using static System.Net.Mime.MediaTypeNames;
-
-using IShellItem = ManagedShell.ShellFolders.Interfaces.IShellItem;
 
 namespace Explorip.Explorer.ViewModels;
 
@@ -80,6 +69,16 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
 
     public bool IsMouseOver { get; set; }
 
+    public int IconWidth
+    {
+        get { return (int)(16 * Dpi); }
+    }
+
+    public int IconHeight
+    {
+        get { return (int)(16 * Dpi); }
+    }
+
     [RelayCommand()]
     private void Execute()
     {
@@ -108,22 +107,27 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
                 _parent.ForceClose();
                 break;
             case ETypeCommand.ContextMenuHandler:
-                System.Drawing.Point mousePos = new();
-                NativeMethods.GetCursorPos(ref mousePos);
-                CmInvokeCommandInfoEx invoke = new()
+                if (Entry.Name == Constants.Localization.CopyPathToClipboard)
+                    Clipboard.SetText(_parent.ListSelected[0].ParsingName);
+                else
                 {
-                    lpVerbW = new IntPtr(Entry.NumCmd),
-                    lpVerb = new IntPtr(Entry.NumCmd),
-                    lpDirectoryW = _parent.ParentFolder.ParsingName,
-                    lpDirectory = _parent.ParentFolder.ParsingName,
-                    fMask = ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
-                        (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
-                        (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
-                    ptInvoke = new NativeMethods.Point(mousePos.X, mousePos.Y),
-                    nShow = NativeMethods.WindowShowStyle.ShowNormal,
-                    hwnd = ((WpfExplorerBrowser)Window.GetWindow(_parent.ParentTab)).WindowHandle,
-                };
-                Entry.ContextMenu?.InvokeCommand(ref invoke);
+                    System.Drawing.Point mousePos = new();
+                    NativeMethods.GetCursorPos(ref mousePos);
+                    CmInvokeCommandInfoEx invoke = new()
+                    {
+                        lpVerbW = new IntPtr(Entry.NumCmd),
+                        lpVerb = new IntPtr(Entry.NumCmd),
+                        lpDirectoryW = _parent.ParentFolder.ParsingName,
+                        lpDirectory = _parent.ParentFolder.ParsingName,
+                        fMask = ContextMenuInfoCommands.UNICODE | ContextMenuInfoCommands.PTINVOKE |
+                            (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl) ? ContextMenuInfoCommands.CONTROL_DOWN : 0) |
+                            (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift) ? ContextMenuInfoCommands.SHIFT_DOWN : 0),
+                        ptInvoke = new NativeMethods.Point(mousePos.X, mousePos.Y),
+                        nShow = NativeMethods.WindowShowStyle.ShowNormal,
+                        hwnd = ((WpfExplorerBrowser)Window.GetWindow(_parent.ParentTab)).WindowHandle,
+                    };
+                    Entry.ContextMenu?.InvokeCommand(ref invoke);
+                }
                 _parent.ForceClose();
                 break;
             case ETypeCommand.CommandStore:
@@ -155,6 +159,21 @@ public partial class ContextMenuEntryViewModel(ShellContextMenuEntry entry, PopU
             case ETypeCommand.Share:
                 break;
             case ETypeCommand.New:
+                string name = Path.Combine(_parent.ParentFolder.ParsingName, $"{Constants.Localization.NEW_FILE} {Path.GetFileNameWithoutExtension(Entry.Name)} (%i){Path.GetExtension(Entry.Command)}");
+                if (File.Exists(name.Replace(" (%i)", "")))
+                {
+                    int nb = 1;
+                    string newName = name;
+                    do
+                    {
+                        nb++;
+                        name = newName.Replace("%i", nb.ToString());
+                    } while (File.Exists(name));
+                }
+                else
+                    name = name.Replace(" (%i)", "");
+                File.Copy(Entry.Command, name);
+                _parent.ForceClose();
                 break;
             case ETypeCommand.OpenWith:
                 if (Entry.Command == "rundll32.exe")

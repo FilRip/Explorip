@@ -213,29 +213,32 @@ public static class IconManager
         ImageSource img = null;
         try
         {
-            if (uri.Contains("ms-resource://"))
+            if (!string.IsNullOrWhiteSpace(uri))
             {
-                img = new BitmapImage();
-                ((BitmapImage)img).BeginInit();
-                ((BitmapImage)img).CacheOption = BitmapCacheOption.OnLoad;
-                ((BitmapImage)img).UriSource = new Uri(Constants.Localization.LoadMsResourceString(uri, uri));
-                ((BitmapImage)img).EndInit();
-                img = img.Resize(width, height);
-            }
-            else
-            {
-                int index = 0;
-                if (uri.Contains(','))
+                if (uri.Contains("ms-resource://"))
                 {
-                    string[] splitter = uri.Split(',');
-                    string strIndex = splitter[splitter.Length - 1].TrimStart('-');
-                    if (int.TryParse(strIndex, out index))
-                        uri = uri.Substring(0, uri.Length - (strIndex.Length + 1)).TrimEnd(',');
+                    img = new BitmapImage();
+                    ((BitmapImage)img).BeginInit();
+                    ((BitmapImage)img).CacheOption = BitmapCacheOption.OnLoad;
+                    ((BitmapImage)img).UriSource = new Uri(Constants.Localization.LoadMsResourceString(uri, uri));
+                    ((BitmapImage)img).EndInit();
+                    img = img.Resize(width, height);
                 }
-                bool large = (width > 16);
-                img = GetIconFromFile(uri, index, large);
+                else
+                {
+                    int index = 0;
+                    if (uri.Contains(','))
+                    {
+                        string[] splitter = uri.Split(',');
+                        string strIndex = splitter[splitter.Length - 1].TrimStart('-');
+                        if (int.TryParse(strIndex, out index))
+                            uri = uri.Substring(0, uri.Length - (strIndex.Length + 1)).TrimEnd(',');
+                    }
+                    bool large = (width > 16);
+                    img = GetIconFromFile(uri, index, large);
+                }
+                img?.Freeze();
             }
-            img.Freeze();
             return img;
         }
         catch (Exception) { /* Ignore errors */ }

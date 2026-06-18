@@ -44,6 +44,7 @@ namespace Explorip.Explorer.Helpers.ContextMenu
 
         public IContextMenu ContextMenu { get; set; }
         public uint NumCmd { get; set; }
+        public DriveInfo DriveInfo { get; set; }
 
         public object Clone()
         {
@@ -56,6 +57,7 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                 Command = Command,
                 Icon = Icon,
                 ContextMenu = ContextMenu,
+                DriveInfo = DriveInfo,
             };
         }
 
@@ -113,19 +115,6 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                     int count = NativeMethods.GetMenuItemCount(hMenu);
                                     if (count > 0)
                                     {
-                                        // Auto expand sub menu. Not working
-                                        /*if (Activator.CreateInstance(Type.GetTypeFromCLSID(guid)) is IContextMenu2 exCommand2)
-                                        {
-                                            for (int i = 0; i < count; i++)
-                                            {
-                                                int idMenu = NativeMethods.GetMenuItemID(hMenu, i);
-                                                if (idMenu < 0)
-                                                {
-                                                    IntPtr idSubMenu = NativeMethods.GetSubMenu(hMenu, i);
-                                                    exCommand2.HandleMenuMsg((int)NativeMethods.WM.INITMENUPOPUP, idSubMenu, new IntPtr(i));
-                                                }
-                                            }
-                                        }*/
                                         int index = 0;
                                         if (count > 1)
                                             index = list.IndexOf(this);
@@ -156,7 +145,7 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                                     if (Name == Constants.Localization.NEW)
                                                     {
                                                         Subitems.AddRange(ExtensionsContextMenu.ExpandNew());
-                                                        Icon = Constants.Icons.Folder;
+                                                        Icon = Constants.Icons.SmallFolder;
                                                     }
                                                     else if (menuItemInfo.hSubMenu != IntPtr.Zero)
                                                         ExpandContextMenuSubItems(menuItemInfo.hSubMenu, this);
@@ -185,7 +174,10 @@ namespace Explorip.Explorer.Helpers.ContextMenu
                                 }
                             }
                         }
-                        catch (Exception) { /* Errors */ }
+                        catch (Exception)
+                        {
+                            toRemove = true;
+                        }
                         finally
                         {
                             if (toRemove)
@@ -235,6 +227,8 @@ namespace Explorip.Explorer.Helpers.ContextMenu
             }
         }
 
+        #region IDisposable Support
+
         public bool IsDisposed
         {
             get { return disposedValue; }
@@ -274,5 +268,7 @@ namespace Explorip.Explorer.Helpers.ContextMenu
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        #endregion
     }
 }

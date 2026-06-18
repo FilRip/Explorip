@@ -33,6 +33,17 @@ internal static class Icons
     public static ImageSource SearchButton { get; private set; }
     public static ImageSource ExpandButtonToRight { get; private set; }
     public static ImageSource ExpandButtonToLeft { get; private set; }
+    public static ImageSource SmallFolder { get; private set; }
+    public static ImageSource RegEdit { get; private set; }
+    public static ImageSource CommandLine { get; private set; }
+    public static ImageSource PowerShell { get; private set; }
+    public static ImageSource Floppy { get; private set; }
+    public static ImageSource HardDisk { get; private set; }
+    public static ImageSource Iso { get; private set; }
+    public static ImageSource Window { get; private set; }
+    public static ImageSource TwoWindows { get; private set; }
+    public static ImageSource TwoWindowsArrow { get; private set; }
+    public static ImageSource TwoWindowsClose { get; private set; }
 
     internal static void Init()
     {
@@ -58,5 +69,16 @@ internal static class Icons
         SearchButton = IconManager.StringToImageSource("\uE721", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush, width: 32, height: 32, fontSize: 32);
         ExpandButtonToRight = IconManager.StringToImageSource("\uE970", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush);
         ExpandButtonToLeft = IconManager.StringToImageSource("\uE96F", foregroundColor: ExploripSharedCopy.Constants.Colors.ForegroundColorBrush);
+        SmallFolder = Folder.Resize(16, 16);
+        RegEdit = IconManager.GetIconFromFile("regedit.exe", 0);
+        PowerShell = IconManager.GetIconFromFile("powershell.exe", 0);
+        CommandLine = IconManager.GetIconFromFile("cmd.exe", 0);
+        Floppy = IconManager.GetIconFromFile(Shell32Dll, 258);
+        HardDisk = IconManager.GetIconFromFile(ImageResDll, 27);
+        Iso = IconManager.GetIconFromFile(ImageResDll, 56);
+        Window = IconManager.GetIconFromFile(ImageResDll, 11);
+        TwoWindows = IconManager.GetIconFromFile(ImageResDll, 146);
+        TwoWindowsArrow = IconManager.GetIconFromFile(ImageResDll, 141);
+        TwoWindowsClose = IconManager.GetIconFromFile(ImageResDll, 162);
     }
 }

@@ -138,5 +138,17 @@ public partial class HeaderWithCloseButtonViewModel(HeaderWithCloseButton contro
             _control.MyTabControl.Items.Insert(_control.MyTabControl.Items.Count - 1, new TabItemFileSystemManagement(dialog.FileName));
     }
 
+    [RelayCommand()]
+    private void NewSftpTab()
+    {
+        _control.MyTabControl.AddNewTab(new TabItemSftp());
+    }
+
+    [RelayCommand()]
+    private void NewSshTab()
+    {
+        _control.MyTabControl.AddNewTab(new TabItemSsh());
+    }
+
     #endregion
 }

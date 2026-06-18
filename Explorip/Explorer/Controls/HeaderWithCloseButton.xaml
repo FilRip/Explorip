@@ -22,24 +22,79 @@
     
     <UserControl.ContextMenu>
         <ContextMenu Name="TabControlContextualMenu" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" BorderBrush="{x:Static colors:Colors.ForegroundColorBrush}">
-            <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_TAB}" Name="NewTab" Command="{Binding NewTabCommand}"/>
-            <MenuItem Header="{x:Static constants:Localization.CLOSE_TAB}" Name="CloseTab" Command="{Binding CloseTabCommand}"/>
-            <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Command="{Binding NewTabOtherCommand}"/>
-            <MenuItem Header="{x:Static constants:Localization.CLOSE_OTHER_TAB}" Name="CloseAllTab" Command="{Binding CloseAllTabCommand}"/>
+            <MenuItem Header="{x:Static constants:Localization.OPEN_NEW_TAB}" Name="NewTab" Command="{Binding NewTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.TwoWindows}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{x:Static constants:Localization.CLOSE_TAB}" Name="CloseTab" Command="{Binding CloseTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.Close}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Ouvrir un nouvel onglet sur l'autre panneau" Name="NewTabOther" Command="{Binding NewTabOtherCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.TwoWindowsArrow}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{x:Static constants:Localization.CLOSE_OTHER_TAB}" Name="CloseAllTab" Command="{Binding CloseAllTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.TwoWindowsClose}"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
-            <MenuItem Header="{x:Static constants:Localization.COMMANDLINE}" Name="NewConsoleTab" Command="{Binding NewConsoleTabCommand}"/>
-            <MenuItem Header="{x:Static constants:Localization.POWER_SHELL}" Name="NewPowerShellTab" Command="{Binding NewPowerShellTabCommand}"/>
+            <MenuItem Header="{x:Static constants:Localization.COMMANDLINE}" Name="NewConsoleTab" Command="{Binding NewConsoleTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.CommandLine}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{x:Static constants:Localization.POWER_SHELL}" Name="NewPowerShellTab" Command="{Binding NewPowerShellTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.PowerShell}"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
-            <MenuItem Header="{x:Static constants:Localization.COMMANDLINE_ADMIN}" Name="NewAdminConsoleTab" Command="{Binding NewAdminConsoleTabCommand}"/>
-            <MenuItem Header="{x:Static constants:Localization.POWER_SHELL_ADMIN}" Name="NewAdminPowerShellTab" Command="{Binding NewAdminPowerShellTabCommand}"/>
+            <MenuItem Header="{x:Static constants:Localization.COMMANDLINE_ADMIN}" Name="NewAdminConsoleTab" Command="{Binding NewAdminConsoleTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.CommandLine}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{x:Static constants:Localization.POWER_SHELL_ADMIN}" Name="NewAdminPowerShellTab" Command="{Binding NewAdminPowerShellTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.PowerShell}"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
-            <MenuItem Header="{x:Static constants:Localization.REGISTRY_EDITOR}" Name="NewRegistryEditorTab" Command="{Binding NewRegistryEditorTabCommand}"/>
+            <MenuItem Header="{x:Static constants:Localization.REGISTRY_EDITOR}" Name="NewRegistryEditorTab" Command="{Binding NewRegistryEditorTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.RegEdit}"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
-            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_FLOPPY}" Name="NewImageFloppyTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="floppy"/>
-            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_DISK}" Name="NewImageDiskTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="hd"/>
-            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_ISO}" Name="NewImageIsoTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="iso"/>
+            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_FLOPPY}" Name="NewImageFloppyTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="floppy">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.Floppy}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_DISK}" Name="NewImageDiskTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="hd">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.HardDisk}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{x:Static constants:Localization.LOAD_IMAGE_ISO}" Name="NewImageIsoTab" Command="{Binding NewImageFileSystemTabCommand}" CommandParameter="iso">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.Iso}"/>
+                </MenuItem.Icon>
+            </MenuItem>
             <Separator Style="{DynamicResource MySeparatorStyle}"/>
-            <MenuItem Header="Embedded Window" Name="NewEmbeddedWindowTab" Command="{Binding NewEmbeddedWindowTabCommand}"/>
+            <MenuItem Header="Embedded Window" Name="NewEmbeddedWindowTab" Command="{Binding NewEmbeddedWindowTabCommand}">
+                <MenuItem.Icon>
+                    <Image Source="{x:Static constants:Icons.Window}"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator Style="{DynamicResource MySeparatorStyle}"/>
+            <MenuItem Header="{x:Static constants:Localization.SFTP}" Name="NewSftpTab" Command="{Binding NewSftpTabCommand}"/>
+            <MenuItem Header="{x:Static constants:Localization.SSH}" Name="NewSshTab" Command="{Binding NewSshTabCommand}"/>
         </ContextMenu>
     </UserControl.ContextMenu>
     

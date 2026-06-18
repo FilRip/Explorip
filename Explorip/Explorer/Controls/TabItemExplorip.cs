@@ -219,11 +219,11 @@ public abstract class TabItemExplorip : TabItem, IDisposable, ITabExplorip
         {
             if (disposing)
             {
-                MyTabControl.Items.Remove(this);
-                MyHeader.DragOver -= MyHeader_DragOver;
+                MyTabControl?.Items?.Remove(this);
+                MyHeader?.DragOver -= MyHeader_DragOver;
                 Drop -= TabItem_Drop;
                 PreviewMouseMove -= TabItem_PreviewMouseMove;
-                MyHeader.lblTitle.SizeChanged -= TabTitle_SizeChanged;
+                MyHeader?.lblTitle.SizeChanged -= TabTitle_SizeChanged;
                 Header = null;
                 Free();
             }

@@ -1,0 +1,52 @@
+﻿<local:TabItemExplorip x:Class="Explorip.Explorer.Controls.Tabs.TabItemSftp"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                       xmlns:local="clr-namespace:Explorip.Explorer.Controls"
+                       xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
+                       xmlns:customControls="clr-namespace:Explorip.Explorer.Helpers"
+                       xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
+                       xmlns:constants="clr-namespace:Explorip.Constants"
+                       mc:Ignorable="d" Style="{StaticResource CustomTabItem}"
+                       d:DesignHeight="450" d:DesignWidth="800">
+
+    <TabItem.DataContext>
+        <viewmodels:TabItemSftpViewModel/>
+    </TabItem.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Text="{Binding Host}" ToolTip="Host" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+            <customControls:NumericUpDown Grid.Column="1" Value="{Binding Port}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Port" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50"/>
+            <TextBox Grid.Column="2" Text="{Binding User}" ToolTip="Username" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100"/>
+            <PasswordBox Grid.Column="3" PasswordChanged="PasswordBox_PasswordChanged" Name="PasswordTextBox" ToolTip="Password" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" PasswordChar="*" Width="100"/>
+            <Button Grid.Column="4" Command="{Binding ConnectionCommand}" Content="{x:Static constants:Localization.CONNECTION}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100"/>
+            <customControls:NumericUpDown Grid.Column="5" Value="{Binding TimeoutActivity}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Timeout (sec)" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*"/>
+            </Grid.ColumnDefinitions>
+            <TreeView Grid.Column="0" ItemsSource="{Binding ListFolders}" DisplayMemberPath="Name" SelectedItemChanged="TreeView_SelectedItemChanged" x:Name="TVItems" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="{x:Static colors:Colors.ForegroundColorBrush}"/>
+            <ListView Grid.Column="1" ItemsSource="{Binding ListFiles}" SelectionChanged="ListView_SelectionChanged" x:Name="LVItems" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+        </Grid>
+    </Grid>
+    
+</local:TabItemExplorip>

@@ -45,7 +45,7 @@
 
         <GridSplitter Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Transparent" Width="5" IsTabStop="False" Foreground="{x:Static config:Colors.ForegroundColorBrush}"/>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Visibility="{Binding ShowMiddleButtons, Converter={StaticResource boolToVisibility}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="auto"/>
