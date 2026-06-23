@@ -5,9 +5,12 @@
                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
                        xmlns:local="clr-namespace:Explorip.Explorer.Controls"
                        xmlns:viewmodels="clr-namespace:Explorip.Explorer.ViewModels"
+                       xmlns:models="clr-namespace:Explorip.Explorer.ViewModels.Sftp"
                        xmlns:customControls="clr-namespace:Explorip.Explorer.Helpers"
                        xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
                        xmlns:constants="clr-namespace:Explorip.Constants"
+                       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+                       xmlns:behaviors="clr-namespace:Explorip.Explorer.Behaviors;assembly=Explorip"
                        mc:Ignorable="d" Style="{StaticResource CustomTabItem}"
                        d:DesignHeight="450" d:DesignWidth="800">
 
@@ -15,36 +18,91 @@
         <viewmodels:TabItemSftpViewModel/>
     </TabItem.DataContext>
 
+    <TabItem.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+    </TabItem.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="10"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding Host}" ToolTip="Host" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
-            <customControls:NumericUpDown Grid.Column="1" Value="{Binding Port}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Port" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50"/>
-            <TextBox Grid.Column="2" Text="{Binding User}" ToolTip="Username" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100"/>
-            <PasswordBox Grid.Column="3" PasswordChanged="PasswordBox_PasswordChanged" Name="PasswordTextBox" ToolTip="Password" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" PasswordChar="*" Width="100"/>
-            <Button Grid.Column="4" Command="{Binding ConnectionCommand}" Content="{x:Static constants:Localization.CONNECTION}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100"/>
-            <customControls:NumericUpDown Grid.Column="5" Value="{Binding TimeoutActivity}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Timeout (sec)" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50"/>
+            <TextBlock Grid.Column="0" Text="Host :" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" VerticalAlignment="Center"/>
+            <TextBox Grid.Column="1" Text="{Binding Host}" ToolTip="Host" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Height="20" Margin="5 0 0 0"/>
+            <customControls:NumericUpDown Grid.Column="2" Value="{Binding Port}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Port" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50" Margin="5 0 0 0"/>
+            <TextBlock Grid.Column="3" Text="{x:Static constants:Localization.USERNAME}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" VerticalAlignment="Center" Margin="5 0 0 0"/>
+            <TextBox Grid.Column="4" Text="{Binding User}" ToolTip="Username" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100" Height="20" Margin="5 0 0 0"/>
+            <TextBlock Grid.Column="5" Text="{x:Static constants:Localization.PASSWORD}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" VerticalAlignment="Center" Margin="5 0 0 0"/>
+            <PasswordBox Grid.Column="6" PasswordChanged="PasswordBox_PasswordChanged" Name="PasswordTextBox" ToolTip="Password" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" PasswordChar="*" Width="100" Height="20" Margin="5 0 0 0"/>
+            <Button Grid.Column="7" Command="{Binding ConnectionCommand}" Content="{x:Static constants:Localization.CONNECTION}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100" Height="20" Margin="5 0 0 0"/>
+            <customControls:NumericUpDown Grid.Column="8" Value="{Binding TimeoutActivity}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Timeout (sec)" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50" Margin="5 0 0 0"/>
         </Grid>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.5*"/>
                 <ColumnDefinition Width="0.5*"/>
             </Grid.ColumnDefinitions>
-            <TreeView Grid.Column="0" ItemsSource="{Binding ListFolders}" DisplayMemberPath="Name" SelectedItemChanged="TreeView_SelectedItemChanged" x:Name="TVItems" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+            <TreeView Grid.Column="0" ItemsSource="{Binding ListFolders}" SelectedItemChanged="TreeView_SelectedItemChanged" x:Name="TVItems" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem">
+                        <Setter Property="behaviors:BringSelectedItemIntoViewBehavior.IsBringSelectedIntoView" Value="True"/>
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                        <Setter Property="FontWeight" Value="Normal"/>
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="0,2,0,2"/>
+                        <Setter Property="Margin" Value="0"/>
+                        <Setter Property="MinHeight" Value="0"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate DataType="{x:Type models:SftpFolder}" ItemsSource="{Binding Children}">
+                        <Grid Margin="0" AllowDrop="True" Name="TreeItemGrid" Drop="TreeItemGrid_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}" PreviewDragEnter="AllowDrop_PreviewDragEnter" DragEnter="Grid_DragEnter" DragLeave="Grid_DragLeave" Background="{x:Static colors:Colors.BackgroundColorBrush}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseRightButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding ContextMenuCommand}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseMove">
+                                    <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Margin="0" Source="{Binding Icon}"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Name}" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" Background="Transparent" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+                            <TextBox Grid.Column="2" Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" Padding="0" BorderThickness="0" VerticalContentAlignment="Center" LostFocus="EditNameBox_LostFocus"/>
+                        </Grid>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            
             <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="{x:Static colors:Colors.ForegroundColorBrush}"/>
+            
             <ListView Grid.Column="1" ItemsSource="{Binding ListFiles}" SelectionChanged="ListView_SelectionChanged" x:Name="LVItems" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
         </Grid>
     </Grid>

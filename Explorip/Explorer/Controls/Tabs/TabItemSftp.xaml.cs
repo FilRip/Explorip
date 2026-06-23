@@ -36,4 +36,32 @@ public partial class TabItemSftp : TabItemExplorip
     {
         DataContext.Password = PasswordTextBox.Password;
     }
+
+    private void TreeItemGrid_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+    }
+
+    private void AllowDrop_DragOver(object sender, System.Windows.DragEventArgs e)
+    {
+    }
+
+    private void AllowDrop_PreviewDragEnter(object sender, System.Windows.DragEventArgs e)
+    {
+    }
+
+    private void Grid_DragEnter(object sender, System.Windows.DragEventArgs e)
+    {
+    }
+
+    private void Grid_DragLeave(object sender, System.Windows.DragEventArgs e)
+    {
+    }
+
+    private void EditBox_IsVisibleChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+    {
+    }
+
+    private void EditNameBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+    {
+    }
 }

@@ -27,6 +27,7 @@ public static class Localization
     private const string TwinUiPcShellDll = "twinui.pcshell.dll";
     private const string SrhDll = "srh.dll";
     private const string ComResDll = "comres.dll";
+    private const string RasPlapDll = "rasplap.dll";
 
     public static string PASTE { get; private set; }
     public static string PASTE_SHORTCUT { get; private set; }
@@ -226,7 +227,8 @@ public static class Localization
     public static string SFTP { get; private set; }
     public static string SSH { get; private set; }
     public static string CONNECTION { get; private set; }
-
+    public static string USERNAME { get; private set; }
+    public static string PASSWORD { get; private set; }
     public static void LoadTranslation()
     {
         PASTE = Load(Shell32Dll, 33562, "Paste");
@@ -440,6 +442,8 @@ public static class Localization
         SFTP = "SFTP";
         SSH = "SSH";
         CONNECTION = Load(ComResDll, 1816, "Connection");
+        USERNAME = Load(RasPlapDll, 3001, "Username");
+        PASSWORD = Load(RasPlapDll, 3002, "Password");
 
         string specialPath = "::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}";
         ManagedShell.ShellFolders.ShellItem si = new(specialPath);

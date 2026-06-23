@@ -6,16 +6,16 @@ namespace Explorip.Explorer.Helpers;
 
 public class NumericUpDown : Control
 {
-    private RepeatButton _upButton;
-    private RepeatButton _downButton;
+    private TextBox _textBox;
 
     public readonly static DependencyProperty MaximumProperty = DependencyProperty.Register(nameof(Maximum), typeof(int), typeof(NumericUpDown));
     public readonly static DependencyProperty MinimumProperty = DependencyProperty.Register(nameof(Minimum), typeof(int), typeof(NumericUpDown));
-    public readonly static DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(int), typeof(NumericUpDown));
+    public readonly static DependencyProperty ValueProperty = DependencyProperty.Register(nameof(Value), typeof(int), typeof(NumericUpDown), new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnValueChanged));
     public readonly static DependencyProperty StepProperty = DependencyProperty.Register(nameof(StepValue), typeof(int), typeof(NumericUpDown));
 
     public NumericUpDown()
     {
+        Style = (Style)Application.Current.FindResource("NumericUpDownStyle");
     }
 
     #region DependencyPropertyAccessor
@@ -32,6 +32,12 @@ public class NumericUpDown : Control
         set { SetValue(MinimumProperty, value); }
     }
 
+    private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var control = (NumericUpDown)d;
+        control.UpdateTextBox();
+    }
+
     public int Value
     {
         get { return (int)GetValue(ValueProperty); }
@@ -46,13 +52,27 @@ public class NumericUpDown : Control
 
     #endregion
 
+    private void UpdateTextBox()
+    {
+        _textBox?.Text = Value.ToString();
+    }
+
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        _upButton = Template.FindName("Part_UpButton", this) as RepeatButton;
-        _downButton = Template.FindName("Part_DownButton", this) as RepeatButton;
-        _upButton.Click += UpButton_Click;
-        _downButton.Click += DownButton_Click;
+        RepeatButton upButton = Template.FindName("Part_UpButton", this) as RepeatButton;
+        RepeatButton downButton = Template.FindName("Part_DownButton", this) as RepeatButton;
+        _textBox = Template.FindName("Part_TextBox", this) as TextBox;
+        upButton.Click += UpButton_Click;
+        downButton.Click += DownButton_Click;
+        _textBox.TextChanged += TextBox_TextChanged;
+        _textBox.Text = Value.ToString();
+    }
+
+    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (int.TryParse(_textBox.Text, out int v))
+            Value = v;
     }
 
     private void DownButton_Click(object sender, RoutedEventArgs e)

@@ -13,18 +13,19 @@ using Renci.SshNet;
 
 namespace Explorip.Explorer.ViewModels;
 
-public partial class TabItemSftpViewModel : ObservableObject
+public partial class TabItemSftpViewModel : ObservableObject, IDisposable
 {
     private SftpClient _sftpClient;
+    private bool disposedValue;
 
     [ObservableProperty()]
-    private ObservableCollection<SftpFolder> _listFolders;
+    private ObservableCollection<SftpFolder> _listFolders = [];
     [ObservableProperty()]
-    private ObservableCollection<SftpFile> _listFiles;
+    private ObservableCollection<SftpFile> _listFiles = [];
     [ObservableProperty()]
     private string _host, _user, _password;
     [ObservableProperty()]
-    private ushort _port = 22, _timeoutActivity = 5;
+    private int _port = 22, _timeoutActivity = 5;
 
     public List<SftpItem> ListSelected { get; set; } = [];
     public SftpItem SelectedFolder { get; set; }
@@ -60,4 +61,33 @@ public partial class TabItemSftpViewModel : ObservableObject
                 ListFiles.Add(new SftpFile(file));
         }
     }
+
+    #region IDisposable
+
+    public bool IsDisposed
+    {
+        get { return disposedValue; }
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                ListFolders?.Clear();
+                ListFiles?.Clear();
+                _sftpClient?.Dispose();
+            }
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }
