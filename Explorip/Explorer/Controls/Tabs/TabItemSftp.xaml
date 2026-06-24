@@ -10,9 +10,10 @@
                        xmlns:colors="clr-namespace:ExploripSharedCopy.Constants;assembly=ExploripSharedCopy"
                        xmlns:constants="clr-namespace:Explorip.Constants"
                        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                       xmlns:behaviors="clr-namespace:Explorip.Explorer.Behaviors;assembly=Explorip"
+                       xmlns:behaviors="clr-namespace:Explorip.Explorer.Behaviors"
+                       xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
                        mc:Ignorable="d" Style="{StaticResource CustomTabItem}"
-                       d:DesignHeight="450" d:DesignWidth="800">
+                       d:DesignHeight="450" d:DesignWidth="800"  Focusable="False" KeyboardNavigation.IsTabStop="False">
 
     <TabItem.DataContext>
         <viewmodels:TabItemSftpViewModel/>
@@ -20,16 +21,18 @@
 
     <TabItem.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVisible"/>
+        <converters:InverseBoolToVisibilityConverter x:Key="inverseBoolToVisible"/>
+        <converters:FileSizeConverter x:Key="sizeConverter"/>
     </TabItem.Resources>
 
-    <Grid>
+    <Grid Focusable="False" KeyboardNavigation.TabNavigation="Continue" KeyboardNavigation.IsTabStop="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="10"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Focusable="False" KeyboardNavigation.TabNavigation="Cycle" KeyboardNavigation.IsTabStop="False">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -42,21 +45,22 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Host :" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" VerticalAlignment="Center"/>
-            <TextBox Grid.Column="1" Text="{Binding Host}" ToolTip="Host" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Height="20" Margin="5 0 0 0"/>
-            <customControls:NumericUpDown Grid.Column="2" Value="{Binding Port}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Port" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50" Margin="5 0 0 0"/>
+            <TextBox Grid.Column="1" Text="{Binding Host}" ToolTip="Host" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Height="20" Margin="5 0 0 0" Focusable="True" IsTabStop="True" TabIndex="0" Name="TxtHost"/>
+            <customControls:NumericUpDown Grid.Column="2" Value="{Binding Port}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Port" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50" Margin="5 0 0 0" Focusable="True" IsTabStop="True" TabIndex="1"/>
             <TextBlock Grid.Column="3" Text="{x:Static constants:Localization.USERNAME}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" VerticalAlignment="Center" Margin="5 0 0 0"/>
-            <TextBox Grid.Column="4" Text="{Binding User}" ToolTip="Username" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100" Height="20" Margin="5 0 0 0"/>
+            <TextBox Grid.Column="4" Text="{Binding User}" ToolTip="Username" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100" Height="20" Margin="5 0 0 0" Focusable="True" IsTabStop="True" TabIndex="2"/>
             <TextBlock Grid.Column="5" Text="{x:Static constants:Localization.PASSWORD}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" VerticalAlignment="Center" Margin="5 0 0 0"/>
-            <PasswordBox Grid.Column="6" PasswordChanged="PasswordBox_PasswordChanged" Name="PasswordTextBox" ToolTip="Password" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" PasswordChar="*" Width="100" Height="20" Margin="5 0 0 0"/>
-            <Button Grid.Column="7" Command="{Binding ConnectionCommand}" Content="{x:Static constants:Localization.CONNECTION}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100" Height="20" Margin="5 0 0 0"/>
-            <customControls:NumericUpDown Grid.Column="8" Value="{Binding TimeoutActivity}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Timeout (sec)" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50" Margin="5 0 0 0"/>
+            <PasswordBox Grid.Column="6" PasswordChanged="PasswordBox_PasswordChanged" Name="PasswordTextBox" ToolTip="Password" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" PasswordChar="*" Width="100" Height="20" Margin="5 0 0 0" Focusable="True" IsTabStop="True" TabIndex="3"/>
+            <Button Grid.Column="7" Command="{Binding ConnectionCommand}" Content="{x:Static constants:Localization.CONNECTION}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="100" Height="20" Margin="5 0 0 0" Focusable="True" IsTabStop="True" TabIndex="4"/>
+            <customControls:NumericUpDown Grid.Column="8" Value="{Binding TimeoutActivity}" Maximum="65535" Minimum="0" StepValue="1" ToolTip="Timeout (sec)" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Width="50" Margin="5 0 0 0" Focusable="True" IsTabStop="True" TabIndex="5"/>
         </Grid>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.5*"/>
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition Width="0.75*"/>
             </Grid.ColumnDefinitions>
+
             <TreeView Grid.Column="0" ItemsSource="{Binding ListFolders}" SelectedItemChanged="TreeView_SelectedItemChanged" x:Name="TVItems" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="TreeViewItem">
@@ -100,10 +104,42 @@
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
             </TreeView>
-            
-            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" Background="{x:Static colors:Colors.ForegroundColorBrush}"/>
-            
-            <ListView Grid.Column="1" ItemsSource="{Binding ListFiles}" SelectionChanged="ListView_SelectionChanged" x:Name="LVItems" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}"/>
+
+            <GridSplitter Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="5" Background="{x:Static colors:Colors.ForegroundColorBrush}" Visibility="{Binding ShowError, Converter={StaticResource inverseBoolToVisible}}"/>
+
+            <ListView Grid.Column="1" ItemsSource="{Binding ListFiles}" SelectionChanged="ListView_SelectionChanged" x:Name="LVItems" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" Visibility="{Binding ShowError, Converter={StaticResource inverseBoolToVisible}}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <VirtualizingStackPanel Orientation="Vertical" AllowDrop="True" Name="FileViewStackPanel" Drop="FileViewStackPanel_Drop" DragOver="AllowDrop_DragOver" Opacity="{Binding Opacity}">
+                            <Grid DragEnter="Grid_DragEnter" DragLeave="Grid_DragLeave" Background="{Binding BackgroundColor}" HorizontalAlignment="Stretch">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseRightButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding ContextMenuCommand}" PassEventArgsToCommand="True"/>
+                                    </i:EventTrigger>
+                                    <i:EventTrigger EventName="MouseMove">
+                                        <i:InvokeCommandAction Command="{Binding MouseMoveCommand}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="80"/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding Icon}" Grid.Column="0" Margin="0"/>
+                                <TextBlock Text="{Binding Name}" Grid.Column="1" Margin="5 0 0 0" Visibility="{Binding ReadOnlyBox, Converter={StaticResource boolToVisible}}" FontSize="12" HorizontalAlignment="Stretch"/>
+                                <TextBox Text="{Binding NewName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="1" Visibility="{Binding RenameMode, Converter={StaticResource boolToVisible}}" Margin="0" x:Name="EditNameBox" IsVisibleChanged="EditBox_IsVisibleChanged" FontSize="12" LostFocus="EditNameBox_LostFocus"/>
+                                <TextBlock Text="{converters:DateTimeBinding Path=LastModified}" Grid.Column="2" HorizontalAlignment="Right" Margin="0 0 5 0" FontSize="12"/>
+                                <TextBlock Text="{Binding Size, Converter={StaticResource sizeConverter}}" Margin="0 0 5 0" Grid.Column="3" HorizontalAlignment="Right" FontSize="12"/>
+                                <TextBlock Text="{Binding Permissions}" Margin="0 0 5 0" Grid.Column="4" HorizontalAlignment="Right" FontSize="12"/>
+                            </Grid>
+                        </VirtualizingStackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding ShowError, Converter={StaticResource boolToVisible}}" Text="{Binding ErrorMessage}" Background="{x:Static colors:Colors.BackgroundColorBrush}" Foreground="{x:Static colors:Colors.ForegroundColorBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Grid>
     </Grid>
     

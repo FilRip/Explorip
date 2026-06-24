@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -251,5 +252,24 @@ public static class IconManager
         tg.Children.Add(new ScaleTransform(width / source.Width, height / source.Height));
         TransformedBitmap tb = new((BitmapSource)source, tg);
         return tb;
+    }
+
+    public static ImageSource GetIconFromExtension(string extension)
+    {
+        NativeMethods.ShFileInfo shinfo = new();
+        NativeMethods.SHGetFileInfo(extension, NativeMethods.EFileAttributes.NORMAL, ref shinfo, (uint)Marshal.SizeOf<NativeMethods.ShFileInfo>(), NativeMethods.ShGetFileInfos.Icon | NativeMethods.ShGetFileInfos.UseFileAttributes);
+
+        if (shinfo.hIcon == IntPtr.Zero)
+            return null;
+
+        BitmapSource img = Imaging.CreateBitmapSourceFromHIcon(
+            shinfo.hIcon,
+            Int32Rect.Empty,
+            BitmapSizeOptions.FromEmptyOptions());
+
+        img.Freeze();
+        NativeMethods.DestroyIcon(shinfo.hIcon);
+
+        return img;
     }
 }

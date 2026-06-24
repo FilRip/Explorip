@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using Explorip.Explorer.ViewModels;
 using Explorip.Explorer.ViewModels.Sftp;
@@ -13,12 +14,29 @@ public partial class TabItemSftp : TabItemExplorip
     public TabItemSftp()
     {
         InitializeComponent();
+        InitializeExplorip();
+        Loaded += TabItemSftp_Loaded;
+        SetTitle(Constants.Localization.SFTP);
+    }
+
+    private void TabItemSftp_Loaded(object sender, System.Windows.RoutedEventArgs e)
+    {
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            System.Windows.Input.Keyboard.Focus(TxtHost);
+        }), System.Windows.Threading.DispatcherPriority.Input);
     }
 
     public new TabItemSftpViewModel DataContext
     {
         get { return (TabItemSftpViewModel)base.DataContext; }
         set { base.DataContext = value; }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        DataContext?.Dispose();
     }
 
     private void ListView_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -62,6 +80,10 @@ public partial class TabItemSftp : TabItemExplorip
     }
 
     private void EditNameBox_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+    {
+    }
+
+    private void FileViewStackPanel_Drop(object sender, System.Windows.DragEventArgs e)
     {
     }
 }

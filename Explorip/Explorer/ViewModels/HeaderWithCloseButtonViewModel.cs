@@ -119,7 +119,7 @@ public partial class HeaderWithCloseButtonViewModel(HeaderWithCloseButton contro
     }
 
     [RelayCommand()]
-    private void NewImageFloppyTab(string param)
+    private void NewImageFileSystemTab(string param)
     {
         OpenFileDialog dialog = new();
         if (param == "floppy")
