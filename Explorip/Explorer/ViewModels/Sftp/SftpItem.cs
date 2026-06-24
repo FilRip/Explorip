@@ -62,7 +62,7 @@ public abstract partial class SftpItem(ISftpFile file, SftpClient sftpClient) : 
     }
 
     [ObservableProperty()]
-    private double _opacity = 1;
+    private double _opacity = (file?.Name?.StartsWith(".") == true ? 0.7 : 1);
 
     public static string MakePermissions(ISftpFile file)
     {
