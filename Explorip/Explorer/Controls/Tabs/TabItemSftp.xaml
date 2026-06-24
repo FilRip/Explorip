@@ -13,7 +13,7 @@
                        xmlns:behaviors="clr-namespace:Explorip.Explorer.Behaviors"
                        xmlns:converters="clr-namespace:Explorip.Explorer.Converters"
                        mc:Ignorable="d" Style="{StaticResource CustomTabItem}"
-                       d:DesignHeight="450" d:DesignWidth="800"  Focusable="False" KeyboardNavigation.IsTabStop="False">
+                       d:DesignHeight="450" d:DesignWidth="800"  Focusable="True" KeyboardNavigation.IsTabStop="False">
 
     <TabItem.DataContext>
         <viewmodels:TabItemSftpViewModel/>
