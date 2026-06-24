@@ -5,6 +5,8 @@ namespace ManagedShell.Interop;
 
 public partial class NativeMethods
 {
+    private const string NtDll = "ntdll.dll";
+
     public enum ProcessInfoClass
     {
         ProcessBasicInformation = 0x00,
@@ -31,6 +33,6 @@ public partial class NativeMethods
         public IntPtr InheritedFromUniqueProcessId;
     }
 
-    [DllImport("NTDLL.DLL", SetLastError = true)]
+    [DllImport(NtDll, SetLastError = true)]
     internal static extern int NtQueryInformationProcess(IntPtr hProcess, ProcessInfoClass pic, ref ProcessBasicInformation pbi, int cb, out int pSize);
 }

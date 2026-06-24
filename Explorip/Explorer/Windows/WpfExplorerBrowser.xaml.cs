@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,7 +9,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-using Explorip.Explorer.Controls;
 using Explorip.Explorer.Controls.Tabs;
 using Explorip.Explorer.ViewModels;
 using Explorip.Helpers;
@@ -230,82 +228,6 @@ public partial class WpfExplorerBrowser : Window
         LeftTab.SetValue(Grid.ColumnSpanProperty, 1);
         LeftGrid.Width = _firstLeftTabWidth == 0 ? new GridLength(1.5, GridUnitType.Star) : new GridLength(_firstLeftTabWidth, GridUnitType.Pixel);
         ConfigManager.StartTwoExplorer = true;
-    }
-
-    #endregion
-
-    #region Files operations
-
-    private static void CopyBetweenTab(TabExplorerBrowser tabSource, TabExplorerBrowser tabDestination, bool move = false)
-    {
-        ShellObject[] listeItems = [.. tabSource.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()];
-        string destination = tabDestination.CurrentTabExplorer.ExplorerBrowser.NavigationLog.CurrentLocation.GetDisplayName(DisplayNameType.FileSystemPath);
-        Task.Run(() =>
-        {
-            FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
-            if (listeItems?.Length > 0)
-            {
-                string fichier;
-                foreach (ShellObject item in listeItems)
-                {
-                    fichier = item.GetDisplayName(DisplayNameType.FileSystemPath);
-                    if (move)
-                        fileOperation.MoveItem(fichier, destination, Path.GetFileName(fichier));
-                    else
-                        fileOperation.CopyItem(fichier, destination, Path.GetFileName(fichier));
-                }
-                fileOperation.PerformOperations();
-                fileOperation.Dispose();
-            }
-        });
-    }
-
-    private void CopyLeft_Click(object sender, RoutedEventArgs e)
-    {
-        CopyBetweenTab(LeftTab, RightTab);
-    }
-
-    private void CopyRight_Click(object sender, RoutedEventArgs e)
-    {
-        CopyBetweenTab(RightTab, LeftTab);
-    }
-
-    private void MoveLeft_Click(object sender, RoutedEventArgs e)
-    {
-        CopyBetweenTab(LeftTab, RightTab, true);
-    }
-
-    private void MoveRight_Click(object sender, RoutedEventArgs e)
-    {
-        CopyBetweenTab(RightTab, LeftTab, true);
-    }
-
-    private static void DeleteSelectTab(TabExplorerBrowser tab)
-    {
-        ShellObject[] listeItems = [.. tab.CurrentTabExplorer.ExplorerBrowser.ExplorerBrowserControl.SelectedItems.OfType<ShellObject>()];
-        Task.Run(() =>
-        {
-            FilesOperations.FileOperation fileOperation = new(NativeMethods.GetDesktopWindow());
-            if (listeItems?.Length > 0)
-            {
-                foreach (ShellObject file in listeItems)
-                {
-                    fileOperation.DeleteItem(file.GetDisplayName(DisplayNameType.FileSystemPath));
-                }
-                fileOperation.PerformOperations();
-                fileOperation.Dispose();
-            }
-        });
-    }
-
-    private void DeleteLeft_Click(object sender, RoutedEventArgs e)
-    {
-        DeleteSelectTab(LeftTab);
-    }
-
-    private void DeleteRight_Click(object sender, RoutedEventArgs e)
-    {
-        DeleteSelectTab(RightTab);
     }
 
     #endregion

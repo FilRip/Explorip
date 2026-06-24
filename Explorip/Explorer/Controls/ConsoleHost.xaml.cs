@@ -44,12 +44,20 @@ public partial class ConsoleHost : UserControl, IDisposable
         try
         {
             _myProcess.Start();
+            Thread.Sleep(100);
+            _myProcess.WaitForInputIdle(100);
             _srcPtr = IntPtr.Zero;
-            while (_srcPtr == IntPtr.Zero)
+            List<int> listProcess = [];
+            while (listProcess.Count == 0 && _srcPtr == IntPtr.Zero)
             {
-                List<IntPtr> listWindows = WindowsExtensions.ListWindowsOfProcess((uint)_myProcess.Id);
-                if (listWindows.Count > 0)
-                    _srcPtr = listWindows[0];
+                listProcess = WindowsExtensions.ListChildProcess(_myProcess.Id, psi.Arguments);
+                if (listProcess.Count > 0)
+                {
+                    List<IntPtr> listWindows = WindowsExtensions.ListWindowsOfProcess((uint)listProcess[0]);
+                    if (listWindows.Count > 0)
+                        _srcPtr = listWindows[0];
+                }
+                Thread.Sleep(10);
             }
             return true;
         }
